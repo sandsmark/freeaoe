@@ -17,24 +17,53 @@
 */
 
 
-#ifndef DRSREADER_H
-#define DRSREADER_H
+#include "DrsGraphics.h"
 
-#include <istream>
+#include "IOHelper.h"
 
-class DrsReader
+//Debug
+#include <iostream>
+
+using std::ios_base;
+using std::streampos;
+
+DrsGraphics::DrsGraphics()
 {
 
-public:
-  DrsReader();
-  virtual ~DrsReader();
-    
-  //----------------------------------------------------------------------------
-  /// Reads a drs formated file from istream.
-  ///
-  /// @param istr stream to read from
-  //
-  void read(std::istream &istr);
-};
+}
 
-#endif // DRSREADER_H
+DrsGraphics::DrsGraphics(const DrsGraphics& other)
+{
+
+}
+
+DrsGraphics::~DrsGraphics()
+{
+
+}
+
+//------------------------------------------------------------------------------
+void DrsGraphics::load(std::istream& istr)
+{
+    DrsFile::load(istr);
+    
+    readHeader();
+}
+
+//------------------------------------------------------------------------------
+void DrsGraphics::readHeader()
+{
+  //dunno 4 bytes
+  istr_->seekg(4, ios_base::cur);
+  
+  long header_len = IOHelper::readLong(*istr_);
+  start_of_slp_ = streampos(header_len);
+  
+  //dunno 8 bytes
+  istr_->seekg(8, ios_base::cur);
+  
+  num_of_slp_ = IOHelper::readLong(*istr_);
+}
+
+
+

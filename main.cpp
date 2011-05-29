@@ -2,7 +2,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "src/file/DrsReader.h"
+#include "src/file/DrsGraphics.h"
 
 int main(int argc, char **argv) {
   std::cout << "Hello, world!" << std::endl;
@@ -11,9 +11,9 @@ int main(int argc, char **argv) {
   
   file.open("../aoe2/Data/graphics.drs");
   
-  DrsReader drs;
+  DrsGraphics gr;
   
-  drs.read(file);
+  gr.load(file);
   
   return 0;
 }

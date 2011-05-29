@@ -17,42 +17,27 @@
 */
 
 
-#include "DrsReader.h"
+#ifndef DRSGRAPHICS_H
+#define DRSGRAPHICS_H
 
-#include <string>
+#include "DrsFile.h"
 
-#include "IOHelper.h"
-
-//Debug
-#include <iostream>
-using std::cout;
-using std::endl;
-
-DrsReader::DrsReader()
+class DrsGraphics : public DrsFile
 {
 
-}
+public:
+  DrsGraphics();
+  DrsGraphics(const DrsGraphics& other);
+  virtual ~DrsGraphics();
+    
+  virtual void load(std::istream& istr);
+    
+private:
+  long num_of_slp_;
+  
+  std::streampos start_of_slp_;
+  
+  void readHeader();
+};
 
-DrsReader::~DrsReader()
-{
-
-}
-
-//------------------------------------------------------------------------------
-void DrsReader::read ( std::istream& istr )
-{
-  // Copyright
-  std::cout << IOHelper::readString(istr, 40) << std::endl;
-  
-  //Version
-  std::cout << IOHelper::readString(istr, 4) << std::endl;
-  
-  //File type
-  std::cout << IOHelper::readString(istr, 12) << std::endl;
-  
-  //Number of tablse 
-  std::cout << IOHelper::readLong(istr) << std::endl;
-  
-  // Number of files
-  std::cout << IOHelper::readLong(istr) << std::endl;
-}
+#endif // DRSGRAPHICS_H
