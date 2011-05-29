@@ -17,49 +17,39 @@
 */
 
 
+#include "SlpFile.h"
+
 #include "IOHelper.h"
 
-//------------------------------------------------------------------------------
-std::string IOHelper::readString ( std::istream& istr, size_t size )
-{
-  if (!istr.eof())
-  {
-    char *buf = new char[size];
-    
-    istr.read(buf, size);
-    
-    return std::string(buf);
-  }
 
-  return "";
+SlpFile::SlpFile()
+{
+
+}
+
+SlpFile::SlpFile(long int id, long int len, std::istream* istr, 
+                 std::streampos pos) : FileIO(istr, pos), id_(id), len_(len)
+{
+}
+
+SlpFile::~SlpFile()
+{
+
 }
 
 //------------------------------------------------------------------------------
-long int IOHelper::readLong ( std::istream& istr )
+void SlpFile::load()
 {
-  long ret = 0;
+  setToPos();
   
-  if (!istr.eof())
-  {
-    istr.read(reinterpret_cast<char *>(&ret), 4); //TODO: Long??
-  }
-  
-  return ret;
+  readHeader();
 }
 
-
-IOHelper::IOHelper()
+//------------------------------------------------------------------------------
+void SlpFile::readHeader()
 {
-
-}
-
-IOHelper::IOHelper ( const IOHelper& other )
-{
-
-}
-
-IOHelper::~IOHelper()
-{
-
+  std::string version = readString(4);
+  long frame_cnt = readLong();
+  std::string comment = readString(24);
 }
 

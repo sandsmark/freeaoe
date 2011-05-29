@@ -17,38 +17,27 @@
 */
 
 
-#ifndef IOHELPER_H
-#define IOHELPER_H
+#ifndef SLPFILE_H
+#define SLPFILE_H
 
 #include <istream>
-#include <string>
+#include "FileIO.h"
 
-class IOHelper
+class SlpFile : public FileIO
 {
 
 public:
-    
-  //----------------------------------------------------------------------------
-  /// Reads a string from stream.
-  ///
-  /// @param istr input stream
-  /// @param size string len
-  /// @return read string
-  //
-  static std::string readString(std::istream &istr, size_t size);
+  SlpFile();
+  SlpFile(long id, long len, std::istream *istr, std::streampos pos);
+  virtual ~SlpFile();
   
-  //----------------------------------------------------------------------------
-  /// Reads a long from stream.
-  ///
-  /// @param istr input stream
-  /// @return read number
-  //
-  static long readLong(std::istream &istr);
+  void load();
   
 private:
-    IOHelper();
-    IOHelper ( const IOHelper& other );
-    virtual ~IOHelper();
+  long id_;
+  long len_;
+  
+  void readHeader();
 };
 
-#endif // IOHELPER_H
+#endif // SLPFILE_H

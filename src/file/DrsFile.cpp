@@ -21,12 +21,16 @@
 
 #include "IOHelper.h"
 
+#include <string>
+
 //Debug
 #include <iostream>
 
-DrsFile::DrsFile()
+using std::string;
+
+DrsFile::DrsFile() : FileIO()
 {
-  istr_ = 0;
+  
 }
 
 DrsFile::~DrsFile()
@@ -37,16 +41,16 @@ DrsFile::~DrsFile()
 
 void DrsFile::load(std::istream& istr)
 {
-  istr_ = &istr;
+  setIstream(&istr);
   
-  // Copyright
-  std::cout << IOHelper::readString(istr, 40) << std::endl;
+  string copy_right = readString(40);
+  std::cout << copy_right << std::endl;
   
-  //Version
-  std::cout << IOHelper::readString(istr, 4) << std::endl;
+  string version = readString(4);
+  std::cout << version << std::endl;
   
   //File type
-  std::cout << IOHelper::readString(istr, 12) << std::endl;
+  std::cout << readString(12) << std::endl;
   
 }
 

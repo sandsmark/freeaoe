@@ -21,8 +21,9 @@
 #define DRSFILE_H
 
 #include <istream>
+#include "FileIO.h"
 
-class DrsFile
+class DrsFile : public FileIO
 {
 
 public:
@@ -32,8 +33,6 @@ public:
   //
   virtual void load(std::istream &istr);
   
-protected:
-  std::istream *istr_;
 };
 
 #endif // DRSFILE_H

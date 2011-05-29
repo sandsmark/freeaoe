@@ -20,7 +20,10 @@
 #ifndef DRSGRAPHICS_H
 #define DRSGRAPHICS_H
 
+#include <map>
+
 #include "DrsFile.h"
+#include "SlpFile.h"
 
 class DrsGraphics : public DrsFile
 {
@@ -37,7 +40,10 @@ private:
   
   std::streampos start_of_slp_;
   
+  std::map<long, SlpFile> slp_files_;
+  
   void readHeader();
+  void readSlpHeaders();
 };
 
 #endif // DRSGRAPHICS_H
