@@ -137,25 +137,15 @@ void SlpFrame::load()
           break;
           
         case 6: // copy and transform (player color)
-          data = (data & 0xF0) >> 4;
-          
-          if (data == 0)
-            pix_cnt = readUInt8();
-          else
-            pix_cnt = data;
-          
+          pix_cnt = getPixelCountFromData(data);
+ 
           // TODO: player color
           readPixelsToImage(row, pix_pos, pix_cnt);
           
           break;
           
         case 7: // Run of plain color
-          data = (data & 0xF0) >> 4;
-          
-          if (data == 0)
-            pix_cnt = readUInt8();
-          else
-            pix_cnt = data;
+          pix_cnt = getPixelCountFromData(data);
           
           color_index = readUInt8();
           setPixelsToColor(row, pix_pos, pix_cnt, 
@@ -163,12 +153,7 @@ void SlpFrame::load()
         break;
         
         case 0xA: // Transform block
-          data = (data & 0xF0) >> 4;
-          
-          if (data == 0)
-            pix_cnt = readUInt8();
-          else
-            pix_cnt = data;
+          pix_cnt = getPixelCountFromData(data);
           
           // TODO: readUint8() | player_color
           color_index = readUInt8();
@@ -178,13 +163,7 @@ void SlpFrame::load()
         
         case 0x0B: // Shadow pixels
           //TODO: incomplete
-          data = (data & 0xF0) >> 4;
-          
-          if (data == 0)
-            pix_cnt = readUInt8();
-          else
-            pix_cnt = data;
-          
+          pix_cnt = getPixelCountFromData(data);
           pix_pos += pix_cnt; //skip until implemented
           
         break;
@@ -193,6 +172,11 @@ void SlpFrame::load()
         
           switch (cmd)
           {
+            case 0x0E: //xflip?? skip??
+            case 0x1E:
+              row-= 1;   
+            break;
+            
             case 0x4E: //special color 1??
             case 0x6E: // special color 2?
               pix_pos += 1;
@@ -269,5 +253,20 @@ void SlpFrame::setPixelsToColor(Uint32 row, Uint32 &col, Uint32 count,
     image_->SetPixel(col, row, color);
     col ++;
   }
+}
+
+//------------------------------------------------------------------------------
+Uint8 SlpFrame::getPixelCountFromData(Uint8 data)
+{
+  Uint8 pix_cnt;
+  
+  data = (data & 0xF0) >> 4;
+          
+  if (data == 0)
+    pix_cnt = readUInt8();
+  else
+    pix_cnt = data;
+          
+  return pix_cnt;
 }
 

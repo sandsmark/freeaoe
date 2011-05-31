@@ -94,6 +94,14 @@ private:
   //
   void setPixelsToColor(sf::Uint32 row, sf::Uint32 &col, sf::Uint32 count,
                         sf::Color color);
+  
+  //----------------------------------------------------------------------------
+  /// This method returns either the count stored in command byte or (if not 
+  /// stored in command) the value of the next byte.
+  ///
+  /// @param data command byte
+  //
+  sf::Uint8 getPixelCountFromData(sf::Uint8 data);
 };
 
 #endif // SLPFRAME_H
