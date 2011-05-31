@@ -26,16 +26,32 @@
 #include <sys/types.h>
 #include <SFML/Graphics/Color.hpp>
 
-/// Class for opening and storing a aoe pallete from .pal files
-///
+//------------------------------------------------------------------------------
+/// Class for opening aoe palletes from .pal files
+//
 class ColorPalette
 {
 
 public:
+  //----------------------------------------------------------------------------
+  /// Constructor that loads the palette from given file.
+  ///
+  /// @param filename filename to load from
+  //
   ColorPalette(std::string filename);
+  
+  //----------------------------------------------------------------------------
+  /// Destructor
+  //
   virtual ~ColorPalette();
    
-  sf::Color getColorAt(u_int16_t pos);  
+  //----------------------------------------------------------------------------
+  /// Returns a color at given index.
+  ///
+  /// @param index index of color in palette
+  /// @return color object
+  //
+  sf::Color getColorAt(u_int16_t index);  
   
 private:
   std::fstream file_;

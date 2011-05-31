@@ -23,12 +23,26 @@
 #include <istream>
 #include <SFML/Config.hpp>
 
+//------------------------------------------------------------------------------
+/// Base class for file input/output. Used for managing an input stream.
+//
 class FileIO
 {
 
 public:
+  //----------------------------------------------------------------------------
+  /// Constructor
+  //
   FileIO();
+  
+  //----------------------------------------------------------------------------
+  /// Constructor
+  //
   FileIO(std::istream *istr, std::streampos pos);
+  
+  //----------------------------------------------------------------------------
+  /// Destructor
+  //
   virtual ~FileIO();
   
 protected:
@@ -57,6 +71,11 @@ protected:
   /// Sets file pointer to Pos
   //
   void setToPos();
+  
+  //----------------------------------------------------------------------------
+  /// Check eof bit
+  //
+  bool eof();
   
   //----------------------------------------------------------------------------
   /// Reads a string from stream.

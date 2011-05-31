@@ -31,17 +31,45 @@ namespace sf
 
 class ColorPalette;
 
+//------------------------------------------------------------------------------
+/// Class for reading a frame in a slp file.
+/// TODO: Check file corruption
+//
 class SlpFrame : public FileIO
 {
   
 public:  
+  //----------------------------------------------------------------------------
+  /// Constructor
+  ///
+  /// @param istr stream to read from
+  /// @param pos position to start reading from
+  /// @param file_pos position pointing at the beginning of the slp file.
+  /// @param palette color palette to choose colors from
+  //
   SlpFrame(std::istream *istr, std::streampos pos, std::streampos file_pos, 
            ColorPalette *palette);
+  
+  //----------------------------------------------------------------------------
+  /// Destructor
+  //
   virtual ~SlpFrame();
   
+  //----------------------------------------------------------------------------
+  /// Loads header data.
+  //
   void loadHeader();
+  
+  //----------------------------------------------------------------------------
+  /// Loads frame data and creates an image.
+  //
   void load();
   
+  //----------------------------------------------------------------------------
+  /// Returns the image created by loading the frame.
+  ///
+  /// @return loaded image
+  //
   sf::Image* getImage();
   
 private:

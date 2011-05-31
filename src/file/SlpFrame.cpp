@@ -64,6 +64,8 @@ void SlpFrame::loadHeader()
   hotspot_x_ = readInt32();
   hotspot_y_ = readInt32();
   
+  
+  
   std::cout << palette_offset_ << std::endl;
 }
 
