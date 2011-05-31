@@ -86,10 +86,13 @@ void SlpFrame::load()
   {
     std::cout << row << ": ";
     Uint8 data = 0;
+    Uint32 pix_pos = left_edges_[row]; //pos where to start putting pixels
     
     while (data != 0x0F)
     {
       data = readUInt8();
+      
+      std::cout << std::hex <<  (int)data << " ";
       
       if (data == 0x0F)
         break;
@@ -102,6 +105,7 @@ void SlpFrame::load()
       
       Uint32 pix_cnt = 0;
       //Uint32 pix_pos = left_edges_[row];
+      Uint8 color_index = 0;
       
       switch (cmd) //0x00
       {
@@ -110,51 +114,60 @@ void SlpFrame::load()
         case 8:
         case 0xC:
           pix_cnt = data >> 2;
-          readPixelsToImage(row, left_edges_[row], pix_cnt);
+          readPixelsToImage(row, pix_pos, pix_cnt);
           break;
         
-    /*    case 1: // lesser skip
+        case 1: // lesser skip (making pixels transparent)
         case 5:
         case 9:
         case 0xD:
           pix_cnt = (data & 0xFC) >> 2;
           
-          for (int j=0; j < pix_cnt; j++)
-          {
-            image_->SetPixel(pix_pos, i, palette_->getColorAt(readUInt8()));
-          }
+          setPixelsToColor(row, pix_pos, pix_cnt, sf::Color(0,0,0,0));
           break;
           
         case 2: // greater block copy
           pix_cnt = ((data & 0xF0) << 4) + readUInt8();
-          for (int j=0; j <pix_cnt; j++)
-          {
-            u_int8_t nc = readUInt8();
-            image_->SetPixel(pix_pos, i, palette_->getColorAt(nc));
-            pix_pos++;
-          }
-        
+          
+          readPixelsToImage(row, pix_pos, pix_cnt);
           break;
           
-        */
+        case 3: // greater skip
+          pix_cnt = ((data & 0xF0) << 4) + readUInt8();
+         
+          setPixelsToColor(row, pix_pos, pix_cnt, sf::Color(0,0,0,0));
+          break;
+          
+        case 6: // copy and transform
+          data = (data & 0xF0) >> 4;
+          
+          if (data == 0)
+            pix_cnt = readUInt8();
+          else
+            pix_cnt = data;
+          
+          // TODO: player color
+          readPixelsToImage(row, pix_pos, pix_cnt);
+          
+          break;
+          
+        case 7: // Run of plain color
+          data = (data & 0xF0) >> 4;
+          
+          if (data == 0)
+            pix_cnt = readUInt8();
+          else
+            pix_cnt = data;
+          
+          color_index = readUInt8();
+          setPixelsToColor(row, pix_pos, pix_cnt, 
+                           palette_->getColorAt(color_index));
+        break;
+        //*/
+        default:
+          //std::cout << (int) data << " ";
+          break;
       }
-      
-     /* if ( (cmd_ch >> 4) == 0x02 ) 
-      {
-        int num_pix = (cmd_ch >> 4) * 256;
-        num_pix += readUInt8();
-        
-        int pix_pos = left_edges_[i];
-        for (int j=0; j <num_pix; j++)
-        {
-          u_int8_t nc = readUInt8();
-          image_->SetPixel(pix_pos, i, pf.getColorAt(nc));
-          pix_pos++;
-        }
-        continue;
-      }
-      */
-      
       
     }
     
@@ -185,21 +198,34 @@ void SlpFrame::readEdges()
     for (sf::Uint32 i=width_-1; i >= (width_ - right_edges_[row_cnt]); i--)
       image_->SetPixel(i, row_cnt, sf::Color(0,0,0,0));
     
-    std::cout << row_cnt << ": " << left_edges_[row_cnt] << " " << right_edges_[row_cnt] << std::endl;
     row_cnt ++;
   }
  
 }
 
 //------------------------------------------------------------------------------
-void SlpFrame::readPixelsToImage(Uint32 row, Uint32 col, Uint32 count)
+void SlpFrame::readPixelsToImage(Uint32 row, Uint32 &col, Uint32 count)
 {
-  for (int i=col; i < (count + col); i++)
+  Uint32 to_pos = col + count;
+  while (col < to_pos)
   {
     Uint8 pixel_index = readUInt8();
-    image_->SetPixel(i, row, palette_->getColorAt(pixel_index));
+    image_->SetPixel(col, row, palette_->getColorAt(pixel_index));
+    col ++;
   }
  
 }
 
+//------------------------------------------------------------------------------
+void SlpFrame::setPixelsToColor(Uint32 row, Uint32 &col, Uint32 count, 
+                                sf::Color color)
+{
+  Uint32 to_pos = col + count;
+  
+  while (col < to_pos)
+  {
+    image_->SetPixel(col, row, color);
+    col ++;
+  }
+}
 

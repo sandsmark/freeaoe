@@ -22,6 +22,7 @@
 
 #include <istream>
 #include "FileIO.h"
+#include <SFML/Graphics/Color.hpp>
 
 namespace sf
 {
@@ -81,7 +82,18 @@ private:
   /// @param col column to set pixels from
   /// @param count how many pixels should be read
   //
-  void readPixelsToImage(sf::Uint32 row, sf::Uint32 col, sf::Uint32 count);
+  void readPixelsToImage(sf::Uint32 row, sf::Uint32 &col, sf::Uint32 count);
+  
+  //----------------------------------------------------------------------------
+  /// Sets the next count of pixels to given color without reading from stream.
+  ///
+  /// @param row row to set pixels at
+  /// @param col column to set pixels from
+  /// @param count how many pixels should be set
+  /// @param color color to set
+  //
+  void setPixelsToColor(sf::Uint32 row, sf::Uint32 &col, sf::Uint32 count,
+                        sf::Color color);
 };
 
 #endif // SLPFRAME_H
