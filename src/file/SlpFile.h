@@ -21,21 +21,32 @@
 #define SLPFILE_H
 
 #include <istream>
+#include <vector>
+
 #include "FileIO.h"
+#include <SFML/Graphics/Image.hpp>
+
+class SlpFrame;
 
 class SlpFile : public FileIO
 {
 
 public:
   SlpFile();
-  SlpFile(long id, long len, std::istream *istr, std::streampos pos);
+  SlpFile(int32_t id, int32_t len, std::istream *istr, std::streampos pos);
   virtual ~SlpFile();
   
   void load();
   
+  sf::Image *image_;
+  
 private:
-  long id_;
-  long len_;
+  int32_t id_;
+  int32_t len_;
+  
+  u_int32_t num_frames_;
+  
+  std::vector<SlpFrame *> frames_;
   
   void readHeader();
 };

@@ -28,19 +28,60 @@ namespace sf
   class Image;
 }
 
+class ColorPalette;
+
 class SlpFrame : public FileIO
 {
   
 public:  
-  SlpFrame(std::istream *istr, std::streampos pos);
+  SlpFrame(std::istream *istr, std::streampos pos, std::streampos file_pos, 
+           ColorPalette *palette);
   virtual ~SlpFrame();
+  
+  void loadHeader();
+  void load();
   
   sf::Image* getImage();
   
 private:
-  std::istream *istr_;
-  std::streampos pos_;
+  std::streampos file_pos_;
   
+  sf::Uint32 cmd_table_offset_;
+  sf::Uint32 outline_table_offset_;
+  sf::Uint32 palette_offset_;
+  sf::Uint32 properties_;
+  
+  sf::Int32 width_;
+  sf::Int32 height_;
+  sf::Int32 hotspot_x_;
+  sf::Int32 hotspot_y_;
+  
+  sf::Uint16 *left_edges_;
+  sf::Uint16 *right_edges_;
+  
+  sf::Image *image_;
+  
+  ColorPalette *palette_;
+  
+  //----------------------------------------------------------------------------
+  /// Reads the edges of the frame. An edge int is the number of pixels in 
+  /// a row which are transparent. There are two 16 bit unsigned integers for
+  /// each side of a row. One starting from left and the other starting from the
+  /// right side.
+  /// Assuming stream pointer is at beginning of edges array.
+  //
+  void readEdges();
+  
+  //----------------------------------------------------------------------------
+  /// Reads pixel indeces from file and sets the pixels according to the
+  /// colors from the palette.
+  /// It is assumed that the stream pointer is at the start of the pixe array.
+  ///
+  /// @param row row to set pixels at
+  /// @param col column to set pixels from
+  /// @param count how many pixels should be read
+  //
+  void readPixelsToImage(sf::Uint32 row, sf::Uint32 col, sf::Uint32 count);
 };
 
 #endif // SLPFRAME_H

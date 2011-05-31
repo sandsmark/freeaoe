@@ -19,8 +19,6 @@
 
 #include "DrsFile.h"
 
-#include "IOHelper.h"
-
 #include <string>
 
 //Debug

@@ -13,13 +13,11 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    aint32_t with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
 #include "DrsGraphics.h"
-
-#include "IOHelper.h"
 
 //Debug
 #include <iostream>
@@ -57,7 +55,7 @@ void DrsGraphics::readHeader()
   //dunno 4 bytes
   readString(4);
   
-  long header_len = readLong();
+  int32_t header_len = readInt32();
   start_of_slp_ = streampos(header_len);
   
   //dunno 8 bytes
@@ -65,21 +63,22 @@ void DrsGraphics::readHeader()
   //Maybe file ending
   std::cout << readString(8) << std::endl;
   
-  num_of_slp_ = readLong();
+  num_of_slp_ = readInt32();
 }
 
 //------------------------------------------------------------------------------
 void DrsGraphics::readSlpHeaders()
 {
-  for (long i=0; i < num_of_slp_; i++)
+  for (int32_t i=0; i < num_of_slp_; i++)
   {
-    long id = readLong();
-    long pos = readLong();
-    long len = readLong();
+    int32_t id = readInt32();
+    int32_t pos = readInt32();
+    int32_t len = readInt32();
     
     slp_files_[id] = SlpFile(id, len, getIstream(), streampos(pos));
   }
-    slp_files_[5].load();
+  slp_files_[3493].load();
+  image_ = slp_files_[3493].image_;
 }
 
 

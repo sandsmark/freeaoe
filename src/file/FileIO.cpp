@@ -47,6 +47,18 @@ std::istream* FileIO::getIstream()
   return istr_;
 }
 
+//------------------------------------------------------------------------------
+std::streampos FileIO::getPos()
+{
+  return pos_;
+}
+
+//------------------------------------------------------------------------------
+std::streampos FileIO::tellg()
+{
+  return istr_->tellg();
+}
+
 
 //------------------------------------------------------------------------------
 void FileIO::setToPos()
@@ -72,13 +84,65 @@ std::string FileIO::readString ( size_t size )
 }
 
 //------------------------------------------------------------------------------
-long int FileIO::readLong ()
+sf::Int32 FileIO::readInt32 ()
 {
-  long ret = 0;
+  sf::Int32 ret = 0;
   
   if (!istr_->eof())
   {
     istr_->read(reinterpret_cast<char *>(&ret), 4);
+  }
+  
+  return ret;
+}
+
+//------------------------------------------------------------------------------
+sf::Uint32 FileIO::readUInt32 ()
+{
+  sf::Uint32 ret = 0;
+  
+  if (!istr_->eof())
+  {
+    istr_->read(reinterpret_cast<char *>(&ret), 4);
+  }
+  
+  return ret;
+}
+
+//------------------------------------------------------------------------------
+sf::Uint16 FileIO::readUInt16 ()
+{
+  sf::Uint16 ret = 0;
+  
+  if (!istr_->eof())
+  {
+    istr_->read(reinterpret_cast<char *>(&ret), 2);
+  }
+  
+  return ret;
+}
+
+//------------------------------------------------------------------------------
+sf::Uint8 FileIO::readUInt8()
+{
+  sf::Uint8 ret = 0;
+  
+  if (!istr_->eof())
+  {
+    istr_->read(reinterpret_cast<char *>(&ret), 1);
+  }
+  
+  return ret;
+}
+
+//------------------------------------------------------------------------------
+char FileIO::readChar()
+{
+  char ret;
+  
+  if (!istr_->eof())
+  {
+    istr_->read(&ret, 1);
   }
   
   return ret;

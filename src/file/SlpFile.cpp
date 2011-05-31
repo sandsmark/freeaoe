@@ -18,8 +18,7 @@
 
 
 #include "SlpFile.h"
-
-#include "IOHelper.h"
+#include "SlpFrame.h"
 
 
 SlpFile::SlpFile()
@@ -27,14 +26,18 @@ SlpFile::SlpFile()
 
 }
 
-SlpFile::SlpFile(long int id, long int len, std::istream* istr, 
+SlpFile::SlpFile(int32_t id, int32_t len, std::istream* istr, 
                  std::streampos pos) : FileIO(istr, pos), id_(id), len_(len)
 {
 }
 
 SlpFile::~SlpFile()
 {
-
+  for (std::vector<SlpFrame *>::iterator it = frames_.begin(); 
+       it != frames_.end(); it ++)
+  {
+    delete (*it);
+  }
 }
 
 //------------------------------------------------------------------------------
@@ -43,13 +46,31 @@ void SlpFile::load()
   setToPos();
   
   readHeader();
+  
+  SlpFrame *frame;
+  
+  for (u_int32_t i = 0; i < num_frames_; i++)
+  {
+    frame = new SlpFrame(getIstream(), tellg(), getPos(), 0);
+    frame->loadHeader();
+    
+    frames_.push_back(frame);
+  }
+  
+  for (std::vector<SlpFrame *>::iterator it = frames_.begin(); 
+       it != frames_.end(); it ++)
+  {
+    (*it)->load();
+    image_ = (*it)->getImage();
+  }
 }
 
 //------------------------------------------------------------------------------
 void SlpFile::readHeader()
 {
   std::string version = readString(4);
-  long frame_cnt = readLong();
+  num_frames_ = readUInt32();
+  
   std::string comment = readString(24);
 }
 

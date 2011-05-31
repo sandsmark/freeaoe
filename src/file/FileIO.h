@@ -21,6 +21,7 @@
 #define FILEIO_H
 
 #include <istream>
+#include <SFML/Config.hpp>
 
 class FileIO
 {
@@ -43,6 +44,16 @@ protected:
   std::istream* getIstream();
   
   //----------------------------------------------------------------------------
+  /// Get start pos.
+  //
+  std::streampos getPos();
+  
+  //----------------------------------------------------------------------------
+  /// Get file pos
+  //
+  std::streampos tellg();
+  
+  //----------------------------------------------------------------------------
   /// Sets file pointer to Pos
   //
   void setToPos();
@@ -57,13 +68,49 @@ protected:
   std::string readString(size_t size);
   
   //----------------------------------------------------------------------------
-  /// Reads a long from stream.
+  /// Reads a 4 byte int from stream.
   ///
   /// @param istr input stream
   /// @return read number
   //
-  long readLong(); 
-    
+  sf::Int32 readInt32(); 
+  
+  //----------------------------------------------------------------------------
+  /// Reads a 4 byte unsigned int from stream.
+  ///
+  /// @param istr input stream
+  /// @return read number
+  //
+  sf::Uint32 readUInt32(); 
+  
+  //----------------------------------------------------------------------------
+  /// Reads a 2 byte unsigned int from stream.
+  ///
+  /// @param istr input stream
+  /// @return read number
+  //
+  sf::Uint16 readUInt16(); 
+  
+  //----------------------------------------------------------------------------
+  /// Reads a 1 byte unsigned int from stream.
+  ///
+  /// @return read number
+  //
+  sf::Uint8 readUInt8(); 
+  
+  //----------------------------------------------------------------------------
+  /// Reads an array of 8 bit unsigned int from stream.
+  ///
+  /// @param size number of values
+  /// @return read number
+  //
+  sf::Uint8* readUInt8(size_t size); 
+  
+  //----------------------------------------------------------------------------
+  ///
+  //
+  char readChar();
+  
 private:
   std::istream *istr_;
   std::streampos pos_;

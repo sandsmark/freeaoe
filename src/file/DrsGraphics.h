@@ -34,6 +34,8 @@ public:
   virtual ~DrsGraphics();
     
   virtual void load(std::istream& istr);
+  
+  sf::Image *image_;
     
 private:
   long num_of_slp_;
