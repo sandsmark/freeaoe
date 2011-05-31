@@ -1,0 +1,124 @@
+<html>
+
+<head>
+
+<title>Age of Empires graphics</title>
+
+</head>
+
+<body BGCOLOR="#cccccc" link=#ff0000 vlink=#B00000 alink=#ff0000 text=#000000>
+<a name="top"></a>
+<br>
+
+<center>
+
+<h1>
+<font color=#0000cc>
+Age of Empires graphics
+</font>
+</h1>
+</center>
+<p>
+<h2>
+<font color=#000066>
+<a href="http://games.nextlevel.net/cartho/age/cgi/board/drs.cgi">.drs message board</a>
+</font>
+</h2>
+
+<p>
+The graphics of AoE cannot be replaced easily since they are encoded in the file <tt>graphics.drs.</tt> I have found out pretty much about the header, together with Steve.
+<p>
+I have also set up a <a href="http://games.nextlevel.net/cartho/age/cgi/board/drs.cgi">message board</a> so people can share their knowledge about the .drs file format. The information for every file seems to be encoded in 12 bytes per file in the header. There are 683 (0x02AB) such mini-headers. <b>Brian Yip</b> has made a list of all <a href="files/slplist.zip">.SLP descriptions</a> (12 K).
+<p>
+<h2>
+<font color=#000066>
+Hex dump of graphics.drs (important part)
+</font>
+</h2>
+
+<pre>
+00000000 436F 7079 7269 6768 7420 2863 2920 3139 Copyright (c) 19
+00000010 3937 2045 6E73 656D 626C 6520 5374 7564 97 Ensemble Stud
+00000020 696F 732E 1A00 0000 312E 3030 7472 6962 ios.....1.00trib
+00000030 6500 0000 0000 0000 0100 0000 5020 0000 e...........P ..
+00000040 2070 6C73 4C00 0000 AB02 0000 <font color=#0000cc>0000 0000</font>  plsL...........
+
+<b><font color=#660000>
+The format of the header is:
+40 bytes	string	CopyrightInfo
+4 bytes		string	File version (1.00)
+12 bytes	string	File type "tribe"
+4 bytes		Unknown?
+4 bytes		long	DRS HeaderLength (8272 bytes = 0x2050)
+8 bytes		Unknown?
+4 bytes		long	Number of sounds (683 = 0x2ab)
+8196 bytes	Array	Sounds lookup table
+</b></font>
+00000050 <font color=#0000cc>5020 0000 6112 0000</font> 0100 0000 B132 0000 P ..a........2..
+<b><font color=#660000>
+The first mini header starts at 0x004C.
+4 bytes		long	Graphic ID number (unique to each sound, starting at 0000)
+4 bytes		long	Offset to the start of the embedded RLE file
+4 bytes		long	Length of the embedded RLE file
+</font></b>
+
+00000060 2C14 0000 0200 0000 DD46 0000 45E0 0100 ,........F..E...
+00000070 0300 0000 2227 0200 5B8D 0000 0400 0000 ...."'..[.......
+00000080 7DB4 0200 2264 0000 0500 0000 9F18 0300 }..."d..........
+00000090 9B13 0000 0800 0000 3A2C 0300 7907 0000 ........:,..y...
+000000A0 0900 0000 B333 0300 7E07 0000 0A00 0000 .....3..~.......
+000000B0 313B 0300 3204 0000 0B00 0000 633F 0300 1;..2.......c?..
+000000C0 7F01 0000 0C00 0000 E240 0300 DC01 0000 .........@......
+000000D0 0D00 0000 BE42 0300 5901 0000 0F00 0000 .....B..Y.......
+000000E0 1744 0300 F43E 0000 1000 0000 0B83 0300 .D...>..........
+000000F0 F12F 0000 1100 0000 FCB2 0300 1057 0000 ./...........W..
+
+... (more and more header data)
+
+00002000 310C FF00 8206 0000 C602 0000 B312 FF00 1...............
+00002010 1F13 0000 C702 0000 D225 FF00 CA01 0000 .........%......
+00002020 C802 0000 9C27 FF00 1805 0000 C902 0000 .....'..........
+00002030 B42C FF00 B7C3 0100 CA02 0000 6BF0 0001 .,..........k...
+00002040 8810 0000 <font color=#ff0000>CB02 0000 F300 0101 F770 0000</font> .............p.. <font color=#ff0000>last header</font>
+<font color=#000066>00002050 322E 304E 0100 0000 5247 4520 524C 4520 2.0N....RGE RLE 
+00002060 7368 6170 6520 6669 6C65 0000 0000 0000 shape file......
+00002070 4C01 0000 4000 0000 0000 0000 0000 0000 L...@...........
+...      RLE bitmap data</font>
+</pre>
+
+<br><br>
+<center><table border=0>
+<tr>
+<td>
+<a href="#top"><img border=0 src="top.gif" alt="Top" align="bottom" width="66" height="60"></a>
+</td>
+<td>
+<a href="news.html"><img border=0  src="back.gif" alt="Back" align="bottom" width="63" height="63"></a>
+</td>
+</tr>
+<tr>
+<td align="center">
+<a href="#top">Top</a>
+</td>
+<td align="center">
+<a href="news.html">Back</a>
+</td>
+</tr>
+</table>
+<br>
+<b><font size=+1>
+<a href="index.html">Main</a> -
+<a href="files/index.html">Downloads</a> -
+<a href="faq.html">FAQ</a> -
+<a href="http://age.gamesmania.com/cgi-bin/board/age.cgi">Forum</a> -
+<a href="iviews.html">Interviews</a> -
+<a href="AoElinks.html">Links</a> -
+<a href="news.html">News</a> -
+<a href="ror/">Rise of Rome</a> -
+<a href="scn/index.html">Scenarios</a> - 
+<a href="strats.html">Strategies</a> - 
+<a href="tips.html">Tips</a> -
+<a href="units.html">Units</a>
+</font></b>
+
+</html>

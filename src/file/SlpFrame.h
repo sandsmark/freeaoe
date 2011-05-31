@@ -34,6 +34,7 @@ class ColorPalette;
 //------------------------------------------------------------------------------
 /// Class for reading a frame in a slp file.
 /// TODO: Check file corruption
+/// TODO: One (or more??) mask for player color and outline (and shadow?)
 //
 class SlpFrame : public FileIO
 {
@@ -56,12 +57,14 @@ public:
   virtual ~SlpFrame();
   
   //----------------------------------------------------------------------------
-  /// Loads header data.
+  /// Loads header data. The headers of frames are stored after the header of 
+  /// the slp file.
   //
   void loadHeader();
   
   //----------------------------------------------------------------------------
-  /// Loads frame data and creates an image.
+  /// Loads frame data and creates an image. Frame data is located after all
+  /// frame headers of the slp file.
   //
   void load();
   

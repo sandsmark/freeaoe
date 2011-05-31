@@ -21,6 +21,7 @@
 #define DRSGRAPHICS_H
 
 #include <map>
+#include <vector>
 
 #include "DrsFile.h"
 #include "SlpFile.h"

@@ -86,7 +86,7 @@ void SlpFrame::load()
   // Each row has it's commands, 0x0F signals the end of a rows commands.
   for (Uint32 row = 0; row < height_; row++)
   {
-    std::cout << row << ": " << std::hex << (int)(tellg() - file_pos_) << " ";
+    //std::cout << row << ": " << std::hex << (int)(tellg() - file_pos_) << std::endl;
     Uint8 data = 0;
     Uint32 pix_pos = left_edges_[row]; //pos where to start putting pixels
     
@@ -198,8 +198,6 @@ void SlpFrame::load()
       }
       
     }
-    
-    std::cout << std::endl;
   }
   
 }

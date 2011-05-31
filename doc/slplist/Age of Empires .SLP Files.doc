@@ -1,0 +1,720 @@
+{\rtf1\ansi\ansicpg1252\uc1 \deff0\deflang1033\deflangfe1033{\fonttbl{\f0\froman\fcharset0\fprq2{\*\panose 02020603050405020304}Times New Roman;}{\f1\fswiss\fcharset0\fprq2{\*\panose 020b0604020202020204}Arial;}{\f2\fmodern\fcharset0\fprq1{\*\panose 02070309020205020404}Courier New;}{\f3\froman\fcharset2\fprq2{\*\panose 05050102010706020507}Symbol;}}{\colortbl;\red0\green0\blue0;\red0\green0\blue255;\red0\green255\blue255;\red0\green255\blue0;\red255\green0\blue255;\red255\green0\blue0;\red255\green255\blue0;\red255\green255\blue255;\red0\green0\blue128;\red0\green128\blue128;\red0\green128\blue0;\red128\green0\blue128;\red128\green0\blue0;\red128\green128\blue0;\red128\green128\blue128;\red192\green192\blue192;}{\stylesheet{\nowidctlpar\widctlpar\adjustright \f1\fs20\cgrid \snext0 Normal;}{\*\cs10 \additive Default Paragraph Font;}{\s15\nowidctlpar\widctlpar\adjustright \f2\fs20\cgrid \sbasedon0 \snext15 Plain Text;}}{\*\listtable{\list\listtemplateid67698703\listsimple{\listlevel\levelnfc0\leveljc0\levelfollow0\levelstartat1\levelspace0\levelindent0{\leveltext\'02\'00.;}{\levelnumbers\'01;}\fi-360\li360\jclisttab\tx360 }{\listname ;}\listid74329523}{\list\listtemplateid67698703\listsimple{\listlevel\levelnfc0\leveljc0\levelfollow0\levelstartat1\levelspace0\levelindent0{\leveltext\'02\'00.;}{\levelnumbers\'01;}\fi-360\li360\jclisttab\tx360 }{\listname ;}\listid129717003}{\list\listtemplateid67698689\listsimple{\listlevel\levelnfc23\leveljc0\levelfollow0\levelstartat1\levelspace0\levelindent0{\leveltext\'01\u-3913 ?;}{\levelnumbers;}\f3\fbias0 \fi-360\li360\jclisttab\tx360 }{\listname ;}\listid224804082}{\list\listtemplateid67698703\listsimple{\listlevel\levelnfc0\leveljc0\levelfollow0\levelstartat1\levelspace0\levelindent0{\leveltext\'02\'00.;}{\levelnumbers\'01;}\fi-360\li360\jclisttab\tx360 }{\listname ;}\listid442961744}{\list\listtemplateid67698703\listsimple{\listlevel\levelnfc0\leveljc0\levelfollow0\levelstartat1\levelspace0\levelindent0{\leveltext\'02\'00.;}{\levelnumbers\'01;}\fi-360\li360\jclisttab\tx360 }{\listname ;}\listid585381984}{\list\listtemplateid67698703\listsimple{\listlevel\levelnfc0\leveljc0\levelfollow0\levelstartat1\levelspace0\levelindent0{\leveltext\'02\'00.;}{\levelnumbers\'01;}\fi-360\li360\jclisttab\tx360 }{\listname ;}\listid869605180}{\list\listtemplateid67698703\listsimple{\listlevel\levelnfc0\leveljc0\levelfollow0\levelstartat1\levelspace0\levelindent0{\leveltext\'02\'00.;}{\levelnumbers\'01;}\fi-360\li360\jclisttab\tx360 }{\listname ;}\listid1662348397}{\list\listtemplateid67698703\listsimple{\listlevel\levelnfc0\leveljc0\levelfollow0\levelstartat1\levelspace0\levelindent0{\leveltext\'02\'00.;}{\levelnumbers\'01;}\fi-360\li360\jclisttab\tx360 }{\listname ;}\listid1746876016}{\list\listtemplateid67698703\listsimple{\listlevel\levelnfc0\leveljc0\levelfollow0\levelstartat1\levelspace0\levelindent0{\leveltext
+\'02\'00.;}{\levelnumbers\'01;}\fi-360\li360\jclisttab\tx360 }{\listname ;}\listid1772895072}{\list\listtemplateid67698703\listsimple{\listlevel\levelnfc0\leveljc0\levelfollow0\levelstartat1\levelspace0\levelindent0{\leveltext\'02\'00.;}{\levelnumbers\'01;}\fi-360\li360\jclisttab\tx360 }{\listname ;}\listid1880892832}{\list\listtemplateid67698703\listsimple{\listlevel\levelnfc0\leveljc0\levelfollow0\levelstartat1\levelspace0\levelindent0{\leveltext\'02\'00.;}{\levelnumbers\'01;}\fi-360\li360\jclisttab\tx360 }{\listname ;}\listid1942685776}{\list\listtemplateid67698703\listsimple{\listlevel\levelnfc0\leveljc0\levelfollow0\levelstartat1\levelspace0\levelindent0{\leveltext\'02\'00.;}{\levelnumbers\'01;}\fi-360\li360\jclisttab\tx360 }{\listname ;}\listid2140801770}}{\*\listoverridetable{\listoverride\listid129717003\listoverridecount0\ls1}{\listoverride\listid224804082\listoverridecount0\ls2}{\listoverride\listid1662348397\listoverridecount0\ls3}{\listoverride\listid1772895072\listoverridecount0\ls4}{\listoverride\listid2140801770\listoverridecount0\ls5}{\listoverride\listid442961744\listoverridecount0\ls6}{\listoverride\listid74329523\listoverridecount0\ls7}{\listoverride\listid1880892832\listoverridecount0\ls8}{\listoverride\listid869605180\listoverridecount0\ls9}{\listoverride\listid1942685776\listoverridecount0\ls10}{\listoverride\listid585381984\listoverridecount0\ls11}{\listoverride\listid1746876016\listoverridecount0\ls12}}{\info{\title 000 -}{\author Jin & James Yip}{\operator Jin & James Yip}{\creatim\yr1998\mo1\dy1\hr9\min54}{\revtim\yr1998\mo1\dy1\hr9\min54}{\printim\yr1997\mo12\dy17\hr21\min35}{\version2}{\edmins1}{\nofpages19}{\nofwords3049}{\nofchars17382}{\*\company Arelescan Integrated Systems}{\nofcharsws21346}{\vern71}}\margl1319\margr1319 \widowctrl\ftnbj\aenddoc\formshade\viewkind4\viewscale100\pgbrdrhead\pgbrdrfoot \fet0\sectd \linex0\headery709\footery709\colsx709\endnhere\sectdefaultcl {\*\pnseclvl1\pnucrm\pnstart1\pnindent720\pnhang{\pntxta .}}{\*\pnseclvl2\pnucltr\pnstart1\pnindent720\pnhang{\pntxta .}}{\*\pnseclvl3\pndec\pnstart1\pnindent720\pnhang{\pntxta .}}{\*\pnseclvl4\pnlcltr\pnstart1\pnindent720\pnhang{\pntxta )}}{\*\pnseclvl5\pndec\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl6\pnlcltr\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl7\pnlcrm\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl8\pnlcltr\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl9\pnlcrm\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}\pard\plain \s15\nowidctlpar\widctlpar\adjustright \f2\fs20\cgrid {000 - \tab  Green clump of trees
+\par 001 - \tab  Brown clump of trees
+\par 002 - \tab  Four large plumes of fire
+\par 003 - \tab  Four small plumes of fire
+\par 004 - \tab  Four small plumes of fire
+\par 005 - \tab  Brown clump of trees
+\par 008 - \tab  Tree (brown fruits)
+\par 009 - \tab  Tree (red fruits)
+\par 010 - \tab  Bones 1
+\par 011 - \tab  Bones 2
+\par 012 - \tab  Bones 3
+\par 013 - \tab  (?) Small green clump
+\par 
+\par \page 015 - \tab Dock \tab \tab \tab \tab (Level 2 of 3 -  Egyptian) 
+\par 016 - \tab Academy \tab \tab \tab (Level 1 of 1 -  Egyptian)
+\par 017 - \tab Barracks \tab \tab \tab (Level 2 of 3 -  Egyptian)
+\par 018 - \tab Town Center \tab \tab (Level 3 of 4 -  Egyptian)
+\par 019 - \tab Siege Workshop \tab \tab (Level 1 of 1 -  Egyptian)
+\par 020 - \tab Granary \tab \tab \tab (Level 1 of 2 -  Egyptian)
+\par 021 - \tab House \tab \tab \tab (Level 2 of 4 -  Egyptian)
+\par 022 - \tab Government Center\tab \tab (Level 1 of 2 -  Egyptian)
+\par 023 - \tab Wall/Fortification\tab (Level 3 of 3 -  Egyptian)
+\par 024 - \tab Market\tab  \tab \tab (Level 2 of 3 -  Egyptian)
+\par 025 - \tab Wall/Fortification\tab (Level 2 of 3 -  Egyptian)
+\par 026 - \tab Storage Pit\tab \tab \tab (Level 2 of 3 -  Egyptian)
+\par 027 - \tab Archery Range \tab \tab (Level 1 of 2 -  Egyptian)
+\par 028 - \tab Stable\tab \tab  \tab (Level 2 of 2 -  Egyptian)
+\par 029 - \tab Temple\tab  \tab \tab (Level 1 of 2 -  Egyptian)
+\par 030 - \tab Wonder\tab \tab \tab (Level 1 of 1 -  Egyptian, UNUSED?)
+\par 031 - \tab Tower\tab \tab \tab \tab (Level 3 of 3 -  Egyptian)
+\par 032 - \tab House\tab \tab \tab \tab (Level ? of 3 -     ?    , UNUSED?)
+\par 033 - \tab Wonder\tab \tab  \tab (Level 1 of 1 -  Egyptian)
+\par 
+\par 034 - \tab (?) livery
+\par 035 - \tab (?) livery
+\par 036 - \tab (?) livery
+\par 037 - \tab (?) livery
+\par 038 - \tab (?) livery
+\par 039 - \tab (?) livery
+\par 040 - \tab (?) livery
+\par 041 - \tab (?) livery
+\par 042 - \tab (?) livery
+\par 043 - \tab (?) livery
+\par 044 - \tab (?) livery
+\par 045 - \tab (?) livery
+\par 046 - \tab (?) livery
+\par 047 - \tab (?) livery
+\par 048 - \tab (?) livery
+\par 050 - \tab (?) livery
+\par 051 - \tab (?) livery
+\par 
+\par 052 - \tab Razed Wall/Fortifica\rquote tn (Level ? of 3 -     ?    ) 
+\par 053 - \tab Razed Wall/Fortifica\rquote tn\tab (Level ? of 3 -     ?    )
+\par 054 - \tab Razed Wall/Fortifica\rquote tn\tab (Level ? of 3 -     ?    )
+\par 055 - \tab Razed Wall/Fortifica\rquote tn\tab (Level ? of 3 -     ?    )
+\par 056 - \tab (?) Small shadow
+\par 057 - \tab (?) Large shadow
+\par 
+\par \page 059 - \tab Dock\tab \tab \tab \tab (Level 2 of 3 -  Greek)
+\par 060 - \tab Academy\tab \tab \tab (Level 1 of 1 -  Greek)
+\par 061 - \tab Barracks \tab \tab \tab (Level 2 of 3 -  Greek)
+\par 062 - \tab Town Center \tab \tab (Level 3 of 4 -  Greek)
+\par 063 - \tab Siege Workshop \tab \tab (Level 1 of 1 -  Greek)
+\par 064 - \tab Granary \tab \tab \tab (Level 1 of 2 -  Greek)
+\par 065 - \tab House \tab \tab \tab (Level 2 of 4 -  Greek)
+\par 066 - \tab Government Center\tab \tab (Level 1 of 2 -  Greek)
+\par 067 - \tab Wall/Fortification\tab (Level 3 of 3 -  Greek)
+\par 068 - \tab Market\tab \tab \tab (Level 2 of 3 -  Greek)
+\par 069 - \tab Wall/Fortification\tab (Level 2 of 3 -  Greek)
+\par 070 - \tab Storage Pit \tab \tab (Level 2 of 3 -  Greek)
+\par 071 - \tab Archery Range \tab \tab (Level 1 of 2 -  Greek)
+\par 072 - \tab Stable\tab  \tab \tab (Level 2 of 2 -  Greek)
+\par 073 - \tab Temple\tab  \tab \tab (Level 1 of 2 -  Greek)
+\par 075 - \tab Tower\tab \tab \tab \tab (Level 3 of 3 -  Greek)
+\par 076 - \tab House\tab \tab \tab \tab (Level ? of 3 -    ?  , UNUSED?)
+\par 077 - \tab Wonder\tab \tab \tab (Level 3 of 3 -  Greek)
+\par 
+\par 078 - \tab (?) livery
+\par 079 - \tab (?) livery
+\par 080 - \tab (?) livery
+\par 081 - \tab (?) livery
+\par 082 - \tab (?) livery
+\par 083 - \tab (?) livery
+\par 084 - \tab (?) livery
+\par 085 - \tab (?) livery
+\par 086 - \tab (?) livery
+\par 087 - \tab (?) livery
+\par 088 - \tab (?) livery
+\par 089 - \tab (?) livery
+\par 090 - \tab (?) livery
+\par 091 - \tab (?) livery
+\par 092 - \tab (?) livery
+\par 094 - \tab (?) livery
+\par 095 - \tab (?) livery
+\par 
+\par 096 - \tab Razed Wall/Fortifica\rquote tn\tab (Level ? of 3 -    ?  )
+\par 097 - \tab Razed Wall/Fortifica\rquote tn\tab (Level ? of 3 -    ?  )
+\par 098 - \tab Razed Wall/Fortifica\rquote tn\tab (Level ? of 3 -    ?  )
+\par 099 - \tab Razed Wall/Fortifica\rquote tn\tab (Level ? of 3 -    ?  )
+\par 100 - \tab (?) Small shadow
+\par 101 - \tab (?) Large shadow
+\par 
+\par \page 103 - \tab Dock\tab \tab \tab \tab (Level 2 of 3 -  Asian)
+\par 104 - \tab Academy\tab \tab \tab (Level 1 of 1 -  Asian)
+\par 105 - \tab Barracks \tab \tab \tab (Level 2 of 3 -  Asian)
+\par 106 - \tab Town Center \tab \tab (Level 3 of 4 -  Asian)
+\par 107 - \tab Siege Workshop \tab \tab (Level 1 of 1 -  Asian)
+\par 108 - \tab Granary \tab \tab \tab (Level 1 of 2 -  Asian)
+\par 109 - \tab House \tab \tab \tab (Level 2 of 4 -  Asian)
+\par 110 - \tab Government Center\tab \tab (Level 1 of 2 -  Asian)
+\par 111 - \tab Wall/Fortification\tab (Level 3 of 3 -  Asian)
+\par 112 - \tab Market\tab \tab \tab (Level 2 of 3 -  Asian)
+\par 113 - \tab Wall/Fortification\tab (Level 2 of 3 -  Asian)
+\par 114 - \tab Storage Pit \tab \tab (Level 2 of 3 -  Asian)
+\par 115 - \tab Archery Range \tab \tab (Level 1 of 2 -  Asian)
+\par 116 - \tab Stable\tab  \tab \tab (Level 2 of 2 -  Asian)
+\par 117 - \tab Temple\tab  \tab \tab (Level 1 of 2 -  Asian)
+\par 119 - \tab Tower\tab \tab \tab \tab (Level 3 of 3 -  Asian)
+\par 120 - \tab House\tab \tab \tab \tab (Level ? of 3 -    ?  , UNUSED?)
+\par 121 - \tab Wonder\tab \tab \tab (Level 3 of 3 -  Asian)
+\par 
+\par 122 - \tab (?) livery
+\par 123 - \tab (?) livery
+\par 124 - \tab (?) livery
+\par 125 - \tab (?) livery
+\par 126 - \tab (?) livery
+\par 127 - \tab (?) livery
+\par 128 - \tab (?) livery
+\par 129 - \tab (?) livery
+\par 131 - \tab (?) livery
+\par 133 - \tab (?) livery
+\par 134 - \tab (?) livery
+\par 135 - \tab (?) livery
+\par 136 - \tab (?) livery
+\par 138 - \tab (?) livery
+\par 139 - \tab (?) livery
+\par 
+\par 140 - \tab Razed Wall/Fortifica\rquote tn\tab (Level ? of 3 -    ?  )
+\par 141 - \tab Razed Wall/Fortifica\rquote tn\tab (Level ? of 3 -    ?  )
+\par 142 - \tab Razed Wall/Fortifica\rquote tn\tab (Level ? of 3 -    ?  )
+\par 143 - \tab Razed Wall/Fortifica\rquote tn\tab (Level ? of 3 -    ?  )
+\par 144 - \tab (?) Small shadow
+\par 145 - \tab (?) Small shadow
+\par 
+\par \page 149 - \tab Tree (green pine)
+\par 150 - \tab Tree (deep green pine)
+\par 151 - \tab Tree (deep green pine)
+\par 152 - \tab Tree (brown pine))
+\par 153 - \tab Small debris wreck\tab (?)
+\par 154 - \tab Large debris wreck\tab (?)
+\par 155 - \tab Large debris wreck\tab (?)
+\par 156 - \tab Tiny black debris wreck\tab (?)
+\par 157 - \tab Tree (round)
+\par 
+\par \page 159 - \tab Dock\tab \tab \tab \tab (Level 2 of 3 -  Babylonian)
+\par 160 - \tab Academy\tab \tab \tab (Level 1 of 1 -  Babylonian)
+\par 161 - \tab Barracks \tab \tab \tab (Level 2 of 3 -  Babylonian)
+\par 162 - \tab Town Center \tab \tab (Level 3 of 4 -  Babylonian)
+\par 163 - \tab Siege Workshop \tab \tab (Level 1 of 1 -  Babylonian)
+\par 164 - \tab Granary \tab \tab \tab (Level 1 of 2 -  Babylonian)
+\par 165 - \tab House \tab \tab \tab (Level 2 of 4 -  Babylonian)
+\par 166 - \tab Government Center\tab \tab (Level 1 of 2 -  Babylonian)
+\par 167 - \tab Wall/Fortification\tab (Level 3 of 3 -  Babylonian)
+\par 168 - \tab Market\tab \tab \tab (Level 2 of 3 -  Babylonian)
+\par 169 - \tab Wall/Fortification\tab (Level 2 of 3 -  Babylonian)
+\par 170 - \tab Storage Pit \tab \tab (Level 2 of 3 -  Babylonian)
+\par 171 - \tab Archery Range \tab \tab (Level 1 of 2 -  Babylonian)
+\par 172 - \tab Stable\tab  \tab \tab (Level 2 of 2 -  Babylonian)
+\par 173 - \tab Temple\tab  \tab \tab (Level 1 of 2 -  Babylonian)
+\par 175 - \tab Tower\tab \tab \tab \tab (Level 3 of 3 -  Babylonian)
+\par 176 - \tab House\tab \tab \tab \tab (Level ? of 3 -      ?     , UNUSED?)
+\par 177 - \tab Wonder\tab \tab \tab (Level 3 of 3 -  Babylonian)
+\par 
+\par 178 - \tab (?) livery
+\par 179 - \tab (?) livery
+\par 180 - \tab (?) livery
+\par 181 - \tab (?) livery
+\par 182 - \tab (?) livery
+\par 183 - \tab (?) livery
+\par 184 - \tab (?) livery
+\par 185 - \tab (?) livery
+\par 186 - \tab (?) livery
+\par 187 - \tab (?) livery
+\par 188 - \tab (?) livery
+\par 189 - \tab (?) livery
+\par 190 - \tab (?) livery
+\par 191 - \tab (?) livery
+\par 192 - \tab (?) livery
+\par 194 - \tab (?) livery
+\par 195 - \tab (?) livery
+\par 
+\par 196 - \tab Razed Wall/Fortifica\rquote tn\tab (Level ? of 3 -    ?  )
+\par 197 - \tab Razed Wall/Fortifica\rquote tn\tab (Level ? of 3 -    ?  )
+\par 198 - \tab Razed Wall/Fortifica\rquote tn\tab (Level ? of 3 -    ?  )
+\par 199 - \tab Razed Wall/Fortifica\rquote tn\tab (Level ? of 3 -    ?  )
+\par 200 - \tab (?) Small shadow
+\par 201 - \tab (?) Small shadow
+\par 
+\par \page 202 - \tab Chariot Archer\tab \tab (facing S)
+\par 203 - \tab Bowman\tab \tab \tab (facing S)
+\par 204 - \tab Improved Bowman\tab \tab (facing S)
+\par 205 - \tab Axeman\tab \tab \tab (facing S)
+\par 206 - \tab Short Swordsman\tab \tab (facing S)
+\par 207 - \tab Ballista + Helepolis\tab (facing S)\tab 
+\par 208 - \tab Catapult + Heavy Catapult\tab \tab (facing S)
+\par 209 - \tab Horse Archer + Heavy Horse Archer\tab (facing S)
+\par 210 - \tab Heavy Cavalry + Cataphract\tab \tab (facing S)
+\par 211 - \tab Cavalry\tab \tab \tab (facing S)
+\par 212 - \tab Clubman\tab \tab \tab (facing S)
+\par 213 - \tab Chariot\tab \tab \tab (facing S)
+\par 214 - \tab Elephant Archer\tab \tab (facing S)
+\par 215 - \tab Elephant \tab \tab \tab (facing S, Gaia)
+\par 216 - \tab War Elephant\tab \tab (facing S)
+\par 217 - \tab Alligator \tab \tab \tab (facing S, Gaia)
+\par 218 - \tab House \tab \tab \tab (Level 1 of 4)
+\par 219 - \tab Long Swordsman + Legion\tab (facing S)
+\par 220 - \tab Broad Swordsman\tab \tab (facing S)
+\par 221 - \tab Phalanx + Centurion\tab (facing S)
+\par 222 - \tab Lion\tab \tab \tab \tab (facing S, Gaia)
+\par 223 - \tab Composite Bowman\tab \tab (facing S)
+\par 224 - \tab Villager \endash  \lquote boneman\rquote \tab (facing S)
+\par 225 - \tab Hoplite\tab \tab \tab (facing S)
+\par 226 - \tab Hero Jason\tab \tab \tab (facing S)
+\par 227 - \tab Scout\tab \tab \tab \tab (facing S)
+\par 228 - \tab War Elephant w/o rider \tab (facing S, ?)
+\par 
+\par 229 - \tab (?) livery
+\par 230 - \tab (?) livery
+\par 231 - \tab (?) livery
+\par 232 - \tab (?) livery
+\par 233 - \tab (?) livery
+\par 234 - \tab (?) livery
+\par 235 - \tab (?) livery
+\par 236 - \tab (?) livery
+\par 237 - \tab (?) livery
+\par 
+\par \page 238 - \tab Razed Wall/Fortifica\rquote tn\tab (Level 1 of 3)
+\par 239 - \tab Razed Farm
+\par 240 \endash  \tab Berry bush\tab \tab \tab (Gaia)
+\par 241 - \tab (?) Small shadow
+\par 242 - \tab Trireme + Ballista bolt
+\par 243 - \tab (?) Razed rod \endash  vertical
+\par 244 - \tab Artifact + War Chest\tab (Gaia -  controlled)
+\par 245 - \tab Artifact + War Chest\tab (Gaia -  uncontrolled)
+\par 246 \endash  \tab Discovery\tab \tab \tab (Gaia)
+\par 247 \endash  \tab Discovery\tab \tab \tab (Gaia, UNUSED?)
+\par 248 - \tab Ruins\tab \tab \tab  \tab (Gaia -  controlled)
+\par 249 - \tab Ruins\tab \tab \tab \tab (Gaia -  uncontrolled)
+\par 250 - \tab Temple (ruined)\tab \tab (Level ? of 2, UNUSED?)
+\par 252 - \tab (?) \lquote Match \endash  horizontal\rquote 
+\par 253 \endash  \tab (?) \lquote Fruit tree\rquote \tab \tab (UNUSED?)
+\par 254 \endash  \tab Barracks\tab \tab  \tab (Level 1 of 3)
+\par 255 - \tab (?) \lquote Fruit tree\rquote  \tab \tab (UNUSED?)
+\par 256 - \tab Unbuilt 1-square plot
+\par 257 - \tab (?) Small wood+stone pile
+\par 258 - \tab Unbuilt 4-square plot
+\par 259 \endash  \tab (?) Medium wood+stone pile
+\par 260 \endash  \tab (?) Large wood+stone pile
+\par 261 - \tab Unbuilt 9-square plot
+\par 262 - \tab (?) Small shipwreck
+\par 263 - \tab (?) Medium shipwreck\tab \tab 
+\par 264 - \tab (?) Large shipwreck\tab \tab 
+\par 265 \endash  \tab (?) Small shadow
+\par 266 \endash  \tab (?) Small shadow
+\par 267 - \tab (?) Small shadow
+\par 268 - \tab Bridge \tab \tab \tab (NWSE)
+\par 269 - \tab Bridge \tab \tab \tab (NESW)
+\par 270 - \tab Villager - carrying ?\tab \tab (facing S)
+\par 271 \endash  \tab Villager - carrying fish\tab (facing S)
+\par 272 \endash  \tab Villager - carrying meat\tab (facing S)
+\par 273 - \tab Villager - carrying wood\tab (facing S)
+\par 274 - \tab Villager - carrying stone\tab (facing S)
+\par \page 275 - \tab Cactus #?
+\par 276 - \tab Cactus #?
+\par 277 \endash  \tab Cactus #?
+\par 278 \endash  \tab Leafy plant\tab #?
+\par 280 - \tab Town Center \tab \tab (Level 1 of 4)
+\par 281 - \tab Villager - carrying gold\tab (facing S)
+\par 282 - \tab Cliff face #?
+\par 283 - \tab (?)\tab (BLANK)
+\par 284 \endash \tab \tab (?)\tab (BLANK)
+\par 285 \endash  \tab (?)\tab (BLANK)
+\par 286 - \tab (?)\tab (BLANK)
+\par 287 - \tab (?)\tab (BLANK)
+\par 288 - \tab (?)\tab (BLANK)
+\par 289 - \tab Cliff face #?
+\par 290 \endash  \tab (?)\tab (BLANK)
+\par 291 \endash  \tab (?)\tab (BLANK)
+\par 292 - \tab Glass Clump\tab #?
+\par 293 - \tab Glass Clump\tab #?
+\par 294 \endash \tab \tab Glass Clump\tab #?
+\par 295 - \tab Glass Clump\tab #?
+\par 296 \endash  \tab Glass Clump\tab #?
+\par 297 \endash \tab \tab Glass Clump\tab #?
+\par 298 - \tab Glass Clump\tab #?
+\par 299 - \tab Glass Clump\tab #?
+\par 300 - \tab Cactus #?
+\par 301 - \tab Cactus #?
+\par 302 \endash  \tab Unbuilt 16-square plot\tab (for Wonder)
+\par 303 \endash  \tab Terrain crack #?
+\par 304 - \tab Terrain crack #?
+\par 305 - \tab Terrain crack #?
+\par 306 - \tab Terrain crack #?
+\par 307 - \tab Terrain crack #?
+\par 
+\par \page 308 \endash  \tab Bowman\tab \tab \tab (nodding ?)
+\par 309 \endash  \tab Improved Bowman\tab \tab (nodding ?)
+\par 310 - \tab Chariot Archer\tab \tab (nodding ?)
+\par 311 - \tab Axeman\tab \tab \tab (nodding ?)
+\par 312 - \tab Short Swordsman\tab \tab (nodding ?)
+\par 313 - \tab Ballista + Helepolis \tab (nodding ?)
+\par 314 \endash  \tab Villager\tab \tab \tab (nodding ?)
+\par 315 \endash  \tab Villager \endash  builder\tab (nodding ?)
+\par 316 - \tab Catapult + Heavy Catapult\tab \tab (nodding ?)
+\par 317 - \tab Stone Thrower\tab \tab (nodding ?)
+\par 318 - \tab Horse Archer + Heavy Horse Archer\tab (nodding ?)
+\par 319 - \tab Heavy Cavalry + Cataphract\tab  \tab (nodding ?)
+\par 320 \endash  \tab Cavalry\tab \tab \tab (nodding ?)
+\par 321 \endash  \tab Clubman\tab \tab \tab (nodding ?)
+\par 322 - \tab Chariot\tab \tab \tab (nodding ?)
+\par 323 - \tab Elephant Archer \tab \tab (nodding ?)
+\par 324 - \tab Elephant\tab \tab \tab (nodding ?, Gaia)
+\par 325 - \tab War Elephant\tab  \tab (nodding ?)
+\par 326 \endash  \tab Villager \endash  farmer\tab \tab (nodding ?)
+\par 327 \endash  \tab Villager \endash  hunter\tab \tab (nodding ?)
+\par 328 - \tab Villager - forager\tab (nodding ?)
+\par 330 - \tab Alligator\tab \tab \tab (nodding ?, Gaia)
+\par 331 - \tab Gazelle\tab \tab \tab (nodding ?, Gaia)
+\par 332 - \tab Villager - fisherman \tab (nodding ?)
+\par 333 \endash  \tab Long Swordsman + Legion\tab (nodding ?)
+\par 334 \endash  \tab Broad Swordsman\tab \tab (nodding ?)
+\par 335 - \tab Phalanx + Centurion\tab (nodding ?)
+\par 336 - \tab Lion\tab \tab \tab \tab (nodding ?, Gaia)
+\par 337 - \tab Composite Bowman\tab \tab (nodding ?)
+\par 338 - \tab Villager \endash  warrior \tab (nodding ?)
+\par 339 \endash  \tab Villager \endash  miner\tab \tab (nodding ?)
+\par 340 \endash  \tab Hoplite\tab \tab \tab (nodding ?)
+\par 341 - \tab Priest\tab \tab \tab (nodding ?)
+\par 342 - \tab Hero Jason\tab \tab \tab (nodding ?)
+\par 343 - \tab Scout\tab \tab \tab \tab (nodding ?)
+\par 
+\par 344 - \tab Dead small tree\tab  \tab (UNUSED?)
+\par 345 \endash  \tab (?) \lquote Jolly Roger\rquote \tab \tab (UNUSED?)
+\par 346 \endash  \tab (?) \lquote Wooden Deer\rquote \tab \tab (UNUSED?)
+\par 347 - \tab (?) \lquote Dwarf\rquote \tab \tab \tab (UNUSED?)
+\par 
+\par \page 348 - \tab (?) Small shadow
+\par 349 - \tab (?) Small shadow
+\par 350 - \tab (?) Large shadow
+\par 351 \endash  \tab (?) Huge shadow
+\par 352 \endash  \tab (?) Huge shadow
+\par 353 - \tab (?) Huge shadow
+\par 354 - \tab (?) Huge shadow
+\par 355 - \tab Dock\tab \tab \tab \tab (Level 1 of 3)
+\par 356 - \tab Unbuilt Dock plot
+\par 357 \endash  \tab Unbuilt Dock plot\tab \tab (=356 ?)
+\par 358 \endash  \tab (?) Razed Dock\tab \tab \tab 
+\par 360 - \tab Catapult Ball
+\par 361 - \tab Dirt path #?
+\par 362 - \tab Dirt path #?
+\par 363 - \tab Dirt path #?
+\par 364 \endash  \tab Dirt path #?
+\par 365 \endash  \tab Dirt path #?
+\par 366 - \tab Dirt path #?
+\par 
+\par \page 367 - \tab Bowman\tab \tab \tab (dead!)
+\par 368 - \tab Improved Bowman\tab \tab (dead!)
+\par 369 - \tab Chariot Archer\tab \tab (dead!)
+\par 370 - \tab Axeman\tab \tab \tab (dead!)
+\par 371 \endash  \tab Short Swordsman\tab \tab (dead!)
+\par 372 \endash  \tab Ballista + Helepolis\tab (dead!)
+\par 373 - \tab Villager\tab \tab \tab (dead!)
+\par 374 - \tab Villager - builder\tab (dead!)
+\par 375 - \tab Catapult + Heavy Catapult\tab \tab (dead!)
+\par 376 - \tab Stone Thrower\tab \tab (dead!)
+\par 377 \endash  \tab Horse Archer + Heavy Horse Archer\tab (dead!)
+\par 378 \endash  \tab Heavy Cavalry + Cataphract\tab \tab (dead!)
+\par 379 - \tab Cavalry\tab \tab \tab (dead!)
+\par 380 - \tab Clubman\tab \tab \tab (dead!)
+\par 381 - \tab Chariot\tab \tab \tab (dead!)
+\par 
+\par 382 - \tab Desert Patch #?
+\par 383 \endash  \tab Desert Patch #?
+\par 384 \endash  \tab Desert Patch #?
+\par 
+\par 385 - \tab Elephant Archer\tab \tab (dead!)
+\par 386 - \tab Elephant\tab \tab \tab (dead!, Gaia)
+\par 387 - \tab War Elephant\tab \tab (dead!)
+\par 388 - \tab Villager \endash  farmer\tab \tab (dead!)
+\par 389 \endash  \tab Villager \endash  hunter\tab \tab (dead!)
+\par 390 \endash  \tab Villager \endash  forager\tab (dead!)
+\par 391 - \tab Alligator\tab \tab \tab (dead!, Gaia)
+\par 392 - \tab Gazelle\tab \tab \tab (dead!, Gaia)
+\par 393 - \tab Villager \endash  fisherman\tab (dead!)
+\par 394 - \tab Long Swordsman + Legion\tab (dead!)
+\par 395 \endash  \tab Broad Swordsman\tab \tab (dead!)
+\par 396 \endash  \tab Phalanx + Centurion\tab (dead!)
+\par 397 - \tab Lion\tab \tab \tab \tab (dead!, Gaia)
+\par 398 - \tab Composite Bowman\tab \tab (dead!)
+\par 399 - \tab Villager - warrior\tab (dead!)
+\par 400 - \tab Villager \endash  miner\tab \tab (dead!)
+\par 401 \endash  \tab Hoplite\tab \tab \tab (dead!)
+\par 402 \endash  \tab Priest\tab \tab \tab (dead!)
+\par 403 - \tab Scout\tab \tab \tab \tab (dead!)
+\par 
+\par 404 - \tab Bird - Eagle\tab \tab (facing S, Gaia)
+\par 405 - \tab (?) Discovery (Bird \endash  Eagle)\tab \tab \tab (UNUSED?)
+\par 406 - \tab Bird - Eagle\tab \tab (facing S, Gaia)
+\par 407 \endash  \tab (?) Bird \endash  Eagle shadow
+\par 409 \endash  \tab (?) Small explosion
+\par 410 - \tab (?) Large explosion
+\par 
+\par \page 412 - \tab Chariot Archer\tab \tab (standing ground)
+\par 413 - \tab Bowman\tab \tab \tab (standing ground)
+\par 414 - \tab Improved Bowman\tab \tab (standing ground)
+\par 415 \endash  \tab Axeman\tab \tab \tab (standing ground)
+\par 416 \endash  \tab Short Swordsman\tab \tab (standing ground)
+\par 417 - \tab Ballista + Helepolis\tab (standing ground)
+\par 418 -\tab \tab Villager\tab \tab \tab (standing ground)
+\par 419 -\tab \tab Villager \endash  builder\tab (standing ground)
+\par 420 - \tab Catapult + Heavy Catapult\tab \tab (standing ground)
+\par 421 -\tab \tab Stone Thrower\tab \tab (standing ground)
+\par 422 - \tab Horse Archer + Heavy Horse Archer\tab (standing ground)
+\par 423 - \tab Heavy Cavalry + Cataphract\tab \tab (standing ground)
+\par 424 - \tab Cavalry\tab \tab \tab (standing ground)
+\par 425 - \tab Clubman\tab \tab \tab (standing ground)
+\par 426 - \tab Chariot\tab \tab \tab (standing ground)
+\par 427 - \tab Elephant Archer\tab \tab (standing ground)
+\par 428 - \tab Elephant \tab \tab \tab (standing ground, Gaia)
+\par 429 - \tab War Elephant\tab \tab (standing ground)
+\par 430 -\tab \tab Villager \endash  farmer\tab \tab (standing ground)
+\par 431 - \tab Villager - hunter\tab \tab (standing ground)
+\par 432 -\tab \tab Villager \endash  forager\tab (standing ground)
+\par 433 -\tab \tab Alligator\tab \tab \tab (standing ground, Gaia)
+\par 434 -\tab \tab (?) \lquote Glowing thing\rquote \tab (UNUSED?)
+\par 435 -\tab \tab Villager \endash  fisherman\tab (standing ground)
+\par 436 - \tab Long Swordsman + Legion\tab (standing ground)
+\par 437 - \tab Broad Swordsman\tab \tab (standing ground)
+\par 438 - \tab Phalanx + Centurion\tab (standing ground)
+\par 439 - \tab Composite Bowman\tab \tab (standing ground)
+\par 440 - \tab Villager \endash  warrior\tab (standing ground)
+\par 441 - \tab Villager \endash  miner\tab \tab (standing ground)
+\par 442 -\tab \tab Hoplite\tab \tab \tab (standing ground)
+\par 443 -\tab \tab Priest\tab \tab \tab (standing ground)
+\par 444 - \tab Hero Jason\tab \tab \tab (standing ground)
+\par 445 - \tab Scout\tab \tab \tab \tab (standing ground)
+\par 446 - \tab War Elephant w/o rider \tab (standing ground)
+\par 
+\par \page 447 - \tab Farm\tab \tab \tab \tab (Level 1 of 1)
+\par 448 -\tab \tab Small stone wall\tab \tab (UNUSED?)
+\par 449 -\tab \tab Small wooden fence\tab (UNUSED?)
+\par 450 - \tab Huge plume of fire
+\par 451 - \tab Large plume of fire
+\par 452 - \tab Small plume of fire
+\par 453 - \tab Average plume of fire
+\par 454 -\tab \tab Tiny plume of fire
+\par 455 -\tab \tab Tiny plume of fire
+\par 456 - \tab Large plume of fire
+\par 457 - \tab Average plume of fire
+\par 458 - \tab (?)\tab (BLANK)
+\par 459 - \tab Single Pole Flag
+\par 460 -\tab \tab Double Pole Flag
+\par 461 -\tab \tab (?) Rock shadow
+\par 463 - \tab Tree \endash  Palm\tab #?
+\par 464 - \tab Tree \endash  Palm\tab #?
+\par 465 - \tab Tree \endash  Palm\tab #?
+\par 466 - \tab Tree \endash  Palm\tab #?
+\par 467 -\tab \tab (?) Shadow
+\par 468 -\tab \tab Tree \endash  Pine #?
+\par 469 - \tab Tree \endash  Spruce #?
+\par 470 - \tab Tree \endash  Pine\tab #?
+\par 471 - \tab Tree \endash  Pine\tab #?
+\par 472 - \tab (?) Shadow
+\par 473 -\tab \tab Fishing Boat\tab \tab (standing ground, moving S)
+\par 474 -\tab \tab Fishing Ship\tab \tab (standing ground, moving S)
+\par 475 - \tab Horse\tab \tab \tab  \tab (standing ground, Gaia, UNUSED?)
+\par 477 - \tab (?) \lquote Wings\rquote \tab  \tab \tab (UNUSED?)
+\par 478 - \tab Gazelle\tab \tab  \tab (standing ground, Gaia)
+\par 479 - \tab Gazelle\tab \tab  \tab (feeding ?, Gaia, ?)
+\par 480 -\tab \tab Gazelle\tab \tab \tab (nodding ?, Gaia, ?)
+\par 481 -\tab \tab Gold Mine
+\par 483 - \tab Grass path #?
+\par 484 - \tab Grass path #?
+\par 485 - \tab Grass path #?
+\par 486 - \tab Grass path #?
+\par 487 -\tab \tab Grass path #?
+\par 488 -\tab \tab Grass path #?
+\par 489 - \tab Unbuilt 1-square plot
+\par 490 - \tab (?) Debris plot
+\par 491 - \tab (?)\tab (BLANK)
+\par 492 - \tab Tree \endash  Oak #?
+\par 493 -\tab \tab Tree #?
+\par 494 -\tab \tab Dead Tree #?\tab \tab (UNUSED?)
+\par 495 - \tab Tree \endash  Oak #?
+\par 496 - \tab Nuke explosion\tab \tab 
+\par 497 - \tab Lion\tab \tab \tab \tab (standing guard, Gaia)
+\par 498 - \tab (?) \lquote Log\rquote 
+\par 499 -\tab \tab (?) \lquote Log\rquote 
+\par 500 -\tab \tab Market\tab \tab \tab (Level 1 of 3)
+\par 501 - \tab Nuke missile\tab \tab 
+\par 502 - \tab (?) \lquote Fruit tree\rquote \tab \tab (UNUSED?)
+\par \page 503 - \tab Tree \endash  Oak #?
+\par 504 - \tab Tree \endash  Oak #?
+\par 505 -\tab \tab Tree #?
+\par 506 -\tab \tab Tree \endash  Oak #?
+\par 507 - \tab Tree \endash  Oak #?
+\par 508 - \tab Tree \endash  Oak #?
+\par 509 - \tab Tree \endash  Oak #?
+\par 510 - \tab Tree \endash  Ash #?
+\par 511 -\tab \tab Tree \endash  Beech #?
+\par 512 -\tab \tab Tree \endash  Palm #?
+\par 513 - \tab Tree \endash  Palm #?
+\par 514 - \tab Tree \endash  Palm #?
+\par 515 - \tab Tree \endash  Palm #?
+\par 516 - \tab Tree \endash  Palm #?
+\par 518 -\tab \tab (?) Tiny shadow
+\par 519 -\tab \tab (?) Tiny shadow
+\par 520 - \tab (?) Discovery (Bird \endash  Hawk)\tab \tab \tab (UNUSED?)
+\par 521 -\tab \tab Bird - Hawk\tab \tab \tab (facing S, Gaia)
+\par 522 - \tab Tree \endash  Pine #?
+\par 523 - \tab Tree \endash  Spruce #?
+\par 524 -\tab \tab Tree \endash  Pine #?
+\par 525 -\tab \tab Tree \endash  Pine #?
+\par 526 - \tab Tree \endash  Pine #?
+\par 527 -\tab \tab Storage Pit\tab \tab \tab (Level 1 of 3)
+\par 528 - \tab Lion\tab \tab \tab \tab (standing guard, Gaia)
+\par 529 - \tab (?) Stone slab\tab \tab (Egyptian?, UNUSED?)
+\par 530 -\tab \tab (?) Stone slab\tab \tab (Babylonian?, UNUSED?)
+\par 531 -\tab \tab Rock #?
+\par 532 - \tab Rock #?
+\par 533 -\tab \tab Rock #?
+\par 534 - \tab Rock #?
+\par 535 - \tab Rock #?
+\par 536 -\tab \tab Rock #?
+\par 537 -\tab \tab Rock #?
+\par 538 - \tab Rock #?
+\par 539 -\tab \tab Rock #?
+\par 540 - \tab Rock #?
+\par 541 - \tab Rock #?
+\par 542 -\tab \tab Rock #?
+\par 543 -\tab \tab Rock #?
+\par 544 - \tab Rock #?
+\par 545 -\tab \tab Rock #?
+\par 546 - \tab Rock #?
+\par 547 - \tab Rock #?
+\par 548 -\tab \tab Rock #?
+\par 549 -\tab \tab Rock #?
+\par 550 - \tab Rock #?
+\par 551 -\tab \tab Rock #?
+\par 552 - \tab Rock #?
+\par 553 - \tab Rock #?
+\par 554 -\tab \tab Rock #?
+\par 555 -\tab \tab Rock #?
+\par 556 - \tab Rock #?
+\par 557 -\tab \tab Rock #?
+\par 558 - \tab Rock #?\tab \tab (UNUSED?)
+\par 559 - \tab (?) \lquote Fruit tree\rquote \tab (UNUSED?)
+\par \page 560 - \tab (?) Shadow
+\par 561 -\tab \tab (?) Shadow
+\par 562 -\tab \tab (?) Shadow
+\par 563 - \tab (?) Shadow
+\par 564 -\tab \tab (?) Shadow
+\par 565 - \tab (?) Shadow
+\par 566 - \tab (?) Shadow
+\par 567 -\tab \tab (?) Shadow
+\par 568 -\tab \tab (?) Shadow
+\par 569 - \tab (?) Shadow
+\par 570 -\tab \tab (?) Shadow
+\par 571 - \tab (?) Shadow
+\par 572 - \tab (?) Shadow
+\par 573 -\tab \tab (?) Shadow
+\par 574 -\tab \tab (?) Shadow
+\par 575 - \tab (?) Shadow
+\par 576 -\tab \tab (?) Shadow
+\par 577 - \tab (?) Shadow
+\par 578 - \tab (?) Shadow
+\par 579 -\tab \tab (?) Shadow
+\par 580 -\tab \tab (?) Shadow
+\par 581 - \tab (?) Shadow
+\par 582 -\tab \tab (?) Shadow
+\par 
+\par 583 - \tab Scout Ship + War Galley sail
+\par 584 - \tab (Catapult) Trireme + Juggernaut sail
+\par 
+\par 586 -\tab \tab (?) Small shadow
+\par 587 -\tab \tab (?) Small shadow
+\par 588 - \tab (?) Small shadow
+\par 589 -\tab \tab (?) Small shadow
+\par 590 - \tab (?) Small shadow
+\par 591 - \tab (?) Small shadow
+\par 592 -\tab \tab (?) Small shadow
+\par 
+\par 593 -\tab \tab Tower\tab \tab \tab \tab (Level 2 of 3)
+\par 594 - \tab (?)\tab (BLANK)
+\par 596 -\tab \tab Shallows #?
+\par 597 - \tab (?) Small shadow
+\par 598 -\tab \tab (?)\tab (BLANK)
+\par 599 - \tab Wall/Fortification\tab (Level 1 of 3)
+\par 600 -\tab \tab (?) Tiny shadow
+\par 601 - \tab (?)\tab (BLANK)
+\par 602 - \tab (?) Tiny shadow
+\par 
+\par 603 -\tab \tab Nuke Trooper\tab \tab (running)
+\par 604 -\tab \tab Nuke Trooper\tab \tab (kneeling shooting)
+\par 605 - \tab Nuke Trooper\tab \tab (prone shooting)
+\par 606 -\tab \tab Nuke Trooper\tab \tab (standing shooting)
+\par 607 - \tab Nuke Trooper\tab \tab (kneeling shooting)
+\par 608 - \tab Villager spear
+\par 609 -\tab \tab Stable\tab \tab \tab (Level 1 of 2)
+\par 
+\par \page 610 -\tab \tab Stone #?
+\par 611 - \tab Stone #?
+\par 612 -\tab \tab Stone #?
+\par 613 - \tab Stone #?
+\par 614 - \tab Stone #?
+\par 615 -\tab \tab Stone #?
+\par 616 -\tab \tab Stone path #?
+\par 617 - \tab Stone path #?
+\par 618 -\tab \tab Stone path #?
+\par 619 - \tab Stone path #?
+\par 620 - \tab Stone path #?
+\par 621 -\tab \tab Stone path #?
+\par 
+\par 622 -\tab \tab Stone mine \tab \tab \tab (semi-depleted?)
+\par 623 - \tab Tree stump #?
+\par 624 -\tab \tab Villager \endash  fisherman\tab (aiming)
+\par 625 - \tab Villager \endash  miner\tab \tab (mining)
+\par 626 - \tab Villager \endash  builder\tab (builder)
+\par 627 -\tab \tab Villager \endash  warrior\tab (striking)
+\par 628 -\tab \tab Villager \endash  builder\tab (building?)
+\par 629 - \tab Stone Thrower\tab \tab (facing S)
+\par 630 -\tab \tab Villager \endash  farmer\tab \tab (farming)
+\par 631 - \tab Villager \endash  hunter\tab \tab (aiming)
+\par 632 - \tab Villager \endash  forager\tab (foraging)
+\par 633 -\tab \tab Villager \endash  miner\tab \tab (mining?)
+\par 634 -\tab \tab Priest\tab \tab \tab (facing S)
+\par 636 - \tab Tree\tab \tab \tab \tab (semi-depleted)
+\par 637 -\tab \tab Tree\tab \tab \tab \tab (very depleted)
+\par 638 - \tab (?) \lquote Fallen pine tree\rquote \tab (UNUSED?)
+\par 639 - \tab Trade Boat\tab \tab \tab (standing ground, moving S)
+\par 640 -\tab \tab Merchant Ship\tab \tab (standing ground, moving S)
+\par 
+\par 641 -\tab \tab (?) Tree #?\tab \tab \tab (UNUSED?)
+\par 642 - \tab (?) Small shadow
+\par 643 -\tab \tab (?) \lquote Bare pine tree\rquote \tab (UNUSED?)
+\par 644 - \tab (?) Discovery (fallen bare pine tree)\tab (UNUSED?)
+\par 645 - \tab Tree \endash  Pine\tab #?\tab \tab 
+\par 646 -\tab \tab (?) Discovery (fallen pine tree)\tab \tab (UNUSED?)
+\par 
+\par 647 -\tab \tab Light Transport\tab \tab (standing ground)
+\par 648 - \tab Heavy Transport\tab \tab (standing ground)
+\par 649 -\tab \tab (?) \lquote Volcano erupting\rquote   (UNUSED?)
+\par 
+\par \page 650 - \tab Chariot Archer\tab \tab (moving S)
+\par 651 - \tab Scout\tab \tab \tab \tab (moving S)
+\par 652 -\tab \tab Bowman\tab \tab \tab (moving S)
+\par 653 -\tab \tab Improved Bowman\tab \tab (moving S)
+\par 654 - \tab Axeman\tab \tab \tab (moving S)
+\par 655 -\tab \tab Short Swordsman\tab \tab (moving S)
+\par 656 - \tab Ballista + Helepolis\tab (moving S)\tab 
+\par 657 - \tab Villager\tab \tab \tab (moving S)
+\par 658 -\tab \tab Villager \endash  builder\tab (moving S)\tab 
+\par 659 -\tab \tab Catapult + Heavy Catapult\tab \tab (moving S)
+\par 660 - \tab Stone Thrower\tab \tab (moving S)
+\par 661 -\tab \tab Horse Archer + Heavy Horse Archer\tab (moving S)
+\par 662 - \tab Heavy Cavalry + Cataphract\tab \tab (moving S)\tab 
+\par 663 - \tab Cavalry\tab \tab \tab (moving S)
+\par 664 -\tab \tab Clubman\tab \tab \tab (moving S)\tab 
+\par 665 -\tab \tab Chariot\tab \tab \tab (moving S)
+\par 666 - \tab Elephant Archer\tab \tab (moving S)
+\par 667 -\tab \tab Elephant\tab \tab \tab (moving S, Gaia)
+\par 668 - \tab (?) \lquote Xmas Ornament\rquote \tab (moving S)\tab 
+\par 669 - \tab War Elephant\tab \tab (moving S)
+\par 670 -\tab \tab Villager \endash  farmer\tab \tab (moving S)
+\par 671 -\tab \tab Villager - hunter\tab \tab (moving S)
+\par 672 - \tab Villager - forager\tab (moving S)
+\par 673 -\tab \tab Alligator\tab \tab \tab (moving S, Gaia)
+\par 674 - \tab (?) \lquote White wolf\rquote \tab \tab (UNUSED?)\tab 
+\par 675 - \tab (?) \lquote Brown frog\rquote \tab \tab (UNUSED?)
+\par 676 -\tab \tab Villager \endash  fisherman\tab (moving S)
+\par 677 -\tab \tab Long Swordsman + Legion\tab (moving S)
+\par 678 - \tab Broad Swordsman\tab \tab (moving S)
+\par 679 -\tab \tab Phalanx + Centurion\tab (moving S)
+\par 680 - \tab Lion\tab \tab \tab \tab (moving S, Gaia)\tab 
+\par 681 - \tab Composite Bowman\tab \tab (moving S)
+\par 682 -\tab \tab Villager - warrior\tab (moving S)
+\par 683 -\tab \tab Villager - miner\tab \tab (moving S)
+\par 684 - \tab Hoplite\tab \tab \tab (moving S)
+\par 685 -\tab \tab Priest\tab \tab \tab (moving S)
+\par 686 - \tab Hero Jason\tab \tab \tab (moving S)\tab 
+\par 687 - \tab War Elephant w/o rider\tab (moving S)
+\par 
+\par \page 688 -\tab \tab Tower\tab \tab \tab \tab (Level 1 of 3)
+\par 689 -\tab \tab (?)\tab (BLANK)
+\par 690 - \tab (?) \lquote Fruit tree\rquote \tab \tab (UNUSED?)
+\par 691 -\tab \tab War Galley\tab \tab \tab (standing ground, moving S)
+\par 692 - \tab Scout Ship\tab \tab \tab (standing ground, moving S)
+\par 693 - \tab (Catapult) Trireme + Juggernaut\tab (standing ground, moving S)
+\par 694 -\tab \tab Trireme paddles & markings\tab 
+\par 695 -\tab \tab Catapult Trireme + Juggernaut paddles & markings
+\par 696 - \tab Horse\tab \tab \tab  \tab (moving S, Gaia, UNUSED?)
+\par 697 -\tab \tab Fishing Ship net
+\par 698 - \tab (?) Stone slab\tab \tab (Egyptian?, UNUSED?)
+\par 699 - \tab Terrain crack #?
+\par 700 -\tab \tab Fishing Boat net
+\par 701 - \tab (?) Nuke missile warhead
+\par 702 -\tab \tab Cliff waterfall #?
+\par 704 - \tab (?) Villager \endash  Jihad warrior\tab 
+\par 705 - \tab (?) \lquote jack be nimble\rquote  flying Villager
+\par 706 -\tab \tab (?) Discovery (\lquote jack be nimble\rquote  flying Villager)\tab (UNUSED?)
+\par 707 -\tab \tab (?) \lquote Cool SpaceJet\rquote \tab (UNUSED?)
+\par 709 - \tab (?) Small shadow
+\par 710 -\tab \tab (?) Small shadow
+\par 711 - \tab (?) Small shadow\tab 
+\par 712 - \tab (?) Small shadow
+\par 713 -\tab \tab Winsett\rquote s_Z\tab \tab \tab (standing ground)
+\par 714 -\tab \tab (?) Nuke missile
+\par 715 -\tab \tab Winsett\rquote s_Z\tab \tab \tab (moving S)
+\par }}

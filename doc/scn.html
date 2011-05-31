@@ -1,0 +1,124 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+<title>Age of Empires .scn format</title>
+</head>
+<body alink="#ff0000" bgcolor="#cccccc" link="#ff0000" text="#000000" vlink="#B00000">
+<a name="top"></a>
+<br>
+<center>
+<h1>
+<font color="#0000cc">
+Age of Empires scenario file format
+</font>
+</h1>
+</center>
+<p>
+</p><h2>
+<a href="http://age.gamesmania.com/cgi-bin/board/drs.cgi">Message board</a>
+</h2>
+Other file formats used in AoE:
+<p>
+</p><ul>
+<li><a href="http://artho.com/age/drs.html">.drs files</a>
+</li><li><a href="http://artho.com/age/files/slplist.zip">.SLP descriptions</a> by <b>Brian Yip </b> (12 K)
+</li><li><a href="http://magic.hurrah.com/%7Esabre/graphpro/sprite3.html" target="_top">basics of RLE sprites</a>
+</li></ul>
+<p>
+I have also set up a <a href="http://age.gamesmania.com/cgi-bin/board/drs.cgi">message board</a> so people can share their knowledge about the different file formats.
+</p><h2>
+<font color="#000066">
+Scenario files
+</font>
+</h2>
+<p>
+<b>Whenever an incorrect .scn file is found, the scenario is replaced by a large, clear grass map.</b> So when you change a byte and get such a scenario, you will have to go back and try again :(
+<br>
+The strange thing is that if you save a scenario twice, you will get different files. For instance, <a href="http://artho.com/age/files/empty3.scn">this scenario</a> and <a href="http://artho.com/age/files/empty2.scn">that one</a> are entirely different files, but they are in fact the same scenario.
+</p><h2>
+<font color="#000066">
+Hex dump of a <a href="http://artho.com/age/files/empty3.scn">scenario file</a> (map size: tiny) that contains only water and a single fishing boat in the left corner of the diamond:
+</font>
+</h2>
+<p>
+</p><pre>00000000 <font color="#000066">312E 3131 14</font>00 0000 0200 0000 <font color="#660000">3A42 7435</font> 1.11........:Bt5
+</pre>
+The <font color="#000066">first five bytes</font> look like some version number; the <font color="#660000">bytes 0C to 0F</font> seem to be a timestamp (you can put 
+arbitrary stuff into it)
+<pre>00000010 0000 0000 0000 0000 0200 0000 EC9D <font color="#000066">BD4E</font> ...............N
+00000020 3241 1846 6759 4540 512A 6B12 29AC 4C74 2A.FgYE@Q*k.).Lt
+00000030 FD2B 8C10 6CA8 8CF1 0E88 D209 18B5 A1A3 .+..l...........
+00000040 F002 484C E8BC 165B 136F C2C2 FBC0 79D9 ..HL...[.o....y.
+00000050 19DC 8C3B 44A3 F988 1FE7 E4BC 997D 369B ...;D........}6.
+00000060 07C4 CD16 2623 8152 2A8A 1EAA 7A01 0000 ....&amp;#.R*...z...
+00000070 0000 0000 80FF 1CF9 3B80 9D05 B30A 1993 ........;.......
+00000080 2DA1 93E5 3899 179D 9C75 F292 9373 4ECE -...8....u...sN.
+00000090 3BB9 E0E4 6527 AF38 B9E8 E455 27AF 39B9 ;...e'.8...U'.9.
+000000A0 64B2 F979 FB4F 05D5 6A5F DFF5 A2AD DB8B d..y.O..j_......
+000000B0 CEC7 6539 553E 3AED 765A C7E5 E947 8966 ..e9U&gt;:.vZ...G.f
+000000C0 5D99 55E7 CDCE 65B7 3DAB F5AB EF7A 5647 ].U...e.=....zVG
+000000D0 B3FE 7C92 BFAD BFC8 E368 3492 F5D9 CCD0 ..|......h4.....
+000000E0 9C9F A72C 9F81 7D58 F9B8 D74F ADCD 8DF8 ...,..}X...O....
+000000F0 E1C5 30CC 7C0E 0000 0000 0000 0000 0000 ..0.|...........
+</pre>
+Now the fun starts :) &nbsp; So far, no one has been able to change a byte there without corrupting the scenario :(
+<pre>00000100 0000 0000 0000 0000 0000 00C0 5FC1 EE17 ............_...
+00000110 F909 C98D 620C C330 F334 BF89 3C8F 1B7A ....b..0.4..&lt;..z
+</pre>
+If you change anything below there, the game will hang when trying to load the scenario.
+<pre>00000120 9509 0244 4444 4444 4444 4444 4444 4444 ...DDDDDDDDDDDDD
+00000130 4444 4444 4444 4444 4444 4444 4444 4444 DDDDDDDDDDDDDDDD
+00000140 C4DF 313F DED1 DC38 8947 5837 C7FF 324F ..1?...8.GX7..2O
+00000150 F668 57E3 E9CB AA8A 2AF3 F632 AC4D DB8A .hW.....*..2.M..
+00000160 2D6F 3FAF CEAE 9ABD D64D 795B 8757 7D79 -o?......My[.W}y
+00000170 AD56 5115 391F 0461 8C7D 05FB B5C7 6963 .VQ.9..a.}....ic
+00000180 5F35 D16D 7A77 7428 D565 6C6F 688A E532 _5.mzwt(.eloh..2
+00000190 FB35 C4DF EF8D 3EF7 9A62 DB3B ADDB DFBB .5....&gt;..b.;....
+000001A0 9BD2 1B17 277B 7DDD FEDE BDB4 DE71 B1DB ....'{}......q..
+000001B0 9BD6 EDEF DD4F ED95 E2B4 5EB7 DBDF 7B90 .....O....^...{.
+000001C0 DEAB 8B7D BDC9 6E7F EFA1 0E03 DD3B A837 ...}..n......;.7
+000001D0 E47F 004C 7AC3 F14D 3CED 1E8B EF72 A7F7 ...Lz..M&lt;....r..
+000001E0 7D00 00
+</pre>    
+<font size="-1" face="Verdana,Arial,Helvetica">
+Age of Empires is a game by Microsoft &amp; Ensemble Studios.
+<br>
+All trademarks are property of their respective owners.
+</font>
+<p>                             
+<br><br>
+</p><center><table border="0">
+<tbody><tr>
+<td>
+<a href="#top"><img src="scn_files/top.gif" alt="Top" align="bottom" border="0" height="60" width="66"></a>
+</td>
+<td>
+<a href="http://artho.com/age/news.html"><img src="scn_files/back.gif" alt="Back" align="bottom" border="0" height="63" width="63"></a>
+</td>
+</tr>
+<tr>
+<td align="center">
+<a href="#top">Top</a>
+</td>
+<td align="center">
+<a href="http://artho.com/age/news.html">Back</a>
+</td>
+</tr>
+</tbody></table>
+<br>
+<b><font size="+1">
+<a href="http://artho.com/age/index.html">Main</a> -
+<a href="http://artho.com/age/files/index.html">Downloads</a> -
+<a href="http://artho.com/age/faq.html">FAQ</a> -
+<a href="http://age.gamesmania.com/cgi-bin/board/age.cgi">Forum</a> -
+<a href="http://artho.com/age/iviews.html">Interviews</a> -
+<a href="http://artho.com/age/AoElinks.html">Links</a> -
+<a href="http://artho.com/age/news.html">News</a> -
+<a href="http://artho.com/age/ror/">Rise of Rome</a> -
+<a href="http://artho.com/age/scn/index.html">Scenarios</a> - 
+<a href="http://artho.com/age/strats.html">Strategies</a> - 
+<a href="http://artho.com/age/tips.html">Tips</a> -
+<a href="http://artho.com/age/units.html">Units</a>
+</font></b>
+
+
+</center></body></html>
