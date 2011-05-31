@@ -84,15 +84,13 @@ void SlpFrame::load()
   // Each row has it's commands, 0x0F signals the end of a rows commands.
   for (Uint32 row = 0; row < height_; row++)
   {
-    std::cout << row << ": ";
+    std::cout << row << ": " << std::hex << (int)(tellg() - file_pos_) << " ";
     Uint8 data = 0;
     Uint32 pix_pos = left_edges_[row]; //pos where to start putting pixels
     
     while (data != 0x0F)
     {
       data = readUInt8();
-      
-      std::cout << std::hex <<  (int)data << " ";
       
       if (data == 0x0F)
         break;
@@ -138,7 +136,7 @@ void SlpFrame::load()
           setPixelsToColor(row, pix_pos, pix_cnt, sf::Color(0,0,0,0));
           break;
           
-        case 6: // copy and transform
+        case 6: // copy and transform (player color)
           data = (data & 0xF0) >> 4;
           
           if (data == 0)
@@ -163,7 +161,51 @@ void SlpFrame::load()
           setPixelsToColor(row, pix_pos, pix_cnt, 
                            palette_->getColorAt(color_index));
         break;
-        //*/
+        
+        case 0xA: // Transform block
+          data = (data & 0xF0) >> 4;
+          
+          if (data == 0)
+            pix_cnt = readUInt8();
+          else
+            pix_cnt = data;
+          
+          // TODO: readUint8() | player_color
+          color_index = readUInt8();
+          setPixelsToColor(row, pix_pos, pix_cnt, 
+                           palette_->getColorAt(color_index));
+        break;
+        
+        case 0x0B: // Shadow pixels
+          //TODO: incomplete
+          data = (data & 0xF0) >> 4;
+          
+          if (data == 0)
+            pix_cnt = readUInt8();
+          else
+            pix_cnt = data;
+          
+          pix_pos += pix_cnt; //skip until implemented
+          
+        break;
+        
+        case 0x0E: // extended commands.. TODO
+        
+          switch (cmd)
+          {
+            case 0x4E: //special color 1??
+            case 0x6E: // special color 2?
+              pix_pos += 1;
+            break;
+            
+            case 0x5E: //special color 1 run
+            case 0x7E: //special color 2 run
+              pix_cnt = readUInt8();
+              pix_pos += pix_cnt;
+            break;
+          }
+
+        break;
         default:
           //std::cout << (int) data << " ";
           break;
