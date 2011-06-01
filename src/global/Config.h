@@ -17,42 +17,47 @@
 */
 
 
-#ifndef RESOURCEMANAGER_H
-#define RESOURCEMANAGER_H
+#ifndef CONFIG_H
+#define CONFIG_H
+#include <string>
 
-#include "Resource.h"
-
-#include <memory>
-#include "Graphic.h"
-
-//------------------------------------------------------------------------------
-/// The resource manager is the primary interface for getting recourses. At
-/// initialization the manager loads header information from drs and other
-/// files and loads needed resources on the fly.
-//
-class ResourceManager
+class Config
 {
 public:
   //----------------------------------------------------------------------------
-  /// Initializes the resource manager once and returns its reference.
+  /// Get instance (singleton pattern)
+  ///
+  /// @return returns instance of config
   //
-  static ResourceManager* Inst();
+  static Config* Inst();
   
   //----------------------------------------------------------------------------
-  /// Destroys the resource manager. Has to be called on exit.
+  /// Deletes the config instance.
   //
   static void Destroy();
   
   //----------------------------------------------------------------------------
-  /// Returns 
+  /// Get path to the game.
+  ///
+  /// @return path pointing to the game dir
   //
-  std::auto_ptr<Graphic> getGraphic(unsigned int id);
+  std::string getGamePath();
   
+  //----------------------------------------------------------------------------
+  /// Get path of the data directory.
+  ///
+  /// @return path of data directory
+  //
+  std::string getDataPath();
+
 private:
-  ResourceManager();
-  virtual ~ResourceManager();
+  Config();
+  Config(const Config& other);
+  virtual ~Config();
   
-  static ResourceManager *instance_;
+  static Config *instance_;
+    
+  std::string game_dir_;  
 };
 
-#endif // RESOURCEMANAGER_H
+#endif // CONFIG_H

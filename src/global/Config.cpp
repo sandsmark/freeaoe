@@ -17,83 +17,52 @@
 */
 
 
-#include "SlpFile.h"
-#include "SlpFrame.h"
+#include "Config.h"
 
-#include <iostream>
+Config *Config::instance_ = 0;
 
 //------------------------------------------------------------------------------
-SlpFile::SlpFile()
+Config* Config::Inst()
+{
+  if (instance_ == 0)
+    instance_ = new Config();
+  
+  return instance_;
+}
+
+//------------------------------------------------------------------------------
+void Config::Destroy()
+{
+  delete instance_;
+}
+
+//------------------------------------------------------------------------------
+std::string Config::getGamePath()
+{
+  return Config::game_dir_;
+}
+
+//------------------------------------------------------------------------------
+std::string Config::getDataPath()
+{
+  return Config::game_dir_ += "Data/";
+}
+
+//------------------------------------------------------------------------------
+Config::Config()
+{
+  game_dir_ = "../aoe2/";
+}
+
+//------------------------------------------------------------------------------
+Config::Config(const Config& other)
 {
 
 }
 
 //------------------------------------------------------------------------------
-SlpFile::SlpFile(int32_t id, int32_t len, std::istream* istr, 
-                 std::streampos pos) : id_(id), FileIO(istr, pos),
-                 len_(len)
+Config::~Config()
 {
-}
 
-//------------------------------------------------------------------------------
-SlpFile::~SlpFile()
-{
-  for (std::vector<SlpFrame *>::iterator it = frames_.begin(); 
-       it != frames_.end(); it ++)
-  {
-    delete (*it);
-  }
-}
-
-//------------------------------------------------------------------------------
-void SlpFile::load()
-{
-  if (frames_.size() > 0) //already loaded
-    return;
-  
-  setToPos();
-  
-  readHeader();
-  
-  SlpFrame *frame = 0;
-  
-  for (u_int32_t i = 0; i < num_frames_; i++)
-  {
-    frame = new SlpFrame(getIstream(), tellg(), getPos(), 0);
-    frame->loadHeader();
-    
-    frames_.push_back(frame);
-  }
-
-  for (std::vector<SlpFrame *>::iterator it = frames_.begin(); 
-       it != frames_.end(); it ++)
-  {
-    (*it)->load();
-  }
-}
-
-//------------------------------------------------------------------------------
-sf::Uint32 SlpFile::getFrameCount()
-{
-  return num_frames_;
-}
-
-//------------------------------------------------------------------------------
-sf::Image* SlpFile::getImage(sf::Uint32 frame)
-{
-  if (frame >= frames_.size())
-    return 0;
-  
-  return frames_[frame]->getImage();
-}
-
-
-//------------------------------------------------------------------------------
-void SlpFile::readHeader()
-{
-  std::string version = readString(4);
-  num_frames_ = readUInt32();
-  
-  std::string comment = readString(24);
 }
 

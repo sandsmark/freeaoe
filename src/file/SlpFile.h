@@ -30,7 +30,7 @@
 
 class SlpFrame;
 
-class SlpFile : public FileIO //TODO: Not a resource, but a resource loader!!
+class SlpFile : public FileIO 
 {
 
 public:
@@ -54,13 +54,26 @@ public:
   //
   virtual ~SlpFile();
   
+  //----------------------------------------------------------------------------
+  /// Loads the file and its frames. If already loaded this method does nothing.
+  //
   void load();
   
+  //----------------------------------------------------------------------------
+  /// Return number of frames stored in the file. Available after load.
+  ///
+  /// @return number of frames
+  //
   sf::Uint32 getFrameCount();
   
-  sf::Image* getImageAt(sf::Uint32 frame);
-  
-  //sf::Image *image_; //DEBUG!!
+  //----------------------------------------------------------------------------
+  /// Returns pointer to the image at given frame or 0 if no image is at frame.
+  /// The image has not to be deleted!
+  ///
+  /// @param frame frame number, default = 0
+  /// @return image object or 0
+  //
+  sf::Image* getImage(sf::Uint32 frame=0);
   
 private:
   sf::Int32 id_;

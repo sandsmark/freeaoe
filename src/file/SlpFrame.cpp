@@ -106,8 +106,8 @@ void SlpFrame::load()
         break;
       
       /*
-       * Command description kindly taken from  Bryce Schroeders SLPLib
-       * bryce@lanset.com
+       * Command description and code snippets borrowed from  Bryce Schroeders 
+       * SLPLib (bryce@lanset.com). TODO: Ask him before releasing
        */
       Uint8 cmd = data & 0xF;
       
@@ -162,7 +162,7 @@ void SlpFrame::load()
                            palette_->getColorAt(color_index));
         break;
         
-        case 0xA: // Transform block
+        case 0xA: // Transform block (player color)
           pix_cnt = getPixelCountFromData(data);
           
           // TODO: readUint8() | player_color
@@ -182,18 +182,19 @@ void SlpFrame::load()
         
           switch (data)
           {
-            case 0x0E: //xflip?? skip??
+            /*case 0x0E: //xflip?? skip?? TODO
             case 0x1E:
               //row-= 1;   
             break;
+            */
             
-            case 0x4E: //special color 1??
-            case 0x6E: // special color 2?
+            case 0x4E: //Outline pixels TODO
+            case 0x6E: 
               pix_pos += 1;
             break;
             
-            case 0x5E: //special color 1 run
-            case 0x7E: //special color 2 run
+            case 0x5E: //Outline run TODO
+            case 0x7E: 
               pix_cnt = readUInt8();
               pix_pos += pix_cnt;
             break;
@@ -201,7 +202,8 @@ void SlpFrame::load()
 
         break;
         default:
-          //std::cout << (int) data << " ";
+          std::cerr << "SlpFrame: Unknown cmd at " << std::hex << 
+                  (int)(tellg() - file_pos_)<< ": " << (int) data << std::endl;
           break;
       }
       

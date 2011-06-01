@@ -77,8 +77,8 @@ void DrsGraphics::readSlpHeaders()
     
     slp_files_[id] = SlpFile(id, len, getIstream(), streampos(pos));
   }
-  slp_files_[5].load();
-  image_ = slp_files_[5].getImageAt(4);
+  slp_files_[15000].load();
+  image_ = slp_files_[15000].getImage(0);
 }
 
 

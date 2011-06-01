@@ -5,13 +5,14 @@
 #include <SFML/Graphics.hpp>
 
 #include "src/file/DrsGraphics.h"
+#include "src/global/Config.h"
 
 int main(int argc, char **argv) {
   std::cout << "Hello, world!" << std::endl;
     
   std::fstream file;
   
-  file.open("../aoe2/Data/graphics.drs");
+  file.open(std::string(Config::Inst()->getDataPath() + "terrain.drs").c_str());
   
   DrsGraphics gr;
   gr.load(file);
@@ -58,5 +59,7 @@ int main(int argc, char **argv) {
          // Update the window
          App.Display();
      }
+     
+  Config::Destroy();
   return 0;
 }
