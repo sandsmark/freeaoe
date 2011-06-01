@@ -17,40 +17,23 @@
 */
 
 
-#ifndef RESOURCEMANAGER_H
-#define RESOURCEMANAGER_H
+#ifndef GRAPHIC_H
+#define GRAPHIC_H
 
 #include "Resource.h"
 
-#include <memory>
-#include "Graphic.h"
-
 //------------------------------------------------------------------------------
-/// The resource manager is the primary interface for getting recourses. At
-/// initialization the manager loads header information from drs and other
-/// files and loads needed resources on the fly.
+/// A graphic resource contains one or more images. E.g. a unit animation
+/// like walk.
 //
-class ResourceManager
+class Graphic : public Resource
 {
+
 public:
-  //----------------------------------------------------------------------------
-  /// Initializes the resource manager, must be called before using it.
-  //
-  static void init();
-  
-  //----------------------------------------------------------------------------
-  /// Destroys the resource manager. Has to be called on exit.
-  //
-  static void destroy();
-  
-  //----------------------------------------------------------------------------
-  /// Returns 
-  //
-  static std::auto_ptr<Graphic> getGraphic(unsigned int id);
-  
+  Graphic();
+  virtual ~Graphic();
+    
 private:
-  ResourceManager();
-  virtual ~ResourceManager();
 };
 
-#endif // RESOURCEMANAGER_H
+#endif // GRAPHIC_H

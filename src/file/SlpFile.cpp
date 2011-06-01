@@ -61,14 +61,26 @@ void SlpFile::load()
     
     frames_.push_back(frame);
   }
-  
+
   for (std::vector<SlpFrame *>::iterator it = frames_.begin(); 
        it != frames_.end(); it ++)
   {
     (*it)->load();
-    image_ = (*it)->getImage(); //TODO: Create animation
   }
 }
+
+//------------------------------------------------------------------------------
+sf::Uint32 SlpFile::getFrameCount()
+{
+  return num_frames_;
+}
+
+//------------------------------------------------------------------------------
+sf::Image* SlpFile::getImageAt(sf::Uint32 frame)
+{
+  return frames_[frame]->getImage();
+}
+
 
 //------------------------------------------------------------------------------
 void SlpFile::readHeader()

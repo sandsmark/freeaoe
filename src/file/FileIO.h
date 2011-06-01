@@ -21,6 +21,7 @@
 #define FILEIO_H
 
 #include <istream>
+#include <memory>
 #include <SFML/Config.hpp>
 
 //------------------------------------------------------------------------------
@@ -109,6 +110,14 @@ protected:
   /// @return read number
   //
   sf::Uint16 readUInt16(); 
+  
+  //----------------------------------------------------------------------------
+  /// Reads a 2 byte int from stream.
+  ///
+  /// @param istr input stream
+  /// @return read number
+  //
+  sf::Int16 readInt16(); 
   
   //----------------------------------------------------------------------------
   /// Reads a 1 byte unsigned int from stream.

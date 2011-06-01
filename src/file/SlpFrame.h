@@ -88,8 +88,8 @@ private:
   sf::Int32 hotspot_x_;
   sf::Int32 hotspot_y_;
   
-  sf::Uint16 *left_edges_;
-  sf::Uint16 *right_edges_;
+  sf::Int16 *left_edges_;
+  sf::Int16 *right_edges_;
   
   sf::Image *image_;
   

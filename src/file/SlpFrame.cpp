@@ -28,7 +28,10 @@
 #include <assert.h>
 
 using sf::Uint8;
+using sf::Uint16;
 using sf::Uint32;
+
+using std::auto_ptr;
 
 SlpFrame::SlpFrame(std::istream* istr, std::streampos pos, 
                    std::streampos file_pos, ColorPalette *palette) 
@@ -45,6 +48,11 @@ SlpFrame::SlpFrame(std::istream* istr, std::streampos pos,
 SlpFrame::~SlpFrame()
 {
   delete palette_; //TODO
+  
+  delete [] left_edges_;
+  delete [] right_edges_;
+  
+  delete image_;
 }
 
 sf::Image* SlpFrame::getImage()
@@ -64,9 +72,7 @@ void SlpFrame::loadHeader()
   hotspot_x_ = readInt32();
   hotspot_y_ = readInt32();
   
-  
-  
-  std::cout << palette_offset_ << std::endl;
+ // std::cout << std::hex << (unsigned int)(tellg() - file_pos_) << std::endl;
 }
 
 void SlpFrame::load()
@@ -93,7 +99,9 @@ void SlpFrame::load()
     while (data != 0x0F)
     {
       data = readUInt8();
-      
+     
+      //if ( (tellg() - file_pos_) == 0x1630)
+      //  std::cout << row << ": " << std::hex << (int)(tellg() - file_pos_) << " cmd: " << (int)data<< std::endl;
       if (data == 0x0F)
         break;
       
@@ -172,11 +180,11 @@ void SlpFrame::load()
         
         case 0x0E: // extended commands.. TODO
         
-          switch (cmd)
+          switch (data)
           {
             case 0x0E: //xflip?? skip??
             case 0x1E:
-              row-= 1;   
+              //row-= 1;   
             break;
             
             case 0x4E: //special color 1??
@@ -207,22 +215,29 @@ void SlpFrame::readEdges()
 {
   std::streampos cmd_table_pos = file_pos_ + std::streampos(cmd_table_offset_);
   
-  left_edges_ = new sf::Uint16[height_];
-  right_edges_= new sf::Uint16[height_];
+  assert(left_edges_ == 0 && right_edges_ == 0);
+  
+  left_edges_ = new sf::Int16[height_];
+  right_edges_= new sf::Int16[height_];
   
   sf::Uint32 row_cnt = 0;
   
   while (tellg() < cmd_table_pos)
   {
-    left_edges_[row_cnt] = readUInt16();
-    right_edges_[row_cnt] = readUInt16();
+    left_edges_[row_cnt] = readInt16();
+    right_edges_[row_cnt] = readInt16();
     
-    // Set edges transparent
-    for (sf::Uint32 i=0; i < left_edges_[row_cnt]; i++)
-      image_->SetPixel(i, row_cnt, sf::Color(0,0,0,0));
-    
-    for (sf::Uint32 i=width_-1; i >= (width_ - right_edges_[row_cnt]); i--)
-      image_->SetPixel(i, row_cnt, sf::Color(0,0,0,0));
+    if (left_edges_[row_cnt] >= 0) // if first edge is -1 skip
+    {
+      assert((left_edges_[row_cnt] + right_edges_[row_cnt]) < width_);
+      
+      // Set edges transparent
+      for (sf::Uint32 i=0; i < left_edges_[row_cnt]; i++)
+        image_->SetPixel(i, row_cnt, sf::Color(0,0,0,0));
+      
+      for (sf::Uint32 i=width_-1; i >= (width_ - right_edges_[row_cnt]); i--)
+        image_->SetPixel(i, row_cnt, sf::Color(0,0,0,0));
+    }
     
     row_cnt ++;
   }

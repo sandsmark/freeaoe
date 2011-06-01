@@ -56,7 +56,11 @@ public:
   
   void load();
   
-  sf::Image *image_;
+  sf::Uint32 getFrameCount();
+  
+  sf::Image* getImageAt(sf::Uint32 frame);
+  
+  //sf::Image *image_; //DEBUG!!
   
 private:
   sf::Int32 id_;

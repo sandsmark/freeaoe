@@ -131,6 +131,19 @@ sf::Uint16 FileIO::readUInt16 ()
 }
 
 //------------------------------------------------------------------------------
+sf::Int16 FileIO::readInt16 ()
+{
+  sf::Int16 ret = 0;
+  
+  if (!istr_->eof())
+  {
+    istr_->read(reinterpret_cast<char *>(&ret), 2);
+  }
+  
+  return ret;
+}
+
+//------------------------------------------------------------------------------
 sf::Uint8 FileIO::readUInt8()
 {
   sf::Uint8 ret = 0;
