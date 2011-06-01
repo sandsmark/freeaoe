@@ -25,12 +25,8 @@
 using std::ios_base;
 using std::streampos;
 
-DrsGraphics::DrsGraphics()
-{
-
-}
-
-DrsGraphics::DrsGraphics(const DrsGraphics& other)
+DrsGraphics::DrsGraphics(std::map< long int, SlpFile > &slp_files): DrsFile(),
+                         slp_files_(slp_files)
 {
 
 }

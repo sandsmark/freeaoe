@@ -10,17 +10,14 @@
 int main(int argc, char **argv) {
   std::cout << "Hello, world!" << std::endl;
     
-  std::fstream file;
   
-  file.open(std::string(Config::Inst()->getDataPath() + "terrain.drs").c_str());
-  
-  DrsGraphics gr;
-  gr.load(file);
+  //DrsGraphics gr;
+  //gr.load(file);
   
   sf::Sprite spr;
   spr.SetX(200);
   spr.SetY(200);
-  spr.SetImage(*gr.image_);
+  //spr.SetImage(*gr.image_);
   
   //gr.load(file);
   /*

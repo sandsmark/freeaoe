@@ -19,6 +19,11 @@
 
 #include "ResourceManager.h"
 
+#include <fstream>
+
+#include <file/DrsGraphics.h>
+#include <global/Config.h>
+
 ResourceManager *ResourceManager::instance_ = 0;
 
 //------------------------------------------------------------------------------
@@ -46,5 +51,16 @@ ResourceManager::ResourceManager()
 ResourceManager::~ResourceManager()
 {
 
+}
+
+//------------------------------------------------------------------------------
+void ResourceManager::initialize()
+{
+  std::fstream file;
+  
+  file.open(std::string(Config::Inst()->getDataPath() + "terrain.drs").c_str());
+  
+  DrsGraphics gr(slp_files_);
+  gr.load(file);
 }
 

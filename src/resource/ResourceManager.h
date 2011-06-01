@@ -23,7 +23,9 @@
 #include "Resource.h"
 
 #include <memory>
+#include <map>
 #include "Graphic.h"
+#include <file/SlpFile.h>
 
 //------------------------------------------------------------------------------
 /// The resource manager is the primary interface for getting recourses. At
@@ -53,6 +55,13 @@ private:
   virtual ~ResourceManager();
   
   static ResourceManager *instance_;
+  
+  std::map<long, SlpFile> slp_files_;
+ 
+  //----------------------------------------------------------------------------
+  /// Loads all resource headers.
+  //
+  void initialize();
 };
 
 #endif // RESOURCEMANAGER_H
