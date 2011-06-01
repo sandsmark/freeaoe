@@ -20,17 +20,22 @@
 #include "SlpFile.h"
 #include "SlpFrame.h"
 
+#include <iostream>
 
+//------------------------------------------------------------------------------
 SlpFile::SlpFile()
 {
 
 }
 
+//------------------------------------------------------------------------------
 SlpFile::SlpFile(int32_t id, int32_t len, std::istream* istr, 
-                 std::streampos pos) : FileIO(istr, pos), id_(id), len_(len)
+                 std::streampos pos) : id_(id), FileIO(istr, pos),
+                 len_(len)
 {
 }
 
+//------------------------------------------------------------------------------
 SlpFile::~SlpFile()
 {
   for (std::vector<SlpFrame *>::iterator it = frames_.begin(); 
@@ -61,7 +66,7 @@ void SlpFile::load()
        it != frames_.end(); it ++)
   {
     (*it)->load();
-    image_ = (*it)->getImage();
+    image_ = (*it)->getImage(); //TODO: Create animation
   }
 }
 

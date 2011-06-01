@@ -17,56 +17,48 @@
 */
 
 
-#ifndef SLPFILE_H
-#define SLPFILE_H
+#ifndef RESOURCE_H
+#define RESOURCE_H
+#include <SFML/Config.hpp>
 
-#include <istream>
-#include <vector>
-
-#include "FileIO.h"
-#include "../resource/Resource.h"
-
-#include <SFML/Graphics/Image.hpp>
-
-class SlpFrame;
-
-class SlpFile : public FileIO //TODO: Not a resource, but a resource loader!!
+//------------------------------------------------------------------------------
+/// All data in age of empires inherit from resource. A resource can be
+/// a palette, a sprite, music or map descriptions. Each resource seems to
+/// have its individual id.
+//
+class Resource
 {
 
 public:
   //----------------------------------------------------------------------------
   /// Constructor
-  //
-  SlpFile();
-  
-  //----------------------------------------------------------------------------
-  /// Constructor
   ///
   /// @param id resources' id
-  /// @param len 
-  /// @param istr input stream
-  /// @param pos start position of this file in stream
   //
-  SlpFile(sf::Int32 id, sf::Int32 len, std::istream *istr, std::streampos pos);
+  Resource(sf::Uint32 id);
   
   //----------------------------------------------------------------------------
   /// Destructor
   //
-  virtual ~SlpFile();
+  virtual ~Resource();
   
-  void load();
+  //----------------------------------------------------------------------------
+  /// Gets resources' id
+  ///
+  /// @return id of resource
+  //
+  sf::Uint32 getId();
   
-  sf::Image *image_;
+protected:
+  //----------------------------------------------------------------------------
+  /// Sets resources' id
+  ///
+  /// @param id new id
+  //
+  void setId(sf::Uint32 id);
   
 private:
-  sf::Int32 id_;
-  sf::Int32 len_;
-  
-  sf::Uint32 num_frames_;
-  
-  std::vector<SlpFrame *> frames_;
-  
-  void readHeader();
+  sf::Uint32 id_;
 };
 
-#endif // SLPFILE_H
+#endif // RESOURCE_H
