@@ -23,8 +23,9 @@
 #include <iostream>
 #include <memory>
 
-#include <file/DrsGraphics.h>
 #include <global/Config.h>
+
+#include <file/DrsFile.h>
 
 //------------------------------------------------------------------------------
 ResourceManager* ResourceManager::Inst()

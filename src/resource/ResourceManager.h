@@ -27,7 +27,8 @@
 #include <fstream>
 #include "Graphic.h"
 #include <file/SlpFile.h>
-#include <file/DrsGraphics.h>
+
+class DrsFile;
 
 //------------------------------------------------------------------------------
 /// The resource manager is the primary interface for getting recourses. At

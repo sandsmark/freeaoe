@@ -4,8 +4,7 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "src/file/DrsGraphics.h"
-#include "src/global/Config.h"
+#include <global/Config.h>
 #include <resource/ResourceManager.h>
 
 int main(int argc, char **argv) {
