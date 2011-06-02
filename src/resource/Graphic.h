@@ -38,6 +38,7 @@ public:
   
   sf::Image *getImage();
     
+  virtual void load();
 private:
   
   SlpFile *slp_file_;

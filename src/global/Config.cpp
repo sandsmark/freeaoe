@@ -19,21 +19,16 @@
 
 #include "Config.h"
 
-Config *Config::instance_ = 0;
-
 //------------------------------------------------------------------------------
 Config* Config::Inst()
 {
-  if (instance_ == 0)
-    instance_ = new Config();
-  
-  return instance_;
+  static Config config;
+  return &config;
 }
 
 //------------------------------------------------------------------------------
 void Config::Destroy()
 {
-  delete instance_;
 }
 
 //------------------------------------------------------------------------------

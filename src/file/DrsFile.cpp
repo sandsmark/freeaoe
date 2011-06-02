@@ -23,19 +23,22 @@
 
 //Debug
 #include <iostream>
+#include <resource/ResourceManager.h>
 
 using std::string;
+using sf::Uint32;
 
 //------------------------------------------------------------------------------
-DrsFile::DrsFile(std::iostream* istr, std::streampos pos): FileIO(istr, pos)
+/*DrsFile::DrsFile(std::iostream* iostr, std::streampos pos): FileIO(iostr, pos)
 {
-
-}
+  header_loaded_ = false;
+}*/
 
 //------------------------------------------------------------------------------
-DrsFile::DrsFile(string file_name): FileIO(file_name)
+DrsFile::DrsFile(string file_name, ResourceManager *resource_manager)
+                 : FileIO(file_name), resource_manager_(resource_manager)
 {
-
+  header_loaded_ = false;
 }
 
 
@@ -47,18 +50,58 @@ DrsFile::~DrsFile()
 
 
 //------------------------------------------------------------------------------
-void DrsFile::load()
+void DrsFile::loadHeader()
 {
-  string copy_right = readString(40);
-  std::cout << copy_right << std::endl;
-  
-  string version = readString(4);
-  std::cout << version << std::endl;
-  
-  //File type
-  std::cout << readString(12) << std::endl;
-  
-  num_of_tables_ = readUInt32();
+  if (header_loaded_)
+    std::cerr << "Warn: Trying to load header again!" << std::endl;
+  else
+  {
+    string copy_right = readString(40);
+    std::cout << copy_right << std::endl;
+    
+    string version = readString(4);
+    std::cout << version << std::endl;
+    
+    //File type
+    std::cout << readString(12) << std::endl;
+    
+    num_of_tables_ = readUInt32();
+    header_offset_ = readUInt32();
+    
+    // Load table data
+    for (Uint32 i = 0; i < num_of_tables_; i++)
+    {
+      table_types_.push_back(readString(8));
+      table_num_of_files_.push_back(readUInt32());
+      std::cout << table_types_[i] << std::endl;
+      
+      std::cout <<  table_types_[i].find(" plsL") << std::endl;
+    }
+   
+    Resource *res = 0;
+   
+    // Load file headers
+    for (Uint32 i = 0; i < num_of_tables_; i++)
+    {
+      for (Uint32 j = 0; j < table_num_of_files_[i]; j++)
+      {
+        sf::Uint32 id = readUInt32();
+        sf::Uint32 pos = readUInt32();
+        sf::Uint32 len = readUInt32();
+                
+        if (table_types_[i].find(" plsL") == 0)
+        {
+          SlpFile *slp = new SlpFile(id, pos, len, getIOStream());
+          res = new Graphic(slp);
+        }
+        
+        resource_manager_->addResource(res);
+      }
+    }
+      
+    
+    header_loaded_ = true;
+  }
 }
 
 

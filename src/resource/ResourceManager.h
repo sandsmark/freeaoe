@@ -52,14 +52,16 @@ public:
   //
   std::auto_ptr<Graphic> getGraphic(unsigned int id);
   
+  void addResource(Resource *);
+  
 private:
   ResourceManager();
   virtual ~ResourceManager();
   
-  static ResourceManager *instance_;
-  
   std::vector<DrsFile *> drs_files_;
   std::map<long, SlpFile *> slp_files_;
+  
+  std::map<sf::Uint32, Resource *> resources_;
   
   std::fstream terrain_file_;
   std::fstream graphics_file_;
@@ -68,6 +70,8 @@ private:
   /// Loads all resource headers.
   //
   void initialize();
+  
+  void loadDrs(std::string file_name);
 };
 
 #endif // RESOURCEMANAGER_H

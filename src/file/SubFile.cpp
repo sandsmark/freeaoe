@@ -17,25 +17,23 @@
 */
 
 
-#include "Resource.h"
+#include "SubFile.h"
 
-using sf::Uint32;
-
-//------------------------------------------------------------------------------
-Resource::Resource(Uint32 id) : id_(id)
+SubFile::SubFile(std::string file_name) : FileIO(file_name)
 {
 
 }
 
-//------------------------------------------------------------------------------
-Resource::~Resource()
+SubFile::SubFile(sf::Uint32 id, sf::Uint32 pos, sf::Uint32 len, 
+                 std::iostream* iostr): FileIO(iostr, std::streampos(pos)), 
+                 id_(id), pos_(pos), len_(len)
 {
 
 }
 
-//------------------------------------------------------------------------------
-Uint32 Resource::getId()
+SubFile::~SubFile()
 {
-  return id_;
+
 }
+
 

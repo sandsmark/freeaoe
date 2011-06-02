@@ -47,8 +47,8 @@ public:
   /// @param istr input/output stream
   /// @param pos start position of this file in stream
   //
-  SlpFile(sf::Int32 id, sf::Int32 len, std::iostream *iostr, 
-          std::streampos pos);
+  SlpFile(sf::Uint32 id, sf::Uint32 pos, sf::Uint32 len, std::iostream *iostr 
+          );
   
   //----------------------------------------------------------------------------
   /// Destructor
@@ -80,8 +80,8 @@ public:
   sf::Image* getImage(sf::Uint32 frame=0);
   
 private:
-  sf::Int32 id_;
-  sf::Int32 len_;
+  sf::Uint32 id_;
+  sf::Uint32 len_;
   
   sf::Uint32 num_frames_;
   

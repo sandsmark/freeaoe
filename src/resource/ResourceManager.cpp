@@ -26,29 +26,26 @@
 #include <file/DrsGraphics.h>
 #include <global/Config.h>
 
-ResourceManager *ResourceManager::instance_ = 0;
-
 //------------------------------------------------------------------------------
 ResourceManager* ResourceManager::Inst()
 {
-  if (instance_ == 0)
-    instance_ = new ResourceManager();
-  
-  return instance_;
+  static ResourceManager rm;
+  return &rm;
 }
 
 //------------------------------------------------------------------------------
 void ResourceManager::Destroy()
 {
-  delete instance_;
+
 }
+
 
 //------------------------------------------------------------------------------
 std::auto_ptr< Graphic > ResourceManager::getGraphic(unsigned int id)
 {
-  std::map<long int, SlpFile *>::iterator pos = slp_files_.find(id);
+  std::map<sf::Uint32, Resource *>::iterator pos = resources_.find(id);
   
-  if (pos == slp_files_.end())
+  if (pos == resources_.end())
   {
     std::cerr << "Graphic " << id << " not found!" << std::endl;
     return std::auto_ptr< Graphic > (0);
@@ -56,8 +53,16 @@ std::auto_ptr< Graphic > ResourceManager::getGraphic(unsigned int id)
   else
   {
     pos->second->load();
-    return std::auto_ptr< Graphic >( new Graphic(pos->second) );
+    Graphic *g = dynamic_cast<Graphic *>(pos->second);
+    return std::auto_ptr< Graphic >( g );
   }
+}
+
+//------------------------------------------------------------------------------
+void ResourceManager::addResource(Resource* res)
+{
+  //TODO: check if already added
+  resources_[res->getId()] = res;
 }
 
 
@@ -76,15 +81,18 @@ ResourceManager::~ResourceManager()
 //------------------------------------------------------------------------------
 void ResourceManager::initialize()
 {
-  std::string terrain_path(Config::Inst()->getDataPath() + "terrain.drs");
-  DrsGraphics *g_terrain = new DrsGraphics(terrain_path.c_str(), &slp_files_);
-  g_terrain->load();
-  
-  drs_files_.push_back(g_terrain);
-  
-  std::string graphics_path(Config::Inst()->getDataPath() + "graphics.drs");
-  g_terrain = new DrsGraphics(graphics_path.c_str(), &slp_files_);
-  g_terrain->load();
-  
-  drs_files_.push_back(g_terrain);
+  loadDrs("graphics.drs");
+  loadDrs("terrain.drs");
+  //loadDrs("interfac.drs");
 }
+
+//------------------------------------------------------------------------------
+
+void ResourceManager::loadDrs(std::string file_name)
+{
+  DrsFile *drs = new DrsFile(Config::Inst()->getDataPath() + file_name, this);
+  drs->loadHeader();
+  
+  drs_files_.push_back(drs);
+}
+

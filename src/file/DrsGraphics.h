@@ -34,17 +34,14 @@ public:
               std::map<long, SlpFile *> *slp_files);
   
   DrsGraphics(std::string file_name, std::map<long, SlpFile *> *slp_files);
-//  DrsGraphics(const DrsGraphics& other);
+
   virtual ~DrsGraphics();
     
   virtual void load();
   
-  sf::Image *image_;
     
 private:
   long num_of_slp_;
-  
-  std::streampos start_of_slp_;
   
   std::map<long, SlpFile *> *slp_files_;
   

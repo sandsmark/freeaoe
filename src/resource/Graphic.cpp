@@ -38,3 +38,9 @@ sf::Image* Graphic::getImage()
 {
   return slp_file_->getImage();
 }
+
+void Graphic::load()
+{
+  slp_file_->load();
+}
+

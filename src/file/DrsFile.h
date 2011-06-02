@@ -22,6 +22,9 @@
 
 #include <iostream>
 #include "FileIO.h"
+#include <vector>
+
+class ResourceManager;
 
 //------------------------------------------------------------------------------
 /// Base class for .drs files
@@ -35,14 +38,14 @@ public:
   /// @param iostr io stream
   /// @param pos start of file
   //
-  DrsFile(std::iostream *iostr, std::streampos pos);
+  //DrsFile(std::iostream *iostr, std::streampos pos);
   
   //----------------------------------------------------------------------------
   /// Constructor that opens a file with given name
   ///
   /// @param file_name file to open
   //
-  DrsFile(std::string file_name);
+  DrsFile(std::string file_name, ResourceManager *rm);
   
   //----------------------------------------------------------------------------
   /// Destructor
@@ -50,10 +53,20 @@ public:
   virtual ~DrsFile();
     
   //----------------------------------------------------------------------------
-  virtual void load();
+  /// Loads table and resource headers.
+  //
+  virtual void loadHeader();
   
 private:
+  bool header_loaded_;
+  
   sf::Uint32 num_of_tables_;
+  sf::Uint32 header_offset_;
+  
+  std::vector<std::string> table_types_;
+  std::vector<sf::Uint32> table_num_of_files_;
+  
+  ResourceManager *resource_manager_;
   
 };
 

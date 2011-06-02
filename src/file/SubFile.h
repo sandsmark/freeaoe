@@ -17,25 +17,27 @@
 */
 
 
-#include "Resource.h"
+#ifndef SUBFILE_H
+#define SUBFILE_H
 
-using sf::Uint32;
+#include "FileIO.h"
 
-//------------------------------------------------------------------------------
-Resource::Resource(Uint32 id) : id_(id)
+
+class SubFile : public FileIO
 {
 
-}
+public:
+  SubFile(sf::Uint32 id, sf::Uint32 pos, sf::Uint32 len, std::iostream* iostr);
+  
+  virtual ~SubFile();
+    
+private:
+  SubFile();
+  SubFile(std::string file_name);
+  
+  sf::Uint32 id_;
+  std::streampos pos_;
+  sf::Uint32 len_;
+};
 
-//------------------------------------------------------------------------------
-Resource::~Resource()
-{
-
-}
-
-//------------------------------------------------------------------------------
-Uint32 Resource::getId()
-{
-  return id_;
-}
-
+#endif // SUBFILE_H

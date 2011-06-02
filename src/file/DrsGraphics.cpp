@@ -26,17 +26,17 @@ using std::ios_base;
 using std::streampos;
 
 //------------------------------------------------------------------------------
-DrsGraphics::DrsGraphics(std::iostream* istr, streampos pos, 
+/*DrsGraphics::DrsGraphics(std::iostream* istr, streampos pos, 
                          std::map< long int, SlpFile* >* slp_files): 
                          DrsFile(istr, pos), slp_files_(slp_files)
 {
 
-}
+}*/
 
 //------------------------------------------------------------------------------
 DrsGraphics::DrsGraphics(std::string file_name, 
                          std::map< long int, SlpFile* >* slp_files): 
-                         DrsFile(file_name), slp_files_(slp_files)
+                         DrsFile(file_name, 0), slp_files_(slp_files)
 {
 
 }
@@ -51,7 +51,7 @@ DrsGraphics::~DrsGraphics()
 //------------------------------------------------------------------------------
 void DrsGraphics::load()
 {
-    DrsFile::load();
+    DrsFile::loadHeader();
     
     readHeader();
     readSlpHeaders();
@@ -60,9 +60,6 @@ void DrsGraphics::load()
 //------------------------------------------------------------------------------
 void DrsGraphics::readHeader()
 {
-  int32_t header_len = readInt32();
-  start_of_slp_ = streampos(header_len);
-  
   //dunno 8 bytes
   //istr_->seekg(8, ios_base::cur);
   //Maybe file ending
@@ -80,7 +77,7 @@ void DrsGraphics::readSlpHeaders()
     int32_t pos = readInt32();
     int32_t len = readInt32();
     
-    (*slp_files_)[id] = new SlpFile(id, len, getIOStream(), streampos(pos));
+    (*slp_files_)[id] = new SlpFile(id, pos, len, getIOStream());
   }
 //  slp_files_[15000]->load();
 //  image_ = slp_files_[15000].getImage(0);

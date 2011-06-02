@@ -54,8 +54,6 @@ private:
   Config();
   Config(const Config& other);
   virtual ~Config();
-  
-  static Config *instance_;
     
   std::string game_dir_;  
 };

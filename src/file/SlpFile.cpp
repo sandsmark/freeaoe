@@ -30,9 +30,8 @@
 */
 
 //------------------------------------------------------------------------------
-SlpFile::SlpFile(int32_t id, int32_t len, std::iostream* iostr, 
-                 std::streampos pos) : id_(id), FileIO(iostr, pos),
-                 len_(len)
+SlpFile::SlpFile(sf::Uint32 id, sf::Uint32 pos, sf::Uint32 len, 
+                 std::iostream* iostr) : id_(id), FileIO(iostr, pos), len_(len)
 {
 }
 
