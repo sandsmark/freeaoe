@@ -23,26 +23,37 @@
 #include <iostream>
 #include "FileIO.h"
 
+//------------------------------------------------------------------------------
+/// Base class for .drs files
 class DrsFile : public FileIO
 {
 
 public:
   //----------------------------------------------------------------------------
-  /// Constructor
+  /// Constructor that opens the file from a stream.
   ///
-  /// @param istr io stream
-  /// @param 
+  /// @param iostr io stream
+  /// @param pos start of file
   //
   DrsFile(std::iostream *iostr, std::streampos pos);
   
   //----------------------------------------------------------------------------
-  /// Constructor
+  /// Constructor that opens a file with given name
+  ///
+  /// @param file_name file to open
   //
   DrsFile(std::string file_name);
+  
+  //----------------------------------------------------------------------------
+  /// Destructor
+  //
   virtual ~DrsFile();
     
+  //----------------------------------------------------------------------------
   virtual void load();
- //virtual void load(std::istream &istr);
+  
+private:
+  sf::Uint32 num_of_tables_;
   
 };
 

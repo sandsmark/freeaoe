@@ -60,9 +60,6 @@ void DrsGraphics::load()
 //------------------------------------------------------------------------------
 void DrsGraphics::readHeader()
 {
-  //dunno 4 bytes
-  readString(4); //Table numbers
-  
   int32_t header_len = readInt32();
   start_of_slp_ = streampos(header_len);
   

@@ -58,7 +58,7 @@ void DrsFile::load()
   //File type
   std::cout << readString(12) << std::endl;
   
-  
+  num_of_tables_ = readUInt32();
 }
 
 
