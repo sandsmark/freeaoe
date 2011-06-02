@@ -26,6 +26,13 @@ using std::string;
 ColorPalette::ColorPalette(std::string filename)
 {
   file_.open(filename.c_str(), std::ios::in);
+  
+  if (!file_.is_open() || file_.bad())
+  {
+    std::cerr << "Could not open " << filename.c_str() << std::endl;
+    return;
+  }
+  
   string smth;
   
   file_ >> smth;

@@ -20,6 +20,8 @@
 #include "ResourceManager.h"
 
 #include <fstream>
+#include <iostream>
+#include <memory>
 
 #include <file/DrsGraphics.h>
 #include <global/Config.h>
@@ -42,9 +44,27 @@ void ResourceManager::Destroy()
 }
 
 //------------------------------------------------------------------------------
+std::auto_ptr< Graphic > ResourceManager::getGraphic(unsigned int id)
+{
+  std::map<long int, SlpFile *>::iterator pos = slp_files_.find(id);
+  
+  if (pos == slp_files_.end())
+  {
+    std::cerr << "Graphic " << id << " not found!" << std::endl;
+    return std::auto_ptr< Graphic > (0);
+  }
+  else
+  {
+    pos->second->load();
+    return std::auto_ptr< Graphic >( new Graphic(pos->second) );
+  }
+}
+
+
+//------------------------------------------------------------------------------
 ResourceManager::ResourceManager()
 {
-
+  initialize();
 }
 
 //------------------------------------------------------------------------------
@@ -56,11 +76,13 @@ ResourceManager::~ResourceManager()
 //------------------------------------------------------------------------------
 void ResourceManager::initialize()
 {
-  std::fstream file;
   
-  file.open(std::string(Config::Inst()->getDataPath() + "terrain.drs").c_str());
+  terrain_file_.open(std::string(Config::Inst()->getDataPath() + "terrain.drs").c_str());
   
-  DrsGraphics gr(slp_files_);
-  gr.load(file);
+  if (!terrain_file_.is_open() || terrain_file_.bad())
+    std::cerr << "Could not open file: " << Config::Inst()->getDataPath() + "terrain.drs" << std::endl;
+  
+  DrsGraphics gr(&slp_files_);
+  gr.load(terrain_file_);
 }
 

@@ -21,19 +21,26 @@
 #define GRAPHIC_H
 
 #include "Resource.h"
+#include <SFML/Graphics/Image.hpp>
+
+class SlpFile;
 
 //------------------------------------------------------------------------------
 /// A graphic resource contains one or more images. E.g. a unit animation
-/// like walk.
+/// like walk. Wrapper class for a slp file.
 //
 class Graphic : public Resource
 {
 
 public:
-  Graphic();
+  Graphic(SlpFile *slp_file);
   virtual ~Graphic();
+  
+  sf::Image *getImage();
     
 private:
+  
+  SlpFile *slp_file_;
 };
 
 #endif // GRAPHIC_H

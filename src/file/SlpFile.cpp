@@ -51,7 +51,7 @@ void SlpFile::load()
   if (frames_.size() > 0) //already loaded
     return;
   
-  setToPos();
+  setToPos(); //TODO: Segfault why?
   
   readHeader();
   
@@ -76,6 +76,12 @@ void SlpFile::load()
 sf::Uint32 SlpFile::getFrameCount()
 {
   return num_frames_;
+}
+
+//------------------------------------------------------------------------------
+sf::Int32 SlpFile::getId()
+{
+  return id_;
 }
 
 //------------------------------------------------------------------------------

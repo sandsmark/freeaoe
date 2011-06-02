@@ -6,6 +6,7 @@
 
 #include "src/file/DrsGraphics.h"
 #include "src/global/Config.h"
+#include <resource/ResourceManager.h>
 
 int main(int argc, char **argv) {
   std::cout << "Hello, world!" << std::endl;
@@ -17,8 +18,9 @@ int main(int argc, char **argv) {
   sf::Sprite spr;
   spr.SetX(200);
   spr.SetY(200);
-  //spr.SetImage(*gr.image_);
   
+  std::auto_ptr<Graphic> ptr = ResourceManager::Inst()->getGraphic(15000);
+  spr.SetImage( *ptr->getImage() );
   //gr.load(file);
   /*
   sf::Image img(2,2);

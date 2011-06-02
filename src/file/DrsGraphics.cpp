@@ -25,7 +25,7 @@
 using std::ios_base;
 using std::streampos;
 
-DrsGraphics::DrsGraphics(std::map< long int, SlpFile > &slp_files): DrsFile(),
+DrsGraphics::DrsGraphics(std::map< long int, SlpFile *> *slp_files): DrsFile(),
                          slp_files_(slp_files)
 {
 
@@ -71,10 +71,10 @@ void DrsGraphics::readSlpHeaders()
     int32_t pos = readInt32();
     int32_t len = readInt32();
     
-    slp_files_[id] = SlpFile(id, len, getIstream(), streampos(pos));
+    (*slp_files_)[id] = new SlpFile(id, len, getIstream(), streampos(pos));
   }
-  slp_files_[15000].load();
-  image_ = slp_files_[15000].getImage(0);
+//  slp_files_[15000]->load();
+//  image_ = slp_files_[15000].getImage(0);
 }
 
 

@@ -67,6 +67,9 @@ public:
   sf::Uint32 getFrameCount();
   
   //----------------------------------------------------------------------------
+  sf::Int32 getId();
+  
+  //----------------------------------------------------------------------------
   /// Returns pointer to the image at given frame or 0 if no image is at frame.
   /// The image has not to be deleted!
   ///

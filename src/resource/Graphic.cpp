@@ -18,14 +18,23 @@
 
 
 #include "Graphic.h"
+#include <file/SlpFile.h>
 
-Graphic::Graphic() : Resource(0)
+//------------------------------------------------------------------------------
+Graphic::Graphic(SlpFile *slp_file) : slp_file_(slp_file), 
+                                      Resource(slp_file->getId())
 {
 
 }
 
+//------------------------------------------------------------------------------
 Graphic::~Graphic()
 {
 
 }
 
+//------------------------------------------------------------------------------
+sf::Image* Graphic::getImage()
+{
+  return slp_file_->getImage();
+}

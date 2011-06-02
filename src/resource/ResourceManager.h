@@ -24,8 +24,10 @@
 
 #include <memory>
 #include <map>
+#include <fstream>
 #include "Graphic.h"
 #include <file/SlpFile.h>
+#include <file/DrsGraphics.h>
 
 //------------------------------------------------------------------------------
 /// The resource manager is the primary interface for getting recourses. At
@@ -56,7 +58,9 @@ private:
   
   static ResourceManager *instance_;
   
-  std::map<long, SlpFile> slp_files_;
+  std::map<long, SlpFile *> slp_files_;
+  
+  std::fstream terrain_file_;
  
   //----------------------------------------------------------------------------
   /// Loads all resource headers.

@@ -30,7 +30,7 @@ class DrsGraphics : public DrsFile
 {
 
 public:
-  DrsGraphics(std::map<long, SlpFile> &slp_files);
+  DrsGraphics(std::map<long, SlpFile *> *slp_files);
 //  DrsGraphics(const DrsGraphics& other);
   virtual ~DrsGraphics();
     
@@ -43,7 +43,7 @@ private:
   
   std::streampos start_of_slp_;
   
-  std::map<long, SlpFile> &slp_files_;
+  std::map<long, SlpFile *> *slp_files_;
   
   void readHeader();
   void readSlpHeaders();
