@@ -40,12 +40,12 @@ FileIO::FileIO(std::string file_name) throw (FileException)
   }
   
   pos_ = file->tellg();
-  istr_ = file;
+  iostr_ = file;
 }
 
 //------------------------------------------------------------------------------
-FileIO::FileIO(std::istream* istr, std::streampos pos) : istr_(istr), pos_(pos),
-               file(0), file_name_("")
+FileIO::FileIO(std::iostream* iostr, std::streampos pos) : iostr_(iostr),
+               pos_(pos), file(0), file_name_("")
 {
 
 }
@@ -55,17 +55,11 @@ FileIO::~FileIO()
 {
   delete file;
 }
-/*
+
 //------------------------------------------------------------------------------
-void FileIO::setIstream(std::istream* istr)
+std::iostream* FileIO::getIOStream()
 {
-  istr_ = istr;
-}
-*/
-//------------------------------------------------------------------------------
-std::istream* FileIO::getIstream()
-{
-  return istr_;
+  return iostr_;
 }
 
 //------------------------------------------------------------------------------
@@ -77,30 +71,30 @@ std::streampos FileIO::getPos()
 //------------------------------------------------------------------------------
 std::streampos FileIO::tellg()
 {
-  return istr_->tellg();
+  return iostr_->tellg();
 }
 
 
 //------------------------------------------------------------------------------
 void FileIO::setToPos()
 {
-  istr_->seekg(pos_);
+  iostr_->seekg(pos_);
 }
 
 //------------------------------------------------------------------------------
 bool FileIO::eof()
 {
-  return istr_->eof();
+  return iostr_->eof();
 }
 
 //------------------------------------------------------------------------------
 std::string FileIO::readString ( size_t size )
 {
-  if (!istr_->eof())
+  if (!iostr_->eof())
   {
     char *buf = new char[size + 1];
     
-    istr_->read(buf, size);
+    iostr_->read(buf, size);
     
     buf[size] = '\0';
     
@@ -115,9 +109,9 @@ sf::Int32 FileIO::readInt32 ()
 {
   sf::Int32 ret = 0;
   
-  if (!istr_->eof())
+  if (!iostr_->eof())
   {
-    istr_->read(reinterpret_cast<char *>(&ret), 4);
+    iostr_->read(reinterpret_cast<char *>(&ret), 4);
   }
   
   return ret;
@@ -128,9 +122,9 @@ sf::Uint32 FileIO::readUInt32 ()
 {
   sf::Uint32 ret = 0;
   
-  if (!istr_->eof())
+  if (!iostr_->eof())
   {
-    istr_->read(reinterpret_cast<char *>(&ret), 4);
+    iostr_->read(reinterpret_cast<char *>(&ret), 4);
   }
   
   return ret;
@@ -141,9 +135,9 @@ sf::Uint16 FileIO::readUInt16 ()
 {
   sf::Uint16 ret = 0;
   
-  if (!istr_->eof())
+  if (!iostr_->eof())
   {
-    istr_->read(reinterpret_cast<char *>(&ret), 2);
+    iostr_->read(reinterpret_cast<char *>(&ret), 2);
   }
   
   return ret;
@@ -154,9 +148,9 @@ sf::Int16 FileIO::readInt16 ()
 {
   sf::Int16 ret = 0;
   
-  if (!istr_->eof())
+  if (!iostr_->eof())
   {
-    istr_->read(reinterpret_cast<char *>(&ret), 2);
+    iostr_->read(reinterpret_cast<char *>(&ret), 2);
   }
   
   return ret;
@@ -167,9 +161,9 @@ sf::Uint8 FileIO::readUInt8()
 {
   sf::Uint8 ret = 0;
   
-  if (!istr_->eof())
+  if (!iostr_->eof())
   {
-    istr_->read(reinterpret_cast<char *>(&ret), 1);
+    iostr_->read(reinterpret_cast<char *>(&ret), 1);
   }
   
   return ret;
@@ -180,9 +174,9 @@ char FileIO::readChar()
 {
   char ret;
   
-  if (!istr_->eof())
+  if (!iostr_->eof())
   {
-    istr_->read(&ret, 1);
+    iostr_->read(&ret, 1);
   }
   
   return ret;

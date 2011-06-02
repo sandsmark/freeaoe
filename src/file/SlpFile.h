@@ -44,10 +44,11 @@ public:
   ///
   /// @param id resources' id
   /// @param len 
-  /// @param istr input stream
+  /// @param istr input/output stream
   /// @param pos start position of this file in stream
   //
-  SlpFile(sf::Int32 id, sf::Int32 len, std::istream *istr, std::streampos pos);
+  SlpFile(sf::Int32 id, sf::Int32 len, std::iostream *iostr, 
+          std::streampos pos);
   
   //----------------------------------------------------------------------------
   /// Destructor

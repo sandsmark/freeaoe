@@ -48,7 +48,7 @@ public:
   /// @param file_pos position pointing at the beginning of the slp file.
   /// @param palette color palette to choose colors from
   //
-  SlpFrame(std::istream *istr, std::streampos pos, std::streampos file_pos, 
+  SlpFrame(std::iostream *iostr, std::streampos pos, std::streampos file_pos, 
            ColorPalette *palette);
   
   //----------------------------------------------------------------------------

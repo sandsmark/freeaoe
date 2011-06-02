@@ -33,9 +33,9 @@ using sf::Uint32;
 
 using std::auto_ptr;
 
-SlpFrame::SlpFrame(std::istream* istr, std::streampos pos, 
+SlpFrame::SlpFrame(std::iostream* iostr, std::streampos pos, 
                    std::streampos file_pos, ColorPalette *palette) 
-                   : FileIO(istr, pos), file_pos_(file_pos), palette_(palette)
+                   : FileIO(iostr, pos), file_pos_(file_pos), palette_(palette)
 {
   palette_ = new ColorPalette("../aoe2/50500.pal"); //TODO: Warning
   

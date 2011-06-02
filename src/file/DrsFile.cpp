@@ -27,7 +27,7 @@
 using std::string;
 
 //------------------------------------------------------------------------------
-DrsFile::DrsFile(std::istream* istr, std::streampos pos): FileIO(istr, pos)
+DrsFile::DrsFile(std::iostream* istr, std::streampos pos): FileIO(istr, pos)
 {
 
 }
@@ -57,6 +57,7 @@ void DrsFile::load()
   
   //File type
   std::cout << readString(12) << std::endl;
+  
   
 }
 

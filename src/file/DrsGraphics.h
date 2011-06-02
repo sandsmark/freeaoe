@@ -30,7 +30,7 @@ class DrsGraphics : public DrsFile
 {
 
 public:
-  DrsGraphics(std::istream *istr, std::streampos pos, 
+  DrsGraphics(std::iostream *iostr, std::streampos pos, 
               std::map<long, SlpFile *> *slp_files);
   
   DrsGraphics(std::string file_name, std::map<long, SlpFile *> *slp_files);

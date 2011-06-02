@@ -20,14 +20,24 @@
 #ifndef DRSFILE_H
 #define DRSFILE_H
 
-#include <istream>
+#include <iostream>
 #include "FileIO.h"
 
 class DrsFile : public FileIO
 {
 
 public:
-  DrsFile(std::istream *istr, std::streampos pos);
+  //----------------------------------------------------------------------------
+  /// Constructor
+  ///
+  /// @param istr io stream
+  /// @param 
+  //
+  DrsFile(std::iostream *iostr, std::streampos pos);
+  
+  //----------------------------------------------------------------------------
+  /// Constructor
+  //
   DrsFile(std::string file_name);
   virtual ~DrsFile();
     

@@ -30,8 +30,8 @@
 */
 
 //------------------------------------------------------------------------------
-SlpFile::SlpFile(int32_t id, int32_t len, std::istream* istr, 
-                 std::streampos pos) : id_(id), FileIO(istr, pos),
+SlpFile::SlpFile(int32_t id, int32_t len, std::iostream* iostr, 
+                 std::streampos pos) : id_(id), FileIO(iostr, pos),
                  len_(len)
 {
 }
@@ -60,7 +60,7 @@ void SlpFile::load()
   
   for (u_int32_t i = 0; i < num_frames_; i++)
   {
-    frame = new SlpFrame(getIstream(), tellg(), getPos(), 0);
+    frame = new SlpFrame(getIOStream(), tellg(), getPos(), 0);
     frame->loadHeader();
     
     frames_.push_back(frame);
