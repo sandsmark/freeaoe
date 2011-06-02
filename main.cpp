@@ -19,7 +19,7 @@ int main(int argc, char **argv) {
   spr.SetX(200);
   spr.SetY(200);
   
-  std::auto_ptr<Graphic> ptr = ResourceManager::Inst()->getGraphic(15000);
+  std::auto_ptr<Graphic> ptr = ResourceManager::Inst()->getGraphic(5);
   spr.SetImage( *ptr->getImage() );
   //gr.load(file);
   /*

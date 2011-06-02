@@ -30,11 +30,14 @@ class DrsGraphics : public DrsFile
 {
 
 public:
-  DrsGraphics(std::map<long, SlpFile *> *slp_files);
+  DrsGraphics(std::istream *istr, std::streampos pos, 
+              std::map<long, SlpFile *> *slp_files);
+  
+  DrsGraphics(std::string file_name, std::map<long, SlpFile *> *slp_files);
 //  DrsGraphics(const DrsGraphics& other);
   virtual ~DrsGraphics();
     
-  virtual void load(std::istream& istr);
+  virtual void load();
   
   sf::Image *image_;
     

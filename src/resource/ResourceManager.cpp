@@ -76,13 +76,15 @@ ResourceManager::~ResourceManager()
 //------------------------------------------------------------------------------
 void ResourceManager::initialize()
 {
+  std::string terrain_path(Config::Inst()->getDataPath() + "terrain.drs");
+  DrsGraphics *g_terrain = new DrsGraphics(terrain_path.c_str(), &slp_files_);
+  g_terrain->load();
   
-  terrain_file_.open(std::string(Config::Inst()->getDataPath() + "terrain.drs").c_str());
+  drs_files_.push_back(g_terrain);
   
-  if (!terrain_file_.is_open() || terrain_file_.bad())
-    std::cerr << "Could not open file: " << Config::Inst()->getDataPath() + "terrain.drs" << std::endl;
+  std::string graphics_path(Config::Inst()->getDataPath() + "graphics.drs");
+  g_terrain = new DrsGraphics(graphics_path.c_str(), &slp_files_);
+  g_terrain->load();
   
-  DrsGraphics gr(&slp_files_);
-  gr.load(terrain_file_);
+  drs_files_.push_back(g_terrain);
 }
-

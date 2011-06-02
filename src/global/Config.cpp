@@ -45,7 +45,7 @@ std::string Config::getGamePath()
 //------------------------------------------------------------------------------
 std::string Config::getDataPath()
 {
-  return Config::game_dir_ += "Data/";
+  return Config::game_dir_ + "Data/";
 }
 
 //------------------------------------------------------------------------------

@@ -21,8 +21,10 @@
 #define FILEIO_H
 
 #include <istream>
+#include <fstream>
 #include <memory>
 #include <SFML/Config.hpp>
+#include <global/FileException.h>
 
 //------------------------------------------------------------------------------
 /// Base class for file input/output. Used for managing an input stream.
@@ -34,7 +36,15 @@ public:
   //----------------------------------------------------------------------------
   /// Constructor
   //
-  FileIO();
+  //FileIO();
+  
+  //----------------------------------------------------------------------------
+  /// If this Constructor is called, FileIO will manage the file and its 
+  /// streams..
+  ///
+  /// @param file_name 
+  //
+  FileIO(std::string file_name) throw (FileException);
   
   //----------------------------------------------------------------------------
   /// Constructor
@@ -51,7 +61,7 @@ protected:
   //----------------------------------------------------------------------------
   /// Sets input stream
   //
-  void setIstream(std::istream *istr);
+  //void setIstream(std::istream *istr);
   
   //----------------------------------------------------------------------------
   /// Get input stream
@@ -142,6 +152,9 @@ protected:
 private:
   std::istream *istr_;
   std::streampos pos_;
+  
+  std::string file_name_;
+  std::fstream *file; //is only used if FileIO is called with file_name
 };
 
 #endif // FILEIO_H

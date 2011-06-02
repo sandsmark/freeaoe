@@ -26,21 +26,29 @@
 
 using std::string;
 
-DrsFile::DrsFile() : FileIO()
+//------------------------------------------------------------------------------
+DrsFile::DrsFile(std::istream* istr, std::streampos pos): FileIO(istr, pos)
 {
-  
+
 }
 
+//------------------------------------------------------------------------------
+DrsFile::DrsFile(string file_name): FileIO(file_name)
+{
+
+}
+
+
+//------------------------------------------------------------------------------
 DrsFile::~DrsFile()
 {
 
 }
 
 
-void DrsFile::load(std::istream& istr)
+//------------------------------------------------------------------------------
+void DrsFile::load()
 {
-  setIstream(&istr);
-  
   string copy_right = readString(40);
   std::cout << copy_right << std::endl;
   

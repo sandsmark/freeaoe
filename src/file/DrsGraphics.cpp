@@ -25,21 +25,33 @@
 using std::ios_base;
 using std::streampos;
 
-DrsGraphics::DrsGraphics(std::map< long int, SlpFile *> *slp_files): DrsFile(),
-                         slp_files_(slp_files)
+//------------------------------------------------------------------------------
+DrsGraphics::DrsGraphics(std::istream* istr, streampos pos, 
+                         std::map< long int, SlpFile* >* slp_files): 
+                         DrsFile(istr, pos), slp_files_(slp_files)
 {
 
 }
 
+//------------------------------------------------------------------------------
+DrsGraphics::DrsGraphics(std::string file_name, 
+                         std::map< long int, SlpFile* >* slp_files): 
+                         DrsFile(file_name), slp_files_(slp_files)
+{
+
+}
+
+
+//------------------------------------------------------------------------------
 DrsGraphics::~DrsGraphics()
 {
 
 }
 
 //------------------------------------------------------------------------------
-void DrsGraphics::load(std::istream& istr)
+void DrsGraphics::load()
 {
-    DrsFile::load(istr);
+    DrsFile::load();
     
     readHeader();
     readSlpHeaders();

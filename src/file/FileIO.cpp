@@ -20,13 +20,32 @@
 #include "FileIO.h"
 
 //------------------------------------------------------------------------------
-FileIO::FileIO()
+/*FileIO::FileIO() : file(0), file_name_("")
 {
 
 }
+*/
 
 //------------------------------------------------------------------------------
-FileIO::FileIO(std::istream* istr, std::streampos pos) : istr_(istr), pos_(pos)
+FileIO::FileIO(std::string file_name) throw (FileException) 
+               : file_name_(file_name)
+               
+{
+  file = new std::fstream(file_name.c_str());
+  
+  if (!file->is_open() || file->bad())
+  {
+    delete file;
+    throw FileException("Can't open " + file_name);
+  }
+  
+  pos_ = file->tellg();
+  istr_ = file;
+}
+
+//------------------------------------------------------------------------------
+FileIO::FileIO(std::istream* istr, std::streampos pos) : istr_(istr), pos_(pos),
+               file(0), file_name_("")
 {
 
 }
@@ -34,15 +53,15 @@ FileIO::FileIO(std::istream* istr, std::streampos pos) : istr_(istr), pos_(pos)
 //------------------------------------------------------------------------------
 FileIO::~FileIO()
 {
-
+  delete file;
 }
-
+/*
 //------------------------------------------------------------------------------
 void FileIO::setIstream(std::istream* istr)
 {
   istr_ = istr;
 }
-
+*/
 //------------------------------------------------------------------------------
 std::istream* FileIO::getIstream()
 {

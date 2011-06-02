@@ -17,5 +17,28 @@
 */
 
 
-#include "FileCorruptException.h"
+#ifndef FILEEXCEPTION_H
+#define FILEEXCEPTION_H
 
+#include <exception>
+#include <string>
+
+class FileException : public std::exception
+{
+public:
+  FileException(std::string message) : message_(message) {}
+  
+  virtual ~FileException() throw() {};
+  
+  virtual const char *what() const throw()
+  {
+    message_.c_str();
+  }
+  
+private:
+  FileException();
+  
+  std::string message_;
+};
+
+#endif // FILECORRUPTEXCEPTION_H

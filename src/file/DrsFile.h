@@ -27,11 +27,12 @@ class DrsFile : public FileIO
 {
 
 public:
-  DrsFile();
+  DrsFile(std::istream *istr, std::streampos pos);
+  DrsFile(std::string file_name);
   virtual ~DrsFile();
     
-  //
-  virtual void load(std::istream &istr);
+  virtual void load();
+ //virtual void load(std::istream &istr);
   
 };
 

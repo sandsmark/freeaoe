@@ -58,9 +58,11 @@ private:
   
   static ResourceManager *instance_;
   
+  std::vector<DrsFile *> drs_files_;
   std::map<long, SlpFile *> slp_files_;
   
   std::fstream terrain_file_;
+  std::fstream graphics_file_;
  
   //----------------------------------------------------------------------------
   /// Loads all resource headers.
