@@ -82,9 +82,9 @@ ResourceManager::~ResourceManager()
 //------------------------------------------------------------------------------
 void ResourceManager::initialize()
 {
-  loadDrs("graphics.drs");
-  loadDrs("terrain.drs");
-  //loadDrs("interfac.drs");
+  //loadDrs("graphics.drs");
+  //loadDrs("terrain.drs");
+  loadDrs("interfac.drs");
 }
 
 //------------------------------------------------------------------------------

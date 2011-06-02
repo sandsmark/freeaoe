@@ -22,7 +22,7 @@
 using sf::Uint32;
 
 //------------------------------------------------------------------------------
-Resource::Resource(Uint32 id) : id_(id)
+Resource::Resource(Uint32 id, Type type) : id_(id), type_(type)
 {
 
 }
@@ -34,8 +34,14 @@ Resource::~Resource()
 }
 
 //------------------------------------------------------------------------------
-Uint32 Resource::getId()
+Uint32 Resource::getId() const
 {
   return id_;
+}
+
+//------------------------------------------------------------------------------
+Resource::Type Resource::getType()
+{
+  return type_;
 }
 

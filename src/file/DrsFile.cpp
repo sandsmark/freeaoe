@@ -29,12 +29,6 @@ using std::string;
 using sf::Uint32;
 
 //------------------------------------------------------------------------------
-/*DrsFile::DrsFile(std::iostream* iostr, std::streampos pos): FileIO(iostr, pos)
-{
-  header_loaded_ = false;
-}*/
-
-//------------------------------------------------------------------------------
 DrsFile::DrsFile(string file_name, ResourceManager *resource_manager)
                  : FileIO(file_name), resource_manager_(resource_manager)
 {
@@ -57,13 +51,11 @@ void DrsFile::loadHeader()
   else
   {
     string copy_right = readString(40);
-    std::cout << copy_right << std::endl;
     
     string version = readString(4);
-    std::cout << version << std::endl;
     
     //File type
-    std::cout << readString(12) << std::endl;
+    string file_type = readString(12);
     
     num_of_tables_ = readUInt32();
     header_offset_ = readUInt32();
@@ -73,9 +65,6 @@ void DrsFile::loadHeader()
     {
       table_types_.push_back(readString(8));
       table_num_of_files_.push_back(readUInt32());
-      std::cout << table_types_[i] << std::endl;
-      
-      std::cout <<  table_types_[i].find(" plsL") << std::endl;
     }
    
     Resource *res = 0;
@@ -94,12 +83,13 @@ void DrsFile::loadHeader()
           SlpFile *slp = new SlpFile(id, pos, len, getIOStream());
           res = new Graphic(slp);
         }
+        else
+          res = new Resource(id);
         
         resource_manager_->addResource(res);
       }
     }
       
-    
     header_loaded_ = true;
   }
 }

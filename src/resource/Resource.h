@@ -31,11 +31,16 @@ class Resource
 
 public:
   //----------------------------------------------------------------------------
+  /// Resource types
+  enum Type {TYPE_UNDEFINED, TYPE_GRAPHIC};
+  
+  //----------------------------------------------------------------------------
   /// Constructor
   ///
   /// @param id resources' id
+  /// @param type type of the resource
   //
-  Resource(sf::Uint32 id);
+  Resource(sf::Uint32 id, Type type=TYPE_UNDEFINED);
   
   //----------------------------------------------------------------------------
   /// Destructor
@@ -47,10 +52,17 @@ public:
   ///
   /// @return id of resource
   //
-  sf::Uint32 getId();
+  sf::Uint32 getId() const;
   
   //----------------------------------------------------------------------------
-  virtual void load() = 0;
+  virtual void load() {}
+  
+  //----------------------------------------------------------------------------
+  /// Returns type of the resource
+  ///
+  /// @return type
+  //
+  Type getType();
   
 protected:
   //----------------------------------------------------------------------------
@@ -62,6 +74,7 @@ protected:
   
 private:
   sf::Uint32 id_;
+  Type type_;
 };
 
 #endif // RESOURCE_H

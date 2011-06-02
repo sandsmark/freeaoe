@@ -17,7 +17,7 @@ int main(int argc, char **argv) {
   spr.SetY(200);
   
   ResourceManager::Inst();
-  std::auto_ptr<Graphic> ptr = ResourceManager::Inst()->getGraphic(3493);
+  std::auto_ptr<Graphic> ptr = ResourceManager::Inst()->getGraphic(50100);
   spr.SetImage( *ptr->getImage() );
   
    // Create the main window

@@ -22,7 +22,7 @@
 
 //------------------------------------------------------------------------------
 Graphic::Graphic(SlpFile *slp_file) : slp_file_(slp_file), 
-                                      Resource(slp_file->getId())
+                                      Resource(slp_file->getId(), TYPE_GRAPHIC)
 {
 
 }
