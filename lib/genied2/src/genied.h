@@ -19,7 +19,7 @@ public:
 
   void Dump ( const char* filename );
 
-  void ReadUnitsData ( void ProgressCallback ( float, void* ), void* CallbackData );
+  void ReadUnitsData ();// void ProgressCallback ( float, void* ), void* CallbackData );
 
   typedef std::list<GenieCiv*> CivsType;
   CivsType Civs;

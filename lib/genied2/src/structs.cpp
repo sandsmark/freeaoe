@@ -2,6 +2,7 @@
 
 // For NULL:
 #include <stdlib.h>
+#include <iostream>
 
 genie_civ::genie_civ()
 {
@@ -77,7 +78,7 @@ genie_unit::~genie_unit()
 
 void genie_unit::Read ( Buffer *DataBuffer, int VersionNum )
 {
-  
+  DataBuffer_ = DataBuffer;
   
   brds ( type );
 
@@ -176,6 +177,8 @@ void genie_unit::Read ( Buffer *DataBuffer, int VersionNum )
 
 void genie_unit::Write ( Buffer *DataBuffer, int VersionNum )
 {
+  DataBuffer_ = DataBuffer;
+  
   bwrs ( type );
 
   bwrs ( head );

@@ -1,7 +1,7 @@
 #include "genied.h"
 #include "structs.h"
 
-#include "zlib/zlib.h"
+#include <zlib.h>
 
 #include <sstream>
 #include <assert.h>
@@ -9,6 +9,7 @@
 #include <time.h>
 
 #include <cstdio>
+#include <iostream>
 
 const int MAX_GENIESIZE = 8*1024*1024;
 
@@ -193,7 +194,7 @@ bool GenieFile::LoadLanguage ( const char* filename )
 //#define brdl(i, s, t) i = new t[s]; DataBuffer->read(i, s*sizeof(t))
 
 
-void GenieFile::ReadUnitsData ( void ProgressCallback ( float, void* ) = NULL, void* CallbackData = NULL )
+void GenieFile::ReadUnitsData ()// void ProgressCallback ( float, void* ) = NULL, void* CallbackData = NULL )
 {
   // Some assumptions
   assert ( sizeof ( char )  == 1 );
@@ -204,7 +205,7 @@ void GenieFile::ReadUnitsData ( void ProgressCallback ( float, void* ) = NULL, v
   char version[8];
   DataBuffer->seek ( 0 );
   DataBuffer->read ( version, 8 );
-
+  
   if ( strcmp ( version, "VER 5.7" ) == 0 ) // AOK X-pack format (no support for non X-pack yet)
     VersionNum = 57;
   else if ( strcmp ( version, "VER 5.9" ) == 0 ) // SWGB + SWGB X-pack format
@@ -231,8 +232,8 @@ void GenieFile::ReadUnitsData ( void ProgressCallback ( float, void* ) = NULL, v
 
   for ( int CivNum = 0; CivNum < CivCount; ++CivNum )
   {
-    if ( ProgressCallback != NULL )
-      ProgressCallback ( ( float ) CivNum / ( float ) CivCount, CallbackData );
+    //if ( ProgressCallback != NULL )
+    //  ProgressCallback ( ( float ) CivNum / ( float ) CivCount, CallbackData );
 
     GenieCiv *Civ = new GenieCiv;
     Civ->Units.clear();
@@ -308,7 +309,11 @@ void GenieFile::ReadUnitsData ( void ProgressCallback ( float, void* ) = NULL, v
       }
 
       //wxString Name1 = wxString::FromAscii ( u->name1 );
-      string Name1( u->name1 );
+      
+      string Name1 = "";
+      
+      if ( u->name1 )
+        Name1 = string (u->name1 );
       unit.Searchables.push_back ( Name1 );
 
       string Name2;

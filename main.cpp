@@ -7,10 +7,19 @@
 #include <global/Config.h>
 #include <resource/ResourceManager.h>
 
+#include <genied.h>
+
 int main(int argc, char **argv) {
   
   //DrsGraphics gr;
   //gr.load(file);
+  
+  GenieFile gf;
+  
+  gf.LoadGenie("../aoe2/Data/empires2_x1.dat");
+  gf.ReadUnitsData();
+  
+  std::cout << gf.Civs.front()->Title << std::endl;
   
   sf::Sprite spr;
   spr.SetX(200);
