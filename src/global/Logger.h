@@ -26,15 +26,9 @@
 #include <string>
 #include <stdarg.h>
 
-//Loglevels
-/*const int LINFO    = 0; 
-const int LDEBUG   = 1; 
-const int LWARNING = 2; 
-const int LERROR   = 3; 
-const int LFATAL   = 4; 
-const int LOFF     = 5; 
-*/
-
+//------------------------------------------------------------------------------
+/// Simple logging class
+//
 class Logger {
 
 public:
@@ -48,22 +42,70 @@ public:
     L_OFF     = 5  // No messages at all
   };
   
-
+  //----------------------------------------------------------------------------
+  /// Returns the static root logger.
+  ///
+  /// @return root logger
+  //
   static Logger& getRootLogger(void);
+  
+  //----------------------------------------------------------------------------
+  /// Returns specific logger that prints additionally its name before log info
+  ///
+  /// @return specific logger
+  //
   static Logger& getLogger(std::string name);
 
+  //----------------------------------------------------------------------------
+  /// Set the overall loglevel to print. All lower log levels will be shown.
+  /// E.g. if loglevel is L_WARNING, then messages with level L_ERROR and
+  /// L_FATAL will also be shown.
+  ///
+  /// @param loglevel minimum level to log
+  //
   static void setLogLevel(LogLevel loglevel);
 
-  void log(LogLevel loglevel, const char *msg, ...);
-
-  void debug(const char *msg, ...);
+  //----------------------------------------------------------------------------
+  /// Logs messages which aren't very important, but they highlight the 
+  /// program status.
+  ///
+  /// @param msg message to print
+  //
   void info(const char *msg, ...);
+  
+  //----------------------------------------------------------------------------
+  /// Messages crucial for debugging can be printed using this method.
+  ///
+  /// @param msg message to print
+  //
+  void debug(const char *msg, ...);
+  
+  //----------------------------------------------------------------------------
+  /// Message that could interfere the programms behaviour should be printed
+  /// using this method.
+  ///
+  /// @param msg message to print
+  //
   void warn(const char *msg, ...);
+  
+  //----------------------------------------------------------------------------
+  /// Method for printing information about a malfunction which are serious
+  /// but lets the programm continue.
+  ///
+  /// @param msg message to print
+  //
   void error(const char *msg, ...);
+  
+  //----------------------------------------------------------------------------
+  /// Prints messages that crashes the program.
+  ///
+  /// @param msg message to print
+  //
   void fatal(const char *msg, ...);
 
 protected:
   void log(LogLevel loglevel, va_list vlist, const char *msg);
+  void log(LogLevel loglevel, const char *msg, ...);
   
   std::string getLogLevelName(LogLevel loglevel);
 

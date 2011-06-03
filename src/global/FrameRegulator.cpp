@@ -21,30 +21,35 @@
 #include <SFML/System/Clock.hpp>
 #include <SFML/System/Sleep.hpp>
 
-
+//------------------------------------------------------------------------------
 FrameRegulator::FrameRegulator() : fps_(60)
 {
 }
 
+//------------------------------------------------------------------------------
 FrameRegulator::~FrameRegulator() 
 {
 }
 
+//------------------------------------------------------------------------------
 int FrameRegulator::getFPS(void) const 
 {
   return fps_;
 }
 
+//------------------------------------------------------------------------------
 void FrameRegulator::setFPS(int fps) 
 {
   fps_ = fps;
 }
 
+//------------------------------------------------------------------------------
 void FrameRegulator::start(void) 
 {
   clock_.Reset();
 }
 
+//------------------------------------------------------------------------------
 void FrameRegulator::regulate(void) 
 {
   if (clock_.GetElapsedTime() < (1000 / fps_)) 
@@ -54,4 +59,3 @@ void FrameRegulator::regulate(void)
 
   clock_.Reset();
 }
-

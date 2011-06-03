@@ -22,16 +22,45 @@
 
 #include <SFML/System/Clock.hpp>
 
+//------------------------------------------------------------------------------
+/// Class for regulation frames in the game loop
+//
 class FrameRegulator 
 {
 public:
+  //----------------------------------------------------------------------------
+  /// Constructor
+  //
   FrameRegulator();
+  
+  //----------------------------------------------------------------------------
+  /// Destructor
+  //
   virtual ~FrameRegulator();
 
+  //----------------------------------------------------------------------------
+  /// Returns set frames per second
+  ///
+  /// @return frames per second
+  //
   int getFPS(void) const;
+  
+  //----------------------------------------------------------------------------
+  /// Sets max frames per second.
+  ///
+  /// @param fps frames per second
+  //
   void setFPS(int fps);
 
+  //----------------------------------------------------------------------------
+  /// Starts the internal clock.
+  //
   void start(void);
+  
+  //----------------------------------------------------------------------------
+  /// If called in the game loop, it regulates time using sleep so that the
+  /// loop cycle doesn't exceed the set fps.
+  //
   void regulate(void);
 
 private:
