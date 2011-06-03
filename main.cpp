@@ -8,8 +8,12 @@
 #include <resource/ResourceManager.h>
 
 #include <genied.h>
+#include <Engine.h>
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv) 
+{
+  Engine en;
+  en.run();
   
   //DrsGraphics gr;
   //gr.load(file);
@@ -26,7 +30,7 @@ int main(int argc, char **argv) {
   spr.SetY(200);
   
   ResourceManager::Inst();
-  std::auto_ptr<Graphic> ptr = ResourceManager::Inst()->getGraphic(50100);
+  std::auto_ptr<Graphic> ptr = ResourceManager::Inst()->getGraphic(5);
   spr.SetImage( *ptr->getImage() );
   
    // Create the main window

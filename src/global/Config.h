@@ -49,6 +49,7 @@ public:
   /// @return path of data directory
   //
   std::string getDataPath();
+  
 
 private:
   Config();

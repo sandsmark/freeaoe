@@ -10,7 +10,29 @@ include_directories(src/ lib/genied2/src/)
 
 add_subdirectory(lib/genied2)
 
-add_executable(freeaoe src/file/SubFile.cpp src/global/Config.cpp src/resource/Graphic.cpp src/resource/ResourceManager.cpp src/resource/Resource.cpp src/global/FileException.cpp src/file/ColorPalette.cpp src/file/FileIO.cpp src/file/SlpFrame.cpp src/file/SlpFile.cpp src/file/DrsFile.cpp main.cpp)
+
+set(FILE_SRC src/file/SubFile.cpp 
+)
+
+set(GLOBAL_SRC src/global/Config.cpp 
+               src/global/FileException.cpp
+               src/global/Logger.cpp
+               src/global/FrameRegulator.cpp)
+             
+set(RESOURCE_SRC src/resource/Graphic.cpp
+                 src/resource/ResourceManager.cpp
+                 src/resource/Resource.cpp)
+
+set(FILE_SRC src/file/ColorPalette.cpp
+             src/file/FileIO.cpp
+             src/file/SlpFrame.cpp
+             src/file/SlpFile.cpp
+             src/file/DrsFile.cpp)
+
+add_executable(freeaoe src/Engine.cpp main.cpp 
+               ${FILE_SRC}
+               ${RESOURCE_SRC}
+               ${GLOBAL_SRC})
 
 target_link_libraries(freeaoe geni_lib2 ${SFML_LIBRARY} )
 
