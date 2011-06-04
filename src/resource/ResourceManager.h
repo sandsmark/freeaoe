@@ -27,6 +27,7 @@
 #include <fstream>
 #include "Graphic.h"
 #include <file/SlpFile.h>
+#include <global/Logger.h>
 
 class DrsFile;
 
@@ -67,6 +68,8 @@ private:
   std::fstream terrain_file_;
   std::fstream graphics_file_;
  
+  static Logger &log;
+  
   //----------------------------------------------------------------------------
   /// Loads all resource headers.
   //

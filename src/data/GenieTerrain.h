@@ -17,34 +17,32 @@
 */
 
 
-#include "Graphic.h"
-#include <file/SlpFile.h>
+#ifndef GENIETERRAIN_H
+#define GENIETERRAIN_H
+#include <string>
 
-//------------------------------------------------------------------------------
-Graphic::Graphic(SlpFile *slp_file) : slp_file_(slp_file), 
-                                      Resource(slp_file->getId(), TYPE_GRAPHIC)
+class FileIO;
+
+class GenieTerrain
 {
+public:
+  static const unsigned int TERRAIN_NAME_SIZE;
+  
+  short unknown1, unknown2;
+  //char name1[TERRAIN_NAME1_SIZE];
+  std::string name1;
+  //char name2[TERRAIN_NAME2_SIZE];
+  std::string name2;
+  long slp_id;
+  long unused1;   //always 0
+  long unknown3;
+  long unknown4;
+  long unknown5;
+  long color;
+  std::string unknown6;
+  //char unknown6[TERRAIN_UNKWN_SIZE];
+  
+  void read(FileIO *file);
+};
 
-}
-
-//------------------------------------------------------------------------------
-Graphic::~Graphic()
-{
-
-}
-
-//------------------------------------------------------------------------------
-sf::Image* Graphic::getImage()
-{
-  return slp_file_->getImage();
-}
-
-void Graphic::load()
-{
-  if (!isLoaded())
-  {
-    slp_file_->load();
-    setLoaded(true);
-  }
-}
-
+#endif // GENIETERRAIN_H

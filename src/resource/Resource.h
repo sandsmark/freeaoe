@@ -62,8 +62,10 @@ public:
   ///
   /// @return type
   //
-  Type getType();
+  Type getType() const;
   
+  //----------------------------------------------------------------------------
+  bool isLoaded() const;
 protected:
   //----------------------------------------------------------------------------
   /// Sets resources' id
@@ -72,9 +74,14 @@ protected:
   //
   void setId(sf::Uint32 id);
   
+  //----------------------------------------------------------------------------
+  void setLoaded(bool loaded);
+  
 private:
   sf::Uint32 id_;
   Type type_;
+  
+  bool loaded_;
 };
 
 #endif // RESOURCE_H

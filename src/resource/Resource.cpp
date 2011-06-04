@@ -22,7 +22,7 @@
 using sf::Uint32;
 
 //------------------------------------------------------------------------------
-Resource::Resource(Uint32 id, Type type) : id_(id), type_(type)
+Resource::Resource(Uint32 id, Type type) : id_(id), type_(type), loaded_(false)
 {
 
 }
@@ -40,8 +40,21 @@ Uint32 Resource::getId() const
 }
 
 //------------------------------------------------------------------------------
-Resource::Type Resource::getType()
+Resource::Type Resource::getType() const
 {
   return type_;
+}
+
+//------------------------------------------------------------------------------
+bool Resource::isLoaded() const
+{
+  return loaded_;
+}
+
+
+//------------------------------------------------------------------------------
+void Resource::setLoaded(bool loaded)
+{
+  loaded_ = loaded;
 }
 

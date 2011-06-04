@@ -17,34 +17,52 @@
 */
 
 
-#include "Graphic.h"
-#include <file/SlpFile.h>
+#include "MapRenderer.h"
+#include <SFML/Graphics/Sprite.hpp>
+#include <resource/Graphic.h>
+#include <resource/ResourceManager.h>
 
-//------------------------------------------------------------------------------
-Graphic::Graphic(SlpFile *slp_file) : slp_file_(slp_file), 
-                                      Resource(slp_file->getId(), TYPE_GRAPHIC)
+MapRenderer::MapRenderer()
 {
 
 }
 
-//------------------------------------------------------------------------------
-Graphic::~Graphic()
+MapRenderer::~MapRenderer()
 {
 
 }
 
-//------------------------------------------------------------------------------
-sf::Image* Graphic::getImage()
+void MapRenderer::setMap(Map* map)
 {
-  return slp_file_->getImage();
-}
-
-void Graphic::load()
-{
-  if (!isLoaded())
+  map_ = map; 
+  
+  int x, y;
+  x = y = 0;
+  
+  for (int col = 0; col < map->getCols(); col++)
   {
-    slp_file_->load();
-    setLoaded(true);
+    for (int row = 0; row < map->getRows(); row++)
+    {
+      sf::Sprite spr;
+      
+      spr.SetX(x);
+      spr.SetY(y);
+      
+      GenieTerrain ter = map->getTerrain(col, row);
+      
+      std::auto_ptr<Graphic> ptr = 
+        ResourceManager::Inst()->getGraphic(ter.slp_id);
+      /*
+      spr.SetImage(*ptr->getImage());
+      
+      this->Draw(spr);*/
+      
+      x += 50;
+      
+    }
+    
+    x = 0;
+    y += 50;
   }
 }
 

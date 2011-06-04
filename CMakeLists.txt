@@ -29,10 +29,17 @@ set(FILE_SRC src/file/ColorPalette.cpp
              src/file/SlpFile.cpp
              src/file/DrsFile.cpp)
 
+set(DATA_SRC src/data/GenieTerrain.cpp)
+
+set(MECHANICS_SRC src/mechanics/Map.cpp
+                  src/mechanics/MapRenderer.cpp) 
+
 add_executable(freeaoe src/Engine.cpp main.cpp 
                ${FILE_SRC}
                ${RESOURCE_SRC}
-               ${GLOBAL_SRC})
+               ${GLOBAL_SRC}
+               ${DATA_SRC}
+               ${MECHANICS_SRC})
 
 target_link_libraries(freeaoe geni_lib2 ${SFML_LIBRARY} )
 

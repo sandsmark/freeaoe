@@ -9,14 +9,23 @@
 
 #include <genied.h>
 #include <Engine.h>
+#include <mechanics/Map.h>
+#include <mechanics/MapRenderer.h>
 
 int main(int argc, char **argv) 
 {
+  Logger::setLogLevel(Logger::L_INFO);
+  
   Engine en;
   en.run();
   
-  //DrsGraphics gr;
-  //gr.load(file);
+  ResourceManager::Inst();
+  
+  Map map;
+  map.setUpSample();
+  
+  MapRenderer render;
+  render.setMap(&map);
   
   GenieFile gf;
   
@@ -29,9 +38,10 @@ int main(int argc, char **argv)
   spr.SetX(200);
   spr.SetY(200);
   
-  ResourceManager::Inst();
   std::auto_ptr<Graphic> ptr = ResourceManager::Inst()->getGraphic(5);
+  std::auto_ptr<Graphic> ptr2 = ResourceManager::Inst()->getGraphic(5);
   spr.SetImage( *ptr->getImage() );
+
   
    // Create the main window
   sf::RenderWindow App(sf::VideoMode(800, 600), "SFML window");

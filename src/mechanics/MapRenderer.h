@@ -17,34 +17,26 @@
 */
 
 
-#include "Graphic.h"
-#include <file/SlpFile.h>
+#ifndef MAPRENDERER_H
+#define MAPRENDERER_H
+#include "Map.h"
+#include <SFML/Graphics/RenderTarget.hpp>
 
-//------------------------------------------------------------------------------
-Graphic::Graphic(SlpFile *slp_file) : slp_file_(slp_file), 
-                                      Resource(slp_file->getId(), TYPE_GRAPHIC)
+class MapRenderer : public sf::RenderTarget
 {
 
-}
+public:
+  MapRenderer();
+  virtual ~MapRenderer();
+  
+  virtual unsigned int GetHeight() const { return 400; }
+  virtual unsigned int GetWidth() const { return 400; }
+  virtual bool Activate(bool Active) {}
+  
+  void setMap(Map *map); 
+  
+private:
+  Map *map_;
+};
 
-//------------------------------------------------------------------------------
-Graphic::~Graphic()
-{
-
-}
-
-//------------------------------------------------------------------------------
-sf::Image* Graphic::getImage()
-{
-  return slp_file_->getImage();
-}
-
-void Graphic::load()
-{
-  if (!isLoaded())
-  {
-    slp_file_->load();
-    setLoaded(true);
-  }
-}
-
+#endif // MAPRENDERER_H

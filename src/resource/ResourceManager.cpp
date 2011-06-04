@@ -27,6 +27,8 @@
 
 #include <file/DrsFile.h>
 
+Logger& ResourceManager::log = Logger::getLogger("freeaoe.ResourceManager");
+
 //------------------------------------------------------------------------------
 ResourceManager* ResourceManager::Inst()
 {
@@ -44,6 +46,7 @@ void ResourceManager::Destroy()
 //------------------------------------------------------------------------------
 std::auto_ptr< Graphic > ResourceManager::getGraphic(unsigned int id)
 {
+  
   std::map<sf::Uint32, Resource *>::iterator pos = resources_.find(id);
   
   if (pos == resources_.end())
@@ -53,9 +56,13 @@ std::auto_ptr< Graphic > ResourceManager::getGraphic(unsigned int id)
   }
   else
   {
-    pos->second->load();
+    if (pos->second->isLoaded() == false)
+    {
+      log.info("Loading graphic [%u]", id);
+      pos->second->load();
+    }
     Graphic *g = dynamic_cast<Graphic *>(pos->second);
-    return std::auto_ptr< Graphic >( g );
+    return std::auto_ptr< Graphic >( new Graphic(*g) ); //return a copy
   }
 }
 
@@ -82,6 +89,8 @@ ResourceManager::~ResourceManager()
 //------------------------------------------------------------------------------
 void ResourceManager::initialize()
 {
+  log.debug("Initializing ResourceManager");
+  
   loadDrs("graphics.drs");
   loadDrs("terrain.drs");
   loadDrs("interfac.drs");
@@ -91,6 +100,8 @@ void ResourceManager::initialize()
 
 void ResourceManager::loadDrs(std::string file_name)
 {
+  log.info("Loading %s", file_name.c_str());
+  
   DrsFile *drs = new DrsFile(Config::Inst()->getDataPath() + file_name, this);
   drs->loadHeader();
   

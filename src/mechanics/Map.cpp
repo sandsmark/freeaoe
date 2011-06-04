@@ -17,34 +17,37 @@
 */
 
 
-#include "Graphic.h"
-#include <file/SlpFile.h>
+#include "Map.h"
 
-//------------------------------------------------------------------------------
-Graphic::Graphic(SlpFile *slp_file) : slp_file_(slp_file), 
-                                      Resource(slp_file->getId(), TYPE_GRAPHIC)
+Map::Map()
 {
 
 }
 
-//------------------------------------------------------------------------------
-Graphic::~Graphic()
+Map::~Map()
 {
 
 }
 
-//------------------------------------------------------------------------------
-sf::Image* Graphic::getImage()
+void Map::setUpSample()
 {
-  return slp_file_->getImage();
-}
-
-void Graphic::load()
-{
-  if (!isLoaded())
+  GenieTerrain ter1;
+  GenieTerrain ter2;
+  GenieTerrain ter3;
+  
+  ter1.name1 = "TER1";
+  ter3.name1 = "TER3";
+  ter2.name1 = "TER2";
+  
+  ter1.slp_id = 15000;
+  ter2.slp_id = 15001;
+  ter3.slp_id = 15002;
+  
+  for (int i=0; i < 4; i++)
   {
-    slp_file_->load();
-    setLoaded(true);
+    terrain_[i][0] = ter1;
+    terrain_[i][1] = ter2;
+    terrain_[i][2] = ter3;
+    //terrain_[i][3] = ter1;
   }
 }
-

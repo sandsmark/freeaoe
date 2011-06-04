@@ -17,34 +17,26 @@
 */
 
 
-#include "Graphic.h"
-#include <file/SlpFile.h>
+#ifndef MAP_H
+#define MAP_H
+#include <data/GenieTerrain.h>
 
-//------------------------------------------------------------------------------
-Graphic::Graphic(SlpFile *slp_file) : slp_file_(slp_file), 
-                                      Resource(slp_file->getId(), TYPE_GRAPHIC)
+class Map
 {
 
-}
+public:
+  Map();
+  virtual ~Map();
+  
+  void setUpSample();
+  
+  unsigned int getRows() { return 3; }
+  unsigned int getCols() { return 3; }
+  
+  GenieTerrain getTerrain(unsigned int col, unsigned int row) { return terrain_[col][row]; }
+  
+private:
+  GenieTerrain terrain_[4][4];
+};
 
-//------------------------------------------------------------------------------
-Graphic::~Graphic()
-{
-
-}
-
-//------------------------------------------------------------------------------
-sf::Image* Graphic::getImage()
-{
-  return slp_file_->getImage();
-}
-
-void Graphic::load()
-{
-  if (!isLoaded())
-  {
-    slp_file_->load();
-    setLoaded(true);
-  }
-}
-
+#endif // MAP_H

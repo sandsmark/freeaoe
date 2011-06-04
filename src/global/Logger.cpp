@@ -71,7 +71,7 @@ void Logger::log(Logger::LogLevel loglevel, va_list args, const char *msg)
     vsprintf(msgBuf, msg, args);
 
     //TODO: should be selectable if log goes to stdout or file
-    std::cout << getLogLevelName(loglevel) << ": " << msgBuf << "\n";
+    std::cout << getLogLevelName(loglevel) << ": " << msgBuf << std::endl;
   }
 }
 
