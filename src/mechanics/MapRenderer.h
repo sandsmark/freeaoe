@@ -21,12 +21,13 @@
 #define MAPRENDERER_H
 #include "Map.h"
 #include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics.hpp>
 
 class MapRenderer : public sf::RenderTarget
 {
 
 public:
-  MapRenderer();
+  MapRenderer(sf::RenderTarget *rt);
   virtual ~MapRenderer();
   
   virtual unsigned int GetHeight() const { return 400; }
@@ -35,8 +36,12 @@ public:
   
   void setMap(Map *map); 
   
+  void Draw();
+  
 private:
   Map *map_;
+  sf::RenderTarget *render_;
+  //sf:: *image;
 };
 
 #endif // MAPRENDERER_H

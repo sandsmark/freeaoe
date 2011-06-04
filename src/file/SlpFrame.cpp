@@ -78,7 +78,8 @@ void SlpFrame::loadHeader()
 void SlpFrame::load()
 {
   assert(!image_); //TODO: Not implemented
-  image_ = new sf::Image(width_, height_);
+  image_ = new sf::Image();//width_, height_);
+  image_->Create(width_, height_);
   
   readEdges();
   

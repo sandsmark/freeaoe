@@ -6,9 +6,10 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/)
 
 Find_Package(SFML REQUIRED)
 
-include_directories(src/ lib/genied2/src/)
+include_directories(src/ lib/genied2/src/) #lib/SFML_2.0/include/)
 
 add_subdirectory(lib/genied2)
+#add_subdirectory(lib/SFML_2.0)
 
 
 set(FILE_SRC src/file/SubFile.cpp 
@@ -41,6 +42,6 @@ add_executable(freeaoe src/Engine.cpp main.cpp
                ${DATA_SRC}
                ${MECHANICS_SRC})
 
-target_link_libraries(freeaoe geni_lib2 ${SFML_LIBRARY} )
+target_link_libraries(freeaoe geni_lib2 ${SFML_LIBRARY})#sfml-graphics sfml-window sfml-system )
 
 add_subdirectory(src)

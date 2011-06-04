@@ -24,7 +24,9 @@ int main(int argc, char **argv)
   Map map;
   map.setUpSample();
   
-  MapRenderer render;
+  sf::RenderWindow App(sf::VideoMode(800, 600), "SFML window");
+  
+  MapRenderer render(&App);
   render.setMap(&map);
   
   GenieFile gf;
@@ -43,8 +45,7 @@ int main(int argc, char **argv)
   spr.SetImage( *ptr->getImage() );
 
   
-   // Create the main window
-  sf::RenderWindow App(sf::VideoMode(800, 600), "SFML window");
+
    // Start the game loop
      while (App.IsOpened())
      {
@@ -60,8 +61,10 @@ int main(int argc, char **argv)
          // Clear screen
          App.Clear();
  
+         App.SetView(render.GetView());
          // Draw the sprite
          App.Draw(spr);
+         render.Draw();
  
          // Draw the string
  

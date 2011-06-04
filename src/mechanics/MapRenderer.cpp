@@ -22,9 +22,9 @@
 #include <resource/Graphic.h>
 #include <resource/ResourceManager.h>
 
-MapRenderer::MapRenderer()
+MapRenderer::MapRenderer(sf::RenderTarget *rt)
 {
-
+  render_ = rt;
 }
 
 MapRenderer::~MapRenderer()
@@ -36,33 +36,41 @@ void MapRenderer::setMap(Map* map)
 {
   map_ = map; 
   
-  int x, y;
-  x = y = 0;
+}
+
+void MapRenderer::Draw()
+{
+  int x, y, x_start, y_start;
+  x_start = y_start = x = y = 100;
   
-  for (int col = 0; col < map->getCols(); col++)
+  for (int col = 0; col < map_->getCols(); col++)
   {
-    for (int row = 0; row < map->getRows(); row++)
+    x = x_start;
+    y = y_start;
+    
+    for (int row = 0; row < map_->getRows(); row++)
     {
       sf::Sprite spr;
       
       spr.SetX(x);
       spr.SetY(y);
       
-      GenieTerrain ter = map->getTerrain(col, row);
+      GenieTerrain ter = map_->getTerrain(col, row);
       
       std::auto_ptr<Graphic> ptr = 
         ResourceManager::Inst()->getGraphic(ter.slp_id);
-      /*
+      
       spr.SetImage(*ptr->getImage());
       
-      this->Draw(spr);*/
+      render_->Draw(spr);
       
-      x += 50;
+      x += 48;
+      y += 24;
       
     }
     
-    x = 0;
-    y += 50;
+    x_start -= 48;
+    y_start += 24;
   }
 }
 
