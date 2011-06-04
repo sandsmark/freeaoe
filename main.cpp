@@ -7,7 +7,6 @@
 #include <global/Config.h>
 #include <resource/ResourceManager.h>
 
-#include <genied.h>
 #include <Engine.h>
 #include <mechanics/Map.h>
 #include <mechanics/MapRenderer.h>
@@ -25,16 +24,10 @@ int main(int argc, char **argv)
   map.setUpSample();
   
   sf::RenderWindow App(sf::VideoMode(800, 600), "SFML window");
+  sf::View view(sf::FloatRect(0,0,300,300));
   
   MapRenderer render(&App);
   render.setMap(&map);
-  
-  GenieFile gf;
-  
-  gf.LoadGenie("../aoe2/Data/empires2_x1.dat");
-  gf.ReadUnitsData();
-  
-  std::cout << gf.Civs.front()->Title << std::endl;
   
   sf::Sprite spr;
   spr.SetX(200);
@@ -61,10 +54,13 @@ int main(int argc, char **argv)
          // Clear screen
          App.Clear();
  
-         App.SetView(render.GetView());
+         App.SetView(view);
          // Draw the sprite
-         App.Draw(spr);
          render.Draw();
+         
+         App.SetView(App.GetDefaultView());
+         
+         App.Draw(spr);
  
          // Draw the string
  

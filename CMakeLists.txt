@@ -6,9 +6,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/)
 
 Find_Package(SFML REQUIRED)
 
-include_directories(src/ lib/genied2/src/) #lib/SFML_2.0/include/)
+include_directories(src/)# lib/genied2/src/) #lib/SFML_2.0/include/)
 
-add_subdirectory(lib/genied2)
+#add_subdirectory(lib/genied2)
 #add_subdirectory(lib/SFML_2.0)
 
 
@@ -30,7 +30,10 @@ set(FILE_SRC src/file/ColorPalette.cpp
              src/file/SlpFile.cpp
              src/file/DrsFile.cpp)
 
-set(DATA_SRC src/data/GenieTerrain.cpp)
+set(DATA_SRC src/data/DataManager.cpp 
+             src/data/GenieTerrain.cpp
+             src/data/GenieGraphic.cpp 
+             src/data/GenieUnit.cpp )
 
 set(MECHANICS_SRC src/mechanics/Map.cpp
                   src/mechanics/MapRenderer.cpp) 
@@ -42,6 +45,6 @@ add_executable(freeaoe src/Engine.cpp main.cpp
                ${DATA_SRC}
                ${MECHANICS_SRC})
 
-target_link_libraries(freeaoe geni_lib2 ${SFML_LIBRARY})#sfml-graphics sfml-window sfml-system )
+target_link_libraries(freeaoe ${SFML_LIBRARY})#sfml-graphics sfml-window sfml-system )
 
 add_subdirectory(src)

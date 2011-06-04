@@ -64,12 +64,12 @@ void MapRenderer::Draw()
       
       render_->Draw(spr);
       
-      x += 48;
+      x += 49;
       y += 24;
       
     }
     
-    x_start -= 48;
+    x_start -= 49;
     y_start += 24;
   }
 }
