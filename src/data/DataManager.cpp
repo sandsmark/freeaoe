@@ -19,6 +19,12 @@
 
 #include "DataManager.h"
 
+#include "GenieGraphic.h"
+#include "GenieTerrain.h"
+#include "GenieUnit.h"
+
+Logger& DataManager::log = Logger::getLogger("freeaoe.DataManager");
+
 DataManager* DataManager::Inst()
 {
   static DataManager inst;
@@ -28,7 +34,7 @@ DataManager* DataManager::Inst()
 
 DataManager::DataManager()
 {
-
+  initialize();
 }
 
 DataManager::DataManager(const DataManager& other)
@@ -45,4 +51,50 @@ DataManager& DataManager::operator=(const DataManager& other)
 {
     return *this;
 }
+
+void DataManager::initialize()
+{
+  log.debug("Initializing DataManager (sample data)");
+  // Setup sample data:
+  
+  GenieUnit *gu = new GenieUnit();
+  gu->id_ = 281;
+  gu->display_name_id_ = 5111;
+  gu->standing_graphic_ = 1128;
+  //type = 70, living unit
+  
+  units_[gu->id_] = gu;
+  
+  gu = new GenieUnit();
+  gu->id_ = 234;
+  gu->display_name_id_ = 5154;
+  gu->standing_graphic_ = 2532;
+  // type = 80 building
+  
+  units_[gu->id_] = gu;
+  
+  GenieGraphic *gg = new GenieGraphic();
+  
+  gg->id_ = 1128;
+  gg->slp_id_ = 1057;
+  gg->name1_ = "TAXEM_FN";
+  gg->frame_count_ = 10;
+  gg->angle_count_ = 8;
+  gg->frame_rate_ = 0.25;
+  
+  graphics_[gg->id_] = gg;
+  
+  gg = new GenieGraphic();
+  
+  gg->id_ = 2532;
+  gg->slp_id_ = 2667;
+  gg->name1_ = "WCTW2NNGW";
+  gg->angle_count_ = 1;
+  gg->frame_count_ = 1;
+  gg->frame_rate_ = 0;
+  
+  graphics_[gg->id_] = gg;
+  
+}
+
 

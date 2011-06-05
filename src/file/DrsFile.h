@@ -20,9 +20,10 @@
 #ifndef DRSFILE_H
 #define DRSFILE_H
 
-#include <iostream>
 #include "FileIO.h"
 #include <vector>
+
+#include <global/Logger.h>
 
 class ResourceManager;
 
@@ -58,6 +59,8 @@ public:
   virtual void loadHeader();
   
 private:
+  static Logger &log;
+  
   bool header_loaded_;
   
   sf::Uint32 num_of_tables_;

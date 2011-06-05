@@ -21,12 +21,12 @@
 
 #include <string>
 
-//Debug
-#include <iostream>
 #include <resource/ResourceManager.h>
 
 using std::string;
 using sf::Uint32;
+
+Logger& DrsFile::log = Logger::getLogger("freeaoe.DrsFile");
 
 //------------------------------------------------------------------------------
 DrsFile::DrsFile(string file_name, ResourceManager *resource_manager)
@@ -47,7 +47,7 @@ DrsFile::~DrsFile()
 void DrsFile::loadHeader()
 {
   if (header_loaded_)
-    std::cerr << "Warn: Trying to load header again!" << std::endl;
+    log.warn("Trying to load header again!"); 
   else
   {
     string copy_right = readString(40);

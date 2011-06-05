@@ -58,7 +58,10 @@ public:
   
 private:
   ResourceManager();
+  ResourceManager(const ResourceManager &rm);
   virtual ~ResourceManager();
+  
+  ResourceManager& operator=(const ResourceManager &rm);
   
   std::vector<DrsFile *> drs_files_;
   std::map<long, SlpFile *> slp_files_;

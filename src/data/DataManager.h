@@ -20,6 +20,17 @@
 #ifndef DATAMANAGER_H
 #define DATAMANAGER_H
 
+#include <global/Logger.h>
+
+#include <map>
+#include <SFML/Config.hpp>
+
+using sf::Uint32;
+
+class GenieGraphic;
+class GenieTerrain;
+class GenieUnit;
+
 //------------------------------------------------------------------------------
 /// Class for receiving and managing data files (.dat)
 //
@@ -35,6 +46,14 @@ private:
   DataManager(const DataManager& other);
   virtual ~DataManager();
   virtual DataManager& operator=(const DataManager& other);
+  
+  void initialize();
+  
+  static Logger &log;
+  
+  std::map<Uint32, GenieGraphic *> graphics_;
+  std::map<Uint32, GenieTerrain *> terrains_;
+  std::map<Uint32, GenieUnit *> units_;
 };
 
 #endif // DATAMANAGER_H

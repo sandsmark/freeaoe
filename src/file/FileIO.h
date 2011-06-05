@@ -131,6 +131,8 @@ private:
   std::fstream *file; //is only used if FileIO is called with file_name
   
   FileIO();
+  FileIO(const FileIO &fio);
+  FileIO& operator=(const FileIO &fio);
 };
 
 #endif // FILEIO_H

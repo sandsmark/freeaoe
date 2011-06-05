@@ -83,6 +83,13 @@ void Logger::error(const char *msg, ...) {
 }
 
 //------------------------------------------------------------------------------
+void Logger::warn(const char *msg, ...) {
+  va_list args;
+  va_start(args,msg);
+  this->log(L_WARNING, args, msg);
+}
+
+//------------------------------------------------------------------------------
 void Logger::info(const char *msg, ...) {
   va_list args;
   va_start(args,msg);

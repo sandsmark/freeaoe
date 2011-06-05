@@ -19,8 +19,6 @@
 
 #include "FileIO.h"
 
-#include <iostream>
-
 //------------------------------------------------------------------------------
 FileIO::FileIO(std::string file_name) throw (FileException) 
                : file_name_(file_name)
@@ -48,7 +46,11 @@ FileIO::FileIO(std::iostream* iostr, std::streampos pos) : iostr_(iostr),
 //------------------------------------------------------------------------------
 FileIO::~FileIO()
 {
-  delete file;
+  if (file)
+  {
+    file->close();
+    delete file;
+  }
 }
 
 //------------------------------------------------------------------------------

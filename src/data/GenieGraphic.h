@@ -30,6 +30,8 @@ public:
   sf::Uint32 slp_id_;
   sf::Uint32 frame_count_;
   sf::Uint32 angle_count_;
+  
+  float frame_rate_;
 };
 
 #endif // GENIEGRAPHIC_H

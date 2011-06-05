@@ -20,8 +20,6 @@
 #include "SlpFile.h"
 #include "SlpFrame.h"
 
-#include <iostream>
-
 using sf::Uint32;
 
 //------------------------------------------------------------------------------
@@ -46,7 +44,7 @@ void SlpFile::load()
   if (frames_.size() > 0) //already loaded
     return;
   
-  setToPos(); //TODO: Segfault why?
+  setToPos(); 
   
   readHeader();
   

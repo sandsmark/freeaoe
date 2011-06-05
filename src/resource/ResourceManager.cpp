@@ -83,7 +83,9 @@ ResourceManager::ResourceManager()
 //------------------------------------------------------------------------------
 ResourceManager::~ResourceManager()
 {
-
+  for (std::vector<DrsFile *>::iterator it = drs_files_.begin();
+       it != drs_files_.end(); it++)
+     delete (*it);
 }
 
 //------------------------------------------------------------------------------
