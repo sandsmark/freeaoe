@@ -22,12 +22,7 @@
 
 #include <iostream>
 
-//------------------------------------------------------------------------------
-/*SlpFile::SlpFile()
-{
-
-}
-*/
+using sf::Uint32;
 
 //------------------------------------------------------------------------------
 SlpFile::SlpFile(sf::Uint32 id, sf::Uint32 pos, sf::Uint32 len, 
@@ -98,7 +93,7 @@ sf::Image* SlpFile::getImage(sf::Uint32 frame)
 void SlpFile::readHeader()
 {
   std::string version = readString(4);
-  num_frames_ = readUInt32();
+  num_frames_ = read<Uint32>();
   
   std::string comment = readString(24);
 }

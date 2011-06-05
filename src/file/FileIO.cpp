@@ -19,12 +19,7 @@
 
 #include "FileIO.h"
 
-//------------------------------------------------------------------------------
-/*FileIO::FileIO() : file(0), file_name_("")
-{
-
-}
-*/
+#include <iostream>
 
 //------------------------------------------------------------------------------
 FileIO::FileIO(std::string file_name) throw (FileException) 
@@ -88,96 +83,22 @@ bool FileIO::eof()
 }
 
 //------------------------------------------------------------------------------
-std::string FileIO::readString ( size_t size )
+std::string FileIO::readString ( size_t len )
 {
   if (!iostr_->eof())
   {
-    char *buf = new char[size + 1];
+    char *buf = new char[len + 1];
     
-    iostr_->read(buf, size);
+    iostr_->read(buf, len);
     
-    buf[size] = '\0';
+    buf[len] = '\0';
     
-    return std::string(buf);
+    std::string ret(buf);
+    
+    delete buf;
+    return ret;
   }
 
   return "";
 }
 
-//------------------------------------------------------------------------------
-sf::Int32 FileIO::readInt32 ()
-{
-  sf::Int32 ret = 0;
-  
-  if (!iostr_->eof())
-  {
-    iostr_->read(reinterpret_cast<char *>(&ret), 4);
-  }
-  
-  return ret;
-}
-
-//------------------------------------------------------------------------------
-sf::Uint32 FileIO::readUInt32 ()
-{
-  sf::Uint32 ret = 0;
-  
-  if (!iostr_->eof())
-  {
-    iostr_->read(reinterpret_cast<char *>(&ret), 4);
-  }
-  
-  return ret;
-}
-
-//------------------------------------------------------------------------------
-sf::Uint16 FileIO::readUInt16 ()
-{
-  sf::Uint16 ret = 0;
-  
-  if (!iostr_->eof())
-  {
-    iostr_->read(reinterpret_cast<char *>(&ret), 2);
-  }
-  
-  return ret;
-}
-
-//------------------------------------------------------------------------------
-sf::Int16 FileIO::readInt16 ()
-{
-  sf::Int16 ret = 0;
-  
-  if (!iostr_->eof())
-  {
-    iostr_->read(reinterpret_cast<char *>(&ret), 2);
-  }
-  
-  return ret;
-}
-
-//------------------------------------------------------------------------------
-sf::Uint8 FileIO::readUInt8()
-{
-  sf::Uint8 ret = 0;
-  
-  if (!iostr_->eof())
-  {
-    iostr_->read(reinterpret_cast<char *>(&ret), 1);
-  }
-  
-  return ret;
-}
-
-//------------------------------------------------------------------------------
-char FileIO::readChar()
-{
-  char ret;
-  
-  if (!iostr_->eof())
-  {
-    iostr_->read(&ret, 1);
-  }
-  
-  return ret;
-}

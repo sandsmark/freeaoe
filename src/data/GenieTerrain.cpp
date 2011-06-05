@@ -21,21 +21,25 @@
 
 #include <file/FileIO.h>
 
-const unsigned int GenieTerrain::TERRAIN_NAME_SIZE = 17; //13 in aok
+using sf::Uint16;
+using sf::Uint32;
+using sf::Int16;
+
+const unsigned int GenieTerrain::TERRAIN_NAME_SIZE = 13; //17 in swgb
 
 void GenieTerrain::read(FileIO *file)
 {
-  unknown1 = file->readInt16();
-  unknown2 = file->readInt16();
+  unknown1 = file->read<Int16>();
+  unknown2 = file->read<Int16>();
   
   name1 = file->readString(TERRAIN_NAME_SIZE);
   name2 = file->readString(TERRAIN_NAME_SIZE);
   
-  slp_id = file->readUInt32();
-  unknown3 = file->readUInt32();
-  unknown4 = file->readUInt32();
-  unknown5 = file->readUInt32();
-  color = file->readUInt32();
+  slp_id = file->read<Uint32>();
+  unknown3 = file->read<Uint32>();
+  unknown4 = file->read<Uint32>();
+  unknown5 = file->read<Uint32>();
+  color = file->read<Uint32>();
   
-  unknown6 = file->readString(406); //382 in aok
+  unknown6 = file->readString(382); //406 in swgb
 }

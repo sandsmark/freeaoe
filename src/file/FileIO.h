@@ -89,59 +89,39 @@ public:
   /// @param size string len
   /// @return read string
   //
-  std::string readString(size_t size);
+  std::string readString(size_t len);
   
   //----------------------------------------------------------------------------
-  /// Reads a 4 byte int from stream.
-  ///
-  /// @param istr input stream
-  /// @return read number
+  /// Generic read method for non pointers
   //
-  sf::Int32 readInt32(); 
+  template <typename T>
+  T read()
+  {
+    T ret;
+  
+    if (!iostr_->eof())
+      iostr_->read(reinterpret_cast<char *>(&ret), sizeof(ret));
+    
+    return ret;
+  }
   
   //----------------------------------------------------------------------------
-  /// Reads a 4 byte unsigned int from stream.
-  ///
-  /// @param istr input stream
-  /// @return read number
+  /// Generic read method for arrays
   //
-  sf::Uint32 readUInt32(); 
+  template <typename T>
+  T* read(size_t len)
+  {
+    T* ret = 0;
+    
+    if (!iostr_->eof())
+    {
+      ret = new T[len];
+      iostr_->read(reinterpret_cast<char *>(ret), sizeof(T) * len);
+    }
+    
+    return ret;
+  }
   
-  //----------------------------------------------------------------------------
-  /// Reads a 2 byte unsigned int from stream.
-  ///
-  /// @param istr input stream
-  /// @return read number
-  //
-  sf::Uint16 readUInt16(); 
-  
-  //----------------------------------------------------------------------------
-  /// Reads a 2 byte int from stream.
-  ///
-  /// @param istr input stream
-  /// @return read number
-  //
-  sf::Int16 readInt16(); 
-  
-  //----------------------------------------------------------------------------
-  /// Reads a 1 byte unsigned int from stream.
-  ///
-  /// @return read number
-  //
-  sf::Uint8 readUInt8(); 
-  
-  //----------------------------------------------------------------------------
-  /// Reads an array of 8 bit unsigned int from stream.
-  ///
-  /// @param size number of values
-  /// @return read number
-  //
-  sf::Uint8* readUInt8(size_t size); 
-  
-  //----------------------------------------------------------------------------
-  ///
-  //
-  char readChar();
   
 private:
   std::iostream *iostr_;

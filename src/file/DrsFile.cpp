@@ -57,14 +57,14 @@ void DrsFile::loadHeader()
     //File type
     string file_type = readString(12);
     
-    num_of_tables_ = readUInt32();
-    header_offset_ = readUInt32();
+    num_of_tables_ = read<Uint32>();
+    header_offset_ = read<Uint32>(); 
     
     // Load table data
     for (Uint32 i = 0; i < num_of_tables_; i++)
     {
       table_types_.push_back(readString(8));
-      table_num_of_files_.push_back(readUInt32());
+      table_num_of_files_.push_back(read<Uint32>());
     }
    
     Resource *res = 0;
@@ -74,9 +74,9 @@ void DrsFile::loadHeader()
     {
       for (Uint32 j = 0; j < table_num_of_files_[i]; j++)
       {
-        sf::Uint32 id = readUInt32();
-        sf::Uint32 pos = readUInt32();
-        sf::Uint32 len = readUInt32();
+        sf::Uint32 id = read<Uint32>();
+        sf::Uint32 pos = read<Uint32>();
+        sf::Uint32 len = read<Uint32>();
                 
         if (table_types_[i].find(" plsL") == 0)
         {
