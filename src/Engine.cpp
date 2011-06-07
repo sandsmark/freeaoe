@@ -23,6 +23,8 @@
 
 Logger& Engine::log = Logger::getLogger("freeaoe.Engine");
 
+const sf::Clock Engine::GameClock;
+
 
 //------------------------------------------------------------------------------
 Engine::Engine()
@@ -42,4 +44,6 @@ void Engine::run()
   Logger::setLogLevel(Logger::L_INFO);
   
   log.info("Starting engine.");
+  
+  //Setup
 }

@@ -19,3 +19,11 @@
 
 #include "GenieUnit.h"
 
+const sf::Uint8 GenieUnit::TYPE_DECO = 10; //Decoration
+const sf::Uint8 GenieUnit::TYPE_FLAG = 20;
+const sf::Uint8 GenieUnit::TYPE_FLAG2 = 25;
+const sf::Uint8 GenieUnit::TYPE_DEAD_FISH = 30; // Dead unit or fish unit
+const sf::Uint8 GenieUnit::TYPE_PROJECTILE = 60;
+const sf::Uint8 GenieUnit::TYPE_LIVING = 70;
+const sf::Uint8 GenieUnit::TYPE_BUILDING = 80;
+  

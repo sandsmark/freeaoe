@@ -67,6 +67,12 @@ std::auto_ptr< Graphic > ResourceManager::getGraphic(unsigned int id)
 }
 
 //------------------------------------------------------------------------------
+SlpFile* ResourceManager::getSlp(sf::Uint32 id)
+{
+  return 0;
+}
+
+//------------------------------------------------------------------------------
 void ResourceManager::addResource(Resource* res)
 {
   //TODO: check if already added

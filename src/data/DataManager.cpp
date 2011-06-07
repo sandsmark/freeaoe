@@ -31,6 +31,11 @@ DataManager* DataManager::Inst()
   return &inst;
 }
 
+GenieGraphic DataManager::getGraphic(Uint32 id)
+{
+  return *graphics_[id];
+}
+
 
 DataManager::DataManager()
 {

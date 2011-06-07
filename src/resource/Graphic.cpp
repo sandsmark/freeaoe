@@ -34,9 +34,9 @@ Graphic::~Graphic()
 }
 
 //------------------------------------------------------------------------------
-sf::Image* Graphic::getImage()
+sf::Image* Graphic::getImage(unsigned int frame)
 {
-  return slp_file_->getImage();
+  return slp_file_->getImage(frame);
 }
 
 void Graphic::load()

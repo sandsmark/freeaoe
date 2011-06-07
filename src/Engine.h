@@ -21,11 +21,14 @@
 #define ENGINE_H
 
 #include <global/Logger.h>
+#include <SFML/System/Clock.hpp>
 
 class Engine
 {
 
 public:
+  static const sf::Clock GameClock;
+  
   Engine();
   ~Engine();
   
@@ -33,6 +36,7 @@ public:
   
 private:
   static Logger &log;
+  
 };
 
 #endif // ENGINE_H

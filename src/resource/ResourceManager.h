@@ -54,6 +54,8 @@ public:
   //
   std::auto_ptr<Graphic> getGraphic(unsigned int id);
   
+  SlpFile* getSlp(sf::Uint32 id);
+  
   void addResource(Resource *);
   
 private:

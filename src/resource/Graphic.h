@@ -36,7 +36,7 @@ public:
   Graphic(SlpFile *slp_file);
   virtual ~Graphic();
   
-  sf::Image *getImage();
+  sf::Image *getImage(unsigned int frame=0);
     
   virtual void load();
 private:

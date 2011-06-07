@@ -10,6 +10,11 @@
 #include <Engine.h>
 #include <mechanics/Map.h>
 #include <mechanics/MapRenderer.h>
+#include <data/DataManager.h>
+#include <render/RenderGraphic.h>
+
+
+// TODO: Bad_alloc
 
 int main(int argc, char **argv) 
 {
@@ -19,6 +24,11 @@ int main(int argc, char **argv)
   en.run();
   
   ResourceManager::Inst();
+  DataManager::Inst();
+  sf::Clock clk;
+ 
+  GenieGraphic gg = DataManager::Inst()->getGraphic(1128);
+  RenderGraphic rg(&gg);
   
   Map map;
   map.setUpSample();
@@ -54,9 +64,11 @@ int main(int argc, char **argv)
          // Clear screen
          App.Clear();
  
-         App.SetView(view);
+         //App.SetView(view);
          // Draw the sprite
          render.Draw();
+         
+         rg.drawOn(&App);
          
          App.SetView(App.GetDefaultView());
          
@@ -66,6 +78,7 @@ int main(int argc, char **argv)
  
          // Update the window
          App.Display();
+         
      }
      
   Config::Destroy();

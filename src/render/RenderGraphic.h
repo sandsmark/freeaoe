@@ -17,27 +17,38 @@
 */
 
 
-#ifndef GENIEUNIT_H
-#define GENIEUNIT_H
-#include <SFML/Config.hpp>
+#ifndef RENDERGRAPHIC_H
+#define RENDERGRAPHIC_H
+#include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/Sprite.hpp>
 
-class GenieUnit
+class GenieGraphic;
+
+class RenderGraphic
 {
+
 public:
-  static const sf::Uint8 TYPE_DECO; //Decoration
-  static const sf::Uint8 TYPE_FLAG;
-  static const sf::Uint8 TYPE_FLAG2;
-  static const sf::Uint8 TYPE_DEAD_FISH; // Dead unit or fihs unit
-  static const sf::Uint8 TYPE_PROJECTILE;
-  static const sf::Uint8 TYPE_LIVING;
-  static const sf::Uint8 TYPE_BUILDING;
+  RenderGraphic(GenieGraphic *data);
+  RenderGraphic(const RenderGraphic& other);
+  virtual ~RenderGraphic();
+  virtual RenderGraphic& operator=(const RenderGraphic& other);
   
+  //TODO: Framecounter? clock?
   
-  sf::Uint32 id_;
-  sf::Uint8 type_;
-  sf::Uint32 display_name_id_;
+  void setX(int x);
+  void setY(int y);
   
-  sf::Uint32 standing_graphic_;
+  void drawOn(sf::RenderTarget *target);
+  
+private:
+  GenieGraphic *data_;
+  
+  int x_, y_;
+  
+  sf::Sprite sprite_;
+  
+  unsigned int current_frame_;
+  float time_last_frame_;
 };
 
-#endif // GENIEUNIT_H
+#endif // RENDERGRAPHIC_H

@@ -38,12 +38,15 @@ set(DATA_SRC src/data/DataManager.cpp
 set(MECHANICS_SRC src/mechanics/Map.cpp
                   src/mechanics/MapRenderer.cpp) 
 
+set(RENDER_SRC src/render/RenderGraphic.cpp )
+
 add_executable(freeaoe src/Engine.cpp main.cpp 
                ${FILE_SRC}
                ${RESOURCE_SRC}
                ${GLOBAL_SRC}
                ${DATA_SRC}
-               ${MECHANICS_SRC})
+               ${MECHANICS_SRC}
+               ${RENDER_SRC})
 
 target_link_libraries(freeaoe ${SFML_LIBRARY})#sfml-graphics sfml-window sfml-system )
 

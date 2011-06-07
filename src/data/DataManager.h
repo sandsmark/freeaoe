@@ -21,13 +21,13 @@
 #define DATAMANAGER_H
 
 #include <global/Logger.h>
+#include <data/GenieGraphic.h>
 
 #include <map>
 #include <SFML/Config.hpp>
 
 using sf::Uint32;
 
-class GenieGraphic;
 class GenieTerrain;
 class GenieUnit;
 
@@ -40,6 +40,8 @@ class DataManager
 public:
   
   static DataManager* Inst();
+  
+  GenieGraphic getGraphic(sf::Uint32 id);
   
 private:
   DataManager();
