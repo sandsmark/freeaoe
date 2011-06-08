@@ -24,7 +24,8 @@
 #include <vector>
 
 #include "FileIO.h"
-#include "../resource/Resource.h"
+#include <resource/Resource.h>
+#include <global/Logger.h>
 
 #include <SFML/Graphics/Image.hpp>
 
@@ -36,19 +37,13 @@ class SlpFile : public FileIO
 public:
   //----------------------------------------------------------------------------
   /// Constructor
-  //
-  //SlpFile();
-  
-  //----------------------------------------------------------------------------
-  /// Constructor
   ///
   /// @param id resources' id
   /// @param len 
   /// @param istr input/output stream
   /// @param pos start position of this file in stream
   //
-  SlpFile(sf::Uint32 id, sf::Uint32 pos, sf::Uint32 len, std::iostream *iostr 
-          );
+  SlpFile(sf::Uint32 id, sf::Uint32 pos, sf::Uint32 len, std::iostream *iostr);
   
   //----------------------------------------------------------------------------
   /// Destructor
@@ -68,6 +63,10 @@ public:
   sf::Uint32 getFrameCount();
   
   //----------------------------------------------------------------------------
+  /// Returns the internal slp id.
+  ///
+  /// @return id
+  //
   sf::Int32 getId();
   
   //----------------------------------------------------------------------------
@@ -79,13 +78,25 @@ public:
   //
   sf::Image* getImage(sf::Uint32 frame=0);
   
-private:
+  //----------------------------------------------------------------------------
+  /// Returns the slp frame at given frame index.
+  ///
+  /// @param frame frame index
+  /// @return SlpFrame
+  //
+  SlpFrame* getFrame(sf::Uint32 frame=0);
+  
+private: 
+  SlpFile();
+  
   sf::Uint32 id_;
   sf::Uint32 len_;
   
   sf::Uint32 num_frames_;
   
   std::vector<SlpFrame *> frames_;
+  
+  static Logger &log;
   
   void readHeader();
 };

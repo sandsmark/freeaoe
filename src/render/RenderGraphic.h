@@ -23,6 +23,7 @@
 #include <SFML/Graphics/Sprite.hpp>
 
 class GenieGraphic;
+class SlpFile;
 
 class RenderGraphic
 {
@@ -33,17 +34,29 @@ public:
   virtual ~RenderGraphic();
   virtual RenderGraphic& operator=(const RenderGraphic& other);
   
-  //TODO: Framecounter? clock?
+  //TODO: direction
   
-  void setX(int x);
-  void setY(int y);
+  //----------------------------------------------------------------------------
+  /// Sets X position of the hotspot.
+  ///
+  /// @param x x pos
+  //
+  void setX(float x);
+  
+  //----------------------------------------------------------------------------
+  /// Sets Y position of the hotspot.
+  ///
+  /// @param y y pos
+  //
+  void setY(float y);
   
   void drawOn(sf::RenderTarget *target);
   
 private:
   GenieGraphic *data_;
+  SlpFile *slp_file_;
   
-  int x_, y_;
+  float x_, y_;
   
   sf::Sprite sprite_;
   

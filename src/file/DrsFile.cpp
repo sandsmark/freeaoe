@@ -81,6 +81,8 @@ void DrsFile::loadHeader()
         if (table_types_[i].find(" plsL") == 0)
         {
           SlpFile *slp = new SlpFile(id, pos, len, getIOStream());
+          resource_manager_->addSlpFile(slp);
+          
           res = new Graphic(slp);
         }
         else

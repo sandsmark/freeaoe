@@ -22,6 +22,8 @@
 
 using sf::Uint32;
 
+Logger& SlpFile::log = Logger::getLogger("freeaoe.SlpFile");
+
 //------------------------------------------------------------------------------
 SlpFile::SlpFile(sf::Uint32 id, sf::Uint32 pos, sf::Uint32 len, 
                  std::iostream* iostr) : id_(id), FileIO(iostr, pos), len_(len)
@@ -80,10 +82,24 @@ sf::Int32 SlpFile::getId()
 //------------------------------------------------------------------------------
 sf::Image* SlpFile::getImage(sf::Uint32 frame)
 {
-  if (frame >= frames_.size())
-    return 0;
+  SlpFrame *slp = getFrame(frame);
   
-  return frames_[frame]->getImage();
+  if (slp)
+    return slp->getImage();
+  
+  return 0;
+}
+
+//------------------------------------------------------------------------------
+SlpFrame* SlpFile::getFrame(Uint32 frame)
+{
+  if (frame >= frames_.size())
+  {
+    log.warn("Trying to get frame [%u] from index out of range!", frame);
+    return 0;
+  }
+  
+  return frames_[frame];
 }
 
 

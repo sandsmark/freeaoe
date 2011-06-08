@@ -51,12 +51,28 @@ public:
   
   //----------------------------------------------------------------------------
   /// Returns 
-  //
+  // TODO: Obsolete
   std::auto_ptr<Graphic> getGraphic(unsigned int id);
   
+  //----------------------------------------------------------------------------
+  /// Returns the slp file with given id or 0 if not found. The slp file
+  /// should not be deleted!
+  ///
+  /// @param id id of the slp file
+  /// @return slp file
+  //
   SlpFile* getSlp(sf::Uint32 id);
   
+  // TODO: Obsolete
   void addResource(Resource *);
+  
+  //----------------------------------------------------------------------------
+  /// Adds an slp file that will be managed by the ResourceManager.
+  /// TODO: Maybe auto_ptr
+  ///
+  /// @param slp reference to the slp file
+  //
+  void addSlpFile(SlpFile *slp);
   
 private:
   ResourceManager();
@@ -66,7 +82,7 @@ private:
   ResourceManager& operator=(const ResourceManager &rm);
   
   std::vector<DrsFile *> drs_files_;
-  std::map<long, SlpFile *> slp_files_;
+  std::map<sf::Uint32, SlpFile *> slp_files_;
   
   std::map<sf::Uint32, Resource *> resources_;
   

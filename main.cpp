@@ -29,6 +29,8 @@ int main(int argc, char **argv)
  
   GenieGraphic gg = DataManager::Inst()->getGraphic(1128);
   RenderGraphic rg(&gg);
+  rg.setX(50);
+  rg.setY(50);
   
   Map map;
   map.setUpSample();

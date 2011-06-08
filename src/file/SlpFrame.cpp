@@ -35,6 +35,7 @@ using sf::Int32;
 
 using std::auto_ptr;
 
+//------------------------------------------------------------------------------
 SlpFrame::SlpFrame(std::iostream* iostr, std::streampos pos, 
                    std::streampos file_pos, ColorPalette *palette) 
                    : FileIO(iostr, pos), file_pos_(file_pos), palette_(palette)
@@ -46,7 +47,7 @@ SlpFrame::SlpFrame(std::iostream* iostr, std::streampos pos,
   image_        = 0;
 }
 
-
+//------------------------------------------------------------------------------
 SlpFrame::~SlpFrame()
 {
   delete palette_; //TODO
@@ -57,11 +58,25 @@ SlpFrame::~SlpFrame()
   delete image_;
 }
 
+//------------------------------------------------------------------------------
 sf::Image* SlpFrame::getImage()
 {
   return image_;
 }
 
+//------------------------------------------------------------------------------
+Int32 SlpFrame::getHotspotX() const
+{
+  return hotspot_x_;
+}
+
+//------------------------------------------------------------------------------
+Int32 SlpFrame::getHotspotY() const
+{
+  return hotspot_y_;
+}
+
+//------------------------------------------------------------------------------
 void SlpFrame::loadHeader()
 {
   cmd_table_offset_     = read<Uint32>();
@@ -77,6 +92,7 @@ void SlpFrame::loadHeader()
  // std::cout << std::hex << (unsigned int)(tellg() - file_pos_) << std::endl;
 }
 
+//------------------------------------------------------------------------------
 void SlpFrame::load()
 {
   assert(!image_); //TODO: Not implemented

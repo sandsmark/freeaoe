@@ -74,6 +74,20 @@ public:
   /// @return loaded image
   //
   sf::Image* getImage();
+ 
+  //----------------------------------------------------------------------------
+  /// Get the hotspot of the frame. The Hotspot is the center of the image.
+  ///
+  /// @return x coordinate of the hotspot
+  //
+  sf::Int32 getHotspotX() const;
+  
+  //----------------------------------------------------------------------------
+  /// Get the hotspot of the frame. The Hotspot is the center of the image.
+  ///
+  /// @return y coordinate of the hotspot
+  //
+  sf::Int32 getHotspotY() const;
   
 private:
   std::streampos file_pos_;

@@ -69,7 +69,18 @@ std::auto_ptr< Graphic > ResourceManager::getGraphic(unsigned int id)
 //------------------------------------------------------------------------------
 SlpFile* ResourceManager::getSlp(sf::Uint32 id)
 {
-  return 0;
+  std::map<sf::Uint32, SlpFile *>::iterator it = slp_files_.find(id);
+  
+  if (it == slp_files_.end())
+  {
+    log.warn("Trying to get slp file with id [%u] that doesn't exist!", id);
+    return 0;
+  }
+  
+  SlpFile *slp = slp_files_[id];
+  slp->load();
+  
+  return slp;
 }
 
 //------------------------------------------------------------------------------
@@ -79,6 +90,16 @@ void ResourceManager::addResource(Resource* res)
   resources_[res->getId()] = res;
 }
 
+//------------------------------------------------------------------------------
+void ResourceManager::addSlpFile(SlpFile* slp)
+{
+  std::map<sf::Uint32, SlpFile *>::iterator it = slp_files_.find(slp->getId());
+  
+  if (it != slp_files_.end())
+    log.warn("Slp file with id: [%u] already exists!", slp->getId());
+  else
+    slp_files_[slp->getId()] = slp;
+}
 
 //------------------------------------------------------------------------------
 ResourceManager::ResourceManager()

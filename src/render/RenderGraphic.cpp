@@ -19,17 +19,21 @@
 
 #include "RenderGraphic.h"
 
+#include <file/SlpFile.h>
+#include <file/SlpFrame.h>
 #include <data/GenieGraphic.h>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Image.hpp>
 #include <resource/ResourceManager.h>
 #include <Engine.h>
 
+#include <iostream>
+
 RenderGraphic::RenderGraphic(GenieGraphic *data) : data_(data), 
                                                    current_frame_(0),
                                                    time_last_frame_(0)
 {
-
+  slp_file_ = ResourceManager::Inst()->getSlp(data->slp_id_);
 }
 
 RenderGraphic::RenderGraphic(const RenderGraphic& other)
@@ -39,7 +43,7 @@ RenderGraphic::RenderGraphic(const RenderGraphic& other)
 
 RenderGraphic::~RenderGraphic()
 {
-
+  slp_file_ = 0;
 }
 
 RenderGraphic& RenderGraphic::operator=(const RenderGraphic& other)
@@ -47,12 +51,12 @@ RenderGraphic& RenderGraphic::operator=(const RenderGraphic& other)
     return *this;
 }
 
-void RenderGraphic::setX(int x)
+void RenderGraphic::setX(float x)
 {
   x_ = x;
 }
 
-void RenderGraphic::setY(int y)
+void RenderGraphic::setY(float y)
 {
   y_ = y;
 }
@@ -60,12 +64,6 @@ void RenderGraphic::setY(int y)
 
 void RenderGraphic::drawOn(sf::RenderTarget* target)
 {
-  ResourceManager *rm = ResourceManager::Inst();
-  sf::Image *img;
-  
-  sprite_.SetX(x_);     //TODO: Center of slp file
-  sprite_.SetY(y_);
-  
   if (time_last_frame_ == 0)
   {
     time_last_frame_ = Engine::GameClock.GetElapsedTime();
@@ -84,10 +82,12 @@ void RenderGraphic::drawOn(sf::RenderTarget* target)
     }
   }
   
-  img = rm->getGraphic(data_->slp_id_)->getImage(current_frame_);
+  SlpFrame *frame = slp_file_->getFrame(current_frame_);
   
+  sprite_.SetX(x_ - frame->getHotspotX());     //TODO: Center of slp file
+  sprite_.SetY(y_ - frame->getHotspotY());
   
-  sprite_.SetImage(*img);
+  sprite_.SetImage(*frame->getImage());
   target->Draw(sprite_);
 }
 
