@@ -29,39 +29,45 @@
 
 #include <iostream>
 
+//------------------------------------------------------------------------------
 RenderGraphic::RenderGraphic(GenieGraphic *data) : data_(data), 
                                                    current_frame_(0),
                                                    time_last_frame_(0)
 {
-  slp_file_ = ResourceManager::Inst()->getSlp(data->slp_id_);
+  slp_file_ = ResourceManager::Inst()->getSlp(data->getSlpId());
 }
 
+//------------------------------------------------------------------------------
 RenderGraphic::RenderGraphic(const RenderGraphic& other)
 {
 
 }
 
+//------------------------------------------------------------------------------
 RenderGraphic::~RenderGraphic()
 {
   slp_file_ = 0;
 }
 
+//------------------------------------------------------------------------------
 RenderGraphic& RenderGraphic::operator=(const RenderGraphic& other)
 {
     return *this;
 }
 
+//------------------------------------------------------------------------------
 void RenderGraphic::setX(float x)
 {
   x_ = x;
 }
 
+//------------------------------------------------------------------------------
 void RenderGraphic::setY(float y)
 {
   y_ = y;
 }
 
-
+//------------------------------------------------------------------------------
 void RenderGraphic::drawOn(sf::RenderTarget* target)
 {
   if (time_last_frame_ == 0)
@@ -71,7 +77,8 @@ void RenderGraphic::drawOn(sf::RenderTarget* target)
   }
   else
   {
-    if ( (Engine::GameClock.GetElapsedTime() - time_last_frame_) > data_->frame_rate_ )
+    if ( (Engine::GameClock.GetElapsedTime() - time_last_frame_) 
+          > data_->frame_rate_ )
     {
       if (current_frame_ < data_->frame_count_ - 1)
         current_frame_ ++;
@@ -84,10 +91,10 @@ void RenderGraphic::drawOn(sf::RenderTarget* target)
   
   SlpFrame *frame = slp_file_->getFrame(current_frame_);
   
-  sprite_.SetX(x_ - frame->getHotspotX());     //TODO: Center of slp file
+  sprite_.SetX(x_ - frame->getHotspotX());
   sprite_.SetY(y_ - frame->getHotspotY());
-  
   sprite_.SetImage(*frame->getImage());
+  
   target->Draw(sprite_);
 }
 

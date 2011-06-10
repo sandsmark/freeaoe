@@ -25,6 +25,7 @@ set(RESOURCE_SRC src/resource/Graphic.cpp
                  src/resource/Resource.cpp)
 
 set(FILE_SRC src/file/ColorPalette.cpp
+             src/file/DatFile.cpp 
              src/file/FileIO.cpp
              src/file/SlpFrame.cpp
              src/file/SlpFile.cpp

@@ -22,9 +22,21 @@
 #include <SFML/Config.hpp>
 #include <string>
 
+//------------------------------------------------------------------------------
+/// Class for loading data describing Slp Graphics
+//
 class GenieGraphic
 {
 public:
+  //----------------------------------------------------------------------------
+  /// Returns the id of the described slp file.
+  ///
+  /// @return slp id
+  //
+  sf::Uint32 getSlpId();
+ 
+public: //TODO: encapsule
+
   sf::Uint32 id_;
   std::string name1_;
   sf::Uint32 slp_id_;

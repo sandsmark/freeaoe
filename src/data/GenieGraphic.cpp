@@ -19,3 +19,8 @@
 
 #include "GenieGraphic.h"
 
+//------------------------------------------------------------------------------
+sf::Uint32 GenieGraphic::getSlpId()
+{
+  return slp_id_;
+}

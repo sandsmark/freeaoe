@@ -110,6 +110,10 @@ ResourceManager::ResourceManager()
 //------------------------------------------------------------------------------
 ResourceManager::~ResourceManager()
 {
+  for (std::map<sf::Uint32, SlpFile *>::iterator it = slp_files_.begin();
+       it != slp_files_.end(); it++)
+    delete it->second;
+  
   for (std::vector<DrsFile *>::iterator it = drs_files_.begin();
        it != drs_files_.end(); it++)
      delete (*it);
@@ -126,7 +130,6 @@ void ResourceManager::initialize()
 }
 
 //------------------------------------------------------------------------------
-
 void ResourceManager::loadDrs(std::string file_name)
 {
   log.info("Loading %s", file_name.c_str());
