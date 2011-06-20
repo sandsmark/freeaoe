@@ -4,9 +4,17 @@ project(freeaoe)
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/)
 
-Find_Package(SFML REQUIRED)
+set(Boost_USE_STATIC_LIBS        ON)
+set(Boost_USE_MULTITHREADED      ON)
+set(Boost_USE_STATIC_RUNTIME    OFF)
 
-include_directories(src/)# lib/genied2/src/) #lib/SFML_2.0/include/)
+find_package(Boost 1.42 COMPONENTS iostreams REQUIRED) #only iostream needed
+
+find_package(SFML REQUIRED)
+find_package(OpenGL REQUIRED)
+find_package(ZLIB REQUIRED)
+
+include_directories(src/ ${Boost_INCLUDE_DIRS})# lib/genied2/src/) #lib/SFML_2.0/include/)
 
 #add_subdirectory(lib/genied2)
 #add_subdirectory(lib/SFML_2.0)
@@ -49,6 +57,6 @@ add_executable(freeaoe src/Engine.cpp main.cpp
                ${MECHANICS_SRC}
                ${RENDER_SRC})
 
-target_link_libraries(freeaoe ${SFML_LIBRARY})#sfml-graphics sfml-window sfml-system )
+target_link_libraries(freeaoe ${SFML_LIBRARY} ${Boost_LIBRARIES} )#sfml-graphics sfml-window sfml-system )
 
 add_subdirectory(src)

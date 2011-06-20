@@ -12,6 +12,7 @@
 #include <mechanics/MapRenderer.h>
 #include <data/DataManager.h>
 #include <render/RenderGraphic.h>
+#include <file/DatFile.h>
 
 
 // TODO: Bad_alloc
@@ -19,6 +20,9 @@
 int main(int argc, char **argv) 
 {
   Logger::setLogLevel(Logger::L_INFO);
+  DatFile df;
+  df.open("../aoe2/Data/empires2_x1_p1.dat");
+  
   
   Engine en;
   en.run();

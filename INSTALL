@@ -1,3 +1,7 @@
+
+sudo apt-get install cmake libsfml-dev libglu1-mesa-dev zlib1g-dev
+
+
 libfreetype6-dev
 libglew1.5-dev
 libjpeg8-dev
