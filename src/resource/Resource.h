@@ -25,6 +25,8 @@
 /// All data in age of empires inherit from resource. A resource can be
 /// a palette, a sprite, music or map descriptions. Each resource seems to
 /// have its individual id.
+///
+/// TODO: remove and/or somehow combine with data/GenieGraphic
 //
 class Resource
 {

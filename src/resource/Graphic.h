@@ -28,6 +28,8 @@ class SlpFile;
 //------------------------------------------------------------------------------
 /// A graphic resource contains one or more images. E.g. a unit animation
 /// like walk. Wrapper class for a slp file.
+///
+/// TODO: remove and/or somehow combine with data/GenieGraphic
 //
 class Graphic : public Resource
 {
