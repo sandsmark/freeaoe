@@ -17,12 +17,15 @@
 
 // TODO: Bad_alloc
 
+// The main function behaves now as a testbed, real code should not be written
+// here.
+
 int main(int argc, char **argv) 
 {
   Logger::setLogLevel(Logger::L_INFO);
   DatFile df;
-  df.open("../aoe2/Data/empires2_x1_p1.dat");
-  
+  // TODO: doesn't work yet
+  //df.open("../aoe2/Data/empires2_x1_p1.dat");
   
   Engine en;
   en.run();
@@ -45,16 +48,6 @@ int main(int argc, char **argv)
   MapRenderer render(&App);
   render.setMap(&map);
   
-  sf::Sprite spr;
-  spr.SetX(200);
-  spr.SetY(200);
-  
-  std::auto_ptr<Graphic> ptr = ResourceManager::Inst()->getGraphic(5);
-  std::auto_ptr<Graphic> ptr2 = ResourceManager::Inst()->getGraphic(5);
-  spr.SetImage( *ptr->getImage() );
-
-  
-
    // Start the game loop
      while (App.IsOpened())
      {
@@ -77,8 +70,6 @@ int main(int argc, char **argv)
          rg.drawOn(&App);
          
          App.SetView(App.GetDefaultView());
-         
-         App.Draw(spr);
  
          // Draw the string
  

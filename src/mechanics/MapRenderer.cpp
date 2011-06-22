@@ -21,6 +21,7 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <resource/Graphic.h>
 #include <resource/ResourceManager.h>
+#include <file/SlpFrame.h>
 
 MapRenderer::MapRenderer(sf::RenderTarget *rt)
 {
@@ -57,10 +58,9 @@ void MapRenderer::Draw()
       
       GenieTerrain ter = map_->getTerrain(col, row);
       
-      std::auto_ptr<Graphic> ptr = 
-        ResourceManager::Inst()->getGraphic(ter.slp_id);
+      SlpFile *ptr = ResourceManager::Inst()->getSlp(ter.slp_id);
       
-      spr.SetImage(*ptr->getImage());
+      spr.SetImage(*ptr->getFrame()->getImage());
       
       render_->Draw(spr);
       

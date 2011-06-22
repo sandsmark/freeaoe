@@ -42,30 +42,6 @@ void ResourceManager::Destroy()
 
 }
 
-
-//------------------------------------------------------------------------------
-std::auto_ptr< Graphic > ResourceManager::getGraphic(unsigned int id)
-{
-  
-  std::map<sf::Uint32, Resource *>::iterator pos = resources_.find(id);
-  
-  if (pos == resources_.end())
-  {
-    std::cerr << "Graphic " << id << " not found!" << std::endl;
-    return std::auto_ptr< Graphic > (0);
-  }
-  else
-  {
-    if (pos->second->isLoaded() == false)
-    {
-      log.info("Loading graphic [%u]", id);
-      pos->second->load();
-    }
-    Graphic *g = dynamic_cast<Graphic *>(pos->second);
-    return std::auto_ptr< Graphic >( new Graphic(*g) ); //return a copy
-  }
-}
-
 //------------------------------------------------------------------------------
 SlpFile* ResourceManager::getSlp(sf::Uint32 id)
 {
@@ -81,13 +57,6 @@ SlpFile* ResourceManager::getSlp(sf::Uint32 id)
   slp->load();
   
   return slp;
-}
-
-//------------------------------------------------------------------------------
-void ResourceManager::addResource(Resource* res)
-{
-  //TODO: check if already added
-  resources_[res->getId()] = res;
 }
 
 //------------------------------------------------------------------------------

@@ -67,8 +67,6 @@ void DrsFile::loadHeader()
       table_num_of_files_.push_back(read<Uint32>());
     }
    
-    Resource *res = 0;
-   
     // Load file headers
     for (Uint32 i = 0; i < num_of_tables_; i++)
     {
@@ -83,12 +81,9 @@ void DrsFile::loadHeader()
           SlpFile *slp = new SlpFile(id, pos, len, getIOStream());
           resource_manager_->addSlpFile(slp);
           
-          res = new Graphic(slp);
         }
-        else
-          res = new Resource(id);
+        // else other 
         
-        resource_manager_->addResource(res);
       }
     }
       

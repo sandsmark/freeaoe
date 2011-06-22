@@ -50,11 +50,6 @@ public:
   static void Destroy();
   
   //----------------------------------------------------------------------------
-  /// Returns 
-  // TODO: Obsolete
-  std::auto_ptr<Graphic> getGraphic(unsigned int id);
-  
-  //----------------------------------------------------------------------------
   /// Returns the slp file with given id or 0 if not found. The slp file
   /// should not be deleted!
   ///
@@ -62,9 +57,6 @@ public:
   /// @return slp file
   //
   SlpFile* getSlp(sf::Uint32 id);
-  
-  // TODO: Obsolete
-  void addResource(Resource *);
   
   //----------------------------------------------------------------------------
   /// Adds an slp file that will be managed by the ResourceManager.
@@ -83,8 +75,6 @@ private:
   
   std::vector<DrsFile *> drs_files_;
   std::map<sf::Uint32, SlpFile *> slp_files_;
-  
-  std::map<sf::Uint32, Resource *> resources_;
   
   std::fstream terrain_file_;
   std::fstream graphics_file_;

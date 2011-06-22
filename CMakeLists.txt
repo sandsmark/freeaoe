@@ -28,9 +28,10 @@ set(GLOBAL_SRC src/global/Config.cpp
                src/global/Logger.cpp
                src/global/FrameRegulator.cpp)
              
-set(RESOURCE_SRC src/resource/Graphic.cpp
+set(RESOURCE_SRC #src/resource/Graphic.cpp
                  src/resource/ResourceManager.cpp
-                 src/resource/Resource.cpp)
+                 #src/resource/Resource.cpp)
+                 )
 
 set(FILE_SRC src/file/ColorPalette.cpp
              src/file/DatFile.cpp 

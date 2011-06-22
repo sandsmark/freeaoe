@@ -23,6 +23,9 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics.hpp>
 
+// Warning: Still experimental
+// TODO: Move to render dir
+// TODO: Use GenieGraphics instead of SlpFiles
 class MapRenderer : public sf::RenderTarget
 {
 
