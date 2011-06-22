@@ -3,3 +3,5 @@ Age of Empires 2.
 
 The project is still in early developement (experimentational state).
 
+To test the engine the Age of Empires 2 files have to be put in
+a folder called "aoe2" located at the projects root directory.
