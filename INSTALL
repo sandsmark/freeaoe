@@ -1,7 +1,25 @@
 
-sudo apt-get install cmake libsfml-dev libglu1-mesa-dev zlib1g-dev
+Ubuntu:
+
+Following requirements are needed for compiling the source:
+
+  sudo apt-get install cmake libsfml-dev libglu1-mesa-dev zlib1g-dev \
+  libboost-iostreams-dev
+ 
+To compile the project create a build dir, run cmake and make
+
+  mkdir build
+  cd build
+  cmake ../
+  make
+
+to run the engine a directory called "aoe2" with the Age of empires 2 +
+expansion (and patch) is needed in the build directory. This can later
+be changed if config files will be implemented.
 
 
+
+# ignore:
 libfreetype6-dev
 libglew1.5-dev
 libjpeg8-dev
