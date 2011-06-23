@@ -45,9 +45,6 @@ private:
   DatFile(const DatFile& other);
   //virtual DatFile& operator=(const DatFile& other);
   
-  std::fstream file_;
-  std::filebuf file_buf_;
-  
   typedef boost::interprocess::basic_vectorstream< std::vector<char> > v_stream;
   v_stream *buf_stream_;
   
