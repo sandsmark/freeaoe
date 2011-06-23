@@ -25,8 +25,7 @@ set(FILE_SRC src/file/SubFile.cpp
 
 set(GLOBAL_SRC src/global/Config.cpp 
                src/global/FileException.cpp
-               src/global/Logger.cpp
-               src/global/FrameRegulator.cpp)
+               src/global/Logger.cpp)
              
 set(RESOURCE_SRC #src/resource/Graphic.cpp
                  src/resource/ResourceManager.cpp
