@@ -57,6 +57,10 @@ void DatFile::open(std::string filename)
     delete buf_stream_;
   
   buf_stream_ = decompress(file);
+
+  ofstream fo("raw.dat", ios_base::binary);
+  fo << buf_stream_->rdbuf();
+  fo.close();
 }
 
 //------------------------------------------------------------------------------

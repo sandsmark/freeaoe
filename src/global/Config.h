@@ -21,6 +21,7 @@
 #define CONFIG_H
 #include <string>
 
+//TODO: read config values like game dir from file or argv
 class Config
 {
 public:

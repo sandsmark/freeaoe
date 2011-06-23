@@ -25,7 +25,7 @@ int main(int argc, char **argv)
   Logger::setLogLevel(Logger::L_INFO);
   DatFile df;
   // TODO: doesn't work yet
-  df.open("../aoe2/Data/empires2_x1_p1.dat");
+  df.open("aoe2/Data/empires2_x1_p1.dat");
   
   Engine en;
   en.run();
