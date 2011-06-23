@@ -25,6 +25,9 @@
 #include <sstream>
 
 #include <global/Logger.h>
+#include <vector>
+
+#include <boost/interprocess/streams/vectorstream.hpp>
 
 class DatFile
 {
@@ -33,22 +36,28 @@ public:
   DatFile();
   virtual ~DatFile();
 
+  //----------------------------------------------------------------------------
   void open(std::string filename);
   
 private:
-  
-  static const unsigned int ZLIB_CHUNK = 262144; //256K
-  
   static Logger &log;
   
   DatFile(const DatFile& other);
-  virtual DatFile& operator=(const DatFile& other);
+  //virtual DatFile& operator=(const DatFile& other);
   
   std::fstream file_;
-  std::stringstream file_buf_;
+  std::filebuf file_buf_;
   
-  /// Decompress the file, and set file_.
-  void decompress(std::fstream &file);
+  typedef boost::interprocess::basic_vectorstream< std::vector<char> > v_stream;
+  v_stream *buf_stream_;
+  
+  //----------------------------------------------------------------------------
+  /// Decompress and return a vectorstream buffering the decompressed file
+  ///
+  /// @param file file to decompress and buffer
+  /// @return buffered vector stream
+  ///
+  v_stream* decompress(std::ifstream &file);
 };
 
 #endif // DATFILE_H

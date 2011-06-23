@@ -22,138 +22,71 @@
 #include <zlib.h>
 #include <assert.h>
 #include <iostream> 
+#include <vector>
 
 #include <boost/iostreams/filtering_streambuf.hpp>
 #include <boost/iostreams/filter/zlib.hpp>
+#include <boost/iostreams/device/back_inserter.hpp>
 #include <boost/iostreams/copy.hpp>
+
+using std::ifstream;
+using std::ofstream;
+using std::ios_base;
+using std::vector;
 
 Logger& DatFile::log = Logger::getLogger("freeaoe.DatFile");
 
+//------------------------------------------------------------------------------
 DatFile::DatFile()
 {
-
+  buf_stream_ = 0;
 }
 
-void DatFile::open(std::string filename)
-{
-  /*std::fstream file_buf;
-  file_buf.open(filename.c_str(), std::ios::binary);
-  
-  decompress(file_buf);
-  
-  log.info("Writing testfile");
-  std::fstream file;
-  file.open("raw.dat", std::ios::out);
-  file << file_buf_.str();
-  file.close();*/
-  using namespace std;
-
-  std::cout << filename << std::endl;
-  ifstream file(filename.c_str(), ios_base::in | ios_base::binary);
-  using namespace boost::iostreams;
-  using namespace std;
-  
-  filtering_streambuf<input> in;
-  
-  in.push(zlib_decompressor());
-  in.push(file);
-  
-  /*ofstream file_out;
-  file_out.open("raw.dat", ios_base::binary);
-  
-  */
-  boost::iostreams::copy(in, cout); //file_out);
-  
-  //file_out.close();*/
- 
-}
-
-void DatFile::decompress(std::fstream& file)
-{ 
-  int ret;
-  unsigned have;
-  z_stream strm;
-  char in[ZLIB_CHUNK];
-  char out[ZLIB_CHUNK];
-  
-  /* allocate inflate state */
-  strm.zalloc = Z_NULL;
-  strm.zfree = Z_NULL;
-  strm.opaque = Z_NULL;
-  strm.avail_in = 0;
-  strm.next_in = Z_NULL;
-  ret = inflateInit(&strm);
-  
-  if (ret != Z_OK)
-  {
-    log.error("Decompressing dat file [%s] failed with error code %d",
-              "unknown", ret);
-  }     
-  
-  /* decompress until deflate stream ends or end of file */
-  do {
-    strm.avail_in = file.readsome(in, ZLIB_CHUNK);//fread(in, 1, CHUNK, source);
-    if ( file.bad() )
-    {
-      (void)inflateEnd(&strm);
-      log.error("file bad");
-      return ;//Z_ERRNO;
-    }
-    if (strm.avail_in == 0)
-    {
-      log.error("break?");
-      break;
-    }
-    strm.next_in = reinterpret_cast<unsigned char *>(in);
-
-    /* run inflate() on input until output buffer not full */
-    do {
-      strm.avail_out = ZLIB_CHUNK;
-      strm.next_out = reinterpret_cast<unsigned char*>(out);
-      ret = inflate(&strm, Z_NO_FLUSH);
-      assert(ret != Z_STREAM_ERROR);  /* state not clobbered */
-      switch (ret) {
-      case Z_NEED_DICT:
-        ret = Z_DATA_ERROR;     /* and fall through */
-      case Z_DATA_ERROR:
-      case Z_MEM_ERROR:
-        (void)inflateEnd(&strm);
-        log.error("something wrong");
-        return; // ret;
-      }
-      have = ZLIB_CHUNK - strm.avail_out;
-      
-      
-      /*if (fwrite(out, 1, have, dest) != have || ferror(dest)) {
-        (void)inflateEnd(&strm);
-        return Z_ERRNO;
-      }*/
-      std::cout << have << std::endl;
-      file_buf_.write(out, have);
-    
-    } while (strm.avail_out == 0);
-
-  /* done when inflate() says it's done */
-  } while (ret != Z_STREAM_END);
-
-  /* clean up and return */
-  (void)inflateEnd(&strm);
-  return ;//ret == Z_STREAM_END ? Z_OK : Z_DATA_ERROR;
-}
-
-
-DatFile::DatFile(const DatFile& other)
-{
-
-}
-
+//------------------------------------------------------------------------------
 DatFile::~DatFile()
 {
-
+  delete buf_stream_;
 }
 
-DatFile& DatFile::operator=(const DatFile& other)
+//------------------------------------------------------------------------------
+void DatFile::open(std::string filename)
 {
-    return *this;
+  ifstream file(filename.c_str(), ios_base::in | ios_base::binary);
+  
+  if (buf_stream_)
+    delete buf_stream_;
+  
+  buf_stream_ = decompress(file);
+}
+
+//------------------------------------------------------------------------------
+DatFile::v_stream* DatFile::decompress(std::ifstream& file)
+{ 
+  using namespace boost::iostreams;
+  
+  try
+  {
+    filtering_streambuf<input> in;
+    
+    zlib_params para;
+    para.window_bits = -15;     //Dunno why, but works (taken from genied2)
+    
+    in.push(zlib_decompressor(para));
+    in.push(file);
+    
+    vector<char> buf;
+    
+    back_insert_device< std::vector<char> > b_ins(buf); 
+    
+    copy(in, b_ins);
+    
+    return new v_stream(buf);
+  }
+  catch ( const zlib_error &z_err)
+  {
+    log.fatal("Zlib decompression failed with error code %d", z_err.error());
+  }
+  
+  return 0;
 }
 
