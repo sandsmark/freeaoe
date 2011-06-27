@@ -40,13 +40,15 @@ SlpFrame::SlpFrame(std::iostream* iostr, std::streampos pos,
                    std::streampos file_pos, ColorPalette *palette) 
                    : FileIO(iostr, pos), file_pos_(file_pos), palette_(palette)
 {
-  palette_ = new ColorPalette("../aoe2/50500.pal"); //TODO: Warning
+  palette_ = new ColorPalette("aoe2/50500.pal"); //TODO: Warning
   
   left_edges_   = 0;
   right_edges_  = 0;
   
   image_        = 0;
   outline_      = 0;
+  
+  player_color_index_ = -1;
 }
 
 //------------------------------------------------------------------------------
@@ -62,15 +64,31 @@ SlpFrame::~SlpFrame()
 }
 
 //------------------------------------------------------------------------------
-sf::Image* SlpFrame::getImage()
+sf::Image* SlpFrame::getImage() const
 {
   return image_;
 }
 
 //------------------------------------------------------------------------------
-sf::Image* SlpFrame::getOutline()
+sf::Image* SlpFrame::getOutline() const
 {
   return outline_;
+}
+
+//------------------------------------------------------------------------------
+sf::Image* SlpFrame::getPlayerColorMask(sf::Uint8 player) const
+{
+  sf::Image *cmask = new sf::Image();
+  cmask->Create(width_, height_);
+  
+  for (std::vector<PlayerColorElement>::const_iterator 
+       it = player_color_mask_.begin(); it != player_color_mask_.end(); it++)
+  {
+    cmask->SetPixel(it->x, it->y, 
+                    palette_->getColorAt(it->index + ((player + 1) * 16)) );
+  }
+  
+  return cmask; //TODO auto pointer
 }
 
 //------------------------------------------------------------------------------
@@ -107,10 +125,12 @@ void SlpFrame::load()
   assert(!image_); //TODO: Error check not implemented
   
   image_ = new sf::Image();
-  image_->Create(width_, height_);
-  
   outline_ = new sf::Image();
+  //player_color_mask_ = new sf::Image();
+  
+  image_->Create(width_, height_);
   outline_->Create(width_, height_);
+  //player_color_mask_->Create(width_, height_);
   
   readEdges();
   
@@ -144,6 +164,7 @@ void SlpFrame::load()
       Uint8 cmd = data & 0xF;
       
       Uint32 pix_cnt = 0;
+      
       //Uint32 pix_pos = left_edges_[row];
       Uint8 color_index = 0;
       
@@ -162,8 +183,7 @@ void SlpFrame::load()
         case 9:
         case 0xD:
           pix_cnt = (data & 0xFC) >> 2;
-          
-          setPixelsToColor(image_, row, pix_pos, pix_cnt, sf::Color(0,0,0,0));
+          pix_pos += pix_cnt;
           break;
           
         case 2: // greater block copy
@@ -174,15 +194,14 @@ void SlpFrame::load()
           
         case 3: // greater skip
           pix_cnt = ((data & 0xF0) << 4) + read<Uint8>();
-         
-          setPixelsToColor(image_, row, pix_pos, pix_cnt, sf::Color(0,0,0,0));
+          pix_pos += pix_cnt;
           break;
           
         case 6: // copy and transform (player color)
           pix_cnt = getPixelCountFromData(data);
  
           // TODO: player color
-          readPixelsToImage(image_, row, pix_pos, pix_cnt);
+          readPixelsToImage(image_, row, pix_pos, pix_cnt, true);
           
           break;
           
@@ -191,7 +210,7 @@ void SlpFrame::load()
           
           color_index = read<Uint8>();
           setPixelsToColor(image_, row, pix_pos, pix_cnt, 
-                           palette_->getColorAt(color_index));
+                           color_index);
         break;
         
         case 0xA: // Transform block (player color)
@@ -200,7 +219,7 @@ void SlpFrame::load()
           // TODO: readUint8() | player_color
           color_index = read<Uint8>();
           setPixelsToColor(image_, row, pix_pos, pix_cnt, 
-                           palette_->getColorAt(color_index));
+                           color_index, true);
         break;
         
         case 0x0B: // Shadow pixels
@@ -222,15 +241,17 @@ void SlpFrame::load()
             
             case 0x4E: //Outline pixel TODO player color
             case 0x6E: 
-              setPixelsToColor(outline_, row, pix_pos, 1, sf::Color(255,100,0));
+              //setPixelsToColor(outline_, row, pix_pos, 1, sf::Color(255,100,0));
+              pix_pos += 1;
             break;
             
             case 0x5E: //Outline run TODO player color
             case 0x7E: 
               pix_cnt = read<Uint8>();
+              pix_pos += pix_cnt;
               
-              setPixelsToColor(outline_, row, pix_pos, pix_cnt, 
-                               sf::Color(255 ,100,0));
+              //setPixelsToColor(outline_, row, pix_pos, pix_cnt, 
+              //                 sf::Color(255 ,100,0));
             break;
           }
 
@@ -282,13 +303,22 @@ void SlpFrame::readEdges()
 
 //------------------------------------------------------------------------------
 void SlpFrame::readPixelsToImage(sf::Image *image, Uint32 row, Uint32 &col, 
-                                 Uint32 count)
+                                 Uint32 count, bool player_col)
 {
   Uint32 to_pos = col + count;
   while (col < to_pos)
   {
-    Uint8 pixel_index = read<Uint8>();
-    image->SetPixel(col, row, palette_->getColorAt(pixel_index));
+    Uint8 color_index = read<Uint8>();
+    
+    image->SetPixel(col, row, palette_->getColorAt(color_index));
+    
+    if (player_col)
+    {
+      PlayerColorElement pce = {col, row, color_index};
+      player_color_mask_.push_back(pce);
+    }
+    //  player_color_mask_->SetPixel(col, row, palette_->getColorAt(pixel_index));
+    
     col ++;
   }
  
@@ -296,13 +326,23 @@ void SlpFrame::readPixelsToImage(sf::Image *image, Uint32 row, Uint32 &col,
 
 //------------------------------------------------------------------------------
 void SlpFrame::setPixelsToColor(sf::Image *image, Uint32 row, Uint32 &col, 
-                                Uint32 count, sf::Color color)
+                                Uint32 count, sf::Uint8 color_index, 
+                                bool player_col)
 {
   Uint32 to_pos = col + count;
   
   while (col < to_pos)
   {
-    image->SetPixel(col, row, color);
+    image->SetPixel(col, row, palette_->getColorAt(color_index));
+    
+    //if (player_col)
+    //  player_color_mask_->SetPixel(col, row, color);
+    if (player_col)
+    {
+      PlayerColorElement pce = {col, row, color_index};
+      player_color_mask_.push_back(pce);
+    }
+    
     col ++;
   }
 }

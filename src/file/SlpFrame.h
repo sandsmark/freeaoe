@@ -23,6 +23,7 @@
 #include <istream>
 #include "FileIO.h"
 #include <SFML/Graphics/Color.hpp>
+#include <vector>
 
 namespace sf
 {
@@ -73,7 +74,7 @@ public:
   ///
   /// @return loaded image
   //
-  sf::Image* getImage();
+  sf::Image* getImage() const;
   
   //----------------------------------------------------------------------------
   /// Returns the outline created by loading the frame.
@@ -82,8 +83,16 @@ public:
   ///
   /// @return loaded outline
   //
-  sf::Image* getOutline();
- 
+  sf::Image* getOutline() const;
+  
+  //----------------------------------------------------------------------------
+  /// Returns the mask colored with color of given players index.
+  ///
+  /// @param player index
+  /// @return player color mask
+  //
+  sf::Image* getPlayerColorMask(sf::Uint8 player) const; //TODO auto_ptr
+  
   //----------------------------------------------------------------------------
   /// Get the hotspot of the frame. The Hotspot is the center of the image.
   ///
@@ -116,8 +125,22 @@ private:
   
   sf::Image *image_;
   sf::Image *outline_;
+  //sf::Image *player_color_mask_;
+  
+  sf::Int32 player_color_index_;
   
   ColorPalette *palette_;
+  
+  // Element for player_color vector, the vector stores position (x, y) of
+  // a player color pixel and the palette index for the color
+  struct PlayerColorElement
+  {
+    sf::Uint32 x;
+    sf::Uint32 y;
+    sf::Uint8 index;
+  };
+  
+  std::vector<PlayerColorElement> player_color_mask_;
   
   //----------------------------------------------------------------------------
   /// Reads the edges of the frame. An edge int is the number of pixels in 
@@ -137,9 +160,10 @@ private:
   /// @param row row to set pixels at
   /// @param col column to set pixels from
   /// @param count how many pixels should be read
+  /// @param player_col if true, pixel will be written to player color image
   //
   void readPixelsToImage(sf::Image *image, sf::Uint32 row, sf::Uint32 &col, 
-                         sf::Uint32 count);
+                         sf::Uint32 count, bool player_col = false);
   
   //----------------------------------------------------------------------------
   /// Sets the next count of pixels to given color without reading from stream.
@@ -149,9 +173,11 @@ private:
   /// @param col column to set pixels from
   /// @param count how many pixels should be set
   /// @param color color to set
+  /// @param player_col if true, pixel will be written to player color image
   //
   void setPixelsToColor(sf::Image *image, sf::Uint32 row, sf::Uint32 &col, 
-                        sf::Uint32 count, sf::Color color);
+                        sf::Uint32 count, sf::Uint8 color_index, 
+                        bool player_col = false);
   
   //----------------------------------------------------------------------------
   /// This method returns either the count stored in command byte or (if not 
