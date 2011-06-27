@@ -19,7 +19,6 @@
 
 #include "DatFile.h"
 
-#include <zlib.h>
 #include <assert.h>
 #include <iostream> 
 #include <vector>

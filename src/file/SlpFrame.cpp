@@ -44,7 +44,9 @@ SlpFrame::SlpFrame(std::iostream* iostr, std::streampos pos,
   
   left_edges_   = 0;
   right_edges_  = 0;
+  
   image_        = 0;
+  outline_      = 0;
 }
 
 //------------------------------------------------------------------------------
@@ -56,12 +58,19 @@ SlpFrame::~SlpFrame()
   delete [] right_edges_;
   
   delete image_;
+  delete outline_;
 }
 
 //------------------------------------------------------------------------------
 sf::Image* SlpFrame::getImage()
 {
   return image_;
+}
+
+//------------------------------------------------------------------------------
+sf::Image* SlpFrame::getOutline()
+{
+  return outline_;
 }
 
 //------------------------------------------------------------------------------
@@ -95,9 +104,13 @@ void SlpFrame::loadHeader()
 //------------------------------------------------------------------------------
 void SlpFrame::load()
 {
-  assert(!image_); //TODO: Not implemented
-  image_ = new sf::Image();//width_, height_);
+  assert(!image_); //TODO: Error check not implemented
+  
+  image_ = new sf::Image();
   image_->Create(width_, height_);
+  
+  outline_ = new sf::Image();
+  outline_->Create(width_, height_);
   
   readEdges();
   
@@ -126,7 +139,7 @@ void SlpFrame::load()
       
       /*
        * Command description and code snippets borrowed from  Bryce Schroeders 
-       * SLPLib (bryce@lanset.com). TODO: Ask him before releasing
+       * SLPLib (bryce@lanset.com). 
        */
       Uint8 cmd = data & 0xF;
       
@@ -141,7 +154,7 @@ void SlpFrame::load()
         case 8:
         case 0xC:
           pix_cnt = data >> 2;
-          readPixelsToImage(row, pix_pos, pix_cnt);
+          readPixelsToImage(image_, row, pix_pos, pix_cnt);
           break;
         
         case 1: // lesser skip (making pixels transparent)
@@ -150,26 +163,26 @@ void SlpFrame::load()
         case 0xD:
           pix_cnt = (data & 0xFC) >> 2;
           
-          setPixelsToColor(row, pix_pos, pix_cnt, sf::Color(0,0,0,0));
+          setPixelsToColor(image_, row, pix_pos, pix_cnt, sf::Color(0,0,0,0));
           break;
           
         case 2: // greater block copy
           pix_cnt = ((data & 0xF0) << 4) + read<Uint8>();
           
-          readPixelsToImage(row, pix_pos, pix_cnt);
+          readPixelsToImage(image_, row, pix_pos, pix_cnt);
           break;
           
         case 3: // greater skip
           pix_cnt = ((data & 0xF0) << 4) + read<Uint8>();
          
-          setPixelsToColor(row, pix_pos, pix_cnt, sf::Color(0,0,0,0));
+          setPixelsToColor(image_, row, pix_pos, pix_cnt, sf::Color(0,0,0,0));
           break;
           
         case 6: // copy and transform (player color)
           pix_cnt = getPixelCountFromData(data);
  
           // TODO: player color
-          readPixelsToImage(row, pix_pos, pix_cnt);
+          readPixelsToImage(image_, row, pix_pos, pix_cnt);
           
           break;
           
@@ -177,7 +190,7 @@ void SlpFrame::load()
           pix_cnt = getPixelCountFromData(data);
           
           color_index = read<Uint8>();
-          setPixelsToColor(row, pix_pos, pix_cnt, 
+          setPixelsToColor(image_, row, pix_pos, pix_cnt, 
                            palette_->getColorAt(color_index));
         break;
         
@@ -186,7 +199,7 @@ void SlpFrame::load()
           
           // TODO: readUint8() | player_color
           color_index = read<Uint8>();
-          setPixelsToColor(row, pix_pos, pix_cnt, 
+          setPixelsToColor(image_, row, pix_pos, pix_cnt, 
                            palette_->getColorAt(color_index));
         break;
         
@@ -207,15 +220,17 @@ void SlpFrame::load()
             break;
             */
             
-            case 0x4E: //Outline pixels TODO
+            case 0x4E: //Outline pixel TODO player color
             case 0x6E: 
-              pix_pos += 1;
+              setPixelsToColor(outline_, row, pix_pos, 1, sf::Color(255,100,0));
             break;
             
-            case 0x5E: //Outline run TODO
+            case 0x5E: //Outline run TODO player color
             case 0x7E: 
               pix_cnt = read<Uint8>();
-              pix_pos += pix_cnt;
+              
+              setPixelsToColor(outline_, row, pix_pos, pix_cnt, 
+                               sf::Color(255 ,100,0));
             break;
           }
 
@@ -266,27 +281,28 @@ void SlpFrame::readEdges()
 }
 
 //------------------------------------------------------------------------------
-void SlpFrame::readPixelsToImage(Uint32 row, Uint32 &col, Uint32 count)
+void SlpFrame::readPixelsToImage(sf::Image *image, Uint32 row, Uint32 &col, 
+                                 Uint32 count)
 {
   Uint32 to_pos = col + count;
   while (col < to_pos)
   {
     Uint8 pixel_index = read<Uint8>();
-    image_->SetPixel(col, row, palette_->getColorAt(pixel_index));
+    image->SetPixel(col, row, palette_->getColorAt(pixel_index));
     col ++;
   }
  
 }
 
 //------------------------------------------------------------------------------
-void SlpFrame::setPixelsToColor(Uint32 row, Uint32 &col, Uint32 count, 
-                                sf::Color color)
+void SlpFrame::setPixelsToColor(sf::Image *image, Uint32 row, Uint32 &col, 
+                                Uint32 count, sf::Color color)
 {
   Uint32 to_pos = col + count;
   
   while (col < to_pos)
   {
-    image_->SetPixel(col, row, color);
+    image->SetPixel(col, row, color);
     col ++;
   }
 }

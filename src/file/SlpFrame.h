@@ -74,6 +74,15 @@ public:
   /// @return loaded image
   //
   sf::Image* getImage();
+  
+  //----------------------------------------------------------------------------
+  /// Returns the outline created by loading the frame.
+  /// Outline is the border of the sprite shown if a object is behind another
+  /// one.
+  ///
+  /// @return loaded outline
+  //
+  sf::Image* getOutline();
  
   //----------------------------------------------------------------------------
   /// Get the hotspot of the frame. The Hotspot is the center of the image.
@@ -106,6 +115,7 @@ private:
   sf::Int16 *right_edges_;
   
   sf::Image *image_;
+  sf::Image *outline_;
   
   ColorPalette *palette_;
   
@@ -121,24 +131,27 @@ private:
   //----------------------------------------------------------------------------
   /// Reads pixel indeces from file and sets the pixels according to the
   /// colors from the palette.
-  /// It is assumed that the stream pointer is at the start of the pixe array.
+  /// It is assumed that the stream pointer is at the start of the pixel array.
   ///
+  /// @param image target to set pixel
   /// @param row row to set pixels at
   /// @param col column to set pixels from
   /// @param count how many pixels should be read
   //
-  void readPixelsToImage(sf::Uint32 row, sf::Uint32 &col, sf::Uint32 count);
+  void readPixelsToImage(sf::Image *image, sf::Uint32 row, sf::Uint32 &col, 
+                         sf::Uint32 count);
   
   //----------------------------------------------------------------------------
   /// Sets the next count of pixels to given color without reading from stream.
   ///
+  /// @param image target to set pixel
   /// @param row row to set pixels at
   /// @param col column to set pixels from
   /// @param count how many pixels should be set
   /// @param color color to set
   //
-  void setPixelsToColor(sf::Uint32 row, sf::Uint32 &col, sf::Uint32 count,
-                        sf::Color color);
+  void setPixelsToColor(sf::Image *image, sf::Uint32 row, sf::Uint32 &col, 
+                        sf::Uint32 count, sf::Color color);
   
   //----------------------------------------------------------------------------
   /// This method returns either the count stored in command byte or (if not 
