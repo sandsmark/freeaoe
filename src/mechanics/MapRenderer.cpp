@@ -60,7 +60,7 @@ void MapRenderer::Draw()
       
       SlpFile *ptr = ResourceManager::Inst()->getSlp(ter.slp_id);
       
-      spr.SetImage(*ptr->getFrame()->getImage());
+      spr.SetImage(*ptr->getFrame(3)->getImage());
       
       render_->Draw(spr);
       

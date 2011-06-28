@@ -100,6 +100,16 @@ void DataManager::initialize()
   
   graphics_[gg->id_] = gg;
   
+  gg = new GenieGraphic();
+  
+  gg->id_ = 1972;
+  gg->slp_id_ = 2085;
+  gg->name1_ = "SCOUT_FN";
+  gg->angle_count_ = 8;
+  gg->frame_count_ = 10;
+  gg->frame_rate_ = 0.2;
+  
+  graphics_[gg->id_] = gg;
 }
 
 

@@ -22,6 +22,7 @@
 #include <string>
 
 #include <resource/ResourceManager.h>
+#include <file/BinaFile.h>
 
 using std::string;
 using sf::Uint32;
@@ -80,7 +81,14 @@ void DrsFile::loadHeader()
         {
           SlpFile *slp = new SlpFile(id, pos, len, getIOStream());
           resource_manager_->addSlpFile(slp);
-          
+        }
+        else
+        {
+          if (table_types_[i].find("anibd") == 0)
+          {
+            BinaFile *bina = new BinaFile(id, pos, len, getIOStream());
+            resource_manager_->addBinaFile(bina);
+          }
         }
         // else other 
         

@@ -31,7 +31,7 @@ int main(int argc, char **argv)
   DataManager::Inst();
   sf::Clock clk;
  
-  GenieGraphic gg = DataManager::Inst()->getGraphic(1128);
+  GenieGraphic gg = DataManager::Inst()->getGraphic(1972);//1128);
   RenderGraphic rg(&gg);
   rg.setX(100);
   rg.setY(150);

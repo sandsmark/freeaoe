@@ -33,6 +33,8 @@ class ColorPalette
 {
 
 public:
+  ColorPalette();
+  
   //----------------------------------------------------------------------------
   /// Constructor that loads the palette from given file.
   ///
@@ -53,6 +55,7 @@ public:
   //
   sf::Color getColorAt(u_int16_t index);  
   
+  void parsePalette(std::istream &istr);
 private:
   std::fstream file_;
   

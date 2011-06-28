@@ -37,7 +37,8 @@ set(FILE_SRC src/file/ColorPalette.cpp
              src/file/FileIO.cpp
              src/file/SlpFrame.cpp
              src/file/SlpFile.cpp
-             src/file/DrsFile.cpp)
+             src/file/DrsFile.cpp
+             src/file/BinaFile.cpp)
 
 set(DATA_SRC src/data/DataManager.cpp 
              src/data/GenieTerrain.cpp

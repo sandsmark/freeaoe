@@ -26,6 +26,8 @@
 #include <global/Config.h>
 
 #include <file/DrsFile.h>
+#include <file/BinaFile.h>
+#include <file/ColorPalette.h>
 
 Logger& ResourceManager::log = Logger::getLogger("freeaoe.ResourceManager");
 
@@ -60,6 +62,12 @@ SlpFile* ResourceManager::getSlp(sf::Uint32 id)
 }
 
 //------------------------------------------------------------------------------
+ColorPalette* ResourceManager::getPalette(sf::Uint32 id)
+{
+  return bina_files_[id]->readPalette();
+}
+
+//------------------------------------------------------------------------------
 void ResourceManager::addSlpFile(SlpFile* slp)
 {
   std::map<sf::Uint32, SlpFile *>::iterator it = slp_files_.find(slp->getId());
@@ -68,6 +76,12 @@ void ResourceManager::addSlpFile(SlpFile* slp)
     log.warn("Slp file with id: [%u] already exists!", slp->getId());
   else
     slp_files_[slp->getId()] = slp;
+}
+
+//------------------------------------------------------------------------------
+void ResourceManager::addBinaFile(BinaFile* bina)
+{
+  bina_files_[bina->getId()] = bina;
 }
 
 //------------------------------------------------------------------------------
@@ -81,6 +95,10 @@ ResourceManager::~ResourceManager()
 {
   for (std::map<sf::Uint32, SlpFile *>::iterator it = slp_files_.begin();
        it != slp_files_.end(); it++)
+    delete it->second;
+  
+  for (std::map<sf::Uint32, BinaFile*>::iterator it = bina_files_.begin();
+       it != bina_files_.end(); it++)
     delete it->second;
   
   for (std::vector<DrsFile *>::iterator it = drs_files_.begin();

@@ -29,6 +29,8 @@
 #include <file/SlpFile.h>
 #include <global/Logger.h>
 
+class ColorPalette;
+class BinaFile;
 class DrsFile;
 
 //------------------------------------------------------------------------------
@@ -58,6 +60,8 @@ public:
   //
   SlpFile* getSlp(sf::Uint32 id);
   
+  ColorPalette* getPalette(sf::Uint32 id);
+  
   //----------------------------------------------------------------------------
   /// Adds an slp file that will be managed by the ResourceManager.
   /// TODO: Maybe auto_ptr
@@ -65,6 +69,8 @@ public:
   /// @param slp reference to the slp file
   //
   void addSlpFile(SlpFile *slp);
+  
+  void addBinaFile(BinaFile *bina);
   
 private:
   ResourceManager();
@@ -75,6 +81,7 @@ private:
   
   std::vector<DrsFile *> drs_files_;
   std::map<sf::Uint32, SlpFile *> slp_files_;
+  std::map<sf::Uint32, BinaFile*> bina_files_;
   
   std::fstream terrain_file_;
   std::fstream graphics_file_;

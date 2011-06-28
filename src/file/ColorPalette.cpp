@@ -23,6 +23,12 @@
 
 using std::string;
 
+ColorPalette::ColorPalette()
+{
+
+}
+
+
 ColorPalette::ColorPalette(std::string filename)
 {
   file_.open(filename.c_str(), std::ios::in);
@@ -33,36 +39,42 @@ ColorPalette::ColorPalette(std::string filename)
     return;
   }
   
+  parsePalette(file_);
+  
+  file_.close();
+}
+
+void ColorPalette::parsePalette(std::istream &istr)
+{
   string smth;
   
-  file_ >> smth;
-  file_ >> smth;
+  istr >> smth;
+  istr >> smth;
   
   u_int32_t num_colors;
   
-  file_ >> num_colors;
+  istr >> num_colors;
   
   for (u_int32_t i=0; i<num_colors; i++)
   {
     u_int32_t color_in;
     sf::Color color_out;
     
-    file_ >> color_in;
+    istr >> color_in;
     color_out.r = color_in;
     
-    file_ >> color_in;
+    istr >> color_in;
     color_out.g = color_in;
     
-    file_ >> color_in;
+    istr >> color_in;
     color_out.b = color_in;
     
     color_out.a = 255;
     
     colors_.push_back(color_out);
   }
-  
-  file_.close();
 }
+
 
 ColorPalette::~ColorPalette()
 {

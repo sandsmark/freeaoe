@@ -40,8 +40,6 @@ SlpFrame::SlpFrame(std::iostream* iostr, std::streampos pos,
                    std::streampos file_pos, ColorPalette *palette) 
                    : FileIO(iostr, pos), file_pos_(file_pos), palette_(palette)
 {
-  palette_ = new ColorPalette("aoe2/50500.pal"); //TODO: Warning
-  
   left_edges_   = 0;
   right_edges_  = 0;
   
@@ -54,8 +52,6 @@ SlpFrame::SlpFrame(std::iostream* iostr, std::streampos pos,
 //------------------------------------------------------------------------------
 SlpFrame::~SlpFrame()
 {
-  delete palette_; //TODO
-  
   delete [] left_edges_;
   delete [] right_edges_;
   
@@ -88,7 +84,8 @@ sf::Image* SlpFrame::getPlayerColorMask(sf::Uint8 player) const
                     palette_->getColorAt(it->index + ((player + 1) * 16)) );
   }
   
-  return cmask; //TODO auto pointer
+  return cmask; //TODO auto pointer (but doesn't work, maybe problem with
+                // images copy constructor, try again in sfml2.0
 }
 
 //------------------------------------------------------------------------------
@@ -115,8 +112,6 @@ void SlpFrame::loadHeader()
   height_    = read<Int32>();
   hotspot_x_ = read<Int32>();
   hotspot_y_ = read<Int32>();
-  
- // std::cout << std::hex << (unsigned int)(tellg() - file_pos_) << std::endl;
 }
 
 //------------------------------------------------------------------------------

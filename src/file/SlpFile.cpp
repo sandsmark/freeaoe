@@ -18,7 +18,10 @@
 
 
 #include "SlpFile.h"
+
 #include "SlpFrame.h"
+#include <resource/ResourceManager.h>
+#include <file/ColorPalette.h>
 
 using sf::Uint32;
 
@@ -54,7 +57,9 @@ void SlpFile::load()
   
   for (u_int32_t i = 0; i < num_frames_; i++)
   {
-    frame = new SlpFrame(getIOStream(), tellg(), getPos(), 0);
+    ColorPalette *palette = ResourceManager::Inst()->getPalette(50500); //50500 = standard palette
+    
+    frame = new SlpFrame(getIOStream(), tellg(), getPos(), palette);
     frame->loadHeader();
     
     frames_.push_back(frame);

@@ -97,7 +97,10 @@ void RenderGraphic::drawOn(sf::RenderTarget* target)
   sprite_.SetImage(*frame->getImage());
   target->Draw(sprite_);
   
-  sprite_.SetImage(*frame->getPlayerColorMask(2));
+  sf::Image *color_mask = frame->getPlayerColorMask(2);
+  sprite_.SetImage(*color_mask);
   target->Draw(sprite_);
+  
+  delete color_mask;
 }
 
