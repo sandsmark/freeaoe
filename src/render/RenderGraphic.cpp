@@ -93,9 +93,11 @@ void RenderGraphic::drawOn(sf::RenderTarget* target)
   
   sprite_.SetX(x_ - frame->getHotspotX());
   sprite_.SetY(y_ - frame->getHotspotY());
-  sprite_.SetImage(*frame->getPlayerColorMask(3));
+ 
+  sprite_.SetImage(*frame->getImage());
+  target->Draw(sprite_);
   
-  
+  sprite_.SetImage(*frame->getPlayerColorMask(2));
   target->Draw(sprite_);
 }
 

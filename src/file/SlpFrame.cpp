@@ -79,7 +79,7 @@ sf::Image* SlpFrame::getOutline() const
 sf::Image* SlpFrame::getPlayerColorMask(sf::Uint8 player) const
 {
   sf::Image *cmask = new sf::Image();
-  cmask->Create(width_, height_);
+  cmask->Create(width_, height_, sf::Color(0,0,0,0));
   
   for (std::vector<PlayerColorElement>::const_iterator 
        it = player_color_mask_.begin(); it != player_color_mask_.end(); it++)
@@ -128,8 +128,8 @@ void SlpFrame::load()
   outline_ = new sf::Image();
   //player_color_mask_ = new sf::Image();
   
-  image_->Create(width_, height_);
-  outline_->Create(width_, height_);
+  image_->Create(width_, height_, sf::Color(0,0,0,0));
+  outline_->Create(width_, height_, sf::Color(0,0,0,0));
   //player_color_mask_->Create(width_, height_);
   
   readEdges();
@@ -283,18 +283,6 @@ void SlpFrame::readEdges()
   {
     left_edges_[row_cnt] = read<Int16>();
     right_edges_[row_cnt] = read<Int16>();
-    
-    if (left_edges_[row_cnt] >= 0) // if first edge is -1 skip
-    {
-      assert((left_edges_[row_cnt] + right_edges_[row_cnt]) < width_);
-      
-      // Set edges transparent
-      for (sf::Uint32 i=0; i < left_edges_[row_cnt]; i++)
-        image_->SetPixel(i, row_cnt, sf::Color(0,0,0,0));
-      
-      for (sf::Uint32 i=width_-1; i >= (width_ - right_edges_[row_cnt]); i--)
-        image_->SetPixel(i, row_cnt, sf::Color(0,0,0,0));
-    }
     
     row_cnt ++;
   }

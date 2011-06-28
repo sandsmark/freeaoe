@@ -23,12 +23,8 @@
 #include <istream>
 #include "FileIO.h"
 #include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/Image.hpp>
 #include <vector>
-
-namespace sf
-{
-  class Image;
-}
 
 class ColorPalette;
 

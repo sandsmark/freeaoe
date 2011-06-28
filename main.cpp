@@ -23,9 +23,6 @@
 int main(int argc, char **argv) 
 {
   Logger::setLogLevel(Logger::L_INFO);
-  DatFile df;
-  // TODO: doesn't work yet
-  df.open("aoe2/Data/empires2_x1_p1.dat");
   
   Engine en;
   en.run();
@@ -36,8 +33,8 @@ int main(int argc, char **argv)
  
   GenieGraphic gg = DataManager::Inst()->getGraphic(1128);
   RenderGraphic rg(&gg);
-  rg.setX(50);
-  rg.setY(50);
+  rg.setX(100);
+  rg.setY(150);
   
   Map map;
   map.setUpSample();
