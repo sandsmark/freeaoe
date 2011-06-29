@@ -23,6 +23,7 @@
 
 #include <iostream>
 
+//------------------------------------------------------------------------------
 BinaFile::BinaFile(sf::Uint32 id, sf::Uint32 pos, sf::Uint32 len, 
                    std::iostream* iostr) : id_(id), FileIO(iostr, pos), 
                    len_(len)
@@ -30,12 +31,14 @@ BinaFile::BinaFile(sf::Uint32 id, sf::Uint32 pos, sf::Uint32 len,
   palette_ = 0;
 }
 
+//------------------------------------------------------------------------------
 BinaFile::~BinaFile()
 {
   delete palette_;
 }
 
 
+//------------------------------------------------------------------------------
 ColorPalette* BinaFile::readPalette()
 {
   if (palette_ == 0)
@@ -49,6 +52,7 @@ ColorPalette* BinaFile::readPalette()
   return palette_;
 }
 
+//------------------------------------------------------------------------------
 sf::Uint32 BinaFile::getId()
 {
   return id_;

@@ -23,41 +23,41 @@
 
 using std::string;
 
-ColorPalette::ColorPalette()
+Logger& ColorPalette::log = Logger::getLogger("freeaoe.ColorPalette");
+
+//------------------------------------------------------------------------------
+ColorPalette::ColorPalette() : num_colors_(0)
+{
+  
+}
+
+//------------------------------------------------------------------------------
+ColorPalette::~ColorPalette()
 {
 
 }
 
-
-ColorPalette::ColorPalette(std::string filename)
-{
-  file_.open(filename.c_str(), std::ios::in);
-  
-  if (!file_.is_open() || file_.bad())
-  {
-    std::cerr << "Could not open " << filename.c_str() << std::endl;
-    return;
-  }
-  
-  parsePalette(file_);
-  
-  file_.close();
-}
-
+//------------------------------------------------------------------------------
 void ColorPalette::parsePalette(std::istream &istr)
 {
+  string type;
   string smth;
   
-  istr >> smth;
-  istr >> smth;
+  istr >> type;
   
-  u_int32_t num_colors;
-  
-  istr >> num_colors;
-  
-  for (u_int32_t i=0; i<num_colors; i++)
+  if (type.find("JASC-PAL") != 0)
   {
-    u_int32_t color_in;
+    log.error("Not a color palette!");
+    //TODO: Exception
+  }
+  
+  istr >> smth;
+  
+  istr >> num_colors_;
+  
+  for (sf::Uint32 i=0; i<num_colors_; i++)
+  {
+    sf::Uint32 color_in;
     sf::Color color_out;
     
     istr >> color_in;
@@ -69,20 +69,22 @@ void ColorPalette::parsePalette(std::istream &istr)
     istr >> color_in;
     color_out.b = color_in;
     
-    color_out.a = 255;
+    color_out.a = 255;  //transparency off
     
     colors_.push_back(color_out);
   }
 }
 
-
-ColorPalette::~ColorPalette()
+//------------------------------------------------------------------------------
+sf::Color ColorPalette::getColorAt(sf::Uint16 pos)
 {
-
-}
-
-sf::Color ColorPalette::getColorAt(u_int16_t pos)
-{
+  if (pos < 0 || pos >= num_colors_)
+  {
+    log.warn("getColorAt: index out of range!");
+    
+    return sf::Color();
+  }
+  
   return colors_[pos];
 }
 

@@ -30,12 +30,33 @@ class ColorPalette;
 class BinaFile : public FileIO
 {
 public:
+  //----------------------------------------------------------------------------
+  /// Constructor
+  ///
+  /// @param id resources' id
+  /// @param len 
+  /// @param istr input/output stream
+  /// @param pos start position of this file in stream
+  //
   BinaFile(sf::Uint32 id, sf::Uint32 pos, sf::Uint32 len, std::iostream *iostr);
   
+  //----------------------------------------------------------------------------
+  /// Destructor
+  //
   virtual ~BinaFile();
   
+  //----------------------------------------------------------------------------
+  /// Tries to read a color palette from data.
+  ///
+  /// @return color palette if successfull
+  //
   ColorPalette* readPalette();
   
+  //----------------------------------------------------------------------------
+  /// Get resource id
+  ///
+  /// @return resource id
+  //
   sf::Uint32 getId();
   
 private:

@@ -21,26 +21,22 @@
 #define PALFILE_H
 
 #include <string>
-#include <fstream>
 #include <vector>
-#include <sys/types.h>
 #include <SFML/Graphics/Color.hpp>
 
+#include <global/Logger.h>
+
 //------------------------------------------------------------------------------
-/// Class for opening aoe palletes from .pal files
+/// Class for parsing aoe palletes.
 //
 class ColorPalette
 {
 
 public:
-  ColorPalette();
-  
   //----------------------------------------------------------------------------
-  /// Constructor that loads the palette from given file.
-  ///
-  /// @param filename filename to load from
+  /// Constructor
   //
-  ColorPalette(std::string filename);
+  ColorPalette();
   
   //----------------------------------------------------------------------------
   /// Destructor
@@ -53,13 +49,22 @@ public:
   /// @param index index of color in palette
   /// @return color object
   //
-  sf::Color getColorAt(u_int16_t index);  
+  sf::Color getColorAt(sf::Uint16 index);  
   
+  //----------------------------------------------------------------------------
+  /// Parse the palette from an input stream.
+  ///
+  /// @param istr input stream where to parse from
+  //
   void parsePalette(std::istream &istr);
+  
 private:
-  std::fstream file_;
+  
+  static Logger &log;
   
   std::vector<sf::Color> colors_;
+  
+  sf::Uint32 num_colors_;
 };
 
 #endif // PALFILE_H
