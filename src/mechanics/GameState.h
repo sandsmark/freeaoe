@@ -17,41 +17,30 @@
 */
 
 
-#include "Engine.h"
+#ifndef GAMESTATE_H
+#define GAMESTATE_H
 
-#include <SFML/Graphics.hpp>
-
-#include <SFML/Graphics/RenderWindow.hpp>
-
-Logger& Engine::log = Logger::getLogger("freeaoe.Engine");
-
-const sf::Clock Engine::GameClock;
-
+#include <mechanics/IState.h>
 
 //------------------------------------------------------------------------------
-Engine::Engine() : render_window_(0)
+/// State where the player actually plays the game
+//
+class GameState : public IState
 {
 
-}
-
-//------------------------------------------------------------------------------
-Engine::~Engine()
-{
-  log.info("Closing engine");
-}
-
-//------------------------------------------------------------------------------
-void Engine::start()
-{
-  Logger::setLogLevel(Logger::L_INFO);
+public:
+  GameState();
+  virtual ~GameState();
   
-  log.info("Starting engine.");
+  virtual void init();
   
-  setup();
-}
+  virtual void draw();
+  virtual void update();
+  virtual void handleEvent(sf::Event event);
+    
+private:
+  
+  GameState(const GameState& other);
+};
 
-//------------------------------------------------------------------------------
-void Engine::setup()
-{
-  render_window_ = new sf::RenderWindow(sf::VideoMode(800, 600), "freeaoe");
-}
+#endif // GAMESTATE_H

@@ -17,35 +17,26 @@
 */
 
 
-#ifndef ENGINE_H
-#define ENGINE_H
+#ifndef STATEMANAGER_H
+#define STATEMANAGER_H
 
-#include <global/Logger.h>
+#include "GameState.h"
 
-#include <SFML/System/Clock.hpp>
-
-namespace sf {
-class RenderWindow;
-}
-
-class Engine
+class StateManager
 {
 
 public:
-  static const sf::Clock GameClock;
+  StateManager();
+  virtual ~StateManager();
   
-  Engine();
-  ~Engine();
+  void addActiveState(GameState *state);
   
-  void start();
-  
+  GameState* getActiveState();
+    
 private:
-  static Logger &log;
+  GameState *active_state_;
   
-  sf::RenderWindow *render_window_;
-  
-  void setup();
-  
+  StateManager(const StateManager& other);
 };
 
-#endif // ENGINE_H
+#endif // STATEMANAGER_H

@@ -46,6 +46,8 @@ set(DATA_SRC src/data/DataManager.cpp
              src/data/GenieUnit.cpp )
 
 set(MECHANICS_SRC src/mechanics/Map.cpp
+                  src/mechanics/StateManager.cpp 
+                  src/mechanics/GameState.cpp 
                   src/mechanics/MapRenderer.cpp) 
 
 set(RENDER_SRC src/render/RenderGraphic.cpp )

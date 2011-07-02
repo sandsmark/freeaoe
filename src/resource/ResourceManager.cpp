@@ -39,12 +39,6 @@ ResourceManager* ResourceManager::Inst()
 }
 
 //------------------------------------------------------------------------------
-void ResourceManager::Destroy()
-{
-
-}
-
-//------------------------------------------------------------------------------
 SlpFile* ResourceManager::getSlp(sf::Uint32 id)
 {
   std::map<sf::Uint32, SlpFile *>::iterator it = slp_files_.find(id);

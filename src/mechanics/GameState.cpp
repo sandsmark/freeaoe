@@ -17,41 +17,40 @@
 */
 
 
-#include "Config.h"
+#include "GameState.h"
 
-//------------------------------------------------------------------------------
-Config* Config::Inst()
+void GameState::init()
 {
-  static Config config;
-  return &config;
+    IState::init();
 }
 
-//------------------------------------------------------------------------------
-std::string Config::getGamePath()
-{
-  return Config::game_dir_;
-}
 
-//------------------------------------------------------------------------------
-std::string Config::getDataPath()
-{
-  return Config::game_dir_ + "Data/";
-}
-
-//------------------------------------------------------------------------------
-Config::Config()
-{
-  game_dir_ = "aoe2/";
-}
-
-//------------------------------------------------------------------------------
-Config::Config(const Config& other)
+void GameState::draw()
 {
 
 }
 
-//------------------------------------------------------------------------------
-Config::~Config()
+void GameState::update()
+{
+
+}
+
+void GameState::handleEvent(sf::Event event)
+{
+
+}
+
+GameState::GameState()
+{
+
+}
+
+GameState::GameState(const GameState& other)
+{
+
+}
+
+GameState::~GameState()
 {
 
 }

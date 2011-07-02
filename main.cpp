@@ -24,8 +24,8 @@ int main(int argc, char **argv)
 {
   Logger::setLogLevel(Logger::L_INFO);
   
-  Engine en;
-  en.run();
+  //Engine en;
+  //en.start();
   
   ResourceManager::Inst();
   DataManager::Inst();
@@ -45,6 +45,7 @@ int main(int argc, char **argv)
   MapRenderer render(&App);
   render.setMap(&map);
   
+  bool pause = false;
    // Start the game loop
      while (App.IsOpened())
      {
@@ -55,8 +56,16 @@ int main(int argc, char **argv)
              // Close window : exit
              if (Event.Type == sf::Event::Closed)
                  App.Close();
+             
+             if (Event.Type == sf::Event::KeyReleased)
+             {
+                if (Event.Key.Code  == sf::Key::Space)
+                  pause = !pause;
+             }
          }
- 
+
+        if (!pause)
+        {
          // Clear screen
          App.Clear();
  
@@ -72,9 +81,9 @@ int main(int argc, char **argv)
  
          // Update the window
          App.Display();
+        }
          
      }
      
-  Config::Destroy();
   return 0;
 }

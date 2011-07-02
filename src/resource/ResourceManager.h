@@ -47,11 +47,6 @@ public:
   static ResourceManager* Inst();
   
   //----------------------------------------------------------------------------
-  /// Destroys the resource manager. Has to be called on exit.
-  //
-  static void Destroy();
-  
-  //----------------------------------------------------------------------------
   /// Returns the slp file with given id or 0 if not found. The slp file
   /// should not be deleted!
   ///
