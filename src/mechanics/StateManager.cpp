@@ -17,42 +17,33 @@
 */
 
 
-#include "Config.h"
+#include "StateManager.h"
 
-//------------------------------------------------------------------------------
-Config* Config::Inst()
-{
-  static Config config;
-  return &config;
-}
-
-//------------------------------------------------------------------------------
-std::string Config::getGamePath()
-{
-  return Config::game_dir_;
-}
-
-//------------------------------------------------------------------------------
-std::string Config::getDataPath()
-{
-  return Config::game_dir_ + "Data/";
-}
-
-//------------------------------------------------------------------------------
-Config::Config()
-{
-  game_dir_ = "aoe2/";
-}
-
-//------------------------------------------------------------------------------
-Config::Config(const Config& other)
+StateManager::StateManager() : active_state_(0)
 {
 
 }
 
-//------------------------------------------------------------------------------
-Config::~Config()
+StateManager::~StateManager()
 {
 
 }
+
+void StateManager::addActiveState(GameState* state)
+{
+  if (active_state_ != 0)
+  {
+    active_state_->cleanUp();
+  }
+  
+  state->init();
+  
+  active_state_ = state;
+}
+
+GameState* StateManager::getActiveState()
+{
+  return active_state_;
+}
+
 
