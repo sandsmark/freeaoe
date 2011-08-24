@@ -33,7 +33,7 @@ class ColorPalette;
 /// TODO: Check file corruption
 /// TODO: One (or more??) mask for player color and outline (and shadow?)
 //
-class SlpFrame : public FileIO
+class SlpFrame
 {
   
 public:  
@@ -104,6 +104,7 @@ public:
   sf::Int32 getHotspotY() const;
   
 private:
+  FileIO file_;
   std::streampos file_pos_;
   
   sf::Uint32 cmd_table_offset_;

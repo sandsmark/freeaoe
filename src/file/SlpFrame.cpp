@@ -38,7 +38,7 @@ using std::auto_ptr;
 //------------------------------------------------------------------------------
 SlpFrame::SlpFrame(std::iostream* iostr, std::streampos pos, 
                    std::streampos file_pos, ColorPalette *palette) 
-                   : FileIO(iostr, pos), file_pos_(file_pos), palette_(palette)
+                   : file_(iostr, pos), file_pos_(file_pos), palette_(palette)
 {
   left_edges_   = 0;
   right_edges_  = 0;
@@ -103,15 +103,15 @@ Int32 SlpFrame::getHotspotY() const
 //------------------------------------------------------------------------------
 void SlpFrame::loadHeader()
 {
-  cmd_table_offset_     = read<Uint32>();
-  outline_table_offset_ = read<Uint32>();
-  palette_offset_       = read<Uint32>();
-  properties_           = read<Uint32>();
+  cmd_table_offset_     = file_.read<Uint32>();
+  outline_table_offset_ = file_.read<Uint32>();
+  palette_offset_       = file_.read<Uint32>();
+  properties_           = file_.read<Uint32>();
   
-  width_     = read<Int32>();
-  height_    = read<Int32>();
-  hotspot_x_ = read<Int32>();
-  hotspot_y_ = read<Int32>();
+  width_     = file_.read<Int32>();
+  height_    = file_.read<Int32>();
+  hotspot_x_ = file_.read<Int32>();
+  hotspot_y_ = file_.read<Int32>();
 }
 
 //------------------------------------------------------------------------------
@@ -133,7 +133,7 @@ void SlpFrame::load()
   // they can be used for checking file integrity.
   for (Uint32 i=0; i < height_; i++)
   {
-    read<Uint32>();
+    file_.read<Uint32>();
   }
   
   // Each row has it's commands, 0x0F signals the end of a rows commands.
@@ -145,7 +145,7 @@ void SlpFrame::load()
     
     while (data != 0x0F)
     {
-      data = read<Uint8>();
+      data = file_.read<Uint8>();
      
       //if ( (tellg() - file_pos_) == 0x1630)
       //  std::cout << row << ": " << std::hex << (int)(tellg() - file_pos_) << " cmd: " << (int)data<< std::endl;
@@ -182,13 +182,13 @@ void SlpFrame::load()
           break;
           
         case 2: // greater block copy
-          pix_cnt = ((data & 0xF0) << 4) + read<Uint8>();
+          pix_cnt = ((data & 0xF0) << 4) + file_.read<Uint8>();
           
           readPixelsToImage(image_, row, pix_pos, pix_cnt);
           break;
           
         case 3: // greater skip
-          pix_cnt = ((data & 0xF0) << 4) + read<Uint8>();
+          pix_cnt = ((data & 0xF0) << 4) + file_.read<Uint8>();
           pix_pos += pix_cnt;
           break;
           
@@ -203,7 +203,7 @@ void SlpFrame::load()
         case 7: // Run of plain color
           pix_cnt = getPixelCountFromData(data);
           
-          color_index = read<Uint8>();
+          color_index = file_.read<Uint8>();
           setPixelsToColor(image_, row, pix_pos, pix_cnt, 
                            color_index);
         break;
@@ -211,8 +211,8 @@ void SlpFrame::load()
         case 0xA: // Transform block (player color)
           pix_cnt = getPixelCountFromData(data);
           
-          // TODO: readUint8() | player_color
-          color_index = read<Uint8>();
+          // TODO: file_.readUint8() | player_color
+          color_index = file_.read<Uint8>();
           setPixelsToColor(image_, row, pix_pos, pix_cnt, 
                            color_index, true);
         break;
@@ -242,7 +242,7 @@ void SlpFrame::load()
             
             case 0x5E: //Outline run TODO player color
             case 0x7E: 
-              pix_cnt = read<Uint8>();
+              pix_cnt = file_.read<Uint8>();
               pix_pos += pix_cnt;
               
               //setPixelsToColor(outline_, row, pix_pos, pix_cnt, 
@@ -253,7 +253,7 @@ void SlpFrame::load()
         break;
         default:
           std::cerr << "SlpFrame: Unknown cmd at " << std::hex << 
-                  (int)(tellg() - file_pos_)<< ": " << (int) data << std::endl;
+                  (int)(file_.tellg() - file_pos_)<< ": " << (int) data << std::endl;
           break;
       }
       
@@ -274,10 +274,10 @@ void SlpFrame::readEdges()
   
   sf::Uint32 row_cnt = 0;
   
-  while (tellg() < cmd_table_pos)
+  while (file_.tellg() < cmd_table_pos)
   {
-    left_edges_[row_cnt] = read<Int16>();
-    right_edges_[row_cnt] = read<Int16>();
+    left_edges_[row_cnt] = file_.read<Int16>();
+    right_edges_[row_cnt] = file_.read<Int16>();
     
     row_cnt ++;
   }
@@ -291,7 +291,7 @@ void SlpFrame::readPixelsToImage(sf::Image *image, Uint32 row, Uint32 &col,
   Uint32 to_pos = col + count;
   while (col < to_pos)
   {
-    Uint8 color_index = read<Uint8>();
+    Uint8 color_index = file_.read<Uint8>();
     
     image->SetPixel(col, row, palette_->getColorAt(color_index));
     
@@ -338,7 +338,7 @@ Uint8 SlpFrame::getPixelCountFromData(Uint8 data)
   data = (data & 0xF0) >> 4;
           
   if (data == 0)
-    pix_cnt = read<Uint8>();
+    pix_cnt = file_.read<Uint8>();
   else
     pix_cnt = data;
           

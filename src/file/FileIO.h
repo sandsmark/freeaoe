@@ -33,7 +33,6 @@ class FileIO
 {
 
 public:
-  
   //----------------------------------------------------------------------------
   /// If this Constructor is called, FileIO will manage the file and its 
   /// streams..
@@ -46,6 +45,10 @@ public:
   /// Constructor
   //
   FileIO(std::iostream *iostr, std::streampos pos);
+  
+  //----------------------------------------------------------------------------
+  /// Copy Constructor
+  FileIO(const FileIO &fio);
   
   //----------------------------------------------------------------------------
   /// Destructor
@@ -124,14 +127,14 @@ public:
   
   
 private:
+  FileIO();
+  
   std::iostream *iostr_;
   std::streampos pos_;
   
   std::string file_name_;
   std::fstream *file; //is only used if FileIO is called with file_name
   
-  FileIO();
-  FileIO(const FileIO &fio);
   FileIO& operator=(const FileIO &fio);
 };
 

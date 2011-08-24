@@ -27,7 +27,7 @@ class ColorPalette;
 //------------------------------------------------------------------------------
 /// Class for reading binary files in drs. Like palettes ...
 //
-class BinaFile : public FileIO
+class BinaFile
 {
 public:
   BinaFile(sf::Uint32 id, sf::Uint32 pos, sf::Uint32 len, std::iostream *iostr);
@@ -39,6 +39,8 @@ public:
   sf::Uint32 getId();
   
 private:
+  FileIO file_;
+  
   sf::Uint32 id_;
   sf::Uint32 len_;
   

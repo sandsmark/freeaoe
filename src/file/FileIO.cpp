@@ -19,6 +19,13 @@
 
 #include "FileIO.h"
 
+#include <iostream>
+
+FileIO::FileIO()
+{
+  std::cout << "calling fileio constructor" << std::endl;
+}
+
 //------------------------------------------------------------------------------
 FileIO::FileIO(std::string file_name) throw (FileException) 
                : file_name_(file_name)
@@ -42,6 +49,12 @@ FileIO::FileIO(std::iostream* iostr, std::streampos pos) : iostr_(iostr),
 {
 
 }
+
+FileIO::FileIO(const FileIO& fio)
+{
+
+}
+
 
 //------------------------------------------------------------------------------
 FileIO::~FileIO()

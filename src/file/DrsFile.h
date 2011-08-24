@@ -29,7 +29,7 @@ class ResourceManager;
 
 //------------------------------------------------------------------------------
 /// Base class for .drs files
-class DrsFile : public FileIO
+class DrsFile
 {
 
 public:
@@ -59,6 +59,8 @@ public:
   virtual void loadHeader();
   
 private:
+  FileIO file_;
+  
   static Logger &log;
   
   bool header_loaded_;

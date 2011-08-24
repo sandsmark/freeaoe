@@ -29,7 +29,7 @@ Logger& SlpFile::log = Logger::getLogger("freeaoe.SlpFile");
 
 //------------------------------------------------------------------------------
 SlpFile::SlpFile(sf::Uint32 id, sf::Uint32 pos, sf::Uint32 len, 
-                 std::iostream* iostr) : id_(id), FileIO(iostr, pos), len_(len)
+                 std::iostream* iostr) : id_(id), file_(iostr, pos), len_(len)
 {
 }
 
@@ -49,7 +49,7 @@ void SlpFile::load()
   if (frames_.size() > 0) //already loaded
     return;
   
-  setToPos(); 
+  file_.setToPos(); 
   
   readHeader();
   
@@ -59,7 +59,7 @@ void SlpFile::load()
   {
     ColorPalette *palette = ResourceManager::Inst()->getPalette(50500); //50500 = standard palette
     
-    frame = new SlpFrame(getIOStream(), tellg(), getPos(), palette);
+    frame = new SlpFrame(file_.getIOStream(), file_.tellg(), file_.getPos(), palette);
     frame->loadHeader();
     
     frames_.push_back(frame);
@@ -111,9 +111,9 @@ SlpFrame* SlpFile::getFrame(Uint32 frame)
 //------------------------------------------------------------------------------
 void SlpFile::readHeader()
 {
-  std::string version = readString(4);
-  num_frames_ = read<Uint32>();
+  std::string version = file_.readString(4);
+  num_frames_ = file_.read<Uint32>();
   
-  std::string comment = readString(24);
+  std::string comment = file_.readString(24);
 }
 
