@@ -3,6 +3,7 @@
 #include <fstream>
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 
 #include <global/Config.h>
 #include <resource/ResourceManager.h>
@@ -62,7 +63,7 @@ int main(int argc, char **argv)
 
              if (Event.Type == sf::Event::KeyReleased)
              {
-                if (Event.Key.Code  == sf::Key::Space)
+                if (Event.Key.Code  == sf::Keyboard::Space)
                   pause = !pause;
              }
          }
