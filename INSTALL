@@ -3,8 +3,7 @@ Ubuntu:
 
 Following requirements are needed for compiling the source:
 
-  sudo apt-get install cmake libsfml-dev libglu1-mesa-dev zlib1g-dev \
-  libboost-iostreams-dev
+  sudo apt-get install cmake libsfml-dev libglu1-mesa-dev zlib1g-dev 
  
 To compile the project create a build dir, run cmake and make
 
