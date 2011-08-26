@@ -24,13 +24,14 @@
 #include <data/GenieGraphic.h>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Image.hpp>
+#include <SFML/Graphics/Texture.hpp>
 #include <resource/ResourceManager.h>
 #include <Engine.h>
 
 #include <iostream>
 
 //------------------------------------------------------------------------------
-RenderGraphic::RenderGraphic(GenieGraphic *data) : data_(data), 
+RenderGraphic::RenderGraphic(GenieGraphic *data) : data_(data),
                                                    current_frame_(0),
                                                    time_last_frame_(0)
 {
@@ -77,30 +78,35 @@ void RenderGraphic::drawOn(sf::RenderTarget* target)
   }
   else
   {
-    if ( (Engine::GameClock.GetElapsedTime() - time_last_frame_) 
+    if ( (Engine::GameClock.GetElapsedTime() - time_last_frame_)
           > data_->frame_rate_ )
     {
       if (current_frame_ < data_->frame_count_ - 1)
         current_frame_ ++;
       else
         current_frame_ = 0;
-      
+
       time_last_frame_ = Engine::GameClock.GetElapsedTime();
     }
   }
-  
+
+  sf::Texture textr_;
+
   SlpFrame *frame = slp_file_->getFrame(current_frame_);
-  
+
   sprite_.SetX(x_ - frame->getHotspotX());
   sprite_.SetY(y_ - frame->getHotspotY());
- 
-  sprite_.SetImage(*frame->getImage());
+
+  textr_.LoadFromImage(*frame->getImage());
+  sprite_.SetTexture(textr_);
   target->Draw(sprite_);
-  
+
   sf::Image *color_mask = frame->getPlayerColorMask(2);
-  sprite_.SetImage(*color_mask);
+  textr_.LoadFromImage(*color_mask);
+  sprite_.SetTexture(textr_);
   target->Draw(sprite_);
-  
+
+  //delete textr_;
   delete color_mask;
 }
 
