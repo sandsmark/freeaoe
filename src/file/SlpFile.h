@@ -31,7 +31,7 @@
 
 class SlpFrame;
 
-class SlpFile : public FileIO 
+class SlpFile
 {
 
 public:
@@ -88,6 +88,8 @@ public:
   
 private: 
   SlpFile();
+  
+  FileIO file_;
   
   sf::Uint32 id_;
   sf::Uint32 len_;

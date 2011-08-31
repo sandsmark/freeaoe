@@ -31,7 +31,7 @@ Logger& DrsFile::log = Logger::getLogger("freeaoe.DrsFile");
 
 //------------------------------------------------------------------------------
 DrsFile::DrsFile(string file_name, ResourceManager *resource_manager)
-                 : FileIO(file_name), resource_manager_(resource_manager)
+                 : file_(file_name), resource_manager_(resource_manager)
 {
   header_loaded_ = false;
 }
@@ -51,21 +51,21 @@ void DrsFile::loadHeader()
     log.warn("Trying to load header again!"); 
   else
   {
-    string copy_right = readString(40);
+    string copy_right = file_.readString(40);
     
-    string version = readString(4);
+    string version = file_.readString(4);
     
     //File type
-    string file_type = readString(12);
+    string file_type = file_.readString(12);
     
-    num_of_tables_ = read<Uint32>();
-    header_offset_ = read<Uint32>(); 
+    num_of_tables_ = file_.read<Uint32>();
+    header_offset_ = file_.read<Uint32>(); 
     
     // Load table data
     for (Uint32 i = 0; i < num_of_tables_; i++)
     {
-      table_types_.push_back(readString(8));
-      table_num_of_files_.push_back(read<Uint32>());
+      table_types_.push_back(file_.readString(8));
+      table_num_of_files_.push_back(file_.read<Uint32>());
     }
    
     // Load file headers
@@ -73,20 +73,20 @@ void DrsFile::loadHeader()
     {
       for (Uint32 j = 0; j < table_num_of_files_[i]; j++)
       {
-        sf::Uint32 id = read<Uint32>();
-        sf::Uint32 pos = read<Uint32>();
-        sf::Uint32 len = read<Uint32>();
+        sf::Uint32 id = file_.read<Uint32>();
+        sf::Uint32 pos = file_.read<Uint32>();
+        sf::Uint32 len = file_.read<Uint32>();
                 
         if (table_types_[i].find(" plsL") == 0)
         {
-          SlpFile *slp = new SlpFile(id, pos, len, getIOStream());
+          SlpFile *slp = new SlpFile(id, pos, len, file_.getIOStream());
           resource_manager_->addSlpFile(slp);
         }
         else
         {
           if (table_types_[i].find("anibd") == 0)
           {
-            BinaFile *bina = new BinaFile(id, pos, len, getIOStream());
+            BinaFile *bina = new BinaFile(id, pos, len, file_.getIOStream());
             resource_manager_->addBinaFile(bina);
           }
         }

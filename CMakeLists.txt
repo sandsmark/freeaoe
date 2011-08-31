@@ -4,21 +4,17 @@ project(freeaoe)
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/)
 
-set(Boost_USE_STATIC_LIBS        ON)
-set(Boost_USE_MULTITHREADED      ON)
-set(Boost_USE_STATIC_RUNTIME    OFF)
+#set(Boost_USE_STATIC_LIBS        ON)
+#set(Boost_USE_MULTITHREADED      ON)
+#set(Boost_USE_STATIC_RUNTIME    OFF)
 
-find_package(Boost 1.42 COMPONENTS iostreams REQUIRED) #only iostream needed
+#find_package(Boost 1.42 COMPONENTS iostreams REQUIRED) #only iostream needed
 
-find_package(SFML REQUIRED)
+find_package(SFML COMPONENTS SYSTEM WINDOW GRAPHICS REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(ZLIB REQUIRED)
 
-include_directories(src/ ${Boost_INCLUDE_DIRS})# lib/genied2/src/) #lib/SFML_2.0/include/)
-
-#add_subdirectory(lib/genied2)
-#add_subdirectory(lib/SFML_2.0)
-
+include_directories(src/) # ${Boost_INCLUDE_DIRS})# 
 
 set(FILE_SRC src/file/SubFile.cpp 
 )
@@ -33,7 +29,7 @@ set(RESOURCE_SRC #src/resource/Graphic.cpp
                  )
 
 set(FILE_SRC src/file/ColorPalette.cpp
-             src/file/DatFile.cpp 
+            # src/file/DatFile.cpp 
              src/file/FileIO.cpp
              src/file/SlpFrame.cpp
              src/file/SlpFile.cpp
@@ -60,6 +56,10 @@ add_executable(freeaoe src/Engine.cpp main.cpp
                ${MECHANICS_SRC}
                ${RENDER_SRC})
 
-target_link_libraries(freeaoe ${SFML_LIBRARY} ${Boost_LIBRARIES} )#sfml-graphics sfml-window sfml-system )
+target_link_libraries(freeaoe 
+                      ${SFML_WINDOW_LIBRARY}
+                      ${SFML_SYSTEM_LIBRARY}
+                      ${SFML_GRAPHICS_LIBRARY} )
+                      
 
 add_subdirectory(src)

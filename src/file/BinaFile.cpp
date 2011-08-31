@@ -25,7 +25,7 @@
 
 //------------------------------------------------------------------------------
 BinaFile::BinaFile(sf::Uint32 id, sf::Uint32 pos, sf::Uint32 len, 
-                   std::iostream* iostr) : id_(id), FileIO(iostr, pos), 
+                   std::iostream* iostr) : id_(id), file_(iostr, pos), 
                    len_(len)
 {
   palette_ = 0;
@@ -44,9 +44,9 @@ ColorPalette* BinaFile::readPalette()
   if (palette_ == 0)
   {
     palette_ = new ColorPalette();
-    setToPos();
+    file_.setToPos();
      
-    palette_->parsePalette(*getIOStream());
+    palette_->parsePalette(*file_.getIOStream());
   }
   
   return palette_;
