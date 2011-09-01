@@ -4,3 +4,8 @@
 
 # IDE Files
 *.kdev4
+
+# build subdirectory
+build/
+
+raw.dat

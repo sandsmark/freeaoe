@@ -19,6 +19,7 @@
 
 #include "MapRenderer.h"
 #include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/Texture.hpp>
 #include <resource/Graphic.h>
 #include <resource/ResourceManager.h>
 #include <file/SlpFrame.h>
@@ -35,40 +36,43 @@ MapRenderer::~MapRenderer()
 
 void MapRenderer::setMap(Map* map)
 {
-  map_ = map; 
-  
+  map_ = map;
+
 }
 
 void MapRenderer::Draw()
 {
   int x, y, x_start, y_start;
   x_start = y_start = x = y = 100;
-  
+
   for (int col = 0; col < map_->getCols(); col++)
   {
     x = x_start;
     y = y_start;
-    
+
     for (int row = 0; row < map_->getRows(); row++)
     {
       sf::Sprite spr;
-      
+      sf::Texture textr;
+
       spr.SetX(x);
       spr.SetY(y);
-      
+
       GenieTerrain ter = map_->getTerrain(col, row);
-      
+
       SlpFile *ptr = ResourceManager::Inst()->getSlp(ter.slp_id);
-      
-      spr.SetImage(*ptr->getFrame(3)->getImage());
-      
+
+	textr.LoadFromImage(*ptr->getFrame(3)->getImage());
+
+      spr.SetTexture(textr);
+
       render_->Draw(spr);
-      
+
       x += 49;
       y += 24;
-      
+
     }
-    
+
     x_start -= 49;
     y_start += 24;
   }

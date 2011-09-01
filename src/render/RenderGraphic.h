@@ -33,33 +33,34 @@ public:
   RenderGraphic(const RenderGraphic& other);
   virtual ~RenderGraphic();
   virtual RenderGraphic& operator=(const RenderGraphic& other);
-  
+
   //TODO: direction
-  
+
   //----------------------------------------------------------------------------
   /// Sets X position of the hotspot.
   ///
   /// @param x x pos
   //
   void setX(float x);
-  
+
   //----------------------------------------------------------------------------
   /// Sets Y position of the hotspot.
   ///
   /// @param y y pos
   //
   void setY(float y);
-  
+
   void drawOn(sf::RenderTarget *target);
-  
+
 private:
   GenieGraphic *data_;
   SlpFile *slp_file_;
-  
+
   float x_, y_;
-  
+
   sf::Sprite sprite_;
-  
+  //sf::Texture textr_;
+
   unsigned int current_frame_;
   float time_last_frame_;
 };
