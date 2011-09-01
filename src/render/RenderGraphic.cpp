@@ -79,7 +79,7 @@ void RenderGraphic::drawOn(sf::RenderTarget* target)
   else
   {
     if ( (Engine::GameClock.GetElapsedTime() - time_last_frame_)
-          > data_->frame_rate_ )
+          > (data_->frame_rate_ * 1000) )
     {
       if (current_frame_ < data_->frame_count_ - 1)
         current_frame_ ++;

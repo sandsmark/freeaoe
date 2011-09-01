@@ -3,7 +3,21 @@ Ubuntu:
 
 Following requirements are needed for compiling the source:
 
-  sudo apt-get install cmake libsfml-dev libglu1-mesa-dev zlib1g-dev 
+  sudo apt-get install cmake libglu1-mesa-dev zlib1g-dev 
+
+You will also need the git version of sfml. You can install it by
+doing following:
+
+  sudo apt-get install libfreetype6-dev libglew1.5-dev libjpeg8-dev \
+  libopenal-dev libsndfile1-dev libxrandr-dev
+
+  git clone https://github.com/LaurentGomila/SFML.git
+  cd SFML
+  mkdir build
+  cd build
+  cmake ../
+  make
+  sudo make install
  
 To compile the project create a build dir, run cmake and make
 
@@ -16,12 +30,3 @@ to run the engine a directory called "aoe2" with the Age of empires 2 +
 expansion (and patch) is needed in the build directory. This can later
 be changed if config files will be implemented.
 
-
-
-# ignore:
-libfreetype6-dev
-libglew1.5-dev
-libjpeg8-dev
-libopenal-dev
-libsndfile1-dev
-libxrandr-dev
