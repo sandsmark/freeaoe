@@ -17,30 +17,17 @@
 */
 
 
-#ifndef GAMESTATE_H
-#define GAMESTATE_H
+#include "CommandSpawn.h"
 
-#include <mechanics/IState.h>
-
-//------------------------------------------------------------------------------
-/// State where the game is processed
-//
-class GameState : public IState
+CommandSpawn::CommandSpawn(void* player, sf::Uint32 unit_id_, sf::Uint32 x_pos, 
+                           sf::Uint32 y_pos): ICommand()
 {
 
-public:
-  GameState();
-  virtual ~GameState();
-  
-  virtual void init();
-  
-  virtual void draw();
-  virtual void update();
-  virtual void handleEvent(sf::Event event);
-    
-private:
-  
-  GameState(const GameState& other);
-};
+}
 
-#endif // GAMESTATE_H
+
+CommandSpawn::~CommandSpawn()
+{
+
+}
+

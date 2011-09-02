@@ -36,6 +36,12 @@ GenieGraphic DataManager::getGraphic(Uint32 id)
   return *graphics_[id];
 }
 
+GenieUnit DataManager::getUnit(Uint32 id)
+{
+  return *units_[id];
+}
+
+
 
 DataManager::DataManager()
 {

@@ -17,30 +17,40 @@
 */
 
 
-#ifndef GAMESTATE_H
-#define GAMESTATE_H
+#ifndef GAMEMANAGER_H
+#define GAMEMANAGER_H
 
-#include <mechanics/IState.h>
+#include <map>
 
-//------------------------------------------------------------------------------
-/// State where the game is processed
-//
-class GameState : public IState
+#include <SFML/Config.hpp>
+
+class ICommand;
+class Unit;
+class GameManager
 {
 
 public:
-  GameState();
-  virtual ~GameState();
+  GameManager();
+  virtual ~GameManager();
   
-  virtual void init();
+  /// Note: Manager will free command (Todo: auto_ptr)
+  void queueCommand(ICommand *cmd);
   
-  virtual void draw();
-  virtual void update();
-  virtual void handleEvent(sf::Event event);
-    
+  void update();
+  
+  //----------------------------------------------------------------------------
+  /// Creates a new unit, adds it to the map of existing ones and returns a
+  /// pointer to it.
+  //
+  Unit *createUnit();
+
 private:
+  GameManager(const GameManager& other);
   
-  GameState(const GameState& other);
+  sf::Uint32 unit_id_counter_;
+  
+  typedef std::map<sf::Uint32, Unit *> UnitMap;
+  UnitMap units_;
 };
 
-#endif // GAMESTATE_H
+#endif // GAMEMANAGER_H

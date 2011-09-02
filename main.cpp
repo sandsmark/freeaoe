@@ -14,6 +14,8 @@
 #include <data/DataManager.h>
 #include <render/RenderGraphic.h>
 #include <file/DatFile.h>
+#include <mechanics/Unit.h>
+#include <render/RenderGame.h>
 
 
 // TODO: Bad_alloc
@@ -34,17 +36,24 @@ int main(int argc, char **argv)
   ResourceManager::Inst();
   DataManager::Inst();
   sf::Clock clk;
-
+  
+  sf::RenderWindow App(sf::VideoMode(800, 600), "SFML window");
+  sf::View view(sf::FloatRect(0,0,300,300));
+  
+  Unit test(0);
+  test.setPos(200, 200);
+  test.setData(DataManager::Inst()->getUnit(281));
+  
+  RenderGame rgame(&App);
+  rgame.addUnit(&test);
+  
   GenieGraphic gg = DataManager::Inst()->getGraphic(1972);//1128);
-  RenderGraphic rg(&gg);
+  RenderGraphic rg(gg,&App);
   rg.setX(100);
   rg.setY(150);
 
   Map map;
   map.setUpSample();
-
-  sf::RenderWindow App(sf::VideoMode(800, 600), "SFML window");
-  sf::View view(sf::FloatRect(0,0,300,300));
 
   MapRenderer render(&App);
   render.setMap(&map);
@@ -76,8 +85,10 @@ int main(int argc, char **argv)
          //App.SetView(view);
          // Draw the sprite
          render.Draw();
-
-         rg.drawOn(&App);
+         rg.update();
+         rg.draw();
+         
+         rgame.draw();
 
          App.SetView(App.GetDefaultView());
 

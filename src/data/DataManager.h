@@ -22,6 +22,7 @@
 
 #include <global/Logger.h>
 #include <data/GenieGraphic.h>
+#include <data/GenieUnit.h>
 
 #include <map>
 #include <SFML/Config.hpp>
@@ -29,7 +30,6 @@
 using sf::Uint32;
 
 class GenieTerrain;
-class GenieUnit;
 
 //------------------------------------------------------------------------------
 /// Class for receiving and managing data files (.dat)
@@ -42,6 +42,7 @@ public:
   static DataManager* Inst();
   
   GenieGraphic getGraphic(sf::Uint32 id);
+  GenieUnit getUnit(sf::Uint32 id);
   
 private:
   DataManager();

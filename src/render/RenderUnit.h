@@ -17,30 +17,34 @@
 */
 
 
-#ifndef GAMESTATE_H
-#define GAMESTATE_H
+#ifndef RENDERUNIT_H
+#define RENDERUNIT_H
 
-#include <mechanics/IState.h>
+class RenderGraphic;
+namespace sf {
+class RenderTarget;
+}
 
-//------------------------------------------------------------------------------
-/// State where the game is processed
-//
-class GameState : public IState
+class Unit;
+class RenderUnit
 {
 
 public:
-  GameState();
-  virtual ~GameState();
-  
-  virtual void init();
-  
-  virtual void draw();
-  virtual void update();
-  virtual void handleEvent(sf::Event event);
+  RenderUnit(Unit *unit, sf::RenderTarget *render_target);
+  virtual ~RenderUnit();
     
-private:
+  /// Update will always be called, draw only if unit is in sight of the camera.
+  void update();
   
-  GameState(const GameState& other);
+  void draw();
+private:
+  RenderUnit(const RenderUnit& other);
+  
+  Unit *unit_;
+  
+  RenderGraphic *current_graph_;
+  
+  sf::RenderTarget *render_target_;
 };
 
-#endif // GAMESTATE_H
+#endif // RENDERUNIT_H

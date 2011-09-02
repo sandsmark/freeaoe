@@ -17,30 +17,30 @@
 */
 
 
-#ifndef GAMESTATE_H
-#define GAMESTATE_H
+#include "GameManager.h"
 
-#include <mechanics/IState.h>
+#include <mechanics/Unit.h>
 
-//------------------------------------------------------------------------------
-/// State where the game is processed
-//
-class GameState : public IState
+GameManager::GameManager() : unit_id_counter_(0)
 {
 
-public:
-  GameState();
-  virtual ~GameState();
-  
-  virtual void init();
-  
-  virtual void draw();
-  virtual void update();
-  virtual void handleEvent(sf::Event event);
-    
-private:
-  
-  GameState(const GameState& other);
-};
+}
 
-#endif // GAMESTATE_H
+GameManager::GameManager(const GameManager& other)
+{
+
+}
+
+GameManager::~GameManager()
+{
+
+}
+
+Unit* GameManager::createUnit()
+{
+  Unit *unit = new Unit(unit_id_counter_ ++);
+  units_[unit_id_counter_] = unit;
+  
+  return unit;
+}
+

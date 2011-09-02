@@ -22,14 +22,15 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
-class GenieGraphic;
+#include <data/GenieGraphic.h>
+
 class SlpFile;
 
 class RenderGraphic
 {
 
 public:
-  RenderGraphic(GenieGraphic *data);
+  RenderGraphic(GenieGraphic data, sf::RenderTarget *render_target);
   RenderGraphic(const RenderGraphic& other);
   virtual ~RenderGraphic();
   virtual RenderGraphic& operator=(const RenderGraphic& other);
@@ -49,15 +50,18 @@ public:
   /// @param y y pos
   //
   void setY(float y);
+  
+  void update();
 
-  void drawOn(sf::RenderTarget *target);
+  void draw();
 
 private:
-  GenieGraphic *data_;
+  GenieGraphic data_;
   SlpFile *slp_file_;
 
   float x_, y_;
 
+  sf::RenderTarget *render_target_;
   sf::Sprite sprite_;
   //sf::Texture textr_;
 

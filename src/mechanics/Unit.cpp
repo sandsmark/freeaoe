@@ -17,30 +17,40 @@
 */
 
 
-#ifndef GAMESTATE_H
-#define GAMESTATE_H
+#include "Unit.h"
 
-#include <mechanics/IState.h>
-
-//------------------------------------------------------------------------------
-/// State where the game is processed
-//
-class GameState : public IState
+Unit::Unit(sf::Uint32 id) : id_(id)
 {
 
-public:
-  GameState();
-  virtual ~GameState();
-  
-  virtual void init();
-  
-  virtual void draw();
-  virtual void update();
-  virtual void handleEvent(sf::Event event);
-    
-private:
-  
-  GameState(const GameState& other);
-};
+}
 
-#endif // GAMESTATE_H
+Unit::Unit(const Unit& other)
+{
+
+}
+
+Unit::~Unit()
+{
+
+}
+
+void Unit::setPos(sf::Uint32 x, sf::Uint32 y)
+{
+  x_ = x;
+  y_ = y;
+}
+
+sf::Uint32 Unit::getX(void ) const
+{
+  return x_;
+}
+
+sf::Uint32 Unit::getY(void ) const
+{
+  return y_;
+}
+
+GenieUnit Unit::getData(void ) const
+{
+  return data_;
+}

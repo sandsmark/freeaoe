@@ -44,9 +44,15 @@ set(DATA_SRC src/data/DataManager.cpp
 set(MECHANICS_SRC src/mechanics/Map.cpp
                   src/mechanics/StateManager.cpp 
                   src/mechanics/GameState.cpp 
-                  src/mechanics/MapRenderer.cpp) 
+                  src/mechanics/GameManager.cpp
+                  src/mechanics/Unit.cpp
+                  src/mechanics/ICommand.cpp  
+                  src/mechanics/MapRenderer.cpp 
+                  src/mechanics/commands/CommandSpawn.cpp )
 
-set(RENDER_SRC src/render/RenderGraphic.cpp )
+set(RENDER_SRC src/render/RenderUnit.cpp 
+               src/render/RenderGame.cpp 
+               src/render/RenderGraphic.cpp )
 
 add_executable(freeaoe src/Engine.cpp main.cpp 
                ${FILE_SRC}

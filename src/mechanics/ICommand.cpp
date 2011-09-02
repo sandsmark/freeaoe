@@ -17,30 +17,5 @@
 */
 
 
-#ifndef GAMESTATE_H
-#define GAMESTATE_H
+#include "ICommand.h"
 
-#include <mechanics/IState.h>
-
-//------------------------------------------------------------------------------
-/// State where the game is processed
-//
-class GameState : public IState
-{
-
-public:
-  GameState();
-  virtual ~GameState();
-  
-  virtual void init();
-  
-  virtual void draw();
-  virtual void update();
-  virtual void handleEvent(sf::Event event);
-    
-private:
-  
-  GameState(const GameState& other);
-};
-
-#endif // GAMESTATE_H

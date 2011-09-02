@@ -17,30 +17,41 @@
 */
 
 
-#ifndef GAMESTATE_H
-#define GAMESTATE_H
+#ifndef UNIT_H
+#define UNIT_H
+#include <SFML/Config.hpp>
 
-#include <mechanics/IState.h>
+#include <data/GenieUnit.h>
 
 //------------------------------------------------------------------------------
-/// State where the game is processed
+///  
 //
-class GameState : public IState
+class Unit
 {
 
 public:
-  GameState();
-  virtual ~GameState();
+  Unit(sf::Uint32 id);
+  virtual ~Unit();
   
-  virtual void init();
+  sf::Uint32 getID(void) const;
   
-  virtual void draw();
-  virtual void update();
-  virtual void handleEvent(sf::Event event);
-    
+  void setPos(sf::Uint32 x, sf::Uint32 y);
+  
+  sf::Uint32 getX(void) const;
+  sf::Uint32 getY(void) const;
+  
+  void setData(GenieUnit data) {data_ = data;}
+  GenieUnit getData(void) const;
+  
 private:
+  Unit(const Unit& other);
   
-  GameState(const GameState& other);
+  sf::Uint32 id_;
+  
+  // Position on the map
+  sf::Uint32 x_, y_;
+  
+  GenieUnit data_;
 };
 
-#endif // GAMESTATE_H
+#endif // UNIT_H

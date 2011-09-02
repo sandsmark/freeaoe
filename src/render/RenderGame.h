@@ -17,30 +17,30 @@
 */
 
 
-#ifndef GAMESTATE_H
-#define GAMESTATE_H
+#ifndef RENDERGAME_H
+#define RENDERGAME_H
+#include <vector>
+#include "RenderUnit.h"
 
-#include <mechanics/IState.h>
-
-//------------------------------------------------------------------------------
-/// State where the game is processed
-//
-class GameState : public IState
+class Unit;
+class RenderGame
 {
 
 public:
-  GameState();
-  virtual ~GameState();
+  RenderGame(sf::RenderTarget *render_target);
+  virtual ~RenderGame();
   
-  virtual void init();
-  
-  virtual void draw();
-  virtual void update();
-  virtual void handleEvent(sf::Event event);
+  /// Adds a unit that needs to be rendered.
+  void addUnit(Unit *unit);
+    
+  void draw();
     
 private:
+  RenderGame(const RenderGame& other);
   
-  GameState(const GameState& other);
+  sf::RenderTarget *render_target_;
+  
+  std::vector<RenderUnit *> render_units_;
 };
 
-#endif // GAMESTATE_H
+#endif // RENDERGAME_H

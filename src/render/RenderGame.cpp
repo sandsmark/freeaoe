@@ -17,30 +17,37 @@
 */
 
 
-#ifndef GAMESTATE_H
-#define GAMESTATE_H
+#include "RenderGame.h"
 
-#include <mechanics/IState.h>
-
-//------------------------------------------------------------------------------
-/// State where the game is processed
-//
-class GameState : public IState
+RenderGame::RenderGame(sf::RenderTarget *render_target) :
+            render_target_(render_target)
 {
 
-public:
-  GameState();
-  virtual ~GameState();
-  
-  virtual void init();
-  
-  virtual void draw();
-  virtual void update();
-  virtual void handleEvent(sf::Event event);
-    
-private:
-  
-  GameState(const GameState& other);
-};
+}
 
-#endif // GAMESTATE_H
+RenderGame::RenderGame(const RenderGame& other)
+{
+
+}
+
+RenderGame::~RenderGame()
+{
+
+}
+
+void RenderGame::addUnit(Unit* unit)
+{
+  render_units_.push_back(new RenderUnit(unit, render_target_));
+}
+
+// TODO: layers, map
+void RenderGame::draw()
+{
+  for( std::vector<RenderUnit *>::iterator it = render_units_.begin(); 
+       it != render_units_.end(); it ++)
+  {
+    (*it)->update();
+    (*it)->draw();
+  }
+}
+

@@ -31,11 +31,11 @@
 #include <iostream>
 
 //------------------------------------------------------------------------------
-RenderGraphic::RenderGraphic(GenieGraphic *data) : data_(data),
-                                                   current_frame_(0),
-                                                   time_last_frame_(0)
+RenderGraphic::RenderGraphic(GenieGraphic data, sf::RenderTarget *render_target) 
+                : data_(data), current_frame_(0), time_last_frame_(0),
+                  render_target_(render_target)
 {
-  slp_file_ = ResourceManager::Inst()->getSlp(data->getSlpId());
+  slp_file_ = ResourceManager::Inst()->getSlp(data.getSlpId());
 }
 
 //------------------------------------------------------------------------------
@@ -69,7 +69,7 @@ void RenderGraphic::setY(float y)
 }
 
 //------------------------------------------------------------------------------
-void RenderGraphic::drawOn(sf::RenderTarget* target)
+void RenderGraphic::update()
 {
   if (time_last_frame_ == 0)
   {
@@ -79,9 +79,9 @@ void RenderGraphic::drawOn(sf::RenderTarget* target)
   else
   {
     if ( (Engine::GameClock.GetElapsedTime() - time_last_frame_)
-          > (data_->frame_rate_ * 1000) )
+          > (data_.frame_rate_ * 1000) )
     {
-      if (current_frame_ < data_->frame_count_ - 1)
+      if (current_frame_ < data_.frame_count_ - 1)
         current_frame_ ++;
       else
         current_frame_ = 0;
@@ -89,7 +89,11 @@ void RenderGraphic::drawOn(sf::RenderTarget* target)
       time_last_frame_ = Engine::GameClock.GetElapsedTime();
     }
   }
+}
 
+//------------------------------------------------------------------------------
+void RenderGraphic::draw()
+{
   sf::Texture textr_;
 
   SlpFrame *frame = slp_file_->getFrame(current_frame_);
@@ -99,12 +103,12 @@ void RenderGraphic::drawOn(sf::RenderTarget* target)
 
   textr_.LoadFromImage(*frame->getImage());
   sprite_.SetTexture(textr_);
-  target->Draw(sprite_);
+  render_target_->Draw(sprite_);
 
   sf::Image *color_mask = frame->getPlayerColorMask(2);
   textr_.LoadFromImage(*color_mask);
   sprite_.SetTexture(textr_);
-  target->Draw(sprite_);
+  render_target_->Draw(sprite_);
 
   //delete textr_;
   delete color_mask;
