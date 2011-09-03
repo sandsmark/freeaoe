@@ -38,6 +38,8 @@ Engine::Engine() : render_window_(0)
 Engine::~Engine()
 {
   log.info("Closing engine");
+  
+  delete render_window_;
 }
 
 //------------------------------------------------------------------------------
@@ -48,10 +50,39 @@ void Engine::start()
   log.info("Starting engine.");
   
   setup();
+  
+  // Start the game loop
+  while (render_window_->IsOpened())
+  {
+    // Process events
+    sf::Event Event;
+    while (render_window_->PollEvent(Event))
+    {
+      // Close window : exit
+      if (Event.Type == sf::Event::Closed)
+        render_window_->Close();
+
+      if (Event.Type == sf::Event::KeyReleased)
+      {
+      }
+    }
+     
+    // Clear screen
+    render_window_->Clear();
+
+    state_manager_.getActiveState()->update();
+    state_manager_.getActiveState()->draw();;
+         
+    // Update the window
+    render_window_->Display();
+  }
+
 }
 
 //------------------------------------------------------------------------------
 void Engine::setup()
 {
   render_window_ = new sf::RenderWindow(sf::VideoMode(800, 600), "freeaoe");
+  
+  state_manager_.addActiveState(new GameState(render_window_));
 }

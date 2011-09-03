@@ -18,9 +18,13 @@
 
 
 #include "CommandSpawn.h"
+#include <mechanics/GameManager.h>
+#include <mechanics/Unit.h>
+#include <data/DataManager.h>
 
-CommandSpawn::CommandSpawn(void* player, sf::Uint32 unit_id_, sf::Uint32 x_pos, 
-                           sf::Uint32 y_pos): ICommand()
+CommandSpawn::CommandSpawn(void* player, sf::Uint32 unit_id, sf::Uint32 x_pos, 
+                           sf::Uint32 y_pos): ICommand(), unit_id_(unit_id),
+                           x_pos_(x_pos), y_pos_(y_pos)
 {
 
 }
@@ -31,3 +35,10 @@ CommandSpawn::~CommandSpawn()
 
 }
 
+void CommandSpawn::execute(GameManager* gm)
+{
+  Unit *unit = gm->createUnit();
+  unit->setPos(x_pos_, y_pos_);
+  
+  unit->setData(DataManager::Inst()->getUnit(unit_id_));
+}

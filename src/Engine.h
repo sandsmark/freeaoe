@@ -23,6 +23,7 @@
 #include <global/Logger.h>
 
 #include <SFML/System/Clock.hpp>
+#include "mechanics/StateManager.h"
 
 namespace sf {
 class RenderWindow;
@@ -45,6 +46,8 @@ private:
   sf::RenderWindow *render_window_;
   
   void setup();
+  
+  StateManager state_manager_;
   
 };
 

@@ -20,8 +20,10 @@
 #include "GameManager.h"
 
 #include <mechanics/Unit.h>
+#include <render/RenderGame.h>
+#include "ICommand.h"
 
-GameManager::GameManager() : unit_id_counter_(0)
+GameManager::GameManager() : unit_id_counter_(0), game_renderer_(0)
 {
 
 }
@@ -41,6 +43,25 @@ Unit* GameManager::createUnit()
   Unit *unit = new Unit(unit_id_counter_ ++);
   units_[unit_id_counter_] = unit;
   
+  if (game_renderer_)
+    game_renderer_->addUnit(unit);
+  
   return unit;
+}
+
+void GameManager::setGameRenderer(RenderGame* game_renderer)
+{
+  game_renderer_ = game_renderer;
+}
+
+void GameManager::queueCommand(ICommand* cmd)
+{
+  // TODO: queue it!
+  cmd->execute(this);
+}
+
+void GameManager::update()
+{
+
 }
 

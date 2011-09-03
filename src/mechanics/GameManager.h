@@ -24,6 +24,7 @@
 
 #include <SFML/Config.hpp>
 
+class RenderGame;
 class ICommand;
 class Unit;
 class GameManager
@@ -34,6 +35,8 @@ public:
   virtual ~GameManager();
   
   /// Note: Manager will free command (Todo: auto_ptr)
+  /// Queues a command and executes it on the next update call
+  //
   void queueCommand(ICommand *cmd);
   
   void update();
@@ -43,6 +46,8 @@ public:
   /// pointer to it.
   //
   Unit *createUnit();
+  
+  void setGameRenderer(RenderGame *game_renderer);
 
 private:
   GameManager(const GameManager& other);
@@ -51,6 +56,8 @@ private:
   
   typedef std::map<sf::Uint32, Unit *> UnitMap;
   UnitMap units_;
+  
+  RenderGame *game_renderer_;
 };
 
 #endif // GAMEMANAGER_H

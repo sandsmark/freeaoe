@@ -16,6 +16,8 @@
 #include <file/DatFile.h>
 #include <mechanics/Unit.h>
 #include <render/RenderGame.h>
+#include <mechanics/GameManager.h>
+#include <mechanics/commands/CommandSpawn.h>
 
 
 // TODO: Bad_alloc
@@ -30,75 +32,8 @@ int main(int argc, char **argv)
  // DatFile df;
  // df.open("aoe2/Data/empires2.dat");
   
-  //Engine en;
-  //en.start();
-
-  ResourceManager::Inst();
-  DataManager::Inst();
-  sf::Clock clk;
-  
-  sf::RenderWindow App(sf::VideoMode(800, 600), "SFML window");
-  sf::View view(sf::FloatRect(0,0,300,300));
-  
-  Unit test(0);
-  test.setPos(200, 200);
-  test.setData(DataManager::Inst()->getUnit(281));
-  
-  RenderGame rgame(&App);
-  rgame.addUnit(&test);
-  
-  GenieGraphic gg = DataManager::Inst()->getGraphic(1972);//1128);
-  RenderGraphic rg(gg,&App);
-  rg.setX(100);
-  rg.setY(150);
-
-  Map map;
-  map.setUpSample();
-
-  MapRenderer render(&App);
-  render.setMap(&map);
-
-  bool pause = false;
-   // Start the game loop
-     while (App.IsOpened())
-     {
-         // Process events
-         sf::Event Event;
-         while (App.PollEvent(Event))
-         {
-             // Close window : exit
-             if (Event.Type == sf::Event::Closed)
-                 App.Close();
-
-             if (Event.Type == sf::Event::KeyReleased)
-             {
-                if (Event.Key.Code  == sf::Keyboard::Space)
-                  pause = !pause;
-             }
-         }
-
-        if (!pause)
-        {
-         // Clear screen
-         App.Clear();
-
-         //App.SetView(view);
-         // Draw the sprite
-         render.Draw();
-         rg.update();
-         rg.draw();
-         
-         rgame.draw();
-
-         App.SetView(App.GetDefaultView());
-
-         // Draw the string
-
-         // Update the window
-         App.Display();
-        }
-
-     }
+  Engine en;
+  en.start();
 
   return 0;
 }

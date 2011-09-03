@@ -22,6 +22,12 @@
 
 #include <mechanics/IState.h>
 
+namespace sf {
+class RenderTarget;
+}
+
+class RenderGame;
+class GameManager;
 //------------------------------------------------------------------------------
 /// State where the game is processed
 //
@@ -29,7 +35,7 @@ class GameState : public IState
 {
 
 public:
-  GameState();
+  GameState(sf::RenderTarget *render_target);
   virtual ~GameState();
   
   virtual void init();
@@ -41,6 +47,11 @@ public:
 private:
   
   GameState(const GameState& other);
+  
+  GameManager *game_manager_;
+  RenderGame *game_renderer_;
+  
+  sf::RenderTarget *render_target_;
 };
 
 #endif // GAMESTATE_H

@@ -32,7 +32,11 @@ public:
                  sf::Uint32 y_pos);
   virtual ~CommandSpawn();
     
-  virtual void execute(GameManager *gm) {};  
+  virtual void execute(GameManager *gm);  
+  
+private:
+  sf::Uint32 unit_id_;
+  sf::Uint32 x_pos_, y_pos_;
 };
 
 #endif // COMMANDSPAWN_H
