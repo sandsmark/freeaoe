@@ -22,6 +22,8 @@
 
 #include <mechanics/IState.h>
 
+class GameClient;
+class GameServer;
 namespace sf {
 class RenderTarget;
 }
@@ -49,6 +51,9 @@ private:
   GameState(const GameState& other);
   
   GameManager *game_manager_;
+  
+  GameServer *game_server_;
+  GameClient *game_client_;
   RenderGame *game_renderer_;
   
   sf::RenderTarget *render_target_;

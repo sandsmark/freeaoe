@@ -17,52 +17,27 @@
 */
 
 
-#include "GameManager.h"
+#ifndef TUNNELTOSERVER_H
+#define TUNNELTOSERVER_H
 
-#include <mechanics/Unit.h>
-#include <render/RenderGame.h>
-#include <communication/ICommand.h>
+class ICommand;
 
-GameManager::GameManager() : unit_id_counter_(0), game_renderer_(0)
+//------------------------------------------------------------------------------
+/// Client part of the tunnel, it can send commands and receives data about
+/// the game state from the server.
+//
+class TunnelToServer
 {
-
-}
-
-GameManager::GameManager(const GameManager& other)
-{
-
-}
-
-GameManager::~GameManager()
-{
-
-}
-
-Unit* GameManager::createUnit()
-{
-  Unit *unit = new Unit(unit_id_counter_ ++);
-  units_[unit_id_counter_] = unit;
+public:
+  virtual ~TunnelToServer() {}
   
-  if (game_renderer_)
-    game_renderer_->addUnit(unit);
+  virtual void sendCommand(ICommand *cmd) = 0;
   
-  return unit;
-}
+  /// Is data queued?
+  bool dataAvailable();
+  
+  /// Returns the first date object in queue.
+  void getData();
+};
 
-void GameManager::setGameRenderer(RenderGame* game_renderer)
-{
-  game_renderer_ = game_renderer;
-}
-
-void GameManager::queueCommand(ICommand* cmd)
-{
-  // TODO: queue it!
-  //cmd->execute(this);
-  //delete cmd;
-}
-
-void GameManager::update()
-{
-
-}
-
+#endif // ITUNNELTOSERVER_H

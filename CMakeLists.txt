@@ -46,13 +46,17 @@ set(MECHANICS_SRC src/mechanics/Map.cpp
                   src/mechanics/GameState.cpp 
                   src/mechanics/GameManager.cpp
                   src/mechanics/Unit.cpp
-                  src/mechanics/ICommand.cpp  
                   src/mechanics/MapRenderer.cpp 
-                  src/mechanics/commands/CommandSpawn.cpp )
+                   )
 
 set(RENDER_SRC src/render/RenderUnit.cpp 
                src/render/RenderGame.cpp 
                src/render/RenderGraphic.cpp )
+
+set(SERVER_SRC src/server/GameServer.cpp)
+
+set(UNSORTED_SRC src/client/GameClient.cpp src/communication/tunnels/LocalTunnelToServer.cpp src/communication/tunnels/LocalTunnelToClient.cpp src/communication/commands/CommandSpawn.cpp
+                 src/communication/TunnelToClient.cpp)
 
 add_executable(freeaoe src/Engine.cpp main.cpp 
                ${FILE_SRC}
@@ -60,7 +64,9 @@ add_executable(freeaoe src/Engine.cpp main.cpp
                ${GLOBAL_SRC}
                ${DATA_SRC}
                ${MECHANICS_SRC}
-               ${RENDER_SRC})
+               ${RENDER_SRC}
+               ${SERVER_SRC}
+               ${UNSORTED_SRC})
 
 target_link_libraries(freeaoe 
                       ${SFML_WINDOW_LIBRARY}

@@ -17,52 +17,16 @@
 */
 
 
-#include "GameManager.h"
+#ifndef ICOMMAND_H
+#define ICOMMAND_H
 
-#include <mechanics/Unit.h>
-#include <render/RenderGame.h>
-#include <communication/ICommand.h>
+class GameServer;
 
-GameManager::GameManager() : unit_id_counter_(0), game_renderer_(0)
+class ICommand
 {
+public:
+  virtual ~ICommand() {};
+  virtual void execute(GameServer *gs) = 0;
+};
 
-}
-
-GameManager::GameManager(const GameManager& other)
-{
-
-}
-
-GameManager::~GameManager()
-{
-
-}
-
-Unit* GameManager::createUnit()
-{
-  Unit *unit = new Unit(unit_id_counter_ ++);
-  units_[unit_id_counter_] = unit;
-  
-  if (game_renderer_)
-    game_renderer_->addUnit(unit);
-  
-  return unit;
-}
-
-void GameManager::setGameRenderer(RenderGame* game_renderer)
-{
-  game_renderer_ = game_renderer;
-}
-
-void GameManager::queueCommand(ICommand* cmd)
-{
-  // TODO: queue it!
-  //cmd->execute(this);
-  //delete cmd;
-}
-
-void GameManager::update()
-{
-
-}
-
+#endif // ICOMMAND_H

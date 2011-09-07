@@ -17,52 +17,28 @@
 */
 
 
-#include "GameManager.h"
-
+#include "CommandSpawn.h"
 #include <mechanics/Unit.h>
-#include <render/RenderGame.h>
-#include <communication/ICommand.h>
+#include <data/DataManager.h>
 
-GameManager::GameManager() : unit_id_counter_(0), game_renderer_(0)
+#include <server/GameServer.h>
+
+#include <iostream>
+
+CommandSpawn::CommandSpawn(void* player, sf::Uint32 unit_id, sf::Uint32 x_pos, 
+                           sf::Uint32 y_pos): ICommand(), unit_id_(unit_id),
+                           x_pos_(x_pos), y_pos_(y_pos)
 {
 
 }
 
-GameManager::GameManager(const GameManager& other)
-{
 
+CommandSpawn::~CommandSpawn()
+{
+  std::cout << "deleting command!" << std::endl;
 }
 
-GameManager::~GameManager()
+void CommandSpawn::execute(GameServer* gm)
 {
-
+  gm->spawnUnit(0, unit_id_, x_pos_, y_pos_);
 }
-
-Unit* GameManager::createUnit()
-{
-  Unit *unit = new Unit(unit_id_counter_ ++);
-  units_[unit_id_counter_] = unit;
-  
-  if (game_renderer_)
-    game_renderer_->addUnit(unit);
-  
-  return unit;
-}
-
-void GameManager::setGameRenderer(RenderGame* game_renderer)
-{
-  game_renderer_ = game_renderer;
-}
-
-void GameManager::queueCommand(ICommand* cmd)
-{
-  // TODO: queue it!
-  //cmd->execute(this);
-  //delete cmd;
-}
-
-void GameManager::update()
-{
-
-}
-

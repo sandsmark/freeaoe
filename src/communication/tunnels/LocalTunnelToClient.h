@@ -17,52 +17,30 @@
 */
 
 
-#include "GameManager.h"
+#ifndef LOCALTUNNELTOCLIENT_H
+#define LOCALTUNNELTOCLIENT_H
 
-#include <mechanics/Unit.h>
-#include <render/RenderGame.h>
-#include <communication/ICommand.h>
+#include <communication/TunnelToClient.h>
 
-GameManager::GameManager() : unit_id_counter_(0), game_renderer_(0)
+class LocalTunnelToServer;
+
+class LocalTunnelToClient : public TunnelToClient
 {
 
-}
-
-GameManager::GameManager(const GameManager& other)
-{
-
-}
-
-GameManager::~GameManager()
-{
-
-}
-
-Unit* GameManager::createUnit()
-{
-  Unit *unit = new Unit(unit_id_counter_ ++);
-  units_[unit_id_counter_] = unit;
+public:
+  LocalTunnelToClient();
+  virtual ~LocalTunnelToClient();
   
-  if (game_renderer_)
-    game_renderer_->addUnit(unit);
+  virtual void sendData(void *data) {}
   
-  return unit;
-}
+  void setClient(LocalTunnelToServer *client);
+  
+  void receiveCommand(ICommand *cmd);
+    
+private:
+  LocalTunnelToClient(const LocalTunnelToClient& other);
+  
+  LocalTunnelToServer *client_;
+};
 
-void GameManager::setGameRenderer(RenderGame* game_renderer)
-{
-  game_renderer_ = game_renderer;
-}
-
-void GameManager::queueCommand(ICommand* cmd)
-{
-  // TODO: queue it!
-  //cmd->execute(this);
-  //delete cmd;
-}
-
-void GameManager::update()
-{
-
-}
-
+#endif // LOCALTUNNELTOCLIENT_H

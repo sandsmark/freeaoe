@@ -17,5 +17,30 @@
 */
 
 
-#include "ICommand.h"
+#include "LocalTunnelToClient.h"
+#include "LocalTunnelToServer.h"
 
+LocalTunnelToClient::LocalTunnelToClient()
+{
+
+}
+
+LocalTunnelToClient::LocalTunnelToClient(const LocalTunnelToClient& other)
+{
+
+}
+
+LocalTunnelToClient::~LocalTunnelToClient()
+{
+
+}
+
+void LocalTunnelToClient::setClient(LocalTunnelToServer* client)
+{
+  client_ = client;
+}
+
+void LocalTunnelToClient::receiveCommand(ICommand *cmd)
+{
+  queueCommand(cmd);
+}

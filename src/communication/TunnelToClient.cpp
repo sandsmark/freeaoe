@@ -16,53 +16,28 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "TunnelToClient.h"
 
-#include "GameManager.h"
-
-#include <mechanics/Unit.h>
-#include <render/RenderGame.h>
-#include <communication/ICommand.h>
-
-GameManager::GameManager() : unit_id_counter_(0), game_renderer_(0)
+bool TunnelToClient::commandAvailable()
 {
-
+  return !commands_.empty();
 }
 
-GameManager::GameManager(const GameManager& other)
+ICommand* TunnelToClient::getCommand()
 {
-
-}
-
-GameManager::~GameManager()
-{
-
-}
-
-Unit* GameManager::createUnit()
-{
-  Unit *unit = new Unit(unit_id_counter_ ++);
-  units_[unit_id_counter_] = unit;
+  ICommand *cmd = 0;
   
-  if (game_renderer_)
-    game_renderer_->addUnit(unit);
+  if (!commands_.empty())
+  {
+    cmd = commands_[0];
+    commands_.pop_front();
+  }
   
-  return unit;
+  return cmd;
 }
 
-void GameManager::setGameRenderer(RenderGame* game_renderer)
+
+void TunnelToClient::queueCommand(ICommand* cmd)
 {
-  game_renderer_ = game_renderer;
+  commands_.push_back(cmd);
 }
-
-void GameManager::queueCommand(ICommand* cmd)
-{
-  // TODO: queue it!
-  //cmd->execute(this);
-  //delete cmd;
-}
-
-void GameManager::update()
-{
-
-}
-

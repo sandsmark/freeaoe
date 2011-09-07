@@ -17,52 +17,46 @@
 */
 
 
-#include "GameManager.h"
+#include "GameClient.h"
+#include <communication/TunnelToServer.h>
+#include <communication/commands/CommandSpawn.h>
 
-#include <mechanics/Unit.h>
-#include <render/RenderGame.h>
-#include <communication/ICommand.h>
-
-GameManager::GameManager() : unit_id_counter_(0), game_renderer_(0)
+GameClient::GameClient()
 {
 
 }
 
-GameManager::GameManager(const GameManager& other)
+GameClient::GameClient(const GameClient& other)
 {
 
 }
 
-GameManager::~GameManager()
+GameClient::~GameClient()
 {
 
 }
 
-Unit* GameManager::createUnit()
+void GameClient::setServer(TunnelToServer* server)
 {
-  Unit *unit = new Unit(unit_id_counter_ ++);
-  units_[unit_id_counter_] = unit;
-  
-  if (game_renderer_)
-    game_renderer_->addUnit(unit);
-  
-  return unit;
+  server_ = server;
 }
 
-void GameManager::setGameRenderer(RenderGame* game_renderer)
+void GameClient::setGameRenderer(RenderGame* game_renderer)
 {
   game_renderer_ = game_renderer;
 }
 
-void GameManager::queueCommand(ICommand* cmd)
-{
-  // TODO: queue it!
-  //cmd->execute(this);
-  //delete cmd;
+void GameClient::update()
+{ /*
+  while (server_->dataAvailable())
+  {
+    
+  }*/
 }
 
-void GameManager::update()
+
+void GameClient::test()
 {
-
+  server_->sendCommand(new CommandSpawn(0, 281, 200, 200));
+  server_->sendCommand(new CommandSpawn(0, 234, 100, 200));
 }
-

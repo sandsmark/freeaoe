@@ -17,15 +17,37 @@
 */
 
 
-#ifndef ICOMMAND_H
-#define ICOMMAND_H
+#ifndef TUNNELTOCLIENT_H
+#define TUNNELTOCLIENT_H
 
-class GameManager;
+#include <deque>
+#include "ICommand.h"
 
-class ICommand
+//------------------------------------------------------------------------------
+/// Server part of the tunnel, it receives commands and can send back data about
+/// the game state to the client.
+//
+class TunnelToClient
 {
 public:
-  virtual void execute(GameManager *gm) = 0;
+  virtual ~TunnelToClient() {}
+  
+  /// Send data back to client  
+  virtual void sendData(void *data) = 0;
+  
+  /// Is a command queued?
+  bool commandAvailable();
+  
+  /// Get the first command from the queue.
+  //
+  ICommand *getCommand();       //TODO: auto_ptr
+  
+protected:
+  void queueCommand(ICommand *cmd);
+  
+private:
+  
+  std::deque<ICommand *> commands_;
 };
 
-#endif // ICOMMAND_H
+#endif // ITUNNELTOCLIENT_H

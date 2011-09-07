@@ -16,27 +16,31 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
-#ifndef COMMANDSPAWN_H
-#define COMMANDSPAWN_H
-
-#include <mechanics/ICommand.h>
-#include <SFML/Config.hpp>
+#include "LocalTunnelToServer.h"
+#include "LocalTunnelToClient.h"
 
 
-class CommandSpawn : public ICommand
+LocalTunnelToServer::LocalTunnelToServer()
 {
 
-public:
-  CommandSpawn(void *player, sf::Uint32 unit_id_, sf::Uint32 x_pos,
-                 sf::Uint32 y_pos);
-  virtual ~CommandSpawn();
-    
-  virtual void execute(GameManager *gm);  
-  
-private:
-  sf::Uint32 unit_id_;
-  sf::Uint32 x_pos_, y_pos_;
-};
+}
 
-#endif // COMMANDSPAWN_H
+LocalTunnelToServer::LocalTunnelToServer(const LocalTunnelToServer& other)
+{
+
+}
+
+LocalTunnelToServer::~LocalTunnelToServer()
+{
+
+}
+
+void LocalTunnelToServer::setServer(LocalTunnelToClient* server)
+{
+  server_ = server;
+}
+
+void LocalTunnelToServer::sendCommand(ICommand* cmd)
+{
+  server_->receiveCommand(cmd);
+}

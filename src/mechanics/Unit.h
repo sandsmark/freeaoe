@@ -24,7 +24,8 @@
 #include <data/GenieUnit.h>
 
 //------------------------------------------------------------------------------
-///  
+/// Units in aoe are all objects the player may interact with. E.g. Buildings,
+/// Trees, Workers ...
 //
 class Unit
 {

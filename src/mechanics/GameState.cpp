@@ -22,13 +22,35 @@
 #include "mechanics/GameManager.h"
 #include "render/RenderGame.h"
 #include <SFML/Graphics/RenderTarget.hpp>
-#include "commands/CommandSpawn.h"
+#include <communication/commands/CommandSpawn.h>
+#include <server/GameServer.h>
+#include <client/GameClient.h>
+#include <communication/tunnels/LocalTunnelToServer.h>
+#include <communication/tunnels/LocalTunnelToClient.h>
 
 void GameState::init()
 {
     IState::init();
     
+    
     game_renderer_ = new RenderGame(render_target_);
+    game_server_ = new GameServer();
+    game_client_ = new GameClient();
+    
+    // Creating local connection
+    LocalTunnelToServer *tToServ = new LocalTunnelToServer();
+    LocalTunnelToClient *tToClient = new LocalTunnelToClient();
+    
+    tToServ->setServer(tToClient);
+    tToClient->setClient(tToServ);
+    
+    game_server_->addClient(tToClient);
+    game_client_->setServer(tToServ);
+    
+    //Test
+    game_client_->test();
+    
+    /*
     game_manager_ = new GameManager();
     
     game_manager_->setGameRenderer(game_renderer_);
@@ -36,6 +58,7 @@ void GameState::init()
     //Test:
     game_manager_->queueCommand(new CommandSpawn(0, 281, 200, 200));
     game_manager_->queueCommand(new CommandSpawn(0, 234, 100, 200));
+    */
 }
 
 
@@ -46,7 +69,8 @@ void GameState::draw()
 
 void GameState::update()
 {
-  game_manager_->update();
+  game_server_->update();
+  //game_manager_->update();
 }
 
 void GameState::handleEvent(sf::Event event)
@@ -67,7 +91,7 @@ GameState::GameState(const GameState& other)
 
 GameState::~GameState()
 {
-  delete game_manager_;
+  //delete game_manager_;
   delete game_renderer_;
 }
 

@@ -17,52 +17,31 @@
 */
 
 
-#include "GameManager.h"
+#ifndef GAMECLIENT_H
+#define GAMECLIENT_H
 
-#include <mechanics/Unit.h>
-#include <render/RenderGame.h>
-#include <communication/ICommand.h>
-
-GameManager::GameManager() : unit_id_counter_(0), game_renderer_(0)
+class RenderGame;
+class TunnelToServer;
+class GameClient
 {
 
-}
-
-GameManager::GameManager(const GameManager& other)
-{
-
-}
-
-GameManager::~GameManager()
-{
-
-}
-
-Unit* GameManager::createUnit()
-{
-  Unit *unit = new Unit(unit_id_counter_ ++);
-  units_[unit_id_counter_] = unit;
+public:
+  GameClient();
+  virtual ~GameClient();
   
-  if (game_renderer_)
-    game_renderer_->addUnit(unit);
+  void setServer(TunnelToServer *server);
   
-  return unit;
-}
+  void setGameRenderer(RenderGame *game_renderer);
+  
+  void update();
+  
+  void test();
+private:
+  GameClient(const GameClient& other);
+  
+  TunnelToServer *server_;
+  
+  RenderGame *game_renderer_;
+};
 
-void GameManager::setGameRenderer(RenderGame* game_renderer)
-{
-  game_renderer_ = game_renderer;
-}
-
-void GameManager::queueCommand(ICommand* cmd)
-{
-  // TODO: queue it!
-  //cmd->execute(this);
-  //delete cmd;
-}
-
-void GameManager::update()
-{
-
-}
-
+#endif // GAMECLIENT_H

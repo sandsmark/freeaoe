@@ -17,52 +17,26 @@
 */
 
 
-#include "GameManager.h"
+#ifndef COMMANDSPAWN_H
+#define COMMANDSPAWN_H
 
-#include <mechanics/Unit.h>
-#include <render/RenderGame.h>
 #include <communication/ICommand.h>
+#include <SFML/Config.hpp>
 
-GameManager::GameManager() : unit_id_counter_(0), game_renderer_(0)
+
+class CommandSpawn : public ICommand
 {
 
-}
-
-GameManager::GameManager(const GameManager& other)
-{
-
-}
-
-GameManager::~GameManager()
-{
-
-}
-
-Unit* GameManager::createUnit()
-{
-  Unit *unit = new Unit(unit_id_counter_ ++);
-  units_[unit_id_counter_] = unit;
+public:
+  CommandSpawn(void *player, sf::Uint32 unit_id_, sf::Uint32 x_pos,
+                 sf::Uint32 y_pos);
+  virtual ~CommandSpawn();
+    
+  virtual void execute(GameServer *gm);  
   
-  if (game_renderer_)
-    game_renderer_->addUnit(unit);
-  
-  return unit;
-}
+private:
+  sf::Uint32 unit_id_;
+  sf::Uint32 x_pos_, y_pos_;
+};
 
-void GameManager::setGameRenderer(RenderGame* game_renderer)
-{
-  game_renderer_ = game_renderer;
-}
-
-void GameManager::queueCommand(ICommand* cmd)
-{
-  // TODO: queue it!
-  //cmd->execute(this);
-  //delete cmd;
-}
-
-void GameManager::update()
-{
-
-}
-
+#endif // COMMANDSPAWN_H

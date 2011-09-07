@@ -17,28 +17,56 @@
 */
 
 
-#include "CommandSpawn.h"
-#include <mechanics/GameManager.h>
+#include "GameServer.h"
+#include <communication/TunnelToClient.h>
 #include <mechanics/Unit.h>
 #include <data/DataManager.h>
 
-CommandSpawn::CommandSpawn(void* player, sf::Uint32 unit_id, sf::Uint32 x_pos, 
-                           sf::Uint32 y_pos): ICommand(), unit_id_(unit_id),
-                           x_pos_(x_pos), y_pos_(y_pos)
+GameServer::GameServer()
 {
 
 }
 
-
-CommandSpawn::~CommandSpawn()
+GameServer::GameServer(const GameServer& other)
 {
 
 }
 
-void CommandSpawn::execute(GameManager* gm)
+GameServer::~GameServer()
 {
-  Unit *unit = gm->createUnit();
-  unit->setPos(x_pos_, y_pos_);
+
+}
+
+void GameServer::addClient(TunnelToClient* client)
+{
+  client_ = client;
+}
+
+void GameServer::update()
+{
+  while (client_->commandAvailable())
+  {
+    client_->getCommand()->execute(this);
+  }
+}
+
+/*
+Unit* GameServer::createUnit()
+{
+  Unit *unit = new Unit(unit_id_counter_ ++);
+  units_[unit_id_counter_] = unit;
+  
+  return unit;
+}
+*/
+
+bool GameServer::spawnUnit(void* player, sf::Uint32 unit_id_, sf::Uint32 x_pos, sf::Uint32 y_pos)
+{
+  Unit *unit = new Unit(unit_id_counter_ ++);
+  units_[unit_id_counter_] = unit;
+  
+  unit->setPos(x_pos, y_pos);
   
   unit->setData(DataManager::Inst()->getUnit(unit_id_));
 }
+
