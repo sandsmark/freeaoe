@@ -31,7 +31,7 @@ public:
   LocalTunnelToClient();
   virtual ~LocalTunnelToClient();
   
-  virtual void sendData(void *data) {}
+  virtual void sendData(UnitData *data);
   
   void setClient(LocalTunnelToServer *client);
   

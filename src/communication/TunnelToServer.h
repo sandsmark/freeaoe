@@ -19,7 +19,9 @@
 
 #ifndef TUNNELTOSERVER_H
 #define TUNNELTOSERVER_H
+#include <deque>
 
+class UnitData;
 class ICommand;
 
 //------------------------------------------------------------------------------
@@ -37,7 +39,14 @@ public:
   bool dataAvailable();
   
   /// Returns the first date object in queue.
-  void getData();
+  UnitData *getData(); //TODO auto_ptr
+  
+protected:
+  void queueData(UnitData *data);
+  
+private:
+  
+  std::deque<UnitData *> data_;
 };
 
 #endif // ITUNNELTOSERVER_H

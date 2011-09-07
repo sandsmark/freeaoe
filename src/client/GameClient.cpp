@@ -20,8 +20,14 @@
 #include "GameClient.h"
 #include <communication/TunnelToServer.h>
 #include <communication/commands/CommandSpawn.h>
+#include <communication/UnitData.h>
+#include <mechanics/Unit.h>
+#include <data/DataManager.h>
+#include <render/RenderGame.h>
 
-GameClient::GameClient()
+#include <iostream>
+
+GameClient::GameClient() : game_renderer_(0)
 {
 
 }
@@ -47,16 +53,25 @@ void GameClient::setGameRenderer(RenderGame* game_renderer)
 }
 
 void GameClient::update()
-{ /*
+{ 
   while (server_->dataAvailable())
   {
+    UnitData *data = server_->getData();
     
-  }*/
+    Unit *unit = new Unit(data->id_);
+    unit->setData(DataManager::Inst()->getUnit(data->data_id_));
+    unit->setPos(data->x_pos_, data->y_pos_);
+    
+    units_[data->id_] = unit;
+    
+    if (game_renderer_)
+      game_renderer_->addUnit(unit);
+  }
 }
 
 
 void GameClient::test()
 {
-  server_->sendCommand(new CommandSpawn(0, 281, 200, 200));
   server_->sendCommand(new CommandSpawn(0, 234, 100, 200));
+  server_->sendCommand(new CommandSpawn(0, 281, 90, 210));
 }

@@ -28,6 +28,7 @@
 #include <communication/tunnels/LocalTunnelToServer.h>
 #include <communication/tunnels/LocalTunnelToClient.h>
 
+
 void GameState::init()
 {
     IState::init();
@@ -36,6 +37,8 @@ void GameState::init()
     game_renderer_ = new RenderGame(render_target_);
     game_server_ = new GameServer();
     game_client_ = new GameClient();
+    
+    game_client_->setGameRenderer(game_renderer_);
     
     // Creating local connection
     LocalTunnelToServer *tToServ = new LocalTunnelToServer();
@@ -63,13 +66,14 @@ void GameState::init()
 
 
 void GameState::draw()
-{
+{ 
   game_renderer_->draw();
 }
 
 void GameState::update()
 {
   game_server_->update();
+  game_client_->update();
   //game_manager_->update();
 }
 

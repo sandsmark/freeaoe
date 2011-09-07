@@ -20,6 +20,10 @@
 #ifndef GAMECLIENT_H
 #define GAMECLIENT_H
 
+#include <map>
+#include <SFML/Config.hpp>
+
+class Unit;
 class RenderGame;
 class TunnelToServer;
 class GameClient
@@ -42,6 +46,9 @@ private:
   TunnelToServer *server_;
   
   RenderGame *game_renderer_;
+  
+  typedef std::map<sf::Uint32, Unit *> UnitMap;
+  UnitMap units_;
 };
 
 #endif // GAMECLIENT_H

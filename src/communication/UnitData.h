@@ -17,38 +17,28 @@
 */
 
 
-#ifndef TUNNELTOCLIENT_H
-#define TUNNELTOCLIENT_H
+#ifndef UNITDATA_H
+#define UNITDATA_H
+#include <SFML/Config.hpp>
 
-#include <deque>
-#include "ICommand.h"
-
-class UnitData;
-//------------------------------------------------------------------------------
-/// Server part of the tunnel, it receives commands and can send back data about
-/// the game state to the client.
-//
-class TunnelToClient
+class UnitData
 {
+
 public:
-  virtual ~TunnelToClient() {}
+  UnitData();
   
-  /// Send data back to client  
-  virtual void sendData(UnitData *data) = 0;
+  UnitData(sf::Uint32 id, sf::Uint32 data_id, sf::Uint32 x_pos, 
+           sf::Uint32 y_pos);
   
-  /// Is a command queued?
-  bool commandAvailable();
+  UnitData(const UnitData& other);
+  virtual ~UnitData();
   
-  /// Get the first command from the queue.
-  //
-  ICommand *getCommand();       //TODO: auto_ptr
-  
-protected:
-  void queueCommand(ICommand *cmd);
-  
-private:
-  
-  std::deque<ICommand *> commands_;
+  //TODO: getter + setter
+  void *player;
+  sf::Uint32 id_;
+  sf::Uint32 data_id_;
+  sf::Uint32 x_pos_;    // Map pos
+  sf::Uint32 y_pos_;
 };
 
-#endif // ITUNNELTOCLIENT_H
+#endif // UNITDATA_H

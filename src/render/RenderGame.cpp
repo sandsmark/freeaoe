@@ -16,8 +16,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include "RenderGame.h"
+#include <SFML/Graphics/RenderTarget.hpp>
+
+#include <iostream>
 
 RenderGame::RenderGame(sf::RenderTarget *render_target) :
             render_target_(render_target)

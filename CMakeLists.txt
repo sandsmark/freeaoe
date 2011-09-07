@@ -55,8 +55,8 @@ set(RENDER_SRC src/render/RenderUnit.cpp
 
 set(SERVER_SRC src/server/GameServer.cpp)
 
-set(UNSORTED_SRC src/client/GameClient.cpp src/communication/tunnels/LocalTunnelToServer.cpp src/communication/tunnels/LocalTunnelToClient.cpp src/communication/commands/CommandSpawn.cpp
-                 src/communication/TunnelToClient.cpp)
+set(UNSORTED_SRC src/communication/UnitData.cpp src/client/GameClient.cpp src/communication/tunnels/LocalTunnelToServer.cpp src/communication/tunnels/LocalTunnelToClient.cpp src/communication/commands/CommandSpawn.cpp
+                 src/communication/TunnelToClient.cpp src/communication/TunnelToServer.cpp)
 
 add_executable(freeaoe src/Engine.cpp src/main.cpp 
                ${FILE_SRC}

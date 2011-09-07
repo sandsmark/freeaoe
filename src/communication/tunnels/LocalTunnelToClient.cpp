@@ -20,6 +20,8 @@
 #include "LocalTunnelToClient.h"
 #include "LocalTunnelToServer.h"
 
+#include <communication/UnitData.h>
+
 LocalTunnelToClient::LocalTunnelToClient()
 {
 
@@ -34,6 +36,12 @@ LocalTunnelToClient::~LocalTunnelToClient()
 {
 
 }
+
+void LocalTunnelToClient::sendData(UnitData *data)
+{
+  client_->receiveData(data);
+}
+
 
 void LocalTunnelToClient::setClient(LocalTunnelToServer* client)
 {

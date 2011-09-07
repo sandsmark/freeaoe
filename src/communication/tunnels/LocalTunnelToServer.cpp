@@ -19,6 +19,7 @@
 #include "LocalTunnelToServer.h"
 #include "LocalTunnelToClient.h"
 
+#include <communication/UnitData.h>
 
 LocalTunnelToServer::LocalTunnelToServer()
 {
@@ -44,3 +45,9 @@ void LocalTunnelToServer::sendCommand(ICommand* cmd)
 {
   server_->receiveCommand(cmd);
 }
+
+void LocalTunnelToServer::receiveData(UnitData *data)
+{
+  queueData(data);
+}
+

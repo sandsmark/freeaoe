@@ -93,14 +93,14 @@ void RenderGraphic::update()
 
 //------------------------------------------------------------------------------
 void RenderGraphic::draw()
-{
+{  
   sf::Texture textr_;
 
   SlpFrame *frame = slp_file_->getFrame(current_frame_);
 
   sprite_.SetX(x_ - frame->getHotspotX());
   sprite_.SetY(y_ - frame->getHotspotY());
-
+  
   textr_.LoadFromImage(*frame->getImage());
   sprite_.SetTexture(textr_);
   render_target_->Draw(sprite_);

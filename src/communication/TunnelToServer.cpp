@@ -16,39 +16,28 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "TunnelToServer.h"
+#include "UnitData.h"
 
-#ifndef TUNNELTOCLIENT_H
-#define TUNNELTOCLIENT_H
-
-#include <deque>
-#include "ICommand.h"
-
-class UnitData;
-//------------------------------------------------------------------------------
-/// Server part of the tunnel, it receives commands and can send back data about
-/// the game state to the client.
-//
-class TunnelToClient
+bool TunnelToServer::dataAvailable()
 {
-public:
-  virtual ~TunnelToClient() {}
-  
-  /// Send data back to client  
-  virtual void sendData(UnitData *data) = 0;
-  
-  /// Is a command queued?
-  bool commandAvailable();
-  
-  /// Get the first command from the queue.
-  //
-  ICommand *getCommand();       //TODO: auto_ptr
-  
-protected:
-  void queueCommand(ICommand *cmd);
-  
-private:
-  
-  std::deque<ICommand *> commands_;
-};
+  return !data_.empty();
+}
 
-#endif // ITUNNELTOCLIENT_H
+UnitData* TunnelToServer::getData()
+{
+  UnitData *data = 0;
+  
+  if (!data_.empty())
+  {
+    data = data_[0];
+    data_.pop_front();
+  }
+  
+  return data;
+}
+
+void TunnelToServer::queueData(UnitData *data)
+{
+  data_.push_back(data);
+}

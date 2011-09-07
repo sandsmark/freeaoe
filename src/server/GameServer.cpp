@@ -21,6 +21,7 @@
 #include <communication/TunnelToClient.h>
 #include <mechanics/Unit.h>
 #include <data/DataManager.h>
+#include <communication/UnitData.h>
 
 GameServer::GameServer()
 {
@@ -60,13 +61,18 @@ Unit* GameServer::createUnit()
 }
 */
 
-bool GameServer::spawnUnit(void* player, sf::Uint32 unit_id_, sf::Uint32 x_pos, sf::Uint32 y_pos)
+bool GameServer::spawnUnit(void* player, sf::Uint32 unit_id, sf::Uint32 x_pos, 
+                           sf::Uint32 y_pos)
 {
   Unit *unit = new Unit(unit_id_counter_ ++);
   units_[unit_id_counter_] = unit;
   
   unit->setPos(x_pos, y_pos);
   
-  unit->setData(DataManager::Inst()->getUnit(unit_id_));
+  unit->setData(DataManager::Inst()->getUnit(unit_id));
+  
+  client_->sendData(new UnitData(unit_id_counter_, unit_id, x_pos, y_pos));
+  
+  return true;
 }
 
