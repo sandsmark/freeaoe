@@ -35,7 +35,6 @@ CommandSpawn::CommandSpawn(void* player, sf::Uint32 unit_id, sf::Uint32 x_pos,
 
 CommandSpawn::~CommandSpawn()
 {
-  std::cout << "deleting command!" << std::endl;
 }
 
 void CommandSpawn::execute(GameServer* gm)

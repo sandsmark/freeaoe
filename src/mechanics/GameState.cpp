@@ -19,7 +19,6 @@
 
 #include "GameState.h"
 
-#include "mechanics/GameManager.h"
 #include "render/RenderGame.h"
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <communication/commands/CommandSpawn.h>
@@ -52,16 +51,6 @@ void GameState::init()
     
     //Test
     game_client_->test();
-    
-    /*
-    game_manager_ = new GameManager();
-    
-    game_manager_->setGameRenderer(game_renderer_);
-    
-    //Test:
-    game_manager_->queueCommand(new CommandSpawn(0, 281, 200, 200));
-    game_manager_->queueCommand(new CommandSpawn(0, 234, 100, 200));
-    */
 }
 
 
@@ -74,7 +63,6 @@ void GameState::update()
 {
   game_server_->update();
   game_client_->update();
-  //game_manager_->update();
 }
 
 void GameState::handleEvent(sf::Event event)
@@ -95,7 +83,6 @@ GameState::GameState(const GameState& other)
 
 GameState::~GameState()
 {
-  //delete game_manager_;
   delete game_renderer_;
 }
 

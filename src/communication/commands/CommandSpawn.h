@@ -28,6 +28,7 @@ class CommandSpawn : public ICommand
 {
 
 public:
+  //TODO: Is player a necessary?
   CommandSpawn(void *player, sf::Uint32 unit_id_, sf::Uint32 x_pos,
                  sf::Uint32 y_pos);
   virtual ~CommandSpawn();
