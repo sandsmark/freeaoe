@@ -23,7 +23,7 @@
 #include <data/DataManager.h>
 #include <communication/UnitData.h>
 
-GameServer::GameServer()
+GameServer::GameServer() : unit_id_counter_(0)
 {
 
 }

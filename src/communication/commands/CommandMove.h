@@ -17,46 +17,23 @@
 */
 
 
-#ifndef RENDERUNIT_H
-#define RENDERUNIT_H
+#ifndef COMMANDMOVE_H
+#define COMMANDMOVE_H
+#include <communication/ICommand.h>
 #include <SFML/Config.hpp>
 
-class RenderGraphic;
-namespace sf {
-class RenderTarget;
-}
-
-class Unit;
-class RenderUnit
+class CommandMove : public ICommand
 {
 
 public:
-  RenderUnit(Unit *unit, sf::RenderTarget *render_target);
-  virtual ~RenderUnit();
-    
-  //----------------------------------------------------------------------------
-  ///
-  //
-  Unit *getUnit();
+  CommandMove(sf::Uint32 unit_id, sf::Uint32 dest_x, sf::Uint32 dest_y);
+  CommandMove(const CommandMove& other);
+  virtual ~CommandMove();
   
-  /// Update will always be called, draw only if unit is in sight of the camera.
-  void update();
-  
-  void draw();
-  
-  //----------------------------------------------------------------------------
-  /// Checks if unit covers given position
-  //
-  bool coversPos(sf::Uint32 x, sf::Uint32 y);
+  virtual void execute(GameServer *gs);
   
 private:
-  RenderUnit(const RenderUnit& other);
-  
-  Unit *unit_;
-  
-  RenderGraphic *current_graph_;
-  
-  sf::RenderTarget *render_target_;
+  sf::Uint32 unit_id_, dest_x_, dest_y_;
 };
 
-#endif // RENDERUNIT_H
+#endif // COMMANDMOVE_H

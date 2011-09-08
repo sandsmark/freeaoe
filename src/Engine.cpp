@@ -54,24 +54,24 @@ void Engine::start()
   // Start the game loop
   while (render_window_->IsOpened())
   {
+    IState *state = state_manager_.getActiveState();
+    
     // Process events
-    sf::Event Event;
-    while (render_window_->PollEvent(Event))
+    sf::Event event;
+    while (render_window_->PollEvent(event))
     {
       // Close window : exit
-      if (Event.Type == sf::Event::Closed)
+      if (event.Type == sf::Event::Closed)
         render_window_->Close();
 
-      if (Event.Type == sf::Event::KeyReleased)
-      {
-      }
+      state->handleEvent(event);
     }
      
     // Clear screen
     render_window_->Clear();
 
-    state_manager_.getActiveState()->update();
-    state_manager_.getActiveState()->draw();;
+    state->update();
+    state->draw();;
          
     // Update the window
     render_window_->Display();

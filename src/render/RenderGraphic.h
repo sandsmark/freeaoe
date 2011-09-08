@@ -54,6 +54,11 @@ public:
   void update();
 
   void draw();
+  
+  //----------------------------------------------------------------------------
+  /// Checks if current image covers given point.
+  //
+  bool coversPos(sf::Uint32 x, sf::Uint32 y);
 
 private:
   GenieGraphic data_;

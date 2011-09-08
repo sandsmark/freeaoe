@@ -19,7 +19,7 @@
 
 #include "GameState.h"
 
-#include "render/RenderGame.h"
+#include <render/RenderGame.h>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <communication/commands/CommandSpawn.h>
 #include <server/GameServer.h>
@@ -27,6 +27,8 @@
 #include <communication/tunnels/LocalTunnelToServer.h>
 #include <communication/tunnels/LocalTunnelToClient.h>
 
+#include <iostream>
+#include "Unit.h"
 
 void GameState::init()
 {
@@ -67,7 +69,18 @@ void GameState::update()
 
 void GameState::handleEvent(sf::Event event)
 {
-
+  if (event.Type == sf::Event::MouseButtonReleased)
+  {
+    std::vector<Unit *> units_at = 
+      game_renderer_->getUnitsAt(event.MouseButton.X, event.MouseButton.Y);
+    
+    for( std::vector<Unit *>::iterator it = units_at.begin(); 
+      it != units_at.end(); it ++)
+    {
+      std::cout << (*it)->getID() << std::endl;
+    }
+  }
+  
 }
 
 GameState::GameState(sf::RenderTarget *render_target) 

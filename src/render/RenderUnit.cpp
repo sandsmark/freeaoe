@@ -44,6 +44,12 @@ RenderUnit::~RenderUnit()
 
 }
 
+Unit* RenderUnit::getUnit()
+{
+  return unit_;
+}
+
+
 void RenderUnit::update()
 {
   if (current_graph_ == 0)
@@ -64,4 +70,9 @@ void RenderUnit::update()
 void RenderUnit::draw()
 {
   current_graph_->draw();
+}
+
+bool RenderUnit::coversPos(Uint32 x, Uint32 y)
+{
+  return current_graph_->coversPos(x, y);
 }

@@ -17,46 +17,28 @@
 */
 
 
-#include "Unit.h"
+#include "CommandMove.h"
+#include <server/GameServer.h>
 
-Unit::Unit(sf::Uint32 id) : id_(id)
+CommandMove::CommandMove(sf::Uint32 unit_id, sf::Uint32 dest_x, 
+                         sf::Uint32 dest_y): unit_id_(unit_id), dest_x_(dest_x),
+                         dest_y_(dest_y)
 {
 
 }
 
-Unit::Unit(const Unit& other)
+
+CommandMove::CommandMove(const CommandMove& other)
 {
 
 }
 
-Unit::~Unit()
+CommandMove::~CommandMove()
 {
 
 }
 
-void Unit::setPos(sf::Uint32 x, sf::Uint32 y)
+void CommandMove::execute(GameServer *gs)
 {
-  x_ = x;
-  y_ = y;
-}
 
-sf::Uint32 Unit::getID(void ) const
-{
-  return id_;
-}
-
-
-sf::Uint32 Unit::getX(void ) const
-{
-  return x_;
-}
-
-sf::Uint32 Unit::getY(void ) const
-{
-  return y_;
-}
-
-GenieUnit Unit::getData(void ) const
-{
-  return data_;
 }

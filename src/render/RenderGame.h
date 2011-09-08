@@ -21,6 +21,7 @@
 #define RENDERGAME_H
 #include <vector>
 #include "RenderUnit.h"
+#include <SFML/Config.hpp>
 
 class Unit;
 class RenderGame
@@ -30,10 +31,22 @@ public:
   RenderGame(sf::RenderTarget *render_target);
   virtual ~RenderGame();
   
+  //----------------------------------------------------------------------------
   /// Adds a unit that needs to be rendered.
+  //
   void addUnit(Unit *unit);
-    
+  
+  //----------------------------------------------------------------------------
   void draw();
+  
+  //----------------------------------------------------------------------------
+  /// Returns a list of units at given point on the screen
+  /// 
+  /// @param x x position on screen
+  /// @param y y position on screen
+  /// @return Units on given position
+  //
+  std::vector<Unit *> getUnitsAt(sf::Uint32 x, sf::Uint32 y);
     
 private:
   RenderGame(const RenderGame& other);

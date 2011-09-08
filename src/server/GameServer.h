@@ -30,7 +30,6 @@ class GameServer
 
 public:
   GameServer();
-  GameServer(const GameServer& other);
   virtual ~GameServer();
   
   void addClient(TunnelToClient *client);
@@ -43,6 +42,8 @@ public:
                  sf::Uint32 y_pos);
   
 private:
+  GameServer(const GameServer& other);
+  
   sf::Uint32 unit_id_counter_;
   
   typedef std::map<sf::Uint32, Unit *> UnitMap;

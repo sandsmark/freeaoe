@@ -20,6 +20,7 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 
 #include <iostream>
+#include <mechanics/Unit.h>
 
 RenderGame::RenderGame(sf::RenderTarget *render_target) :
             render_target_(render_target)
@@ -37,6 +38,7 @@ RenderGame::~RenderGame()
 
 }
 
+//------------------------------------------------------------------------------
 void RenderGame::addUnit(Unit* unit)
 {
   render_units_.push_back(new RenderUnit(unit, render_target_));
@@ -53,3 +55,19 @@ void RenderGame::draw()
   }
 }
 
+//------------------------------------------------------------------------------
+std::vector<Unit *> RenderGame::getUnitsAt(sf::Uint32 x, sf::Uint32 y)
+{
+  std::vector<Unit *> units_at;
+  
+  for( std::vector<RenderUnit *>::iterator it = render_units_.begin(); 
+       it != render_units_.end(); it ++)
+  {
+    if ((*it)->coversPos(x, y))
+    {
+      units_at.push_back((*it)->getUnit());
+    }
+  }
+  
+  return units_at;
+}

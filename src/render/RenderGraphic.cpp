@@ -114,3 +114,20 @@ void RenderGraphic::draw()
   delete color_mask;
 }
 
+//------------------------------------------------------------------------------
+bool RenderGraphic::coversPos(sf::Uint32 x, sf::Uint32 y)
+{
+  SlpFrame *frame = slp_file_->getFrame(current_frame_);
+  
+  //TODO: Better locating. Outline?
+  
+  sf::Uint32 x_img = x_ - frame->getHotspotX();
+  sf::Uint32 y_img = y_ - frame->getHotspotY();
+  
+  if (x >= x_img && x <= x_img + frame->getImage()->GetWidth() &&
+      y >= y_img && y <= y_img + frame->getImage()->GetHeight())
+    return true;
+  
+  return false;
+}
+
