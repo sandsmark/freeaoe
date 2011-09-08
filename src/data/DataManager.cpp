@@ -48,19 +48,9 @@ DataManager::DataManager()
   initialize();
 }
 
-DataManager::DataManager(const DataManager& other)
-{
-
-}
-
 DataManager::~DataManager()
 {
 
-}
-
-DataManager& DataManager::operator=(const DataManager& other)
-{
-    return *this;
 }
 
 void DataManager::initialize()

@@ -28,6 +28,7 @@
 #include "Graphic.h"
 #include <file/SlpFile.h>
 #include <global/Logger.h>
+#include <global/NonCopyable.h>
 
 class ColorPalette;
 class BinaFile;
@@ -38,7 +39,7 @@ class DrsFile;
 /// initialization the manager loads header information from drs and other
 /// files and loads needed resources on the fly.
 //
-class ResourceManager
+class ResourceManager : public NonCopyable
 {
 public:
   //----------------------------------------------------------------------------
@@ -69,10 +70,7 @@ public:
   
 private:
   ResourceManager();
-  ResourceManager(const ResourceManager &rm);
   virtual ~ResourceManager();
-  
-  ResourceManager& operator=(const ResourceManager &rm);
   
   std::vector<DrsFile *> drs_files_;
   std::map<sf::Uint32, SlpFile *> slp_files_;

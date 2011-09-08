@@ -17,45 +17,19 @@
 */
 
 
-#ifndef DATAMANAGER_H
-#define DATAMANAGER_H
+#ifndef NONCOPYABLE_H
+#define NONCOPYABLE_H
 
-#include <global/Logger.h>
-#include <data/GenieGraphic.h>
-#include <data/GenieUnit.h>
-
-#include <map>
-#include <SFML/Config.hpp>
-#include <global/NonCopyable.h>
-
-using sf::Uint32;
-
-class GenieTerrain;
-
-//------------------------------------------------------------------------------
-/// Class for receiving and managing data files (.dat)
-//
-class DataManager : public NonCopyable
+/// Classes derived from this interface can't be copied. 
+class NonCopyable
 {
-
 public:
-  
-  static DataManager* Inst();
-  
-  GenieGraphic getGraphic(sf::Uint32 id);
-  GenieUnit getUnit(sf::Uint32 id);
-  
+  NonCopyable() {}
+  virtual ~NonCopyable() {}
+
 private:
-  DataManager();
-  virtual ~DataManager();
-  
-  void initialize();
-  
-  static Logger &log;
-  
-  std::map<Uint32, GenieGraphic *> graphics_;
-  std::map<Uint32, GenieTerrain *> terrains_;
-  std::map<Uint32, GenieUnit *> units_;
+  NonCopyable(const NonCopyable &other);
+  NonCopyable& operator=(const NonCopyable& other);
 };
 
-#endif // DATAMANAGER_H
+#endif // NONCOPYABLE_H

@@ -21,8 +21,10 @@
 #define CONFIG_H
 #include <string>
 
+#include "NonCopyable.h"
+
 //TODO: read config values like game dir from file or argv
-class Config
+class Config : public NonCopyable
 {
 public:
   //----------------------------------------------------------------------------
@@ -49,7 +51,6 @@ public:
 
 private:
   Config();
-  Config(const Config& other);
   virtual ~Config();
     
   std::string game_dir_;  
