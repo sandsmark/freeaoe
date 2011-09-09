@@ -72,7 +72,7 @@ void GameClient::update()
 
 void GameClient::test()
 {
-  server_->sendCommand(new CommandSpawn(0, 234, 100, 200));
-  server_->sendCommand(new CommandSpawn(0, 281, 90, 210));
-  server_->sendCommand(new CommandSpawn(0, 281, 200, 200));
+  server_->sendCommand(new CommandSpawn(0, 234, 200, 250));
+  server_->sendCommand(new CommandSpawn(0, 281, 190, 260));
+  server_->sendCommand(new CommandSpawn(0, 281, 300, 250));
 }

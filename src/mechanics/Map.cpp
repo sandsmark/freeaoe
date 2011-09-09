@@ -41,8 +41,8 @@ Map::~Map()
 
 void Map::setUpSample()
 {
-  node_cols_ = 10;
-  node_rows_ = 10;
+  node_cols_ = 20;
+  node_rows_ = 20;
   
   makeGrid();
   makeTiles();
@@ -73,7 +73,7 @@ void Map::addNodeToShape(sf::Shape *shape, MapNode *node, sf::Color *point_col)
 void Map::draw(sf::RenderTarget* render_target)
 {
   x_offset_ = 512;
-  y_offset_ = 100;
+  y_offset_ = 0;
 
   sf::Image img;
 

@@ -68,8 +68,8 @@ public:
 private:
   GenieTerrain terrain_[4][4];
   
-  sf::Uint32 x_offset_;
-  sf::Uint32 y_offset_;
+  sf::Int32 x_offset_;
+  sf::Int32 y_offset_;
   
   //std::vector<MapNode *> nodes_;
   typedef std::pair<sf::Uint32, sf::Uint32> ColRowPair;
