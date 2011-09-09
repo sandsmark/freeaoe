@@ -23,20 +23,33 @@
 #include <SFML/Config.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <vector>
+#include <map>
+
+namespace sf {
+class Shape;
+}
 
 class MapNode
 {
 public:
   sf::Uint32 row, col;
-  sf::Uint32 x_pos, y_pos;
+  sf::Int32 height;
+  sf::Int32 x_pos, y_pos, z_pos;
+};
+
+class MapTile
+{
+public:
+  MapNode *north, *east, *south, *west;
 };
 
 class Map
 {
 
 public:
-  static const sf::Uint32 TILE_HEIGHT = 48;
-  static const sf::Uint32 TILE_WIDTH = 96;
+  static const sf::Uint32 TILE_SIZE_VERTICAL = 48;
+  static const sf::Uint32 TILE_SIZE_HORIZONTAL = 96;
+  static const sf::Uint32 TILE_SIZE_HEIGHT = 24;        //Mountain
   
   Map();
   virtual ~Map();
@@ -46,6 +59,7 @@ public:
   sf::Uint32 getRows();
   sf::Uint32 getCols();
   
+  
   GenieTerrain getTerrain(unsigned int col, unsigned int row) { return terrain_[col][row]; }
   
   //TODO: Outsource to RenderMap!
@@ -54,13 +68,28 @@ public:
 private:
   GenieTerrain terrain_[4][4];
   
-  std::vector<MapNode *> nodes_;
+  sf::Uint32 x_offset_;
+  sf::Uint32 y_offset_;
+  
+  //std::vector<MapNode *> nodes_;
+  typedef std::pair<sf::Uint32, sf::Uint32> ColRowPair;
+  typedef std::map< ColRowPair , MapNode * > NodeMap;
+  NodeMap nodes_;
+  
+  typedef std::vector<MapTile *> TileArray;
+  TileArray tiles_;
   
   sf::Uint32 node_rows_;
   sf::Uint32 node_cols_;
   
   /// Creates the node grid
   void makeGrid(void);
+  
+  void makeTiles(void);
+  
+  void addNodeToShape(sf::Shape *shape, MapNode *node, sf::Color *point_col);
+  
+  MapNode *getNodeByCoords(sf::Uint32 col, sf::Uint32 row);
 };
 
 #endif // MAP_H

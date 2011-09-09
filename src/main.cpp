@@ -15,7 +15,7 @@ int main(int argc, char **argv)
   
  // DatFile df;
  // df.open("aoe2/Data/empires2.dat");
-  ResourceManager::Inst()->getSlp(15000)->getImage()->SaveToFile("terrain.bmp");
+  //ResourceManager::Inst()->getSlp(15000)->getImage()->SaveToFile("terrain.bmp");
   
   Engine en;
   en.start();

@@ -22,6 +22,11 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <resource/ResourceManager.h>
 
+#include <ctime>
+#include <cstdlib>
+#include <stdexcept>
+#include <SFML/Graphics/Shape.hpp>
+
 Map::Map()
 {
 
@@ -29,9 +34,9 @@ Map::Map()
 
 Map::~Map()
 {
-  for (std::vector< MapNode* >::iterator it = nodes_.begin();
+  for (NodeMap::iterator it = nodes_.begin();
        it != nodes_.end(); it ++)
-       delete (*it);
+       delete it->second;
 }
 
 void Map::setUpSample()
@@ -40,6 +45,7 @@ void Map::setUpSample()
   node_rows_ = 10;
   
   makeGrid();
+  makeTiles();
   
 }
 
@@ -53,10 +59,22 @@ sf::Uint32 Map::getRows()
   return node_rows_;
 }
 
+void Map::addNodeToShape(sf::Shape *shape, MapNode *node, sf::Color *point_col)
+{
+  if (node)
+  {
+    shape->AddPoint(node->x_pos + x_offset_, 
+                    node->y_pos - node->z_pos + y_offset_, *point_col,
+                    sf::Color::Blue
+                   );
+  }
+}
+
 void Map::draw(sf::RenderTarget* render_target)
 {
-  sf::Uint32 x_offset = 512;
-  sf::Uint32 y_offset = 100;
+  x_offset_ = 512;
+  y_offset_ = 100;
+
   sf::Image img;
 
   img.Create(5,3,sf::Color(0,0,0,0));
@@ -71,11 +89,10 @@ void Map::draw(sf::RenderTarget* render_target)
   sf::Sprite spr;
   spr.SetTexture(txt);
   
-  for (std::vector< MapNode* >::iterator it = nodes_.begin();
-       it != nodes_.end(); it ++)
+  for (NodeMap::iterator it = nodes_.begin(); it != nodes_.end(); it ++)
   {
-    spr.SetX((*it)->x_pos + x_offset);
-    spr.SetY((*it)->y_pos + y_offset);
+    spr.SetX((it->second)->x_pos + x_offset_);
+    spr.SetY((it->second)->y_pos + y_offset_);
     
     /*if (true || (*it)->col == 7 && (*it)->row == 3)
     {
@@ -93,11 +110,30 @@ void Map::draw(sf::RenderTarget* render_target)
     
     render_target->Draw(spr);
   }
+  
+  for (TileArray::iterator it = tiles_.begin(); it != tiles_.end(); it++)
+  {
+    sf::Shape shape;
+    
+    sf::Color point(0,255,0);
+    
+    addNodeToShape(&shape, (*it)->north, &point);
+    addNodeToShape(&shape, (*it)->east, &point);
+    addNodeToShape(&shape, (*it)->south, &point);
+    addNodeToShape(&shape, (*it)->west, &point);
+    
+    //shape.EnableFill(false);
+    shape.EnableOutline(true);
+    shape.SetOutlineThickness(1);
+    
+    render_target->Draw(shape);
+  }
 
 }
 
 void Map::makeGrid(void )
 {
+      srand(time(0));     
   for (int col = 0; col < node_cols_; col ++)
   {
     for (int row = 0; row < node_rows_; row ++)
@@ -107,12 +143,53 @@ void Map::makeGrid(void )
       node->col = col;
       node->row = row;
       
-      node->x_pos = ( node->col - node->row ) * ( Map::TILE_WIDTH / 2 );
-      node->y_pos = ( node->col + node->row ) * ( Map::TILE_HEIGHT / 2);
+      if ( rand() % 3 == 1 )
+        node->height = (rand() % 3) - 1;
       
-      nodes_.push_back(node);
+      node->x_pos = (node->col - node->row) * (Map::TILE_SIZE_HORIZONTAL / 2);
+      node->y_pos = (node->col + node->row) * (Map::TILE_SIZE_VERTICAL / 2);
+      node->z_pos = node->height * (Map::TILE_SIZE_HEIGHT / 2);
+
+      
+      nodes_[ColRowPair(col, row)] = node;
     }
   }
 }
+
+void Map::makeTiles(void )
+{
+  for (int col = 0; col < node_cols_; col ++)
+  {
+    for (int row = 0; row < node_rows_; row ++)
+    {
+      MapTile *tile = new MapTile();
+      
+      tile->north = getNodeByCoords(col, row);
+      tile->east = getNodeByCoords(col + 1, row);
+      tile->south = getNodeByCoords(col + 1, row + 1);
+      tile->west = getNodeByCoords(col, row + 1);
+      
+      tiles_.push_back(tile);
+    }
+  }
+}
+
+
+MapNode* Map::getNodeByCoords(sf::Uint32 col, sf::Uint32 row)
+{
+  MapNode *node = 0;
+  
+  try
+  {
+    node = nodes_.at(ColRowPair(col, row));
+  }
+  catch (std::out_of_range e)
+  {
+    node = 0;
+  }
+  
+  return node;
+}
+
 
 
