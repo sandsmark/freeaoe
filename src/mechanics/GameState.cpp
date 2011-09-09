@@ -34,6 +34,8 @@ void GameState::init()
 {
     IState::init();
     
+    map_ = new Map();
+    map_->setUpSample();
     
     game_renderer_ = new RenderGame(render_target_);
     game_server_ = new GameServer();
@@ -58,6 +60,7 @@ void GameState::init()
 
 void GameState::draw()
 { 
+  map_->draw(render_target_);
   game_renderer_->draw();
 }
 

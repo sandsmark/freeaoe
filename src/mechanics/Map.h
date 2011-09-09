@@ -20,23 +20,47 @@
 #ifndef MAP_H
 #define MAP_H
 #include <data/GenieTerrain.h>
+#include <SFML/Config.hpp>
+#include <SFML/Graphics/RenderTarget.hpp>
+#include <vector>
+
+class MapNode
+{
+public:
+  sf::Uint32 row, col;
+  sf::Uint32 x_pos, y_pos;
+};
 
 class Map
 {
 
 public:
+  static const sf::Uint32 TILE_HEIGHT = 48;
+  static const sf::Uint32 TILE_WIDTH = 96;
+  
   Map();
   virtual ~Map();
   
   void setUpSample();
   
-  unsigned int getRows() { return 3; }
-  unsigned int getCols() { return 3; }
+  sf::Uint32 getRows();
+  sf::Uint32 getCols();
   
   GenieTerrain getTerrain(unsigned int col, unsigned int row) { return terrain_[col][row]; }
   
+  //TODO: Outsource to RenderMap!
+  void draw(sf::RenderTarget *render_target);
+  
 private:
   GenieTerrain terrain_[4][4];
+  
+  std::vector<MapNode *> nodes_;
+  
+  sf::Uint32 node_rows_;
+  sf::Uint32 node_cols_;
+  
+  /// Creates the node grid
+  void makeGrid(void);
 };
 
 #endif // MAP_H

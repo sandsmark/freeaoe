@@ -21,6 +21,7 @@
 #define GAMESTATE_H
 
 #include <mechanics/IState.h>
+#include "Map.h"
 
 class GameClient;
 class GameServer;
@@ -57,6 +58,8 @@ private:
   RenderGame *game_renderer_;
   
   sf::RenderTarget *render_target_;
+  
+  Map *map_;
 };
 
 #endif // GAMESTATE_H

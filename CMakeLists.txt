@@ -46,7 +46,7 @@ set(MECHANICS_SRC src/mechanics/Map.cpp
                   src/mechanics/GameState.cpp 
                  
                   src/mechanics/Unit.cpp
-                  src/mechanics/MapRenderer.cpp 
+                  
                    )
 
 set(RENDER_SRC src/render/RenderUnit.cpp 

@@ -82,7 +82,7 @@ void Engine::start()
 //------------------------------------------------------------------------------
 void Engine::setup()
 {
-  render_window_ = new sf::RenderWindow(sf::VideoMode(800, 600), "freeaoe");
+  render_window_ = new sf::RenderWindow(sf::VideoMode(1024, 786), "freeaoe");
   
   state_manager_.addActiveState(new GameState(render_window_));
 }
