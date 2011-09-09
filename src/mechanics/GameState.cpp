@@ -21,6 +21,7 @@
 
 #include <render/RenderGame.h>
 #include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Window/Mouse.hpp>
 #include <communication/commands/CommandSpawn.h>
 #include <server/GameServer.h>
 #include <client/GameClient.h>
@@ -74,13 +75,24 @@ void GameState::handleEvent(sf::Event event)
 {
   if (event.Type == sf::Event::MouseButtonReleased)
   {
-    std::vector<Unit *> units_at = 
+    
+    if (event.MouseButton.Button == sf::Mouse::Left)
+    {
+      std::vector<Unit *> units_at = 
       game_renderer_->getUnitsAt(event.MouseButton.X, event.MouseButton.Y);
     
-    for( std::vector<Unit *>::iterator it = units_at.begin(); 
-      it != units_at.end(); it ++)
+      if ( !units_at.empty())
+        game_client_->selectUnit(units_at[0]);
+      
+      for( std::vector<Unit *>::iterator it = units_at.begin(); 
+        it != units_at.end(); it ++)
+      {
+        std::cout << (*it)->getID() << std::endl;
+      }
+    }
+    else
     {
-      std::cout << (*it)->getID() << std::endl;
+      game_client_->moveSelectedTo(sf::Vector2f( event.MouseButton.X, event.MouseButton.Y));
     }
   }
   

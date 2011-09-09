@@ -26,14 +26,15 @@ class CommandMove : public ICommand
 {
 
 public:
-  CommandMove(sf::Uint32 unit_id, sf::Uint32 dest_x, sf::Uint32 dest_y);
+  CommandMove(sf::Uint32 unit_id, float dest_x, float dest_y);
   CommandMove(const CommandMove& other);
   virtual ~CommandMove();
   
   virtual void execute(GameServer *gs);
   
 private:
-  sf::Uint32 unit_id_, dest_x_, dest_y_;
+  sf::Uint32 unit_id_;
+  float dest_x_, dest_y_;
 };
 
 #endif // COMMANDMOVE_H

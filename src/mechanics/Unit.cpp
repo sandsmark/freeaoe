@@ -34,10 +34,20 @@ Unit::~Unit()
 
 }
 
-void Unit::setPos(sf::Uint32 x, sf::Uint32 y)
+void Unit::setPos(float x, float y)
 {
-  x_ = x;
-  y_ = y;
+  pos_.x = x;
+  pos_.y = y;
+}
+
+void Unit::setPos(sf::Vector2f pos)
+{
+  pos_ = pos;
+}
+
+sf::Vector2f Unit::getPos(void ) const
+{
+  return pos_;
 }
 
 sf::Uint32 Unit::getID(void ) const
@@ -46,14 +56,14 @@ sf::Uint32 Unit::getID(void ) const
 }
 
 
-sf::Uint32 Unit::getX(void ) const
+float Unit::getX(void ) const
 {
-  return x_;
+  return pos_.x;
 }
 
-sf::Uint32 Unit::getY(void ) const
+float Unit::getY(void ) const
 {
-  return y_;
+  return pos_.y;
 }
 
 GenieUnit Unit::getData(void ) const

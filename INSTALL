@@ -18,7 +18,10 @@ following:
   cmake ../
   make
   sudo make install
- 
+
+Last but not least you need to get thor and check it out to extern/thor.
+The update_thor.sh script located in the thor folder will do that for you.
+
 To compile the project create a build dir, run cmake and make
 
   mkdir build

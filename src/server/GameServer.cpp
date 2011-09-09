@@ -22,6 +22,7 @@
 #include <mechanics/Unit.h>
 #include <data/DataManager.h>
 #include <communication/UnitData.h>
+#include <mechanics/IAction.h>
 
 GameServer::GameServer() : unit_id_counter_(0)
 {
@@ -49,7 +50,27 @@ void GameServer::update()
   {
     client_->getCommand()->execute(this);
   }
+  
+  for (ActionArray::iterator it = actions_.begin(); it != actions_.end(); it ++)
+  {
+    (*it)->update();
+    Unit *unit = (*it)->getUnit();
+    client_->sendData(new UnitData(unit->getID(), unit->getData().id_, 
+                                   unit->getX(), unit->getY()));
+  }
 }
+
+bool GameServer::addAction(IAction* act)
+{
+  actions_.push_back(act);
+}
+
+
+Unit* GameServer::getUnit(Uint32 unit_id)
+{
+  return units_[unit_id];
+}
+
 
 /*
 Unit* GameServer::createUnit()
@@ -64,7 +85,7 @@ Unit* GameServer::createUnit()
 bool GameServer::spawnUnit(void* player, sf::Uint32 unit_id, sf::Uint32 x_pos, 
                            sf::Uint32 y_pos)
 {
-  Unit *unit = new Unit(unit_id_counter_ ++);
+  Unit *unit = new Unit(unit_id_counter_);
   units_[unit_id_counter_] = unit;
   
   unit->setPos(x_pos, y_pos);
@@ -72,6 +93,8 @@ bool GameServer::spawnUnit(void* player, sf::Uint32 unit_id, sf::Uint32 x_pos,
   unit->setData(DataManager::Inst()->getUnit(unit_id));
   
   client_->sendData(new UnitData(unit_id_counter_, unit_id, x_pos, y_pos));
+  
+  unit_id_counter_ ++;
   
   return true;
 }

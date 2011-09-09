@@ -38,6 +38,8 @@ public:
   sf::Uint32 display_name_id_;
   
   sf::Uint32 standing_graphic_;
+  
+  float Speed;
 };
 
 #endif // GENIEUNIT_H

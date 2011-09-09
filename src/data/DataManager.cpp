@@ -62,6 +62,7 @@ void DataManager::initialize()
   gu->id_ = 281;
   gu->display_name_id_ = 5111;
   gu->standing_graphic_ = 1128;
+  gu->Speed = 0.9;
   //type = 70, living unit
   
   units_[gu->id_] = gu;

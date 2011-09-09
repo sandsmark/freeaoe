@@ -22,6 +22,7 @@
 
 #include <map>
 #include <SFML/Config.hpp>
+#include <SFML/System/Vector2.hpp>
 
 class Unit;
 class RenderGame;
@@ -39,6 +40,9 @@ public:
   
   void update();
   
+  void selectUnit( Unit *unit);
+  void moveSelectedTo (sf::Vector2f pos);
+  
   void test();
 private:
   GameClient(const GameClient& other);
@@ -49,6 +53,8 @@ private:
   
   typedef std::map<sf::Uint32, Unit *> UnitMap;
   UnitMap units_;
+  
+  Unit *selected_unit_;
 };
 
 #endif // GAMECLIENT_H

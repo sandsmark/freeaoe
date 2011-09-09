@@ -26,6 +26,7 @@
 #include <render/RenderGame.h>
 
 #include <iostream>
+#include <communication/commands/CommandMove.h>
 
 GameClient::GameClient() : game_renderer_(0)
 {
@@ -58,21 +59,42 @@ void GameClient::update()
   {
     UnitData *data = server_->getData();
     
-    Unit *unit = new Unit(data->id_);
-    unit->setData(DataManager::Inst()->getUnit(data->data_id_));
-    unit->setPos(data->x_pos_, data->y_pos_);
+    if (units_.find(data->id_) != units_.end())
+    {
+      Unit *unit = units_[data->id_];
+      
+      unit->setPos(data->x_pos_, data->y_pos_);
+    }
+    else
+    {
+      Unit *unit = new Unit(data->id_);
+      unit->setData(DataManager::Inst()->getUnit(data->data_id_));
+      unit->setPos(data->x_pos_, data->y_pos_);
     
-    units_[data->id_] = unit;
+      units_[data->id_] = unit;
     
-    if (game_renderer_)
-      game_renderer_->addUnit(unit);
+      if (game_renderer_)
+        game_renderer_->addUnit(unit);
+    }
   }
+}
+
+void GameClient::selectUnit(Unit* unit)
+{
+  selected_unit_ = unit;
+}
+
+void GameClient::moveSelectedTo(sf::Vector2f pos)
+{
+  server_->sendCommand(new CommandMove(selected_unit_->getID(), pos.x, pos.y));
 }
 
 
 void GameClient::test()
 {
   server_->sendCommand(new CommandSpawn(0, 234, 200, 250));
-  server_->sendCommand(new CommandSpawn(0, 281, 190, 260));
+  server_->sendCommand(new CommandSpawn(0, 281, 190, 360));
   server_->sendCommand(new CommandSpawn(0, 281, 300, 250));
+  
+ // server_->sendCommand(new CommandMove(2, 500,300));
 }

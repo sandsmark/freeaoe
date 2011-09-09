@@ -14,7 +14,10 @@ find_package(SFML COMPONENTS SYSTEM WINDOW GRAPHICS REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(ZLIB REQUIRED)
 
-include_directories(src/) # ${Boost_INCLUDE_DIRS})# 
+include_directories(src/
+  ${CMAKE_HOME_DIRECTORY}/extern/thor/include) # ${Boost_INCLUDE_DIRS})# 
+
+add_subdirectory( extern/thor )
 
 set(FILE_SRC src/file/SubFile.cpp 
 )
@@ -55,7 +58,7 @@ set(RENDER_SRC src/render/RenderUnit.cpp
 
 set(SERVER_SRC src/server/GameServer.cpp)
 
-set(UNSORTED_SRC src/communication/commands/CommandMove.cpp src/communication/UnitData.cpp src/client/GameClient.cpp src/communication/tunnels/LocalTunnelToServer.cpp src/communication/tunnels/LocalTunnelToClient.cpp src/communication/commands/CommandSpawn.cpp
+set(UNSORTED_SRC src/mechanics/ActionMove.cpp src/communication/commands/CommandMove.cpp src/communication/UnitData.cpp src/client/GameClient.cpp src/communication/tunnels/LocalTunnelToServer.cpp src/communication/tunnels/LocalTunnelToClient.cpp src/communication/commands/CommandSpawn.cpp
                  src/communication/TunnelToClient.cpp src/communication/TunnelToServer.cpp)
 
 add_executable(freeaoe src/Engine.cpp src/main.cpp 
@@ -71,7 +74,8 @@ add_executable(freeaoe src/Engine.cpp src/main.cpp
 target_link_libraries(freeaoe 
                       ${SFML_WINDOW_LIBRARY}
                       ${SFML_SYSTEM_LIBRARY}
-                      ${SFML_GRAPHICS_LIBRARY} )
+                      ${SFML_GRAPHICS_LIBRARY}
+                      ${THOR_TARGET})
                       
 
 add_subdirectory(src)

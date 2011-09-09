@@ -29,15 +29,15 @@ class CommandSpawn : public ICommand
 
 public:
   //TODO: Is player a necessary?
-  CommandSpawn(void *player, sf::Uint32 unit_id_, sf::Uint32 x_pos,
-                 sf::Uint32 y_pos);
+  CommandSpawn(void *player, sf::Uint32 unit_id_, float x_pos,
+                 float y_pos);
   virtual ~CommandSpawn();
     
   virtual void execute(GameServer *gm);  
   
 private:
   sf::Uint32 unit_id_;
-  sf::Uint32 x_pos_, y_pos_;
+  float x_pos_, y_pos_;
 };
 
 #endif // COMMANDSPAWN_H

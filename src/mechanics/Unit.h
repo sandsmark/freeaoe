@@ -22,6 +22,7 @@
 #include <SFML/Config.hpp>
 
 #include <data/GenieUnit.h>
+#include <SFML/System/Vector2.hpp>
 
 //------------------------------------------------------------------------------
 /// Units in aoe are all objects the player may interact with. E.g. Buildings,
@@ -36,10 +37,13 @@ public:
   
   sf::Uint32 getID(void) const;
   
-  void setPos(sf::Uint32 x, sf::Uint32 y);
+  void setPos(float x, float y);
+  void setPos(sf::Vector2f pos);
   
-  sf::Uint32 getX(void) const;
-  sf::Uint32 getY(void) const;
+  sf::Vector2f getPos(void) const;
+  
+  float getX(void) const;
+  float getY(void) const;
   
   void setData(GenieUnit data) {data_ = data;}
   GenieUnit getData(void) const;
@@ -50,9 +54,11 @@ private:
   sf::Uint32 id_;
   
   // Position on the map
-  sf::Uint32 x_, y_;
+  sf::Vector2f pos_;
   
   GenieUnit data_;
+  
+  bool data_changed_;
 };
 
 #endif // UNIT_H

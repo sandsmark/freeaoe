@@ -15,50 +15,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include "Unit.h"
 
-
-#ifndef GAMESERVER_H
-#define GAMESERVER_H
-
-#include <SFML/Config.hpp>
-#include <map>
-#include <vector>
-
-class IAction;
-class Unit;
-class TunnelToClient;
-class GameServer
+class IAction 
 {
-
 public:
-  GameServer();
-  virtual ~GameServer();
+  virtual void update() = 0;
   
-  void addClient(TunnelToClient *client);
-  
-  void update();
-  
-  Unit *createUnit();
-  
-  bool spawnUnit(void *player, sf::Uint32 unit_id_, sf::Uint32 x_pos,
-                 sf::Uint32 y_pos);
-  
-  bool addAction(IAction *act);
-  
-  Unit *getUnit(sf::Uint32 unit_id);
-  
-private:
-  GameServer(const GameServer& other);
-  
-  sf::Uint32 unit_id_counter_;
-  
-  typedef std::map<sf::Uint32, Unit *> UnitMap;
-  UnitMap units_;
-  
-  typedef std::vector< IAction * > ActionArray;
-  ActionArray actions_;
-  
-  TunnelToClient *client_;
+  virtual Unit* getUnit(void) = 0;
 };
-
-#endif // GAMESERVER_H

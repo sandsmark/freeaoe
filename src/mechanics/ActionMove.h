@@ -17,48 +17,32 @@
 */
 
 
-#ifndef GAMESERVER_H
-#define GAMESERVER_H
-
+#ifndef ACTIONMOVE_H
+#define ACTIONMOVE_H
+#include "IAction.h"
+#include <SFML/System/Vector2.hpp>
 #include <SFML/Config.hpp>
-#include <map>
-#include <vector>
 
-class IAction;
 class Unit;
-class TunnelToClient;
-class GameServer
+class ActionMove : public IAction
 {
 
 public:
-  GameServer();
-  virtual ~GameServer();
+  ActionMove(Unit *unit, sf::Vector2f goal_pos);
+  virtual ~ActionMove();
   
-  void addClient(TunnelToClient *client);
+  virtual void update(void);
   
-  void update();
-  
-  Unit *createUnit();
-  
-  bool spawnUnit(void *player, sf::Uint32 unit_id_, sf::Uint32 x_pos,
-                 sf::Uint32 y_pos);
-  
-  bool addAction(IAction *act);
-  
-  Unit *getUnit(sf::Uint32 unit_id);
+  virtual Unit *getUnit(void);
   
 private:
-  GameServer(const GameServer& other);
+  Unit *unit_;
+  sf::Vector2f goal_pos_;
   
-  sf::Uint32 unit_id_counter_;
+  sf::Uint32 last_update_;
   
-  typedef std::map<sf::Uint32, Unit *> UnitMap;
-  UnitMap units_;
-  
-  typedef std::vector< IAction * > ActionArray;
-  ActionArray actions_;
-  
-  TunnelToClient *client_;
+  sf::Vector2f path_part;
+  bool target_reached;
 };
 
-#endif // GAMESERVER_H
+#endif // ACTIONMOVE_H

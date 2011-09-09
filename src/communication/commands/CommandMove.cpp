@@ -19,9 +19,10 @@
 
 #include "CommandMove.h"
 #include <server/GameServer.h>
+#include <mechanics/ActionMove.h>
 
-CommandMove::CommandMove(sf::Uint32 unit_id, sf::Uint32 dest_x, 
-                         sf::Uint32 dest_y): unit_id_(unit_id), dest_x_(dest_x),
+CommandMove::CommandMove(sf::Uint32 unit_id, float dest_x, 
+                         float dest_y): unit_id_(unit_id), dest_x_(dest_x),
                          dest_y_(dest_y)
 {
 
@@ -40,5 +41,5 @@ CommandMove::~CommandMove()
 
 void CommandMove::execute(GameServer *gs)
 {
-
+  gs->addAction(new ActionMove(gs->getUnit(unit_id_), sf::Vector2f(dest_x_, dest_y_)));
 }
