@@ -26,9 +26,9 @@ set(GLOBAL_SRC src/global/Config.cpp
                src/global/FileException.cpp
                src/global/Logger.cpp)
              
-set(RESOURCE_SRC #src/resource/Graphic.cpp
-                 src/resource/ResourceManager.cpp
-                 #src/resource/Resource.cpp)
+set(RESOURCE_SRC src/resource/ResourceManager.cpp
+                 src/resource/Resource.cpp
+                 src/resource/Graphic.cpp
                  )
 
 set(FILE_SRC src/file/ColorPalette.cpp
@@ -58,7 +58,7 @@ set(RENDER_SRC src/render/RenderUnit.cpp
 
 set(SERVER_SRC src/server/GameServer.cpp)
 
-set(UNSORTED_SRC src/render/RenderMap.cpp src/mechanics/ActionMove.cpp src/communication/commands/CommandMove.cpp src/communication/UnitStatus.cpp src/client/GameClient.cpp src/communication/tunnels/LocalTunnelToServer.cpp src/communication/tunnels/LocalTunnelToClient.cpp src/communication/commands/CommandSpawn.cpp
+set(UNSORTED_SRC src/resource/ResourcePtr.cpp src/render/RenderMap.cpp src/mechanics/ActionMove.cpp src/communication/commands/CommandMove.cpp src/communication/UnitStatus.cpp src/client/GameClient.cpp src/communication/tunnels/LocalTunnelToServer.cpp src/communication/tunnels/LocalTunnelToClient.cpp src/communication/commands/CommandSpawn.cpp
                  src/communication/TunnelToClient.cpp src/communication/TunnelToServer.cpp)
 
 add_executable(freeaoe src/Engine.cpp src/main.cpp 

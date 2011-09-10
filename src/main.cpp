@@ -19,6 +19,8 @@
 #include <iostream>
 
 #include <Engine.h>
+#include "resource/ResourceManager.h"
+#include "resource/ResourcePtr.h"
 
 // TODO: Bad_alloc
 
@@ -29,8 +31,15 @@ int main(int argc, char **argv)
  // DatFile df;
  // df.open("aoe2/Data/empires2.dat");
   
-  Engine en;
-  en.start();
+  res::Graphic gr(1128);
+  
+  res::ResourcePtr<res::Graphic> ptr(&gr);
+  
+  ptr->load();
+  ptr->getImage(0);
+  
+  //Engine en;
+  //en.start();
 
   return 0;
 }

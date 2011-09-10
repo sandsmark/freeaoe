@@ -19,7 +19,10 @@
 
 #include "Resource.h"
 
-using sf::Uint32;
+#include <global/Types.h>
+
+namespace res
+{
 
 //------------------------------------------------------------------------------
 Resource::Resource(Uint32 id, Type type) : id_(id), type_(type), loaded_(false)
@@ -51,6 +54,18 @@ bool Resource::isLoaded() const
   return loaded_;
 }
 
+//------------------------------------------------------------------------------
+void Resource::load()
+{
+  setLoaded(true);
+}
+
+//------------------------------------------------------------------------------
+void Resource::unload()
+{
+  setLoaded(false);
+}
+
 
 //------------------------------------------------------------------------------
 void Resource::setLoaded(bool loaded)
@@ -58,3 +73,4 @@ void Resource::setLoaded(bool loaded)
   loaded_ = loaded;
 }
 
+}

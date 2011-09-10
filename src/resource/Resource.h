@@ -20,6 +20,10 @@
 #ifndef RESOURCE_H
 #define RESOURCE_H
 #include <SFML/Config.hpp>
+#include <global/NonCopyable.h>
+
+namespace res
+{
 
 //------------------------------------------------------------------------------
 /// All data in age of empires inherit from resource. A resource can be
@@ -28,7 +32,7 @@
 ///
 /// TODO: remove and/or somehow combine with data/GenieGraphic
 //
-class Resource
+class Resource : public NonCopyable
 {
 
 public:
@@ -57,8 +61,13 @@ public:
   sf::Uint32 getId() const;
   
   //----------------------------------------------------------------------------
-  virtual void load() {}
+  virtual void load();
   
+  //----------------------------------------------------------------------------
+  /// 
+  //
+  virtual void unload();
+ 
   //----------------------------------------------------------------------------
   /// Returns type of the resource
   ///
@@ -85,5 +94,7 @@ private:
   
   bool loaded_;
 };
+
+}
 
 #endif // RESOURCE_H

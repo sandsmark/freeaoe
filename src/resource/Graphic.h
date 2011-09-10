@@ -22,8 +22,12 @@
 
 #include "Resource.h"
 #include <SFML/Graphics/Image.hpp>
+#include <data/GenieGraphic.h>
 
 class SlpFile;
+
+namespace res
+{
 
 //------------------------------------------------------------------------------
 /// A graphic resource contains one or more images. E.g. a unit animation
@@ -35,7 +39,12 @@ class Graphic : public Resource
 {
 
 public:
-  Graphic(SlpFile *slp_file);
+  //----------------------------------------------------------------------------
+  /// Constructor
+  ///
+  /// @param id Id of the graphic struct in .dat file.
+  //
+  Graphic(sf::Uint32 id);
   virtual ~Graphic();
   
   sf::Image *getImage(unsigned int frame=0);
@@ -43,7 +52,15 @@ public:
   virtual void load();
 private:
   
-  SlpFile *slp_file_;
+  sf::Uint32 id_;
+  
+  GenieGraphic *data_;
+  SlpFile *slp_;
+  
+  //TODO: collection with all frames, playercolors and outlines loaded
+  //      And rewrite SlpFile/Frame so that it will not store any data.
 };
+
+}
 
 #endif // GRAPHIC_H

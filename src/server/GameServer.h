@@ -24,6 +24,7 @@
 #include <map>
 #include <vector>
 #include <global/Types.h>
+#include <global/NonCopyable.h>
 
 class IAction;
 
@@ -31,7 +32,7 @@ class Unit;
 
 class TunnelToClient;
 
-class GameServer
+class GameServer : public NonCopyable
 {
 
 public:
@@ -55,8 +56,6 @@ public:
   bool addAction (IAction *act);
 
 private:
-  GameServer (const GameServer& other);
-
   sf::Uint32 unit_id_counter_;
 
   typedef std::map<sf::Uint32, Unit *> UnitMap;

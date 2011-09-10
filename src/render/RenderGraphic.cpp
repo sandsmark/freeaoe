@@ -30,12 +30,16 @@
 
 #include <iostream>
 
+Logger& RenderGraphic::log = Logger::getLogger("freeaoe.Render.RenderGraphic");
+
 //------------------------------------------------------------------------------
 RenderGraphic::RenderGraphic(GenieGraphic data, sf::RenderTarget *render_target) 
                 : data_(data), current_frame_(0), time_last_frame_(0),
-                  render_target_(render_target)
+                  render_target_(render_target), current_angle_(0), 
+                  angle_diff_(0), mirror_frame_(false)
 {
   slp_file_ = ResourceManager::Inst()->getSlp(data.getSlpId());
+  setAngle(7);
 }
 
 //------------------------------------------------------------------------------
@@ -74,6 +78,30 @@ void RenderGraphic::setPos (sf::Vector2f pos)
   pos_ = pos;
 }
 
+//------------------------------------------------------------------------------
+void RenderGraphic::setAngle(sf::Uint8 angle)
+{
+  if (angle >= data_.angle_count_)
+  {
+    log.warn("Graphic with id [%d] has no frames for given angle.", data_.id_);
+  }
+  else
+  {
+    current_angle_ = angle;
+    
+    if (angle <= data_.angle_count_/2)
+    {
+      angle_diff_ = data_.frame_count_ * angle;
+      mirror_frame_ = false;
+    }
+    else
+    {
+      angle_diff_ = data_.frame_count_ * (data_.angle_count_ - angle);
+      mirror_frame_ = true;
+    }
+  }
+}
+
 
 //------------------------------------------------------------------------------
 void RenderGraphic::update()
@@ -103,22 +131,34 @@ void RenderGraphic::draw()
 {  
   sf::Texture textr_;
 
-  SlpFrame *frame = slp_file_->getFrame(current_frame_);
+  SlpFrame *frame = slp_file_->getFrame(current_frame_ + angle_diff_);
 
   sprite_.SetX(pos_.x - frame->getHotspotX()); //TODO: Hotspot as vector
   sprite_.SetY(pos_.y - frame->getHotspotY());
   
-  textr_.LoadFromImage(*frame->getImage());
+  sf::Image img = sf::Image(*frame->getImage());
+  
+  if (mirror_frame_)    //TODO: hotspot also differs
+    img.FlipHorizontally();
+  
+  textr_.LoadFromImage(img);
+  
   sprite_.SetTexture(textr_);
   render_target_->Draw(sprite_);
 
-  sf::Image *color_mask = frame->getPlayerColorMask(2);
-  textr_.LoadFromImage(*color_mask);
+  sf::Image *cmask = frame->getPlayerColorMask(2);
+  sf::Image color_mask = sf::Image(*cmask);
+  
+  if (mirror_frame_)
+    color_mask.FlipHorizontally();
+  
+  textr_.LoadFromImage(color_mask);
   sprite_.SetTexture(textr_);
   render_target_->Draw(sprite_);
 
   //delete textr_;
-  delete color_mask;
+  //delete color_mask;
+  delete cmask;
 }
 
 //------------------------------------------------------------------------------

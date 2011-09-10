@@ -19,10 +19,15 @@
 
 #include "Graphic.h"
 #include <file/SlpFile.h>
+#include <data/DataManager.h>
+#include "ResourceManager.h"
+#include <file/SlpFrame.h>
+
+namespace res
+{
 
 //------------------------------------------------------------------------------
-Graphic::Graphic(SlpFile *slp_file) : slp_file_(slp_file), 
-                                      Resource(slp_file->getId(), TYPE_GRAPHIC)
+Graphic::Graphic(sf::Uint32 id) : Resource(id, TYPE_GRAPHIC), data_(0)
 {
 
 }
@@ -36,15 +41,18 @@ Graphic::~Graphic()
 //------------------------------------------------------------------------------
 sf::Image* Graphic::getImage(unsigned int frame)
 {
-  return slp_file_->getImage(frame);
+  slp_->getFrame(frame)->getImage();
 }
 
+//------------------------------------------------------------------------------
 void Graphic::load()
 {
-  if (!isLoaded())
-  {
-    slp_file_->load();
-    setLoaded(true);
-  }
+  data_ = new GenieGraphic(DataManager::Inst()->getGraphic(getId()));
+  
+  slp_ = ResourceManager::Inst()->getSlp(data_->getSlpId());
+  slp_->load();
+  
+  Resource::load();
 }
 
+}

@@ -15,6 +15,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include <SFML/System/Vector2.hpp>
+
+#include <SFML/System.hpp>
+//#include <SFML/System/Vector2.hpp>
+
+using sf::Uint32;
 
 typedef sf::Vector2f MapPos;

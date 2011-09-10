@@ -17,27 +17,35 @@
 */
 
 
-#ifndef COMMANDSPAWN_H
-#define COMMANDSPAWN_H
+#ifndef RESOURCEPTR_H
+#define RESOURCEPTR_H
+#include "Resource.h"
 
-#include <communication/ICommand.h>
-#include <SFML/Config.hpp>
-#include <global/Types.h>
+namespace res
+{
 
-
-class CommandSpawn : public ICommand
+template <class T>
+class ResourcePtr
 {
 
 public:
-  //TODO: Is player necessary?
-  CommandSpawn(void *player, sf::Uint32 unit_id_, MapPos pos);
-  virtual ~CommandSpawn();
-    
-  virtual void execute(GameServer *gm);  
+  ResourcePtr(Resource *resource) : res_(resource) {}
+  ResourcePtr(const ResourcePtr& other);
+  virtual ~ResourcePtr() {}
+  //virtual ResourcePtr& operator=(const ResourcePtr& other);
+  //virtual bool operator==(const ResourcePtr& other) const;
+         
+  T *operator->() const 
+  {
+    return dynamic_cast<T*>(res_);
+  }
+  
   
 private:
-  sf::Uint32 unit_id_;
-  MapPos pos_;
+    
+  Resource *res_;
 };
 
-#endif // COMMANDSPAWN_H
+}
+
+#endif // RESOURCEPTR_H

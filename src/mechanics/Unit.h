@@ -54,7 +54,6 @@ private:
   
   sf::Uint32 id_; //Unique ingame unit id
   
-  // Position on the map
   MapPos pos_;
   
   GenieUnit data_;

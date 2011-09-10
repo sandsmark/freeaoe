@@ -54,7 +54,7 @@ public:
   /// @param id id of the slp file
   /// @return slp file
   //
-  SlpFile* getSlp(sf::Uint32 id);
+  SlpFile * const getSlp(sf::Uint32 id);
   
   ColorPalette* getPalette(sf::Uint32 id);
   

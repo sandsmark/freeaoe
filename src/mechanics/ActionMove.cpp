@@ -53,8 +53,8 @@ void ActionMove::update(void )
     float length = thor::Length<float>(path);
     
     // (Speed + 1) / 10
-    path_part.x = (path.x * 0.19 * time_step) / length;
-    path_part.y = (path.y * 0.19 * time_step) / length;
+    path_part.x = (path.x * 0.09 * time_step) / length;
+    path_part.y = (path.y * 0.09 * time_step) / length;
    
     unit_->setPos(unit_->getPos() + path_part);
     

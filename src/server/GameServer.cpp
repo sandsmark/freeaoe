@@ -30,11 +30,6 @@ GameServer::GameServer() : unit_id_counter_ (0)
 
 }
 
-GameServer::GameServer (const GameServer& other)
-{
-
-}
-
 GameServer::~GameServer()
 {
 

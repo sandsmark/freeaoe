@@ -23,6 +23,7 @@
 #include <SFML/Graphics/Sprite.hpp>
 
 #include <data/GenieGraphic.h>
+#include <global/Logger.h>
 
 class SlpFile;
 
@@ -53,6 +54,12 @@ public:
   
   void setPos(sf::Vector2f pos);
   
+  //----------------------------------------------------------------------------
+  /// Sets the angle of a unit, starting with 0 pointing to south and continues
+  /// counter clockwise.
+  //
+  void setAngle(sf::Uint8 angle);
+  
   void update();
 
   void draw();
@@ -63,6 +70,8 @@ public:
   bool coversPos(sf::Uint32 x, sf::Uint32 y);
 
 private:
+   static Logger &log;
+  
   GenieGraphic data_;
   SlpFile *slp_file_;
 
@@ -72,7 +81,13 @@ private:
   sf::Sprite sprite_;
   //sf::Texture textr_;
 
-  unsigned int current_frame_;
+  sf::Uint32 current_frame_;
+  
+  sf::Uint8 current_angle_;
+  sf::Uint32 angle_diff_;  
+  
+  bool mirror_frame_;
+  
   float time_last_frame_;
 };
 
