@@ -20,7 +20,7 @@
 #include "LocalTunnelToClient.h"
 #include "LocalTunnelToServer.h"
 
-#include <communication/UnitData.h>
+#include <communication/UnitStatus.h>
 
 LocalTunnelToClient::LocalTunnelToClient()
 {
@@ -37,7 +37,7 @@ LocalTunnelToClient::~LocalTunnelToClient()
 
 }
 
-void LocalTunnelToClient::sendData(UnitData *data)
+void LocalTunnelToClient::sendData(UnitStatus *data)
 {
   client_->receiveData(data);
 }

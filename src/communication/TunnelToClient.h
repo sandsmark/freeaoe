@@ -23,7 +23,7 @@
 #include <deque>
 #include "ICommand.h"
 
-class UnitData;
+class UnitStatus;
 //------------------------------------------------------------------------------
 /// Server part of the tunnel, it receives commands and can send back data about
 /// the game state to the client.
@@ -34,7 +34,7 @@ public:
   virtual ~TunnelToClient() {}
   
   /// Send data back to client  
-  virtual void sendData(UnitData *data) = 0;
+  virtual void sendData(UnitStatus *data) = 0;
   
   /// Is a command queued?
   bool commandAvailable();

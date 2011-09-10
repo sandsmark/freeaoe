@@ -17,16 +17,16 @@
 */
 
 #include "TunnelToServer.h"
-#include "UnitData.h"
+#include "UnitStatus.h"
 
 bool TunnelToServer::dataAvailable()
 {
   return !data_.empty();
 }
 
-UnitData* TunnelToServer::getData()
+UnitStatus* TunnelToServer::getData()
 {
-  UnitData *data = 0;
+  UnitStatus *data = 0;
   
   if (!data_.empty())
   {
@@ -37,7 +37,7 @@ UnitData* TunnelToServer::getData()
   return data;
 }
 
-void TunnelToServer::queueData(UnitData *data)
+void TunnelToServer::queueData(UnitStatus *data)
 {
   data_.push_back(data);
 }

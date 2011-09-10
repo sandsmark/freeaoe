@@ -21,16 +21,16 @@
 #include <communication/TunnelToClient.h>
 #include <mechanics/Unit.h>
 #include <data/DataManager.h>
-#include <communication/UnitData.h>
+#include <communication/UnitStatus.h>
 #include <mechanics/IAction.h>
 #include <SFML/System/Clock.hpp>
 
-GameServer::GameServer() : unit_id_counter_(0)
+GameServer::GameServer() : unit_id_counter_ (0)
 {
 
 }
 
-GameServer::GameServer(const GameServer& other)
+GameServer::GameServer (const GameServer& other)
 {
 
 }
@@ -40,7 +40,7 @@ GameServer::~GameServer()
 
 }
 
-void GameServer::addClient(TunnelToClient* client)
+void GameServer::addClient (TunnelToClient* client)
 {
   client_ = client;
 }
@@ -48,63 +48,57 @@ void GameServer::addClient(TunnelToClient* client)
 void GameServer::update()
 {
   static sf::Clock clock;
-  
+
   if (clock.GetElapsedTime() > 150)
   {
-  
-  while (client_->commandAvailable())
-  {
-    client_->getCommand()->execute(this);
+
+    while (client_->commandAvailable())
+    {
+      client_->getCommand()->execute (this);
+    }
+
+    clock.Reset();
   }
-      clock.Reset();
-  }
-  
+
   for (ActionArray::iterator it = actions_.begin(); it != actions_.end(); it ++)
   {
     (*it)->update();
     Unit *unit = (*it)->getUnit();
-    client_->sendData(new UnitData(unit->getID(), unit->getData().id_, unit->getPos()));
+    client_->sendData (new UnitStatus (unit->getID(), unit->getData().id_, 
+                                     unit->getPos()));
   }
-  
+
 
 }
 
-bool GameServer::addAction(IAction* act)
+//------------------------------------------------------------------------------
+bool GameServer::addAction (IAction* act)
 {
-  actions_.push_back(act);
+  actions_.push_back (act);
 }
 
-
-Unit* GameServer::getUnit(Uint32 unit_id)
+//------------------------------------------------------------------------------
+Unit* GameServer::getUnit (Uint32 unit_id)
 {
   return units_[unit_id];
 }
 
-
-/*
-Unit* GameServer::createUnit()
+//------------------------------------------------------------------------------
+bool GameServer::spawnUnit (void* player, sf::Uint32 unit_id, sf::Uint32 x_pos,
+                            sf::Uint32 y_pos)
 {
-  Unit *unit = new Unit(unit_id_counter_ ++);
+  Unit *unit = new Unit (unit_id_counter_);
   units_[unit_id_counter_] = unit;
-  
-  return unit;
-}
-*/
 
-bool GameServer::spawnUnit(void* player, sf::Uint32 unit_id, sf::Uint32 x_pos, 
-                           sf::Uint32 y_pos)
-{
-  Unit *unit = new Unit(unit_id_counter_);
-  units_[unit_id_counter_] = unit;
-  
-  unit->setPos(x_pos, y_pos);
-  
-  unit->setData(DataManager::Inst()->getUnit(unit_id));
-  
-  client_->sendData(new UnitData(unit_id_counter_, unit_id, MapPos(x_pos, y_pos)));
-  
+  unit->setPos (x_pos, y_pos);
+
+  unit->setData (DataManager::Inst()->getUnit (unit_id));
+
+  client_->sendData (new UnitStatus (unit_id_counter_, unit_id, 
+                                   MapPos (x_pos, y_pos)));
+
   unit_id_counter_ ++;
-  
+
   return true;
 }
 

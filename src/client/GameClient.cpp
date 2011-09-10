@@ -20,7 +20,7 @@
 #include "GameClient.h"
 #include <communication/TunnelToServer.h>
 #include <communication/commands/CommandSpawn.h>
-#include <communication/UnitData.h>
+#include <communication/UnitStatus.h>
 #include <mechanics/Unit.h>
 #include <data/DataManager.h>
 #include <render/RenderGame.h>
@@ -57,7 +57,7 @@ void GameClient::update()
 { 
   while (server_->dataAvailable())
   {
-    UnitData *data = server_->getData();
+    UnitStatus *data = server_->getData();
     
     if (units_.find(data->id_) != units_.end())
     {

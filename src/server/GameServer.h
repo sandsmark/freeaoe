@@ -25,39 +25,42 @@
 #include <vector>
 
 class IAction;
+
 class Unit;
+
 class TunnelToClient;
+
 class GameServer
 {
 
 public:
   GameServer();
   virtual ~GameServer();
+
+  void addClient (TunnelToClient *client);
+
+  void update (void);
+
+  Unit *createUnit (void);
+
+  Unit *getUnit (sf::Uint32 unit_id);
   
-  void addClient(TunnelToClient *client);
-  
-  void update();
-  
-  Unit *createUnit();
-  
-  bool spawnUnit(void *player, sf::Uint32 unit_id_, sf::Uint32 x_pos,
-                 sf::Uint32 y_pos);
-  
-  bool addAction(IAction *act);
-  
-  Unit *getUnit(sf::Uint32 unit_id);
-  
+  bool spawnUnit (void *player, sf::Uint32 unit_id_, sf::Uint32 x_pos,
+                  sf::Uint32 y_pos);
+
+  bool addAction (IAction *act);
+
 private:
-  GameServer(const GameServer& other);
-  
+  GameServer (const GameServer& other);
+
   sf::Uint32 unit_id_counter_;
-  
+
   typedef std::map<sf::Uint32, Unit *> UnitMap;
   UnitMap units_;
-  
+
   typedef std::vector< IAction * > ActionArray;
   ActionArray actions_;
-  
+
   TunnelToClient *client_;
 };
 

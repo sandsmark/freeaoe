@@ -17,21 +17,24 @@
 */
 
 
-#ifndef UNITDATA_H
-#define UNITDATA_H
+#ifndef UNITSTATUS_H
+#define UNITSTATUS_H
 #include <SFML/Config.hpp>
 #include <global/Types.h>
 
-class UnitData
+//------------------------------------------------------------------------------
+/// This data package contains information about changes to a units state.
+//
+class UnitStatus
 {
 
 public:
-  UnitData();
+  UnitStatus();
   
-  UnitData(sf::Uint32 id, sf::Uint32 data_id, MapPos pos);
+  UnitStatus(sf::Uint32 id, sf::Uint32 data_id, MapPos pos);
   
-  UnitData(const UnitData& other);
-  virtual ~UnitData();
+  UnitStatus(const UnitStatus& other);
+  virtual ~UnitStatus();
   
   //TODO: getter + setter
   void *player;
@@ -41,4 +44,4 @@ public:
   MapPos pos_;
 };
 
-#endif // UNITDATA_H
+#endif // UNITSTATUS_H

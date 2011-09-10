@@ -17,14 +17,14 @@
 */
 
 
-#include "UnitData.h"
+#include "UnitStatus.h"
 
-UnitData::UnitData()
+UnitStatus::UnitStatus()
 {
 
 }
 
-UnitData::UnitData(sf::Uint32 id, sf::Uint32 data_id, MapPos pos) : id_(id), 
+UnitStatus::UnitStatus(sf::Uint32 id, sf::Uint32 data_id, MapPos pos) : id_(id), 
                    data_id_(data_id), pos_(pos) 
                    
 {
@@ -32,12 +32,12 @@ UnitData::UnitData(sf::Uint32 id, sf::Uint32 data_id, MapPos pos) : id_(id),
 }
 
 
-UnitData::UnitData(const UnitData& other)
+UnitStatus::UnitStatus(const UnitStatus& other)
 {
 
 }
 
-UnitData::~UnitData()
+UnitStatus::~UnitStatus()
 {
 
 }

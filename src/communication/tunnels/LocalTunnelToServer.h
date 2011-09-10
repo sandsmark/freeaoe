@@ -22,7 +22,7 @@
 
 #include <communication/TunnelToServer.h>
 
-class UnitData;
+class UnitStatus;
 
 class LocalTunnelToClient;
 class LocalTunnelToServer : public TunnelToServer
@@ -36,7 +36,7 @@ public:
   
   virtual void sendCommand(ICommand* cmd);
   
-  void receiveData(UnitData *data);
+  void receiveData(UnitStatus *data);
   
 private:
   LocalTunnelToServer(const LocalTunnelToServer& other);

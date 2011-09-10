@@ -95,6 +95,7 @@ void Engine::setup()
   fps_label_.SetColor(sf::Color::Green);
 }
 
+//------------------------------------------------------------------------------
 void Engine::drawFps()
 { 
   static sf::Clock clock;
