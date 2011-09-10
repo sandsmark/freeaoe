@@ -63,9 +63,7 @@ void GameServer::update()
   for (ActionArray::iterator it = actions_.begin(); it != actions_.end(); it ++)
   {
     (*it)->update();
-    Unit *unit = (*it)->getUnit();
-    client_->sendData (new UnitStatus (unit->getID(), unit->getData().id_, 
-                                     unit->getPos()));
+    client_->sendData ((*it)->getUnit()->getStatus());
   }
 
 
@@ -84,18 +82,16 @@ Unit* GameServer::getUnit (Uint32 unit_id)
 }
 
 //------------------------------------------------------------------------------
-bool GameServer::spawnUnit (void* player, sf::Uint32 unit_id, sf::Uint32 x_pos,
-                            sf::Uint32 y_pos)
+bool GameServer::spawnUnit (void* player, sf::Uint32 unit_id, MapPos pos) 
 {
   Unit *unit = new Unit (unit_id_counter_);
   units_[unit_id_counter_] = unit;
 
-  unit->setPos (x_pos, y_pos);
+  unit->setPos (pos);
 
   unit->setData (DataManager::Inst()->getUnit (unit_id));
 
-  client_->sendData (new UnitStatus (unit_id_counter_, unit_id, 
-                                   MapPos (x_pos, y_pos)));
+  client_->sendData (unit->getStatus());
 
   unit_id_counter_ ++;
 

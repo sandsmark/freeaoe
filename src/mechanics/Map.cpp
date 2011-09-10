@@ -74,7 +74,7 @@ void Map::draw(sf::RenderTarget* render_target)
 {
   x_offset_ = 512;
   y_offset_ = 0;
-
+/*
   sf::Image img;
 
   img.Create(5,3,sf::Color(0,0,0,0));
@@ -106,10 +106,11 @@ void Map::draw(sf::RenderTarget* render_target)
       
       spr2.SetTexture(ter);
       render_target->Draw(spr2);
-    } */
+    } 
+    /
     
     render_target->Draw(spr); 
-  }
+  } */
   
   for (TileArray::iterator it = tiles_.begin(); it != tiles_.end(); it++)
   {

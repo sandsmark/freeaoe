@@ -57,21 +57,21 @@ void GameClient::update()
 { 
   while (server_->dataAvailable())
   {
-    UnitStatus *data = server_->getData();
+    UnitStatus data = server_->getData();
     
-    if (units_.find(data->id_) != units_.end())
+    if (units_.find(data.getID()) != units_.end())
     {
-      Unit *unit = units_[data->id_];
+      Unit *unit = units_[data.getID()];
       
-      unit->setPos(data->pos_);
+      unit->setPos(data.getPos());
     }
     else
     {
-      Unit *unit = new Unit(data->id_);
-      unit->setData(DataManager::Inst()->getUnit(data->data_id_));
-      unit->setPos(data->pos_);
+      Unit *unit = new Unit(data.getID());
+      unit->setData(DataManager::Inst()->getUnit(data.getDataID()));
+      unit->setPos(data.getPos());
     
-      units_[data->id_] = unit;
+      units_[data.getID()] = unit;
     
       if (game_renderer_)
         game_renderer_->addUnit(unit);
@@ -92,9 +92,9 @@ void GameClient::moveSelectedTo(sf::Vector2f pos)
 
 void GameClient::test()
 {
-  server_->sendCommand(new CommandSpawn(0, 234, 200, 250));
-  server_->sendCommand(new CommandSpawn(0, 281, 190, 360));
-  server_->sendCommand(new CommandSpawn(0, 281, 300, 250));
+  server_->sendCommand(new CommandSpawn(0, 234, MapPos(200, 250)));
+  server_->sendCommand(new CommandSpawn(0, 281, MapPos(190, 360)));
+  server_->sendCommand(new CommandSpawn(0, 281, MapPos(300, 250)));
   
  // server_->sendCommand(new CommandMove(2, 500,300));
 }

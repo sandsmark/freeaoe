@@ -25,9 +25,9 @@
 
 #include <iostream>
 
-CommandSpawn::CommandSpawn(void* player, sf::Uint32 unit_id, float x_pos, 
-                           float y_pos): ICommand(), unit_id_(unit_id),
-                           x_pos_(x_pos), y_pos_(y_pos)
+CommandSpawn::CommandSpawn(void* player, sf::Uint32 unit_id, MapPos pos) : 
+                           ICommand(), unit_id_(unit_id), pos_(pos)
+                           
 {
 
 }
@@ -39,5 +39,5 @@ CommandSpawn::~CommandSpawn()
 
 void CommandSpawn::execute(GameServer* gm)
 {
-  gm->spawnUnit(0, unit_id_, x_pos_, y_pos_);
+  gm->spawnUnit(0, unit_id_, pos_);
 }

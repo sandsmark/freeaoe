@@ -51,6 +51,8 @@ public:
   //
   void setY(float y);
   
+  void setPos(sf::Vector2f pos);
+  
   void update();
 
   void draw();
@@ -64,7 +66,7 @@ private:
   GenieGraphic data_;
   SlpFile *slp_file_;
 
-  float x_, y_;
+  sf::Vector2f pos_;
 
   sf::RenderTarget *render_target_;
   sf::Sprite sprite_;

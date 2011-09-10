@@ -93,7 +93,7 @@ public:
   /// Get the hotspot of the frame. The Hotspot is the center of the image.
   ///
   /// @return x coordinate of the hotspot
-  //
+  // TODO: Hotspot as vector
   sf::Int32 getHotspotX() const;
   
   //----------------------------------------------------------------------------

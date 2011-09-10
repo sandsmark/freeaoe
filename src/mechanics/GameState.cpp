@@ -61,7 +61,7 @@ void GameState::init()
 
 void GameState::draw()
 { 
-  //map_->draw(render_target_); //very slow!
+  map_->draw(render_target_);
   game_renderer_->draw();
 }
 
@@ -84,11 +84,6 @@ void GameState::handleEvent(sf::Event event)
       if ( !units_at.empty())
         game_client_->selectUnit(units_at[0]);
       
-      for( std::vector<Unit *>::iterator it = units_at.begin(); 
-        it != units_at.end(); it ++)
-      {
-        std::cout << (*it)->getID() << std::endl;
-      }
     }
     else
     {

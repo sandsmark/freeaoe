@@ -23,6 +23,7 @@
 #include <SFML/Config.hpp>
 #include <map>
 #include <vector>
+#include <global/Types.h>
 
 class IAction;
 
@@ -45,8 +46,11 @@ public:
 
   Unit *getUnit (sf::Uint32 unit_id);
   
-  bool spawnUnit (void *player, sf::Uint32 unit_id_, sf::Uint32 x_pos,
-                  sf::Uint32 y_pos);
+  //----------------------------------------------------------------------------
+  ///
+  /// @param unit_id Id of the unit in dat file.
+  //
+  bool spawnUnit (void *player, sf::Uint32 unit_id, MapPos pos);
 
   bool addAction (IAction *act);
 

@@ -37,7 +37,7 @@ LocalTunnelToClient::~LocalTunnelToClient()
 
 }
 
-void LocalTunnelToClient::sendData(UnitStatus *data)
+void LocalTunnelToClient::sendData(UnitStatus data)
 {
   client_->receiveData(data);
 }

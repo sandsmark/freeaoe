@@ -21,8 +21,7 @@
 #define LOCALTUNNELTOSERVER_H
 
 #include <communication/TunnelToServer.h>
-
-class UnitStatus;
+#include <communication/UnitStatus.h>
 
 class LocalTunnelToClient;
 class LocalTunnelToServer : public TunnelToServer
@@ -36,7 +35,7 @@ public:
   
   virtual void sendCommand(ICommand* cmd);
   
-  void receiveData(UnitStatus *data);
+  void receiveData(UnitStatus data);
   
 private:
   LocalTunnelToServer(const LocalTunnelToServer& other);

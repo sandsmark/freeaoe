@@ -24,20 +24,16 @@ bool TunnelToServer::dataAvailable()
   return !data_.empty();
 }
 
-UnitStatus* TunnelToServer::getData()
+UnitStatus TunnelToServer::getData()
 {
-  UnitStatus *data = 0;
-  
-  if (!data_.empty())
-  {
-    data = data_[0];
-    data_.pop_front();
-  }
+  UnitStatus data(data_.at(0));
+
+  data_.pop_front();
   
   return data;
 }
 
-void TunnelToServer::queueData(UnitStatus *data)
+void TunnelToServer::queueData(UnitStatus &data)
 {
   data_.push_back(data);
 }

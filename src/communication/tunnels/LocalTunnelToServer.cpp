@@ -46,8 +46,8 @@ void LocalTunnelToServer::sendCommand(ICommand* cmd)
   server_->receiveCommand(cmd);
 }
 
-void LocalTunnelToServer::receiveData(UnitStatus *data)
+void LocalTunnelToServer::receiveData(UnitStatus data)
 {
-  queueData(data);
+  this->queueData(data);
 }
 

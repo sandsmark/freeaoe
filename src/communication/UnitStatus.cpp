@@ -31,14 +31,22 @@ UnitStatus::UnitStatus(sf::Uint32 id, sf::Uint32 data_id, MapPos pos) : id_(id),
 
 }
 
-
-UnitStatus::UnitStatus(const UnitStatus& other)
-{
-
-}
-
 UnitStatus::~UnitStatus()
 {
 
 }
 
+sf::Uint32 UnitStatus::getID()
+{
+  return id_;
+}
+
+sf::Uint32 UnitStatus::getDataID()
+{
+  return data_id_;
+}
+
+MapPos UnitStatus::getPos()
+{
+  return pos_;
+}

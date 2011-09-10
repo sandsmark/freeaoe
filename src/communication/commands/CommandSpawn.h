@@ -22,6 +22,7 @@
 
 #include <communication/ICommand.h>
 #include <SFML/Config.hpp>
+#include <global/Types.h>
 
 
 class CommandSpawn : public ICommand
@@ -29,15 +30,14 @@ class CommandSpawn : public ICommand
 
 public:
   //TODO: Is player a necessary?
-  CommandSpawn(void *player, sf::Uint32 unit_id_, float x_pos,
-                 float y_pos);
+  CommandSpawn(void *player, sf::Uint32 unit_id_, MapPos pos);
   virtual ~CommandSpawn();
     
   virtual void execute(GameServer *gm);  
   
 private:
   sf::Uint32 unit_id_;
-  float x_pos_, y_pos_;
+  MapPos pos_;
 };
 
 #endif // COMMANDSPAWN_H

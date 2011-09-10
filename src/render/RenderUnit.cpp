@@ -60,8 +60,7 @@ void RenderUnit::update()
     current_graph_ = new RenderGraphic(graph, render_target_);
   }
  
-  current_graph_->setX(unit_->getX());
-  current_graph_->setY(unit_->getY());
+  current_graph_->setPos(unit_->getPos());
   
   current_graph_->update();
 }

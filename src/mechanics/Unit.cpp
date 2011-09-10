@@ -18,55 +18,53 @@
 
 
 #include "Unit.h"
+#include <communication/UnitStatus.h>
 
+//------------------------------------------------------------------------------
 Unit::Unit(sf::Uint32 id) : id_(id)
 {
 
 }
 
+//------------------------------------------------------------------------------
 Unit::Unit(const Unit& other)
 {
 
 }
 
+//------------------------------------------------------------------------------
 Unit::~Unit()
 {
 
 }
 
-void Unit::setPos(float x, float y)
-{
-  pos_.x = x;
-  pos_.y = y;
-}
-
+//------------------------------------------------------------------------------
 void Unit::setPos(MapPos pos)
 {
   pos_ = pos;
 }
 
+//------------------------------------------------------------------------------
 MapPos Unit::getPos(void ) const
 {
   return pos_;
 }
 
+//------------------------------------------------------------------------------
 sf::Uint32 Unit::getID(void ) const
 {
   return id_;
 }
 
-
-float Unit::getX(void ) const
-{
-  return pos_.x;
-}
-
-float Unit::getY(void ) const
-{
-  return pos_.y;
-}
-
+//------------------------------------------------------------------------------
 GenieUnit Unit::getData(void ) const
 {
   return data_;
 }
+
+//------------------------------------------------------------------------------
+UnitStatus Unit::getStatus (void)
+{
+  return UnitStatus(id_, data_.id_, pos_);
+}
+

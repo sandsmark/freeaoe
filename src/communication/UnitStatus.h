@@ -23,7 +23,7 @@
 #include <global/Types.h>
 
 //------------------------------------------------------------------------------
-/// This data package contains information about changes to a units state.
+/// This data package contains information about a units status.
 //
 class UnitStatus
 {
@@ -33,10 +33,15 @@ public:
   
   UnitStatus(sf::Uint32 id, sf::Uint32 data_id, MapPos pos);
   
-  UnitStatus(const UnitStatus& other);
   virtual ~UnitStatus();
   
-  //TODO: getter + setter
+  sf::Uint32 getID();
+  
+  sf::Uint32 getDataID();
+  
+  MapPos getPos();
+  
+private:
   void *player;
   sf::Uint32 id_;
   sf::Uint32 data_id_;

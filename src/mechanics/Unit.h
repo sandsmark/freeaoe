@@ -24,6 +24,7 @@
 #include <data/GenieUnit.h>
 #include <SFML/System/Vector2.hpp>
 #include <global/Types.h>
+#include <communication/UnitStatus.h>
 
 //------------------------------------------------------------------------------
 /// Units in aoe are all objects the player may interact with. E.g. Buildings,
@@ -38,21 +39,20 @@ public:
   
   sf::Uint32 getID(void) const;
   
-  void setPos(float x, float y);
+//  void setPos(float x, float y);
   void setPos(MapPos pos);
   
   MapPos getPos(void) const;
   
-  float getX(void) const;
-  float getY(void) const;
-  
   void setData(GenieUnit data) {data_ = data;}
   GenieUnit getData(void) const;
+  
+  UnitStatus getStatus(void);
   
 private:
   Unit(const Unit& other);
   
-  sf::Uint32 id_;
+  sf::Uint32 id_; //Unique ingame unit id
   
   // Position on the map
   MapPos pos_;
