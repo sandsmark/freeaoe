@@ -19,6 +19,8 @@
 
 #include "Engine.h"
 
+#include <sstream>
+
 #include <SFML/Graphics.hpp>
 
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -50,7 +52,7 @@ void Engine::start()
   log.info("Starting engine.");
   
   setup();
-  
+    
   // Start the game loop
   while (render_window_->IsOpened())
   {
@@ -71,7 +73,9 @@ void Engine::start()
     render_window_->Clear();
 
     state->update();
-    state->draw();;
+    state->draw();
+    
+    drawFps();
          
     // Update the window
     render_window_->Display();
@@ -83,6 +87,30 @@ void Engine::start()
 void Engine::setup()
 {
   render_window_ = new sf::RenderWindow(sf::VideoMode(1024, 786), "freeaoe");
+  render_window_->SetFramerateLimit(60);
   
   state_manager_.addActiveState(new GameState(render_window_));
+  
+  fps_label_.SetPosition(sf::Vector2f(10,10));
+  fps_label_.SetColor(sf::Color::Green);
+}
+
+void Engine::drawFps()
+{ 
+  static sf::Clock clock;
+
+  if (clock.GetElapsedTime() >= 1000)
+  {
+    float fps = 1000 / render_window_->GetFrameTime();
+  
+    std::stringstream ss;
+  
+    ss << fps;
+    sf::String dfps;
+    dfps = "FPS: " + ss.str(); 
+    fps_label_.SetString(dfps);    
+    
+    clock.Reset();
+  }
+  render_window_->Draw(fps_label_);
 }

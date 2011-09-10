@@ -38,7 +38,7 @@ ActionMove::~ActionMove()
 // TODO: UUUUGGGLYYY 
 void ActionMove::update(void )
 {
-  sf::Uint32 time_step = 30;
+  float time_step = 30;
   
   sf::Uint32 time = Engine::GameClock.GetElapsedTime();
   

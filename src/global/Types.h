@@ -15,30 +15,6 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include <SFML/System/Vector2.hpp>
 
-
-#ifndef UNITDATA_H
-#define UNITDATA_H
-#include <SFML/Config.hpp>
-#include <global/Types.h>
-
-class UnitData
-{
-
-public:
-  UnitData();
-  
-  UnitData(sf::Uint32 id, sf::Uint32 data_id, MapPos pos);
-  
-  UnitData(const UnitData& other);
-  virtual ~UnitData();
-  
-  //TODO: getter + setter
-  void *player;
-  sf::Uint32 id_;
-  sf::Uint32 data_id_;
-  
-  MapPos pos_;
-};
-
-#endif // UNITDATA_H
+typedef sf::Vector2f MapPos;

@@ -40,12 +40,12 @@ void Unit::setPos(float x, float y)
   pos_.y = y;
 }
 
-void Unit::setPos(sf::Vector2f pos)
+void Unit::setPos(MapPos pos)
 {
   pos_ = pos;
 }
 
-sf::Vector2f Unit::getPos(void ) const
+MapPos Unit::getPos(void ) const
 {
   return pos_;
 }

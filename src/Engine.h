@@ -24,6 +24,7 @@
 
 #include <SFML/System/Clock.hpp>
 #include "mechanics/StateManager.h"
+#include <SFML/Graphics/Text.hpp>
 
 namespace sf {
 class RenderWindow;
@@ -44,10 +45,14 @@ private:
   static Logger &log;
   
   sf::RenderWindow *render_window_;
+  StateManager state_manager_;
+  
+  sf::Text fps_label_;
   
   void setup();
   
-  StateManager state_manager_;
+  void drawFps();
+  
   
 };
 

@@ -61,7 +61,7 @@ void GameState::init()
 
 void GameState::draw()
 { 
-  map_->draw(render_target_);
+  //map_->draw(render_target_); //very slow!
   game_renderer_->draw();
 }
 

@@ -17,28 +17,25 @@
 */
 
 
-#ifndef UNITDATA_H
-#define UNITDATA_H
-#include <SFML/Config.hpp>
-#include <global/Types.h>
+#ifndef RENDERMAP_H
+#define RENDERMAP_H
 
-class UnitData
+class Map;
+namespace sf {
+class RenderTarget;
+}
+
+class RenderMap
 {
 
 public:
-  UnitData();
+  RenderMap(Map *map,sf::RenderTarget *render_target);
+  virtual ~RenderMap();
   
-  UnitData(sf::Uint32 id, sf::Uint32 data_id, MapPos pos);
+private:
+  Map *map_;
   
-  UnitData(const UnitData& other);
-  virtual ~UnitData();
-  
-  //TODO: getter + setter
-  void *player;
-  sf::Uint32 id_;
-  sf::Uint32 data_id_;
-  
-  MapPos pos_;
+  sf::RenderTarget *render_target_;
 };
 
-#endif // UNITDATA_H
+#endif // RENDERMAP_H

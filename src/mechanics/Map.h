@@ -20,10 +20,13 @@
 #ifndef MAP_H
 #define MAP_H
 #include <data/GenieTerrain.h>
+#include <global/Types.h>
 #include <SFML/Config.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <vector>
 #include <map>
+#include <SFML/Graphics/Image.hpp>
+#include <SFML/Graphics/RenderTexture.hpp>
 
 namespace sf {
 class Shape;
@@ -46,7 +49,7 @@ public:
 class Map
 {
 
-public:
+public:  
   static const sf::Uint32 TILE_SIZE_VERTICAL = 48;
   static const sf::Uint32 TILE_SIZE_HORIZONTAL = 96;
   static const sf::Uint32 TILE_SIZE_HEIGHT = 24;        //Mountain
@@ -65,8 +68,12 @@ public:
   //TODO: Outsource to RenderMap!
   void draw(sf::RenderTarget *render_target);
   
+  void drawFast(sf::RenderTarget *render_target);
+  
 private:
   GenieTerrain terrain_[4][4];
+  sf::RenderTexture *map_txt_;
+  sf::Texture *s_map_txt_;
   
   sf::Int32 x_offset_;
   sf::Int32 y_offset_;

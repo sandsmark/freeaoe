@@ -21,12 +21,13 @@
 #define COMMANDMOVE_H
 #include <communication/ICommand.h>
 #include <SFML/Config.hpp>
+#include <global/Types.h>
 
 class CommandMove : public ICommand
 {
 
 public:
-  CommandMove(sf::Uint32 unit_id, float dest_x, float dest_y);
+  CommandMove(sf::Uint32 unit_id, MapPos target);
   CommandMove(const CommandMove& other);
   virtual ~CommandMove();
   
@@ -34,7 +35,7 @@ public:
   
 private:
   sf::Uint32 unit_id_;
-  float dest_x_, dest_y_;
+  MapPos target_;
 };
 
 #endif // COMMANDMOVE_H

@@ -63,13 +63,13 @@ void GameClient::update()
     {
       Unit *unit = units_[data->id_];
       
-      unit->setPos(data->x_pos_, data->y_pos_);
+      unit->setPos(data->pos_);
     }
     else
     {
       Unit *unit = new Unit(data->id_);
       unit->setData(DataManager::Inst()->getUnit(data->data_id_));
-      unit->setPos(data->x_pos_, data->y_pos_);
+      unit->setPos(data->pos_);
     
       units_[data->id_] = unit;
     
@@ -86,7 +86,7 @@ void GameClient::selectUnit(Unit* unit)
 
 void GameClient::moveSelectedTo(sf::Vector2f pos)
 {
-  server_->sendCommand(new CommandMove(selected_unit_->getID(), pos.x, pos.y));
+  server_->sendCommand(new CommandMove(selected_unit_->getID(), pos));
 }
 
 

@@ -24,9 +24,9 @@ UnitData::UnitData()
 
 }
 
-UnitData::UnitData(sf::Uint32 id, sf::Uint32 data_id, sf::Uint32 x_pos, 
-                   sf::Uint32 y_pos) : id_(id), data_id_(data_id), 
-                   x_pos_(x_pos), y_pos_(y_pos)
+UnitData::UnitData(sf::Uint32 id, sf::Uint32 data_id, MapPos pos) : id_(id), 
+                   data_id_(data_id), pos_(pos) 
+                   
 {
 
 }
