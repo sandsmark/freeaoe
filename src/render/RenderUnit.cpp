@@ -54,10 +54,10 @@ void RenderUnit::update()
 {
   if (current_graph_ == 0)
   {
-    GenieGraphic graph =
-      DataManager::Inst()->getGraphic(unit_->getData().standing_graphic_);
+    //GenieGraphic graph =
+      //DataManager::Inst()->getGraphic(unit_->getData().standing_graphic_);
       
-    current_graph_ = new RenderGraphic(graph, render_target_);
+    current_graph_ = new RenderGraphic(unit_->getData().standing_graphic_, render_target_);
   }
  
   current_graph_->setPos(unit_->getPos());

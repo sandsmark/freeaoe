@@ -39,20 +39,62 @@ Graphic::~Graphic()
 }
 
 //------------------------------------------------------------------------------
-sf::Image* Graphic::getImage(unsigned int frame)
+const sf::Image& Graphic::getImage(Uint32 frame_num, bool mirrored)
 {
-  slp_->getFrame(frame)->getImage();
+  sf::Image *img = slp_->getFrame(frame_num)->getImage();
+  
+  if (mirrored)
+  {
+    img = new sf::Image(*img);
+    img->FlipHorizontally();
+  }
+  
+  return *img;
+}
+
+//------------------------------------------------------------------------------
+ScreenPos Graphic::getHotspot(Uint32 frame_num, bool mirrored) const
+{
+  SlpFrame *frame = slp_->getFrame(frame_num);
+  
+  Int32 hot_spot_x = frame->getHotspotX();
+  
+  if (mirrored)
+    hot_spot_x = frame->getImage()->GetWidth() - hot_spot_x;
+  
+  return ScreenPos(hot_spot_x, frame->getHotspotY());
+}
+
+//------------------------------------------------------------------------------
+float Graphic::getFrameRate(void ) const
+{
+  return data_->frame_rate_;
+}
+
+//------------------------------------------------------------------------------
+Uint32 Graphic::getFrameCount(void ) const
+{
+  return data_->frame_count_;
+}
+
+//------------------------------------------------------------------------------
+Uint32 Graphic::getAngleCount(void ) const
+{
+  return data_->angle_count_;
 }
 
 //------------------------------------------------------------------------------
 void Graphic::load()
 {
+  if (data_ == 0)
+  {
   data_ = new GenieGraphic(DataManager::Inst()->getGraphic(getId()));
   
   slp_ = ResourceManager::Inst()->getSlp(data_->getSlpId());
   slp_->load();
   
   Resource::load();
+  }
 }
 
 }

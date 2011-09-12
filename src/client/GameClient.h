@@ -23,6 +23,7 @@
 #include <map>
 #include <SFML/Config.hpp>
 #include <SFML/System/Vector2.hpp>
+#include <global/Logger.h>
 
 class Unit;
 class RenderGame;
@@ -45,6 +46,8 @@ public:
   
   void test();
 private:
+  static Logger &log;
+  
   GameClient(const GameClient& other);
   
   TunnelToServer *server_;

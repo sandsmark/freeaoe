@@ -22,8 +22,10 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
+#include <global/Types.h>
 #include <data/GenieGraphic.h>
 #include <global/Logger.h>
+#include <resource/Graphic.h>
 
 class SlpFile;
 
@@ -31,10 +33,8 @@ class RenderGraphic
 {
 
 public:
-  RenderGraphic(GenieGraphic data, sf::RenderTarget *render_target);
-  RenderGraphic(const RenderGraphic& other);
+  RenderGraphic(Uint32 graph_id, sf::RenderTarget *render_target);
   virtual ~RenderGraphic();
-  virtual RenderGraphic& operator=(const RenderGraphic& other);
 
   //TODO: direction
 
@@ -52,13 +52,13 @@ public:
   //
   void setY(float y);
   
-  void setPos(sf::Vector2f pos);
+  void setPos(ScreenPos pos);
   
   //----------------------------------------------------------------------------
   /// Sets the angle of a unit, starting with 0 pointing to south and continues
   /// counter clockwise.
   //
-  void setAngle(sf::Uint8 angle);
+  void setAngle(Uint32 angle);
   
   void update();
 
@@ -70,25 +70,26 @@ public:
   bool coversPos(sf::Uint32 x, sf::Uint32 y);
 
 private:
-   static Logger &log;
+  static Logger &log;
   
-  GenieGraphic data_;
-  SlpFile *slp_file_;
-
-  sf::Vector2f pos_;
+  res::GraphicPtr graph_;
+  
+  ScreenPos pos_;
 
   sf::RenderTarget *render_target_;
   sf::Sprite sprite_;
   //sf::Texture textr_;
 
-  sf::Uint32 current_frame_;
+  Uint32 current_frame_;
   
-  sf::Uint8 current_angle_;
-  sf::Uint32 angle_diff_;  
+  Uint8 current_angle_;
+  Uint32 angle_diff_;  
   
   bool mirror_frame_;
   
   float time_last_frame_;
+  
+  Uint32 getCurrentFrame(void);
 };
 
 #endif // RENDERGRAPHIC_H

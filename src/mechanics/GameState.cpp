@@ -82,7 +82,10 @@ void GameState::handleEvent(sf::Event event)
       game_renderer_->getUnitsAt(event.MouseButton.X, event.MouseButton.Y);
     
       if ( !units_at.empty())
+      {
+        std::cout << units_at[0]->getID() << std::endl;
         game_client_->selectUnit(units_at[0]);
+      }
       
     }
     else

@@ -29,6 +29,7 @@
 #include <file/SlpFile.h>
 #include <global/Logger.h>
 #include <global/NonCopyable.h>
+#include <global/Types.h>
 
 class ColorPalette;
 class BinaFile;
@@ -36,14 +37,14 @@ class DrsFile;
 
 //------------------------------------------------------------------------------
 /// The resource manager is the primary interface for getting recourses. At
-/// initialization the manager loads header information from drs and other
-/// files and loads needed resources on the fly.
 //
 class ResourceManager : public NonCopyable
 {
 public:
   //----------------------------------------------------------------------------
-  /// Initializes the resource manager once and returns its reference.
+  /// Initializes the resource manager once and returns its reference. On
+  /// calling inst the first time the manager will load header information from 
+  /// drs and other files.
   //
   static ResourceManager* Inst();
   
@@ -54,9 +55,17 @@ public:
   /// @param id id of the slp file
   /// @return slp file
   //
-  SlpFile * const getSlp(sf::Uint32 id);
+  SlpFile * const getSlp(Uint32 id);
   
-  ColorPalette* getPalette(sf::Uint32 id);
+  //----------------------------------------------------------------------------
+  /// Get a Graphic resource object.
+  ///
+  /// @param id id of the resource
+  /// @return GraphicPtr pointing to the object
+  //
+  res::GraphicPtr getGraphic(Uint32 id);
+  
+  ColorPalette* getPalette(Uint32 id);
   
   //----------------------------------------------------------------------------
   /// Adds an slp file that will be managed by the ResourceManager.
@@ -73,8 +82,11 @@ private:
   virtual ~ResourceManager();
   
   std::vector<DrsFile *> drs_files_;
-  std::map<sf::Uint32, SlpFile *> slp_files_;
-  std::map<sf::Uint32, BinaFile*> bina_files_;
+  std::map<Uint32, SlpFile *> slp_files_;
+  std::map<Uint32, BinaFile*> bina_files_;
+  
+  typedef std::map<Uint32, res::Graphic *> GraphicMap;
+  GraphicMap graphics_;
   
   std::fstream terrain_file_;
   std::fstream graphics_file_;

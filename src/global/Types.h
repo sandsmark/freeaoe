@@ -20,5 +20,9 @@
 //#include <SFML/System/Vector2.hpp>
 
 using sf::Uint32;
+using sf::Uint8;
+
+using sf::Int32;
 
 typedef sf::Vector2f MapPos;
+typedef sf::Vector2f ScreenPos;

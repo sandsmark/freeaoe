@@ -26,11 +26,7 @@ namespace res
 {
 
 //------------------------------------------------------------------------------
-/// All data in age of empires inherit from resource. A resource can be
-/// a palette, a sprite, music or map descriptions. Each resource seems to
-/// have its individual id.
-///
-/// TODO: remove and/or somehow combine with data/GenieGraphic
+/// Resource is the basic class of resources managed by the ResourceManager.
 //
 class Resource : public NonCopyable
 {
@@ -61,10 +57,12 @@ public:
   sf::Uint32 getId() const;
   
   //----------------------------------------------------------------------------
+  /// Load the resource from disk
+  //
   virtual void load();
   
   //----------------------------------------------------------------------------
-  /// 
+  /// Free memory reserved for the resource
   //
   virtual void unload();
  
@@ -76,7 +74,12 @@ public:
   Type getType() const;
   
   //----------------------------------------------------------------------------
+  /// Check wheter the resource is loaded or not.
+  ///
+  /// @return resource load status
+  //
   bool isLoaded() const;
+  
 protected:
   //----------------------------------------------------------------------------
   /// Sets resources' id

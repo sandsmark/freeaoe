@@ -24,16 +24,58 @@
 namespace res
 {
 
+//------------------------------------------------------------------------------
+/// A pointer class pointing to a Resource Object. It handles loading and
+/// unloading dependend on if there are any pointers to the object or not.
+//
 template <class T>
 class ResourcePtr
 {
 
 public:
-  ResourcePtr(Resource *resource) : res_(resource) {}
+  //----------------------------------------------------------------------------
+  /// Standard constructor
+  //
+  ResourcePtr()
+  {
+  }
+  
+  //----------------------------------------------------------------------------
+  /// Constructor
+  ///
+  /// @param resource Pointer to the resource to point at.
+  //
+  ResourcePtr(Resource *resource) : res_(resource) 
+  {
+    
+  }
+  
   ResourcePtr(const ResourcePtr& other);
-  virtual ~ResourcePtr() {}
+  
+  virtual ~ResourcePtr() 
+  {
+    
+  }
+  
+  //----------------------------------------------------------------------------
+  /// 
+  //
+  /*
+  virtual ResourcePtr& operator=(Resource *other) 
+  { 
+    this->res_ = other; 
+  }
+  */
+  
   //virtual ResourcePtr& operator=(const ResourcePtr& other);
-  //virtual bool operator==(const ResourcePtr& other) const;
+  
+  //----------------------------------------------------------------------------
+  /// Compare pointers to the resources
+  //
+  virtual bool operator==(const ResourcePtr& other) const
+  {
+    return res_ == other.res_;
+  }
          
   T *operator->() const 
   {

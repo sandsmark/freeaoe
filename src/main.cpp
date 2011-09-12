@@ -24,6 +24,11 @@
 
 // TODO: Bad_alloc
 
+int * const test()
+{
+  return new int(15);
+}
+
 int main(int argc, char **argv)
 {
   Logger::setLogLevel(Logger::L_INFO);
@@ -31,15 +36,15 @@ int main(int argc, char **argv)
  // DatFile df;
  // df.open("aoe2/Data/empires2.dat");
   
-  res::Graphic gr(1128);
+  /*res::Graphic gr(1128);
   
   res::ResourcePtr<res::Graphic> ptr(&gr);
   
   ptr->load();
-  ptr->getImage(0);
+  */
   
-  //Engine en;
-  //en.start();
+  Engine en;
+  en.start();
 
   return 0;
 }

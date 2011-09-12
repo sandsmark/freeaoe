@@ -28,7 +28,9 @@
 #include <iostream>
 #include <communication/commands/CommandMove.h>
 
-GameClient::GameClient() : game_renderer_(0)
+Logger& GameClient::log = Logger::getLogger("freeaoe.client.GameClient");
+
+GameClient::GameClient() : game_renderer_(0), selected_unit_(0)
 {
 
 }
@@ -86,7 +88,10 @@ void GameClient::selectUnit(Unit* unit)
 
 void GameClient::moveSelectedTo(sf::Vector2f pos)
 {
-  server_->sendCommand(new CommandMove(selected_unit_->getID(), pos));
+  if (!selected_unit_)
+    log.warn("No unit selected to move");
+  else
+    server_->sendCommand(new CommandMove(selected_unit_->getID(), pos));
 }
 
 

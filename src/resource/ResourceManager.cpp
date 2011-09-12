@@ -56,6 +56,27 @@ SlpFile * const ResourceManager::getSlp(sf::Uint32 id)
 }
 
 //------------------------------------------------------------------------------
+res::GraphicPtr ResourceManager::getGraphic(Uint32 id)
+{
+  res::Graphic *graph;
+  
+  if (graphics_.find(id) != graphics_.end())
+  {
+    graph = graphics_[id];
+  }
+  else
+  {
+    graph = new res::Graphic(id);
+    graph->load();
+    
+    graphics_[id] = graph;
+  }
+  
+  return res::GraphicPtr(graph);
+}
+
+
+//------------------------------------------------------------------------------
 ColorPalette* ResourceManager::getPalette(sf::Uint32 id)
 {
   return bina_files_[id]->readPalette();
@@ -98,6 +119,9 @@ ResourceManager::~ResourceManager()
   for (std::vector<DrsFile *>::iterator it = drs_files_.begin();
        it != drs_files_.end(); it++)
      delete (*it);
+  
+  for (GraphicMap::iterator it = graphics_.begin(); it != graphics_.end(); it++)
+    delete it->second;
 }
 
 //------------------------------------------------------------------------------

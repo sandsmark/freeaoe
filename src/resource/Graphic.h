@@ -23,17 +23,18 @@
 #include "Resource.h"
 #include <SFML/Graphics/Image.hpp>
 #include <data/GenieGraphic.h>
+#include <global/Types.h>
+#include "ResourcePtr.h"
 
 class SlpFile;
 
 namespace res
 {
-
+  
 //------------------------------------------------------------------------------
-/// A graphic resource contains one or more images. E.g. a unit animation
-/// like walk. Wrapper class for a slp file.
-///
-/// TODO: remove and/or somehow combine with data/GenieGraphic
+/// A graphic resource contains one or more frames and data stored to
+/// the graphic.
+// TODO: Player mask, outline
 //
 class Graphic : public Resource
 {
@@ -44,15 +45,49 @@ public:
   ///
   /// @param id Id of the graphic struct in .dat file.
   //
-  Graphic(sf::Uint32 id);
+  Graphic(Uint32 id);
   virtual ~Graphic();
   
-  sf::Image *getImage(unsigned int frame=0);
+  //----------------------------------------------------------------------------
+  /// Returns the image of the graphic. 
+  ///
+  /// @param frame_num Number of the frame
+  /// @param mirrored If set, the image will be returned mirrored
+  /// @return Image
+  //
+  const sf::Image& getImage(Uint32 frame_num=0, bool mirrored=false);
+  
+  //----------------------------------------------------------------------------
+  /// Get the hotspot of a frame.
+  // TODO: Maybe inherit from sf::Image and include this property
+  //
+  ScreenPos getHotspot(Uint32 frame_num=0, bool mirrored=false) const;
+  
+  //----------------------------------------------------------------------------
+  /// Get the frame rate of the graphic
+  ///
+  /// @return frame rate
+  //
+  float getFrameRate(void) const;
+  
+  //----------------------------------------------------------------------------
+  /// Get the graphics frame count.
+  ///
+  /// @return frame count
+  //
+  Uint32 getFrameCount(void) const;
+    
+  //----------------------------------------------------------------------------
+  /// Get the graphics angle count
+  ///
+  /// @return angle count
+  //
+  Uint32 getAngleCount(void) const;
     
   virtual void load();
 private:
   
-  sf::Uint32 id_;
+  Uint32 id_;
   
   GenieGraphic *data_;
   SlpFile *slp_;
@@ -60,6 +95,8 @@ private:
   //TODO: collection with all frames, playercolors and outlines loaded
   //      And rewrite SlpFile/Frame so that it will not store any data.
 };
+
+typedef ResourcePtr<Graphic> GraphicPtr;
 
 }
 

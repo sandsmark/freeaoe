@@ -19,9 +19,6 @@
 
 #include "RenderGraphic.h"
 
-#include <file/SlpFile.h>
-#include <file/SlpFrame.h>
-#include <data/GenieGraphic.h>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Image.hpp>
 #include <SFML/Graphics/Texture.hpp>
@@ -33,31 +30,19 @@
 Logger& RenderGraphic::log = Logger::getLogger("freeaoe.Render.RenderGraphic");
 
 //------------------------------------------------------------------------------
-RenderGraphic::RenderGraphic(GenieGraphic data, sf::RenderTarget *render_target) 
-                : data_(data), current_frame_(0), time_last_frame_(0),
+RenderGraphic::RenderGraphic(Uint32 graph_id, sf::RenderTarget *render_target) 
+                : current_frame_(0), time_last_frame_(0),
                   render_target_(render_target), current_angle_(0), 
                   angle_diff_(0), mirror_frame_(false)
 {
-  slp_file_ = ResourceManager::Inst()->getSlp(data.getSlpId());
+  graph_ = ResourceManager::Inst()->getGraphic(graph_id);
+  
   setAngle(7);
-}
-
-//------------------------------------------------------------------------------
-RenderGraphic::RenderGraphic(const RenderGraphic& other)
-{
-
 }
 
 //------------------------------------------------------------------------------
 RenderGraphic::~RenderGraphic()
 {
-  slp_file_ = 0;
-}
-
-//------------------------------------------------------------------------------
-RenderGraphic& RenderGraphic::operator=(const RenderGraphic& other)
-{
-    return *this;
 }
 
 //------------------------------------------------------------------------------
@@ -79,24 +64,25 @@ void RenderGraphic::setPos (sf::Vector2f pos)
 }
 
 //------------------------------------------------------------------------------
-void RenderGraphic::setAngle(sf::Uint8 angle)
+void RenderGraphic::setAngle(Uint32 angle)
 {
-  if (angle >= data_.angle_count_)
+  if (angle >= graph_->getAngleCount())
   {
-    log.warn("Graphic with id [%d] has no frames for given angle.", data_.id_);
+    log.warn("Graphic with id [%d] has no frames for given angle.", 
+             graph_->getId());
   }
   else
   {
     current_angle_ = angle;
     
-    if (angle <= data_.angle_count_/2)
+    if (angle <= graph_->getAngleCount() / 2)
     {
-      angle_diff_ = data_.frame_count_ * angle;
+      angle_diff_ = graph_->getFrameCount() * angle;
       mirror_frame_ = false;
     }
     else
     {
-      angle_diff_ = data_.frame_count_ * (data_.angle_count_ - angle);
+      angle_diff_ = graph_->getFrameCount() * (graph_->getAngleCount() - angle);
       mirror_frame_ = true;
     }
   }
@@ -114,9 +100,9 @@ void RenderGraphic::update()
   else
   {
     if ( (Engine::GameClock.GetElapsedTime() - time_last_frame_)
-          > (data_.frame_rate_ * 1000) )
+          > (graph_->getFrameRate() * 1000) )
     {
-      if (current_frame_ < data_.frame_count_ - 1)
+      if (current_frame_ < graph_->getFrameCount() - 1)
         current_frame_ ++;
       else
         current_frame_ = 0;
@@ -131,21 +117,14 @@ void RenderGraphic::draw()
 {  
   sf::Texture textr_;
 
-  SlpFrame *frame = slp_file_->getFrame(current_frame_ + angle_diff_);
-
-  sprite_.SetX(pos_.x - frame->getHotspotX()); //TODO: Hotspot as vector
-  sprite_.SetY(pos_.y - frame->getHotspotY());
+  textr_.LoadFromImage(graph_->getImage(getCurrentFrame(), mirror_frame_));
   
-  sf::Image img = sf::Image(*frame->getImage());
-  
-  if (mirror_frame_)    //TODO: hotspot also differs
-    img.FlipHorizontally();
-  
-  textr_.LoadFromImage(img);
-  
+  sprite_.SetPosition(pos_ - graph_->getHotspot(getCurrentFrame(), mirror_frame_));
   sprite_.SetTexture(textr_);
+  
   render_target_->Draw(sprite_);
 
+  /*
   sf::Image *cmask = frame->getPlayerColorMask(2);
   sf::Image color_mask = sf::Image(*cmask);
   
@@ -159,22 +138,29 @@ void RenderGraphic::draw()
   //delete textr_;
   //delete color_mask;
   delete cmask;
+  */
 }
 
 //------------------------------------------------------------------------------
 bool RenderGraphic::coversPos(sf::Uint32 x, sf::Uint32 y)
 {
-  SlpFrame *frame = slp_file_->getFrame(current_frame_);
-  
   //TODO: Better locating. Outline?
   
-  sf::Uint32 x_img = pos_.x - frame->getHotspotX();
-  sf::Uint32 y_img = pos_.y - frame->getHotspotY();
+  float x_img = pos_.x - graph_->getHotspot(getCurrentFrame()).x;
+  float y_img = pos_.y - graph_->getHotspot(getCurrentFrame()).y;
   
-  if (x >= x_img && x <= x_img + frame->getImage()->GetWidth() &&
-      y >= y_img && y <= y_img + frame->getImage()->GetHeight())
+  sf::Image img = graph_->getImage(getCurrentFrame());
+  
+  if (x >= x_img && x <= x_img + img.GetWidth() &&
+      y >= y_img && y <= y_img + img.GetHeight())
     return true;
   
   return false;
+}
+
+//------------------------------------------------------------------------------
+Uint32 RenderGraphic::getCurrentFrame(void )
+{
+  return current_frame_ + angle_diff_;
 }
 
