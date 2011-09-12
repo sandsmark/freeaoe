@@ -53,7 +53,11 @@ public:
   //----------------------------------------------------------------------------
   /// Loads the file and its frames. If already loaded this method does nothing.
   //
-  void load();
+  void load(void);
+  
+  void unload(void);
+  
+  bool isLoaded(void) const;
   
   //----------------------------------------------------------------------------
   /// Return number of frames stored in the file. Available after load.
@@ -90,13 +94,15 @@ private:
   SlpFile();
   
   FileIO file_;
+  bool loaded_;
   
   sf::Uint32 id_;
   sf::Uint32 len_;
   
   sf::Uint32 num_frames_;
   
-  std::vector<SlpFrame *> frames_;
+  typedef std::vector<SlpFrame *> FrameVector;
+  FrameVector frames_;
   
   static Logger &log;
   

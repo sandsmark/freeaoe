@@ -25,9 +25,11 @@
 
 namespace res
 {
+  
+Logger& Graphic::log = Logger::getLogger("freeaoe.resource.Graphic");
 
 //------------------------------------------------------------------------------
-Graphic::Graphic(sf::Uint32 id) : Resource(id, TYPE_GRAPHIC), data_(0)
+Graphic::Graphic(sf::Uint32 id) : Resource(id, TYPE_GRAPHIC), data_(0), slp_(0)
 {
 
 }
@@ -86,15 +88,36 @@ Uint32 Graphic::getAngleCount(void ) const
 //------------------------------------------------------------------------------
 void Graphic::load()
 {
-  if (data_ == 0)
+  if (!isLoaded())
   {
-  data_ = new GenieGraphic(DataManager::Inst()->getGraphic(getId()));
+    data_ = new GenieGraphic(DataManager::Inst()->getGraphic(getId()));
   
-  slp_ = ResourceManager::Inst()->getSlp(data_->getSlpId());
-  slp_->load();
+    if (slp_ == 0)
+      slp_ = ResourceManager::Inst()->getSlp(data_->getSlpId());
+    
+    slp_->load();
   
-  Resource::load();
+    if (slp_->getFrameCount() != 
+        data_->frame_count_ * (data_->angle_count_ / 2 + 1) )
+      log.warn("Graphic [%d]: Framecount between data and slp differs.", 
+               getId());
+    
+    Resource::load();
   }
 }
+
+//------------------------------------------------------------------------------
+void Graphic::unload(void )
+{
+  if (isLoaded())
+  {
+    delete data_;
+    data_ = 0;
+    
+    slp_->unload();
+    Resource::unload();
+  }
+}
+
 
 }

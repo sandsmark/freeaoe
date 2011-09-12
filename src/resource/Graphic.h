@@ -25,6 +25,7 @@
 #include <data/GenieGraphic.h>
 #include <global/Types.h>
 #include "ResourcePtr.h"
+#include <global/Logger.h>
 
 class SlpFile;
 
@@ -84,8 +85,10 @@ public:
   //
   Uint32 getAngleCount(void) const;
     
-  virtual void load();
+  virtual void load(void);
+  virtual void unload(void);
 private:
+  static Logger &log;
   
   Uint32 id_;
   

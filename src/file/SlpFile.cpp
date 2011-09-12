@@ -29,14 +29,15 @@ Logger& SlpFile::log = Logger::getLogger("freeaoe.SlpFile");
 
 //------------------------------------------------------------------------------
 SlpFile::SlpFile(sf::Uint32 id, sf::Uint32 pos, sf::Uint32 len, 
-                 std::iostream* iostr) : id_(id), file_(iostr, pos), len_(len)
+                 std::iostream* iostr) : id_(id), file_(iostr, pos), len_(len),
+                 loaded_(false)
 {
 }
 
 //------------------------------------------------------------------------------
 SlpFile::~SlpFile()
 {
-  for (std::vector<SlpFrame *>::iterator it = frames_.begin(); 
+  for (FrameVector::iterator it = frames_.begin(); 
        it != frames_.end(); it ++)
   {
     delete (*it);
@@ -46,7 +47,7 @@ SlpFile::~SlpFile()
 //------------------------------------------------------------------------------
 void SlpFile::load()
 {
-  if (frames_.size() > 0) //already loaded
+  if (loaded_) 
     return;
   
   file_.setToPos(); 
@@ -65,12 +66,36 @@ void SlpFile::load()
     frames_.push_back(frame);
   }
 
-  for (std::vector<SlpFrame *>::iterator it = frames_.begin(); 
-       it != frames_.end(); it ++)
+  for (FrameVector::iterator it = frames_.begin(); it != frames_.end(); it ++)
   {
     (*it)->load();
   }
+  
+  loaded_ = true;
 }
+
+//------------------------------------------------------------------------------
+void SlpFile::unload(void )
+{
+  if (!loaded_)
+    log.warn("Trying to unload a not loaded slpfile!");
+  
+  for (FrameVector::iterator it = frames_.begin(); it != frames_.end(); it ++)
+  {
+    delete (*it);
+  }
+  
+  frames_.clear();
+  
+  loaded_ = false;
+}
+
+//------------------------------------------------------------------------------
+bool SlpFile::isLoaded(void ) const
+{
+  return loaded_;
+}
+
 
 //------------------------------------------------------------------------------
 sf::Uint32 SlpFile::getFrameCount()
