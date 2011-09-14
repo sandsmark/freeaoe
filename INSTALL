@@ -3,7 +3,8 @@ UBUNTU
 
 Following requirements are needed for compiling the source:
 
-  sudo apt-get install cmake libglu1-mesa-dev zlib1g-dev 
+  sudo apt-get install cmake libglu1-mesa-dev zlib1g-dev \
+  libboost-iostreams1.42-dev
 
 You will also need the git version of sfml. You can install it by doing 
 following:

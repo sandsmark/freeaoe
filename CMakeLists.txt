@@ -4,24 +4,14 @@ project(freeaoe)
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/)
 
-set(Boost_USE_STATIC_LIBS        ON)
-set(Boost_USE_MULTITHREADED      ON)
-set(Boost_USE_STATIC_RUNTIME    OFF)
-
-find_package(Boost 1.42 COMPONENTS iostreams REQUIRED) #only iostream needed
-
 find_package(SFML COMPONENTS SYSTEM WINDOW GRAPHICS REQUIRED)
 find_package(OpenGL REQUIRED)
-find_package(ZLIB REQUIRED)
 
 include_directories(src/
   ${CMAKE_HOME_DIRECTORY}/extern/thor/include 
   ${Boost_INCLUDE_DIRS})# 
 
 add_subdirectory( extern/thor )
-
-set(FILE_SRC src/file/SubFile.cpp 
-)
 
 set(GLOBAL_SRC src/global/Config.cpp 
                src/global/FileException.cpp
@@ -47,9 +37,7 @@ set(DATA_SRC src/data/DataManager.cpp
 set(MECHANICS_SRC src/mechanics/Map.cpp
                   src/mechanics/StateManager.cpp 
                   src/mechanics/GameState.cpp 
-                 
                   src/mechanics/Unit.cpp
-                  
                    )
 
 set(RENDER_SRC src/render/RenderUnit.cpp 
@@ -75,8 +63,7 @@ target_link_libraries(freeaoe
                       ${SFML_WINDOW_LIBRARY}
                       ${SFML_SYSTEM_LIBRARY}
                       ${SFML_GRAPHICS_LIBRARY}
-                      ${THOR_TARGET}
-                      ${Boost_LIBRARIES})
+                      ${THOR_TARGET})
                       
 
 add_subdirectory(src)
