@@ -24,3 +24,10 @@ sf::Uint32 GenieGraphic::getSlpId()
 {
   return slp_id_;
 }
+
+
+void GenieGraphic::read(FileIO file)
+{
+  
+}
+

@@ -30,7 +30,6 @@ class RenderTarget;
 }
 
 class RenderGame;
-class GameManager;
 //------------------------------------------------------------------------------
 /// State where the game is processed
 //
@@ -50,8 +49,6 @@ public:
 private:
   
   GameState(const GameState& other);
-  
-  GameManager *game_manager_;
   
   GameServer *game_server_;
   GameClient *game_client_;

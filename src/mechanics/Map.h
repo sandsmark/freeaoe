@@ -68,8 +68,6 @@ public:
   //TODO: Outsource to RenderMap!
   void draw(sf::RenderTarget *render_target);
   
-  void drawFast(sf::RenderTarget *render_target);
-  
 private:
   GenieTerrain terrain_[4][4];
   sf::RenderTexture *map_txt_;

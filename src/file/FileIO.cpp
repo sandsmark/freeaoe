@@ -52,7 +52,11 @@ FileIO::FileIO(std::iostream* iostr, std::streampos pos) : iostr_(iostr),
 
 FileIO::FileIO(const FileIO& fio)
 {
-
+  iostr_ = fio.iostr_;
+  pos_ = fio.tellg();
+  
+  file = fio.file;
+  file_name_ = fio.file_name_;
 }
 
 
@@ -67,19 +71,19 @@ FileIO::~FileIO()
 }
 
 //------------------------------------------------------------------------------
-std::iostream* FileIO::getIOStream()
+std::iostream* FileIO::getIOStream() const
 {
   return iostr_;
 }
 
 //------------------------------------------------------------------------------
-std::streampos FileIO::getPos()
+std::streampos FileIO::getPos() const
 {
   return pos_;
 }
 
 //------------------------------------------------------------------------------
-std::streampos FileIO::tellg()
+std::streampos FileIO::tellg() const
 {
   return iostr_->tellg();
 }
@@ -92,7 +96,7 @@ void FileIO::setToPos()
 }
 
 //------------------------------------------------------------------------------
-bool FileIO::eof()
+bool FileIO::eof() const
 {
   return iostr_->eof();
 }

@@ -92,7 +92,7 @@ private:
   
   Uint32 id_;
   
-  GenieGraphic *data_;
+  dat::Graphic *data_;
   SlpFile *slp_;
   
   //TODO: collection with all frames, playercolors and outlines loaded

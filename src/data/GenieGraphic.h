@@ -21,6 +21,7 @@
 #define GENIEGRAPHIC_H
 #include <SFML/Config.hpp>
 #include <string>
+#include <file/FileIO.h>
 
 //------------------------------------------------------------------------------
 /// Class for loading data describing Slp Graphics
@@ -44,6 +45,13 @@ public: //TODO: encapsule
   sf::Uint32 angle_count_;
   
   float frame_rate_;
+  
+  void read(FileIO file);
 };
+
+namespace dat
+{
+  typedef GenieGraphic Graphic; 
+}
 
 #endif // GENIEGRAPHIC_H

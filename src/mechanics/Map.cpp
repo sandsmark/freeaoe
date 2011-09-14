@@ -132,24 +132,6 @@ void Map::draw(sf::RenderTarget* render_target)
 
 }
 
-void Map::drawFast(sf::RenderTarget* render_target)
-{
-  if (map_txt_ == 0)
-  {
-    map_txt_ = new sf::RenderTexture();
-    map_txt_->Create(2000,2000);
-    map_txt_->Clear();
-    draw(map_txt_);
-    map_txt_->Display();
-    s_map_txt_ = new sf::Texture( map_txt_->GetTexture());
-  }
-  
-  sf::Sprite m(*s_map_txt_);
-  
-  render_target->Draw(m);
-}
-
-
 void Map::makeGrid(void )
 {
       srand(time(0));     

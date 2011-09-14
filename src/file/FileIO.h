@@ -47,7 +47,9 @@ public:
   FileIO(std::iostream *iostr, std::streampos pos);
   
   //----------------------------------------------------------------------------
-  /// Copy Constructor
+  /// Copy Constructor will construct a new FileIO pointing to the current
+  /// position of given FileIO object
+  //
   FileIO(const FileIO &fio);
   
   //----------------------------------------------------------------------------
@@ -63,17 +65,17 @@ public:
   //----------------------------------------------------------------------------
   /// Get input stream
   //
-  std::iostream* getIOStream();
+  std::iostream* getIOStream() const;
   
   //----------------------------------------------------------------------------
   /// Get start pos.
   //
-  std::streampos getPos();
+  std::streampos getPos() const;
   
   //----------------------------------------------------------------------------
   /// Get file pos
   //
-  std::streampos tellg();
+  std::streampos tellg() const;
   
   //----------------------------------------------------------------------------
   /// Sets file pointer to Pos
@@ -83,7 +85,7 @@ public:
   //----------------------------------------------------------------------------
   /// Check eof bit
   //
-  bool eof();
+  bool eof() const;
   
   //----------------------------------------------------------------------------
   /// Reads a string from stream.
