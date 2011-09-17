@@ -9,8 +9,7 @@ find_package(OpenGL REQUIRED)
 
 include_directories(src/
   ${CMAKE_HOME_DIRECTORY}/extern/thor/include 
-  ${CMAKE_HOME_DIRECTORY}/extern/geniedat/include
-  ${Boost_INCLUDE_DIRS})# 
+  ${CMAKE_HOME_DIRECTORY}/extern/geniedat/include)
 
 add_subdirectory( extern/thor )
 add_subdirectory( extern/geniedat )
