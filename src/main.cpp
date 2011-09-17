@@ -20,6 +20,8 @@
 
 #include <Engine.h>
 
+#include <geniedat/File.h>
+
 // TODO: Bad_alloc
 
 int * const test()
@@ -30,7 +32,9 @@ int * const test()
 int main(int argc, char **argv)
 {
   Logger::setLogLevel(Logger::L_INFO);
-  
+
+  gdat::File file; //test
+
   Engine en;
   en.start();
 

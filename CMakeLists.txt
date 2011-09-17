@@ -9,9 +9,11 @@ find_package(OpenGL REQUIRED)
 
 include_directories(src/
   ${CMAKE_HOME_DIRECTORY}/extern/thor/include 
+  ${CMAKE_HOME_DIRECTORY}/extern/geniedat/include
   ${Boost_INCLUDE_DIRS})# 
 
 add_subdirectory( extern/thor )
+add_subdirectory( extern/geniedat )
 
 set(GLOBAL_SRC src/global/Config.cpp 
                src/global/FileException.cpp
@@ -63,7 +65,8 @@ target_link_libraries(freeaoe
                       ${SFML_WINDOW_LIBRARY}
                       ${SFML_SYSTEM_LIBRARY}
                       ${SFML_GRAPHICS_LIBRARY}
-                      ${THOR_TARGET})
+                      ${THOR_TARGET}
+                      geniedat)
                       
 
 add_subdirectory(src)

@@ -1,0 +1,3 @@
+[submodule "extern/geniedat"]
+	path = extern/geniedat
+	url = git@github.com:apreiml/geniedat.git
