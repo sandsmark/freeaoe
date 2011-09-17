@@ -20,8 +20,19 @@ following:
   make
   sudo make install
 
-Last but not least you need to get thor and check it out to extern/thor.
-The update_thor.sh script located in the thor folder will do that for you.
+Before you can compile the project you need to check out its submodule and
+you need to checkout thor in extern/thor. The update_thor.sh script 
+located in the thor folder will do that for you:
+
+  cd freeaoe
+
+  git submodule init
+  git submodule update
+
+  cd extern/thor/
+
+  ./update_thor.sh
+  cd ../..
 
 To compile the project create a build dir, run cmake and make
 
