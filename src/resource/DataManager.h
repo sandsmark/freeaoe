@@ -17,29 +17,44 @@
 */
 
 
-#include "GenieTerrain.h"
+#ifndef DATAMANAGER_H
+#define DATAMANAGER_H
 
-#include <file/FileIO.h>
+#include <global/Logger.h>
+#include <geniedat/File.h>
+#include <geniedat/Unit.h>
 
-using sf::Uint16;
+#include <map>
+#include <SFML/Config.hpp>
+#include <global/NonCopyable.h>
+
 using sf::Uint32;
-using sf::Int16;
 
-const unsigned int GenieTerrain::TERRAIN_NAME_SIZE = 13; //17 in swgb
+class GenieTerrain;
 
-void GenieTerrain::read(FileIO *file)
+//------------------------------------------------------------------------------
+/// Class for receiving and managing data files (.dat)
+//
+class DataManager : public NonCopyable
 {
-  unknown1 = file->read<Int16>();
-  unknown2 = file->read<Int16>();
+
+public:
   
-  name1 = file->readString(TERRAIN_NAME_SIZE);
-  name2 = file->readString(TERRAIN_NAME_SIZE);
+  static DataManager* Inst();
   
-  slp_id = file->read<Uint32>();
-  unknown3 = file->read<Uint32>();
-  unknown4 = file->read<Uint32>();
-  unknown5 = file->read<Uint32>();
-  color = file->read<Uint32>();
+  gdat::Graphic getGraphic(sf::Uint32 id);
+  gdat::Unit getUnit(sf::Uint32 id);
   
-  unknown6 = file->readString(382); //406 in swgb
-}
+private:
+  DataManager();
+  virtual ~DataManager();
+  
+  void initialize();
+  
+  static Logger &log;
+  
+  gdat::File dat_file_;
+  
+};
+
+#endif // DATAMANAGER_H

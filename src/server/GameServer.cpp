@@ -20,7 +20,7 @@
 #include "GameServer.h"
 #include <communication/TunnelToClient.h>
 #include <mechanics/Unit.h>
-#include <data/DataManager.h>
+#include <resource/DataManager.h>
 #include <communication/UnitStatus.h>
 #include <mechanics/IAction.h>
 #include <SFML/System/Clock.hpp>

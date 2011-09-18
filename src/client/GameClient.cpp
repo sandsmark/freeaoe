@@ -22,7 +22,7 @@
 #include <communication/commands/CommandSpawn.h>
 #include <communication/UnitStatus.h>
 #include <mechanics/Unit.h>
-#include <data/DataManager.h>
+#include <resource/DataManager.h>
 #include <render/RenderGame.h>
 
 #include <iostream>

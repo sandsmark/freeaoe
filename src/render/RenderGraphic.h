@@ -23,7 +23,7 @@
 #include <SFML/Graphics/Sprite.hpp>
 
 #include <global/Types.h>
-#include <data/GenieGraphic.h>
+#include <geniedat/Graphic.h>
 #include <global/Logger.h>
 #include <resource/Graphic.h>
 

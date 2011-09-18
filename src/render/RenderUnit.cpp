@@ -25,8 +25,7 @@
 
 #include <mechanics/Unit.h>
 
-#include <data/GenieUnit.h>
-#include <data/DataManager.h>
+#include <resource/DataManager.h>
 
 RenderUnit::RenderUnit(Unit *unit, sf::RenderTarget *render_target) : 
             unit_(unit), current_graph_(0), render_target_(render_target)
@@ -57,7 +56,7 @@ void RenderUnit::update()
     //GenieGraphic graph =
       //DataManager::Inst()->getGraphic(unit_->getData().standing_graphic_);
       
-    current_graph_ = new RenderGraphic(unit_->getData().standing_graphic_, render_target_);
+    current_graph_ = new RenderGraphic(unit_->getData().StandingGraphic.first, render_target_);
   }
  
   current_graph_->setPos(unit_->getPos());

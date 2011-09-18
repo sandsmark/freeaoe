@@ -57,7 +57,13 @@ sf::Uint32 Unit::getID(void ) const
 }
 
 //------------------------------------------------------------------------------
-GenieUnit Unit::getData(void ) const
+void Unit::setData(gdat::Unit data)
+{
+  data_ = data;
+}
+
+//------------------------------------------------------------------------------
+gdat::Unit Unit::getData(void ) const
 {
   return data_;
 }
@@ -65,6 +71,6 @@ GenieUnit Unit::getData(void ) const
 //------------------------------------------------------------------------------
 UnitStatus Unit::getStatus (void)
 {
-  return UnitStatus(id_, data_.id_, pos_);
+  return UnitStatus(id_, data_.ID1, pos_);
 }
 

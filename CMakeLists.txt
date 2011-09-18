@@ -29,6 +29,7 @@ set(GLOBAL_SRC src/global/Config.cpp
                src/global/Logger.cpp)
              
 set(RESOURCE_SRC src/resource/ResourceManager.cpp
+                 src/resource/DataManager.cpp 
                  src/resource/Resource.cpp
                  src/resource/Graphic.cpp
                  )
@@ -39,11 +40,6 @@ set(FILE_SRC src/file/ColorPalette.cpp
              src/file/SlpFile.cpp
              src/file/DrsFile.cpp
              src/file/BinaFile.cpp)
-
-set(DATA_SRC src/data/DataManager.cpp 
-             src/data/GenieTerrain.cpp
-             src/data/GenieGraphic.cpp 
-             src/data/GenieUnit.cpp )
 
 set(MECHANICS_SRC src/mechanics/Map.cpp
                   src/mechanics/StateManager.cpp 
@@ -64,7 +60,6 @@ add_executable(freeaoe src/Engine.cpp src/main.cpp
                ${FILE_SRC}
                ${RESOURCE_SRC}
                ${GLOBAL_SRC}
-               ${DATA_SRC}
                ${MECHANICS_SRC}
                ${RENDER_SRC}
                ${SERVER_SRC}

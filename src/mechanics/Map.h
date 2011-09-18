@@ -19,7 +19,7 @@
 
 #ifndef MAP_H
 #define MAP_H
-#include <data/GenieTerrain.h>
+#include <geniedat/Terrain.h>
 #include <global/Types.h>
 #include <SFML/Config.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
@@ -63,13 +63,13 @@ public:
   sf::Uint32 getCols();
   
   
-  GenieTerrain getTerrain(unsigned int col, unsigned int row) { return terrain_[col][row]; }
+  gdat::Terrain getTerrain(unsigned int col, unsigned int row) { return terrain_[col][row]; }
   
   //TODO: Outsource to RenderMap!
   void draw(sf::RenderTarget *render_target);
   
 private:
-  GenieTerrain terrain_[4][4];
+  gdat::Terrain terrain_[4][4];
   sf::RenderTexture *map_txt_;
   sf::Texture *s_map_txt_;
   

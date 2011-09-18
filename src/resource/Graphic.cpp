@@ -19,7 +19,7 @@
 
 #include "Graphic.h"
 #include <file/SlpFile.h>
-#include <data/DataManager.h>
+#include <resource/DataManager.h>
 #include "ResourceManager.h"
 #include <file/SlpFrame.h>
 
@@ -70,19 +70,19 @@ ScreenPos Graphic::getHotspot(Uint32 frame_num, bool mirrored) const
 //------------------------------------------------------------------------------
 float Graphic::getFrameRate(void ) const
 {
-  return data_->frame_rate_;
+  return data_->FrameRate;
 }
 
 //------------------------------------------------------------------------------
 Uint32 Graphic::getFrameCount(void ) const
 {
-  return data_->frame_count_;
+  return data_->FrameCount;
 }
 
 //------------------------------------------------------------------------------
 Uint32 Graphic::getAngleCount(void ) const
 {
-  return data_->angle_count_;
+  return data_->AngleCount;
 }
 
 //------------------------------------------------------------------------------
@@ -90,15 +90,15 @@ void Graphic::load()
 {
   if (!isLoaded())
   {
-    data_ = new GenieGraphic(DataManager::Inst()->getGraphic(getId()));
+    data_ = new gdat::Graphic(DataManager::Inst()->getGraphic(getId()));
   
     if (slp_ == 0)
-      slp_ = ResourceManager::Inst()->getSlp(data_->getSlpId());
+      slp_ = ResourceManager::Inst()->getSlp(data_->SLP);
     
     slp_->load();
   
     if (slp_->getFrameCount() != 
-        data_->frame_count_ * (data_->angle_count_ / 2 + 1) )
+        data_->FrameCount * (data_->AngleCount / 2 + 1) )
       log.warn("Graphic [%d]: Framecount between data and slp differs.", 
                getId());
     

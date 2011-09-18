@@ -19,7 +19,7 @@
 
 #include "CommandSpawn.h"
 #include <mechanics/Unit.h>
-#include <data/DataManager.h>
+#include <resource/DataManager.h>
 
 #include <server/GameServer.h>
 

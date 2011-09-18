@@ -17,15 +17,15 @@
 */
 
 
-#ifndef GRAPHIC_H
-#define GRAPHIC_H
+#ifndef FREEAOE_GRAPHIC_H
+#define FREEAOE_GRAPHIC_H
 
 #include "Resource.h"
 #include <SFML/Graphics/Image.hpp>
-#include <data/GenieGraphic.h>
 #include <global/Types.h>
 #include "ResourcePtr.h"
 #include <global/Logger.h>
+#include <geniedat/Graphic.h>
 
 class SlpFile;
 
@@ -92,7 +92,7 @@ private:
   
   Uint32 id_;
   
-  dat::Graphic *data_;
+  gdat::Graphic *data_;
   SlpFile *slp_;
   
   //TODO: collection with all frames, playercolors and outlines loaded
@@ -103,4 +103,4 @@ typedef ResourcePtr<Graphic> GraphicPtr;
 
 }
 
-#endif // GRAPHIC_H
+#endif // FREEAOE_GRAPHIC_H

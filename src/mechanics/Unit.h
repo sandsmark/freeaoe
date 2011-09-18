@@ -17,14 +17,14 @@
 */
 
 
-#ifndef UNIT_H
-#define UNIT_H
+#ifndef FREEAOE_UNIT_H
+#define FREEAOE_UNIT_H
 #include <SFML/Config.hpp>
 
-#include <data/GenieUnit.h>
 #include <SFML/System/Vector2.hpp>
 #include <global/Types.h>
 #include <communication/UnitStatus.h>
+#include <geniedat/Unit.h>
 
 //------------------------------------------------------------------------------
 /// Units in aoe are all objects the player may interact with. E.g. Buildings,
@@ -44,8 +44,8 @@ public:
   
   MapPos getPos(void) const;
   
-  void setData(GenieUnit data) {data_ = data;}
-  GenieUnit getData(void) const;
+  void setData(gdat::Unit data);
+  gdat::Unit getData(void) const;
   
   UnitStatus getStatus(void);
   
@@ -56,9 +56,9 @@ private:
   
   MapPos pos_;
   
-  GenieUnit data_;
+  gdat::Unit data_;
   
   bool data_changed_;
 };
 
-#endif // UNIT_H
+#endif // FREEAOE_UNIT_H
