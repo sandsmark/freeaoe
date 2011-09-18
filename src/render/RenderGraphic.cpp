@@ -31,8 +31,8 @@ Logger& RenderGraphic::log = Logger::getLogger("freeaoe.Render.RenderGraphic");
 
 //------------------------------------------------------------------------------
 RenderGraphic::RenderGraphic(Uint32 graph_id, sf::RenderTarget *render_target) 
-                : current_frame_(0), time_last_frame_(0),
-                  render_target_(render_target), current_angle_(0), 
+                : render_target_(render_target),  current_frame_(0), 
+                  time_last_frame_(0), current_angle_(0), 
                   angle_diff_(0), mirror_frame_(false)
 {
   graph_ = ResourceManager::Inst()->getGraphic(graph_id);

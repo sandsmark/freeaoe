@@ -29,7 +29,7 @@
 #include <data/DataManager.h>
 
 RenderUnit::RenderUnit(Unit *unit, sf::RenderTarget *render_target) : 
-            unit_(unit), render_target_(render_target), current_graph_(0)
+            unit_(unit), current_graph_(0), render_target_(render_target)
 {
 
 }

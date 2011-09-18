@@ -81,13 +81,12 @@ private:
   //sf::Texture textr_;
 
   Uint32 current_frame_;
+  float time_last_frame_;
   
   Uint8 current_angle_;
   Uint32 angle_diff_;  
   
   bool mirror_frame_;
-  
-  float time_last_frame_;
   
   Uint32 getCurrentFrame(void);
 };

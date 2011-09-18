@@ -29,8 +29,8 @@ Logger& SlpFile::log = Logger::getLogger("freeaoe.SlpFile");
 
 //------------------------------------------------------------------------------
 SlpFile::SlpFile(sf::Uint32 id, sf::Uint32 pos, sf::Uint32 len, 
-                 std::iostream* iostr) : id_(id), file_(iostr, pos), len_(len),
-                 loaded_(false)
+                 std::iostream* iostr) : file_(iostr, pos), loaded_(false), 
+                 id_(id), len_(len)
 {
 }
 
@@ -56,7 +56,7 @@ void SlpFile::load()
   
   SlpFrame *frame = 0;
   
-  for (u_int32_t i = 0; i < num_frames_; i++)
+  for (Uint32 i = 0; i < num_frames_; i++)
   {
     ColorPalette *palette = ResourceManager::Inst()->getPalette(50500); //50500 = standard palette
     

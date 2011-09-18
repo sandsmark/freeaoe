@@ -68,6 +68,8 @@ void GameServer::update()
 bool GameServer::addAction (IAction* act)
 {
   actions_.push_back (act);
+  
+  return true;
 }
 
 //------------------------------------------------------------------------------

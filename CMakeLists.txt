@@ -4,15 +4,25 @@ project(freeaoe)
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/)
 
+set(Boost_USE_STATIC_LIBS        ON)
+set(Boost_USE_MULTITHREADED      ON)
+set(Boost_USE_STATIC_RUNTIME    OFF)
+
+find_package(Boost 1.42 COMPONENTS iostreams REQUIRED)
 find_package(SFML COMPONENTS SYSTEM WINDOW GRAPHICS REQUIRED)
 find_package(OpenGL REQUIRED)
 
 include_directories(src/
   ${CMAKE_HOME_DIRECTORY}/extern/thor/include 
-  ${CMAKE_HOME_DIRECTORY}/extern/geniedat/include)
+  ${CMAKE_HOME_DIRECTORY}/extern/geniedat/include
+  ${Boost_INCLUDE_DIRS}
+  ${SFML_INCLUDE_DIR})
 
 add_subdirectory( extern/thor )
 add_subdirectory( extern/geniedat )
+
+# additional compiler flags 
+add_definitions(-Wall)
 
 set(GLOBAL_SRC src/global/Config.cpp 
                src/global/FileException.cpp

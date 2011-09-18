@@ -32,7 +32,7 @@ public:
   
   virtual const char *what() const throw()
   {
-    message_.c_str();
+    return message_.c_str();
   }
   
 private:

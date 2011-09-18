@@ -39,7 +39,7 @@ find_path(SFML_INCLUDE_DIR SFML/Config.hpp
           /opt/local/  # DarwinPorts
           /opt/csw/    # Blastwave
           /opt/
-          ${SFMLDIR}
+          ${SFMLDIR}/include
           $ENV{SFMLDIR})
 
 # check the version number
@@ -81,7 +81,7 @@ set(FIND_SFML_LIB_PATHS ~/Library/Frameworks
                         /opt/local
                         /opt/csw
                         /opt
-                        ${SFMLDIR}
+                        ${SFMLDIR}/lib
                         $ENV{SFMLDIR})
 foreach(FIND_SFML_COMPONENT ${SFML_FIND_COMPONENTS})
     string(TOLOWER ${FIND_SFML_COMPONENT} FIND_SFML_COMPONENT_LOWER)
