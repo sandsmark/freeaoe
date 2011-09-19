@@ -20,7 +20,29 @@
 class IAction 
 {
 public:
+  IAction() : done_(false) {}
+  
+  virtual ~IAction() {}
+  
+  //----------------------------------------------------------------------------
+  /// Updates action
+  ///
+  /// @return true if action is updated and false if action is already done
+  //
   virtual void update() = 0;
   
+  virtual bool isActive() { return true; }
+  
+  virtual bool isDone() { return done_; }
+  
+  //virtual IAction getNextAction() {}
+  
+  virtual bool hasNextAction() { return false; }
+  
   virtual Unit* getUnit(void) = 0;
+
+  void setDone() { done_ = true; }
+  
+private:
+  bool done_;
 };

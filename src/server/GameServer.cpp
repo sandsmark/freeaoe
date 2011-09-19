@@ -54,13 +54,33 @@ void GameServer::update()
 
     clock.Reset();
   }
+  
+  vector<ActionArray::iterator> to_remove;
+  ActionArray to_add;
 
   for (ActionArray::iterator it = actions_.begin(); it != actions_.end(); it ++)
   {
-    (*it)->update();
+    if ((*it)->isDone())
+    {
+      //if ((*it)->hasNextAction())
+      
+      to_remove.push_back(it);
+    }
+    else
+    {
+      if ((*it)->isActive())
+        (*it)->update();
+    }
+      
     client_->sendData ((*it)->getUnit()->getStatus());
   }
 
+  for (vector<ActionArray::iterator>::reverse_iterator it = to_remove.rbegin(); 
+       it != to_remove.rend(); it ++)
+  {
+    delete (*(*it));
+    actions_.erase(*it);
+  }
 
 }
 
@@ -68,6 +88,13 @@ void GameServer::update()
 bool GameServer::addAction (IAction* act)
 {
   actions_.push_back (act);
+  
+  IAction *current_action = act->getUnit()->getCurrentAction();
+  
+  if (current_action != 0)
+    current_action->setDone();
+  
+  act->getUnit()->setCurrentAction(act);
   
   return true;
 }

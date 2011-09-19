@@ -27,7 +27,7 @@
 ActionMove::ActionMove(Unit* unit, sf::Vector2f goal_pos): unit_(unit),
                        goal_pos_(goal_pos), last_update_(0), target_reached(false)
 {
-
+  
 }
 
 ActionMove::~ActionMove()
@@ -41,9 +41,6 @@ void ActionMove::update(void )
   float time_step = 30;
   
   sf::Uint32 time = Engine::GameClock.GetElapsedTime();
-  
-  if (target_reached)
-      return;
   
   if (last_update_ == 0) // || time - last_update_ > 100 )
   {
@@ -73,7 +70,10 @@ void ActionMove::update(void )
   float ld = thor::Length<float>(dist);
   
   if ( abs(ld) < 3)
+  {
     target_reached = true;
+    IAction::setDone();
+  }
 }
 
 Unit* ActionMove::getUnit(void )

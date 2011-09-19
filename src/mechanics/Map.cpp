@@ -46,6 +46,7 @@ void Map::setUpSample()
   
   makeGrid();
   makeTiles();
+  updateElevations();
   
 }
 
@@ -134,7 +135,7 @@ void Map::draw(sf::RenderTarget* render_target)
 
 void Map::makeGrid(void )
 {
-      srand(time(0));     
+           
   for (int col = 0; col < node_cols_; col ++)
   {
     for (int row = 0; row < node_rows_; row ++)
@@ -143,13 +144,18 @@ void Map::makeGrid(void )
       
       node->col = col;
       node->row = row;
+      node->elevation = 0;
       
-      if ( rand() % 3 == 1 )
-        node->height = (rand() % 3) - 1;
+      //if ( rand() % 3 == 1 )
+      //  node->elevation = (rand() % 4);
       
       node->x_pos = (node->col - node->row) * (Map::TILE_SIZE_HORIZONTAL / 2);
       node->y_pos = (node->col + node->row) * (Map::TILE_SIZE_VERTICAL / 2);
-      node->z_pos = node->height * (Map::TILE_SIZE_HEIGHT / 2);
+      node->z_pos = 0;//Map::TILE_SIZE_HEIGHT/2;
+      //if (node->elevation == 0)
+      //  node->z_pos = -1 * (Map::TILE_SIZE_HEIGHT / 2);
+      //else
+        //node->z_pos = node->elevation * (Map::TILE_SIZE_HEIGHT / 2);
 
       
       nodes_[ColRowPair(col, row)] = node;
@@ -159,6 +165,8 @@ void Map::makeGrid(void )
 
 void Map::makeTiles(void )
 {
+  srand(time(0));
+  
   for (int col = 0; col < node_cols_; col ++)
   {
     for (int row = 0; row < node_rows_; row ++)
@@ -170,8 +178,36 @@ void Map::makeTiles(void )
       tile->south = getNodeByCoords(col + 1, row + 1);
       tile->west = getNodeByCoords(col, row + 1);
       
+      if (rand() % 4 == 0)
+        tile->elevation = (rand() % 2);
+      
       tiles_.push_back(tile);
     }
+  }
+}
+
+void Map::updateElevation(MapNode* node, Int32 elevation)
+{
+  if (node && node->z_pos > elevation)
+    node->z_pos = elevation;
+}
+
+
+void Map::updateElevations(void )
+{
+  for (TileArray::iterator it = tiles_.begin(); it != tiles_.end(); it++)
+  {
+    Int32 elev;
+    
+    if ((*it)->elevation == 0)
+      elev = (TILE_SIZE_HEIGHT/2);
+    else
+      elev = (*it)->elevation * (-(TILE_SIZE_HEIGHT/2));
+    
+    updateElevation((*it)->north, elev);
+    updateElevation((*it)->east, elev);
+    updateElevation((*it)->south, elev);
+    updateElevation((*it)->west, elev);
   }
 }
 

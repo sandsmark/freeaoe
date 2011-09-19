@@ -19,15 +19,10 @@
 
 #include "Unit.h"
 #include <communication/UnitStatus.h>
+#include "IAction.h"
 
 //------------------------------------------------------------------------------
-Unit::Unit(sf::Uint32 id) : id_(id)
-{
-
-}
-
-//------------------------------------------------------------------------------
-Unit::Unit(const Unit& other)
+Unit::Unit(sf::Uint32 id) : id_(id), action_(0)
 {
 
 }
@@ -73,4 +68,17 @@ UnitStatus Unit::getStatus (void)
 {
   return UnitStatus(id_, data_.ID1, pos_);
 }
+
+//------------------------------------------------------------------------------
+void Unit::setCurrentAction(IAction* action)
+{
+  action_ = action;
+}
+
+//------------------------------------------------------------------------------
+IAction* Unit::getCurrentAction(void ) const
+{
+  return action_;
+}
+
 

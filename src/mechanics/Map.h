@@ -36,7 +36,7 @@ class MapNode
 {
 public:
   sf::Uint32 row, col;
-  sf::Int32 height;
+  sf::Int8 elevation;
   sf::Int32 x_pos, y_pos, z_pos;
 };
 
@@ -44,6 +44,8 @@ class MapTile
 {
 public:
   MapNode *north, *east, *south, *west;
+  sf::Uint8 elevation;
+  sf::Uint8 terrain_id;
 };
 
 class Map
@@ -91,6 +93,9 @@ private:
   void makeGrid(void);
   
   void makeTiles(void);
+  
+  void updateElevation(MapNode *node, sf::Int32 elevation);
+  void updateElevations(void);
   
   void addNodeToShape(sf::Shape *shape, MapNode *node, sf::Color *point_col);
   

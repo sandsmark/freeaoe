@@ -40,5 +40,8 @@ CommandMove::~CommandMove()
 
 void CommandMove::execute(GameServer *gs)
 {
-  gs->addAction(new ActionMove(gs->getUnit(unit_id_), target_));
+  Unit *unit = gs->getUnit(unit_id_);
+  
+  if (unit->getData().Type == gdat::UT_LivingObject)
+    gs->addAction(new ActionMove(gs->getUnit(unit_id_), target_));
 }

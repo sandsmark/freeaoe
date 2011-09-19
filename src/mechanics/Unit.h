@@ -26,6 +26,7 @@
 #include <communication/UnitStatus.h>
 #include <geniedat/Unit.h>
 
+class IAction;
 //------------------------------------------------------------------------------
 /// Units in aoe are all objects the player may interact with. E.g. Buildings,
 /// Trees, Workers ...
@@ -49,6 +50,9 @@ public:
   
   UnitStatus getStatus(void);
   
+  void setCurrentAction(IAction *action);
+  IAction *getCurrentAction(void) const;
+  
 private:
   Unit(const Unit& other);
   
@@ -59,6 +63,8 @@ private:
   gdat::Unit data_;
   
   bool data_changed_;
+  
+  IAction *action_;
 };
 
 #endif // FREEAOE_UNIT_H
