@@ -121,6 +121,7 @@ void SlpFrame::load()
   
   image_ = new sf::Image();
   outline_ = new sf::Image();
+
   //player_color_mask_ = new sf::Image();
   
   image_->Create(width_, height_, sf::Color(0,0,0,0));

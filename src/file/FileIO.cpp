@@ -21,17 +21,25 @@
 
 #include <iostream>
 
-FileIO::FileIO()
+FileIO::FileIO() : file(0)
 {
-  std::cout << "calling fileio constructor" << std::endl;
 }
 
 //------------------------------------------------------------------------------
 FileIO::FileIO(std::string file_name) throw (FileException) 
-               : file_name_(file_name)
+               : file_name_(file_name), file(0)
                
 {
-  file = new std::fstream(file_name.c_str());
+  try 
+  {
+    file = new std::fstream(file_name.c_str());
+  }
+  catch (std::bad_alloc &e)
+  {
+    delete file;
+    file = 0;
+    throw;
+  }
   
   if (!file->is_open() || file->bad())
   {
@@ -45,7 +53,7 @@ FileIO::FileIO(std::string file_name) throw (FileException)
 
 //------------------------------------------------------------------------------
 FileIO::FileIO(std::iostream* iostr, std::streampos pos) : iostr_(iostr),
-               pos_(pos), file(0), file_name_("")
+               pos_(pos), file_name_(""), file(0)  
 {
 
 }

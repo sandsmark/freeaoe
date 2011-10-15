@@ -52,6 +52,16 @@ class Map
 {
 
 public:  
+  /*
+   * A tiny-size map? 72 x 72.
+   * A small-size map? 96 x 96.
+   * A medium-size map? 120 x 120.
+   * A large-size map? 144 x 144.
+   * A huge-size map? 200 x 200.
+   * A gigantic-size map? 255 x 255. 
+   */
+  
+  
   static const sf::Uint32 TILE_SIZE_VERTICAL = 48;
   static const sf::Uint32 TILE_SIZE_HORIZONTAL = 96;
   static const sf::Uint32 TILE_SIZE_HEIGHT = 24;        //Mountain

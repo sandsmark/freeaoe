@@ -25,7 +25,7 @@
 
 //------------------------------------------------------------------------------
 BinaFile::BinaFile(sf::Uint32 id, sf::Uint32 pos, sf::Uint32 len, 
-                   std::iostream* iostr) : id_(id), file_(iostr, pos), 
+                   std::iostream* iostr) : file_(iostr, pos), id_(id),
                    len_(len)
 {
   palette_ = 0;
