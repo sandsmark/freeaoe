@@ -44,7 +44,7 @@ void Map::setUpSample()
   node_cols_ = 20;
   node_rows_ = 20;
   
-  makeGrid();
+  makeGrid(true);
   makeTiles();
   updateElevations();
   
@@ -133,7 +133,7 @@ void Map::draw(sf::RenderTarget* render_target)
 
 }
 
-void Map::makeGrid(void )
+void Map::makeGrid(bool topDown )
 {
            
   for (int col = 0; col < node_cols_; col ++)
@@ -149,13 +149,21 @@ void Map::makeGrid(void )
       //if ( rand() % 3 == 1 )
       //  node->elevation = (rand() % 4);
       
-      node->x_pos = (node->col - node->row) * (Map::TILE_SIZE_HORIZONTAL / 2);
-      node->y_pos = (node->col + node->row) * (Map::TILE_SIZE_VERTICAL / 2);
-      node->z_pos = 0;//Map::TILE_SIZE_HEIGHT/2;
-      //if (node->elevation == 0)
-      //  node->z_pos = -1 * (Map::TILE_SIZE_HEIGHT / 2);
-      //else
-        //node->z_pos = node->elevation * (Map::TILE_SIZE_HEIGHT / 2);
+      if (topDown)
+      {
+        node->x_pos = node->col * Map::TILE_SIZE;
+        node->y_pos = node->row * Map::TILE_SIZE;
+      }
+      else
+      {
+        node->x_pos = (node->col - node->row) * (Map::TILE_SIZE_HORIZONTAL / 2);
+        node->y_pos = (node->col + node->row) * (Map::TILE_SIZE_VERTICAL / 2);
+        node->z_pos = 0;//Map::TILE_SIZE_HEIGHT/2;
+        //if (node->elevation == 0)
+        //  node->z_pos = -1 * (Map::TILE_SIZE_HEIGHT / 2);
+        //else
+          //node->z_pos = node->elevation * (Map::TILE_SIZE_HEIGHT / 2);
+      }
 
       
       nodes_[ColRowPair(col, row)] = node;
@@ -178,8 +186,8 @@ void Map::makeTiles(void )
       tile->south = getNodeByCoords(col + 1, row + 1);
       tile->west = getNodeByCoords(col, row + 1);
       
-      if (rand() % 4 == 0)
-        tile->elevation = (rand() % 2);
+      //if (rand() % 4 == 0)
+      //  tile->elevation = (rand() % 2);
       
       tiles_.push_back(tile);
     }

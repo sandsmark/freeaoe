@@ -21,6 +21,7 @@
 #include <Engine.h>
 
 #include <geniedat/File.h>
+#include "mechanics/EntityFactory.h"
 
 // TODO: Bad_alloc
 
@@ -33,10 +34,16 @@ int main(int argc, char **argv)
 {
   Logger::setLogLevel(Logger::L_INFO);
 
-  gdat::File file; //test
-
+  boost::shared_ptr<Entity> e = EntityFactory::Inst().createUnit(281);
+  
+  std::cout << e->getAttribute<attr::String>(attr::id::NAME)->value << std::endl;
+  
+  std::cout << e->hasAttribute(attr::id::MOVABLE);
+  
+  /*
+  
   Engine en;
   en.start();
-
+*/
   return 0;
 }

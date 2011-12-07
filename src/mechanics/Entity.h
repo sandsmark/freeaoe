@@ -17,43 +17,36 @@
 */
 
 
-#include "DataManager.h"
-#include <global/Config.h>
+#ifndef ENTITY_H
+#define ENTITY_H
 
+#include <map>
+#include "Attributes.h"
+#include <boost/smart_ptr/shared_ptr.hpp>
 
-Logger& DataManager::log = Logger::getLogger("freeaoe.DataManager");
-
-DataManager& DataManager::Inst()
-{
-  static DataManager inst;
-  return inst;
-}
-
-gdat::Graphic DataManager::getGraphic(Uint32 id)
-{
-  return dat_file_.Graphics[id];
-}
-
-gdat::Unit DataManager::getUnit(Uint32 id)
-{
-  return dat_file_.Civs[0].Units[id];
-}
-
-
-
-DataManager::DataManager()
-{
-  initialize();
-}
-
-DataManager::~DataManager()
+/// Entity is a generic class for game objects.
+class Entity
 {
 
-}
+public:
+  Entity();
+  virtual ~Entity();
+  
+  void addAttribute(const char *name, boost::shared_ptr< attr::IAttribute > attribute);
+  
+  boost::shared_ptr< attr::IAttribute > getAttribute(const char *name);
+  
+  template< class T >
+  boost::shared_ptr< T > getAttribute(const char *name)
+  {
+    return boost::dynamic_pointer_cast< T >(getAttribute(name));
+  }
+  
+  bool hasAttribute(const char *name);
+  
+private:
+  typedef std::map<const char *, boost::shared_ptr< attr::IAttribute > > AttributeMap;
+  AttributeMap attributes_;
+};
 
-void DataManager::initialize()
-{
-  dat_file_.setGameVersion(gdat::GV_TC);
-  dat_file_.setFileName(Config::Inst()->getDataPath() + "empires2_x1_p1.dat");
-  dat_file_.load();
-}
+#endif // ENTITY_H

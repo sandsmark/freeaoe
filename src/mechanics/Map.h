@@ -61,7 +61,9 @@ public:
    * A gigantic-size map? 255 x 255. 
    */
   
+  static const sf::Uint32 TILE_SIZE = 48;
   
+  // Isometric sizes:
   static const sf::Uint32 TILE_SIZE_VERTICAL = 48;
   static const sf::Uint32 TILE_SIZE_HORIZONTAL = 96;
   static const sf::Uint32 TILE_SIZE_HEIGHT = 24;        //Mountain
@@ -100,7 +102,7 @@ private:
   sf::Uint32 node_cols_;
   
   /// Creates the node grid
-  void makeGrid(void);
+  void makeGrid(bool topDown = false);
   
   void makeTiles(void);
   

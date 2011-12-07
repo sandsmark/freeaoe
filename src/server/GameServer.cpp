@@ -113,7 +113,7 @@ bool GameServer::spawnUnit (void* player, sf::Uint32 unit_id, MapPos pos)
 
   unit->setPos (pos);
 
-  unit->setData (DataManager::Inst()->getUnit (unit_id));
+  unit->setData (DataManager::Inst().getUnit (unit_id));
 
   client_->sendData (unit->getStatus());
 

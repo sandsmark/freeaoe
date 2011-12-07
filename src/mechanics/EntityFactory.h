@@ -17,43 +17,23 @@
 */
 
 
-#include "DataManager.h"
-#include <global/Config.h>
+#ifndef ENTITYFACTORY_H
+#define ENTITYFACTORY_H
+#include "Entity.h"
+#include <boost/smart_ptr/shared_ptr.hpp>
 
-
-Logger& DataManager::log = Logger::getLogger("freeaoe.DataManager");
-
-DataManager& DataManager::Inst()
+class EntityFactory
 {
-  static DataManager inst;
-  return inst;
-}
+public:
+  static EntityFactory & Inst();
+  
+  boost::shared_ptr<Entity> createUnit(int ID);
 
-gdat::Graphic DataManager::getGraphic(Uint32 id)
-{
-  return dat_file_.Graphics[id];
-}
+private:
+  EntityFactory();
+  virtual ~EntityFactory();
+  
+  
+};
 
-gdat::Unit DataManager::getUnit(Uint32 id)
-{
-  return dat_file_.Civs[0].Units[id];
-}
-
-
-
-DataManager::DataManager()
-{
-  initialize();
-}
-
-DataManager::~DataManager()
-{
-
-}
-
-void DataManager::initialize()
-{
-  dat_file_.setGameVersion(gdat::GV_TC);
-  dat_file_.setFileName(Config::Inst()->getDataPath() + "empires2_x1_p1.dat");
-  dat_file_.load();
-}
+#endif // ENTITYFACTORY_H

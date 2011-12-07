@@ -17,43 +17,26 @@
 */
 
 
-#include "DataManager.h"
-#include <global/Config.h>
+#include "Attributes.h"
 
-
-Logger& DataManager::log = Logger::getLogger("freeaoe.DataManager");
-
-DataManager& DataManager::Inst()
+namespace attr
 {
-  static DataManager inst;
-  return inst;
-}
+ 
+const char * const id::NAME = "Name";
+const char * const id::MAP_3D_POS = "Map3DPos";
+const char * const id::SCREEN_POS = "ScreenPos";
+const char * const id::MOVABLE = "IsoMovable";
+const char * const id::COLLIDABLE = "Collidable";
+const char * const id::LOGICAL_SHAPE = "LogicalShape";
 
-gdat::Graphic DataManager::getGraphic(Uint32 id)
-{
-  return dat_file_.Graphics[id];
-}
-
-gdat::Unit DataManager::getUnit(Uint32 id)
-{
-  return dat_file_.Civs[0].Units[id];
-}
-
-
-
-DataManager::DataManager()
-{
-  initialize();
-}
-
-DataManager::~DataManager()
+IAttribute::IAttribute()
 {
 
 }
 
-void DataManager::initialize()
+IAttribute::~IAttribute()
 {
-  dat_file_.setGameVersion(gdat::GV_TC);
-  dat_file_.setFileName(Config::Inst()->getDataPath() + "empires2_x1_p1.dat");
-  dat_file_.load();
+
+}
+
 }

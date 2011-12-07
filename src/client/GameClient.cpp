@@ -70,7 +70,7 @@ void GameClient::update()
     else
     {
       Unit *unit = new Unit(data.getID());
-      unit->setData(DataManager::Inst()->getUnit(data.getDataID()));
+      unit->setData(DataManager::Inst().getUnit(data.getDataID()));
       unit->setPos(data.getPos());
     
       units_[data.getID()] = unit;
@@ -97,7 +97,7 @@ void GameClient::moveSelectedTo(sf::Vector2f pos)
 
 void GameClient::test()
 {
-  server_->sendCommand(new CommandSpawn(0, 234, MapPos(200, 250)));
+  server_->sendCommand(new CommandSpawn(0, 234, MapPos(175, 230)));
   server_->sendCommand(new CommandSpawn(0, 281, MapPos(190, 360)));
   server_->sendCommand(new CommandSpawn(0, 281, MapPos(300, 250)));
   

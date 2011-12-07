@@ -17,43 +17,35 @@
 */
 
 
-#include "DataManager.h"
-#include <global/Config.h>
+#include "Entity.h"
 
-
-Logger& DataManager::log = Logger::getLogger("freeaoe.DataManager");
-
-DataManager& DataManager::Inst()
-{
-  static DataManager inst;
-  return inst;
-}
-
-gdat::Graphic DataManager::getGraphic(Uint32 id)
-{
-  return dat_file_.Graphics[id];
-}
-
-gdat::Unit DataManager::getUnit(Uint32 id)
-{
-  return dat_file_.Civs[0].Units[id];
-}
-
-
-
-DataManager::DataManager()
-{
-  initialize();
-}
-
-DataManager::~DataManager()
+Entity::Entity()
 {
 
 }
 
-void DataManager::initialize()
+Entity::~Entity()
 {
-  dat_file_.setGameVersion(gdat::GV_TC);
-  dat_file_.setFileName(Config::Inst()->getDataPath() + "empires2_x1_p1.dat");
-  dat_file_.load();
+
 }
+
+void Entity::addAttribute(const char* name, 
+                          boost::shared_ptr< attr::IAttribute > attribute)
+{
+  attributes_[name] = attribute;
+}
+
+boost::shared_ptr< attr::IAttribute > Entity::getAttribute(const char* name)
+{
+  return attributes_[name];
+}
+
+bool Entity::hasAttribute(const char* name)
+{
+  if (attributes_.find(name) == attributes_.end())
+    return false;
+  else
+    return true;
+}
+
+

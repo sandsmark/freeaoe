@@ -21,6 +21,10 @@
 
 #include <iostream>
 #include <mechanics/Unit.h>
+#include <resource/ResourceManager.h>
+#include <file/SlpFrame.h>
+#include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/Sprite.hpp>
 
 RenderGame::RenderGame(sf::RenderTarget *render_target) :
             render_target_(render_target)
@@ -53,6 +57,15 @@ void RenderGame::draw()
     (*it)->update();
     (*it)->draw();
   }
+  
+  //test:
+  sf::Texture text;
+  text.LoadFromImage(*ResourceManager::Inst()->getSlp(15001)->getFrame(0)->getImage());
+  
+  sf::Sprite spr;
+  spr.SetTexture(text);
+  spr.SetPosition(100,100);
+  render_target_->Draw(spr);
 }
 
 //------------------------------------------------------------------------------

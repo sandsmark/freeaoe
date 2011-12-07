@@ -17,43 +17,17 @@
 */
 
 
-#include "DataManager.h"
-#include <global/Config.h>
+#include "Component.h"
 
+const char * Component::COMP_RENDERABLE = "Renderable\0";
 
-Logger& DataManager::log = Logger::getLogger("freeaoe.DataManager");
-
-DataManager& DataManager::Inst()
-{
-  static DataManager inst;
-  return inst;
-}
-
-gdat::Graphic DataManager::getGraphic(Uint32 id)
-{
-  return dat_file_.Graphics[id];
-}
-
-gdat::Unit DataManager::getUnit(Uint32 id)
-{
-  return dat_file_.Civs[0].Units[id];
-}
-
-
-
-DataManager::DataManager()
-{
-  initialize();
-}
-
-DataManager::~DataManager()
+Component::Component()
 {
 
 }
 
-void DataManager::initialize()
+Component::~Component()
 {
-  dat_file_.setGameVersion(gdat::GV_TC);
-  dat_file_.setFileName(Config::Inst()->getDataPath() + "empires2_x1_p1.dat");
-  dat_file_.load();
+
 }
+

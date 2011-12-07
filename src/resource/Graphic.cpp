@@ -90,7 +90,7 @@ void Graphic::load()
 {
   if (!isLoaded())
   {
-    data_ = new gdat::Graphic(DataManager::Inst()->getGraphic(getId()));
+    data_ = new gdat::Graphic(DataManager::Inst().getGraphic(getId()));
   
     if (slp_ == 0)
       slp_ = ResourceManager::Inst()->getSlp(data_->SLP);

@@ -35,6 +35,7 @@ RenderGraphic::RenderGraphic(Uint32 graph_id, sf::RenderTarget *render_target)
                   time_last_frame_(0), current_angle_(0), 
                   angle_diff_(0), mirror_frame_(false)
 {
+  //graph_ = ResourceManager::Inst()->getGraphic(15001);//graph_id);
   graph_ = ResourceManager::Inst()->getGraphic(graph_id);
   
   setAngle(7);

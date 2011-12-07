@@ -40,7 +40,7 @@ class DataManager : public NonCopyable
 
 public:
   
-  static DataManager* Inst();
+  static DataManager & Inst();
   
   gdat::Graphic getGraphic(sf::Uint32 id);
   gdat::Unit getUnit(sf::Uint32 id);
