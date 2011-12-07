@@ -55,7 +55,7 @@ void GameServer::update()
     clock.Reset();
   }
   
-  vector<ActionArray::iterator> to_remove;
+  std::vector<ActionArray::iterator> to_remove;
   ActionArray to_add;
 
   for (ActionArray::iterator it = actions_.begin(); it != actions_.end(); it ++)
@@ -75,7 +75,7 @@ void GameServer::update()
     client_->sendData ((*it)->getUnit()->getStatus());
   }
 
-  for (vector<ActionArray::iterator>::reverse_iterator it = to_remove.rbegin(); 
+  for (std::vector<ActionArray::iterator>::reverse_iterator it = to_remove.rbegin(); 
        it != to_remove.rend(); it ++)
   {
     delete (*(*it));
