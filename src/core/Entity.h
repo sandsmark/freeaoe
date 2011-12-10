@@ -31,22 +31,6 @@ class Entity
 public:
   Entity();
   virtual ~Entity();
-  
-  void addAttribute(const char *name, boost::shared_ptr< attr::IAttribute > attribute);
-  
-  boost::shared_ptr< attr::IAttribute > getAttribute(const char *name);
-  
-  template< class T >
-  boost::shared_ptr< T > getAttribute(const char *name)
-  {
-    return boost::dynamic_pointer_cast< T >(getAttribute(name));
-  }
-  
-  bool hasAttribute(const char *name);
-  
-private:
-  typedef std::map<const char *, boost::shared_ptr< attr::IAttribute > > AttributeMap;
-  AttributeMap attributes_;
 };
 
 #endif // ENTITY_H

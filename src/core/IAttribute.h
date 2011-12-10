@@ -17,20 +17,15 @@
 */
 
 
-#ifndef COMPONENT_H
-#define COMPONENT_H
+#ifndef IATTRIBUTE_H
+#define IATTRIBUTE_H
 
-class Component
+class IAttribute
 {
 
 public:
-  static const char *COMP_RENDERABLE;
-  
-public:
-  Component();
-  virtual ~Component();
-  
-  virtual const char *getCompName() const = 0;
+    IAttribute();
+    virtual ~IAttribute();
 };
 
-#endif // COMPONENT_H
+#endif // IATTRIBUTE_H

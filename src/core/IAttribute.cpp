@@ -17,35 +17,15 @@
 */
 
 
-#include "Entity.h"
+#include "IAttribute.h"
 
-Entity::Entity()
+IAttribute::IAttribute()
 {
 
 }
 
-Entity::~Entity()
+IAttribute::~IAttribute()
 {
 
 }
-
-void Entity::addAttribute(const char* name, 
-                          boost::shared_ptr< attr::IAttribute > attribute)
-{
-  attributes_[name] = attribute;
-}
-
-boost::shared_ptr< attr::IAttribute > Entity::getAttribute(const char* name)
-{
-  return attributes_[name];
-}
-
-bool Entity::hasAttribute(const char* name)
-{
-  if (attributes_.find(name) == attributes_.end())
-    return false;
-  else
-    return true;
-}
-
 

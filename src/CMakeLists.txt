@@ -8,3 +8,5 @@ add_subdirectory(render)
 add_subdirectory(server)
 add_subdirectory(communication)
 add_subdirectory(client)
+
+add_subdirectory(core)

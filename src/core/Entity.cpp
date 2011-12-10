@@ -17,17 +17,17 @@
 */
 
 
-#include "Component.h"
+#include "Entity.h"
 
-const char * Component::COMP_RENDERABLE = "Renderable\0";
-
-Component::Component()
+Entity::Entity()
 {
 
 }
 
-Component::~Component()
+Entity::~Entity()
 {
 
 }
+
+
 

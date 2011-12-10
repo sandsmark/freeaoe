@@ -16,24 +16,24 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "IComponent.h"
 
-#ifndef ENTITYFACTORY_H
-#define ENTITYFACTORY_H
-#include "../core/Entity.h"
-#include <boost/smart_ptr/shared_ptr.hpp>
-
-class EntityFactory
+void IComponent::addAttribute(const char* name, 
+                          boost::shared_ptr< attr::IAttribute > attribute)
 {
-public:
-  static EntityFactory & Inst();
-  
-  boost::shared_ptr<Entity> createUnit(int ID);
+  attributes_[name] = attribute;
+}
 
-private:
-  EntityFactory();
-  virtual ~EntityFactory();
-  
-  
-};
+boost::shared_ptr< attr::IAttribute > IComponent::getAttribute(const char* name)
+{
+  return attributes_[name];
+}
 
-#endif // ENTITYFACTORY_H
+bool IComponent::hasAttribute(const char* name)
+{
+  if (attributes_.find(name) == attributes_.end())
+    return false;
+  else
+    return true;
+}
+

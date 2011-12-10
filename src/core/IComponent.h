@@ -17,23 +17,41 @@
 */
 
 
-#ifndef ENTITYFACTORY_H
-#define ENTITYFACTORY_H
-#include "../core/Entity.h"
+#ifndef ICOMPONENT_H
+#define ICOMPONENT_H
+
+#include <map>
+
 #include <boost/smart_ptr/shared_ptr.hpp>
+#include "Attributes.h"
 
-class EntityFactory
+class IComponent
 {
-public:
-  static EntityFactory & Inst();
-  
-  boost::shared_ptr<Entity> createUnit(int ID);
 
+public:
+  static const char *COMP_RENDERABLE;
+  
+public:
+  IComponent();
+  virtual ~IComponent();
+  
+ // virtual const char *getCompName() const = 0;
+  
+  void addAttribute(const char *name, boost::shared_ptr< attr::IAttribute > attribute);
+  
+  boost::shared_ptr< attr::IAttribute > getAttribute(const char *name);
+  
+  template< class T >
+  boost::shared_ptr< T > getAttribute(const char *name)
+  {
+    return boost::dynamic_pointer_cast< T >(getAttribute(name));
+  }
+  
+  bool hasAttribute(const char *name);
+  
 private:
-  EntityFactory();
-  virtual ~EntityFactory();
-  
-  
+  typedef std::map<const char *, boost::shared_ptr< attr::IAttribute > > AttributeMap;
+  AttributeMap attributes_;
 };
 
-#endif // ENTITYFACTORY_H
+#endif // ICOMPONENT_H
