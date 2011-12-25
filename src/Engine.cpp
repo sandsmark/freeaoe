@@ -24,6 +24,7 @@
 #include <SFML/Graphics.hpp>
 
 #include <SFML/Graphics/RenderWindow.hpp>
+#include "resource/ResourceManager.h"
 
 Logger& Engine::log = Logger::getLogger("freeaoe.Engine");
 
@@ -31,7 +32,7 @@ const sf::Clock Engine::GameClock;
 
 
 //------------------------------------------------------------------------------
-Engine::Engine() : render_window_(0)
+Engine::Engine() : render_window_(0), game_renderer_(0)
 {
 
 }
@@ -58,6 +59,9 @@ void Engine::start()
   {
     IState *state = state_manager_.getActiveState();
     
+    
+    res::GraphicPtr x = ResourceManager::Inst()->getGraphic(633);
+    
     // Process events
     sf::Event event;
     while (render_window_->PollEvent(event))
@@ -66,14 +70,15 @@ void Engine::start()
       if (event.Type == sf::Event::Closed)
         render_window_->Close();
 
-      state->handleEvent(event);
+      //state->handleEvent(event);
     }
      
     // Clear screen
     render_window_->Clear();
 
-    state->update();
-    state->draw();
+    game_renderer_->draw(x, ScreenPos(10,10));
+    //state->update();
+    //state->draw();
     
     drawFps();
          
@@ -89,7 +94,9 @@ void Engine::setup()
   render_window_ = new sf::RenderWindow(sf::VideoMode(1024, 786), "freeaoe");
   render_window_->SetFramerateLimit(60);
   
-  state_manager_.addActiveState(new GameState(render_window_));
+  game_renderer_ = new GameRenderer(*render_window_);
+  
+  //state_manager_.addActiveState(new GameState(render_window_));
   
   fps_label_.SetPosition(sf::Vector2f(10,10));
   fps_label_.SetColor(sf::Color::Green);

@@ -29,7 +29,7 @@ namespace res
 /// unloading dependend on if there are any pointers to the object or not.
 //
 template <class T>
-class ResourcePtr
+class ResourcePtr //TODO
 {
 
 public:
@@ -50,7 +50,10 @@ public:
     
   }
   
-  ResourcePtr(const ResourcePtr& other);
+  ResourcePtr(const ResourcePtr& other)
+  {
+    res_ = other.res_;
+  }
   
   virtual ~ResourcePtr() 
   {

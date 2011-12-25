@@ -23,13 +23,9 @@
 #include <geniedat/File.h>
 #include "mechanics/EntityFactory.h"
 #include "global/Config.h"
+#include "resource/ResourceManager.h"
 
 // TODO: Bad_alloc
-
-int * const test()
-{
-  return new int(15);
-}
 
 int main(int argc, char **argv)
 {
@@ -37,16 +33,15 @@ int main(int argc, char **argv)
   
   Config::Inst()->parseOptions(argc, argv);
   
-  boost::shared_ptr<Entity> e = EntityFactory::Inst().createUnit(281);
+//  boost::shared_ptr<Entity> e = EntityFactory::Inst().createUnit(281);
+  
   
   //std::cout << e->getAttribute<attr::String>(attr::id::NAME)->value << std::endl;
   
   //std::cout << e->hasAttribute(attr::id::MOVABLE);
   
-  /*
-  
   Engine en;
   en.start();
-*/
+  
   return 0;
 }

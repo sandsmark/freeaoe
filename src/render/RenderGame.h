@@ -24,6 +24,7 @@
 #include <SFML/Config.hpp>
 
 class Unit;
+//TODO: Obsolete
 class RenderGame
 {
 

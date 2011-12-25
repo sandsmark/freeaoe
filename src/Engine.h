@@ -26,6 +26,8 @@
 #include "mechanics/StateManager.h"
 #include <SFML/Graphics/Text.hpp>
 
+#include "render/GameRenderer.h"
+
 namespace sf {
 class RenderWindow;
 }
@@ -45,6 +47,8 @@ private:
   static Logger &log;
   
   sf::RenderWindow *render_window_;
+  GameRenderer *game_renderer_;
+  
   StateManager state_manager_;
   
   sf::Text fps_label_;

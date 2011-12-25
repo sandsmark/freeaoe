@@ -17,38 +17,36 @@
 */
 
 
-#ifndef ENTITY_H
-#define ENTITY_H
+#ifndef GAMERENDERER_H
+#define GAMERENDERER_H
 
-#include <map>
-#include "Attributes.h"
-#include <boost/smart_ptr/shared_ptr.hpp>
-#include "IComponent.h"
+#include <core/Entity.h>
+#include <resource/Graphic.h>
 
-class EntityForm;
+namespace sf {
+class RenderWindow;
+}
 
-/// Entity is a generic class for game objects.
-class Entity
+class GameRenderer
 {
 
 public:
-  Entity();
-  virtual ~Entity();
+  GameRenderer(sf::RenderWindow &render_window);
+  virtual ~GameRenderer();
   
-  virtual void update(Time time);
+  //----------------------------------------------------------------------------
+  void draw(EntityForm &form);
+  
+  //----------------------------------------------------------------------------
+  void draw(res::GraphicPtr graph, ScreenPos pos, int frame=0, int angle=0);
+  
+  //----------------------------------------------------------------------------
+  /// Displays frame.
+  //
+  void display(void);
   
 private:
-  typedef std::map<const char *, boost::shared_ptr< IComponent > > ComponentMap;
-  ComponentMap components_;
+  sf::RenderWindow *render_window_;
 };
 
-
-/// A generic class representing an entity on screen
-class EntityForm : public Entity
-{
-  //TODO: Component
-  //gdat::Graphic graphic_data_;
-  //res::Graphic gr_;
-};
-
-#endif // ENTITY_H
+#endif // GAMERENDERER_H
