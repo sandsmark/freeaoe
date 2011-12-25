@@ -9,6 +9,10 @@
 # build subdirectory
 build/
 
+# generated files by doxygen
+doc/html/
+doc/latex/
+
 # thor files
 extern/thor/*.txt
 extern/thor/.svn/

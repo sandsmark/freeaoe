@@ -17,40 +17,30 @@
 */
 
 
-#ifndef ENTITY_H
-#define ENTITY_H
+#include "EntityFormManager.h"
 
-#include <map>
-#include <boost/smart_ptr/shared_ptr.hpp>
-
-#include "Attributes.h"
-#include "IComponent.h"
-
-class EntityForm;
-
-/// Entity is a generic class for game objects.
-class Entity
-{       //TODO: entity collections
-
-public:  
-  Entity();
-  virtual ~Entity();
-  
-  virtual void update(Time time);
- 
-private:
-  typedef std::map<const char *, boost::shared_ptr< IComponent > > ComponentMap;
-  ComponentMap components_;
-  
-};
-
-
-/// A generic class representing an entity on screen
-class EntityForm : public Entity
+EntityFormManager::EntityFormManager() 
 {
-  //TODO: Component
-  //gdat::Graphic graphic_data_;
-  //res::Graphic gr_;
-};
 
-#endif // ENTITY_H
+}
+
+EntityFormManager::~EntityFormManager()
+{
+
+}
+
+void EntityFormManager::setGameRenderer(boost::shared_ptr< GameRenderer > renderer)
+{
+  game_renderer_ = renderer;
+}
+
+void EntityFormManager::add(EntityForm& form)
+{
+  forms_.push_back(form);
+}
+
+void EntityFormManager::draw()
+{
+  for (EFVector::iterator it = forms_.begin(); it != forms_.end(); it++)
+    game_renderer_->draw(*it);
+}

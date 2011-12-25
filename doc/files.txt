@@ -1,6 +1,0 @@
-
-.drs  Data files containing a collection of resources
-
-.slp  Graphic Resource files
-
-.cr   Credits

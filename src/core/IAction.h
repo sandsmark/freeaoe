@@ -28,7 +28,7 @@ public:
   IAction();
   virtual ~IAction();
   
-  virtual void activateOn(Entity &entity) = 0;
+  virtual void doAction() = 0;
 };
 
 #endif // IACTION_H
