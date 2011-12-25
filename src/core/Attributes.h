@@ -23,6 +23,9 @@
 #include <SFML/System/Vector3.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <string>
+
+#include "IAttribute.h"
+
 //#include "Entity.h"
 
 namespace attr
@@ -38,16 +41,6 @@ public:
   static const char * const MOVABLE;
   static const char * const COLLIDABLE;
   static const char * const LOGICAL_SHAPE;
-};
-
-class IAttribute
-{
-public:
-  
-public:
-  IAttribute();
-  virtual ~IAttribute();
-  
 };
 
 class String : public IAttribute

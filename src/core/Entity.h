@@ -23,6 +23,7 @@
 #include <map>
 #include "Attributes.h"
 #include <boost/smart_ptr/shared_ptr.hpp>
+#include "IComponent.h"
 
 /// Entity is a generic class for game objects.
 class Entity
@@ -31,6 +32,12 @@ class Entity
 public:
   Entity();
   virtual ~Entity();
+  
+  void update(Time time);
+  
+private:
+  typedef std::map<const char *, boost::shared_ptr< IComponent > > ComponentMap;
+  ComponentMap components_;
 };
 
 #endif // ENTITY_H

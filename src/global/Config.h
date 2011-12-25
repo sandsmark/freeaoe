@@ -23,6 +23,8 @@
 
 #include "NonCopyable.h"
 
+#include <boost/program_options.hpp>
+
 //TODO: read config values like game dir from file or argv
 class Config : public NonCopyable
 {
@@ -33,6 +35,12 @@ public:
   /// @return returns instance of config
   //
   static Config* Inst();
+  
+  //----------------------------------------------------------------------------
+  /// Parses command line options and config file if present.
+  ///
+  //
+  void parseOptions(int argc, char **argv);
   
   //----------------------------------------------------------------------------
   /// Get path to the game.
@@ -53,7 +61,7 @@ private:
   Config();
   virtual ~Config();
     
-  std::string game_dir_;  
+  boost::program_options::variables_map options_;
 };
 
 #endif // CONFIG_H

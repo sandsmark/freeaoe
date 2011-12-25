@@ -26,3 +26,6 @@ using sf::Int32;
 
 typedef sf::Vector2f MapPos;
 typedef sf::Vector2f ScreenPos;
+
+/// Time in milliseconds
+typedef unsigned int Time;

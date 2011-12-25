@@ -8,7 +8,7 @@ set(Boost_USE_STATIC_LIBS        ON)
 set(Boost_USE_MULTITHREADED      ON)
 set(Boost_USE_STATIC_RUNTIME    OFF)
 
-find_package(Boost 1.42 COMPONENTS iostreams REQUIRED)
+find_package(Boost 1.42 COMPONENTS iostreams program_options REQUIRED)
 find_package(SFML COMPONENTS SYSTEM WINDOW GRAPHICS REQUIRED)
 find_package(OpenGL REQUIRED)
 
@@ -53,7 +53,7 @@ set(RENDER_SRC src/render/RenderUnit.cpp
 
 set(SERVER_SRC src/server/GameServer.cpp)
 
-set(UNSORTED_SRC src/core/IAttribute.cpp src/mechanics/EntityFactory.cpp src/core/Attributes.cpp src/core/IComponent.cpp src/core/Entity.cpp src/render/RenderMap.cpp src/mechanics/ActionMove.cpp src/communication/commands/CommandMove.cpp src/communication/UnitStatus.cpp src/client/GameClient.cpp src/communication/tunnels/LocalTunnelToServer.cpp src/communication/tunnels/LocalTunnelToClient.cpp src/communication/commands/CommandSpawn.cpp
+set(UNSORTED_SRC src/core/IAction.cpp src/core/IAttribute.cpp src/mechanics/EntityFactory.cpp src/core/Attributes.cpp src/core/IComponent.cpp src/core/Entity.cpp src/render/RenderMap.cpp src/mechanics/ActionMove.cpp src/communication/commands/CommandMove.cpp src/communication/UnitStatus.cpp src/client/GameClient.cpp src/communication/tunnels/LocalTunnelToServer.cpp src/communication/tunnels/LocalTunnelToClient.cpp src/communication/commands/CommandSpawn.cpp
                  src/communication/TunnelToClient.cpp src/communication/TunnelToServer.cpp)
 
 add_executable(freeaoe src/Engine.cpp src/main.cpp 

@@ -49,7 +49,7 @@ boost::shared_ptr< Entity > EntityFactory::createUnit(int ID)
   
   std::cout << gunit.Name << std::endl;
   
-  entity->addAttribute(attr::id::NAME,
+/*  entity->addAttribute(attr::id::NAME,
     shared_ptr< attr::String > (new attr::String(gunit.Name)) 
   );
   
@@ -74,7 +74,7 @@ boost::shared_ptr< Entity > EntityFactory::createUnit(int ID)
     entity->addAttribute(attr::id::LOGICAL_SHAPE, 
       shared_ptr< attr::LogicalShape> (new attr::LogicalShape(
         attr::Circle(gunit.SizeRadius.first * cnst::TILE_SIZE)))
-    );
+    );*/
   
   return entity;
 }

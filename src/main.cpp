@@ -22,6 +22,7 @@
 
 #include <geniedat/File.h>
 #include "mechanics/EntityFactory.h"
+#include "global/Config.h"
 
 // TODO: Bad_alloc
 
@@ -33,12 +34,14 @@ int * const test()
 int main(int argc, char **argv)
 {
   Logger::setLogLevel(Logger::L_INFO);
-
+  
+  Config::Inst()->parseOptions(argc, argv);
+  
   boost::shared_ptr<Entity> e = EntityFactory::Inst().createUnit(281);
   
-  std::cout << e->getAttribute<attr::String>(attr::id::NAME)->value << std::endl;
+  //std::cout << e->getAttribute<attr::String>(attr::id::NAME)->value << std::endl;
   
-  std::cout << e->hasAttribute(attr::id::MOVABLE);
+  //std::cout << e->hasAttribute(attr::id::MOVABLE);
   
   /*
   

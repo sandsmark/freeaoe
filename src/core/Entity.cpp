@@ -29,5 +29,12 @@ Entity::~Entity()
 
 }
 
+void Entity::update(Time time)
+{
+  for (ComponentMap::iterator it = components_.begin(); it != components_.end();
+       it ++)
+    (*it).second->update(time);
+}
+
 
 

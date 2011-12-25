@@ -19,12 +19,12 @@
 #include "IComponent.h"
 
 void IComponent::addAttribute(const char* name, 
-                          boost::shared_ptr< attr::IAttribute > attribute)
+                          boost::shared_ptr< IAttribute > attribute)
 {
   attributes_[name] = attribute;
 }
 
-boost::shared_ptr< attr::IAttribute > IComponent::getAttribute(const char* name)
+boost::shared_ptr< IAttribute > IComponent::getAttribute(const char* name)
 {
   return attributes_[name];
 }
@@ -35,5 +35,10 @@ bool IComponent::hasAttribute(const char* name)
     return false;
   else
     return true;
+}
+
+void IComponent::update(Time time)
+{
+
 }
 

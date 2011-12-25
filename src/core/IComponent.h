@@ -24,6 +24,7 @@
 
 #include <boost/smart_ptr/shared_ptr.hpp>
 #include "Attributes.h"
+#include <global/Types.h>
 
 class IComponent
 {
@@ -37,9 +38,9 @@ public:
   
  // virtual const char *getCompName() const = 0;
   
-  void addAttribute(const char *name, boost::shared_ptr< attr::IAttribute > attribute);
+  void addAttribute(const char *name, boost::shared_ptr< IAttribute > attribute);
   
-  boost::shared_ptr< attr::IAttribute > getAttribute(const char *name);
+  boost::shared_ptr< IAttribute > getAttribute(const char *name);
   
   template< class T >
   boost::shared_ptr< T > getAttribute(const char *name)
@@ -49,8 +50,11 @@ public:
   
   bool hasAttribute(const char *name);
   
+  
+  void update(Time time);
+  
 private:
-  typedef std::map<const char *, boost::shared_ptr< attr::IAttribute > > AttributeMap;
+  typedef std::map<const char *, boost::shared_ptr< IAttribute > > AttributeMap;
   AttributeMap attributes_;
 };
 

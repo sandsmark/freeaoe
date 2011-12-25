@@ -17,15 +17,18 @@
 */
 
 
-#ifndef IATTRIBUTE_H
-#define IATTRIBUTE_H
+#ifndef IACTION_H
+#define IACTION_H
+#include "Entity.h"
 
-class IAttribute
+class IAction
 {
 
 public:
-  IAttribute();
-  virtual ~IAttribute();
+  IAction();
+  virtual ~IAction();
+  
+  virtual void activateOn(Entity &entity) = 0;
 };
 
-#endif // IATTRIBUTE_H
+#endif // IACTION_H

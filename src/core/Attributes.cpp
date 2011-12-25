@@ -29,14 +29,4 @@ const char * const id::MOVABLE = "IsoMovable";
 const char * const id::COLLIDABLE = "Collidable";
 const char * const id::LOGICAL_SHAPE = "LogicalShape";
 
-IAttribute::IAttribute()
-{
-
-}
-
-IAttribute::~IAttribute()
-{
-
-}
-
 }

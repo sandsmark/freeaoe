@@ -17,15 +17,15 @@
 */
 
 
-#ifndef IATTRIBUTE_H
-#define IATTRIBUTE_H
+#include "IAction.h"
 
-class IAttribute
+IAction::IAction()
 {
 
-public:
-  IAttribute();
-  virtual ~IAttribute();
-};
+}
 
-#endif // IATTRIBUTE_H
+IAction::~IAction()
+{
+
+}
+
