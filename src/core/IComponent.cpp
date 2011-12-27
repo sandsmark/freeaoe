@@ -18,27 +18,41 @@
 
 #include "IComponent.h"
 
-void IComponent::addAttribute(const char* name, 
-                          boost::shared_ptr< IAttribute > attribute)
+IComponent::IComponent()
 {
-  attributes_[name] = attribute;
+
 }
 
-boost::shared_ptr< IAttribute > IComponent::getAttribute(const char* name)
+IComponent::~IComponent()
 {
-  return attributes_[name];
+
 }
 
-bool IComponent::hasAttribute(const char* name)
+void IComponent::addAttribute(const std::string name, AttributePtr attribute)
 {
-  if (attributes_.find(name) == attributes_.end())
+  attributes_[name.c_str()] = attribute;
+}
+
+
+AttributePtr IComponent::getAttribute(const std::string& name)
+{
+  AttributePtr attr = attributes_[name.c_str()];
+  
+  std::cout << name << std::endl;
+  return attr;
+}
+
+bool IComponent::hasAttribute(const std::string &name)
+{
+  if (attributes_.find(name.c_str()) == attributes_.end())
     return false;
   else
     return true;
 }
 
+/*
 void IComponent::update(Time time)
 {
 
 }
-
+*/

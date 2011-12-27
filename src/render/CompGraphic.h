@@ -17,19 +17,54 @@
 */
 
 
-#ifndef IATTRIBUTE_H
-#define IATTRIBUTE_H
+#ifndef COMPGRAPHIC_H
+#define COMPGRAPHIC_H
 
-#include <boost/smart_ptr/shared_ptr.hpp>
+#include <core/IComponent.h>
+#include <resource/Graphic.h>
+#include "GameRenderer.h"
 
-class IAttribute
+namespace attr
+{
+  const std::string GRAPHIC("graphic");
+  
+  class Graphic : public IAttribute
+  {
+  public:
+    res::GraphicPtr Resource;
+  };
+  
+  typedef boost::shared_ptr<Graphic> GraphicPtr;
+}
+
+namespace comp
+{
+
+const std::string GRAPHIC("graphic");
+  
+class Graphic;
+
+typedef boost::shared_ptr< Graphic > GraphicPtr;
+
+class GraphicTemplate 
+{
+public:
+  //TODO: Why not in CompGraphic?
+  static GraphicPtr create(unsigned int graphic_id);
+};
+
+class Graphic : public IComponent
 {
 
 public:
-  IAttribute();
-  virtual ~IAttribute();
+  Graphic();
+  virtual ~Graphic();
+  
+  virtual void update(Time time);
+  
+  void drawOn(GameRenderer &renderer);
 };
 
-typedef boost::shared_ptr<IAttribute> AttributePtr;
+}
 
-#endif // IATTRIBUTE_H
+#endif // COMPGRAPHIC_H

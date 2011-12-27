@@ -27,6 +27,7 @@
 #include <SFML/Graphics/Text.hpp>
 
 #include "render/GameRenderer.h"
+#include "render/EntityFormManager.h"
 
 namespace sf {
 class RenderWindow;
@@ -48,6 +49,8 @@ private:
   
   sf::RenderWindow *render_window_;
   GameRenderer *game_renderer_;
+  
+  EntityFormManager entity_form_manager_;
   
   StateManager state_manager_;
   

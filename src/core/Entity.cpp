@@ -29,6 +29,12 @@ Entity::~Entity()
 
 }
 
+void Entity::addComponent(const std::string& name, ComponentPtr comp)
+{
+  components_[name.c_str()] = comp;
+}
+
+
 void Entity::update(Time time)
 {
   for (ComponentMap::iterator it = components_.begin(); it != components_.end();

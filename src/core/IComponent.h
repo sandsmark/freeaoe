@@ -38,24 +38,35 @@ public:
   
  // virtual const char *getCompName() const = 0;
   
-  void addAttribute(const char *name, boost::shared_ptr< IAttribute > attribute);
-  
-  boost::shared_ptr< IAttribute > getAttribute(const char *name);
+  void addAttribute(const std::string name, AttributePtr attribute);
   
   template< class T >
-  boost::shared_ptr< T > getAttribute(const char *name)
+  void addAttribute(const std::string &name, boost::shared_ptr< T > attribute)
   {
-    return boost::dynamic_pointer_cast< T >(getAttribute(name));
+    AttributePtr ptr = boost::dynamic_pointer_cast< IAttribute >(attribute);
+    addAttribute(name, ptr);
+  }
+    
+  AttributePtr getAttribute(const std::string &name);
+  
+  template< class T >
+  boost::shared_ptr< T > getAttribute(const std::string &name)
+  {
+    AttributePtr attr_base = getAttribute(name);
+    boost::shared_ptr< T > attr = boost::dynamic_pointer_cast< T >(attr_base);
+    return attr;
   }
   
-  bool hasAttribute(const char *name);
+  bool hasAttribute(const std::string &name);
   
   
-  void update(Time time);
+  virtual void update(Time time) = 0;
   
 private:
   typedef std::map<const char *, boost::shared_ptr< IAttribute > > AttributeMap;
   AttributeMap attributes_;
 };
+
+typedef boost::shared_ptr< IComponent > ComponentPtr;
 
 #endif // ICOMPONENT_H

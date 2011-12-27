@@ -37,9 +37,24 @@ public:
   virtual ~Entity();
   
   virtual void update(Time time);
- 
+  
+  void addComponent(const std::string &name, ComponentPtr comp);
+  
+  template <class T>
+  void addComponent(const std::string &name, boost::shared_ptr< T > comp)
+  {
+    ComponentPtr ptr = boost::dynamic_pointer_cast< IComponent >(comp);
+    addComponent(name, ptr);
+  }
+  
+  template <class T>
+  boost::shared_ptr< T > getComponent(const std::string &name)
+  {
+    return boost::dynamic_pointer_cast< T >(components_[name.c_str()]);
+  }
+  
 private:
-  typedef std::map<const char *, boost::shared_ptr< IComponent > > ComponentMap;
+  typedef std::map<const char *, ComponentPtr > ComponentMap;
   ComponentMap components_;
   
 };

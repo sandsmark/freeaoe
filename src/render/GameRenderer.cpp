@@ -21,6 +21,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
+#include "CompGraphic.h"
 
 GameRenderer::GameRenderer(sf::RenderWindow &render_window)
 {
@@ -34,7 +35,7 @@ GameRenderer::~GameRenderer()
 
 void GameRenderer::draw(EntityForm& form)
 {
-
+  form.getComponent<comp::Graphic>(comp::GRAPHIC)->drawOn(*this);
 }
 
 void GameRenderer::draw(res::GraphicPtr graph, ScreenPos pos, int frame, int angle)

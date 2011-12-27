@@ -25,6 +25,7 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "resource/ResourceManager.h"
+#include "render/CompGraphic.h"
 
 Logger& Engine::log = Logger::getLogger("freeaoe.Engine");
 
@@ -77,13 +78,17 @@ void Engine::start()
     render_window_->Clear();
 
     game_renderer_->draw(x, ScreenPos(10,10));
+    
+    entity_form_manager_.draw();
+    
     //state->update();
     //state->draw();
     
     drawFps();
          
     // Update the window
-    render_window_->Display();
+    game_renderer_->display();
+    //render_window_->Display();
   }
 
 }
@@ -95,8 +100,26 @@ void Engine::setup()
   render_window_->SetFramerateLimit(60);
   
   game_renderer_ = new GameRenderer(*render_window_);
+  entity_form_manager_.setGameRenderer(boost::shared_ptr<GameRenderer>(game_renderer_));
   
   //state_manager_.addActiveState(new GameState(render_window_));
+  
+  //TODO: Test
+  
+  EntityForm form;
+  
+  comp::GraphicPtr g = comp::GraphicTemplate::create(881);
+  
+  std::cout << g->getAttribute<attr::Graphic>(attr::GRAPHIC)->Resource->getId() << std::endl;
+  
+  
+  form.addComponent(comp::GRAPHIC, g);
+  
+  entity_form_manager_.add(form);
+  
+  std::cout << form.getComponent<comp::Graphic>(comp::GRAPHIC)->getAttribute<attr::Graphic>(attr::GRAPHIC)->Resource->getId() << std::endl;
+  
+  //-------------
   
   fps_label_.SetPosition(sf::Vector2f(10,10));
   fps_label_.SetColor(sf::Color::Green);
