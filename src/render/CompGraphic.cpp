@@ -23,33 +23,22 @@
 #include <resource/ResourceManager.h>
 #include <resource/DataManager.h>
 
-namespace comp
+namespace attr
 {
-  
-GraphicPtr GraphicTemplate::create(unsigned int graphic_id)
+
+GraphicDescPtr GraphicDesc::create(unsigned int graphic_id)
 {
-  GraphicPtr graph(new Graphic());
-  
-  attr::GraphicPtr attr_graph(new attr::Graphic());
-  
+  GraphicDescPtr attr_graph(new GraphicDesc());
   attr_graph->Resource = ResourceManager::Inst()->getGraphic(graphic_id);
   
-  graph->addAttribute(attr::GRAPHIC, attr_graph);
-  
-  std::cout << graph->getAttribute<attr::Graphic>(attr::GRAPHIC)->Resource->getId() << std::endl;
-  
-  GraphicPtr x = graph;
-  
-  std::cout << x->getAttribute<attr::Graphic>(attr::GRAPHIC)->Resource->getId() << std::endl;
-  
-  
-  std::cout << "attr: " << attr_graph.get() << std::endl;
-  std::cout << "attr: " << x->getAttribute<attr::Graphic>(attr::GRAPHIC).get() << std::endl;
-  
-  std::cout << "comp: " << graph.get() << std::endl;
-  return graph;
+  return attr_graph;
 }
 
+}
+
+
+namespace comp
+{
 
 Graphic::Graphic()
 {
@@ -68,7 +57,16 @@ void Graphic::update(Time time)
 
 void Graphic::drawOn(GameRenderer& renderer)
 {
-  renderer.draw(getAttribute<attr::Graphic>(attr::GRAPHIC)->Resource, ScreenPos(100,100));
+  renderer.draw(getAttribute<attr::GraphicDesc>(attr::GRAPHIC_DESC)->Resource, ScreenPos(100,100));
+}
+
+GraphicPtr Graphic::create(unsigned int graphic_id)
+{
+  comp::GraphicPtr ptr (new comp::Graphic());
+  
+  ptr->addAttribute(attr::GRAPHIC_DESC, attr::GraphicDesc::create(graphic_id));
+  
+  return ptr;
 }
 
 

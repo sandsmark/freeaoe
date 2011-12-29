@@ -22,6 +22,7 @@
 
 #include <map>
 #include <boost/smart_ptr/shared_ptr.hpp>
+#include "Utility.h"
 
 #include "Attributes.h"
 #include "IComponent.h"
@@ -50,11 +51,12 @@ public:
   template <class T>
   boost::shared_ptr< T > getComponent(const std::string &name)
   {
-    return boost::dynamic_pointer_cast< T >(components_[name.c_str()]);
+    ComponentPtr ptr = components_[name.c_str()];
+    return boost::dynamic_pointer_cast<T>(ptr);
   }
   
 private:
-  typedef std::map<const char *, ComponentPtr > ComponentMap;
+  typedef std::map<const char *, ComponentPtr, util::cstr_comp > ComponentMap;
   ComponentMap components_;
   
 };

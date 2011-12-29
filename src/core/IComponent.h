@@ -24,6 +24,7 @@
 
 #include <boost/smart_ptr/shared_ptr.hpp>
 #include "Attributes.h"
+#include "Utility.h"
 #include <global/Types.h>
 
 class IComponent
@@ -63,7 +64,7 @@ public:
   virtual void update(Time time) = 0;
   
 private:
-  typedef std::map<const char *, boost::shared_ptr< IAttribute > > AttributeMap;
+  typedef std::map<const char *, AttributePtr, util::cstr_comp > AttributeMap;
   AttributeMap attributes_;
 };
 

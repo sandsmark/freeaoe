@@ -23,35 +23,34 @@
 #include <core/IComponent.h>
 #include <resource/Graphic.h>
 #include "GameRenderer.h"
+#include <resource/ResourceManager.h>
 
 namespace attr
 {
-  const std::string GRAPHIC("graphic");
+  const std::string GRAPHIC_DESC("attr_graphic");
   
-  class Graphic : public IAttribute
+  class GraphicDesc;
+  typedef boost::shared_ptr<GraphicDesc> GraphicDescPtr;
+  
+  class GraphicDesc : public IAttribute
   {
   public:
     res::GraphicPtr Resource;
+    
+    static GraphicDescPtr create(unsigned int graphic_id);
+    
   };
   
-  typedef boost::shared_ptr<Graphic> GraphicPtr;
 }
 
 namespace comp
 {
 
-const std::string GRAPHIC("graphic");
+const std::string GRAPHIC("comp_graphic");
   
 class Graphic;
 
 typedef boost::shared_ptr< Graphic > GraphicPtr;
-
-class GraphicTemplate 
-{
-public:
-  //TODO: Why not in CompGraphic?
-  static GraphicPtr create(unsigned int graphic_id);
-};
 
 class Graphic : public IComponent
 {
@@ -63,6 +62,9 @@ public:
   virtual void update(Time time);
   
   void drawOn(GameRenderer &renderer);
+  
+  static comp::GraphicPtr create(unsigned int graphic_id);
+  
 };
 
 }

@@ -108,16 +108,12 @@ void Engine::setup()
   
   EntityForm form;
   
-  comp::GraphicPtr g = comp::GraphicTemplate::create(881);
-  
-  std::cout << g->getAttribute<attr::Graphic>(attr::GRAPHIC)->Resource->getId() << std::endl;
-  
+  comp::GraphicPtr g = comp::Graphic::create(881);
   
   form.addComponent(comp::GRAPHIC, g);
-  
+ 
   entity_form_manager_.add(form);
   
-  std::cout << form.getComponent<comp::Graphic>(comp::GRAPHIC)->getAttribute<attr::Graphic>(attr::GRAPHIC)->Resource->getId() << std::endl;
   
   //-------------
   

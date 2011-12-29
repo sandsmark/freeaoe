@@ -26,63 +26,15 @@
 #include "resource/ResourceManager.h"
 #include "render/CompGraphic.h"
 
-class Base
-{
-public:
-  virtual void x() = 0;
-};
-
-class Derived : public Base
-{
-public:
-  int i;
-  
-  virtual void x() {}
-};
-
-void test(std::map<char *, boost::shared_ptr<Base> > &m)
-{
-  boost::shared_ptr<Derived> n = boost::shared_ptr<Derived>(new Derived());
-  n->i = 10;
-  
-  m["test"] = n;
-}
-
-
 // TODO: Bad_alloc
-
 int main(int argc, char **argv)
 {
   Logger::setLogLevel(Logger::L_INFO);
   
   Config::Inst()->parseOptions(argc, argv);
   
-//  boost::shared_ptr<Entity> e = EntityFactory::Inst().createUnit(281);
-
-  std::map<char *, boost::shared_ptr<Base> > map;
-  test(map);
-  
-  boost::shared_ptr<Base> xx = map["test"];
-  std::cout << boost::dynamic_pointer_cast<Derived>(xx)->i << std::endl;
-  
-  //std::cout << e->getAttribute<attr::String>(attr::id::NAME)->value << std::endl;
-  
-  //std::cout << e->hasAttribute(attr::id::MOVABLE);
-  
-  comp::GraphicPtr graph = comp::GraphicTemplate::create(881);
-  
-  std::cout << "comp: " << graph.get() << std::endl;
-  
-//  std::cout << graph->getAttribute<attr::Graphic>(attr::GRAPHIC)->Resource->getId() << std::endl;
-  
-  attr::GraphicPtr gp = graph->getAttribute<attr::Graphic>(attr::GRAPHIC); 
-  
-  std::cout << "attr: " << gp.get() << std::endl;
-  
- // std::cout << gp->Resource->getId() << std::endl;
-  /*
   Engine en;
-  en.start();*/
+  en.start();
   
   return 0;
 }

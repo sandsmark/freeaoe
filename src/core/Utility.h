@@ -16,32 +16,22 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef UTILITY_H
+#define UTILITY_H
 
-#include "EntityFormManager.h"
-#include "CompGraphic.h"
+#include <cstring>
 
-EntityFormManager::EntityFormManager() 
+namespace util
 {
+
+struct cstr_comp
+{
+   bool operator()(char const *a, char const *b)
+   {
+      return std::strcmp(a, b) < 0;
+   }
+};
 
 }
 
-EntityFormManager::~EntityFormManager()
-{
-
-}
-
-void EntityFormManager::setGameRenderer(boost::shared_ptr< GameRenderer > renderer)
-{
-  game_renderer_ = renderer;
-}
-
-void EntityFormManager::add(EntityForm& form)
-{
-  forms_.push_back(form);
-}
-
-void EntityFormManager::draw()
-{
-  for (EFVector::iterator it = forms_.begin(); it != forms_.end(); it++)
-    game_renderer_->draw(*it);
-}
+#endif //UTILITY_H

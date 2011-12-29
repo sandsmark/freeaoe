@@ -37,8 +37,6 @@ void IComponent::addAttribute(const std::string name, AttributePtr attribute)
 AttributePtr IComponent::getAttribute(const std::string& name)
 {
   AttributePtr attr = attributes_[name.c_str()];
-  
-  std::cout << name << std::endl;
   return attr;
 }
 
