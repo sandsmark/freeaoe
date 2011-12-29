@@ -19,7 +19,6 @@
 
 #include "GameState.h"
 
-#include <render/RenderGame.h>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Window/Mouse.hpp>
 #include <communication/commands/CommandSpawn.h>
