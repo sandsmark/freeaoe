@@ -65,6 +65,11 @@ public:
   
   static comp::GraphicPtr create(unsigned int graphic_id);
   
+private:
+  res::GraphicPtr graphic_;
+  
+  ScreenPos screen_pos_;
+  
 };
 
 }

@@ -40,9 +40,9 @@ GraphicDescPtr GraphicDesc::create(unsigned int graphic_id)
 namespace comp
 {
 
-Graphic::Graphic()
+Graphic::Graphic() : screen_pos_(0,0)
 {
-
+  
 }
 
 Graphic::~Graphic()
@@ -57,14 +57,19 @@ void Graphic::update(Time time)
 
 void Graphic::drawOn(GameRenderer& renderer)
 {
-  renderer.draw(getAttribute<attr::GraphicDesc>(attr::GRAPHIC_DESC)->Resource, ScreenPos(100,100));
+  //renderer.draw(getAttribute<attr::GraphicDesc>(attr::GRAPHIC_DESC)->Resource, ScreenPos(100,100));
+  renderer.draw(graphic_, screen_pos_);
 }
 
 GraphicPtr Graphic::create(unsigned int graphic_id)
 {
   comp::GraphicPtr ptr (new comp::Graphic());
   
-  ptr->addAttribute(attr::GRAPHIC_DESC, attr::GraphicDesc::create(graphic_id));
+  attr::GraphicDescPtr gdesc = attr::GraphicDesc::create(graphic_id);
+ // ptr->addAttribute(attr::GRAPHIC_DESC, gdesc);
+  
+  ptr->graphic_ = gdesc->Resource;
+  ptr->screen_pos_ = ScreenPos(100, 100);
   
   return ptr;
 }

@@ -27,6 +27,7 @@
 #include "Utility.h"
 #include <global/Types.h>
 
+//TODO: Do I need attributes? Move it to Entity?
 class IComponent
 {
 

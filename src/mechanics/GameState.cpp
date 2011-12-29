@@ -39,7 +39,7 @@ void GameState::init()
     map_->setUpSample();
     
     game_renderer_ = new RenderGame(render_target_);
-    game_server_ = new GameServer();
+/*    game_server_ = new GameServer();
     game_client_ = new GameClient();
     
     game_client_->setGameRenderer(game_renderer_);
@@ -56,6 +56,7 @@ void GameState::init()
     
     //Test
     game_client_->test();
+    */
 }
 
 
@@ -67,15 +68,15 @@ void GameState::draw()
 
 void GameState::update()
 {
-  game_server_->update();
-  game_client_->update();
+  //game_server_->update();
+  //game_client_->update();
 }
 
 void GameState::handleEvent(sf::Event event)
 {
   if (event.Type == sf::Event::MouseButtonReleased)
   {
-    
+    /*
     if (event.MouseButton.Button == sf::Mouse::Left)
     {
       std::vector<Unit *> units_at = 
@@ -91,7 +92,7 @@ void GameState::handleEvent(sf::Event event)
     else
     {
       game_client_->moveSelectedTo(sf::Vector2f( event.MouseButton.X, event.MouseButton.Y));
-    }
+    } */
   }
   
 }

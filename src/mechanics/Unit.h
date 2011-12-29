@@ -48,7 +48,7 @@ public:
   void setData(gdat::Unit data);
   gdat::Unit getData(void) const;
   
-  UnitStatus getStatus(void);
+  //UnitStatus getStatus(void);
   
   void setCurrentAction(IAction *action);
   IAction *getCurrentAction(void) const;

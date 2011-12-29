@@ -65,9 +65,6 @@ private:
 /// A generic class representing an entity on screen
 class EntityForm : public Entity
 {
-  //TODO: Component
-  //gdat::Graphic graphic_data_;
-  //res::Graphic gr_;
 };
 
 #endif // ENTITY_H

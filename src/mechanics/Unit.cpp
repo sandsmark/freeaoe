@@ -64,10 +64,12 @@ gdat::Unit Unit::getData(void ) const
 }
 
 //------------------------------------------------------------------------------
+/*
 UnitStatus Unit::getStatus (void)
 {
   return UnitStatus(id_, data_.ID1, pos_);
 }
+*/
 
 //------------------------------------------------------------------------------
 void Unit::setCurrentAction(IAction* action)
