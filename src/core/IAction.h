@@ -28,7 +28,10 @@ public:
   IAction();
   virtual ~IAction();
   
-  virtual void doAction() = 0;
+  /// @return true if action is done
+  virtual bool update(Time time) = 0;
+  
+  //isDone?
 };
 
 #endif // IACTION_H

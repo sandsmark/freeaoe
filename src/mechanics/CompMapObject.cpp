@@ -17,43 +17,20 @@
 */
 
 
-#include "GameRenderer.h"
-#include <SFML/Graphics/Texture.hpp>
-#include <SFML/Graphics/Sprite.hpp>
-#include "CompGraphic.h"
-#include <SFML/Graphics/RenderTarget.hpp>
+#include "CompMapObject.h"
 
-GameRenderer::GameRenderer(sf::RenderTarget &render_target)
+namespace comp
 {
-  render_target_ = &render_target;
-}
 
-GameRenderer::~GameRenderer()
+MapObject::MapObject()
 {
 
 }
 
-void GameRenderer::draw(EntityForm& form)
+MapObject::~MapObject()
 {
-  form.getComponent<comp::Graphic>(comp::GRAPHIC)->drawOn(*this);
+
 }
 
-void GameRenderer::draw(res::GraphicPtr graph, ScreenPos pos, int frame, int angle)
-{
-  sf::Texture texture;
   
-  texture.LoadFromImage(graph->getImage(frame));
-  
-  sf::Sprite sprite;
-  sprite.SetTexture(texture);
-  
-  sprite.SetPosition(pos);
-  
-  render_target_->Draw(sprite);
-}
-
-
-void GameRenderer::display(void )
-{
-//  render_window_->Display();
 }

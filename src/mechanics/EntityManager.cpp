@@ -17,43 +17,26 @@
 */
 
 
-#include "GameRenderer.h"
-#include <SFML/Graphics/Texture.hpp>
-#include <SFML/Graphics/Sprite.hpp>
-#include "CompGraphic.h"
-#include <SFML/Graphics/RenderTarget.hpp>
+#include "EntityManager.h"
 
-GameRenderer::GameRenderer(sf::RenderTarget &render_target)
-{
-  render_target_ = &render_target;
-}
-
-GameRenderer::~GameRenderer()
+EntityManager::EntityManager()
 {
 
 }
 
-void GameRenderer::draw(EntityForm& form)
+EntityManager::~EntityManager()
 {
-  form.getComponent<comp::Graphic>(comp::GRAPHIC)->drawOn(*this);
+
 }
 
-void GameRenderer::draw(res::GraphicPtr graph, ScreenPos pos, int frame, int angle)
+void EntityManager::add(EntityPtr entity)
 {
-  sf::Texture texture;
-  
-  texture.LoadFromImage(graph->getImage(frame));
-  
-  sf::Sprite sprite;
-  sprite.SetTexture(texture);
-  
-  sprite.SetPosition(pos);
-  
-  render_target_->Draw(sprite);
+  entities_.push_back(entity);
 }
 
-
-void GameRenderer::display(void )
+void EntityManager::update(Time time)
 {
-//  render_window_->Display();
+  for (EntityVector::iterator it = entities_.begin(); it != entities_.end();
+       it++)
+    (*it)->update(time);
 }

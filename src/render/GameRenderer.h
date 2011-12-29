@@ -24,14 +24,14 @@
 #include <resource/Graphic.h>
 
 namespace sf {
-class RenderWindow;
+class RenderTarget;
 }
 
 class GameRenderer
 {
 
 public:
-  GameRenderer(sf::RenderWindow &render_window);
+  GameRenderer(sf::RenderTarget &render_target);
   virtual ~GameRenderer();
   
   //----------------------------------------------------------------------------
@@ -46,7 +46,7 @@ public:
   void display(void);
   
 private:
-  sf::RenderWindow *render_window_;
+  sf::RenderTarget *render_target_;
 };
 
 #endif // GAMERENDERER_H

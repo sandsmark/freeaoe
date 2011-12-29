@@ -22,6 +22,8 @@
 
 #include <mechanics/IState.h>
 #include "Map.h"
+#include <render/GameRenderer.h>
+#include <render/EntityFormManager.h>
 
 class GameClient;
 class GameServer;
@@ -29,7 +31,6 @@ namespace sf {
 class RenderTarget;
 }
 
-class RenderGame;
 //------------------------------------------------------------------------------
 /// State where the game is processed
 //
@@ -50,10 +51,13 @@ private:
   
   GameState(const GameState& other);
   
+  GameRenderer *game_renderer_;
+  
+  EntityFormManager entity_form_manager_;
+  /*
   GameServer *game_server_;
   GameClient *game_client_;
-  RenderGame *game_renderer_;
-  
+  */
   sf::RenderTarget *render_target_;
   
   Map *map_;

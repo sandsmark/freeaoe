@@ -33,7 +33,7 @@ const sf::Clock Engine::GameClock;
 
 
 //------------------------------------------------------------------------------
-Engine::Engine() : render_window_(0), game_renderer_(0)
+Engine::Engine() : render_window_(0)
 {
 
 }
@@ -60,9 +60,6 @@ void Engine::start()
   {
     IState *state = state_manager_.getActiveState();
     
-    
-    res::GraphicPtr x = ResourceManager::Inst()->getGraphic(633);
-    
     // Process events
     sf::Event event;
     while (render_window_->PollEvent(event))
@@ -71,24 +68,19 @@ void Engine::start()
       if (event.Type == sf::Event::Closed)
         render_window_->Close();
 
-      //state->handleEvent(event);
+      state->handleEvent(event);
     }
      
     // Clear screen
     render_window_->Clear();
-
-    game_renderer_->draw(x, ScreenPos(10,10));
     
-    entity_form_manager_.draw();
-    
-    //state->update();
-    //state->draw();
+    state->update();
+    state->draw();
     
     drawFps();
          
     // Update the window
-    game_renderer_->display();
-    //render_window_->Display();
+    render_window_->Display();
   }
 
 }
@@ -99,24 +91,8 @@ void Engine::setup()
   render_window_ = new sf::RenderWindow(sf::VideoMode(1024, 786), "freeaoe");
   render_window_->SetFramerateLimit(60);
   
-  game_renderer_ = new GameRenderer(*render_window_);
-  entity_form_manager_.setGameRenderer(boost::shared_ptr<GameRenderer>(game_renderer_));
-  
-  //state_manager_.addActiveState(new GameState(render_window_));
-  
-  //TODO: Test
-  
-  EntityForm form;
-  
-  comp::GraphicPtr g = comp::Graphic::create(881);
-  
-  form.addComponent(comp::GRAPHIC, g);
- 
-  entity_form_manager_.add(form);
-  
-  
-  //-------------
-  
+  state_manager_.addActiveState(new GameState(render_window_));
+
   fps_label_.SetPosition(sf::Vector2f(10,10));
   fps_label_.SetColor(sf::Color::Green);
 }

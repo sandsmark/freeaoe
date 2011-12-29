@@ -31,7 +31,7 @@ class EntityForm;
 
 /// Entity is a generic class for game objects.
 class Entity
-{       //TODO: entity collections
+{       //TODO: entity collections, actions
 
 public:  
   Entity();
@@ -60,6 +60,8 @@ private:
   ComponentMap components_;
   
 };
+
+typedef boost::shared_ptr< Entity > EntityPtr;
 
 
 /// A generic class representing an entity on screen

@@ -30,15 +30,32 @@
 
 #include <iostream>
 #include "Unit.h"
+#include <render/CompGraphic.h>
 
 void GameState::init()
 {
-    IState::init();
+  IState::init();
+  
+  map_ = new Map();
+  map_->setUpSample();
+  
+  game_renderer_ = new GameRenderer(*render_target_);
+  entity_form_manager_.setGameRenderer(boost::shared_ptr<GameRenderer>(game_renderer_));
     
-    map_ = new Map();
-    map_->setUpSample();
+      
+  //TODO: Test
+  
+  EntityForm form;
+  
+  comp::GraphicPtr g = comp::Graphic::create(881);
+  
+  form.addComponent(comp::GRAPHIC, g);
+ 
+  entity_form_manager_.add(form);
+  
+  
+  //-------------
     
-    game_renderer_ = new RenderGame(render_target_);
 /*    game_server_ = new GameServer();
     game_client_ = new GameClient();
     
@@ -63,7 +80,7 @@ void GameState::init()
 void GameState::draw()
 { 
   map_->draw(render_target_);
-  game_renderer_->draw();
+  entity_form_manager_.draw();
 }
 
 void GameState::update()
@@ -76,23 +93,6 @@ void GameState::handleEvent(sf::Event event)
 {
   if (event.Type == sf::Event::MouseButtonReleased)
   {
-    /*
-    if (event.MouseButton.Button == sf::Mouse::Left)
-    {
-      std::vector<Unit *> units_at = 
-      game_renderer_->getUnitsAt(event.MouseButton.X, event.MouseButton.Y);
-    
-      if ( !units_at.empty())
-      {
-        std::cout << units_at[0]->getID() << std::endl;
-        game_client_->selectUnit(units_at[0]);
-      }
-      
-    }
-    else
-    {
-      game_client_->moveSelectedTo(sf::Vector2f( event.MouseButton.X, event.MouseButton.Y));
-    } */
   }
   
 }

@@ -21,6 +21,7 @@
 #include <geniedat/Unit.h>
 #include <resource/DataManager.h>
 #include <global/Constants.h>
+#include "CompMapObject.h"
 
 using boost::shared_ptr;
 
@@ -45,9 +46,14 @@ boost::shared_ptr< Entity > EntityFactory::createUnit(int ID)
 {
   gdat::Unit gunit = DataManager::Inst().getUnit(ID);
   
-  boost::shared_ptr< Entity > entity(new Entity());
+  EntityPtr entity(new Entity());
   
   std::cout << gunit.Name << std::endl;
+  
+  comp::MapObjectPtr mo(new comp::MapObject());
+  
+  entity->addComponent(comp::MAP_OBJECT, mo);
+  
   
 /*  entity->addAttribute(attr::id::NAME,
     shared_ptr< attr::String > (new attr::String(gunit.Name)) 

@@ -17,43 +17,30 @@
 */
 
 
-#include "GameRenderer.h"
-#include <SFML/Graphics/Texture.hpp>
-#include <SFML/Graphics/Sprite.hpp>
-#include "CompGraphic.h"
-#include <SFML/Graphics/RenderTarget.hpp>
+#ifndef ENTITYMANAGER_H
+#define ENTITYMANAGER_H
+#include <vector>
+#include <core/Entity.h>
 
-GameRenderer::GameRenderer(sf::RenderTarget &render_target)
-{
-  render_target_ = &render_target;
-}
 
-GameRenderer::~GameRenderer()
+// IDEA: Class containing all entities, (adds, removes, updates them).
+// Base class (EntitySpace?)
+class EntityManager
 {
 
-}
-
-void GameRenderer::draw(EntityForm& form)
-{
-  form.getComponent<comp::Graphic>(comp::GRAPHIC)->drawOn(*this);
-}
-
-void GameRenderer::draw(res::GraphicPtr graph, ScreenPos pos, int frame, int angle)
-{
-  sf::Texture texture;
+public:
+  EntityManager();
+  virtual ~EntityManager();
   
-  texture.LoadFromImage(graph->getImage(frame));
+  void add(EntityPtr entity);
   
-  sf::Sprite sprite;
-  sprite.SetTexture(texture);
+  void update(Time time);
   
-  sprite.SetPosition(pos);
+private:
   
-  render_target_->Draw(sprite);
-}
+  typedef std::vector< EntityPtr > EntityVector;
+  
+  EntityVector entities_;
+};
 
-
-void GameRenderer::display(void )
-{
-//  render_window_->Display();
-}
+#endif // ENTITYMANAGER_H

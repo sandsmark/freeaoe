@@ -40,7 +40,7 @@ public:
   static const sf::Clock GameClock;
   
   Engine();
-  ~Engine();
+  virtual ~Engine();
   
   void start();
   
@@ -48,9 +48,7 @@ private:
   static Logger &log;
   
   sf::RenderWindow *render_window_;
-  GameRenderer *game_renderer_;
-  
-  EntityFormManager entity_form_manager_;
+
   
   StateManager state_manager_;
   

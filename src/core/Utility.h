@@ -24,6 +24,9 @@
 namespace util
 {
 
+//------------------------------------------------------------------------------
+/// Struct providing a cstring compare function.
+//
 struct cstr_comp
 {
    bool operator()(char const *a, char const *b)

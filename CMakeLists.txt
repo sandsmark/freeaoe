@@ -49,7 +49,6 @@ set(MECHANICS_SRC src/mechanics/Map.cpp
                    )
 
 set(RENDER_SRC src/render/RenderUnit.cpp 
-               src/render/RenderGame.cpp 
                src/render/RenderGraphic.cpp
                src/render/RenderMap.cpp  )
 
@@ -65,7 +64,7 @@ set(COMMUNICATION_SRC src/communication/TunnelToClient.cpp
                       src/communication/commands/CommandSpawn.cpp )
  
 
-set(UNSORTED_SRC src/render/CompGraphic.cpp src/render/EntityFormManager.cpp src/render/GameRenderer.cpp src/core/IAction.cpp src/core/IAttribute.cpp src/mechanics/EntityFactory.cpp src/core/Attributes.cpp src/core/IComponent.cpp src/core/Entity.cpp
+set(UNSORTED_SRC src/mechanics/EntityManager.cpp src/mechanics/CompMapObject.cpp src/render/CompGraphic.cpp src/render/EntityFormManager.cpp src/render/GameRenderer.cpp src/core/IAction.cpp src/core/IAttribute.cpp src/mechanics/EntityFactory.cpp src/core/Attributes.cpp src/core/IComponent.cpp src/core/Entity.cpp
 
                  )
 
