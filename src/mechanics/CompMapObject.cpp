@@ -32,5 +32,16 @@ MapObject::~MapObject()
 
 }
 
+MapPos MapObject::getPos(void ) const
+{
+  return pos_;
+}
+
+void MapObject::setPos(MapPos pos)
+{
+  pos_ = pos;
+}
+
+
   
 }

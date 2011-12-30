@@ -42,7 +42,6 @@ set(FILE_SRC src/file/ColorPalette.cpp
 set(MECHANICS_SRC src/mechanics/Map.cpp
                   src/mechanics/StateManager.cpp 
                   src/mechanics/GameState.cpp 
-                  src/mechanics/Unit.cpp
                   src/mechanics/ActionMove.cpp
                    )
 

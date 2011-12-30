@@ -127,13 +127,13 @@ void SlpFrame::load()
   
   // Skipping command offsets. They are not needed now but
   // they can be used for checking file integrity.
-  for (uint32_t i=0; i < height_; i++)
+  for (int32_t i=0; i < height_; i++)
   {
     file_.read<uint32_t>();
   }
   
   // Each row has it's commands, 0x0F signals the end of a rows commands.
-  for (uint32_t row = 0; row < height_; row++)
+  for (int32_t row = 0; row < height_; row++)
   {
     //std::cout << row << ": " << std::hex << (int)(tellg() - file_pos_) << std::endl;
     uint8_t data = 0;

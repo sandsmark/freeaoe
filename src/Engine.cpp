@@ -54,7 +54,7 @@ void Engine::start()
   log.info("Starting engine.");
   
   setup();
-    
+  
   // Start the game loop
   while (render_window_->IsOpened())
   {
@@ -77,7 +77,7 @@ void Engine::start()
     state->update();
     state->draw();
     
-    drawFps();
+    //drawFps();
          
     // Update the window
     render_window_->Display();

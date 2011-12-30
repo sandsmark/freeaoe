@@ -19,21 +19,40 @@
 
 #include "ActionMove.h"
 #include <Engine.h>
-#include "Unit.h"
 
 #include <iostream>
+#include "CompMapObject.h"
 
-ActionMove::ActionMove(Unit* unit, sf::Vector2f goal_pos): unit_(unit),
-                       goal_pos_(goal_pos), last_update_(0), target_reached(false)
-{
-  
-}
-
-ActionMove::~ActionMove()
+namespace act
 {
 
+MoveOnMap::MoveOnMap(EntityPtr entity, MapPos destination) : entity_(entity)
+{
+  dest_ = destination;
+  last_update_ = 0;
 }
 
+MoveOnMap::~MoveOnMap()
+{
+
+}
+
+bool MoveOnMap::update(Time time)
+{
+  if (last_update_ == 0 || (time - last_update_) >= 100 ) //test!
+  {
+    comp::MapObjectPtr ptr = entity_->getComponent<comp::MapObject>(comp::MAP_OBJECT);
+    
+    ptr->setPos(ptr->getPos() + MapPos(10,10));
+    
+    last_update_ = time;
+  }
+}
+
+
+}
+
+/*
 // TODO: UUUUGGGLYYY 
 void ActionMove::update(void )
 {
@@ -73,11 +92,6 @@ void ActionMove::update(void )
   {
     target_reached = true;
     IAction::setDone();
-  }*/
-}
-
-Unit* ActionMove::getUnit(void )
-{
-  return unit_;
-}
+  }*
+}*/
 

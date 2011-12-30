@@ -19,30 +19,30 @@
 
 #ifndef ACTIONMOVE_H
 #define ACTIONMOVE_H
-#include "IAction.h"
-#include <SFML/System/Vector2.hpp>
-#include <SFML/Config.hpp>
+#include "core/IAction.h"
 
-class Unit;
-class ActionMove : public IAction
+namespace act
+{
+
+class MoveOnMap : public IAction
 {
 
 public:
-  ActionMove(Unit *unit, sf::Vector2f goal_pos);
-  virtual ~ActionMove();
+  MoveOnMap(EntityPtr entity, MapPos destination);
+  virtual ~MoveOnMap();
   
-  virtual void update(void);
+  virtual bool update(Time time);
   
-  virtual Unit *getUnit(void);
   
 private:
-  Unit *unit_;
-  sf::Vector2f goal_pos_;
+  EntityPtr entity_;
+  MapPos dest_;
+    
+  Time last_update_;
   
-  sf::Uint32 last_update_;
-  
-  sf::Vector2f path_part;
   bool target_reached;
 };
+
+}
 
 #endif // ACTIONMOVE_H
