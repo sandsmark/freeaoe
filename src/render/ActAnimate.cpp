@@ -16,17 +16,25 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <SFML/System.hpp>
-//#include <SFML/System/Vector2.hpp>
 
-using sf::Uint32;
-using sf::Uint8;
+#include "ActAnimate.h"
 
-using sf::Int32;
+namespace act
+{
 
-/// x,y,height
-typedef sf::Vector3f MapPos;
-typedef sf::Vector2f ScreenPos;
+Animate::Animate(EntityFormPtr form)
+{
 
-/// Time in milliseconds
-typedef unsigned int Time;
+}
+
+Animate::~Animate()
+{
+
+}
+
+bool Animate::update(Time time)
+{
+
+}
+
+}

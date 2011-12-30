@@ -19,7 +19,9 @@
 
 #ifndef ACTIONMOVE_H
 #define ACTIONMOVE_H
+
 #include "core/IAction.h"
+#include "core/Entity.h"
 
 namespace act
 {

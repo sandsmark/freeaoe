@@ -19,7 +19,10 @@
 
 #ifndef IACTION_H
 #define IACTION_H
-#include "Entity.h"
+
+#include <boost/shared_ptr.hpp>
+
+#include "global/Types.h"
 
 class IAction
 {
@@ -33,5 +36,7 @@ public:
   
   //isDone?
 };
+
+typedef boost::shared_ptr< IAction > ActionPtr;
 
 #endif // IACTION_H

@@ -23,6 +23,7 @@
 #include <global/Constants.h>
 #include "CompMapObject.h"
 #include "CompUnitData.h"
+#include "ActionMove.h"
 
 using boost::shared_ptr;
 
@@ -52,6 +53,7 @@ boost::shared_ptr< Entity > EntityFactory::createUnit(int ID)
   //std::cout << gunit.Name << std::endl;
   
   comp::MapObjectPtr mo(new comp::MapObject());
+  mo->setPos(MapPos(500,100,0));
   
   entity->addComponent(comp::MAP_OBJECT, mo);
   
@@ -60,6 +62,9 @@ boost::shared_ptr< Entity > EntityFactory::createUnit(int ID)
   
   entity->addComponent(comp::UNIT_DATA, gunit);
   
+  ActionPtr act(new act::MoveOnMap(entity, MapPos(300,20,0)));
+  
+  entity->current_action_ = act;
   
 /*  entity->addAttribute(attr::id::NAME,
     shared_ptr< attr::String > (new attr::String(gunit.Name)) 

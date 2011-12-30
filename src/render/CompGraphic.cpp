@@ -22,6 +22,7 @@
 #include "core/IAttribute.h"
 #include <resource/ResourceManager.h>
 #include <resource/DataManager.h>
+#include <mechanics/CompMapObject.h>
 
 namespace attr
 {
@@ -56,6 +57,8 @@ Graphic::~Graphic()
 
 void Graphic::update(Time time)
 {
+  
+  
   if (time_last_frame_ == 0)
   {
     time_last_frame_ = time;
@@ -77,8 +80,17 @@ void Graphic::update(Time time)
 
 void Graphic::drawOn(GameRenderer& renderer)
 {
+  
+  screen_pos_ = mapToScreenPos(map_object_->getPos());
+  
   renderer.draw(graphic_, screen_pos_, current_frame_);
 }
+
+void Graphic::setMapObject(MapObjectPtr map_object)
+{
+  map_object_ = map_object;
+}
+
 
 GraphicPtr Graphic::create(unsigned int graphic_id)
 {
@@ -92,6 +104,17 @@ GraphicPtr Graphic::create(unsigned int graphic_id)
   
   return ptr;
 }
+
+ScreenPos Graphic::mapToScreenPos(MapPos mpos)
+{
+  ScreenPos spos;
+  
+  spos.x = mpos.x - mpos.y;
+  spos.y = mpos.z + (mpos.x + mpos.y)/2;
+  
+  return spos;
+}
+
 
 
 }

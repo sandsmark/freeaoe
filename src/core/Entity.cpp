@@ -39,6 +39,9 @@ void Entity::update(Time time)
   for (ComponentMap::iterator it = components_.begin(); it != components_.end();
        it ++)
     (*it).second->update(time);
+  
+  if (current_action_.get() != 0)
+    current_action_->update(time);
 }
 
 

@@ -51,7 +51,11 @@ void EntityFormManager::createForms(EntityPtr entity)
     
     EntityForm form(entity);
     
-    form.addComponent(comp::GRAPHIC, comp::Graphic::create(gunit->getData().StandingGraphic.first));
+    comp::GraphicPtr graphic = comp::Graphic::create(gunit->getData().StandingGraphic.first);
+    
+    graphic->setMapObject(entity->getComponent<comp::MapObject>(comp::MAP_OBJECT));
+    
+    form.addComponent(comp::GRAPHIC, graphic);
     
     forms_.push_back(form);  
   }

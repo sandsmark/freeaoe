@@ -43,10 +43,12 @@ bool MoveOnMap::update(Time time)
   {
     comp::MapObjectPtr ptr = entity_->getComponent<comp::MapObject>(comp::MAP_OBJECT);
     
-    ptr->setPos(ptr->getPos() + MapPos(10,10));
+    ptr->setPos(ptr->getPos() + MapPos(10,10,0));
     
     last_update_ = time;
   }
+  
+  return false;
 }
 
 

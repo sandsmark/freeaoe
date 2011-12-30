@@ -23,6 +23,8 @@
 #include "core/IComponent.h"
 
 #include "global/Types.h"
+
+#include "core/Entity.h"
 #include "core/IAction.h"
 
 namespace comp

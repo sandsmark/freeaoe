@@ -26,6 +26,7 @@
 
 #include "Attributes.h"
 #include "IComponent.h"
+#include "IAction.h"
 
 class EntityForm;
 
@@ -55,6 +56,9 @@ public:
     return boost::dynamic_pointer_cast<T>(ptr);
   }
   
+public:
+  ActionPtr current_action_;
+  
 private:
   typedef std::map<const char *, ComponentPtr, util::cstr_comp > ComponentMap;
   ComponentMap components_;
@@ -70,6 +74,8 @@ class EntityForm : public Entity
 public:
   EntityForm(EntityPtr root) : root_(root) {}
   virtual ~EntityForm() {}
+  
+  EntityPtr getRoot(void) { return root_; }
   
 private:
   EntityPtr root_;

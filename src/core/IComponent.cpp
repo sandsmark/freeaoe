@@ -18,7 +18,9 @@
 
 #include "IComponent.h"
 
-IComponent::IComponent()
+#include "Entity.h"
+
+IComponent::IComponent() 
 {
 
 }

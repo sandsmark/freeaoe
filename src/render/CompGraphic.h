@@ -24,6 +24,7 @@
 #include <resource/Graphic.h>
 #include "GameRenderer.h"
 #include <resource/ResourceManager.h>
+#include <mechanics/CompMapObject.h>
 
 namespace attr
 {
@@ -66,10 +67,14 @@ public:
   
   void setGraphic(res::GraphicPtr graphic);
   
+  void setMapObject(MapObjectPtr map_object);
+  
   static comp::GraphicPtr create(unsigned int graphic_id);
   
 private:
   res::GraphicPtr graphic_;
+  
+  MapObjectPtr map_object_;
   
   ScreenPos screen_pos_;
   
@@ -80,6 +85,8 @@ private:
   unsigned int angle_diff_;  
   
   bool mirror_frame_;
+  
+  ScreenPos mapToScreenPos(MapPos pos);
 };
 
 }
