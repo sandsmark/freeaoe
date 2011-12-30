@@ -23,12 +23,10 @@
 #include <resource/ResourceManager.h>
 #include <file/ColorPalette.h>
 
-using sf::Uint32;
-
 Logger& SlpFile::log = Logger::getLogger("freeaoe.SlpFile");
 
 //------------------------------------------------------------------------------
-SlpFile::SlpFile(sf::Uint32 id, sf::Uint32 pos, sf::Uint32 len, 
+SlpFile::SlpFile(uint32_t id, uint32_t pos, uint32_t len, 
                  std::iostream* iostr) : file_(iostr, pos), loaded_(false), 
                  id_(id), len_(len)
 {
@@ -56,7 +54,7 @@ void SlpFile::load()
   
   SlpFrame *frame = 0;
   
-  for (Uint32 i = 0; i < num_frames_; i++)
+  for (uint32_t i = 0; i < num_frames_; i++)
   {
     ColorPalette *palette = ResourceManager::Inst()->getPalette(50500); //50500 = standard palette
     
@@ -98,19 +96,19 @@ bool SlpFile::isLoaded(void ) const
 
 
 //------------------------------------------------------------------------------
-sf::Uint32 SlpFile::getFrameCount()
+uint32_t SlpFile::getFrameCount()
 {
   return num_frames_;
 }
 
 //------------------------------------------------------------------------------
-sf::Int32 SlpFile::getId()
+int32_t SlpFile::getId()
 {
   return id_;
 }
 
 //------------------------------------------------------------------------------
-sf::Image* SlpFile::getImage(sf::Uint32 frame)
+sf::Image* SlpFile::getImage(uint32_t frame)
 {
   SlpFrame *slp = getFrame(frame);
   
@@ -121,7 +119,7 @@ sf::Image* SlpFile::getImage(sf::Uint32 frame)
 }
 
 //------------------------------------------------------------------------------
-SlpFrame* SlpFile::getFrame(Uint32 frame)
+SlpFrame* SlpFile::getFrame(uint32_t frame)
 {
   if (frame >= frames_.size())
   {
@@ -137,7 +135,7 @@ SlpFrame* SlpFile::getFrame(Uint32 frame)
 void SlpFile::readHeader()
 {
   std::string version = file_.readString(4);
-  num_frames_ = file_.read<Uint32>();
+  num_frames_ = file_.read<uint32_t>();
   
   std::string comment = file_.readString(24);
 }

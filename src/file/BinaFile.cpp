@@ -24,7 +24,7 @@
 #include <iostream>
 
 //------------------------------------------------------------------------------
-BinaFile::BinaFile(sf::Uint32 id, sf::Uint32 pos, sf::Uint32 len, 
+BinaFile::BinaFile(uint32_t id, uint32_t pos, uint32_t len, 
                    std::iostream* iostr) : file_(iostr, pos), id_(id),
                    len_(len)
 {
@@ -53,7 +53,7 @@ ColorPalette* BinaFile::readPalette()
 }
 
 //------------------------------------------------------------------------------
-sf::Uint32 BinaFile::getId()
+uint32_t BinaFile::getId()
 {
   return id_;
 }

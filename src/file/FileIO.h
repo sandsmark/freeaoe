@@ -23,7 +23,8 @@
 #include <istream>
 #include <fstream>
 #include <memory>
-#include <SFML/Config.hpp>
+#include <stdint.h>
+
 #include <global/FileException.h>
 
 //------------------------------------------------------------------------------

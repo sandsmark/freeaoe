@@ -38,7 +38,7 @@ public:
   /// @param istr input/output stream
   /// @param pos start position of this file in stream
   //
-  BinaFile(sf::Uint32 id, sf::Uint32 pos, sf::Uint32 len, std::iostream *iostr);
+  BinaFile(uint32_t id, uint32_t pos, uint32_t len, std::iostream *iostr);
   
   //----------------------------------------------------------------------------
   /// Destructor
@@ -57,13 +57,13 @@ public:
   ///
   /// @return resource id
   //
-  sf::Uint32 getId();
+  uint32_t getId();
   
 private:
   FileIO file_;
   
-  sf::Uint32 id_;
-  sf::Uint32 len_;
+  uint32_t id_;
+  uint32_t len_;
   
   ColorPalette *palette_;
 };

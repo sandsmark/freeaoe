@@ -25,7 +25,6 @@
 #include <file/BinaFile.h>
 
 using std::string;
-using sf::Uint32;
 
 Logger& DrsFile::log = Logger::getLogger("freeaoe.DrsFile");
 
@@ -58,24 +57,24 @@ void DrsFile::loadHeader()
     //File type
     string file_type = file_.readString(12);
     
-    num_of_tables_ = file_.read<Uint32>();
-    header_offset_ = file_.read<Uint32>(); 
+    num_of_tables_ = file_.read<uint32_t>();
+    header_offset_ = file_.read<uint32_t>(); 
     
     // Load table data
-    for (Uint32 i = 0; i < num_of_tables_; i++)
+    for (uint32_t i = 0; i < num_of_tables_; i++)
     {
       table_types_.push_back(file_.readString(8));
-      table_num_of_files_.push_back(file_.read<Uint32>());
+      table_num_of_files_.push_back(file_.read<uint32_t>());
     }
    
     // Load file headers
-    for (Uint32 i = 0; i < num_of_tables_; i++)
+    for (uint32_t i = 0; i < num_of_tables_; i++)
     {
-      for (Uint32 j = 0; j < table_num_of_files_[i]; j++)
+      for (uint32_t j = 0; j < table_num_of_files_[i]; j++)
       {
-        sf::Uint32 id = file_.read<Uint32>();
-        sf::Uint32 pos = file_.read<Uint32>();
-        sf::Uint32 len = file_.read<Uint32>();
+        uint32_t id = file_.read<uint32_t>();
+        uint32_t pos = file_.read<uint32_t>();
+        uint32_t len = file_.read<uint32_t>();
                 
         if (table_types_[i].find(" plsL") == 0)
         {

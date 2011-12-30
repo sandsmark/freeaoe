@@ -22,6 +22,8 @@
 
 #include <string>
 #include <vector>
+#include <stdint.h>
+
 #include <SFML/Graphics/Color.hpp>
 
 #include <global/Logger.h>
@@ -49,7 +51,7 @@ public:
   /// @param index index of color in palette
   /// @return color object
   //
-  sf::Color getColorAt(sf::Uint16 index);  
+  sf::Color getColorAt(uint16_t index);  
   
   //----------------------------------------------------------------------------
   /// Parse the palette from an input stream.
@@ -64,7 +66,7 @@ private:
   
   std::vector<sf::Color> colors_;
   
-  sf::Uint32 num_colors_;
+  uint32_t num_colors_;
 };
 
 #endif // PALFILE_H

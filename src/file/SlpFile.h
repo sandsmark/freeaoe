@@ -43,7 +43,7 @@ public:
   /// @param istr input/output stream
   /// @param pos start position of this file in stream
   //
-  SlpFile(sf::Uint32 id, sf::Uint32 pos, sf::Uint32 len, std::iostream *iostr);
+  SlpFile(uint32_t id, uint32_t pos, uint32_t len, std::iostream *iostr);
   
   //----------------------------------------------------------------------------
   /// Destructor
@@ -64,14 +64,14 @@ public:
   ///
   /// @return number of frames
   //
-  sf::Uint32 getFrameCount();
+  uint32_t getFrameCount();
   
   //----------------------------------------------------------------------------
   /// Returns the internal slp id.
   ///
   /// @return id
   //
-  sf::Int32 getId();
+  int32_t getId();
   
   //----------------------------------------------------------------------------
   /// Returns pointer to the image at given frame or 0 if no image is at frame.
@@ -80,7 +80,7 @@ public:
   /// @param frame frame number, default = 0
   /// @return image object or 0
   //
-  sf::Image* getImage(sf::Uint32 frame=0);
+  sf::Image* getImage(uint32_t frame=0);
   
   //----------------------------------------------------------------------------
   /// Returns the slp frame at given frame index.
@@ -88,7 +88,7 @@ public:
   /// @param frame frame index
   /// @return SlpFrame
   //
-  SlpFrame* getFrame(sf::Uint32 frame=0);
+  SlpFrame* getFrame(uint32_t frame=0);
   
 private: 
   SlpFile();
@@ -96,10 +96,10 @@ private:
   FileIO file_;
   bool loaded_;
   
-  sf::Uint32 id_;
-  sf::Uint32 len_;
+  uint32_t id_;
+  uint32_t len_;
   
-  sf::Uint32 num_frames_;
+  uint32_t num_frames_;
   
   typedef std::vector<SlpFrame *> FrameVector;
   FrameVector frames_;

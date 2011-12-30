@@ -55,9 +55,9 @@ void ColorPalette::parsePalette(std::istream &istr)
   
   istr >> num_colors_;
   
-  for (sf::Uint32 i=0; i<num_colors_; i++)
+  for (uint32_t i=0; i<num_colors_; i++)
   {
-    sf::Uint32 color_in;
+    uint32_t color_in;
     sf::Color color_out;
     
     istr >> color_in;
@@ -76,7 +76,7 @@ void ColorPalette::parsePalette(std::istream &istr)
 }
 
 //------------------------------------------------------------------------------
-sf::Color ColorPalette::getColorAt(sf::Uint16 pos)
+sf::Color ColorPalette::getColorAt(uint16_t pos)
 {
   if (pos < 0 || pos >= num_colors_)
   {

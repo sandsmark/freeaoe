@@ -87,44 +87,44 @@ public:
   /// @param player index
   /// @return player color mask
   //
-  sf::Image* getPlayerColorMask(sf::Uint8 player) const; //TODO auto_ptr
+  sf::Image* getPlayerColorMask(uint8_t player) const; //TODO auto_ptr
   
   //----------------------------------------------------------------------------
   /// Get the hotspot of the frame. The Hotspot is the center of the image.
   ///
   /// @return x coordinate of the hotspot
   // TODO: Hotspot as vector
-  sf::Int32 getHotspotX() const;
+  int32_t getHotspotX() const;
   
   //----------------------------------------------------------------------------
   /// Get the hotspot of the frame. The Hotspot is the center of the image.
   ///
   /// @return y coordinate of the hotspot
   //
-  sf::Int32 getHotspotY() const;
+  int32_t getHotspotY() const;
   
 private:
   FileIO file_;
   std::streampos file_pos_;
   
-  sf::Uint32 cmd_table_offset_;
-  sf::Uint32 outline_table_offset_;
-  sf::Uint32 palette_offset_;
-  sf::Uint32 properties_;
+  uint32_t cmd_table_offset_;
+  uint32_t outline_table_offset_;
+  uint32_t palette_offset_;
+  uint32_t properties_;
   
-  sf::Int32 width_;
-  sf::Int32 height_;
-  sf::Int32 hotspot_x_;
-  sf::Int32 hotspot_y_;
+  int32_t width_;
+  int32_t height_;
+  int32_t hotspot_x_;
+  int32_t hotspot_y_;
   
-  sf::Int16 *left_edges_;
-  sf::Int16 *right_edges_;
+  int16_t *left_edges_;
+  int16_t *right_edges_;
   
   sf::Image *image_;
   sf::Image *outline_;
   //sf::Image *player_color_mask_;
   
-  sf::Int32 player_color_index_;
+  int32_t player_color_index_;
   
   ColorPalette *palette_;
   
@@ -132,9 +132,9 @@ private:
   // a player color pixel and the palette index for the color
   struct PlayerColorElement
   {
-    sf::Uint32 x;
-    sf::Uint32 y;
-    sf::Uint8 index;
+    uint32_t x;
+    uint32_t y;
+    uint8_t index;
   };
   
   std::vector<PlayerColorElement> player_color_mask_;
@@ -159,8 +159,8 @@ private:
   /// @param count how many pixels should be read
   /// @param player_col if true, pixel will be written to player color image
   //
-  void readPixelsToImage(sf::Image *image, sf::Uint32 row, sf::Uint32 &col, 
-                         sf::Uint32 count, bool player_col = false);
+  void readPixelsToImage(sf::Image *image, uint32_t row, uint32_t &col, 
+                         uint32_t count, bool player_col = false);
   
   //----------------------------------------------------------------------------
   /// Sets the next count of pixels to given color without reading from stream.
@@ -172,8 +172,8 @@ private:
   /// @param color color to set
   /// @param player_col if true, pixel will be written to player color image
   //
-  void setPixelsToColor(sf::Image *image, sf::Uint32 row, sf::Uint32 &col, 
-                        sf::Uint32 count, sf::Uint8 color_index, 
+  void setPixelsToColor(sf::Image *image, uint32_t row, uint32_t &col, 
+                        uint32_t count, uint8_t color_index, 
                         bool player_col = false);
   
   //----------------------------------------------------------------------------
@@ -182,7 +182,7 @@ private:
   ///
   /// @param data command byte
   //
-  sf::Uint8 getPixelCountFromData(sf::Uint8 data);
+  uint8_t getPixelCountFromData(uint8_t data);
 };
 
 #endif // SLPFRAME_H

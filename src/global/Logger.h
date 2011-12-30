@@ -51,6 +51,7 @@ public:
   
   //----------------------------------------------------------------------------
   /// Returns specific logger that prints additionally its name before log info
+  /// TODO
   ///
   /// @return specific logger
   //

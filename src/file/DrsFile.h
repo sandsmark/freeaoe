@@ -65,11 +65,11 @@ private:
   
   bool header_loaded_;
   
-  sf::Uint32 num_of_tables_;
-  sf::Uint32 header_offset_;
+  uint32_t num_of_tables_;
+  uint32_t header_offset_;
   
   std::vector<std::string> table_types_;
-  std::vector<sf::Uint32> table_num_of_files_;
+  std::vector<uint32_t> table_num_of_files_;
   
   ResourceManager *resource_manager_;
   
