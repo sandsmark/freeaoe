@@ -77,7 +77,6 @@ void Graphic::update(Time time)
 
 void Graphic::drawOn(GameRenderer& renderer)
 {
-  //renderer.draw(getAttribute<attr::GraphicDesc>(attr::GRAPHIC_DESC)->Resource, ScreenPos(100,100));
   renderer.draw(graphic_, screen_pos_, current_frame_);
 }
 
