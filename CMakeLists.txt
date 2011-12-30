@@ -13,12 +13,10 @@ find_package(SFML COMPONENTS SYSTEM WINDOW GRAPHICS REQUIRED)
 find_package(OpenGL REQUIRED)
 
 include_directories(src/
-  ${CMAKE_HOME_DIRECTORY}/extern/thor/include 
   ${CMAKE_HOME_DIRECTORY}/extern/geniedat/include
   ${Boost_INCLUDE_DIRS}
   ${SFML_INCLUDE_DIR})
 
-add_subdirectory( extern/thor )
 add_subdirectory( extern/geniedat )
 
 # additional compiler flags 
@@ -48,7 +46,9 @@ set(MECHANICS_SRC src/mechanics/Map.cpp
                   src/mechanics/ActionMove.cpp
                    )
 
-set(RENDER_SRC src/render/RenderUnit.cpp 
+set(RENDER_SRC src/render/CompGraphic.cpp 
+               src/render/EntityFormManager.cpp 
+               src/render/GameRenderer.cpp
                src/render/RenderGraphic.cpp
                src/render/RenderMap.cpp  )
 
@@ -64,7 +64,7 @@ set(COMMUNICATION_SRC src/communication/TunnelToClient.cpp
                       src/communication/commands/CommandSpawn.cpp )
  
 
-set(UNSORTED_SRC src/mechanics/EntityManager.cpp src/mechanics/CompMapObject.cpp src/render/CompGraphic.cpp src/render/EntityFormManager.cpp src/render/GameRenderer.cpp src/core/IAction.cpp src/core/IAttribute.cpp src/mechanics/EntityFactory.cpp src/core/Attributes.cpp src/core/IComponent.cpp src/core/Entity.cpp
+set(UNSORTED_SRC src/mechanics/CompUnitData.cpp src/mechanics/EntityManager.cpp src/mechanics/CompMapObject.cpp src/core/IAction.cpp src/core/IAttribute.cpp src/mechanics/EntityFactory.cpp src/core/Attributes.cpp src/core/IComponent.cpp src/core/Entity.cpp
 
                  )
 
@@ -82,7 +82,6 @@ target_link_libraries(freeaoe
                       ${SFML_WINDOW_LIBRARY}
                       ${SFML_SYSTEM_LIBRARY}
                       ${SFML_GRAPHICS_LIBRARY}
-                      ${THOR_TARGET}
                       geniedat)
                       
 

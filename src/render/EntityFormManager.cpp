@@ -19,6 +19,7 @@
 
 #include "EntityFormManager.h"
 #include "CompGraphic.h"
+#include <mechanics/CompUnitData.h>
 
 EntityFormManager::EntityFormManager() 
 {
@@ -39,6 +40,29 @@ void EntityFormManager::add(EntityForm& form)
 {
   forms_.push_back(form);
 }
+
+void EntityFormManager::createForms(EntityPtr entity)
+{
+  comp::UnitDataPtr gunit = entity->getComponent<comp::UnitData>(comp::UNIT_DATA);
+  
+  if (gunit.get())
+  {
+    std::cout << "Creating form for " << gunit->getData().Name << std::endl;
+    
+    EntityForm form(entity);
+    
+    form.addComponent(comp::GRAPHIC, comp::Graphic::create(gunit->getData().StandingGraphic.first));
+    
+    forms_.push_back(form);  
+  }
+}
+
+void EntityFormManager::update(Time time)
+{
+  for (EFVector::iterator it = forms_.begin(); it != forms_.end(); it++)
+    (*it).update(time);
+}
+
 
 void EntityFormManager::draw()
 {

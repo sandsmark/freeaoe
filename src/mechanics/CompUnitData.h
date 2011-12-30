@@ -17,46 +17,33 @@
 */
 
 
-#ifndef RENDERUNIT_H
-#define RENDERUNIT_H
-#include <SFML/Config.hpp>
+#ifndef COMPUNITDATA_H
+#define COMPUNITDATA_H
+#include <core/IComponent.h>
+#include <geniedat/Unit.h>
 
-class RenderGraphic;
-namespace sf {
-class RenderTarget;
-}
+namespace comp
+{
+  
+const std::string UNIT_DATA("unit_data");
 
-class Unit;
-class RenderUnit
+class UnitData : public IComponent
 {
 
 public:
-  RenderUnit(Unit *unit, sf::RenderTarget *render_target);
-  virtual ~RenderUnit();
-    
-  //----------------------------------------------------------------------------
-  ///
-  //
-  Unit *getUnit();
+  UnitData();
+  virtual ~UnitData();
   
-  /// Update will always be called, draw only if unit is in sight of the camera.
-  void update();
+  void setUnit(unsigned int unit_id);
   
-  void draw();
-  
-  //----------------------------------------------------------------------------
-  /// Checks if unit covers given position
-  //
-  bool coversPos(sf::Uint32 x, sf::Uint32 y);
+  gdat::Unit getData(void) const;
   
 private:
-  RenderUnit(const RenderUnit& other);
-  
-  Unit *unit_;
-  
-  RenderGraphic *current_graph_;
-  
-  sf::RenderTarget *render_target_;
+  gdat::Unit data_;
 };
 
-#endif // RENDERUNIT_H
+typedef boost::shared_ptr< UnitData > UnitDataPtr;
+
+}
+
+#endif // COMPUNITDATA_H

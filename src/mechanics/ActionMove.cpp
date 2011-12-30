@@ -20,7 +20,6 @@
 #include "ActionMove.h"
 #include <Engine.h>
 #include "Unit.h"
-#include <Thor/Vectors/VectorAlgebra2D.hpp>
 
 #include <iostream>
 
@@ -38,6 +37,7 @@ ActionMove::~ActionMove()
 // TODO: UUUUGGGLYYY 
 void ActionMove::update(void )
 {
+  /*
   float time_step = 30;
   
   sf::Uint32 time = Engine::GameClock.GetElapsedTime();
@@ -73,7 +73,7 @@ void ActionMove::update(void )
   {
     target_reached = true;
     IAction::setDone();
-  }
+  }*/
 }
 
 Unit* ActionMove::getUnit(void )

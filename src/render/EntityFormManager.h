@@ -36,8 +36,9 @@ public:
   
   void add(EntityForm &form);
   
-  void createForm(Entity &entity);
+  void createForms(EntityPtr entity);
   
+  void update(Time time);
   void draw();
   
 private:

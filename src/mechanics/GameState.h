@@ -24,6 +24,7 @@
 #include "Map.h"
 #include <render/GameRenderer.h>
 #include <render/EntityFormManager.h>
+#include "EntityManager.h"
 
 class GameClient;
 class GameServer;
@@ -53,6 +54,7 @@ private:
   
   GameRenderer *game_renderer_;
   
+  EntityManager entity_manager_;
   EntityFormManager entity_form_manager_;
   /*
   GameServer *game_server_;

@@ -52,6 +52,7 @@ class Graphic;
 
 typedef boost::shared_ptr< Graphic > GraphicPtr;
 
+/// Draws and manages Graphics for EntityForm objects.
 class Graphic : public IComponent
 {
 
@@ -63,6 +64,8 @@ public:
   
   void drawOn(GameRenderer &renderer);
   
+  void setGraphic(res::GraphicPtr graphic);
+  
   static comp::GraphicPtr create(unsigned int graphic_id);
   
 private:
@@ -70,6 +73,13 @@ private:
   
   ScreenPos screen_pos_;
   
+  unsigned int current_frame_;
+  Time time_last_frame_;
+  
+  unsigned short current_angle_;
+  unsigned int angle_diff_;  
+  
+  bool mirror_frame_;
 };
 
 }

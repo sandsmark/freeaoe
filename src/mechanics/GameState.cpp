@@ -30,6 +30,8 @@
 #include <iostream>
 #include "Unit.h"
 #include <render/CompGraphic.h>
+#include "EntityFactory.h"
+#include <Engine.h>
 
 void GameState::init()
 {
@@ -44,6 +46,14 @@ void GameState::init()
       
   //TODO: Test
   
+  
+  EntityPtr unit = EntityFactory::Inst().createUnit(531);
+  
+  
+  entity_manager_.add(unit);
+  entity_form_manager_.createForms(unit);
+  
+  /*
   EntityForm form;
   
   comp::GraphicPtr g = comp::Graphic::create(881);
@@ -52,7 +62,7 @@ void GameState::init()
  
   entity_form_manager_.add(form);
   
-  
+  */
   //-------------
     
 /*    game_server_ = new GameServer();
@@ -84,6 +94,7 @@ void GameState::draw()
 
 void GameState::update()
 {
+  entity_form_manager_.update(Engine::GameClock.GetElapsedTime());
   //game_server_->update();
   //game_client_->update();
 }

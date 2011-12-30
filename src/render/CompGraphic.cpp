@@ -42,7 +42,11 @@ namespace comp
 
 Graphic::Graphic() : screen_pos_(0,0)
 {
-  
+  current_frame_ = 0; 
+  time_last_frame_ = 0;
+  current_angle_ = 0; 
+  angle_diff_ = 0;
+  mirror_frame_ = false;
 }
 
 Graphic::~Graphic()
@@ -52,13 +56,29 @@ Graphic::~Graphic()
 
 void Graphic::update(Time time)
 {
+  if (time_last_frame_ == 0)
+  {
+    time_last_frame_ = time;
+    current_frame_ = 0;
+  }
+  else
+  {
+    if ( (time - time_last_frame_) > (graphic_->getFrameRate() * 1000) )
+    {
+      if (current_frame_ < graphic_->getFrameCount() - 1)
+        current_frame_ ++;
+      else
+        current_frame_ = 0;
 
+      time_last_frame_ = time;
+    }
+  }
 }
 
 void Graphic::drawOn(GameRenderer& renderer)
 {
   //renderer.draw(getAttribute<attr::GraphicDesc>(attr::GRAPHIC_DESC)->Resource, ScreenPos(100,100));
-  renderer.draw(graphic_, screen_pos_);
+  renderer.draw(graphic_, screen_pos_, current_frame_);
 }
 
 GraphicPtr Graphic::create(unsigned int graphic_id)

@@ -62,7 +62,7 @@ public:
   bool hasAttribute(const std::string &name);
   
   
-  virtual void update(Time time) = 0;
+  virtual void update(Time time) {}
   
 private:
   typedef std::map<const char *, AttributePtr, util::cstr_comp > AttributeMap;

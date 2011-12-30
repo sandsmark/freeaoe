@@ -22,6 +22,7 @@
 #include <resource/DataManager.h>
 #include <global/Constants.h>
 #include "CompMapObject.h"
+#include "CompUnitData.h"
 
 using boost::shared_ptr;
 
@@ -44,15 +45,20 @@ EntityFactory::~EntityFactory()
 
 boost::shared_ptr< Entity > EntityFactory::createUnit(int ID)
 {
-  gdat::Unit gunit = DataManager::Inst().getUnit(ID);
+  //gdat::Unit gunit = DataManager::Inst().getUnit(ID);
   
   EntityPtr entity(new Entity());
   
-  std::cout << gunit.Name << std::endl;
+  //std::cout << gunit.Name << std::endl;
   
   comp::MapObjectPtr mo(new comp::MapObject());
   
   entity->addComponent(comp::MAP_OBJECT, mo);
+  
+  comp::UnitDataPtr gunit(new comp::UnitData());
+  gunit->setUnit(ID);
+  
+  entity->addComponent(comp::UNIT_DATA, gunit);
   
   
 /*  entity->addAttribute(attr::id::NAME,

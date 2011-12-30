@@ -47,7 +47,7 @@ void GameRenderer::draw(res::GraphicPtr graph, ScreenPos pos, int frame, int ang
   sf::Sprite sprite;
   sprite.SetTexture(texture);
   
-  sprite.SetPosition(pos);
+  sprite.SetPosition(pos - graph->getHotspot(frame));
   
   render_target_->Draw(sprite);
 }

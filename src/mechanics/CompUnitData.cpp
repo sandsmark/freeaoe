@@ -17,29 +17,31 @@
 */
 
 
-#include "Entity.h"
+#include "CompUnitData.h"
+#include <resource/DataManager.h>
 
-Entity::Entity()
+namespace comp
+{
+  
+UnitData::UnitData()
 {
 
 }
 
-Entity::~Entity()
+UnitData::~UnitData()
 {
 
 }
 
-void Entity::addComponent(const std::string& name, ComponentPtr comp)
+void UnitData::setUnit(unsigned int unit_id)
 {
-  components_[name.c_str()] = comp;
+  data_ = DataManager::Inst().getUnit(unit_id);
 }
 
-void Entity::update(Time time)
+gdat::Unit UnitData::getData(void ) const
 {
-  for (ComponentMap::iterator it = components_.begin(); it != components_.end();
-       it ++)
-    (*it).second->update(time);
+  return data_;
 }
 
 
-
+}
