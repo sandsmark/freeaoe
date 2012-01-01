@@ -39,7 +39,7 @@ MoveOnMap::~MoveOnMap()
 
 bool MoveOnMap::update(Time time)
 {
-  if (last_update_ == 0 || (time - last_update_) >= 100 ) //test!
+  if (last_update_ == 0 || (time - last_update_) >= 1000 ) //test!
   {
     comp::MapObjectPtr ptr = entity_->getComponent<comp::MapObject>(comp::MAP_OBJECT);
     

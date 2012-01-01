@@ -29,7 +29,7 @@ IComponent::~IComponent()
 {
 
 }
-
+/*
 void IComponent::addAttribute(const std::string name, AttributePtr attribute)
 {
   attributes_[name.c_str()] = attribute;
@@ -49,7 +49,7 @@ bool IComponent::hasAttribute(const std::string &name)
   else
     return true;
 }
-
+*/
 /*
 void IComponent::update(Time time)
 {

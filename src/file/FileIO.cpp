@@ -32,7 +32,8 @@ FileIO::FileIO(std::string file_name) throw (FileException)
 {
   try 
   {
-    file = new std::fstream(file_name.c_str());
+    file = new std::fstream();
+    file->open(file_name.c_str(), std::ios::binary | std::ios::out | std::ios::in);
   }
   catch (std::bad_alloc &e)
   {

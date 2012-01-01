@@ -41,7 +41,7 @@ public:
   virtual ~IComponent();
   
  // virtual const char *getCompName() const = 0;
-  
+  /*
   void addAttribute(const std::string name, AttributePtr attribute);
   
   template< class T >
@@ -62,7 +62,7 @@ public:
   }
   
   bool hasAttribute(const std::string &name);
-  
+  */
   
   virtual void update(Time time) {}
   
