@@ -81,7 +81,9 @@ private:
   unsigned int current_frame_;
   Time time_last_frame_;
   
-  unsigned short current_angle_;
+  bool replay_delay_;
+  
+  uint16_t current_angle_;
   unsigned int angle_diff_;  
   
   bool mirror_frame_;

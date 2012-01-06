@@ -72,6 +72,12 @@ public:
   float getFrameRate(void) const;
   
   //----------------------------------------------------------------------------
+  ///
+  /// @return replay delay
+  //
+  float getReplayDelay(void) const;
+  
+  //----------------------------------------------------------------------------
   /// Get the graphics frame count.
   ///
   /// @return frame count

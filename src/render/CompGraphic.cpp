@@ -48,6 +48,7 @@ Graphic::Graphic() : screen_pos_(0,0)
   current_angle_ = 0; 
   angle_diff_ = 0;
   mirror_frame_ = false;
+  replay_delay_ = false;
 }
 
 Graphic::~Graphic()
@@ -66,12 +67,23 @@ void Graphic::update(Time time)
   }
   else
   {
-    if ( (time - time_last_frame_) > (graphic_->getFrameRate() * 1000) )
+    Time frame_rate = graphic_->getFrameRate() * 1000;
+    
+    if (replay_delay_)
+      frame_rate += replay_delay_ * 1000;
+    
+    if ( (time - time_last_frame_) > frame_rate)
     {
       if (current_frame_ < graphic_->getFrameCount() - 1)
+      {
         current_frame_ ++;
+        replay_delay_ = false;
+      }
       else
+      {
         current_frame_ = 0;
+        replay_delay_ = true;
+      }
 
       time_last_frame_ = time;
     }

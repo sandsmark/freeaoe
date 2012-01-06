@@ -74,6 +74,12 @@ float Graphic::getFrameRate(void ) const
 }
 
 //------------------------------------------------------------------------------
+float Graphic::getReplayDelay(void ) const
+{
+  return data_->ReplayDelay;
+}
+
+//------------------------------------------------------------------------------
 Uint32 Graphic::getFrameCount(void ) const
 {
   return data_->FrameCount;
