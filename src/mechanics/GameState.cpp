@@ -87,7 +87,7 @@ void GameState::init()
 
 void GameState::draw()
 { 
-  map_->draw(render_target_);
+  //map_->draw(render_target_);
   entity_form_manager_.draw();
 }
 

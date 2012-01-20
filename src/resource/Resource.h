@@ -34,7 +34,7 @@ class Resource : public NonCopyable
 public:
   //----------------------------------------------------------------------------
   /// Resource types
-  enum Type {TYPE_UNDEFINED, TYPE_GRAPHIC};
+  enum Type {TYPE_UNDEFINED, TYPE_GRAPHIC, TYPE_TERRAIN};
   
   //----------------------------------------------------------------------------
   /// Constructor

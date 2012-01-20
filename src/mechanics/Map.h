@@ -19,6 +19,8 @@
 
 #ifndef MAP_H
 #define MAP_H
+
+#include <global/Logger.h>
 #include <geniedat/Terrain.h>
 #include <global/Types.h>
 #include <SFML/Config.hpp>
@@ -27,6 +29,8 @@
 #include <map>
 #include <SFML/Graphics/Image.hpp>
 #include <SFML/Graphics/RenderTexture.hpp>
+#include <core/Entity.h>
+#include <resource/Terrain.h>
 
 namespace sf {
 class Shape;
@@ -35,7 +39,7 @@ class Shape;
 class MapNode
 {
 public:
-  sf::Uint32 row, col;
+  unsigned int row, col;
   sf::Int8 elevation;
   sf::Int32 x_pos, y_pos, z_pos;
 };
@@ -44,11 +48,12 @@ class MapTile
 {
 public:
   MapNode *north, *east, *south, *west;
-  sf::Uint8 elevation;
-  sf::Uint8 terrain_id;
+  
+  unsigned int elevation_;
+  gdat::Terrain terrain_;
 };
 
-class Map
+class Map : public Entity
 {
 
 public:  
@@ -61,28 +66,43 @@ public:
    * A gigantic-size map? 255 x 255. 
    */
   
-  static const sf::Uint32 TILE_SIZE = 48;
+  static const unsigned int TILE_SIZE = 48;
   
   // Isometric sizes:
-  static const sf::Uint32 TILE_SIZE_VERTICAL = 48;
-  static const sf::Uint32 TILE_SIZE_HORIZONTAL = 96;
-  static const sf::Uint32 TILE_SIZE_HEIGHT = 24;        //Mountain
+  static const unsigned int TILE_SIZE_VERTICAL = 48;
+  static const unsigned int TILE_SIZE_HORIZONTAL = 96;
+  static const unsigned int TILE_SIZE_HEIGHT = 24;        //Mountain
   
   Map();
   virtual ~Map();
   
   void setUpSample();
   
-  sf::Uint32 getRows();
-  sf::Uint32 getCols();
+  unsigned int getRows();
+  unsigned int getCols();
   
+  MapTile getTileAt(unsigned int col, unsigned int row);
   
+  // old stuff down ------------------------------------------------------------
+  /*
   gdat::Terrain getTerrain(unsigned int col, unsigned int row) { return terrain_[col][row]; }
   
   //TODO: Outsource to RenderMap!
   void draw(sf::RenderTarget *render_target);
+  */
   
 private:
+  
+  static Logger &log;
+  
+  // cols_ = x, rows_ = y
+  unsigned int rows_, cols_;
+  
+  typedef std::vector<MapTile> MapTileArray;
+  MapTileArray tiles_;
+  
+  // old stuff down ------------------------------------------------------------
+  /*
   gdat::Terrain terrain_[4][4];
   sf::RenderTexture *map_txt_;
   sf::Texture *s_map_txt_;
@@ -91,15 +111,13 @@ private:
   sf::Int32 y_offset_;
   
   //std::vector<MapNode *> nodes_;
-  typedef std::pair<sf::Uint32, sf::Uint32> ColRowPair;
+  typedef std::pair<unsigned int, unsigned int> ColRowPair;
   typedef std::map< ColRowPair , MapNode * > NodeMap;
   NodeMap nodes_;
   
-  typedef std::vector<MapTile *> TileArray;
-  TileArray tiles_;
   
-  sf::Uint32 node_rows_;
-  sf::Uint32 node_cols_;
+  unsigned int node_rows_;
+  unsigned int node_cols_;
   
   /// Creates the node grid
   void makeGrid(bool topDown = false);
@@ -111,7 +129,8 @@ private:
   
   void addNodeToShape(sf::Shape *shape, MapNode *node, sf::Color *point_col);
   
-  MapNode *getNodeByCoords(sf::Uint32 col, sf::Uint32 row);
+  MapNode *getNodeByCoords(unsigned int col, unsigned int row);
+  */
 };
 
 #endif // MAP_H

@@ -20,12 +20,13 @@
 #ifndef RESOURCEMANAGER_H
 #define RESOURCEMANAGER_H
 
-#include "Resource.h"
+#include "ResourcePtr.h"
 
 #include <memory>
 #include <map>
 #include <fstream>
 #include "Graphic.h"
+#include "Terrain.h"
 #include <file/SlpFile.h>
 #include <global/Logger.h>
 #include <global/NonCopyable.h>
@@ -55,7 +56,7 @@ public:
   /// @param id id of the slp file
   /// @return slp file
   //
-  SlpFile * const getSlp(Uint32 id);
+  SlpFile * const getSlp(unsigned int id);
   
   //----------------------------------------------------------------------------
   /// Get a Graphic resource object.
@@ -63,9 +64,17 @@ public:
   /// @param id id of the resource
   /// @return GraphicPtr pointing to the object
   //
-  res::GraphicPtr getGraphic(Uint32 id);
+  res::GraphicPtr getGraphic(unsigned int id);
   
-  ColorPalette* getPalette(Uint32 id);
+  //----------------------------------------------------------------------------
+  /// Get a Terrain resource object.
+  ///
+  /// @param id id of the resource
+  /// @return resource pointer to the object
+  //
+  res::TerrainPtr getTerrain(unsigned int id);
+  
+  ColorPalette* getPalette(unsigned int id);
   
   //----------------------------------------------------------------------------
   /// Adds an slp file that will be managed by the ResourceManager.
@@ -82,11 +91,15 @@ private:
   virtual ~ResourceManager();
   
   std::vector<DrsFile *> drs_files_;
-  std::map<Uint32, SlpFile *> slp_files_;
-  std::map<Uint32, BinaFile*> bina_files_;
+  std::map<unsigned int, SlpFile *> slp_files_;
+  std::map<unsigned int, BinaFile*> bina_files_;
   
-  typedef std::map<Uint32, res::Graphic *> GraphicMap;
+  //TODO: All resources into one map?
+  typedef std::map<unsigned int, res::Graphic *> GraphicMap;
   GraphicMap graphics_;
+  
+  typedef std::map<unsigned int, res::TerrainPtr> TerrainMap;
+  TerrainMap terrains_;
   
   std::fstream terrain_file_;
   std::fstream graphics_file_;

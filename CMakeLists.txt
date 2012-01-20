@@ -49,7 +49,7 @@ set(RENDER_SRC src/render/CompGraphic.cpp
                src/render/EntityFormManager.cpp 
                src/render/GameRenderer.cpp
                src/render/RenderGraphic.cpp
-               src/render/RenderMap.cpp  )
+               )
 
 set(SERVER_SRC src/server/GameServer.cpp)
 
@@ -63,7 +63,7 @@ set(COMMUNICATION_SRC src/communication/TunnelToClient.cpp
                       src/communication/commands/CommandSpawn.cpp )
  
 
-set(UNSORTED_SRC src/render/ActAnimate.cpp src/mechanics/CompUnitData.cpp src/mechanics/EntityManager.cpp src/mechanics/CompMapObject.cpp src/core/IAction.cpp src/core/IAttribute.cpp src/mechanics/EntityFactory.cpp src/core/Attributes.cpp src/core/IComponent.cpp src/core/Entity.cpp
+set(UNSORTED_SRC src/render/MapRender.cpp src/resource/Terrain.cpp src/render/ActAnimate.cpp src/mechanics/CompUnitData.cpp src/mechanics/EntityManager.cpp src/mechanics/CompMapObject.cpp src/core/IAction.cpp src/core/IAttribute.cpp src/mechanics/EntityFactory.cpp src/core/Attributes.cpp src/core/IComponent.cpp src/core/Entity.cpp
 
                  )
 

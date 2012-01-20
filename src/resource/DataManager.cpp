@@ -29,14 +29,19 @@ DataManager& DataManager::Inst()
   return inst;
 }
 
-gdat::Graphic DataManager::getGraphic(Uint32 id)
+gdat::Graphic DataManager::getGraphic(unsigned int id)
 {
   return dat_file_.Graphics[id];
 }
 
-gdat::Unit DataManager::getUnit(Uint32 id)
+gdat::Unit DataManager::getUnit(unsigned int id)
 {
   return dat_file_.Civs[0].Units[id];
+}
+
+gdat::Terrain DataManager::getTerrain(unsigned int id)
+{
+  return dat_file_.Terrains[id];
 }
 
 

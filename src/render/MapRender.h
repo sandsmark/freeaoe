@@ -1,6 +1,6 @@
 /*
     <one line to give the program's name and a brief idea of what it does.>
-    Copyright (C) 2011  <copyright holder> <email>
+    Copyright (C) 2012  <copyright holder> <email>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,41 +17,26 @@
 */
 
 
-#ifndef DATAMANAGER_H
-#define DATAMANAGER_H
+#ifndef MAPRENDER_H
+#define MAPRENDER_H
 
-#include <global/Logger.h>
-#include <geniedat/File.h>
-#include <geniedat/Unit.h>
+#include "IRenderableComponent.h"
 
-#include <map>
-#include <SFML/Config.hpp>
-#include <global/NonCopyable.h>
+namespace comp
+{
 
-//------------------------------------------------------------------------------
-/// Class for receiving and managing data files (.dat)
-//
-class DataManager : public NonCopyable
+class MapRender : public IRenderableComponent
 {
 
 public:
+  MapRender();
+  virtual ~MapRender();
   
-  static DataManager & Inst();
+  virtual void update(Time time);
   
-  gdat::Graphic getGraphic(unsigned int id);
-  gdat::Unit getUnit(unsigned int id);
-  gdat::Terrain getTerrain(unsigned int id);
-  
-private:
-  DataManager();
-  virtual ~DataManager();
-  
-  void initialize();
-  
-  static Logger &log;
-  
-  gdat::File dat_file_;
-  
+  virtual void drawOn(GameRenderer &renderer);
 };
 
-#endif // DATAMANAGER_H
+}
+
+#endif // MAPRENDER_H

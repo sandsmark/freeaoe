@@ -32,6 +32,8 @@ namespace comp
   
 const std::string MAP_OBJECT("map_object");
 
+// TODO: Rename to MapUnit?
+/// Component that enables an entity to be placed on a map.
 class MapObject : public IComponent
 {
 public:

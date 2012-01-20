@@ -25,6 +25,7 @@
 #include "GameRenderer.h"
 #include <resource/ResourceManager.h>
 #include <mechanics/CompMapObject.h>
+#include "IRenderableComponent.h"
 
 namespace attr
 {
@@ -54,7 +55,7 @@ class Graphic;
 typedef boost::shared_ptr< Graphic > GraphicPtr;
 
 /// Draws and manages Graphics for EntityForm objects.
-class Graphic : public IComponent
+class Graphic : public IRenderableComponent
 {
 
 public:
@@ -63,7 +64,7 @@ public:
   
   virtual void update(Time time);
   
-  void drawOn(GameRenderer &renderer);
+  virtual void drawOn(GameRenderer &renderer);
   
   void setGraphic(res::GraphicPtr graphic);
   

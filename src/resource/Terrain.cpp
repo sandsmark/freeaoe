@@ -1,6 +1,6 @@
 /*
     <one line to give the program's name and a brief idea of what it does.>
-    Copyright (C) 2011  <copyright holder> <email>
+    Copyright (C) 2012  <copyright holder> <email>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,25 +17,21 @@
 */
 
 
-#ifndef RENDERMAP_H
-#define RENDERMAP_H
+#include "Terrain.h"
 
-class Map;
-namespace sf {
-class RenderTarget;
-}
-
-class RenderMap
+namespace res
 {
 
-public:
-  RenderMap(Map *map,sf::RenderTarget *render_target);
-  virtual ~RenderMap();
-  
-private:
-  Map *map_;
-  
-  sf::RenderTarget *render_target_;
-};
+Terrain::Terrain(unsigned int Id): Resource(Id, TYPE_TERRAIN)
+{
 
-#endif // RENDERMAP_H
+}
+
+Terrain::~Terrain()
+{
+
+}
+
+  
+  
+}

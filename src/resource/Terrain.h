@@ -1,6 +1,6 @@
 /*
     <one line to give the program's name and a brief idea of what it does.>
-    Copyright (C) 2011  <copyright holder> <email>
+    Copyright (C) 2012  <copyright holder> <email>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,41 +17,27 @@
 */
 
 
-#ifndef DATAMANAGER_H
-#define DATAMANAGER_H
+#ifndef FREEAOE_TERRAIN_H
+#define FREEAOE_TERRAIN_H
 
-#include <global/Logger.h>
-#include <geniedat/File.h>
-#include <geniedat/Unit.h>
+//#include "Resource.h"
+#include "ResourcePtr.h"
 
-#include <map>
-#include <SFML/Config.hpp>
-#include <global/NonCopyable.h>
-
-//------------------------------------------------------------------------------
-/// Class for receiving and managing data files (.dat)
-//
-class DataManager : public NonCopyable
+namespace res
 {
 
+class Terrain : public Resource
+{
 public:
-  
-  static DataManager & Inst();
-  
-  gdat::Graphic getGraphic(unsigned int id);
-  gdat::Unit getUnit(unsigned int id);
-  gdat::Terrain getTerrain(unsigned int id);
-  
-private:
-  DataManager();
-  virtual ~DataManager();
-  
-  void initialize();
-  
-  static Logger &log;
-  
-  gdat::File dat_file_;
-  
+  //----------------------------------------------------------------------------
+  /// @param Id resource id
+  //
+  Terrain(unsigned int Id);
+  virtual ~Terrain();
 };
 
-#endif // DATAMANAGER_H
+typedef ResourcePtr<Terrain> TerrainPtr;
+
+}
+
+#endif // FREEAOE_TERRAIN_H

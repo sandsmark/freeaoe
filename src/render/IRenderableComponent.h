@@ -16,19 +16,21 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef IRENDERABLE_COMPONENT
+#define IRENDERABLE_COMPONENT
 
-#include "RenderMap.h"
+#include <core/IComponent.h>
+#include "GameRenderer.h"
 
-//------------------------------------------------------------------------------
-RenderMap::RenderMap(Map* map, sf::RenderTarget* render_target) : map_(map),
-                     render_target_(render_target)
+namespace comp
 {
-
+ 
+class IRenderableComponent : public IComponent
+{
+public:
+  virtual void drawOn(GameRenderer &renderer) = 0;
+};
+  
 }
 
-//------------------------------------------------------------------------------
-RenderMap::~RenderMap()
-{
-
-}
-
+#endif // IRENDERABLE_COMPONENT

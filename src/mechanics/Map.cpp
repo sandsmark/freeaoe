@@ -26,40 +26,75 @@
 #include <cstdlib>
 #include <stdexcept>
 #include <SFML/Graphics/Shape.hpp>
+#include <resource/DataManager.h>
 
-Map::Map() : map_txt_(0)
+Logger& Map::log = Logger::getLogger("freeaoe.Map");
+
+Map::Map() //: map_txt_(0)
 {
 
 }
 
 Map::~Map()
 {
+  /*
   for (NodeMap::iterator it = nodes_.begin();
        it != nodes_.end(); it ++)
        delete it->second;
+  */
 }
 
 void Map::setUpSample()
 {
-  node_cols_ = 20;
-  node_rows_ = 20;
+  cols_ = 4;
+  rows_ = 4;
   
-  makeGrid(true);
+  tiles_.clear();
+  
+  MapTile grass;
+  grass.elevation_ = 0;
+  grass.terrain_ = DataManager::Inst().getTerrain(0);
+  
+  tiles_.resize(cols_ * rows_);
+  
+  gdat::Terrain water_dat = DataManager::Inst().getTerrain(1);
+  
+  tiles_[7].terrain_ = water_dat;
+  tiles_[9].terrain_ = water_dat;
+  tiles_[10].terrain_ = water_dat;
+  tiles_[11].terrain_ = water_dat;
+  
+  
+  /*makeGrid(true);
   makeTiles();
   updateElevations();
+  */
+}
+
+unsigned int Map::getCols()
+{
+  return  cols_;
+}
+
+unsigned int Map::getRows()
+{
+  return rows_;
+}
+
+MapTile Map::getTileAt(unsigned int col, unsigned int row)
+{
+  unsigned int index = row * cols_ + col;
   
+  if (index >= tiles_.size())
+    log.error("Trying to get MapTile out of index!");
+  else
+  {
+    return tiles_[index];
+  }
 }
 
-sf::Uint32 Map::getCols()
-{
-  return  node_cols_;
-}
 
-sf::Uint32 Map::getRows()
-{
-  return node_rows_;
-}
-
+/*
 void Map::addNodeToShape(sf::Shape *shape, MapNode *node, sf::Color *point_col)
 {
   if (node)
@@ -111,9 +146,9 @@ void Map::draw(sf::RenderTarget* render_target)
     /
     
     render_target->Draw(spr); 
-  } */
+  } *
   
-  for (TileArray::iterator it = tiles_.begin(); it != tiles_.end(); it++)
+  for (MapTileArray::iterator it = tiles_.begin(); it != tiles_.end(); it++)
   {
     sf::Shape shape;
     
@@ -129,10 +164,10 @@ void Map::draw(sf::RenderTarget* render_target)
     shape.SetOutlineThickness(1);
     
     render_target->Draw(shape);
-  }
+  }*
 
 }
-
+/*
 void Map::makeGrid(bool topDown )
 {
            
@@ -179,12 +214,12 @@ void Map::makeTiles(void )
   {
     for (int row = 0; row < node_rows_; row ++)
     {
-      MapTile *tile = new MapTile();
+      MapTile tile;
       
-      tile->north = getNodeByCoords(col, row);
-      tile->east = getNodeByCoords(col + 1, row);
-      tile->south = getNodeByCoords(col + 1, row + 1);
-      tile->west = getNodeByCoords(col, row + 1);
+      tile.north = getNodeByCoords(col, row);
+      tile.east = getNodeByCoords(col + 1, row);
+      tile.south = getNodeByCoords(col + 1, row + 1);
+      tile.west = getNodeByCoords(col, row + 1);
       
       //if (rand() % 4 == 0)
       //  tile->elevation = (rand() % 2);
@@ -203,11 +238,11 @@ void Map::updateElevation(MapNode* node, Int32 elevation)
 
 void Map::updateElevations(void )
 {
-  for (TileArray::iterator it = tiles_.begin(); it != tiles_.end(); it++)
+/*  for (MapTileArray::iterator it = tiles_.begin(); it != tiles_.end(); it++)
   {
     Int32 elev;
     
-    if ((*it)->elevation == 0)
+    if ((*it).elevation == 0)
       elev = (TILE_SIZE_HEIGHT/2);
     else
       elev = (*it)->elevation * (-(TILE_SIZE_HEIGHT/2));
@@ -216,9 +251,9 @@ void Map::updateElevations(void )
     updateElevation((*it)->east, elev);
     updateElevation((*it)->south, elev);
     updateElevation((*it)->west, elev);
-  }
+  }*
 }
-
+/*
 
 MapNode* Map::getNodeByCoords(sf::Uint32 col, sf::Uint32 row)
 {
@@ -236,5 +271,5 @@ MapNode* Map::getNodeByCoords(sf::Uint32 col, sf::Uint32 row)
   return node;
 }
 
-
+*/
 

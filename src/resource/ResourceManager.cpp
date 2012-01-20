@@ -75,6 +75,25 @@ res::GraphicPtr ResourceManager::getGraphic(Uint32 id)
   return res::GraphicPtr(graph);
 }
 
+//------------------------------------------------------------------------------
+res::TerrainPtr ResourceManager::getTerrain(unsigned int id)
+{
+  res::TerrainPtr terrain;
+  
+  if (terrains_.find(id) != terrains_.end())
+  {
+    terrain = terrains_[id];
+  }
+  else
+  {
+    terrain = res::TerrainPtr(new res::Terrain(id));
+    terrain->load();
+    
+    terrains_[id] = terrain;
+  }
+  
+  return terrain;
+}
 
 //------------------------------------------------------------------------------
 ColorPalette* ResourceManager::getPalette(sf::Uint32 id)
