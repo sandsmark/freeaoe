@@ -39,15 +39,21 @@ void GameRenderer::draw(EntityForm& form)
 }
 
 void GameRenderer::draw(res::GraphicPtr graph, ScreenPos pos, int frame, int angle)
+{  
+  //TODO: angle
+  draw(graph->getImage(frame), pos - graph->getHotspot(frame));
+}
+
+void GameRenderer::draw(const sf::Image &image, ScreenPos pos)
 {
   sf::Texture texture;
   
-  texture.LoadFromImage(graph->getImage(frame));
+  texture.LoadFromImage(image);
   
   sf::Sprite sprite;
   sprite.SetTexture(texture);
   
-  sprite.SetPosition(pos - graph->getHotspot(frame));
+  sprite.SetPosition(pos);
   
   render_target_->Draw(sprite);
 }

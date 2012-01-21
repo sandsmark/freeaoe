@@ -62,7 +62,8 @@ private:
   */
   sf::RenderTarget *render_target_;
   
-  Map *map_;
+  MapPtr map_;
+  EntityFormPtr map_form_;
 };
 
 #endif // GAMESTATE_H

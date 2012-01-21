@@ -92,7 +92,7 @@ Uint32 Graphic::getAngleCount(void ) const
 }
 
 //------------------------------------------------------------------------------
-void Graphic::load()
+void Graphic::load(void )
 {
   if (!isLoaded())
   {

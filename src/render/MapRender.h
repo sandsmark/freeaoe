@@ -21,9 +21,12 @@
 #define MAPRENDER_H
 
 #include "IRenderableComponent.h"
+#include <mechanics/Map.h>
 
 namespace comp
 {
+
+const std::string MAP_RENDER("map_render");
 
 class MapRender : public IRenderableComponent
 {
@@ -35,7 +38,16 @@ public:
   virtual void update(Time time);
   
   virtual void drawOn(GameRenderer &renderer);
+  
+  void setMap(MapPtr map);
+  
+private:
+  MapPtr map_; //todo root?
+  
+  unsigned int x_offset_, y_offset_;    //TODO: ScreenPos?
 };
+
+typedef boost::shared_ptr<MapRender> MapRenderPtr;
 
 }
 

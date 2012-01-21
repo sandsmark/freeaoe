@@ -31,13 +31,14 @@
 #include <render/CompGraphic.h>
 #include "EntityFactory.h"
 #include <Engine.h>
+#include <render/MapRender.h>
 
 void GameState::init()
 {
   IState::init();
   
-  map_ = new Map();
-  map_->setUpSample();
+
+  
   
   game_renderer_ = new GameRenderer(*render_target_);
   entity_form_manager_.setGameRenderer(boost::shared_ptr<GameRenderer>(game_renderer_));
@@ -51,6 +52,16 @@ void GameState::init()
   
   entity_manager_.add(unit);
   entity_form_manager_.createForms(unit);
+  
+    //Map test
+  map_ = MapPtr(new Map());
+  map_->setUpSample();
+  
+  comp::MapRenderPtr map_render(new comp::MapRender());
+  map_render->setMap(map_);
+  
+  map_form_ = EntityFormPtr(new EntityForm(map_));
+  map_form_->addComponent(comp::MAP_RENDER, map_render);
   
   /*
   EntityForm form;
@@ -88,6 +99,9 @@ void GameState::init()
 void GameState::draw()
 { 
   //map_->draw(render_target_);
+  map_form_->getComponent<comp::MapRender>(comp::MAP_RENDER)->drawOn(*game_renderer_);
+  //std::cout << map_form_->getComponent<comp::MapRender>(comp::MAP_RENDER).get() << std::endl;
+
   entity_form_manager_.draw();
 }
 

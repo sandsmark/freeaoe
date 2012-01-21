@@ -19,8 +19,15 @@
 
 #include "Terrain.h"
 
+#include <file/SlpFile.h>
+#include "DataManager.h"
+#include "ResourceManager.h"
+#include <file/SlpFrame.h>
+
 namespace res
 {
+  
+Logger& Terrain::log = Logger::getLogger("freeaoe.resource.Terrain");
 
 Terrain::Terrain(unsigned int Id): Resource(Id, TYPE_TERRAIN)
 {
@@ -32,6 +39,30 @@ Terrain::~Terrain()
 
 }
 
+const sf::Image& Terrain::getImage(void )
+{
+  sf::Image *img = slp_->getFrame()->getImage();
   
+  img = new sf::Image(*img);
+
+  return *img;
+}
+
+void Terrain::load(void )
+{
+  if (!isLoaded())
+  {
+    data_ = DataManager::Inst().getTerrain(getId());
+  
+    if (slp_ == 0)
+      slp_ = ResourceManager::Inst()->getSlp(data_.SLP);
+    
+    slp_->load();
+     
+    Resource::load();
+  }
+}
+
+
   
 }

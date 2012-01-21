@@ -49,6 +49,8 @@ public:
     return boost::dynamic_pointer_cast<T>(ptr);
   }
   
+  unsigned int getComponentSize() { return components_.size(); }
+  
 public:
   ActionPtr current_action_;
   
@@ -65,6 +67,7 @@ typedef boost::shared_ptr< Entity > EntityPtr;
 class EntityForm : public Entity
 {
 public:
+  EntityForm() {}
   EntityForm(EntityPtr root) : root_(root) {}
   virtual ~EntityForm() {}
   
@@ -72,6 +75,8 @@ public:
   
 private:
   EntityPtr root_;
+  
+  //EntityForm(const EntityForm& other);
 };
 
 typedef boost::shared_ptr< EntityForm > EntityFormPtr;

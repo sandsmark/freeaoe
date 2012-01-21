@@ -18,6 +18,7 @@
 
 
 #include "MapRender.h"
+#include <resource/ResourceManager.h>
 
 namespace comp
 {
@@ -25,6 +26,8 @@ namespace comp
 MapRender::MapRender()
 {
 
+  x_offset_ = 200;
+  y_offset_ = 0;
 }
 
 MapRender::~MapRender()
@@ -39,8 +42,37 @@ void MapRender::update(Time time)
 
 void MapRender::drawOn(GameRenderer& renderer)
 {
+  
+  for (unsigned int col =0; col < map_->getCols(); col++)
+  {
+    for (unsigned int row = 0; row < map_->getRows(); row++)
+    {
+      res::TerrainPtr t = ResourceManager::Inst()->getTerrain(map_->getTileAt(col,row).terrain_id_);
 
+      //TODO: MapPos to screenpos (Tile 0,0 is drawn at MapPos 0,0
+      MapPos mpos(0,0,0);
+      
+      mpos.x += col*Map::TILE_SIZE;
+      mpos.y += row*Map::TILE_SIZE;
+      
+      ScreenPos spos;
+  
+      spos.x = mpos.x - mpos.y;
+      spos.y = mpos.z + (mpos.x + mpos.y)/2;
+      
+      spos.x += x_offset_;
+      spos.y += y_offset_;
+
+      renderer.draw(t->getImage(), spos);
+    }
+  }
 }
+
+void MapRender::setMap(MapPtr map)
+{
+  map_ = map;
+}
+
 
 
 }

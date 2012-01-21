@@ -41,6 +41,9 @@ public:
   void draw(res::GraphicPtr graph, ScreenPos pos, int frame=0, int angle=0);
   
   //----------------------------------------------------------------------------
+  void draw(const sf::Image &image, ScreenPos pos);
+  
+  //----------------------------------------------------------------------------
   /// Displays frame.
   //
   void display(void);

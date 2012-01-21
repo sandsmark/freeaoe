@@ -51,6 +51,7 @@ public:
   
   unsigned int elevation_;
   gdat::Terrain terrain_;
+  unsigned int terrain_id_;
 };
 
 class Map : public Entity
@@ -132,5 +133,7 @@ private:
   MapNode *getNodeByCoords(unsigned int col, unsigned int row);
   */
 };
+
+typedef boost::shared_ptr<Map> MapPtr;
 
 #endif // MAP_H

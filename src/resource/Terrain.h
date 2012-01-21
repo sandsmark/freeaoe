@@ -22,6 +22,11 @@
 
 //#include "Resource.h"
 #include "ResourcePtr.h"
+#include <SFML/Graphics/Image.hpp>
+#include <geniedat/Terrain.h>
+#include <global/Logger.h>
+
+class SlpFile;
 
 namespace res
 {
@@ -34,6 +39,17 @@ public:
   //
   Terrain(unsigned int Id);
   virtual ~Terrain();
+  
+  const sf::Image &getImage(void); 
+  
+  virtual void load(void);
+  
+private:
+  static Logger &log;
+  
+  gdat::Terrain data_;
+  SlpFile *slp_;
+  
 };
 
 typedef ResourcePtr<Terrain> TerrainPtr;
