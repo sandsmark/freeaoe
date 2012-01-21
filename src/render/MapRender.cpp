@@ -42,7 +42,7 @@ void MapRender::update(Time time)
 
 void MapRender::drawOn(GameRenderer& renderer)
 {
-  
+  //TODO: very ugly code for testing purposes
   for (unsigned int col =0; col < map_->getCols(); col++)
   {
     for (unsigned int row = 0; row < map_->getRows(); row++)
