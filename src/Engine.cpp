@@ -25,7 +25,7 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "resource/ResourceManager.h"
-#include "render/CompGraphic.h"
+#include "render/GraphicRender.h"
 
 Logger& Engine::log = Logger::getLogger("freeaoe.Engine");
 

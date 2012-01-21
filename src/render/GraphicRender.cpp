@@ -17,31 +17,18 @@
 */
 
 
-#include "CompGraphic.h"
+#include "GraphicRender.h"
 
 #include "core/IAttribute.h"
 #include <resource/ResourceManager.h>
 #include <resource/DataManager.h>
 #include <mechanics/CompMapObject.h>
-
-namespace attr
-{
-
-GraphicDescPtr GraphicDesc::create(unsigned int graphic_id)
-{
-  GraphicDescPtr attr_graph(new GraphicDesc());
-  attr_graph->Resource = ResourceManager::Inst()->getGraphic(graphic_id);
-  
-  return attr_graph;
-}
-
-}
-
+#include "MapRender.h"
 
 namespace comp
 {
 
-Graphic::Graphic() : screen_pos_(0,0)
+GraphicRender::GraphicRender() : screen_pos_(0,0)
 {
   current_frame_ = 0; 
   time_last_frame_ = 0;
@@ -51,12 +38,12 @@ Graphic::Graphic() : screen_pos_(0,0)
   replay_delay_ = false;
 }
 
-Graphic::~Graphic()
+GraphicRender::~GraphicRender()
 {
 
 }
 
-void Graphic::update(Time time)
+void GraphicRender::update(Time time)
 {
   
   
@@ -90,43 +77,28 @@ void Graphic::update(Time time)
   }
 }
 
-void Graphic::drawOn(GameRenderer& renderer)
+void GraphicRender::drawOn(GameRenderer& renderer)
 {
   
-  screen_pos_ = mapToScreenPos(map_object_->getPos());
+  screen_pos_ = MapRender::mapToScreenPos(map_object_->getPos());
   
   renderer.draw(graphic_, screen_pos_, current_frame_);
 }
 
-void Graphic::setMapObject(MapObjectPtr map_object)
+void GraphicRender::setMapObject(MapObjectPtr map_object)
 {
   map_object_ = map_object;
 }
 
 
-GraphicPtr Graphic::create(unsigned int graphic_id)
+GraphicPtr GraphicRender::create(unsigned int graphic_id)
 {
-  comp::GraphicPtr ptr (new comp::Graphic());
-  
-  attr::GraphicDescPtr gdesc = attr::GraphicDesc::create(graphic_id);
- // ptr->addAttribute(attr::GRAPHIC_DESC, gdesc);
-  
-  ptr->graphic_ = gdesc->Resource;
+  comp::GraphicPtr ptr (new comp::GraphicRender());
+    
+  ptr->graphic_ = ResourceManager::Inst()->getGraphic(graphic_id);
   ptr->screen_pos_ = ScreenPos(100, 100);
   
   return ptr;
 }
-
-ScreenPos Graphic::mapToScreenPos(MapPos mpos)
-{
-  ScreenPos spos;
-  
-  spos.x = mpos.x - mpos.y;
-  spos.y = mpos.z + (mpos.x + mpos.y)/2;
-  
-  return spos;
-}
-
-
 
 }

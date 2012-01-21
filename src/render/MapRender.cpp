@@ -55,10 +55,7 @@ void MapRender::drawOn(GameRenderer& renderer)
       mpos.x += col*Map::TILE_SIZE;
       mpos.y += row*Map::TILE_SIZE;
       
-      ScreenPos spos;
-  
-      spos.x = mpos.x - mpos.y;
-      spos.y = mpos.z + (mpos.x + mpos.y)/2;
+      ScreenPos spos = mapToScreenPos(mpos);
       
       spos.x += x_offset_;
       spos.y += y_offset_;

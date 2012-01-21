@@ -84,6 +84,11 @@ public:
   
   MapTile getTileAt(unsigned int col, unsigned int row);
   
+  static inline ScreenPos mapToScreenPos(MapPos mpos)
+  {
+    return ScreenPos(0,0);
+  }
+  
   // old stuff down ------------------------------------------------------------
   /*
   gdat::Terrain getTerrain(unsigned int col, unsigned int row) { return terrain_[col][row]; }

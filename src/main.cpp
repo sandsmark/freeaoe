@@ -24,7 +24,7 @@
 #include "mechanics/EntityFactory.h"
 #include "global/Config.h"
 #include "resource/ResourceManager.h"
-#include "render/CompGraphic.h"
+#include "render/GraphicRender.h"
 
 // TODO: Bad_alloc
 int main(int argc, char **argv)

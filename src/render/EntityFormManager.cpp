@@ -18,7 +18,7 @@
 
 
 #include "EntityFormManager.h"
-#include "CompGraphic.h"
+#include "GraphicRender.h"
 #include <mechanics/CompUnitData.h>
 
 EntityFormManager::EntityFormManager() 
@@ -51,11 +51,11 @@ void EntityFormManager::createForms(EntityPtr entity)
     
     EntityForm form(entity);
     
-    comp::GraphicPtr graphic = comp::Graphic::create(gunit->getData().StandingGraphic.first);
+    comp::GraphicPtr graphic = comp::GraphicRender::create(gunit->getData().StandingGraphic.first);
     
     graphic->setMapObject(entity->getComponent<comp::MapObject>(comp::MAP_OBJECT));
     
-    form.addComponent(comp::GRAPHIC, graphic);
+    form.addComponent(comp::GRAPHIC_RENDER, graphic);
     
     forms_.push_back(form);  
   }

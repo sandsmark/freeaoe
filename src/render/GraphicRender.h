@@ -17,8 +17,8 @@
 */
 
 
-#ifndef COMPGRAPHIC_H
-#define COMPGRAPHIC_H
+#ifndef GRAPHIC_RENDER_H
+#define GRAPHIC_RENDER_H
 
 #include <core/IComponent.h>
 #include <resource/Graphic.h>
@@ -27,40 +27,22 @@
 #include <mechanics/CompMapObject.h>
 #include "IRenderableComponent.h"
 
-namespace attr
-{
-  const std::string GRAPHIC_DESC("attr_graphic");
-  
-  class GraphicDesc;
-  typedef boost::shared_ptr<GraphicDesc> GraphicDescPtr;
-  
-  class GraphicDesc : public IAttribute
-  {
-  public:
-    res::GraphicPtr Resource;
-    
-    static GraphicDescPtr create(unsigned int graphic_id);
-    
-  };
-  
-}
-
 namespace comp
 {
 
-const std::string GRAPHIC("comp_graphic");
+const std::string GRAPHIC_RENDER("comp_graphic");
   
-class Graphic;
+class GraphicRender;
 
-typedef boost::shared_ptr< Graphic > GraphicPtr;
+typedef boost::shared_ptr< GraphicRender > GraphicPtr;
 
 /// Draws and manages Graphics for EntityForm objects.
-class Graphic : public IRenderableComponent
+class GraphicRender : public IRenderableComponent
 {
 
 public:
-  Graphic();
-  virtual ~Graphic();
+  GraphicRender();
+  virtual ~GraphicRender();
   
   virtual void update(Time time);
   
@@ -88,10 +70,8 @@ private:
   unsigned int angle_diff_;  
   
   bool mirror_frame_;
-  
-  ScreenPos mapToScreenPos(MapPos pos);
 };
 
 }
 
-#endif // COMPGRAPHIC_H
+#endif // GRAPHIC_RENDER_H

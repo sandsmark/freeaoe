@@ -41,6 +41,16 @@ public:
   
   void setMap(MapPtr map);
   
+  static inline ScreenPos mapToScreenPos(MapPos mpos)
+  {
+    ScreenPos spos;
+
+    spos.x = mpos.x - mpos.y;
+    spos.y = mpos.z + (mpos.x + mpos.y)/2;
+    
+    return spos;
+  }
+  
 private:
   MapPtr map_; //todo root?
   

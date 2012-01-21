@@ -28,7 +28,7 @@
 #include <communication/tunnels/LocalTunnelToClient.h>
 
 #include <iostream>
-#include <render/CompGraphic.h>
+#include <render/GraphicRender.h>
 #include "EntityFactory.h"
 #include <Engine.h>
 #include <render/MapRender.h>

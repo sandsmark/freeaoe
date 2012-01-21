@@ -20,7 +20,7 @@
 #include "GameRenderer.h"
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
-#include "CompGraphic.h"
+#include "GraphicRender.h"
 #include <SFML/Graphics/RenderTarget.hpp>
 
 GameRenderer::GameRenderer(sf::RenderTarget &render_target)
@@ -35,7 +35,7 @@ GameRenderer::~GameRenderer()
 
 void GameRenderer::draw(EntityForm& form)
 {
-  form.getComponent<comp::Graphic>(comp::GRAPHIC)->drawOn(*this);
+  form.getComponent<comp::GraphicRender>(comp::GRAPHIC_RENDER)->drawOn(*this);
 }
 
 void GameRenderer::draw(res::GraphicPtr graph, ScreenPos pos, int frame, int angle)

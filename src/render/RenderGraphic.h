@@ -29,6 +29,7 @@
 
 class SlpFile;
 
+//TODO: Obsolete!
 class RenderGraphic
 {
 
