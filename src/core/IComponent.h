@@ -24,12 +24,9 @@
 
 #include <boost/smart_ptr/shared_ptr.hpp>
 
-#include "Attributes.h"
 #include "Utility.h"
 #include <global/Types.h>
 
-
-//TODO: Do I need attributes? Move it to Entity?
 class IComponent
 {
 
@@ -41,34 +38,10 @@ public:
   virtual ~IComponent();
   
  // virtual const char *getCompName() const = 0;
-  /*
-  void addAttribute(const std::string name, AttributePtr attribute);
-  
-  template< class T >
-  void addAttribute(const std::string &name, boost::shared_ptr< T > attribute)
-  {
-    AttributePtr ptr = boost::dynamic_pointer_cast< IAttribute >(attribute);
-    addAttribute(name, ptr);
-  }
-    
-  AttributePtr getAttribute(const std::string &name);
-  
-  template< class T >
-  boost::shared_ptr< T > getAttribute(const std::string &name)
-  {
-    AttributePtr attr_base = getAttribute(name);
-    boost::shared_ptr< T > attr = boost::dynamic_pointer_cast< T >(attr_base);
-    return attr;
-  }
-  
-  bool hasAttribute(const std::string &name);
-  */
   
   virtual void update(Time time) {}
   
 private:
-  typedef std::map<const char *, AttributePtr, util::cstr_comp > AttributeMap;
-  AttributeMap attributes_;
 };
 
 typedef boost::shared_ptr< IComponent > ComponentPtr;

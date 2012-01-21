@@ -24,7 +24,6 @@
 #include <boost/smart_ptr/shared_ptr.hpp>
 #include "Utility.h"
 
-#include "Attributes.h"
 #include "IComponent.h"
 #include "IAction.h"
 

@@ -19,7 +19,6 @@
 
 #include "GraphicRender.h"
 
-#include "core/IAttribute.h"
 #include <resource/ResourceManager.h>
 #include <resource/DataManager.h>
 #include <mechanics/CompMapObject.h>
