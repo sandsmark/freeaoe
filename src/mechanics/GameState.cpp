@@ -107,8 +107,8 @@ void GameState::draw()
 
 void GameState::update()
 {
-  entity_manager_.update(Engine::GameClock.GetElapsedTime());
-  entity_form_manager_.update(Engine::GameClock.GetElapsedTime());
+  entity_manager_.update(Engine::GameClock.GetElapsedTime().AsMilliseconds());
+  entity_form_manager_.update(Engine::GameClock.GetElapsedTime().AsMilliseconds());
   //game_server_->update();
   //game_client_->update();
 }

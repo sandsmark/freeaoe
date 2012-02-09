@@ -56,7 +56,7 @@ void Engine::start()
   setup();
   
   // Start the game loop
-  while (render_window_->IsOpened())
+  while (render_window_->IsOpen())
   {
     IState *state = state_manager_.getActiveState();
     
@@ -100,6 +100,7 @@ void Engine::setup()
 //------------------------------------------------------------------------------
 void Engine::drawFps()
 { 
+  /*
   static sf::Clock clock;
 
   if (clock.GetElapsedTime() >= 1000)
@@ -116,4 +117,5 @@ void Engine::drawFps()
     clock.Reset();
   }
   render_window_->Draw(fps_label_);
+  */
 }
