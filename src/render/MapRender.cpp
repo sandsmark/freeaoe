@@ -60,7 +60,9 @@ void MapRender::drawOn(GameRenderer& renderer)
       spos.x += x_offset_;
       spos.y += y_offset_;
 
-      renderer.draw(t->getImage(), spos);
+      sf::Image img = t->getImage();
+      
+      renderer.draw(img, spos);
     }
   }
 }

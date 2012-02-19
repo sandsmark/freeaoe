@@ -25,9 +25,7 @@
 
 #include <global/Config.h>
 
-#include <file/DrsFile.h>
-#include <file/BinaFile.h>
-#include <file/ColorPalette.h>
+#include <genie/resource/DrsFile.h>
 
 Logger& ResourceManager::log = Logger::getLogger("freeaoe.ResourceManager");
 
@@ -39,9 +37,24 @@ ResourceManager* ResourceManager::Inst()
 }
 
 //------------------------------------------------------------------------------
-SlpFile * const ResourceManager::getSlp(sf::Uint32 id)
+genie::SlpFilePtr ResourceManager::getSlp(sf::Uint32 id)
 {
-  std::map<sf::Uint32, SlpFile *>::iterator it = slp_files_.find(id);
+  genie::SlpFilePtr slp_ptr;
+  
+  log.info("Loading slp with id [%u]", id);
+  
+  for (DrsFileVector::iterator i = drs_files_.begin(); i != drs_files_.end();
+       i++)
+  {
+    slp_ptr = (*i)->getSlpFile(id);
+    
+    if (slp_ptr.get() != 0)
+      return slp_ptr;
+  }
+  
+  log.warn("No slp file with id [%u] found!", id);
+  return slp_ptr;
+  /*std::map<sf::Uint32, SlpFile *>::iterator it = slp_files_.find(id);
   
   if (it == slp_files_.end())
   {
@@ -52,7 +65,7 @@ SlpFile * const ResourceManager::getSlp(sf::Uint32 id)
   SlpFile *slp = slp_files_[id];
   slp->load();
   
-  return slp;
+  return slp;*/
 }
 
 //------------------------------------------------------------------------------
@@ -96,26 +109,41 @@ res::TerrainPtr ResourceManager::getTerrain(unsigned int id)
 }
 
 //------------------------------------------------------------------------------
-ColorPalette* ResourceManager::getPalette(sf::Uint32 id)
+genie::PalFilePtr ResourceManager::getPalette(sf::Uint32 id)
 {
-  return bina_files_[id]->readPalette();
+//   return bina_files_[id]->readPalette();
+  genie::PalFilePtr pal_ptr;
+  
+  for (DrsFileVector::iterator i = drs_files_.begin(); i != drs_files_.end();
+       i++)
+  {
+    pal_ptr = (*i)->getPalFile(id);
+    
+    if (pal_ptr.get() != 0)
+      return pal_ptr;
+  }
+  
+  log.warn("No pal file with id [%u] found!", id);
+  return pal_ptr;
 }
 
 //------------------------------------------------------------------------------
 void ResourceManager::addSlpFile(SlpFile* slp)
 {
+  /*
   std::map<sf::Uint32, SlpFile *>::iterator it = slp_files_.find(slp->getId());
   
   if (it != slp_files_.end())
     log.warn("Slp file with id: [%u] already exists!", slp->getId());
   else
     slp_files_[slp->getId()] = slp;
+  */
 }
 
 //------------------------------------------------------------------------------
 void ResourceManager::addBinaFile(BinaFile* bina)
 {
-  bina_files_[bina->getId()] = bina;
+//   bina_files_[bina->getId()] = bina;
 }
 
 //------------------------------------------------------------------------------
@@ -127,6 +155,7 @@ ResourceManager::ResourceManager()
 //------------------------------------------------------------------------------
 ResourceManager::~ResourceManager()
 {
+  /*
   for (std::map<sf::Uint32, SlpFile *>::iterator it = slp_files_.begin();
        it != slp_files_.end(); it++)
     delete it->second;
@@ -141,6 +170,7 @@ ResourceManager::~ResourceManager()
   
   for (GraphicMap::iterator it = graphics_.begin(); it != graphics_.end(); it++)
     delete it->second;
+  */
 }
 
 //------------------------------------------------------------------------------
@@ -158,9 +188,21 @@ void ResourceManager::loadDrs(std::string file_name)
 {
   log.info("Loading %s", file_name.c_str());
   
+  std::string file_path = Config::Inst()->getDataPath() + file_name;
+  
+  boost::shared_ptr<genie::DrsFile> drs_file(new genie::DrsFile());
+  
+  drs_file->setGameVersion(Config::Inst()->getGameVersion());
+  drs_file->load(file_path.c_str());
+  
+  drs_files_.push_back(drs_file);
+  
+  
+  /*
   DrsFile *drs = new DrsFile(Config::Inst()->getDataPath() + file_name, this);
   drs->loadHeader();
   
   drs_files_.push_back(drs);
+  */
 }
 

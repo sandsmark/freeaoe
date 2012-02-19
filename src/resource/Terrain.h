@@ -26,6 +26,8 @@
 #include <geniedat/Terrain.h>
 #include <global/Logger.h>
 
+#include <genie/resource/SlpFile.h>
+
 class SlpFile;
 
 namespace res
@@ -40,7 +42,7 @@ public:
   Terrain(unsigned int Id);
   virtual ~Terrain();
   
-  const sf::Image &getImage(void); 
+  sf::Image getImage(void); 
   
   virtual void load(void);
   
@@ -48,7 +50,7 @@ private:
   static Logger &log;
   
   gdat::Terrain data_;
-  SlpFile *slp_;
+  genie::SlpFilePtr slp_;
   
 };
 

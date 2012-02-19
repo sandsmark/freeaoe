@@ -20,7 +20,6 @@
 
 #include <Engine.h>
 
-#include <geniedat/File.h>
 #include "mechanics/EntityFactory.h"
 #include "global/Config.h"
 #include "resource/ResourceManager.h"

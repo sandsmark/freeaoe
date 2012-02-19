@@ -19,10 +19,10 @@
 
 #include "Terrain.h"
 
-#include <file/SlpFile.h>
 #include "DataManager.h"
 #include "ResourceManager.h"
-#include <file/SlpFrame.h>
+
+#include <genie/resource/SlpFrame.h>
 
 namespace res
 {
@@ -39,13 +39,18 @@ Terrain::~Terrain()
 
 }
 
-const sf::Image& Terrain::getImage(void )
+sf::Image Terrain::getImage(void )
 {
-  sf::Image *img = slp_->getFrame()->getImage();
+  // TODO: maybe move to resourcemanager because res::Graphic is using the same
+  genie::SlpFramePtr frame = slp_->getFrame(0);
   
-  img = new sf::Image(*img);
-
-  return *img;
+  sf::Image img = Graphic::convertPixelsToImage(frame->getWidth(), frame->getHeight(),
+                                       frame->getPixelIndexes(), 
+                                       frame->getTransparentPixelIndex(), 
+                                       ResourceManager::Inst()->getPalette(50500) 
+                                      );
+  
+  return img;
 }
 
 void Terrain::load(void )
@@ -54,11 +59,9 @@ void Terrain::load(void )
   {
     data_ = DataManager::Inst().getTerrain(getId());
   
-    if (slp_ == 0)
+    if (slp_.get() == 0)
       slp_ = ResourceManager::Inst()->getSlp(data_.SLP);
     
-    slp_->load();
-     
     Resource::load();
   }
 }

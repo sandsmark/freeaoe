@@ -24,6 +24,7 @@
 #include "NonCopyable.h"
 
 #include <boost/program_options.hpp>
+#include <genie/Types.h>
 
 //TODO: read config values like game dir from file or argv
 class Config : public NonCopyable
@@ -55,6 +56,9 @@ public:
   /// @return path of data directory
   //
   std::string getDataPath();
+  
+  
+  genie::GameVersion getGameVersion() const;
   
 
 private:

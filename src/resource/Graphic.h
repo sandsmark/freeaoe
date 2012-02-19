@@ -21,11 +21,14 @@
 #define FREEAOE_GRAPHIC_H
 
 #include "Resource.h"
+
 #include <SFML/Graphics/Image.hpp>
 #include <global/Types.h>
 #include "ResourcePtr.h"
 #include <global/Logger.h>
 #include <geniedat/Graphic.h>
+
+#include <genie/resource/SlpFile.h>
 
 class SlpFile;
 
@@ -46,7 +49,7 @@ public:
   ///
   /// @param id Id of the graphic struct in .dat file.
   //
-  Graphic(Uint32 id);
+  Graphic(uint32_t id);
   virtual ~Graphic();
   
   //----------------------------------------------------------------------------
@@ -56,13 +59,13 @@ public:
   /// @param mirrored If set, the image will be returned mirrored
   /// @return Image
   //
-  const sf::Image& getImage(Uint32 frame_num=0, bool mirrored=false);
+  sf::Image getImage(uint32_t frame_num=0, bool mirrored=false);
   
   //----------------------------------------------------------------------------
   /// Get the hotspot of a frame.
   // TODO: Maybe inherit from sf::Image and include this property
   //
-  ScreenPos getHotspot(Uint32 frame_num=0, bool mirrored=false) const;
+  ScreenPos getHotspot(uint32_t frame_num=0, bool mirrored=false) const;
   
   //----------------------------------------------------------------------------
   /// Get the frame rate of the graphic
@@ -82,24 +85,29 @@ public:
   ///
   /// @return frame count
   //
-  Uint32 getFrameCount(void) const;
+  uint32_t getFrameCount(void) const;
     
   //----------------------------------------------------------------------------
   /// Get the graphics angle count
   ///
   /// @return angle count
   //
-  Uint32 getAngleCount(void) const;
+  uint32_t getAngleCount(void) const;
     
   virtual void load(void);
   virtual void unload(void);
+  
+  static sf::Image convertPixelsToImage(uint32_t width, uint32_t height,
+                                        const uint8_t *pixels,
+                                        uint8_t transparent_pixel,
+                                        genie::PalFilePtr palette);
 private:
   static Logger &log;
   
-  Uint32 id_;
+  uint32_t id_;
   
   gdat::Graphic *data_;
-  SlpFile *slp_;
+  genie::SlpFilePtr slp_;
   
   //TODO: collection with all frames, playercolors and outlines loaded
   //      And rewrite SlpFile/Frame so that it will not store any data.

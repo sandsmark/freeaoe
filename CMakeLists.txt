@@ -14,10 +14,12 @@ find_package(OpenGL REQUIRED)
 
 include_directories(src/
   ${CMAKE_HOME_DIRECTORY}/extern/geniedat/include
+  ${CMAKE_HOME_DIRECTORY}/extern/genieutils/include
   ${Boost_INCLUDE_DIRS}
   ${SFML_INCLUDE_DIR})
 
 add_subdirectory( extern/geniedat )
+add_subdirectory( extern/genieutils )
 
 # additional compiler flags 
 add_definitions(-Wall)
@@ -33,15 +35,6 @@ set(RESOURCE_SRC
     src/resource/DataManager.cpp 
     src/resource/Resource.cpp
     src/resource/Graphic.cpp
-    )
-
-set(FILE_SRC 
-    src/file/ColorPalette.cpp
-    src/file/FileIO.cpp
-    src/file/SlpFrame.cpp
-    src/file/SlpFile.cpp
-    src/file/DrsFile.cpp
-    src/file/BinaFile.cpp
     )
 
 set(MECHANICS_SRC 
@@ -77,7 +70,6 @@ set(UNSORTED_SRC  src/resource/Terrain.cpp src/render/ActAnimate.cpp src/mechani
                  )
 
 add_executable(freeaoe src/Engine.cpp src/main.cpp 
-               ${FILE_SRC}
                ${RESOURCE_SRC}
                ${GLOBAL_SRC}
                ${MECHANICS_SRC}
@@ -90,6 +82,8 @@ target_link_libraries(freeaoe
                       ${SFML_WINDOW_LIBRARY}
                       ${SFML_SYSTEM_LIBRARY}
                       ${SFML_GRAPHICS_LIBRARY}
+                      #${Genieutils_LIBRARY}
+                      genieutils
                       geniedat)
                       
 

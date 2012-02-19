@@ -82,6 +82,12 @@ std::string Config::getDataPath()
 }
 
 //------------------------------------------------------------------------------
+genie::GameVersion Config::getGameVersion() const
+{
+  return genie::GV_TC;
+}
+
+//------------------------------------------------------------------------------
 Config::Config()
 {
 }

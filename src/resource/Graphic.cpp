@@ -18,10 +18,12 @@
 
 
 #include "Graphic.h"
-#include <file/SlpFile.h>
 #include <resource/DataManager.h>
 #include "ResourceManager.h"
-#include <file/SlpFrame.h>
+
+#include <genie/resource/SlpFile.h>
+#include <genie/resource/SlpFrame.h>
+#include <genie/resource/Color.h>
 
 namespace res
 {
@@ -29,7 +31,7 @@ namespace res
 Logger& Graphic::log = Logger::getLogger("freeaoe.resource.Graphic");
 
 //------------------------------------------------------------------------------
-Graphic::Graphic(sf::Uint32 id) : Resource(id, TYPE_GRAPHIC), data_(0), slp_(0)
+Graphic::Graphic(uint32_t id) : Resource(id, TYPE_GRAPHIC), data_(0)
 {
 
 }
@@ -41,28 +43,33 @@ Graphic::~Graphic()
 }
 
 //------------------------------------------------------------------------------
-const sf::Image& Graphic::getImage(Uint32 frame_num, bool mirrored)
+sf::Image Graphic::getImage(uint32_t frame_num, bool mirrored)
 {
-  sf::Image *img = slp_->getFrame(frame_num)->getImage();
+  genie::SlpFramePtr frame = slp_->getFrame(frame_num);
+  
+  sf::Image img = convertPixelsToImage(frame->getWidth(), frame->getHeight(),
+                                       frame->getPixelIndexes(), 
+                                       frame->getTransparentPixelIndex(), 
+                                       ResourceManager::Inst()->getPalette(50500) 
+                                      );
   
   if (mirrored)
   {
-    img = new sf::Image(*img);
-    img->FlipHorizontally();
+    img.FlipHorizontally();
   }
   
-  return *img;
+  return img;
 }
 
 //------------------------------------------------------------------------------
-ScreenPos Graphic::getHotspot(Uint32 frame_num, bool mirrored) const
+ScreenPos Graphic::getHotspot(uint32_t frame_num, bool mirrored) const
 {
-  SlpFrame *frame = slp_->getFrame(frame_num);
+  genie::SlpFramePtr frame = slp_->getFrame(frame_num);
   
-  Int32 hot_spot_x = frame->getHotspotX();
+  int32_t hot_spot_x = frame->getHotspotX();
   
   if (mirrored)
-    hot_spot_x = frame->getImage()->GetWidth() - hot_spot_x;
+    hot_spot_x = frame->getWidth() - hot_spot_x;
   
   return ScreenPos(hot_spot_x, frame->getHotspotY());
 }
@@ -80,13 +87,13 @@ float Graphic::getReplayDelay(void ) const
 }
 
 //------------------------------------------------------------------------------
-Uint32 Graphic::getFrameCount(void ) const
+uint32_t Graphic::getFrameCount(void ) const
 {
   return data_->FrameCount;
 }
 
 //------------------------------------------------------------------------------
-Uint32 Graphic::getAngleCount(void ) const
+uint32_t Graphic::getAngleCount(void ) const
 {
   return data_->AngleCount;
 }
@@ -98,10 +105,7 @@ void Graphic::load(void )
   {
     data_ = new gdat::Graphic(DataManager::Inst().getGraphic(getId()));
   
-    if (slp_ == 0)
-      slp_ = ResourceManager::Inst()->getSlp(data_->SLP);
-    
-    slp_->load();
+    slp_ = ResourceManager::Inst()->getSlp(data_->SLP);
   
     if (slp_->getFrameCount() != 
         data_->FrameCount * (data_->AngleCount / 2 + 1) )
@@ -125,5 +129,29 @@ void Graphic::unload(void )
   }
 }
 
+//------------------------------------------------------------------------------
+sf::Image Graphic::convertPixelsToImage(uint32_t width, uint32_t height,
+                                               const uint8_t *pixels,
+                                               uint8_t transparent_pixel,
+                                               genie::PalFilePtr palette)
+{
+  sf::Image img;
+  
+  img.Create(width, height, sf::Color::Transparent);
+
+  for (uint32_t row=0; row < height; row++)
+    for (uint32_t col=0; col < width; col++)
+    {
+      uint8_t c_index = pixels[row * width + col];
+      
+      if (c_index != transparent_pixel)
+      {
+        genie::Color g_color = (*palette)[c_index];
+        img.SetPixel(col, row, sf::Color(g_color.r, g_color.g, g_color.b));
+      }           
+    }
+  
+  return img;
+}
 
 }

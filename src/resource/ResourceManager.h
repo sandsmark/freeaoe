@@ -27,14 +27,20 @@
 #include <fstream>
 #include "Graphic.h"
 #include "Terrain.h"
-#include <file/SlpFile.h>
 #include <global/Logger.h>
 #include <global/NonCopyable.h>
 #include <global/Types.h>
 
+#include <genie/resource/PalFile.h>
+#include <genie/resource/SlpFile.h>
+
 class ColorPalette;
 class BinaFile;
+
+namespace genie
+{
 class DrsFile;
+}
 
 //------------------------------------------------------------------------------
 /// The resource manager is the primary interface for getting recourses. At
@@ -48,7 +54,7 @@ public:
   /// drs and other files.
   //
   static ResourceManager* Inst();
-  
+   
   //----------------------------------------------------------------------------
   /// Returns the slp file with given id or 0 if not found. The slp file
   /// should not be deleted!
@@ -56,7 +62,7 @@ public:
   /// @param id id of the slp file
   /// @return slp file
   //
-  SlpFile * const getSlp(unsigned int id);
+  genie::SlpFilePtr getSlp(unsigned int id);
   
   //----------------------------------------------------------------------------
   /// Get a Graphic resource object.
@@ -74,7 +80,7 @@ public:
   //
   res::TerrainPtr getTerrain(unsigned int id);
   
-  ColorPalette* getPalette(unsigned int id);
+  genie::PalFilePtr getPalette(unsigned int id);
   
   //----------------------------------------------------------------------------
   /// Adds an slp file that will be managed by the ResourceManager.
@@ -90,19 +96,22 @@ private:
   ResourceManager();
   virtual ~ResourceManager();
   
-  std::vector<DrsFile *> drs_files_;
+  typedef std::vector< boost::shared_ptr<genie::DrsFile> > DrsFileVector;
+  DrsFileVector drs_files_;
+  /*
   std::map<unsigned int, SlpFile *> slp_files_;
   std::map<unsigned int, BinaFile*> bina_files_;
-  
+  */
   //TODO: All resources into one map?
   typedef std::map<unsigned int, res::Graphic *> GraphicMap;
   GraphicMap graphics_;
   
   typedef std::map<unsigned int, res::TerrainPtr> TerrainMap;
   TerrainMap terrains_;
-  
+  /*
   std::fstream terrain_file_;
   std::fstream graphics_file_;
+  */
  
   static Logger &log;
   
@@ -111,7 +120,8 @@ private:
   //
   void initialize();
   
-  void loadDrs(std::string file_name);
+  void loadDrs(std::string file_name);  
+ 
 };
 
 #endif // RESOURCEMANAGER_H
