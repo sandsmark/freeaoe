@@ -20,7 +20,7 @@
 #ifndef COMPUNITDATA_H
 #define COMPUNITDATA_H
 #include <core/IComponent.h>
-#include <geniedat/Unit.h>
+#include <genie/dat/Unit.h>
 
 namespace comp
 {
@@ -36,10 +36,10 @@ public:
   
   void setUnit(unsigned int unit_id);
   
-  gdat::Unit getData(void) const;
+  genie::Unit getData(void) const;
   
 private:
-  gdat::Unit data_;
+  genie::Unit data_;
 };
 
 typedef boost::shared_ptr< UnitData > UnitDataPtr;

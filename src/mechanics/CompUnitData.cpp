@@ -38,7 +38,7 @@ void UnitData::setUnit(unsigned int unit_id)
   data_ = DataManager::Inst().getUnit(unit_id);
 }
 
-gdat::Unit UnitData::getData(void ) const
+genie::Unit UnitData::getData(void ) const
 {
   return data_;
 }

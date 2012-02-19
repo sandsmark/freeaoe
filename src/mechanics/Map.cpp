@@ -58,7 +58,7 @@ void Map::setUpSample()
   
   tiles_.resize(cols_ * rows_, grass);
   
-  gdat::Terrain water_dat = DataManager::Inst().getTerrain(1);
+  genie::Terrain water_dat = DataManager::Inst().getTerrain(1);
   
   tiles_[7].terrain_ = water_dat;
   tiles_[7].terrain_id_ = 1;

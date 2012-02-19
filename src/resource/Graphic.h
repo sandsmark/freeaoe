@@ -26,7 +26,7 @@
 #include <global/Types.h>
 #include "ResourcePtr.h"
 #include <global/Logger.h>
-#include <geniedat/Graphic.h>
+#include <genie/dat/Graphic.h>
 
 #include <genie/resource/SlpFile.h>
 
@@ -106,7 +106,7 @@ private:
   
   uint32_t id_;
   
-  gdat::Graphic *data_;
+  genie::Graphic *data_;
   genie::SlpFilePtr slp_;
   
   //TODO: collection with all frames, playercolors and outlines loaded

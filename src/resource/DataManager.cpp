@@ -29,17 +29,17 @@ DataManager& DataManager::Inst()
   return inst;
 }
 
-gdat::Graphic DataManager::getGraphic(unsigned int id)
+genie::Graphic DataManager::getGraphic(unsigned int id)
 {
   return dat_file_.Graphics[id];
 }
 
-gdat::Unit DataManager::getUnit(unsigned int id)
+genie::Unit DataManager::getUnit(unsigned int id)
 {
   return dat_file_.Civs[0].Units[id];
 }
 
-gdat::Terrain DataManager::getTerrain(unsigned int id)
+genie::Terrain DataManager::getTerrain(unsigned int id)
 {
   return dat_file_.Terrains[id];
 }
@@ -58,7 +58,7 @@ DataManager::~DataManager()
 
 void DataManager::initialize()
 {
-  dat_file_.setGameVersion(gdat::GV_TC);
+  dat_file_.setGameVersion(genie::GV_TC);
   dat_file_.setFileName(Config::Inst()->getDataPath() + "empires2_x1_p1.dat");
   dat_file_.load();
 }

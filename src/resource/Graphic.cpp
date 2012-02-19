@@ -103,7 +103,7 @@ void Graphic::load(void )
 {
   if (!isLoaded())
   {
-    data_ = new gdat::Graphic(DataManager::Inst().getGraphic(getId()));
+    data_ = new genie::Graphic(DataManager::Inst().getGraphic(getId()));
   
     slp_ = ResourceManager::Inst()->getSlp(data_->SLP);
   

@@ -21,7 +21,7 @@
 #define MAP_H
 
 #include <global/Logger.h>
-#include <geniedat/Terrain.h>
+#include <genie/dat/Terrain.h>
 #include <global/Types.h>
 #include <SFML/Config.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
@@ -50,7 +50,7 @@ public:
   MapNode *north, *east, *south, *west;
   
   unsigned int elevation_;
-  gdat::Terrain terrain_;
+  genie::Terrain terrain_;
   unsigned int terrain_id_;
 };
 

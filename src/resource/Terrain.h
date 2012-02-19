@@ -23,7 +23,7 @@
 //#include "Resource.h"
 #include "ResourcePtr.h"
 #include <SFML/Graphics/Image.hpp>
-#include <geniedat/Terrain.h>
+#include <genie/dat/Terrain.h>
 #include <global/Logger.h>
 
 #include <genie/resource/SlpFile.h>
@@ -49,7 +49,7 @@ public:
 private:
   static Logger &log;
   
-  gdat::Terrain data_;
+  genie::Terrain data_;
   genie::SlpFilePtr slp_;
   
 };

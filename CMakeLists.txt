@@ -13,12 +13,10 @@ find_package(SFML COMPONENTS SYSTEM WINDOW GRAPHICS REQUIRED)
 find_package(OpenGL REQUIRED)
 
 include_directories(src/
-  ${CMAKE_HOME_DIRECTORY}/extern/geniedat/include
   ${CMAKE_HOME_DIRECTORY}/extern/genieutils/include
   ${Boost_INCLUDE_DIRS}
   ${SFML_INCLUDE_DIR})
 
-add_subdirectory( extern/geniedat )
 add_subdirectory( extern/genieutils )
 
 # additional compiler flags 
@@ -84,7 +82,7 @@ target_link_libraries(freeaoe
                       ${SFML_GRAPHICS_LIBRARY}
                       #${Genieutils_LIBRARY}
                       genieutils
-                      geniedat)
+                      )
                       
 
 add_subdirectory(src)

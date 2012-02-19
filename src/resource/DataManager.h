@@ -21,8 +21,8 @@
 #define DATAMANAGER_H
 
 #include <global/Logger.h>
-#include <geniedat/File.h>
-#include <geniedat/Unit.h>
+#include <genie/dat/DatFile.h>
+#include <genie/dat/Unit.h>
 
 #include <map>
 #include <SFML/Config.hpp>
@@ -38,9 +38,9 @@ public:
   
   static DataManager & Inst();
   
-  gdat::Graphic getGraphic(unsigned int id);
-  gdat::Unit getUnit(unsigned int id);
-  gdat::Terrain getTerrain(unsigned int id);
+  genie::Graphic getGraphic(unsigned int id);
+  genie::Unit getUnit(unsigned int id);
+  genie::Terrain getTerrain(unsigned int id);
   
 private:
   DataManager();
@@ -50,7 +50,7 @@ private:
   
   static Logger &log;
   
-  gdat::File dat_file_;
+  genie::DatFile dat_file_;
   
 };
 

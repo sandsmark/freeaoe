@@ -18,7 +18,7 @@
 
 
 #include "EntityFactory.h"
-#include <geniedat/Unit.h>
+#include <genie/dat/Unit.h>
 #include <resource/DataManager.h>
 #include <global/Constants.h>
 #include "CompMapObject.h"
@@ -46,7 +46,7 @@ EntityFactory::~EntityFactory()
 
 boost::shared_ptr< Entity > EntityFactory::createUnit(int ID)
 {
-  //gdat::Unit gunit = DataManager::Inst().getUnit(ID);
+  //genie::Unit gunit = DataManager::Inst().getUnit(ID);
   
   EntityPtr entity(new Entity());
   
@@ -75,8 +75,8 @@ boost::shared_ptr< Entity > EntityFactory::createUnit(int ID)
   );
   
   
-  if (gunit.getType() >= gdat::UT_Bird && 
-      gunit.getType() <= gdat::UT_Creatable)
+  if (gunit.getType() >= genie::UT_Bird && 
+      gunit.getType() <= genie::UT_Creatable)
     entity->addAttribute(attr::id::MOVABLE, 
       shared_ptr< attr::Movable > (new attr::Movable()) 
     );
