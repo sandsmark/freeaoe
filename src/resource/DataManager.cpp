@@ -18,7 +18,11 @@
 
 
 #include "DataManager.h"
-#include <global/Config.h>
+
+#include "global/Config.h"
+#include "genie/dat/Graphic.h"
+#include "genie/dat/Civ.h"
+#include "genie/dat/Terrain.h"
 
 
 Logger& DataManager::log = Logger::getLogger("freeaoe.DataManager");
@@ -59,6 +63,8 @@ DataManager::~DataManager()
 void DataManager::initialize()
 {
   dat_file_.setGameVersion(genie::GV_TC);
-  dat_file_.setFileName(Config::Inst()->getDataPath() + "empires2_x1_p1.dat");
-  dat_file_.load();
+  
+  std::string filePath = Config::Inst()->getDataPath() + "empires2_x1_p1.dat";
+  
+  dat_file_.load(filePath.c_str());
 }
