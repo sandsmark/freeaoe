@@ -59,6 +59,7 @@ DataManager::~DataManager()
 void DataManager::initialize()
 {
   dat_file_.setGameVersion(genie::GV_TC);
-  dat_file_.setFileName(Config::Inst()->getDataPath() + "empires2_x1_p1.dat");
+  std::string datFilename = Config::Inst()->getDataPath() + "empires2_x1_p1.dat";
+  dat_file_.setFileName(datFilename.c_str());
   dat_file_.load();
 }
