@@ -26,6 +26,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "resource/ResourceManager.h"
 #include "render/GraphicRender.h"
+#include "global/Config.h"
 
 Logger& Engine::log = Logger::getLogger("freeaoe.Engine");
 
@@ -91,7 +92,17 @@ void Engine::setup()
   render_window_ = new sf::RenderWindow(sf::VideoMode(1024, 786), "freeaoe");
   render_window_->SetFramerateLimit(60);
   
-  state_manager_.addActiveState(new GameState(render_window_));
+  GameState *gameState = new GameState(render_window_);
+  
+  std::string scnFile = Config::Inst()->getScenarioFile();
+  
+  if (!scnFile.empty())
+  {
+    boost::shared_ptr<genie::ScnFile> scenario(new genie::ScnFile());
+    scenario->load(scnFile.c_str());
+    gameState->setScenario(scenario);
+  }
+  state_manager_.addActiveState(gameState);
 
   fps_label_.SetPosition(sf::Vector2f(10,10));
   fps_label_.SetColor(sf::Color::Green);

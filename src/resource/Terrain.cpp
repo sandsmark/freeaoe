@@ -41,16 +41,20 @@ Terrain::~Terrain()
 
 sf::Image Terrain::getImage(void )
 {
-  // TODO: maybe move to resourcemanager because res::Graphic is using the same
-  genie::SlpFramePtr frame = slp_->getFrame(0);
-  
-  sf::Image img = Graphic::convertPixelsToImage(frame->getWidth(), frame->getHeight(),
-                                       frame->getPixelIndexes(), 
-                                       frame->getTransparentPixelIndex(), 
-                                       ResourceManager::Inst()->getPalette(50500) 
-                                      );
-  
-  return img;
+  if (slp_.get())
+  {
+    // TODO: maybe move to resourcemanager because res::Graphic is using the same
+    genie::SlpFramePtr frame = slp_->getFrame(0);
+    
+    sf::Image img = Graphic::convertPixelsToImage(frame->getWidth(), frame->getHeight(),
+                                        frame->getPixelIndexes(), 
+                                        frame->getTransparentPixelIndex(), 
+                                        ResourceManager::Inst()->getPalette(50500) 
+                                        );
+    
+    return img;
+  }
+  return sf::Image();
 }
 
 void Terrain::load(void )
@@ -61,6 +65,9 @@ void Terrain::load(void )
   
     if (slp_.get() == 0)
       slp_ = ResourceManager::Inst()->getSlp(data_.SLP);
+    
+    if (slp_.get() == 0)
+      slp_ = ResourceManager::Inst()->getSlp(15000); // TODO Loading grass if -1
     
     Resource::load();
   }

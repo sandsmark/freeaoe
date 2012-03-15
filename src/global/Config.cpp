@@ -39,6 +39,7 @@ void Config::parseOptions(int argc, char** argv)
   generic.add_options()
     ("config-file,c", po::value<std::string>()->default_value("faoe.cfg"), 
      "path to config file")
+    ("scenario,s", po::value<std::string>()->default_value(""), "load scenario")
     ;
     
   po::options_description config("Configuration");
@@ -80,6 +81,13 @@ std::string Config::getDataPath()
 {
   return getGamePath() + "Data/";
 }
+
+//------------------------------------------------------------------------------
+std::string Config::getScenarioFile()
+{
+  return options_["scenario"].as<std::string>();
+}
+
 
 //------------------------------------------------------------------------------
 genie::GameVersion Config::getGameVersion() const

@@ -52,7 +52,7 @@ genie::SlpFilePtr ResourceManager::getSlp(sf::Uint32 id)
       return slp_ptr;
   }
   
-  log.warn("No slp file with id [%u] found!", id);
+  log.warn("No slp file with id [%u] found! %d", id, slp_ptr.get());
   return slp_ptr;
   /*std::map<sf::Uint32, SlpFile *>::iterator it = slp_files_.find(id);
   

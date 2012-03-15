@@ -31,6 +31,7 @@
 #include <SFML/Graphics/RenderTexture.hpp>
 #include <core/Entity.h>
 #include <resource/Terrain.h>
+#include <genie/script/scn/MapDescription.h>
 
 namespace sf {
 class Shape;
@@ -78,6 +79,8 @@ public:
   virtual ~Map();
   
   void setUpSample();
+  
+  void create(genie::MapDescription mapDescription);
   
   unsigned int getRows();
   unsigned int getCols();

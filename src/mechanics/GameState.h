@@ -26,6 +26,8 @@
 #include <render/EntityFormManager.h>
 #include "EntityManager.h"
 
+#include <genie/script/ScnFile.h>
+
 class GameClient;
 class GameServer;
 namespace sf {
@@ -41,6 +43,8 @@ class GameState : public IState
 public:
   GameState(sf::RenderTarget *render_target);
   virtual ~GameState();
+  
+  void setScenario(boost::shared_ptr<genie::ScnFile> scenario);
   
   virtual void init();
   
@@ -64,6 +68,8 @@ private:
   
   MapPtr map_;
   EntityFormPtr map_form_;
+  
+  boost::shared_ptr<genie::ScnFile> scenario_;
 };
 
 #endif // GAMESTATE_H

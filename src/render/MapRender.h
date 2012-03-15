@@ -54,7 +54,9 @@ public:
 private:
   MapPtr map_; //todo root?
   
-  unsigned int x_offset_, y_offset_;    //TODO: ScreenPos?
+  int xOffset_, yOffset_;    //TODO: ScreenPos?
+  
+  sf::RenderTexture mapTexture_;
 };
 
 typedef boost::shared_ptr<MapRender> MapRenderPtr;

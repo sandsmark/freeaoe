@@ -77,6 +77,28 @@ void Map::setUpSample()
   */
 }
 
+void Map::create(genie::MapDescription mapDescription)
+{
+  tiles_.clear();
+  
+  cols_ = mapDescription.width;
+  rows_ = mapDescription.height;
+  
+  tiles_.resize(cols_ * rows_);
+  
+  for (int i=0; i < tiles_.size(); i++)
+  {
+    genie::MapTile tile = mapDescription.tiles[i];
+
+    tiles_[i].terrain_id_ = tile.terrainId;
+    tiles_[i].elevation_ = tile.elevation;
+    
+    tiles_[i].terrain_ = DataManager::Inst().getTerrain(tile.terrainId);
+  }
+  
+}
+
+
 unsigned int Map::getCols()
 {
   return  cols_;

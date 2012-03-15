@@ -22,6 +22,7 @@
 
 #include <core/Entity.h>
 #include <resource/Graphic.h>
+#include <SFML/Graphics/Texture.hpp>
 
 namespace sf {
 class RenderTarget;
@@ -42,6 +43,9 @@ public:
   
   //----------------------------------------------------------------------------
   void draw(const sf::Image &image, ScreenPos pos);
+  
+  //----------------------------------------------------------------------------
+  void draw(const sf::Texture &texture, ScreenPos pos);
   
   //----------------------------------------------------------------------------
   /// Displays frame.

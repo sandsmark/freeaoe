@@ -33,6 +33,12 @@
 #include <Engine.h>
 #include <render/MapRender.h>
 
+void GameState::setScenario(boost::shared_ptr< genie::ScnFile > scenario)
+{
+  scenario_ = scenario;
+}
+
+
 void GameState::init()
 {
   IState::init();
@@ -55,7 +61,11 @@ void GameState::init()
   
     //Map test
   map_ = MapPtr(new Map());
-  map_->setUpSample();
+  
+  if (scenario_.get())
+    map_->create(scenario_->map);
+  else
+    map_->setUpSample();
   
   comp::MapRenderPtr map_render(new comp::MapRender());
   map_render->setMap(map_);
