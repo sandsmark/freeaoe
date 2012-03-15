@@ -56,23 +56,23 @@ void Engine::start()
   setup();
   
   // Start the game loop
-  while (render_window_->IsOpen())
+  while (render_window_->isOpen())
   {
     IState *state = state_manager_.getActiveState();
     
     // Process events
     sf::Event event;
-    while (render_window_->PollEvent(event))
+    while (render_window_->pollEvent(event))
     {
       // Close window : exit
-      if (event.Type == sf::Event::Closed)
-        render_window_->Close();
+      if (event.type == sf::Event::Closed)
+        render_window_->close();
 
       state->handleEvent(event);
     }
      
     // Clear screen
-    render_window_->Clear();
+    render_window_->clear();
     
     state->update();
     state->draw();
@@ -80,7 +80,7 @@ void Engine::start()
     //drawFps();
          
     // Update the window
-    render_window_->Display();
+    render_window_->display();
   }
 
 }
@@ -89,12 +89,12 @@ void Engine::start()
 void Engine::setup()
 {
   render_window_ = new sf::RenderWindow(sf::VideoMode(1024, 786), "freeaoe");
-  render_window_->SetFramerateLimit(60);
+  render_window_->setFramerateLimit(60);
   
   state_manager_.addActiveState(new GameState(render_window_));
 
-  fps_label_.SetPosition(sf::Vector2f(10,10));
-  fps_label_.SetColor(sf::Color::Green);
+  fps_label_.setPosition(sf::Vector2f(10,10));
+  fps_label_.setColor(sf::Color::Green);
 }
 
 //------------------------------------------------------------------------------

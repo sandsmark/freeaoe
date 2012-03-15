@@ -55,7 +55,7 @@ sf::Image Graphic::getImage(uint32_t frame_num, bool mirrored)
   
   if (mirrored)
   {
-    img.FlipHorizontally();
+    img.flipHorizontally();
   }
   
   return img;
@@ -137,7 +137,7 @@ sf::Image Graphic::convertPixelsToImage(uint32_t width, uint32_t height,
 {
   sf::Image img;
   
-  img.Create(width, height, sf::Color::Transparent);
+  img.create(width, height, sf::Color::Transparent);
 
   for (uint32_t row=0; row < height; row++)
     for (uint32_t col=0; col < width; col++)
@@ -147,7 +147,7 @@ sf::Image Graphic::convertPixelsToImage(uint32_t width, uint32_t height,
       if (c_index != transparent_pixel)
       {
         genie::Color g_color = (*palette)[c_index];
-        img.SetPixel(col, row, sf::Color(g_color.r, g_color.g, g_color.b));
+        img.setPixel(col, row, sf::Color(g_color.r, g_color.g, g_color.b));
       }           
     }
   
