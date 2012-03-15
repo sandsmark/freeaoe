@@ -23,6 +23,9 @@
 #include <global/Logger.h>
 #include <genie/dat/DatFile.h>
 #include <genie/dat/Unit.h>
+#include <genie/dat/Graphic.h>
+#include <genie/dat/Terrain.h>
+#include <genie/dat/Civ.h>
 
 #include <map>
 #include <SFML/Config.hpp>

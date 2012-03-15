@@ -117,15 +117,15 @@ void GameState::draw()
 
 void GameState::update()
 {
-  entity_manager_.update(Engine::GameClock.GetElapsedTime().AsMilliseconds());
-  entity_form_manager_.update(Engine::GameClock.GetElapsedTime().AsMilliseconds());
+  entity_manager_.update(Engine::GameClock.getElapsedTime().asMilliseconds());
+  entity_form_manager_.update(Engine::GameClock.getElapsedTime().asMilliseconds());
   //game_server_->update();
   //game_client_->update();
 }
 
 void GameState::handleEvent(sf::Event event)
 {
-  if (event.Type == sf::Event::MouseButtonReleased)
+  if (event.type == sf::Event::MouseButtonReleased)
   {
   }
   

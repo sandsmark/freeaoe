@@ -48,14 +48,14 @@ void GameRenderer::draw(const sf::Image &image, ScreenPos pos)
 {
   sf::Texture texture;
   
-  texture.LoadFromImage(image);
+  texture.loadFromImage(image);
   
   sf::Sprite sprite;
-  sprite.SetTexture(texture);
+  sprite.setTexture(texture);
   
-  sprite.SetPosition(pos);
+  sprite.setPosition(pos);
   
-  render_target_->Draw(sprite);
+  render_target_->draw(sprite);
 }
 
 void GameRenderer::draw(const sf::Texture& texture, ScreenPos pos)
