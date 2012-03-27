@@ -20,7 +20,9 @@
 #ifndef RESOURCE_H
 #define RESOURCE_H
 #include <SFML/Config.hpp>
+#include <SFML/Graphics/Image.hpp>
 #include <global/NonCopyable.h>
+#include <genie/resource/PalFile.h>
 
 namespace res
 {
@@ -90,6 +92,11 @@ protected:
   
   //----------------------------------------------------------------------------
   void setLoaded(bool loaded);
+  
+  static sf::Image convertPixelsToImage(uint32_t width, uint32_t height,
+                                        const uint8_t *pixels,
+                                        uint8_t transparent_pixel,
+                                        genie::PalFilePtr palette);
   
 private:
   sf::Uint32 id_;

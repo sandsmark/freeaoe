@@ -22,7 +22,7 @@
 
 #include <mechanics/IState.h>
 #include "Map.h"
-#include <render/GameRenderer.h>
+#include <render/SfmlRenderTarget.h>
 #include <render/EntityFormManager.h>
 #include "EntityManager.h"
 
@@ -56,7 +56,7 @@ private:
   
   GameState(const GameState& other);
   
-  GameRenderer *game_renderer_;
+  SfmlRenderTarget *game_renderer_;
   
   EntityManager entity_manager_;
   EntityFormManager entity_form_manager_;

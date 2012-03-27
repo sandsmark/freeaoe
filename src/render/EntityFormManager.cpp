@@ -20,6 +20,7 @@
 #include "EntityFormManager.h"
 #include "GraphicRender.h"
 #include <mechanics/CompUnitData.h>
+#include "SfmlRenderTarget.h"
 
 EntityFormManager::EntityFormManager() 
 {
@@ -31,7 +32,7 @@ EntityFormManager::~EntityFormManager()
 
 }
 
-void EntityFormManager::setGameRenderer(boost::shared_ptr< GameRenderer > renderer)
+void EntityFormManager::setGameRenderer(boost::shared_ptr< SfmlRenderTarget > renderer)
 {
   game_renderer_ = renderer;
 }

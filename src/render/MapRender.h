@@ -37,7 +37,7 @@ public:
   
   virtual void update(Time time);
   
-  virtual void drawOn(GameRenderer &renderer);
+  virtual void drawOn(IRenderTarget &renderer);
   
   void setMap(MapPtr map);
   
@@ -57,6 +57,7 @@ private:
   int xOffset_, yOffset_;    //TODO: ScreenPos?
   
   sf::RenderTexture mapTexture_;
+  sf::Image mapImage_;
 };
 
 typedef boost::shared_ptr<MapRender> MapRenderPtr;

@@ -18,6 +18,7 @@
 
 
 #include "MapRender.h"
+#include "IRenderTarget.h"
 #include <resource/ResourceManager.h>
 #include <SFML/Graphics/Sprite.hpp>
 
@@ -41,7 +42,7 @@ void MapRender::update(Time time)
     IComponent::update(time);
 }
 
-void MapRender::drawOn(GameRenderer& renderer)
+void MapRender::drawOn(IRenderTarget& renderer)
 {
   /*
   //TODO: very ugly code for testing purposes
@@ -71,7 +72,8 @@ void MapRender::drawOn(GameRenderer& renderer)
   */
   ScreenPos pos(xOffset_, yOffset_);
   
-  renderer.draw(mapTexture_.GetTexture(), pos);
+//   renderer.draw(mapImage_, pos);
+  renderer.draw(mapTexture_.getTexture(), pos);
   
   
 }
@@ -84,27 +86,31 @@ void MapRender::setMap(MapPtr map)
 //   MapPos h(map_->getCols()*Map::TILE_SIZE, map_->getRows() * Map::TILE_SIZE, 0);
 //   MapPos w((map_->getCols() + 1) * Map::TILE_SIZE, 0, 0);
   
-//   int height = mapToScreenPos(h).y;
-//   int width = mapToScreenPos(w).x;
+  int rowColCount = map_->getCols() + map_->getRows();
   
-  int width = 100;
-  int height = 50;
+  int width = rowColCount * Map::TILE_SIZE_HORIZONTAL/2;
+  int height = rowColCount * Map::TILE_SIZE_VERTICAL/2;
+
+  int xOffset = map_->getRows() * Map::TILE_SIZE_HORIZONTAL/2;
+  int yOffset = 0;
   
+  std::cout << "Rendering map (rows x cols): " << std::dec 
+            <<map_->getRows() << "x" << map_->getCols() << std::endl;
   std::cout << "Rendering map: " << width << "x" << height << std::endl;
   
-  if (!mapTexture_.Create(width, height))
+  if (!mapTexture_.create(width, height))
     std::cerr << "Couldn't create map texture!" << std::endl;
   
-  mapTexture_.Clear(sf::Color::Green);
-  /*
-  //TODO: very ugly code for testing purposes
+  mapTexture_.clear(sf::Color::Transparent);
+  
+//   mapImage_.create(width, height, sf::Color::Transparent);
+  
   for (unsigned int col =0; col < map_->getCols(); col++)
   {
     for (unsigned int row = 0; row < map_->getRows(); row++)
     {
       res::TerrainPtr t = ResourceManager::Inst()->getTerrain(map_->getTileAt(col,row).terrain_id_);
 
-      //TODO: MapPos to screenpos (Tile 0,0 is drawn at MapPos 0,0
       MapPos mpos(0,0,0);
       
       mpos.x += col*Map::TILE_SIZE;
@@ -112,47 +118,27 @@ void MapRender::setMap(MapPtr map)
       
       ScreenPos spos = mapToScreenPos(mpos);
       
-//       spos.x += xOffset_;
-//       spos.y += yOffset_;
-      spos.x += 500;
+      spos.x += xOffset;
+      spos.y += yOffset;
 
       sf::Image img = t->getImage();
       
-      sf::Texture texture;
-      texture.LoadFromImage(img);
-      sf::Sprite sprite;
-      sprite.SetTexture(texture);
-      sprite.SetPosition(spos);
+      // TODO use render texture if it's working again
+//       mapImage_.copy(img, spos.x, spos.y, sf::IntRect(0,0,0, 0), true);
       
-      mapTexture_.Draw(sprite);
+      sf::Texture texture;
+      texture.loadFromImage(img);
+      
+      sf::Sprite sprite;
+      sprite.setTexture(texture);
+      sprite.setPosition(spos);
+      
+      mapTexture_.draw(sprite);
     }
-  }
-  *
+  }  
   
-  res::TerrainPtr t = ResourceManager::Inst()->getTerrain(map_->getTileAt(0,0).terrain_id_);
-
-      //TODO: MapPos to screenpos (Tile 0,0 is drawn at MapPos 0,0
-      MapPos mpos(0,0,0);
-      
-      ScreenPos spos(0,0);// = mapToScreenPos(mpos);
-      
-//       spos.x += xOffset_;
-//       spos.y += yOffset_;
-//       spos.x += Map::TILE_SIZE/2;
-
-      sf::Image img = t->getImage();
-      
-      sf::Texture texture;
-      texture.LoadFromImage(img);
-      sf::Sprite sprite;
-      sprite.SetTexture(texture);
-      sprite.SetPosition(spos);
-      
-      mapTexture_.Draw(sprite);
-      */
-      
-  mapTexture_.Display();
-  
+//   mapImage_.saveToFile("map.png");
+  mapTexture_.getTexture().copyToImage().saveToFile("map.png");
   
 }
 

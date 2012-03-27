@@ -20,7 +20,8 @@
 #define IRENDERABLE_COMPONENT
 
 #include <core/IComponent.h>
-#include "GameRenderer.h"
+
+class IRenderTarget;
 
 namespace comp
 {
@@ -28,7 +29,7 @@ namespace comp
 class IRenderableComponent : public IComponent
 {
 public:
-  virtual void drawOn(GameRenderer &renderer) = 0;
+  virtual void drawOn(IRenderTarget &renderer) = 0;
 };
   
 }

@@ -32,6 +32,7 @@
 #include "EntityFactory.h"
 #include <Engine.h>
 #include <render/MapRender.h>
+#include "render/SfmlRenderTarget.h"
 
 void GameState::setScenario(boost::shared_ptr< genie::ScnFile > scenario)
 {
@@ -46,8 +47,8 @@ void GameState::init()
 
   
   
-  game_renderer_ = new GameRenderer(*render_target_);
-  entity_form_manager_.setGameRenderer(boost::shared_ptr<GameRenderer>(game_renderer_));
+  game_renderer_ = new SfmlRenderTarget(*render_target_);
+  entity_form_manager_.setGameRenderer(boost::shared_ptr<SfmlRenderTarget>(game_renderer_));
     
       
   //TODO: Test

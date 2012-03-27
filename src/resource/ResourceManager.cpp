@@ -41,7 +41,7 @@ genie::SlpFilePtr ResourceManager::getSlp(sf::Uint32 id)
 {
   genie::SlpFilePtr slp_ptr;
   
-  log.info("Loading slp with id [%u]", id);
+  log.info("Loading slp with id [%d]", id);
   
   for (DrsFileVector::iterator i = drs_files_.begin(); i != drs_files_.end();
        i++)
@@ -52,7 +52,7 @@ genie::SlpFilePtr ResourceManager::getSlp(sf::Uint32 id)
       return slp_ptr;
   }
   
-  log.warn("No slp file with id [%u] found! %d", id, slp_ptr.get());
+  log.warn("No slp file with id [%d] found!", id);
   return slp_ptr;
   /*std::map<sf::Uint32, SlpFile *>::iterator it = slp_files_.find(id);
   

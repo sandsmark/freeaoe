@@ -20,6 +20,7 @@
 #include "Resource.h"
 
 #include <global/Types.h>
+#include <genie/resource/Color.h>
 
 namespace res
 {
@@ -71,6 +72,31 @@ void Resource::unload()
 void Resource::setLoaded(bool loaded)
 {
   loaded_ = loaded;
+}
+
+//------------------------------------------------------------------------------
+sf::Image Resource::convertPixelsToImage(uint32_t width, uint32_t height,
+                                               const uint8_t *pixels,
+                                               uint8_t transparent_pixel,
+                                               genie::PalFilePtr palette)
+{
+  sf::Image img;
+  
+  img.create(width, height, sf::Color::Transparent);
+
+  for (uint32_t row=0; row < height; row++)
+    for (uint32_t col=0; col < width; col++)
+    {
+      uint8_t c_index = pixels[row * width + col];
+      
+      if (c_index != transparent_pixel)
+      {
+        genie::Color g_color = (*palette)[c_index];
+        img.setPixel(col, row, sf::Color(g_color.r, g_color.g, g_color.b));
+      }           
+    }
+  
+  return img;
 }
 
 }

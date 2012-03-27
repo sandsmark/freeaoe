@@ -26,7 +26,7 @@
 #include "mechanics/StateManager.h"
 #include <SFML/Graphics/Text.hpp>
 
-#include "render/GameRenderer.h"
+#include "render/SfmlRenderTarget.h"
 #include "render/EntityFormManager.h"
 
 namespace sf {

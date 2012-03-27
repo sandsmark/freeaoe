@@ -52,6 +52,8 @@ private:
   genie::Terrain data_;
   genie::SlpFilePtr slp_;
   
+  sf::Image *image_; // TODO Frames?
+  
 };
 
 typedef ResourcePtr<Terrain> TerrainPtr;

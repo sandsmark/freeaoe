@@ -17,34 +17,34 @@
 */
 
 
-#include "GameRenderer.h"
+#include "SfmlRenderTarget.h"
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include "GraphicRender.h"
 #include <SFML/Graphics/RenderTarget.hpp>
 
-GameRenderer::GameRenderer(sf::RenderTarget &render_target)
+SfmlRenderTarget::SfmlRenderTarget(sf::RenderTarget &render_target)
 {
   render_target_ = &render_target;
 }
 
-GameRenderer::~GameRenderer()
+SfmlRenderTarget::~SfmlRenderTarget()
 {
 
 }
 
-void GameRenderer::draw(EntityForm& form)
+void SfmlRenderTarget::draw(EntityForm& form)
 {
   form.getComponent<comp::GraphicRender>(comp::GRAPHIC_RENDER)->drawOn(*this);
 }
 
-void GameRenderer::draw(res::GraphicPtr graph, ScreenPos pos, int frame, int angle)
+void SfmlRenderTarget::draw(res::GraphicPtr graph, ScreenPos pos, int frame, int angle)
 {  
   //TODO: angle
   draw(graph->getImage(frame), pos - graph->getHotspot(frame));
 }
 
-void GameRenderer::draw(const sf::Image &image, ScreenPos pos)
+void SfmlRenderTarget::draw(const sf::Image &image, ScreenPos pos)
 {
   sf::Texture texture;
   
@@ -58,16 +58,16 @@ void GameRenderer::draw(const sf::Image &image, ScreenPos pos)
   render_target_->draw(sprite);
 }
 
-void GameRenderer::draw(const sf::Texture& texture, ScreenPos pos)
+void SfmlRenderTarget::draw(const sf::Texture& texture, ScreenPos pos)
 {
   sf::Sprite sprite;
-  sprite.SetTexture(texture);
-  sprite.SetPosition(pos);
+  sprite.setTexture(texture);
+  sprite.setPosition(pos);
   
-  render_target_->Draw(sprite);
+  render_target_->draw(sprite);
 }
 
-void GameRenderer::display(void )
+void SfmlRenderTarget::display(void )
 {
 //  render_window_->Display();
 }

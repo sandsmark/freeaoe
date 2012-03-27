@@ -22,7 +22,6 @@
 
 #include <core/IComponent.h>
 #include <resource/Graphic.h>
-#include "GameRenderer.h"
 #include <resource/ResourceManager.h>
 #include <mechanics/CompMapObject.h>
 #include "IRenderableComponent.h"
@@ -46,7 +45,7 @@ public:
   
   virtual void update(Time time);
   
-  virtual void drawOn(GameRenderer &renderer);
+  virtual void drawOn(IRenderTarget &renderer);
   
   void setGraphic(res::GraphicPtr graphic);
   

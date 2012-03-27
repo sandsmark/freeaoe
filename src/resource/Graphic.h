@@ -97,10 +97,6 @@ public:
   virtual void load(void);
   virtual void unload(void);
   
-  static sf::Image convertPixelsToImage(uint32_t width, uint32_t height,
-                                        const uint8_t *pixels,
-                                        uint8_t transparent_pixel,
-                                        genie::PalFilePtr palette);
 private:
   static Logger &log;
   

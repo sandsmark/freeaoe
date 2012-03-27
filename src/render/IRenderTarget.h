@@ -16,44 +16,34 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
-#ifndef GAMERENDERER_H
-#define GAMERENDERER_H
-
 #include <core/Entity.h>
 #include <resource/Graphic.h>
 #include <SFML/Graphics/Texture.hpp>
 
-namespace sf {
-class RenderTarget;
-}
-
-class GameRenderer
+class IRenderTarget
 {
-
 public:
-  GameRenderer(sf::RenderTarget &render_target);
-  virtual ~GameRenderer();
+  IRenderTarget() {}
+  virtual ~IRenderTarget() {}
   
   //----------------------------------------------------------------------------
-  void draw(EntityForm &form);
+  virtual void draw(EntityForm &form) = 0;
   
   //----------------------------------------------------------------------------
-  void draw(res::GraphicPtr graph, ScreenPos pos, int frame=0, int angle=0);
+  virtual void draw(res::GraphicPtr graph, ScreenPos pos, int frame=0, 
+                    int angle=0) = 0;
   
   //----------------------------------------------------------------------------
-  void draw(const sf::Image &image, ScreenPos pos);
+  /// TODO: Remove sf:: from api
+  virtual void draw(const sf::Image &image, ScreenPos pos) = 0;
   
   //----------------------------------------------------------------------------
-  void draw(const sf::Texture &texture, ScreenPos pos);
+  /// TODO: Remove sf:: from api
+  virtual void draw(const sf::Texture &texture, ScreenPos pos) = 0;
   
   //----------------------------------------------------------------------------
   /// Displays frame.
   //
-  void display(void);
+  virtual void display(void) = 0;
   
-private:
-  sf::RenderTarget *render_target_;
 };
-
-#endif // GAMERENDERER_H

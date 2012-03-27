@@ -31,43 +31,12 @@
 // TODO: Bad_alloc
 int main(int argc, char **argv)
 {
-  /*
   Logger::setLogLevel(Logger::L_INFO);
   
   Config::Inst()->parseOptions(argc, argv);
   
   Engine en;
   en.start();
-  */
-  
- sf::RenderWindow window(sf::VideoMode(800, 600, 32), "SFML bug");
-
-    sf::RenderTexture texture;  
-    texture.Create(400, 300);
-
-    bool isPlaying = true;
-    while (window.IsOpen())
-    {        
-        sf::Event event;
-        while (window.PollEvent(event))
-        {  
-            if ((event.Type == sf::Event::Closed) || 
-               ((event.Type == sf::Event::KeyPressed) && (event.Key.Code == sf::Keyboard::Escape)))
-            {
-                window.Close();
-                break;
-            }
-        } 
-        window.Clear();
-        texture.Clear(sf::Color::Green);
-
-        texture.Display();
-
-        sf::Sprite sprite(texture.GetTexture());        
-        window.Draw(sprite);
-        window.Display();
-    }
-
   
   return 0;
 }

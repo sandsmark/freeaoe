@@ -46,7 +46,7 @@ set(RENDER_SRC
     src/render/GraphicRender.cpp 
     src/render/MapRender.cpp
     src/render/EntityFormManager.cpp 
-    src/render/GameRenderer.cpp
+    src/render/SfmlRenderTarget.cpp
     )
 
 set(SERVER_SRC 
