@@ -29,12 +29,11 @@
 
 #include <map>
 #include <SFML/Config.hpp>
-#include <global/NonCopyable.h>
 
 //------------------------------------------------------------------------------
 /// Class for receiving and managing data files (.dat)
 //
-class DataManager : public NonCopyable
+class DataManager : public boost::noncopyable
 {
 
 public:

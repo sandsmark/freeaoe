@@ -24,7 +24,7 @@
 #include <map>
 #include <vector>
 #include <global/Types.h>
-#include <global/NonCopyable.h>
+#include <boost/noncopyable.hpp>
 
 class IAction;
 
@@ -32,7 +32,7 @@ class Unit;
 
 class TunnelToClient;
 
-class GameServer : public NonCopyable
+class GameServer : public boost::noncopyable
 {
 
 public:

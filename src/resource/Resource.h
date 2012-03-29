@@ -21,7 +21,6 @@
 #define RESOURCE_H
 #include <SFML/Config.hpp>
 #include <SFML/Graphics/Image.hpp>
-#include <global/NonCopyable.h>
 #include <genie/resource/PalFile.h>
 
 namespace res
@@ -30,7 +29,7 @@ namespace res
 //------------------------------------------------------------------------------
 /// Resource is the basic class of resources managed by the ResourceManager.
 //
-class Resource : public NonCopyable
+class Resource : public boost::noncopyable
 {
 
 public:

@@ -21,13 +21,12 @@
 #define CONFIG_H
 #include <string>
 
-#include "NonCopyable.h"
-
 #include <boost/program_options.hpp>
 #include <genie/Types.h>
+#include <boost/noncopyable.hpp>
 
 //
-class Config : public NonCopyable
+class Config : public boost::noncopyable
 {
 public:
   //----------------------------------------------------------------------------

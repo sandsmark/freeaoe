@@ -37,6 +37,9 @@ public:
   virtual ~SfmlRenderTarget();
   
   //----------------------------------------------------------------------------
+  virtual Vector2u getSize(void);
+  
+  //----------------------------------------------------------------------------
   void draw(EntityForm &form);
   
   //----------------------------------------------------------------------------
@@ -54,7 +57,7 @@ public:
   void display(void);
   
 private:
-  sf::RenderTarget *render_target_;
+  sf::RenderTarget *renderTarget_;
 };
 
 #endif // GAMERENDERER_H

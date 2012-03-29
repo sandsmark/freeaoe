@@ -17,7 +17,6 @@
 */
 
 #include <SFML/System.hpp>
-//#include <SFML/System/Vector2.hpp>
 
 using sf::Uint32;
 using sf::Uint8;
@@ -27,6 +26,9 @@ using sf::Int32;
 /// x,y,height
 typedef sf::Vector3f MapPos;
 typedef sf::Vector2f ScreenPos;
+
+// for now TODO Maybe switch to boost vectors or something
+using sf::Vector2u;
 
 /// Time in milliseconds
 typedef unsigned int Time;

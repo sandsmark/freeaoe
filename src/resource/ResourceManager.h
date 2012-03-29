@@ -28,7 +28,6 @@
 #include "Graphic.h"
 #include "Terrain.h"
 #include <global/Logger.h>
-#include <global/NonCopyable.h>
 #include <global/Types.h>
 
 #include <genie/resource/PalFile.h>
@@ -45,7 +44,7 @@ class DrsFile;
 //------------------------------------------------------------------------------
 /// The resource manager is the primary interface for getting recourses. At
 //
-class ResourceManager : public NonCopyable
+class ResourceManager : public boost::noncopyable
 {
 public:
   //----------------------------------------------------------------------------

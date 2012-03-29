@@ -25,13 +25,19 @@
 
 SfmlRenderTarget::SfmlRenderTarget(sf::RenderTarget &render_target)
 {
-  render_target_ = &render_target;
+  renderTarget_ = &render_target;
 }
 
 SfmlRenderTarget::~SfmlRenderTarget()
 {
 
 }
+
+Vector2u SfmlRenderTarget::getSize(void )
+{
+  return renderTarget_->getSize();
+}
+
 
 void SfmlRenderTarget::draw(EntityForm& form)
 {
@@ -55,7 +61,7 @@ void SfmlRenderTarget::draw(const sf::Image &image, ScreenPos pos)
   
   sprite.setPosition(pos);
   
-  render_target_->draw(sprite);
+  renderTarget_->draw(sprite);
 }
 
 void SfmlRenderTarget::draw(const sf::Texture& texture, ScreenPos pos)
@@ -64,7 +70,7 @@ void SfmlRenderTarget::draw(const sf::Texture& texture, ScreenPos pos)
   sprite.setTexture(texture);
   sprite.setPosition(pos);
   
-  render_target_->draw(sprite);
+  renderTarget_->draw(sprite);
 }
 
 void SfmlRenderTarget::display(void )

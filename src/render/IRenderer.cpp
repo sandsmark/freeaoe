@@ -18,21 +18,25 @@
 
 #include "IRenderer.h"
 
+//------------------------------------------------------------------------------
 IRenderer::IRenderer()
 {
 
 }
 
+//------------------------------------------------------------------------------
 IRenderer::~IRenderer()
 {
 
 }
 
+//------------------------------------------------------------------------------
 void IRenderer::setRenderTarget(boost::shared_ptr< IRenderTarget > renderTarget)
 {
   renderTarget_ = renderTarget;
 }
 
+//------------------------------------------------------------------------------
 void IRenderer::update(Time time)
 {
 
