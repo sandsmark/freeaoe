@@ -17,27 +17,22 @@
 */
 
 
-#ifndef MAPRENDER_H
-#define MAPRENDER_H
+#ifndef MAP_RENDERER_H
+#define MAP_RENDERER_H
 
-#include "IRenderableComponent.h"
-#include <mechanics/Map.h>
+#include "IRenderer.h"
+#include "mechanics/Map.h"
 
-namespace comp
-{
-
-const std::string MAP_RENDER("map_render");
-
-class MapRender : public IRenderableComponent
+class MapRenderer : public IRenderer
 {
 
 public:
-  MapRender();
-  virtual ~MapRender();
+  MapRenderer();
+  virtual ~MapRenderer();
   
   virtual void update(Time time);
   
-  virtual void drawOn(IRenderTarget &renderer);
+  virtual void display(void);
   
   void setMap(MapPtr map);
   
@@ -52,7 +47,7 @@ public:
   }
   
 private:
-  MapPtr map_; //todo root?
+  MapPtr map_; 
   
   int xOffset_, yOffset_;    //TODO: ScreenPos?
   
@@ -60,8 +55,6 @@ private:
   sf::Image mapImage_;
 };
 
-typedef boost::shared_ptr<MapRender> MapRenderPtr;
+typedef boost::shared_ptr<MapRenderer> MapRendererPtr;
 
-}
-
-#endif // MAPRENDER_H
+#endif // MAP_RENDERER_H

@@ -16,22 +16,25 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef IRENDERABLE_COMPONENT
-#define IRENDERABLE_COMPONENT
+#include "IRenderer.h"
 
-#include <core/IComponent.h>
-
-class IRenderTarget;
-
-namespace comp
+IRenderer::IRenderer()
 {
- 
-class IRenderableComponent : public IComponent
-{
-public:
-  virtual void drawOn(IRenderTarget &renderTarget) = 0;
-};
-  
+
 }
 
-#endif // IRENDERABLE_COMPONENT
+IRenderer::~IRenderer()
+{
+
+}
+
+void IRenderer::setRenderTarget(boost::shared_ptr< IRenderTarget > renderTarget)
+{
+  renderTarget_ = renderTarget;
+}
+
+void IRenderer::update(Time time)
+{
+
+}
+

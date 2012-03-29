@@ -17,32 +17,27 @@
 */
 
 
-#include "EntityFormManager.h"
+#include "UnitRenderer.h"
 #include "GraphicRender.h"
 #include <mechanics/CompUnitData.h>
-#include "SfmlRenderTarget.h"
+#include "IRenderTarget.h"
 
-EntityFormManager::EntityFormManager() 
+UnitRenderer::UnitRenderer() 
 {
 
 }
 
-EntityFormManager::~EntityFormManager()
+UnitRenderer::~UnitRenderer()
 {
 
 }
 
-void EntityFormManager::setGameRenderer(boost::shared_ptr< SfmlRenderTarget > renderer)
-{
-  game_renderer_ = renderer;
-}
-
-void EntityFormManager::add(EntityForm& form)
+void UnitRenderer::add(EntityForm& form)
 {
   forms_.push_back(form);
 }
 
-void EntityFormManager::createForms(EntityPtr entity)
+void UnitRenderer::createForms(EntityPtr entity)
 {
   comp::UnitDataPtr gunit = entity->getComponent<comp::UnitData>(comp::UNIT_DATA);
   
@@ -62,15 +57,15 @@ void EntityFormManager::createForms(EntityPtr entity)
   }
 }
 
-void EntityFormManager::update(Time time)
+void UnitRenderer::update(Time time)
 {
   for (EFVector::iterator it = forms_.begin(); it != forms_.end(); it++)
     (*it).update(time);
 }
 
 
-void EntityFormManager::draw()
+void UnitRenderer::display()
 {
   for (EFVector::iterator it = forms_.begin(); it != forms_.end(); it++)
-    game_renderer_->draw(*it);
+    renderTarget_->draw(*it);
 }

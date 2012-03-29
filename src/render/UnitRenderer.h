@@ -17,35 +17,33 @@
 */
 
 
-#ifndef ENTITYFORMMANAGER_H
-#define ENTITYFORMMANAGER_H
-#include <vector>
-#include <core/Entity.h>
-#include "SfmlRenderTarget.h"
+#ifndef UNIT_RENDERER_H
+#define UNIT_RENDERER_H
 
-class SfmlRenderTarget;
+#include <vector>
+
+#include "IRenderer.h"
+#include "core/Entity.h"
+
 /// Handles entity forms and draws them properly to screen
-class EntityFormManager
+class UnitRenderer : public IRenderer
 {
 
 public:
-  EntityFormManager();
-  virtual ~EntityFormManager();
-  
-  void setGameRenderer(boost::shared_ptr<SfmlRenderTarget> renderer);
+  UnitRenderer();
+  virtual ~UnitRenderer();
   
   void add(EntityForm &form);
   
   void createForms(EntityPtr entity);
   
-  void update(Time time);
-  void draw();
+  virtual void update(Time time);
+  virtual void display();
   
 private:
   typedef std::vector<EntityForm> EFVector;
   EFVector forms_;
   
-  boost::shared_ptr<SfmlRenderTarget> game_renderer_;
 };
 
-#endif // ENTITYFORMMANAGER_H
+#endif // UNIT_RENDERER_H

@@ -17,32 +17,28 @@
 */
 
 
-#include "MapRender.h"
+#include "MapRenderer.h"
 #include "IRenderTarget.h"
 #include <resource/ResourceManager.h>
 #include <SFML/Graphics/Sprite.hpp>
 
-namespace comp
-{
-
-MapRender::MapRender()
+MapRenderer::MapRenderer()
 {
 
   xOffset_ = 0;//-1200;
   yOffset_ = 0;//-1500;
 }
 
-MapRender::~MapRender()
+MapRenderer::~MapRenderer()
 {
 
 }
 
-void MapRender::update(Time time)
+void MapRenderer::update(Time time)
 {
-    IComponent::update(time);
 }
 
-void MapRender::drawOn(IRenderTarget& renderer)
+void MapRenderer::display(void)
 {
   /*
   //TODO: very ugly code for testing purposes
@@ -73,12 +69,12 @@ void MapRender::drawOn(IRenderTarget& renderer)
   ScreenPos pos(xOffset_, yOffset_);
   
 //   renderer.draw(mapImage_, pos);
-  renderer.draw(mapTexture_.getTexture(), pos);
+  renderTarget_->draw(mapTexture_.getTexture(), pos);
   
   
 }
 
-void MapRender::setMap(MapPtr map)
+void MapRenderer::setMap(MapPtr map)
 {
   map_ = map;
   
@@ -140,8 +136,4 @@ void MapRender::setMap(MapPtr map)
 //   mapImage_.saveToFile("map.png");
   mapTexture_.getTexture().copyToImage().saveToFile("map.png");
   
-}
-
-
-
 }

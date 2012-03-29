@@ -31,7 +31,7 @@
 #include <render/GraphicRender.h>
 #include "EntityFactory.h"
 #include <Engine.h>
-#include <render/MapRender.h>
+#include "render/MapRenderer.h"
 #include "render/SfmlRenderTarget.h"
 
 void GameState::setScenario(boost::shared_ptr< genie::ScnFile > scenario)
@@ -47,8 +47,8 @@ void GameState::init()
 
   
   
-  game_renderer_ = new SfmlRenderTarget(*render_target_);
-  entity_form_manager_.setGameRenderer(boost::shared_ptr<SfmlRenderTarget>(game_renderer_));
+  gameRenderTarget_ = boost::shared_ptr<SfmlRenderTarget>(new SfmlRenderTarget(*render_target_));
+  entity_form_manager_.setRenderTarget(gameRenderTarget_);
     
       
   //TODO: Test
@@ -68,11 +68,9 @@ void GameState::init()
   else
     map_->setUpSample();
   
-  comp::MapRenderPtr map_render(new comp::MapRender());
-  map_render->setMap(map_);
+  mapRenderer_.setRenderTarget(gameRenderTarget_);
+  mapRenderer_.setMap(map_);
   
-  map_form_ = EntityFormPtr(new EntityForm(map_));
-  map_form_->addComponent(comp::MAP_RENDER, map_render);
   
   /*
   EntityForm form;
@@ -110,16 +108,17 @@ void GameState::init()
 void GameState::draw()
 { 
   //map_->draw(render_target_);
-  map_form_->getComponent<comp::MapRender>(comp::MAP_RENDER)->drawOn(*game_renderer_);
   //std::cout << map_form_->getComponent<comp::MapRender>(comp::MAP_RENDER).get() << std::endl;
 
-  entity_form_manager_.draw();
+  mapRenderer_.display();
+  entity_form_manager_.display();
 }
 
 void GameState::update()
 {
   entity_manager_.update(Engine::GameClock.getElapsedTime().asMilliseconds());
   entity_form_manager_.update(Engine::GameClock.getElapsedTime().asMilliseconds());
+
   //game_server_->update();
   //game_client_->update();
 }
@@ -145,6 +144,5 @@ GameState::GameState(const GameState& other)
 
 GameState::~GameState()
 {
-  delete game_renderer_;
 }
 

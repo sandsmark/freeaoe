@@ -22,8 +22,9 @@
 #include <resource/ResourceManager.h>
 #include <resource/DataManager.h>
 #include <mechanics/CompMapObject.h>
-#include "MapRender.h"
 #include "IRenderTarget.h"
+
+#include "MapRenderer.h"
 
 namespace comp
 {
@@ -80,7 +81,7 @@ void GraphicRender::update(Time time)
 void GraphicRender::drawOn(IRenderTarget& renderer)
 {
   
-  screen_pos_ = MapRender::mapToScreenPos(map_object_->getPos());
+  screen_pos_ = MapRenderer::mapToScreenPos(map_object_->getPos());
   
   renderer.draw(graphic_, screen_pos_, current_frame_);
 }

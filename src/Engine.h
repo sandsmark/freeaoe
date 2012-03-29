@@ -20,14 +20,11 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
-#include <global/Logger.h>
-
 #include <SFML/System/Clock.hpp>
-#include "mechanics/StateManager.h"
 #include <SFML/Graphics/Text.hpp>
 
-#include "render/SfmlRenderTarget.h"
-#include "render/EntityFormManager.h"
+#include "global/Logger.h"
+#include "mechanics/StateManager.h"
 
 namespace sf {
 class RenderWindow;

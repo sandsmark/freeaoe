@@ -20,16 +20,18 @@
 #ifndef GAMESTATE_H
 #define GAMESTATE_H
 
-#include <mechanics/IState.h>
+#include "mechanics/IState.h"
 #include "Map.h"
-#include <render/SfmlRenderTarget.h>
-#include <render/EntityFormManager.h>
+#include "render/SfmlRenderTarget.h"
+#include "render/UnitRenderer.h"
+#include "render/MapRenderer.h"
 #include "EntityManager.h"
 
-#include <genie/script/ScnFile.h>
+#include "genie/script/ScnFile.h"
 
 class GameClient;
 class GameServer;
+
 namespace sf {
 class RenderTarget;
 }
@@ -56,10 +58,10 @@ private:
   
   GameState(const GameState& other);
   
-  SfmlRenderTarget *game_renderer_;
+  boost::shared_ptr<SfmlRenderTarget> gameRenderTarget_;
   
   EntityManager entity_manager_;
-  EntityFormManager entity_form_manager_;
+  UnitRenderer entity_form_manager_;
   /*
   GameServer *game_server_;
   GameClient *game_client_;
@@ -67,7 +69,7 @@ private:
   sf::RenderTarget *render_target_;
   
   MapPtr map_;
-  EntityFormPtr map_form_;
+  MapRenderer mapRenderer_;
   
   boost::shared_ptr<genie::ScnFile> scenario_;
 };
