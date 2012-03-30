@@ -43,7 +43,7 @@ class GameState : public IState
 {
 
 public:
-  GameState(sf::RenderTarget *render_target);
+  GameState(IRenderTargetPtr renderTarget);
   virtual ~GameState();
   
   void setScenario(boost::shared_ptr<genie::ScnFile> scenario);
@@ -58,7 +58,7 @@ private:
   
   GameState(const GameState& other);
   
-  boost::shared_ptr<SfmlRenderTarget> gameRenderTarget_;
+  IRenderTargetPtr renderTarget_;
   
   EntityManager entity_manager_;
   UnitRenderer entity_form_manager_;
@@ -66,7 +66,6 @@ private:
   GameServer *game_server_;
   GameClient *game_client_;
   */
-  sf::RenderTarget *render_target_;
   
   MapPtr map_;
   MapRenderer mapRenderer_;

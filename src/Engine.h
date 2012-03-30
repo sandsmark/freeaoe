@@ -44,7 +44,9 @@ public:
 private:
   static Logger &log;
   
-  sf::RenderWindow *render_window_;
+  sf::RenderWindow *renderWindow_;
+  
+  IRenderTargetPtr renderTarget_;
 
   
   StateManager state_manager_;

@@ -34,7 +34,7 @@ const sf::Clock Engine::GameClock;
 
 
 //------------------------------------------------------------------------------
-Engine::Engine() : render_window_(0)
+Engine::Engine() : renderWindow_(0)
 {
 
 }
@@ -44,7 +44,7 @@ Engine::~Engine()
 {
   log.info("Closing engine");
   
-  delete render_window_;
+  delete renderWindow_;
 }
 
 //------------------------------------------------------------------------------
@@ -57,23 +57,23 @@ void Engine::start()
   setup();
   
   // Start the game loop
-  while (render_window_->isOpen())
+  while (renderWindow_->isOpen())
   {
     IState *state = state_manager_.getActiveState();
     
     // Process events
     sf::Event event;
-    while (render_window_->pollEvent(event))
+    while (renderWindow_->pollEvent(event))
     {
       // Close window : exit
       if (event.type == sf::Event::Closed)
-        render_window_->close();
+        renderWindow_->close();
 
       state->handleEvent(event);
     }
      
     // Clear screen
-    render_window_->clear();
+    renderWindow_->clear();
     
     state->update();
     state->draw();
@@ -81,7 +81,7 @@ void Engine::start()
     //drawFps();
          
     // Update the window
-    render_window_->display();
+    renderWindow_->display();
   }
 
 }
@@ -89,10 +89,12 @@ void Engine::start()
 //------------------------------------------------------------------------------
 void Engine::setup()
 {
-  render_window_ = new sf::RenderWindow(sf::VideoMode(1024, 786), "freeaoe");
-  render_window_->setFramerateLimit(60);
+  renderWindow_ = new sf::RenderWindow(sf::VideoMode(1024, 786), "freeaoe");
+  renderWindow_->setFramerateLimit(60);
   
-  GameState *gameState = new GameState(render_window_);
+  renderTarget_ = IRenderTargetPtr(new SfmlRenderTarget(*renderWindow_));
+  
+  GameState *gameState = new GameState(renderTarget_);
   
   std::string scnFile = Config::Inst()->getScenarioFile();
   

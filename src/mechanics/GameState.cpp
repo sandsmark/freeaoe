@@ -34,6 +34,20 @@
 #include "render/MapRenderer.h"
 #include "render/SfmlRenderTarget.h"
 
+GameState::GameState(IRenderTargetPtr renderTarget)
+{
+  renderTarget_ = renderTarget;
+}
+
+GameState::GameState(const GameState& other)
+{
+
+}
+
+GameState::~GameState()
+{
+}
+
 void GameState::setScenario(boost::shared_ptr< genie::ScnFile > scenario)
 {
   scenario_ = scenario;
@@ -44,11 +58,7 @@ void GameState::init()
 {
   IState::init();
   
-
-  
-  
-  gameRenderTarget_ = boost::shared_ptr<SfmlRenderTarget>(new SfmlRenderTarget(*render_target_));
-  entity_form_manager_.setRenderTarget(gameRenderTarget_);
+  entity_form_manager_.setRenderTarget(renderTarget_);
     
       
   //TODO: Test
@@ -68,7 +78,7 @@ void GameState::init()
   else
     map_->setUpSample();
   
-  mapRenderer_.setRenderTarget(gameRenderTarget_);
+  mapRenderer_.setRenderTarget(renderTarget_);
   mapRenderer_.setMap(map_);
   
   
@@ -131,18 +141,5 @@ void GameState::handleEvent(sf::Event event)
   
 }
 
-GameState::GameState(sf::RenderTarget *render_target) 
-            : render_target_(render_target)
-{
 
-}
-
-GameState::GameState(const GameState& other)
-{
-
-}
-
-GameState::~GameState()
-{
-}
 
