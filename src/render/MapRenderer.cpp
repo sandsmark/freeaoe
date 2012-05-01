@@ -31,11 +31,13 @@ MapRenderer::MapRenderer()
   xOffset_ = 0;//-1200;
   yOffset_ = 0;//-1500;
   
-  cameraPos_.x = 192;
+  cameraPos_.x = 0;
   cameraPos_.y = 0;
   cameraPos_.z = 0;
   
   camChanged_ = true;
+  
+  rColBegin_ = rColEnd_ = rRowBegin_ = rRowEnd_ = 0;
 }
 
 MapRenderer::~MapRenderer()
@@ -45,7 +47,8 @@ MapRenderer::~MapRenderer()
 
 void MapRenderer::update(Time time)
 {
-  if (map_.get() != 0 && camChanged_)
+  
+  if (map_.get() != 0 && camChanged_) //TODO: split up (refactor)
   {
     // Get the absolute map positions of the rendertarget corners
     ScreenPos camCenter;
@@ -54,7 +57,7 @@ void MapRenderer::update(Time time)
     
     // relative map positions (from center) //only changes if renderTargets resolution does
     MapPos nullCenterMp = screenToMapPos(camCenter);
-    MapPos nulltopLeftMp = screenToMapPos(ScreenPos(0,0));
+//     MapPos nulltopLeftMp = screenToMapPos(ScreenPos(0,0));
     MapPos nullbotLeftMp = screenToMapPos(ScreenPos(0, renderTarget_->getSize().y));
     MapPos nullTopRightMp = screenToMapPos(ScreenPos(renderTarget_->getSize().x, 0));
     MapPos nullBotRightMp = screenToMapPos(ScreenPos(renderTarget_->getSize().x, renderTarget_->getSize().y));
@@ -71,7 +74,7 @@ void MapRenderer::update(Time time)
     std::cout << "botRightMp " << botRightMp.x << " " << botRightMp.y << std::endl;
     
     // get column and row boundaries for rendering
-    rColBegin_ = topLeftMp.x/Map::TILE_SIZE; //int = round down //TODO Plattform independent?
+    rColBegin_ = botLeftMp.x/Map::TILE_SIZE;  //int = round down //TODO Platform independent?
     
     if (rColBegin_ < 0) rColBegin_ = 0;
     if (rColBegin_ > map_->getCols()) 
@@ -80,7 +83,7 @@ void MapRenderer::update(Time time)
       std::cout << "E: Somethings fishy... (rColBegin_ > map_->getCols())" << std::endl;
     }
     
-    rColEnd_ = botRightMp.x/Map::TILE_SIZE;
+    rColEnd_ = topRightMp.x/Map::TILE_SIZE;
     rColEnd_ ++; //round up
     
     if (rColEnd_ < 0) 
@@ -90,7 +93,7 @@ void MapRenderer::update(Time time)
     }
     if (rColEnd_ > map_->getCols()) rColEnd_ = map_->getCols();
     
-    rRowBegin_ = topRightMp.y/Map::TILE_SIZE;
+    rRowBegin_ = topLeftMp.y/Map::TILE_SIZE;
     
     if (rRowBegin_ < 0) rRowBegin_ = 0;
     if (rRowBegin_ > map_->getRows())
@@ -99,7 +102,7 @@ void MapRenderer::update(Time time)
       rRowBegin_ = map_->getRows();
     }
     
-    rRowEnd_ = botLeftMp.y/Map::TILE_SIZE;
+    rRowEnd_ = botRightMp.y/Map::TILE_SIZE;
     rRowEnd_ ++; // round up
     
     if (rRowEnd_ < 0)
@@ -135,7 +138,7 @@ void MapRenderer::update(Time time)
 
 void MapRenderer::display(void)
 {
-  //TODO: very ugly code for testing purposes
+  //TODO: change to RenderTexture if it's working correctly
   for (unsigned int col = rColBegin_; col < rColEnd_; col++)
   {
     for (unsigned int row = rRowBegin_; row < rRowEnd_; row++)
@@ -153,87 +156,23 @@ void MapRenderer::display(void)
       spos.x += xOffset_;
       spos.y += yOffset_;
 
-      spos.x -= Map::TILE_SIZE_HORIZONTAL/2;
+      spos.y -= Map::TILE_SIZE_VERTICAL/2;
       
       sf::Image img = t->getImage();
       
       renderTarget_->draw(img, spos);
     }
   } 
-  
-  
-  /*
-  ScreenPos pos(xOffset_, yOffset_);
-  
-//   renderer.draw(mapImage_, pos);
-  renderTarget_->draw(mapTexture_.getTexture(), pos);
-  */
-  
+    
 }
 
 void MapRenderer::setMap(MapPtr map)
 {
   map_ = map;
   
-  //ARrg TODO Pls change before commit :(
-//   MapPos h(map_->getCols()*Map::TILE_SIZE, map_->getRows() * Map::TILE_SIZE, 0);
-//   MapPos w((map_->getCols() + 1) * Map::TILE_SIZE, 0, 0);
-  /*
-  int rowColCount = map_->getCols() + map_->getRows();
-  
-  int width = rowColCount * Map::TILE_SIZE_HORIZONTAL/2;
-  int height = rowColCount * Map::TILE_SIZE_VERTICAL/2;
-
-  int xOffset = map_->getRows() * Map::TILE_SIZE_HORIZONTAL/2;
-  int yOffset = 0;
-  
-  std::cout << "Rendering map (rows x cols): " << std::dec 
-            <<map_->getRows() << "x" << map_->getCols() << std::endl;
-  std::cout << "Rendering map: " << width << "x" << height << std::endl;
-  
-  if (!mapTexture_.create(width, height))
-    std::cerr << "Couldn't create map texture!" << std::endl;
-  
-  mapTexture_.clear(sf::Color::Transparent);
-  
-//   mapImage_.create(width, height, sf::Color::Transparent);
-  
-  for (unsigned int col =0; col < map_->getCols(); col++)
-  {
-    for (unsigned int row = 0; row < map_->getRows(); row++)
-    {
-      res::TerrainPtr t = ResourceManager::Inst()->getTerrain(map_->getTileAt(col,row).terrain_id_);
-
-      MapPos mpos(0,0,0);
-      
-      mpos.x += col*Map::TILE_SIZE;
-      mpos.y += row*Map::TILE_SIZE;
-      
-      ScreenPos spos = mapToScreenPos(mpos);
-      
-      spos.x += xOffset;
-      spos.y += yOffset;
-
-      sf::Image img = t->getImage();
-      
-      // TODO use render texture if it's working again
-//       mapImage_.copy(img, spos.x, spos.y, sf::IntRect(0,0,0, 0), true);
-      
-      sf::Texture texture;
-      texture.loadFromImage(img);
-      
-      sf::Sprite sprite;
-      sprite.setTexture(texture);
-      sprite.setPosition(spos);
-      
-      mapTexture_.draw(sprite);
-    }
-  }  
-  
-//   mapImage_.saveToFile("map.png");
-  mapTexture_.getTexture().copyToImage().saveToFile("map.png");
-  */
-  
+  rRowBegin_ = rColBegin_ = 0;
+  rRowEnd_ = map_->getRows();
+  rColEnd_ = map_->getCols();  
 }
 
 MapPos MapRenderer::getMapPosition(ScreenPos pos)

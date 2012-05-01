@@ -38,22 +38,24 @@ public:
   
   MapPos getMapPosition(ScreenPos pos);
   
+  // relative map position to screen position (map(0,0,0) is on screen(0,0)
   static inline ScreenPos mapToScreenPos(MapPos mpos)
   {
     ScreenPos spos;
-
-    spos.x = mpos.x - mpos.y;
-    spos.y = mpos.z + (mpos.x + mpos.y)/2;
+    
+    spos.x = mpos.x + mpos.y;
+    spos.y = mpos.z + (mpos.y - mpos.x)/2;
     
     return spos;
   }
   
+  // screen position to relative map position (map(0,0,0) is on screen(0,0)
   static inline MapPos screenToMapPos(ScreenPos spos)
   {
     MapPos mpos;
     
-    mpos.x = (spos.x + 2*spos.y)/2;
-    mpos.y = spos.y- spos.x/2.0;
+    mpos.x = spos.x/2.0 - spos.y;
+    mpos.y = spos.x/2.0 + spos.y;
     mpos.z = 0;
     
     return mpos;
