@@ -78,7 +78,7 @@ void Map::setUpSample()
 }
 
 void Map::create(genie::MapDescription mapDescription)
-{
+{  
   tiles_.clear();
   
   cols_ = mapDescription.width;

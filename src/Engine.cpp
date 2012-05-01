@@ -89,7 +89,8 @@ void Engine::start()
 //------------------------------------------------------------------------------
 void Engine::setup()
 {
-  renderWindow_ = new sf::RenderWindow(sf::VideoMode(1024, 786), "freeaoe");
+//   renderWindow_ = new sf::RenderWindow(sf::VideoMode(384 - (48 + 96) + 296, 96*2 - (24 + 48)), "freeaoe");
+  renderWindow_ = new sf::RenderWindow(sf::VideoMode(800, 600), "freeaoe");
   renderWindow_->setFramerateLimit(60);
   
   renderTarget_ = IRenderTargetPtr(new SfmlRenderTarget(*renderWindow_));

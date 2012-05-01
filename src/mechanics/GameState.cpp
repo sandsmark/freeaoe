@@ -67,8 +67,8 @@ void GameState::init()
   EntityPtr unit = EntityFactory::Inst().createUnit(531);
   
   
-  entity_manager_.add(unit);
-  entity_form_manager_.createForms(unit);
+//   entity_manager_.add(unit);
+//   entity_form_manager_.createForms(unit);
   
     //Map test
   map_ = MapPtr(new Map());
@@ -80,7 +80,6 @@ void GameState::init()
   
   mapRenderer_.setRenderTarget(renderTarget_);
   mapRenderer_.setMap(map_);
-  
   
   /*
   EntityForm form;
@@ -126,6 +125,8 @@ void GameState::draw()
 
 void GameState::update()
 {
+  mapRenderer_.update(Engine::GameClock.getElapsedTime().asMilliseconds());
+  
   entity_manager_.update(Engine::GameClock.getElapsedTime().asMilliseconds());
   entity_form_manager_.update(Engine::GameClock.getElapsedTime().asMilliseconds());
 
@@ -137,6 +138,20 @@ void GameState::handleEvent(sf::Event event)
 {
   if (event.type == sf::Event::MouseButtonReleased)
   {
+    ScreenPos p;
+    p.x = event.mouseButton.x;
+    p.y = event.mouseButton.y;
+    
+    MapPos m = MapRenderer::screenToMapPos(p);
+    MapPos absM = mapRenderer_.getMapPosition(p);
+    
+    std::cout << "Screenpos: (" << p.x << ", " << p.y << ")" <<  std::endl;
+    std::cout << "Mappos   : (" << m.x << ", " << m.y << ")" <<  std::endl;
+    std::cout << "Abs mpos : (" << absM.x << ", " << absM.y << ", " << absM.z << ")" <<  std::endl;
+    std::cout << "---------------------------------------------------------" << std::endl;
+    
+    mapRenderer_.cameraPos_ = absM;
+    mapRenderer_.camChanged_ = true;
   }
   
 }
