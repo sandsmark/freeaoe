@@ -31,11 +31,7 @@ MapRenderer::MapRenderer()
   xOffset_ = 0;//-1200;
   yOffset_ = 0;//-1500;
   
-  cameraPos_.x = 0;
-  cameraPos_.y = 0;
-  cameraPos_.z = 0;
-  
-  camChanged_ = true;
+  camChanged_ = false;
   
   rColBegin_ = rColEnd_ = rRowBegin_ = rRowEnd_ = 0;
 }
@@ -47,9 +43,14 @@ MapRenderer::~MapRenderer()
 
 void MapRenderer::update(Time time)
 {
+  if (camChanged_ == false && lastCameraPos_ != camera_->getTargetPosition()) // check for camera change
+    camChanged_ = true;
+    
   
   if (map_.get() != 0 && camChanged_) //TODO: split up (refactor)
   {
+    MapPos cameraPos = camera_->getTargetPosition();
+    
     // Get the absolute map positions of the rendertarget corners
     ScreenPos camCenter;
     camCenter.x = renderTarget_->getSize().x/2.0;
@@ -63,11 +64,11 @@ void MapRenderer::update(Time time)
     MapPos nullBotRightMp = screenToMapPos(ScreenPos(renderTarget_->getSize().x, renderTarget_->getSize().y));
     
     // absolute map positions
-    MapPos topLeftMp = cameraPos_ - nullCenterMp;
-    MapPos botRightMp = cameraPos_ + (nullBotRightMp - nullCenterMp);
+    MapPos topLeftMp = cameraPos - nullCenterMp;
+    MapPos botRightMp = cameraPos + (nullBotRightMp - nullCenterMp);
     
-    MapPos topRightMp = cameraPos_ + (nullTopRightMp - nullCenterMp);
-    MapPos botLeftMp = cameraPos_ + (nullbotLeftMp - nullCenterMp);
+    MapPos topRightMp = cameraPos + (nullTopRightMp - nullCenterMp);
+    MapPos botLeftMp = cameraPos + (nullbotLeftMp - nullCenterMp);
     
     std::cout << "nulC " << nullCenterMp.x << " " << nullCenterMp.y << std::endl;
     std::cout << "topLeftMp " << topLeftMp.x << " " << topLeftMp.y << std::endl;
@@ -131,6 +132,7 @@ void MapRenderer::update(Time time)
     xOffset_ = offsetSp.x;
     yOffset_ = offsetSp.y;
     
+    lastCameraPos_ = camera_->getTargetPosition();
     camChanged_ = false;
     
   }
@@ -186,9 +188,15 @@ MapPos MapRenderer::getMapPosition(ScreenPos pos)
   
   MapPos nullPos = screenToMapPos(pos);
   
-  MapPos absMapPos = cameraPos_ + (nullPos - nullCenterMp);
+  MapPos absMapPos = camera_->getTargetPosition() + (nullPos - nullCenterMp);
   
-//   return MapPos(map_->getCols()*Map::TILE_SIZE, 0, 0) + absMapPos;
   return absMapPos;
 }
+
+void MapRenderer::setCamera(CameraPtr camera)
+{
+  camera_ = camera;
+  camChanged_ = true;
+}
+
 

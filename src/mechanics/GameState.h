@@ -70,6 +70,8 @@ private:
   MapPtr map_;
   MapRenderer mapRenderer_;
   
+  CameraPtr camera_;
+    
   boost::shared_ptr<genie::ScnFile> scenario_;
 };
 

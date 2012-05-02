@@ -78,8 +78,11 @@ void GameState::init()
   else
     map_->setUpSample();
   
+  camera_ = CameraPtr(new Camera());
+  
   mapRenderer_.setRenderTarget(renderTarget_);
   mapRenderer_.setMap(map_);
+  mapRenderer_.setCamera(camera_);
   
   /*
   EntityForm form;
@@ -150,8 +153,7 @@ void GameState::handleEvent(sf::Event event)
     std::cout << "Abs mpos : (" << absM.x << ", " << absM.y << ", " << absM.z << ")" <<  std::endl;
     std::cout << "---------------------------------------------------------" << std::endl;
     
-    mapRenderer_.cameraPos_ = absM;
-    mapRenderer_.camChanged_ = true;
+    camera_->setTargetPosition(absM);
   }
   
 }

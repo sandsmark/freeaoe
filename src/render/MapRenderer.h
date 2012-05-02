@@ -22,6 +22,7 @@
 
 #include "IRenderer.h"
 #include "mechanics/Map.h"
+#include "Camera.h"
 
 class MapRenderer : public IRenderer
 {
@@ -37,6 +38,10 @@ public:
   void setMap(MapPtr map);
   
   MapPos getMapPosition(ScreenPos pos);
+  
+  void setCamera(CameraPtr camera);
+  
+//private: //TODO
   
   // relative map position to screen position (map(0,0,0) is on screen(0,0)
   static inline ScreenPos mapToScreenPos(MapPos mpos)
@@ -61,10 +66,13 @@ public:
     return mpos;
   }
   
-  MapPos cameraPos_;
-  bool camChanged_;
+//   MapPos cameraPos_;
   
 private:
+  CameraPtr camera_;
+  MapPos lastCameraPos_;
+  bool camChanged_;
+  
   MapPtr map_; 
   
   int xOffset_, yOffset_;    //TODO: ScreenPos?
