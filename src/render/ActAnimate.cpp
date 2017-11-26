@@ -16,25 +16,19 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include "ActAnimate.h"
 
-namespace act
-{
+namespace act {
 
 Animate::Animate(EntityFormPtr form)
 {
-
 }
 
 Animate::~Animate()
 {
-
 }
 
 bool Animate::update(Time time)
 {
-
 }
-
 }

@@ -21,24 +21,20 @@
 //------------------------------------------------------------------------------
 IRenderer::IRenderer()
 {
-
 }
 
 //------------------------------------------------------------------------------
 IRenderer::~IRenderer()
 {
-
 }
 
 //------------------------------------------------------------------------------
-void IRenderer::setRenderTarget(std::shared_ptr< IRenderTarget > renderTarget)
+void IRenderer::setRenderTarget(std::shared_ptr<IRenderTarget> renderTarget)
 {
-  renderTarget_ = renderTarget;
+    renderTarget_ = renderTarget;
 }
 
 //------------------------------------------------------------------------------
 void IRenderer::update(Time time)
 {
-
 }
-

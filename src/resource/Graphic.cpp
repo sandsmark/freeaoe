@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include "Graphic.h"
 #include <resource/DataManager.h>
 #include "ResourceManager.h"
@@ -25,108 +24,100 @@
 #include <genie/resource/SlpFrame.h>
 #include <genie/resource/Color.h>
 
-namespace res
-{
-  
-Logger& Graphic::log = Logger::getLogger("freeaoe.resource.Graphic");
+namespace res {
+
+Logger &Graphic::log = Logger::getLogger("freeaoe.resource.Graphic");
 
 //------------------------------------------------------------------------------
-Graphic::Graphic(uint32_t id) : Resource(id, TYPE_GRAPHIC), data_(0)
+Graphic::Graphic(uint32_t id) :
+    Resource(id, TYPE_GRAPHIC), data_(0)
 {
-
 }
 
 //------------------------------------------------------------------------------
 Graphic::~Graphic()
 {
-
 }
 
 //------------------------------------------------------------------------------
 sf::Image Graphic::getImage(uint32_t frame_num, bool mirrored)
 {
-  genie::SlpFramePtr frame = slp_->getFrame(frame_num);
-  
-  sf::Image img = convertPixelsToImage(frame->getWidth(), frame->getHeight(),
-                                       frame->img_data.pixel_indexes, 
-                                       //frame->getTransparentPixelIndex(), 
-                                       ResourceManager::Inst()->getPalette(50500) 
-                                      );
-  
-  if (mirrored)
-  {
-    img.flipHorizontally();
-  }
-  
-  return img;
+    genie::SlpFramePtr frame = slp_->getFrame(frame_num);
+
+    sf::Image img = convertPixelsToImage(frame->getWidth(), frame->getHeight(),
+                                         frame->img_data.pixel_indexes,
+                                         //frame->getTransparentPixelIndex(),
+                                         ResourceManager::Inst()->getPalette(50500));
+
+    if (mirrored) {
+        img.flipHorizontally();
+    }
+
+    return img;
 }
 
 //------------------------------------------------------------------------------
 ScreenPos Graphic::getHotspot(uint32_t frame_num, bool mirrored) const
 {
-  genie::SlpFramePtr frame = slp_->getFrame(frame_num);
-  
-  int32_t hot_spot_x = frame->hotspot_x;
-  
-  if (mirrored)
-    hot_spot_x = frame->getWidth() - hot_spot_x;
-  
-  return ScreenPos(hot_spot_x, frame->hotspot_y);
+    genie::SlpFramePtr frame = slp_->getFrame(frame_num);
+
+    int32_t hot_spot_x = frame->hotspot_x;
+
+    if (mirrored)
+        hot_spot_x = frame->getWidth() - hot_spot_x;
+
+    return ScreenPos(hot_spot_x, frame->hotspot_y);
 }
 
 //------------------------------------------------------------------------------
-float Graphic::getFrameRate(void ) const
+float Graphic::getFrameRate(void) const
 {
-  return data_->FrameDuration;
+    return data_->FrameDuration;
 }
 
 //------------------------------------------------------------------------------
-float Graphic::getReplayDelay(void ) const
+float Graphic::getReplayDelay(void) const
 {
-  return data_->ReplayDelay;
+    return data_->ReplayDelay;
 }
 
 //------------------------------------------------------------------------------
-uint32_t Graphic::getFrameCount(void ) const
+uint32_t Graphic::getFrameCount(void) const
 {
-  return data_->FrameCount;
+    return data_->FrameCount;
 }
 
 //------------------------------------------------------------------------------
-uint32_t Graphic::getAngleCount(void ) const
+uint32_t Graphic::getAngleCount(void) const
 {
-  return data_->AngleCount;
+    return data_->AngleCount;
 }
 
 //------------------------------------------------------------------------------
-void Graphic::load(void )
+void Graphic::load(void)
 {
-  if (!isLoaded())
-  {
-    data_ = new genie::Graphic(DataManager::Inst().getGraphic(getId()));
-  
-    slp_ = ResourceManager::Inst()->getSlp(data_->SLP);
-  
-    if (slp_->getFrameCount() != 
-        data_->FrameCount * (data_->AngleCount / 2 + 1) )
-      log.warn("Graphic [%d]: Framecount between data and slp differs.", 
-               getId());
-    
-    Resource::load();
-  }
+    if (!isLoaded()) {
+        data_ = new genie::Graphic(DataManager::Inst().getGraphic(getId()));
+
+        slp_ = ResourceManager::Inst()->getSlp(data_->SLP);
+
+        if (slp_->getFrameCount() != data_->FrameCount * (data_->AngleCount / 2 + 1))
+            log.warn("Graphic [%d]: Framecount between data and slp differs.",
+                     getId());
+
+        Resource::load();
+    }
 }
 
 //------------------------------------------------------------------------------
-void Graphic::unload(void )
+void Graphic::unload(void)
 {
-  if (isLoaded())
-  {
-    delete data_;
-    data_ = 0;
-    
-    slp_->unload();
-    Resource::unload();
-  }
-}
+    if (isLoaded()) {
+        delete data_;
+        data_ = 0;
 
+        slp_->unload();
+        Resource::unload();
+    }
+}
 }

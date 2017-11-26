@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef COMPMAPOBJECT_H
 #define COMPMAPOBJECT_H
 
@@ -29,9 +28,8 @@
 #include "core/Entity.h"
 #include "core/IAction.h"
 
-namespace comp
-{
-  
+namespace comp {
+
 const std::string MAP_OBJECT("map_object");
 
 // TODO: Rename to MapUnit?
@@ -39,48 +37,46 @@ const std::string MAP_OBJECT("map_object");
 class MapObject : public IComponent
 {
 public:
-  MapObject();
-  virtual ~MapObject();
-  
-  virtual void update(Time time) {}
-  
-  void setPos(MapPos pos);
-  
-  MapPos getPos(void) const;
-    
-private:
-  MapPos pos_;
-  
-  //FacingDirection
+    MapObject();
+    virtual ~MapObject();
 
-  //*map
-  
+    virtual void update(Time time) {}
+
+    void setPos(MapPos pos);
+
+    MapPos getPos(void) const;
+
+private:
+    MapPos pos_;
+
+    //FacingDirection
+
+    //*map
 };
 
-typedef std::shared_ptr< MapObject > MapObjectPtr;
+typedef std::shared_ptr<MapObject> MapObjectPtr;
 
-namespace act
-{
-  
-class PlaceMapObject : public IAction 
-{
-public:
-  PlaceMapObject(EntityPtr entity, MapPos pos) : target_(entity), new_pos_(pos)
-  {}
-  
-  virtual bool update(Time time)
-  {
-    target_->getComponent<comp::MapObject>(comp::MAP_OBJECT)->setPos(new_pos_);
-    return true;
-  }
-  
-private:
-  EntityPtr target_;
-  MapPos new_pos_;
-};
+namespace act {
 
+    class PlaceMapObject : public IAction
+    {
+    public:
+        PlaceMapObject(EntityPtr entity, MapPos pos) :
+            target_(entity), new_pos_(pos)
+        {
+        }
+
+        virtual bool update(Time time)
+        {
+            target_->getComponent<comp::MapObject>(comp::MAP_OBJECT)->setPos(new_pos_);
+            return true;
+        }
+
+    private:
+        EntityPtr target_;
+        MapPos new_pos_;
+    };
 }
-
 }
 
 #endif // COMPMAPOBJECT_H

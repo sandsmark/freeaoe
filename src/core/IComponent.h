@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef ICOMPONENT_H
 #define ICOMPONENT_H
 
@@ -31,19 +30,19 @@ class IComponent
 {
 
 public:
-  static const char *COMP_RENDERABLE;
-  
+    static const char *COMP_RENDERABLE;
+
 public:
-  IComponent();
-  virtual ~IComponent();
-  
- // virtual const char *getCompName() const = 0;
-  
-  virtual void update(Time time) {}
-  
+    IComponent();
+    virtual ~IComponent();
+
+    // virtual const char *getCompName() const = 0;
+
+    virtual void update(Time time) {}
+
 private:
 };
 
-typedef std::shared_ptr< IComponent > ComponentPtr;
+typedef std::shared_ptr<IComponent> ComponentPtr;
 
 #endif // ICOMPONENT_H

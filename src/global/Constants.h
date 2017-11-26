@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace cnst
-{
-  const int TILE_SIZE = 96;
+namespace cnst {
+const int TILE_SIZE = 96;
 };

@@ -16,27 +16,24 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include "EntityManager.h"
 
 EntityManager::EntityManager()
 {
-
 }
 
 EntityManager::~EntityManager()
 {
-
 }
 
 void EntityManager::add(EntityPtr entity)
 {
-  entities_.push_back(entity);
+    entities_.push_back(entity);
 }
 
 void EntityManager::update(Time time)
 {
-  for (EntityVector::iterator it = entities_.begin(); it != entities_.end();
-       it++)
-    (*it)->update(time);
+    for (EntityVector::iterator it = entities_.begin(); it != entities_.end();
+         it++)
+        (*it)->update(time);
 }

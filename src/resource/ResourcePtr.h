@@ -16,13 +16,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef RESOURCEPTR_H
 #define RESOURCEPTR_H
 #include "Resource.h"
 
-namespace res
-{
+namespace res {
 
 //------------------------------------------------------------------------------
 /// A pointer class pointing to a Resource Object. It handles loading and
@@ -33,64 +31,60 @@ class ResourcePtr //TODO
 {
 
 public:
-  //----------------------------------------------------------------------------
-  /// Standard constructor
-  //
-  ResourcePtr()
-  {
-  }
-  
-  //----------------------------------------------------------------------------
-  /// Constructor
-  ///
-  /// @param resource Pointer to the resource to point at.
-  //
-  ResourcePtr(Resource *resource) : res_(resource) 
-  {
-    
-  }
-  
-  ResourcePtr(const ResourcePtr& other)
-  {
-    res_ = other.res_;
-  }
-  
-  virtual ~ResourcePtr() 
-  {
-    
-  }
-  
-  //----------------------------------------------------------------------------
-  /// 
-  //
-  /*
+    //----------------------------------------------------------------------------
+    /// Standard constructor
+    //
+    ResourcePtr()
+    {
+    }
+
+    //----------------------------------------------------------------------------
+    /// Constructor
+    ///
+    /// @param resource Pointer to the resource to point at.
+    //
+    ResourcePtr(Resource *resource) :
+        res_(resource)
+    {
+    }
+
+    ResourcePtr(const ResourcePtr &other)
+    {
+        res_ = other.res_;
+    }
+
+    virtual ~ResourcePtr()
+    {
+    }
+
+    //----------------------------------------------------------------------------
+    ///
+    //
+    /*
   virtual ResourcePtr& operator=(Resource *other) 
   { 
     this->res_ = other; 
   }
   */
-  
-  //virtual ResourcePtr& operator=(const ResourcePtr& other);
-  
-  //----------------------------------------------------------------------------
-  /// Compare pointers to the resources
-  //
-  virtual bool operator==(const ResourcePtr& other) const
-  {
-    return res_ == other.res_;
-  }
-         
-  T *operator->() const 
-  {
-    return dynamic_cast<T*>(res_);
-  }
-  
-  
-private:
-    
-  Resource *res_;
-};
 
+    //virtual ResourcePtr& operator=(const ResourcePtr& other);
+
+    //----------------------------------------------------------------------------
+    /// Compare pointers to the resources
+    //
+    virtual bool operator==(const ResourcePtr &other) const
+    {
+        return res_ == other.res_;
+    }
+
+    T *operator->() const
+    {
+        return dynamic_cast<T *>(res_);
+    }
+
+private:
+    Resource *res_;
+};
 }
 
 #endif // RESOURCEPTR_H

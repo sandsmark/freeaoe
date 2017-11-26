@@ -16,29 +16,25 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include "Camera.h"
 
 Camera::Camera()
 {
-  target_.x = 0;
-  target_.y = 0;
-  target_.z = 0;
+    target_.x = 0;
+    target_.y = 0;
+    target_.z = 0;
 }
 
 Camera::~Camera()
 {
-
 }
 
-MapPos Camera::getTargetPosition(void ) const
+MapPos Camera::getTargetPosition(void) const
 {
-  return target_;
+    return target_;
 }
 
 void Camera::setTargetPosition(MapPos target)
 {
-  target_ = target;
+    target_ = target;
 }
-
-

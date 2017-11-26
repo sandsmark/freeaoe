@@ -16,56 +16,51 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include "UnitRenderer.h"
 #include "GraphicRender.h"
 #include <mechanics/CompUnitData.h>
 #include "IRenderTarget.h"
 
-UnitRenderer::UnitRenderer() 
+UnitRenderer::UnitRenderer()
 {
-
 }
 
 UnitRenderer::~UnitRenderer()
 {
-
 }
 
-void UnitRenderer::add(EntityForm& form)
+void UnitRenderer::add(EntityForm &form)
 {
-  forms_.push_back(form);
+    forms_.push_back(form);
 }
 
 void UnitRenderer::createForms(EntityPtr entity)
 {
-  comp::UnitDataPtr gunit = entity->getComponent<comp::UnitData>(comp::UNIT_DATA);
-  
-  if (gunit.get())
-  {
-    std::cout << "Creating form for " << gunit->getData().Name << std::endl;
-    
-    EntityForm form(entity);
-    
-    comp::GraphicPtr graphic = comp::GraphicRender::create(gunit->getData().StandingGraphic.first);
-    
-    graphic->setMapObject(entity->getComponent<comp::MapObject>(comp::MAP_OBJECT));
-    
-    form.addComponent(comp::GRAPHIC_RENDER, graphic);
-    
-    forms_.push_back(form);  
-  }
+    comp::UnitDataPtr gunit = entity->getComponent<comp::UnitData>(comp::UNIT_DATA);
+
+    if (gunit.get()) {
+        std::cout << "Creating form for " << gunit->getData().Name << std::endl;
+
+        EntityForm form(entity);
+
+        comp::GraphicPtr graphic = comp::GraphicRender::create(gunit->getData().StandingGraphic.first);
+
+        graphic->setMapObject(entity->getComponent<comp::MapObject>(comp::MAP_OBJECT));
+
+        form.addComponent(comp::GRAPHIC_RENDER, graphic);
+
+        forms_.push_back(form);
+    }
 }
 
 void UnitRenderer::update(Time time)
 {
-  for (EFVector::iterator it = forms_.begin(); it != forms_.end(); it++)
-    (*it).update(time);
+    for (EFVector::iterator it = forms_.begin(); it != forms_.end(); it++)
+        (*it).update(time);
 }
-
 
 void UnitRenderer::display()
 {
-  for (EFVector::iterator it = forms_.begin(); it != forms_.end(); it++)
-    renderTarget_->draw(*it);
+    for (EFVector::iterator it = forms_.begin(); it != forms_.end(); it++)
+        renderTarget_->draw(*it);
 }

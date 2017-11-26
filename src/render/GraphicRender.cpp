@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include "GraphicRender.h"
 
 #include <resource/ResourceManager.h>
@@ -26,80 +25,69 @@
 
 #include "MapRenderer.h"
 
-namespace comp
-{
+namespace comp {
 
-GraphicRender::GraphicRender() : screen_pos_(0,0)
+GraphicRender::GraphicRender() :
+    screen_pos_(0, 0)
 {
-  current_frame_ = 0; 
-  time_last_frame_ = 0;
-  current_angle_ = 0; 
-  angle_diff_ = 0;
-  mirror_frame_ = false;
-  replay_delay_ = false;
+    current_frame_ = 0;
+    time_last_frame_ = 0;
+    current_angle_ = 0;
+    angle_diff_ = 0;
+    mirror_frame_ = false;
+    replay_delay_ = false;
 }
 
 GraphicRender::~GraphicRender()
 {
-
 }
 
 void GraphicRender::update(Time time)
 {
-  
-  
-  if (time_last_frame_ == 0)
-  {
-    time_last_frame_ = time;
-    current_frame_ = 0;
-  }
-  else
-  {
-    Time frame_rate = graphic_->getFrameRate() * 1000;
-    
-    if (replay_delay_)
-      frame_rate += replay_delay_ * 1000;
-    
-    if ( (time - time_last_frame_) > frame_rate)
-    {
-      if (current_frame_ < graphic_->getFrameCount() - 1)
-      {
-        current_frame_ ++;
-        replay_delay_ = false;
-      }
-      else
-      {
-        current_frame_ = 0;
-        replay_delay_ = true;
-      }
 
-      time_last_frame_ = time;
+    if (time_last_frame_ == 0) {
+        time_last_frame_ = time;
+        current_frame_ = 0;
+    } else {
+        Time frame_rate = graphic_->getFrameRate() * 1000;
+
+        if (replay_delay_)
+            frame_rate += replay_delay_ * 1000;
+
+        if ((time - time_last_frame_) > frame_rate) {
+            if (current_frame_ < graphic_->getFrameCount() - 1) {
+                current_frame_++;
+                replay_delay_ = false;
+            } else {
+                current_frame_ = 0;
+                replay_delay_ = true;
+            }
+
+            time_last_frame_ = time;
+        }
     }
-  }
 }
 
-void GraphicRender::drawOn(IRenderTarget& renderer)
+void GraphicRender::drawOn(IRenderTarget &renderer)
 {
-  
-  screen_pos_ = MapRenderer::mapToScreenPos(map_object_->getPos());
-  
-  renderer.draw(graphic_, screen_pos_, current_frame_);
+
+    screen_pos_ = MapRenderer::mapToScreenPos(map_object_->getPos());
+
+    renderer.draw(graphic_, screen_pos_, current_frame_);
 }
 
 void GraphicRender::setMapObject(MapObjectPtr map_object)
 {
-  map_object_ = map_object;
+    map_object_ = map_object;
 }
-
 
 GraphicPtr GraphicRender::create(unsigned int graphic_id)
 {
-  comp::GraphicPtr ptr (new comp::GraphicRender());
-    
-  ptr->graphic_ = ResourceManager::Inst()->getGraphic(graphic_id);
-  ptr->screen_pos_ = ScreenPos(100, 100);
-  
-  return ptr;
-}
+    comp::GraphicPtr ptr(new comp::GraphicRender());
 
+    ptr->graphic_ = ResourceManager::Inst()->getGraphic(graphic_id);
+    ptr->screen_pos_ = ScreenPos(100, 100);
+
+    return ptr;
+}
 }

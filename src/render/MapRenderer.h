@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef MAP_RENDERER_H
 #define MAP_RENDERER_H
 
@@ -28,59 +27,59 @@ class MapRenderer : public IRenderer
 {
 
 public:
-  MapRenderer();
-  virtual ~MapRenderer();
-  
-  virtual void update(Time time);
-  
-  virtual void display(void);
-  
-  void setMap(MapPtr map);
-  
-  MapPos getMapPosition(ScreenPos pos);
-  
-  void setCamera(CameraPtr camera);
-  
-//private: //TODO
-  
-  // relative map position to screen position (map(0,0,0) is on screen(0,0)
-  static inline ScreenPos mapToScreenPos(MapPos mpos)
-  {
-    ScreenPos spos;
-    
-    spos.x = mpos.x + mpos.y;
-    spos.y = mpos.z + (mpos.y - mpos.x)/2;
-    
-    return spos;
-  }
-  
-  // screen position to relative map position (map(0,0,0) is on screen(0,0)
-  static inline MapPos screenToMapPos(ScreenPos spos)
-  {
-    MapPos mpos;
-    
-    mpos.x = spos.x/2.0 - spos.y;
-    mpos.y = spos.x/2.0 + spos.y;
-    mpos.z = 0;
-    
-    return mpos;
-  }
-  
-//   MapPos cameraPos_;
-  
+    MapRenderer();
+    virtual ~MapRenderer();
+
+    virtual void update(Time time);
+
+    virtual void display(void);
+
+    void setMap(MapPtr map);
+
+    MapPos getMapPosition(ScreenPos pos);
+
+    void setCamera(CameraPtr camera);
+
+    //private: //TODO
+
+    // relative map position to screen position (map(0,0,0) is on screen(0,0)
+    static inline ScreenPos mapToScreenPos(MapPos mpos)
+    {
+        ScreenPos spos;
+
+        spos.x = mpos.x + mpos.y;
+        spos.y = mpos.z + (mpos.y - mpos.x) / 2;
+
+        return spos;
+    }
+
+    // screen position to relative map position (map(0,0,0) is on screen(0,0)
+    static inline MapPos screenToMapPos(ScreenPos spos)
+    {
+        MapPos mpos;
+
+        mpos.x = spos.x / 2.0 - spos.y;
+        mpos.y = spos.x / 2.0 + spos.y;
+        mpos.z = 0;
+
+        return mpos;
+    }
+
+    //   MapPos cameraPos_;
+
 private:
-  CameraPtr camera_;
-  MapPos lastCameraPos_;
-  bool camChanged_;
-  
-  MapPtr map_; 
-  
-  int xOffset_, yOffset_;    //TODO: ScreenPos?
-  int rRowBegin_, rRowEnd_;
-  int rColBegin_, rColEnd_;
-  
-  sf::RenderTexture mapTexture_;
-  sf::Image mapImage_;
+    CameraPtr camera_;
+    MapPos lastCameraPos_;
+    bool camChanged_;
+
+    MapPtr map_;
+
+    int xOffset_, yOffset_; //TODO: ScreenPos?
+    int rRowBegin_, rRowEnd_;
+    int rColBegin_, rColEnd_;
+
+    sf::RenderTexture mapTexture_;
+    sf::Image mapImage_;
 };
 
 typedef std::shared_ptr<MapRenderer> MapRendererPtr;

@@ -16,12 +16,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef ENTITYMANAGER_H
 #define ENTITYMANAGER_H
 #include <vector>
 #include <core/Entity.h>
-
 
 // IDEA: Class containing all entities, (adds, removes, updates them).
 // Base class (EntitySpace?)
@@ -29,18 +27,17 @@ class EntityManager
 {
 
 public:
-  EntityManager();
-  virtual ~EntityManager();
-  
-  void add(EntityPtr entity);
-  
-  void update(Time time);
-  
+    EntityManager();
+    virtual ~EntityManager();
+
+    void add(EntityPtr entity);
+
+    void update(Time time);
+
 private:
-  
-  typedef std::vector< EntityPtr > EntityVector;
-  
-  EntityVector entities_;
+    typedef std::vector<EntityPtr> EntityVector;
+
+    EntityVector entities_;
 };
 
 #endif // ENTITYMANAGER_H

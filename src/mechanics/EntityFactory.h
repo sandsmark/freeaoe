@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef ENTITYFACTORY_H
 #define ENTITYFACTORY_H
 #include "../core/Entity.h"
@@ -24,15 +23,13 @@
 class EntityFactory
 {
 public:
-  static EntityFactory & Inst();
-  
-  std::shared_ptr<Entity> createUnit(int ID);
+    static EntityFactory &Inst();
+
+    std::shared_ptr<Entity> createUnit(int ID);
 
 private:
-  EntityFactory();
-  virtual ~EntityFactory();
-  
-  
+    EntityFactory();
+    virtual ~EntityFactory();
 };
 
 #endif // ENTITYFACTORY_H

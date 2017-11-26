@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef CONFIG_H
 #define CONFIG_H
 #include <string>
@@ -29,47 +28,45 @@
 class Config : public boost::noncopyable
 {
 public:
-  //----------------------------------------------------------------------------
-  /// Get instance (singleton pattern)
-  ///
-  /// @return returns instance of config
-  //
-  static Config* Inst();
-  
-  //----------------------------------------------------------------------------
-  /// Parses command line options and config file if present.
-  ///
-  //
-  void parseOptions(int argc, char **argv);
-  
-  //----------------------------------------------------------------------------
-  /// Get path to the game.
-  ///
-  /// @return path pointing to the game dir
-  //
-  std::string getGamePath();
-  
-  //----------------------------------------------------------------------------
-  /// Get path of the data directory.
-  ///
-  /// @return path of data directory
-  //
-  std::string getDataPath();
-  
-  //----------------------------------------------------------------------------
-  /// Returns a given scenario file or an empty string if unused
-  //
-  std::string getScenarioFile();
-  
-  
-  genie::GameVersion getGameVersion() const;
-  
+    //----------------------------------------------------------------------------
+    /// Get instance (singleton pattern)
+    ///
+    /// @return returns instance of config
+    //
+    static Config *Inst();
+
+    //----------------------------------------------------------------------------
+    /// Parses command line options and config file if present.
+    ///
+    //
+    void parseOptions(int argc, char **argv);
+
+    //----------------------------------------------------------------------------
+    /// Get path to the game.
+    ///
+    /// @return path pointing to the game dir
+    //
+    std::string getGamePath();
+
+    //----------------------------------------------------------------------------
+    /// Get path of the data directory.
+    ///
+    /// @return path of data directory
+    //
+    std::string getDataPath();
+
+    //----------------------------------------------------------------------------
+    /// Returns a given scenario file or an empty string if unused
+    //
+    std::string getScenarioFile();
+
+    genie::GameVersion getGameVersion() const;
 
 private:
-  Config();
-  virtual ~Config();
-    
-  boost::program_options::variables_map options_;
+    Config();
+    virtual ~Config();
+
+    boost::program_options::variables_map options_;
 };
 
 #endif // CONFIG_H

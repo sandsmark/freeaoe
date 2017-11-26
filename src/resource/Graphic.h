@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef FREEAOE_GRAPHIC_H
 #define FREEAOE_GRAPHIC_H
 
@@ -32,9 +31,8 @@
 
 class SlpFile;
 
-namespace res
-{
-  
+namespace res {
+
 //------------------------------------------------------------------------------
 /// A graphic resource contains one or more frames and data stored to
 /// the graphic.
@@ -44,73 +42,72 @@ class Graphic : public Resource
 {
 
 public:
-  //----------------------------------------------------------------------------
-  /// Constructor
-  ///
-  /// @param id Id of the graphic struct in .dat file.
-  //
-  Graphic(uint32_t id);
-  virtual ~Graphic();
-  
-  //----------------------------------------------------------------------------
-  /// Returns the image of the graphic. 
-  ///
-  /// @param frame_num Number of the frame
-  /// @param mirrored If set, the image will be returned mirrored
-  /// @return Image
-  //
-  sf::Image getImage(uint32_t frame_num=0, bool mirrored=false);
-  
-  //----------------------------------------------------------------------------
-  /// Get the hotspot of a frame.
-  // TODO: Maybe inherit from sf::Image and include this property
-  //
-  ScreenPos getHotspot(uint32_t frame_num=0, bool mirrored=false) const;
-  
-  //----------------------------------------------------------------------------
-  /// Get the frame rate of the graphic
-  ///
-  /// @return frame rate
-  //
-  float getFrameRate(void) const;
-  
-  //----------------------------------------------------------------------------
-  ///
-  /// @return replay delay
-  //
-  float getReplayDelay(void) const;
-  
-  //----------------------------------------------------------------------------
-  /// Get the graphics frame count.
-  ///
-  /// @return frame count
-  //
-  uint32_t getFrameCount(void) const;
-    
-  //----------------------------------------------------------------------------
-  /// Get the graphics angle count
-  ///
-  /// @return angle count
-  //
-  uint32_t getAngleCount(void) const;
-    
-  virtual void load(void);
-  virtual void unload(void);
-  
+    //----------------------------------------------------------------------------
+    /// Constructor
+    ///
+    /// @param id Id of the graphic struct in .dat file.
+    //
+    Graphic(uint32_t id);
+    virtual ~Graphic();
+
+    //----------------------------------------------------------------------------
+    /// Returns the image of the graphic.
+    ///
+    /// @param frame_num Number of the frame
+    /// @param mirrored If set, the image will be returned mirrored
+    /// @return Image
+    //
+    sf::Image getImage(uint32_t frame_num = 0, bool mirrored = false);
+
+    //----------------------------------------------------------------------------
+    /// Get the hotspot of a frame.
+    // TODO: Maybe inherit from sf::Image and include this property
+    //
+    ScreenPos getHotspot(uint32_t frame_num = 0, bool mirrored = false) const;
+
+    //----------------------------------------------------------------------------
+    /// Get the frame rate of the graphic
+    ///
+    /// @return frame rate
+    //
+    float getFrameRate(void) const;
+
+    //----------------------------------------------------------------------------
+    ///
+    /// @return replay delay
+    //
+    float getReplayDelay(void) const;
+
+    //----------------------------------------------------------------------------
+    /// Get the graphics frame count.
+    ///
+    /// @return frame count
+    //
+    uint32_t getFrameCount(void) const;
+
+    //----------------------------------------------------------------------------
+    /// Get the graphics angle count
+    ///
+    /// @return angle count
+    //
+    uint32_t getAngleCount(void) const;
+
+    virtual void load(void);
+    virtual void unload(void);
+
 private:
-  static Logger &log;
-  
-  uint32_t id_;
-  
-  genie::Graphic *data_;
-  genie::SlpFilePtr slp_;
-  
-  //TODO: collection with all frames, playercolors and outlines loaded
-  //      And rewrite SlpFile/Frame so that it will not store any data.
+    static Logger &log;
+
+    uint32_t id_;
+
+    genie::Graphic *data_;
+    genie::SlpFilePtr slp_;
+
+    //TODO: collection with all frames, playercolors and outlines loaded
+    //      And rewrite SlpFile/Frame so that it will not store any data.
 };
 
 typedef ResourcePtr<Graphic> GraphicPtr;
-
 }
 
 #endif // FREEAOE_GRAPHIC_H

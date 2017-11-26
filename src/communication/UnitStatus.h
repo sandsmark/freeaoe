@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef UNITSTATUS_H
 #define UNITSTATUS_H
 #include <SFML/Config.hpp>
@@ -29,24 +28,24 @@ class UnitStatus
 {
 
 public:
-  UnitStatus();
-  
-  UnitStatus(sf::Uint32 id, sf::Uint32 data_id, MapPos pos);
-  
-  virtual ~UnitStatus();
-  
-  sf::Uint32 getID();
-  
-  sf::Uint32 getDataID();
-  
-  MapPos getPos();
-  
+    UnitStatus();
+
+    UnitStatus(sf::Uint32 id, sf::Uint32 data_id, MapPos pos);
+
+    virtual ~UnitStatus();
+
+    sf::Uint32 getID();
+
+    sf::Uint32 getDataID();
+
+    MapPos getPos();
+
 private:
-  void *player;
-  sf::Uint32 id_;
-  sf::Uint32 data_id_;
-  
-  MapPos pos_;
+    void *player;
+    sf::Uint32 id_;
+    sf::Uint32 data_id_;
+
+    MapPos pos_;
 };
 
 #endif // UNITSTATUS_H

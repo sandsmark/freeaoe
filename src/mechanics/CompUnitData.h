@@ -16,34 +16,31 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef COMPUNITDATA_H
 #define COMPUNITDATA_H
 #include <core/IComponent.h>
 #include <genie/dat/Unit.h>
 
-namespace comp
-{
-  
+namespace comp {
+
 const std::string UNIT_DATA("unit_data");
 
 class UnitData : public IComponent
 {
 
 public:
-  UnitData();
-  virtual ~UnitData();
-  
-  void setUnit(unsigned int unit_id);
-  
-  genie::Unit getData(void) const;
-  
+    UnitData();
+    virtual ~UnitData();
+
+    void setUnit(unsigned int unit_id);
+
+    genie::Unit getData(void) const;
+
 private:
-  genie::Unit data_;
+    genie::Unit data_;
 };
 
-typedef std::shared_ptr< UnitData > UnitDataPtr;
-
+typedef std::shared_ptr<UnitData> UnitDataPtr;
 }
 
 #endif // COMPUNITDATA_H

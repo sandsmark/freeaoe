@@ -20,24 +20,22 @@
 
 bool TunnelToClient::commandAvailable()
 {
-  return !commands_.empty();
+    return !commands_.empty();
 }
 
-ICommand* TunnelToClient::getCommand()
+ICommand *TunnelToClient::getCommand()
 {
-  ICommand *cmd = 0;
-  
-  if (!commands_.empty())
-  {
-    cmd = commands_[0];
-    commands_.pop_front();
-  }
-  
-  return cmd;
+    ICommand *cmd = 0;
+
+    if (!commands_.empty()) {
+        cmd = commands_[0];
+        commands_.pop_front();
+    }
+
+    return cmd;
 }
 
-
-void TunnelToClient::queueCommand(ICommand* cmd)
+void TunnelToClient::queueCommand(ICommand *cmd)
 {
-  commands_.push_back(cmd);
+    commands_.push_back(cmd);
 }

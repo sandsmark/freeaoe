@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef GAMESERVER_H
 #define GAMESERVER_H
 
@@ -36,35 +35,35 @@ class GameServer : public boost::noncopyable
 {
 
 public:
-  GameServer();
-  virtual ~GameServer();
+    GameServer();
+    virtual ~GameServer();
 
-  void addClient (TunnelToClient *client);
+    void addClient(TunnelToClient *client);
 
-  void update (void);
+    void update(void);
 
-  Unit *createUnit (void);
+    Unit *createUnit(void);
 
-  Unit *getUnit (sf::Uint32 unit_id);
-  
-  //----------------------------------------------------------------------------
-  ///
-  /// @param unit_id Id of the unit in dat file.
-  //
-  bool spawnUnit (void *player, sf::Uint32 unit_id, MapPos pos);
+    Unit *getUnit(sf::Uint32 unit_id);
 
-  bool addAction (IAction *act);
+    //----------------------------------------------------------------------------
+    ///
+    /// @param unit_id Id of the unit in dat file.
+    //
+    bool spawnUnit(void *player, sf::Uint32 unit_id, MapPos pos);
+
+    bool addAction(IAction *act);
 
 private:
-  sf::Uint32 unit_id_counter_;
+    sf::Uint32 unit_id_counter_;
 
-  typedef std::map<sf::Uint32, Unit *> UnitMap;
-  UnitMap units_;
+    typedef std::map<sf::Uint32, Unit *> UnitMap;
+    UnitMap units_;
 
-  typedef std::vector< IAction * > ActionArray;
-  ActionArray actions_;
+    typedef std::vector<IAction *> ActionArray;
+    ActionArray actions_;
 
-  TunnelToClient *client_;
+    TunnelToClient *client_;
 };
 
 #endif // GAMESERVER_H

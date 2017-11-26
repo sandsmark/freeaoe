@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include "GameState.h"
 
 #include <SFML/Graphics/RenderTarget.hpp>
@@ -36,55 +35,50 @@
 
 GameState::GameState(IRenderTargetPtr renderTarget)
 {
-  renderTarget_ = renderTarget;
+    renderTarget_ = renderTarget;
 }
 
-GameState::GameState(const GameState& other)
+GameState::GameState(const GameState &other)
 {
-
 }
 
 GameState::~GameState()
 {
 }
 
-void GameState::setScenario(std::shared_ptr< genie::ScnFile > scenario)
+void GameState::setScenario(std::shared_ptr<genie::ScnFile> scenario)
 {
-  scenario_ = scenario;
+    scenario_ = scenario;
 }
-
 
 void GameState::init()
 {
-  IState::init();
-  
-  entity_form_manager_.setRenderTarget(renderTarget_);
-    
-      
-  //TODO: Test
-  
-  
-  EntityPtr unit = EntityFactory::Inst().createUnit(531);
-  
-  
-//   entity_manager_.add(unit);
-//   entity_form_manager_.createForms(unit);
-  
+    IState::init();
+
+    entity_form_manager_.setRenderTarget(renderTarget_);
+
+    //TODO: Test
+
+    EntityPtr unit = EntityFactory::Inst().createUnit(531);
+
+    //   entity_manager_.add(unit);
+    //   entity_form_manager_.createForms(unit);
+
     //Map test
-  map_ = MapPtr(new Map());
-  
-  if (scenario_.get())
-    map_->create(scenario_->map);
-  else
-    map_->setUpSample();
-  
-  camera_ = CameraPtr(new Camera());
-  
-  mapRenderer_.setRenderTarget(renderTarget_);
-  mapRenderer_.setMap(map_);
-  mapRenderer_.setCamera(camera_);
-  
-  /*
+    map_ = MapPtr(new Map());
+
+    if (scenario_.get())
+        map_->create(scenario_->map);
+    else
+        map_->setUpSample();
+
+    camera_ = CameraPtr(new Camera());
+
+    mapRenderer_.setRenderTarget(renderTarget_);
+    mapRenderer_.setMap(map_);
+    mapRenderer_.setCamera(camera_);
+
+    /*
   EntityForm form;
   
   comp::GraphicPtr g = comp::Graphic::create(881);
@@ -94,9 +88,9 @@ void GameState::init()
   entity_form_manager_.add(form);
   
   */
-  //-------------
-    
-/*    game_server_ = new GameServer();
+    //-------------
+
+    /*    game_server_ = new GameServer();
     game_client_ = new GameClient();
     
     game_client_->setGameRenderer(game_renderer_);
@@ -116,47 +110,41 @@ void GameState::init()
     */
 }
 
-
 void GameState::draw()
-{ 
-  //map_->draw(render_target_);
-  //std::cout << map_form_->getComponent<comp::MapRender>(comp::MAP_RENDER).get() << std::endl;
+{
+    //map_->draw(render_target_);
+    //std::cout << map_form_->getComponent<comp::MapRender>(comp::MAP_RENDER).get() << std::endl;
 
-  mapRenderer_.display();
-  entity_form_manager_.display();
+    mapRenderer_.display();
+    entity_form_manager_.display();
 }
 
 void GameState::update()
 {
-  mapRenderer_.update(Engine::GameClock.getElapsedTime().asMilliseconds());
-  
-  entity_manager_.update(Engine::GameClock.getElapsedTime().asMilliseconds());
-  entity_form_manager_.update(Engine::GameClock.getElapsedTime().asMilliseconds());
+    mapRenderer_.update(Engine::GameClock.getElapsedTime().asMilliseconds());
 
-  //game_server_->update();
-  //game_client_->update();
+    entity_manager_.update(Engine::GameClock.getElapsedTime().asMilliseconds());
+    entity_form_manager_.update(Engine::GameClock.getElapsedTime().asMilliseconds());
+
+    //game_server_->update();
+    //game_client_->update();
 }
 
 void GameState::handleEvent(sf::Event event)
 {
-  if (event.type == sf::Event::MouseButtonReleased)
-  {
-    ScreenPos p;
-    p.x = event.mouseButton.x;
-    p.y = event.mouseButton.y;
-    
-    MapPos m = MapRenderer::screenToMapPos(p);
-    MapPos absM = mapRenderer_.getMapPosition(p);
-    
-    std::cout << "Screenpos: (" << p.x << ", " << p.y << ")" <<  std::endl;
-    std::cout << "Mappos   : (" << m.x << ", " << m.y << ")" <<  std::endl;
-    std::cout << "Abs mpos : (" << absM.x << ", " << absM.y << ", " << absM.z << ")" <<  std::endl;
-    std::cout << "---------------------------------------------------------" << std::endl;
-    
-    camera_->setTargetPosition(absM);
-  }
-  
+    if (event.type == sf::Event::MouseButtonReleased) {
+        ScreenPos p;
+        p.x = event.mouseButton.x;
+        p.y = event.mouseButton.y;
+
+        MapPos m = MapRenderer::screenToMapPos(p);
+        MapPos absM = mapRenderer_.getMapPosition(p);
+
+        std::cout << "Screenpos: (" << p.x << ", " << p.y << ")" << std::endl;
+        std::cout << "Mappos   : (" << m.x << ", " << m.y << ")" << std::endl;
+        std::cout << "Abs mpos : (" << absM.x << ", " << absM.y << ", " << absM.z << ")" << std::endl;
+        std::cout << "---------------------------------------------------------" << std::endl;
+
+        camera_->setTargetPosition(absM);
+    }
 }
-
-
-

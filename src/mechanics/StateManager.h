@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef STATEMANAGER_H
 #define STATEMANAGER_H
 
@@ -26,17 +25,17 @@ class StateManager
 {
 
 public:
-  StateManager();
-  virtual ~StateManager();
-  
-  void addActiveState(GameState *state);
-  
-  GameState* getActiveState();
-    
+    StateManager();
+    virtual ~StateManager();
+
+    void addActiveState(GameState *state);
+
+    GameState *getActiveState();
+
 private:
-  GameState *active_state_;
-  
-  StateManager(const StateManager& other);
+    GameState *active_state_;
+
+    StateManager(const StateManager &other);
 };
 
 #endif // STATEMANAGER_H

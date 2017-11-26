@@ -16,32 +16,26 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include "CompUnitData.h"
 #include <resource/DataManager.h>
 
-namespace comp
-{
-  
+namespace comp {
+
 UnitData::UnitData()
 {
-
 }
 
 UnitData::~UnitData()
 {
-
 }
 
 void UnitData::setUnit(unsigned int unit_id)
 {
-  data_ = DataManager::Inst().getUnit(unit_id);
+    data_ = DataManager::Inst().getUnit(unit_id);
 }
 
-genie::Unit UnitData::getData(void ) const
+genie::Unit UnitData::getData(void) const
 {
-  return data_;
+    return data_;
 }
-
-
 }

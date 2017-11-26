@@ -16,90 +16,85 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include "Resource.h"
 
 #include <global/Types.h>
 #include <genie/resource/Color.h>
 
-namespace res
-{
+namespace res {
 
 //------------------------------------------------------------------------------
-Resource::Resource(Uint32 id, Type type) : id_(id), type_(type), loaded_(false)
+Resource::Resource(Uint32 id, Type type) :
+    id_(id), type_(type), loaded_(false)
 {
-
 }
 
 //------------------------------------------------------------------------------
 Resource::~Resource()
 {
-  unload();
+    unload();
 }
 
 //------------------------------------------------------------------------------
 Uint32 Resource::getId() const
 {
-  return id_;
+    return id_;
 }
 
 //------------------------------------------------------------------------------
 Resource::Type Resource::getType() const
 {
-  return type_;
+    return type_;
 }
 
 //------------------------------------------------------------------------------
 bool Resource::isLoaded() const
 {
-  return loaded_;
+    return loaded_;
 }
 
 //------------------------------------------------------------------------------
 void Resource::load()
 {
-  setLoaded(true);
+    setLoaded(true);
 }
 
 //------------------------------------------------------------------------------
 void Resource::unload()
 {
-  setLoaded(false);
+    setLoaded(false);
 }
-
 
 //------------------------------------------------------------------------------
 void Resource::setLoaded(bool loaded)
 {
-  loaded_ = loaded;
+    loaded_ = loaded;
 }
 
 //------------------------------------------------------------------------------
 sf::Image Resource::convertPixelsToImage(uint32_t width, uint32_t height,
-                                               const std::vector<uint8_t> &pixels,
-        //                                       uint8_t transparent_pixel,
-                                               genie::PalFilePtr palette)
+                                         const std::vector<uint8_t> &pixels,
+                                         //                                       uint8_t transparent_pixel,
+                                         genie::PalFilePtr palette)
 {
-  sf::Image img;
-  
-  img.create(width, height, sf::Color::Transparent);
+    sf::Image img;
 
-  for (uint32_t row=0; row < height; row++)
-    for (uint32_t col=0; col < width; col++)
-    {
-      uint8_t c_index = pixels[row * width + col];
-      
- //     if (c_index != transparent_pixel)
- //     {
-        genie::Color g_color = (*palette)[c_index];
-        if (g_color.a == 0) {
-            continue;
+    img.create(width, height, sf::Color::Transparent);
+
+    for (uint32_t row = 0; row < height; row++)
+        for (uint32_t col = 0; col < width; col++) {
+            uint8_t c_index = pixels[row * width + col];
+
+            //     if (c_index != transparent_pixel)
+            //     {
+            genie::Color g_color = (*palette)[c_index];
+            if (g_color.a == 0) {
+                continue;
+            }
+            img.setPixel(col, row, sf::Color(g_color.r, g_color.g, g_color.b));
+            //}
         }
-        img.setPixel(col, row, sf::Color(g_color.r, g_color.g, g_color.b));
-      //}           
-    }
-  
-  return img;
-}
 
+    return img;
+}
 }

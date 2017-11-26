@@ -16,37 +16,34 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include "UnitStatus.h"
 
 UnitStatus::UnitStatus()
 {
-
 }
 
-UnitStatus::UnitStatus(sf::Uint32 id, sf::Uint32 data_id, MapPos pos) : id_(id), 
-                   data_id_(data_id), pos_(pos) 
-                   
-{
+UnitStatus::UnitStatus(sf::Uint32 id, sf::Uint32 data_id, MapPos pos) :
+    id_(id),
+    data_id_(data_id), pos_(pos)
 
+{
 }
 
 UnitStatus::~UnitStatus()
 {
-
 }
 
 sf::Uint32 UnitStatus::getID()
 {
-  return id_;
+    return id_;
 }
 
 sf::Uint32 UnitStatus::getDataID()
 {
-  return data_id_;
+    return data_id_;
 }
 
 MapPos UnitStatus::getPos()
 {
-  return pos_;
+    return pos_;
 }

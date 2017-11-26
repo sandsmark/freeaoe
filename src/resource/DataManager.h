@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef DATAMANAGER_H
 #define DATAMANAGER_H
 
@@ -35,25 +34,22 @@
 //
 class DataManager : public boost::noncopyable
 {
-
 public:
-  
-  static DataManager & Inst();
-  
-  genie::Graphic getGraphic(unsigned int id);
-  genie::Unit getUnit(unsigned int id);
-  genie::Terrain getTerrain(unsigned int id);
-  
+    static DataManager &Inst();
+
+    genie::Graphic getGraphic(unsigned int id);
+    genie::Unit getUnit(unsigned int id);
+    genie::Terrain getTerrain(unsigned int id);
+
 private:
-  DataManager();
-  virtual ~DataManager();
-  
-  void initialize();
-  
-  static Logger &log;
-  
-  genie::DatFile dat_file_;
-  
+    DataManager();
+    virtual ~DataManager();
+
+    void initialize();
+
+    static Logger &log;
+
+    genie::DatFile dat_file_;
 };
 
 #endif // DATAMANAGER_H

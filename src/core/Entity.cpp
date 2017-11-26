@@ -16,33 +16,27 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include "Entity.h"
 
 Entity::Entity()
 {
-
 }
 
 Entity::~Entity()
 {
-
 }
 
-void Entity::addComponent(const std::string& name, ComponentPtr comp)
+void Entity::addComponent(const std::string &name, ComponentPtr comp)
 {
-  components_[name.c_str()] = comp;
+    components_[name.c_str()] = comp;
 }
 
 void Entity::update(Time time)
 {
-  for (ComponentMap::iterator it = components_.begin(); it != components_.end();
-       it ++)
-    (*it).second->update(time);
-  
-  if (current_action_.get() != 0)
-    current_action_->update(time);
+    for (ComponentMap::iterator it = components_.begin(); it != components_.end();
+         it++)
+        (*it).second->update(time);
+
+    if (current_action_.get() != 0)
+        current_action_->update(time);
 }
-
-
-

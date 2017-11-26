@@ -16,27 +16,24 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef ACTANIMATE_H
 #define ACTANIMATE_H
 
 #include "core/IAction.h"
 #include "core/Entity.h"
 
-namespace act
-{
+namespace act {
 
 //TODO Actions instead of comp::update?
 class Animate : public IAction
 {
 
 public:
-  Animate(EntityFormPtr form);
-  virtual ~Animate();
-    
-  virtual bool update(Time time);
-};
+    Animate(EntityFormPtr form);
+    virtual ~Animate();
 
+    virtual bool update(Time time);
+};
 }
 
 #endif // ACTANIMATE_H

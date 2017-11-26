@@ -16,35 +16,31 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef ACTIONMOVE_H
 #define ACTIONMOVE_H
 
 #include "core/IAction.h"
 #include "core/Entity.h"
 
-namespace act
-{
+namespace act {
 
 class MoveOnMap : public IAction
 {
 
 public:
-  MoveOnMap(EntityPtr entity, MapPos destination);
-  virtual ~MoveOnMap();
-  
-  virtual bool update(Time time);
-  
-  
-private:
-  EntityPtr entity_;
-  MapPos dest_;
-    
-  Time last_update_;
-  
-  bool target_reached;
-};
+    MoveOnMap(EntityPtr entity, MapPos destination);
+    virtual ~MoveOnMap();
 
+    virtual bool update(Time time);
+
+private:
+    EntityPtr entity_;
+    MapPos dest_;
+
+    Time last_update_;
+
+    bool target_reached;
+};
 }
 
 #endif // ACTIONMOVE_H

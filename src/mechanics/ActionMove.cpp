@@ -16,42 +16,38 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include "ActionMove.h"
 #include <Engine.h>
 
 #include <iostream>
 #include "CompMapObject.h"
 
-namespace act
-{
+namespace act {
 
-MoveOnMap::MoveOnMap(EntityPtr entity, MapPos destination) : entity_(entity)
+MoveOnMap::MoveOnMap(EntityPtr entity, MapPos destination) :
+    entity_(entity)
 {
-  dest_ = destination;
-  last_update_ = 0;
+    dest_ = destination;
+    last_update_ = 0;
 }
 
 MoveOnMap::~MoveOnMap()
 {
-
 }
 
 bool MoveOnMap::update(Time time)
 {
-  if (last_update_ == 0 || (time - last_update_) >= 1000 ) //test!
-  {
-    comp::MapObjectPtr ptr = entity_->getComponent<comp::MapObject>(comp::MAP_OBJECT);
-    
-    ptr->setPos(ptr->getPos() + MapPos(10,10,0));
-    
-    last_update_ = time;
-  }
-  
-  return false;
+    if (last_update_ == 0 || (time - last_update_) >= 1000) //test!
+    {
+        comp::MapObjectPtr ptr = entity_->getComponent<comp::MapObject>(comp::MAP_OBJECT);
+
+        ptr->setPos(ptr->getPos() + MapPos(10, 10, 0));
+
+        last_update_ = time;
+    }
+
+    return false;
 }
-
-
 }
 
 /*
@@ -96,4 +92,3 @@ void ActionMove::update(void )
     IAction::setDone();
   }*
 }*/
-

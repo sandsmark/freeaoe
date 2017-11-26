@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef GRAPHIC_RENDER_H
 #define GRAPHIC_RENDER_H
 
@@ -26,51 +25,49 @@
 #include <mechanics/CompMapObject.h>
 #include "IRenderableComponent.h"
 
-namespace comp
-{
+namespace comp {
 
 const std::string GRAPHIC_RENDER("comp_graphic");
-  
+
 class GraphicRender;
 
-typedef std::shared_ptr< GraphicRender > GraphicPtr;
+typedef std::shared_ptr<GraphicRender> GraphicPtr;
 
 /// Draws and manages Graphics for EntityForm objects.
 class GraphicRender : public IRenderableComponent
 {
 
 public:
-  GraphicRender();
-  virtual ~GraphicRender();
-  
-  virtual void update(Time time);
-  
-  virtual void drawOn(IRenderTarget &renderer);
-  
-  void setGraphic(res::GraphicPtr graphic);
-  
-  void setMapObject(MapObjectPtr map_object);
-  
-  static comp::GraphicPtr create(unsigned int graphic_id);
-  
-private:
-  res::GraphicPtr graphic_;
-  
-  MapObjectPtr map_object_;
-  
-  ScreenPos screen_pos_;
-  
-  unsigned int current_frame_;
-  Time time_last_frame_;
-  
-  bool replay_delay_;
-  
-  uint16_t current_angle_;
-  unsigned int angle_diff_;  
-  
-  bool mirror_frame_;
-};
+    GraphicRender();
+    virtual ~GraphicRender();
 
+    virtual void update(Time time);
+
+    virtual void drawOn(IRenderTarget &renderer);
+
+    void setGraphic(res::GraphicPtr graphic);
+
+    void setMapObject(MapObjectPtr map_object);
+
+    static comp::GraphicPtr create(unsigned int graphic_id);
+
+private:
+    res::GraphicPtr graphic_;
+
+    MapObjectPtr map_object_;
+
+    ScreenPos screen_pos_;
+
+    unsigned int current_frame_;
+    Time time_last_frame_;
+
+    bool replay_delay_;
+
+    uint16_t current_angle_;
+    unsigned int angle_diff_;
+
+    bool mirror_frame_;
+};
 }
 
 #endif // GRAPHIC_RENDER_H

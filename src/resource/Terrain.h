@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef FREEAOE_TERRAIN_H
 #define FREEAOE_TERRAIN_H
 
@@ -30,34 +29,31 @@
 
 class SlpFile;
 
-namespace res
-{
+namespace res {
 
 class Terrain : public Resource
 {
 public:
-  //----------------------------------------------------------------------------
-  /// @param Id resource id
-  //
-  Terrain(unsigned int Id);
-  virtual ~Terrain();
-  
-  sf::Image getImage(void); 
-  
-  virtual void load(void);
-  
+    //----------------------------------------------------------------------------
+    /// @param Id resource id
+    //
+    Terrain(unsigned int Id);
+    virtual ~Terrain();
+
+    sf::Image getImage(void);
+
+    virtual void load(void);
+
 private:
-  static Logger &log;
-  
-  genie::Terrain data_;
-  genie::SlpFilePtr slp_;
-  
-  sf::Image *image_; // TODO Frames?
-  
+    static Logger &log;
+
+    genie::Terrain data_;
+    genie::SlpFilePtr slp_;
+
+    sf::Image *image_; // TODO Frames?
 };
 
 typedef ResourcePtr<Terrain> TerrainPtr;
-
 }
 
 #endif // FREEAOE_TERRAIN_H

@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef GAMERENDERER_H
 #define GAMERENDERER_H
 
@@ -33,31 +32,31 @@ class SfmlRenderTarget : public IRenderTarget
 {
 
 public:
-  SfmlRenderTarget(sf::RenderTarget &render_target);
-  virtual ~SfmlRenderTarget();
-  
-  //----------------------------------------------------------------------------
-  virtual Vector2u getSize(void);
-  
-  //----------------------------------------------------------------------------
-  void draw(EntityForm &form);
-  
-  //----------------------------------------------------------------------------
-  void draw(res::GraphicPtr graph, ScreenPos pos, int frame=0, int angle=0);
-  
-  //----------------------------------------------------------------------------
-  void draw(const sf::Image &image, ScreenPos pos);
-  
-  //----------------------------------------------------------------------------
-  void draw(const sf::Texture &texture, ScreenPos pos);
-  
-  //----------------------------------------------------------------------------
-  /// Displays frame.
-  //
-  void display(void);
-  
+    SfmlRenderTarget(sf::RenderTarget &render_target);
+    virtual ~SfmlRenderTarget();
+
+    //----------------------------------------------------------------------------
+    virtual Vector2u getSize(void);
+
+    //----------------------------------------------------------------------------
+    void draw(EntityForm &form);
+
+    //----------------------------------------------------------------------------
+    void draw(res::GraphicPtr graph, ScreenPos pos, int frame = 0, int angle = 0);
+
+    //----------------------------------------------------------------------------
+    void draw(const sf::Image &image, ScreenPos pos);
+
+    //----------------------------------------------------------------------------
+    void draw(const sf::Texture &texture, ScreenPos pos);
+
+    //----------------------------------------------------------------------------
+    /// Displays frame.
+    //
+    void display(void);
+
 private:
-  sf::RenderTarget *renderTarget_;
+    sf::RenderTarget *renderTarget_;
 };
 
 #endif // GAMERENDERER_H

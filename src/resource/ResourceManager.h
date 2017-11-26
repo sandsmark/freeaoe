@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef RESOURCEMANAGER_H
 #define RESOURCEMANAGER_H
 
@@ -36,8 +35,7 @@
 class ColorPalette;
 class BinaFile;
 
-namespace genie
-{
+namespace genie {
 class DrsFile;
 }
 
@@ -47,80 +45,79 @@ class DrsFile;
 class ResourceManager : public boost::noncopyable
 {
 public:
-  //----------------------------------------------------------------------------
-  /// Initializes the resource manager once and returns its reference. On
-  /// calling inst the first time the manager will load header information from 
-  /// drs and other files.
-  //
-  static ResourceManager* Inst();
-   
-  //----------------------------------------------------------------------------
-  /// Returns the slp file with given id or 0 if not found. The slp file
-  /// should not be deleted!
-  ///
-  /// @param id id of the slp file
-  /// @return slp file
-  //
-  genie::SlpFilePtr getSlp(unsigned int id);
-  
-  //----------------------------------------------------------------------------
-  /// Get a Graphic resource object.
-  ///
-  /// @param id id of the resource
-  /// @return GraphicPtr pointing to the object
-  //
-  res::GraphicPtr getGraphic(unsigned int id);
-  
-  //----------------------------------------------------------------------------
-  /// Get a Terrain resource object.
-  ///
-  /// @param id id of the resource
-  /// @return resource pointer to the object
-  //
-  res::TerrainPtr getTerrain(unsigned int id);
-  
-  genie::PalFilePtr getPalette(unsigned int id);
-  
-  //----------------------------------------------------------------------------
-  /// Adds an slp file that will be managed by the ResourceManager.
-  /// TODO: Maybe auto_ptr
-  ///
-  /// @param slp reference to the slp file
-  //
-  void addSlpFile(SlpFile *slp);
-  
-  void addBinaFile(BinaFile *bina);
-  
+    //----------------------------------------------------------------------------
+    /// Initializes the resource manager once and returns its reference. On
+    /// calling inst the first time the manager will load header information from
+    /// drs and other files.
+    //
+    static ResourceManager *Inst();
+
+    //----------------------------------------------------------------------------
+    /// Returns the slp file with given id or 0 if not found. The slp file
+    /// should not be deleted!
+    ///
+    /// @param id id of the slp file
+    /// @return slp file
+    //
+    genie::SlpFilePtr getSlp(unsigned int id);
+
+    //----------------------------------------------------------------------------
+    /// Get a Graphic resource object.
+    ///
+    /// @param id id of the resource
+    /// @return GraphicPtr pointing to the object
+    //
+    res::GraphicPtr getGraphic(unsigned int id);
+
+    //----------------------------------------------------------------------------
+    /// Get a Terrain resource object.
+    ///
+    /// @param id id of the resource
+    /// @return resource pointer to the object
+    //
+    res::TerrainPtr getTerrain(unsigned int id);
+
+    genie::PalFilePtr getPalette(unsigned int id);
+
+    //----------------------------------------------------------------------------
+    /// Adds an slp file that will be managed by the ResourceManager.
+    /// TODO: Maybe auto_ptr
+    ///
+    /// @param slp reference to the slp file
+    //
+    void addSlpFile(SlpFile *slp);
+
+    void addBinaFile(BinaFile *bina);
+
 private:
-  ResourceManager();
-  virtual ~ResourceManager();
-  
-  typedef std::vector<std::shared_ptr<genie::DrsFile>> DrsFileVector;
-  DrsFileVector drs_files_;
-  /*
+    ResourceManager();
+    virtual ~ResourceManager();
+
+    typedef std::vector<std::shared_ptr<genie::DrsFile>> DrsFileVector;
+    DrsFileVector drs_files_;
+    /*
   std::map<unsigned int, SlpFile *> slp_files_;
   std::map<unsigned int, BinaFile*> bina_files_;
   */
-  //TODO: All resources into one map?
-  typedef std::map<unsigned int, res::Graphic *> GraphicMap;
-  GraphicMap graphics_;
-  
-  typedef std::map<unsigned int, res::TerrainPtr> TerrainMap;
-  TerrainMap terrains_;
-  /*
+    //TODO: All resources into one map?
+    typedef std::map<unsigned int, res::Graphic *> GraphicMap;
+    GraphicMap graphics_;
+
+    typedef std::map<unsigned int, res::TerrainPtr> TerrainMap;
+    TerrainMap terrains_;
+    /*
   std::fstream terrain_file_;
   std::fstream graphics_file_;
   */
- 
-  static Logger &log;
-  
-  //----------------------------------------------------------------------------
-  /// Loads all resource headers.
-  //
-  void initialize();
-  
-  void loadDrs(std::string file_name);  
- 
+
+    static Logger &log;
+
+    //----------------------------------------------------------------------------
+    /// Loads all resource headers.
+    //
+    void initialize();
+
+    void loadDrs(std::string file_name);
 };
 
 #endif // RESOURCEMANAGER_H

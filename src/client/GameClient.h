@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef GAMECLIENT_H
 #define GAMECLIENT_H
 
@@ -32,32 +31,33 @@ class GameClient
 {
 
 public:
-  GameClient();
-  virtual ~GameClient();
-  
-  void setServer(TunnelToServer *server);
-  
-  void setGameRenderer(RenderGame *game_renderer);
-  
-  void update();
-  
-  void selectUnit( Unit *unit);
-  void moveSelectedTo (sf::Vector2f pos);
-  
-  void test();
+    GameClient();
+    virtual ~GameClient();
+
+    void setServer(TunnelToServer *server);
+
+    void setGameRenderer(RenderGame *game_renderer);
+
+    void update();
+
+    void selectUnit(Unit *unit);
+    void moveSelectedTo(sf::Vector2f pos);
+
+    void test();
+
 private:
-  static Logger &log;
-  
-  GameClient(const GameClient& other);
-  
-  TunnelToServer *server_;
-  
-  RenderGame *game_renderer_;
-  
-  typedef std::map<sf::Uint32, Unit *> UnitMap;
-  UnitMap units_;
-  
-  Unit *selected_unit_;
+    static Logger &log;
+
+    GameClient(const GameClient &other);
+
+    TunnelToServer *server_;
+
+    RenderGame *game_renderer_;
+
+    typedef std::map<sf::Uint32, Unit *> UnitMap;
+    UnitMap units_;
+
+    Unit *selected_unit_;
 };
 
 #endif // GAMECLIENT_H

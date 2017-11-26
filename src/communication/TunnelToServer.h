@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef TUNNELTOSERVER_H
 #define TUNNELTOSERVER_H
 #include <deque>
@@ -31,22 +30,21 @@ class ICommand;
 class TunnelToServer
 {
 public:
-  virtual ~TunnelToServer() {}
-  
-  virtual void sendCommand(ICommand *cmd) = 0;
-  
-  /// Is data queued?
-  bool dataAvailable();
-  
-  /// Returns the first date object in queue.
-  UnitStatus getData();
-  
+    virtual ~TunnelToServer() {}
+
+    virtual void sendCommand(ICommand *cmd) = 0;
+
+    /// Is data queued?
+    bool dataAvailable();
+
+    /// Returns the first date object in queue.
+    UnitStatus getData();
+
 protected:
-  void queueData(UnitStatus &data);
-  
+    void queueData(UnitStatus &data);
+
 private:
-  
-  std::deque<UnitStatus> data_;
+    std::deque<UnitStatus> data_;
 };
 
 #endif // ITUNNELTOSERVER_H

@@ -29,95 +29,93 @@
 //------------------------------------------------------------------------------
 /// Simple logging class
 //
-class Logger {
+class Logger
+{
 
 public:
-  enum LogLevel 
-  {
-    L_INFO    = 0, // Informational messages that highlight the process
-    L_DEBUG   = 1, // Messages that are most useful for debugging
-    L_WARNING = 2, // Messages that designate potential harmful situations
-    L_ERROR   = 3, // Malfunctions which allows the application to continue 
-    L_FATAL   = 4, // Malfunctions that break the application
-    L_OFF     = 5  // No messages at all
-  };
-  
-  //----------------------------------------------------------------------------
-  /// Returns the static root logger.
-  ///
-  /// @return root logger
-  //
-  static Logger& getRootLogger(void);
-  
-  //----------------------------------------------------------------------------
-  /// Returns specific logger that prints additionally its name before log info
-  /// TODO
-  ///
-  /// @return specific logger
-  //
-  static Logger& getLogger(std::string name);
+    enum LogLevel {
+        L_INFO = 0, // Informational messages that highlight the process
+        L_DEBUG = 1, // Messages that are most useful for debugging
+        L_WARNING = 2, // Messages that designate potential harmful situations
+        L_ERROR = 3, // Malfunctions which allows the application to continue
+        L_FATAL = 4, // Malfunctions that break the application
+        L_OFF = 5 // No messages at all
+    };
 
-  //----------------------------------------------------------------------------
-  /// Set the overall loglevel to print. All lower log levels will be shown.
-  /// E.g. if loglevel is L_WARNING, then messages with level L_ERROR and
-  /// L_FATAL will also be shown.
-  ///
-  /// @param loglevel minimum level to log
-  //
-  static void setLogLevel(LogLevel loglevel);
+    //----------------------------------------------------------------------------
+    /// Returns the static root logger.
+    ///
+    /// @return root logger
+    //
+    static Logger &getRootLogger(void);
 
-  //----------------------------------------------------------------------------
-  /// Logs messages which aren't very important, but they highlight the 
-  /// program status.
-  ///
-  /// @param msg message to print
-  //
-  void info(const char *msg, ...);
-  
-  //----------------------------------------------------------------------------
-  /// Messages crucial for debugging can be printed using this method.
-  ///
-  /// @param msg message to print
-  //
-  void debug(const char *msg, ...);
-  
-  //----------------------------------------------------------------------------
-  /// Message that could interfere the programms behaviour should be printed
-  /// using this method.
-  ///
-  /// @param msg message to print
-  //
-  void warn(const char *msg, ...);
-  
-  //----------------------------------------------------------------------------
-  /// Method for printing information about a malfunction which are serious
-  /// but lets the programm continue.
-  ///
-  /// @param msg message to print
-  //
-  void error(const char *msg, ...);
-  
-  //----------------------------------------------------------------------------
-  /// Prints messages that crashes the program.
-  ///
-  /// @param msg message to print
-  //
-  void fatal(const char *msg, ...);
+    //----------------------------------------------------------------------------
+    /// Returns specific logger that prints additionally its name before log info
+    /// TODO
+    ///
+    /// @return specific logger
+    //
+    static Logger &getLogger(std::string name);
+
+    //----------------------------------------------------------------------------
+    /// Set the overall loglevel to print. All lower log levels will be shown.
+    /// E.g. if loglevel is L_WARNING, then messages with level L_ERROR and
+    /// L_FATAL will also be shown.
+    ///
+    /// @param loglevel minimum level to log
+    //
+    static void setLogLevel(LogLevel loglevel);
+
+    //----------------------------------------------------------------------------
+    /// Logs messages which aren't very important, but they highlight the
+    /// program status.
+    ///
+    /// @param msg message to print
+    //
+    void info(const char *msg, ...);
+
+    //----------------------------------------------------------------------------
+    /// Messages crucial for debugging can be printed using this method.
+    ///
+    /// @param msg message to print
+    //
+    void debug(const char *msg, ...);
+
+    //----------------------------------------------------------------------------
+    /// Message that could interfere the programms behaviour should be printed
+    /// using this method.
+    ///
+    /// @param msg message to print
+    //
+    void warn(const char *msg, ...);
+
+    //----------------------------------------------------------------------------
+    /// Method for printing information about a malfunction which are serious
+    /// but lets the programm continue.
+    ///
+    /// @param msg message to print
+    //
+    void error(const char *msg, ...);
+
+    //----------------------------------------------------------------------------
+    /// Prints messages that crashes the program.
+    ///
+    /// @param msg message to print
+    //
+    void fatal(const char *msg, ...);
 
 protected:
-  void log(LogLevel loglevel, va_list vlist, const char *msg);
-  void log(LogLevel loglevel, const char *msg, ...);
-  
-  std::string getLogLevelName(LogLevel loglevel);
+    void log(LogLevel loglevel, va_list vlist, const char *msg);
+    void log(LogLevel loglevel, const char *msg, ...);
+
+    std::string getLogLevelName(LogLevel loglevel);
 
 private:
-  Logger();
-  virtual ~Logger();
+    Logger();
+    virtual ~Logger();
 
 private:
-  static LogLevel LOG_LEVEL;
-
+    static LogLevel LOG_LEVEL;
 };
-
 
 #endif /* LOGGER_H_ */

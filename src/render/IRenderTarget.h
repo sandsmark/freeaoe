@@ -26,35 +26,34 @@
 class IRenderTarget
 {
 public:
-  //----------------------------------------------------------------------------
-  IRenderTarget() {}
-  
-  //----------------------------------------------------------------------------
-  virtual ~IRenderTarget() {}
-  
-  //----------------------------------------------------------------------------
-  virtual Vector2u getSize(void) = 0;
-  
-  //----------------------------------------------------------------------------
-  virtual void draw(EntityForm &form) = 0;
-  
-  //----------------------------------------------------------------------------
-  virtual void draw(res::GraphicPtr graph, ScreenPos pos, int frame=0, 
-                    int angle=0) = 0;
-  
-  //----------------------------------------------------------------------------
-  /// TODO: Remove sf:: from api
-  virtual void draw(const sf::Image &image, ScreenPos pos) = 0;
-  
-  //----------------------------------------------------------------------------
-  /// TODO: Remove sf:: from api
-  virtual void draw(const sf::Texture &texture, ScreenPos pos) = 0;
-  
-  //----------------------------------------------------------------------------
-  /// Displays frame.
-  //
-  virtual void display(void) = 0;
-  
+    //----------------------------------------------------------------------------
+    IRenderTarget() {}
+
+    //----------------------------------------------------------------------------
+    virtual ~IRenderTarget() {}
+
+    //----------------------------------------------------------------------------
+    virtual Vector2u getSize(void) = 0;
+
+    //----------------------------------------------------------------------------
+    virtual void draw(EntityForm &form) = 0;
+
+    //----------------------------------------------------------------------------
+    virtual void draw(res::GraphicPtr graph, ScreenPos pos, int frame = 0,
+                      int angle = 0) = 0;
+
+    //----------------------------------------------------------------------------
+    /// TODO: Remove sf:: from api
+    virtual void draw(const sf::Image &image, ScreenPos pos) = 0;
+
+    //----------------------------------------------------------------------------
+    /// TODO: Remove sf:: from api
+    virtual void draw(const sf::Texture &texture, ScreenPos pos) = 0;
+
+    //----------------------------------------------------------------------------
+    /// Displays frame.
+    //
+    virtual void display(void) = 0;
 };
 
 typedef std::shared_ptr<IRenderTarget> IRenderTargetPtr;

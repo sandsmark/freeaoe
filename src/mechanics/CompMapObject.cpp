@@ -16,32 +16,25 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include "CompMapObject.h"
 
-namespace comp
-{
+namespace comp {
 
 MapObject::MapObject()
 {
-
 }
 
 MapObject::~MapObject()
 {
-
 }
 
-MapPos MapObject::getPos(void ) const
+MapPos MapObject::getPos(void) const
 {
-  return pos_;
+    return pos_;
 }
 
 void MapObject::setPos(MapPos pos)
 {
-  pos_ = pos;
+    pos_ = pos;
 }
-
-
-  
 }

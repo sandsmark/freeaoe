@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef FILEEXCEPTION_H
 #define FILEEXCEPTION_H
 
@@ -26,19 +25,20 @@
 class FileException : public std::exception
 {
 public:
-  FileException(std::string message) : message_(message) {}
-  
-  virtual ~FileException() throw() {};
-  
-  virtual const char *what() const throw()
-  {
-    return message_.c_str();
-  }
-  
+    FileException(std::string message) :
+        message_(message) {}
+
+    virtual ~FileException() throw(){};
+
+    virtual const char *what() const throw()
+    {
+        return message_.c_str();
+    }
+
 private:
-  FileException();
-  
-  std::string message_;
+    FileException();
+
+    std::string message_;
 };
 
 #endif // FILECORRUPTEXCEPTION_H

@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef UNIT_RENDERER_H
 #define UNIT_RENDERER_H
 
@@ -30,20 +29,19 @@ class UnitRenderer : public IRenderer
 {
 
 public:
-  UnitRenderer();
-  virtual ~UnitRenderer();
-  
-  void add(EntityForm &form);
-  
-  void createForms(EntityPtr entity);
-  
-  virtual void update(Time time);
-  virtual void display();
-  
+    UnitRenderer();
+    virtual ~UnitRenderer();
+
+    void add(EntityForm &form);
+
+    void createForms(EntityPtr entity);
+
+    virtual void update(Time time);
+    virtual void display();
+
 private:
-  typedef std::vector<EntityForm> EFVector;
-  EFVector forms_;
-  
+    typedef std::vector<EntityForm> EFVector;
+    EFVector forms_;
 };
 
 #endif // UNIT_RENDERER_H

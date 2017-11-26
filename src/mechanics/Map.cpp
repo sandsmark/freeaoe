@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include "Map.h"
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
@@ -28,16 +27,15 @@
 #include <SFML/Graphics/Shape.hpp>
 #include <resource/DataManager.h>
 
-Logger& Map::log = Logger::getLogger("freeaoe.Map");
+Logger &Map::log = Logger::getLogger("freeaoe.Map");
 
 Map::Map() //: map_txt_(0)
 {
-
 }
 
 Map::~Map()
 {
-  /*
+    /*
   for (NodeMap::iterator it = nodes_.begin();
        it != nodes_.end(); it ++)
        delete it->second;
@@ -46,81 +44,76 @@ Map::~Map()
 
 void Map::setUpSample()
 {
-  cols_ = 4;
-  rows_ = 4;
-  
-  tiles_.clear();
-  
-  MapTile grass;
-  grass.elevation_ = 0;
-  grass.terrain_id_ = 0;
-  grass.terrain_ = DataManager::Inst().getTerrain(0);
-  
-  tiles_.resize(cols_ * rows_, grass);
-  
-  genie::Terrain water_dat = DataManager::Inst().getTerrain(1);
-  
-  tiles_[7].terrain_ = water_dat;
-  tiles_[7].terrain_id_ = 1;
-  tiles_[9].terrain_ = water_dat;
-  tiles_[9].terrain_id_ = 1;
-  tiles_[10].terrain_ = water_dat;
-  tiles_[10].terrain_id_ = 1;
-  tiles_[11].terrain_ = water_dat;
-  tiles_[11].terrain_id_ = 1;
-  
-  std::cout << tiles_[0].terrain_id_ << std::endl;
-  
-  /*makeGrid(true);
+    cols_ = 4;
+    rows_ = 4;
+
+    tiles_.clear();
+
+    MapTile grass;
+    grass.elevation_ = 0;
+    grass.terrain_id_ = 0;
+    grass.terrain_ = DataManager::Inst().getTerrain(0);
+
+    tiles_.resize(cols_ * rows_, grass);
+
+    genie::Terrain water_dat = DataManager::Inst().getTerrain(1);
+
+    tiles_[7].terrain_ = water_dat;
+    tiles_[7].terrain_id_ = 1;
+    tiles_[9].terrain_ = water_dat;
+    tiles_[9].terrain_id_ = 1;
+    tiles_[10].terrain_ = water_dat;
+    tiles_[10].terrain_id_ = 1;
+    tiles_[11].terrain_ = water_dat;
+    tiles_[11].terrain_id_ = 1;
+
+    std::cout << tiles_[0].terrain_id_ << std::endl;
+
+    /*makeGrid(true);
   makeTiles();
   updateElevations();
   */
 }
 
 void Map::create(genie::ScnMap mapDescription)
-{  
-  tiles_.clear();
-  
-  cols_ = mapDescription.width;
-  rows_ = mapDescription.height;
-  
-  tiles_.resize(cols_ * rows_);
-  
-  for (int i=0; i < tiles_.size(); i++)
-  {
-    genie::MapTile tile = mapDescription.tiles[i];
+{
+    tiles_.clear();
 
-    tiles_[i].terrain_id_ = tile.terrainID;
-    tiles_[i].elevation_ = tile.elevation;
-    
-    tiles_[i].terrain_ = DataManager::Inst().getTerrain(tile.terrainID);
-  }
-  
+    cols_ = mapDescription.width;
+    rows_ = mapDescription.height;
+
+    tiles_.resize(cols_ * rows_);
+
+    for (int i = 0; i < tiles_.size(); i++) {
+        genie::MapTile tile = mapDescription.tiles[i];
+
+        tiles_[i].terrain_id_ = tile.terrainID;
+        tiles_[i].elevation_ = tile.elevation;
+
+        tiles_[i].terrain_ = DataManager::Inst().getTerrain(tile.terrainID);
+    }
 }
-
 
 unsigned int Map::getCols()
 {
-  return  cols_;
+    return cols_;
 }
 
 unsigned int Map::getRows()
 {
-  return rows_;
+    return rows_;
 }
 
 MapTile Map::getTileAt(unsigned int col, unsigned int row)
 {
-  unsigned int index = row * cols_ + col;
-  
-  if (index >= tiles_.size())
-    log.error("Trying to get MapTile out of index!");
-  else
-  {
-    return tiles_[index];
-  }
-}
+    unsigned int index = row * cols_ + col;
 
+    if (index >= tiles_.size())
+        log.error("Trying to get MapTile out of index!");
+    else {
+        return tiles_[index];
+    }
+}
 
 /*
 void Map::addNodeToShape(sf::Shape *shape, MapNode *node, sf::Color *point_col)
@@ -300,4 +293,3 @@ MapNode* Map::getNodeByCoords(sf::Uint32 col, sf::Uint32 row)
 }
 
 */
-

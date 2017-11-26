@@ -20,14 +20,12 @@
 
 #include "Entity.h"
 
-IComponent::IComponent() 
+IComponent::IComponent()
 {
-
 }
 
 IComponent::~IComponent()
 {
-
 }
 /*
 void IComponent::addAttribute(const std::string name, AttributePtr attribute)

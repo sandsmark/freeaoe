@@ -24,104 +24,106 @@
 Logger::LogLevel Logger::LOG_LEVEL = L_OFF;
 
 //------------------------------------------------------------------------------
-Logger& Logger::getRootLogger(void) 
+Logger &Logger::getRootLogger(void)
 {
-  static Logger l;
-  return l;
+    static Logger l;
+    return l;
 }
 
 //------------------------------------------------------------------------------
-Logger& Logger::getLogger(std::string name) 
+Logger &Logger::getLogger(std::string name)
 {
-  return getRootLogger();
+    return getRootLogger();
 }
 
 //------------------------------------------------------------------------------
-void Logger::setLogLevel(Logger::LogLevel loglevel) 
+void Logger::setLogLevel(Logger::LogLevel loglevel)
 {
-  Logger::LOG_LEVEL = loglevel;
+    Logger::LOG_LEVEL = loglevel;
 }
 
 //------------------------------------------------------------------------------
-Logger::Logger() 
+Logger::Logger()
 {
 }
 
 //------------------------------------------------------------------------------
-Logger::~Logger() 
+Logger::~Logger()
 {
-
 }
 
 //------------------------------------------------------------------------------
-void Logger::log(Logger::LogLevel loglevel, const char *msg, ...) 
+void Logger::log(Logger::LogLevel loglevel, const char *msg, ...)
 {
-  va_list args;
-  va_start(args,msg);
+    va_list args;
+    va_start(args, msg);
 
-  this->log(loglevel, args, msg);
+    this->log(loglevel, args, msg);
 }
 
 //------------------------------------------------------------------------------
-void Logger::log(Logger::LogLevel loglevel, va_list args, const char *msg) 
+void Logger::log(Logger::LogLevel loglevel, va_list args, const char *msg)
 {
-  if (loglevel >= Logger::LOG_LEVEL)
-  {
-    char msgBuf[1024];                  //TODO: reserve memory on time
-    vsprintf(msgBuf, msg, args);
+    if (loglevel >= Logger::LOG_LEVEL) {
+        char msgBuf[1024]; //TODO: reserve memory on time
+        vsprintf(msgBuf, msg, args);
 
-    //TODO: should be selectable if log goes to stdout or file
-    std::cout << getLogLevelName(loglevel) << ": " << msgBuf << std::endl;
-  }
+        //TODO: should be selectable if log goes to stdout or file
+        std::cout << getLogLevelName(loglevel) << ": " << msgBuf << std::endl;
+    }
 }
 
 //------------------------------------------------------------------------------
-void Logger::error(const char *msg, ...) {
-  va_list args;
-  va_start(args,msg);
-  this->log(L_ERROR, args, msg);
+void Logger::error(const char *msg, ...)
+{
+    va_list args;
+    va_start(args, msg);
+    this->log(L_ERROR, args, msg);
 }
 
 //------------------------------------------------------------------------------
-void Logger::warn(const char *msg, ...) {
-  va_list args;
-  va_start(args,msg);
-  this->log(L_WARNING, args, msg);
+void Logger::warn(const char *msg, ...)
+{
+    va_list args;
+    va_start(args, msg);
+    this->log(L_WARNING, args, msg);
 }
 
 //------------------------------------------------------------------------------
-void Logger::info(const char *msg, ...) {
-  va_list args;
-  va_start(args,msg);
-  this->log(L_INFO, args, msg);
+void Logger::info(const char *msg, ...)
+{
+    va_list args;
+    va_start(args, msg);
+    this->log(L_INFO, args, msg);
 }
 
 //------------------------------------------------------------------------------
-void Logger::fatal(const char *msg, ...) {
-  va_list args;
-  va_start(args,msg);
-  this->log(L_FATAL, args, msg);
+void Logger::fatal(const char *msg, ...)
+{
+    va_list args;
+    va_start(args, msg);
+    this->log(L_FATAL, args, msg);
 }
 
 //------------------------------------------------------------------------------
-void Logger::debug(const char *msg, ...) {
-  va_list args;
-  va_start(args,msg);
-  this->log(L_DEBUG, args, msg);
+void Logger::debug(const char *msg, ...)
+{
+    va_list args;
+    va_start(args, msg);
+    this->log(L_DEBUG, args, msg);
 }
 
 //------------------------------------------------------------------------------
 std::string Logger::getLogLevelName(Logger::LogLevel loglevel)
 {
-  static const std::string LOG_LEVEL_NAMES[] = {
-    "Info   ",  //LINFO
-    "Debug  ",
-    "Warning",
-    "ERROR  ",
-    "FATAL  ",
-    "Off    "   //LOFF
-  };
-  
-  return LOG_LEVEL_NAMES[loglevel];
-}
+    static const std::string LOG_LEVEL_NAMES[] = {
+        "Info   ", //LINFO
+        "Debug  ",
+        "Warning",
+        "ERROR  ",
+        "FATAL  ",
+        "Off    " //LOFF
+    };
 
+    return LOG_LEVEL_NAMES[loglevel];
+}

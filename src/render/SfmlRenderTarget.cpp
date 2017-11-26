@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include "SfmlRenderTarget.h"
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
@@ -25,55 +24,53 @@
 
 SfmlRenderTarget::SfmlRenderTarget(sf::RenderTarget &render_target)
 {
-  renderTarget_ = &render_target;
+    renderTarget_ = &render_target;
 }
 
 SfmlRenderTarget::~SfmlRenderTarget()
 {
-
 }
 
-Vector2u SfmlRenderTarget::getSize(void )
+Vector2u SfmlRenderTarget::getSize(void)
 {
-  return renderTarget_->getSize();
+    return renderTarget_->getSize();
 }
 
-
-void SfmlRenderTarget::draw(EntityForm& form)
+void SfmlRenderTarget::draw(EntityForm &form)
 {
-  form.getComponent<comp::GraphicRender>(comp::GRAPHIC_RENDER)->drawOn(*this);
+    form.getComponent<comp::GraphicRender>(comp::GRAPHIC_RENDER)->drawOn(*this);
 }
 
 void SfmlRenderTarget::draw(res::GraphicPtr graph, ScreenPos pos, int frame, int angle)
-{  
-  //TODO: angle
-  draw(graph->getImage(frame), pos - graph->getHotspot(frame));
+{
+    //TODO: angle
+    draw(graph->getImage(frame), pos - graph->getHotspot(frame));
 }
 
 void SfmlRenderTarget::draw(const sf::Image &image, ScreenPos pos)
 {
-  sf::Texture texture;
-  
-  texture.loadFromImage(image);
-  
-  sf::Sprite sprite;
-  sprite.setTexture(texture);
-  
-  sprite.setPosition(pos);
-  
-  renderTarget_->draw(sprite);
+    sf::Texture texture;
+
+    texture.loadFromImage(image);
+
+    sf::Sprite sprite;
+    sprite.setTexture(texture);
+
+    sprite.setPosition(pos);
+
+    renderTarget_->draw(sprite);
 }
 
-void SfmlRenderTarget::draw(const sf::Texture& texture, ScreenPos pos)
+void SfmlRenderTarget::draw(const sf::Texture &texture, ScreenPos pos)
 {
-  sf::Sprite sprite;
-  sprite.setTexture(texture);
-  sprite.setPosition(pos);
-  
-  renderTarget_->draw(sprite);
+    sf::Sprite sprite;
+    sprite.setTexture(texture);
+    sprite.setPosition(pos);
+
+    renderTarget_->draw(sprite);
 }
 
-void SfmlRenderTarget::display(void )
+void SfmlRenderTarget::display(void)
 {
-//  render_window_->Display();
+    //  render_window_->Display();
 }

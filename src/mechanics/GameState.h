@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef GAMESTATE_H
 #define GAMESTATE_H
 
@@ -43,36 +42,35 @@ class GameState : public IState
 {
 
 public:
-  GameState(IRenderTargetPtr renderTarget);
-  virtual ~GameState();
-  
-  void setScenario(std::shared_ptr<genie::ScnFile> scenario);
-  
-  virtual void init();
-  
-  virtual void draw();
-  virtual void update();
-  virtual void handleEvent(sf::Event event);
-    
+    GameState(IRenderTargetPtr renderTarget);
+    virtual ~GameState();
+
+    void setScenario(std::shared_ptr<genie::ScnFile> scenario);
+
+    virtual void init();
+
+    virtual void draw();
+    virtual void update();
+    virtual void handleEvent(sf::Event event);
+
 private:
-  
-  GameState(const GameState& other);
-  
-  IRenderTargetPtr renderTarget_;
-  
-  EntityManager entity_manager_;
-  UnitRenderer entity_form_manager_;
-  /*
+    GameState(const GameState &other);
+
+    IRenderTargetPtr renderTarget_;
+
+    EntityManager entity_manager_;
+    UnitRenderer entity_form_manager_;
+    /*
   GameServer *game_server_;
   GameClient *game_client_;
   */
-  
-  MapPtr map_;
-  MapRenderer mapRenderer_;
-  
-  CameraPtr camera_;
-    
-  std::shared_ptr<genie::ScnFile> scenario_;
+
+    MapPtr map_;
+    MapRenderer mapRenderer_;
+
+    CameraPtr camera_;
+
+    std::shared_ptr<genie::ScnFile> scenario_;
 };
 
 #endif // GAMESTATE_H

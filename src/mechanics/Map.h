@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef MAP_H
 #define MAP_H
 
@@ -40,26 +39,26 @@ class Shape;
 class MapNode
 {
 public:
-  unsigned int row, col;
-  sf::Int8 elevation;
-  sf::Int32 x_pos, y_pos, z_pos;
+    unsigned int row, col;
+    sf::Int8 elevation;
+    sf::Int32 x_pos, y_pos, z_pos;
 };
 
 class MapTile
 {
 public:
-  MapNode *north, *east, *south, *west;
-  
-  unsigned int elevation_;
-  genie::Terrain terrain_;
-  unsigned int terrain_id_;
+    MapNode *north, *east, *south, *west;
+
+    unsigned int elevation_;
+    genie::Terrain terrain_;
+    unsigned int terrain_id_;
 };
 
 class Map : public Entity
 {
 
-public:  
-  /*
+public:
+    /*
    * A tiny-size map? 72 x 72.
    * A small-size map? 96 x 96.
    * A medium-size map? 120 x 120.
@@ -67,46 +66,45 @@ public:
    * A huge-size map? 200 x 200.
    * A gigantic-size map? 255 x 255. 
    */
-  
-  static const unsigned int TILE_SIZE = 48;
-  
-  // Isometric sizes:
-  static const unsigned int TILE_SIZE_VERTICAL = 48;
-  static const unsigned int TILE_SIZE_HORIZONTAL = 96;
-  static const unsigned int TILE_SIZE_HEIGHT = 24;        //Mountain
-  
-  Map();
-  virtual ~Map();
-  
-  void setUpSample();
-  
-  void create(genie::ScnMap mapDescription);
-  
-  unsigned int getRows();
-  unsigned int getCols();
-  
-  MapTile getTileAt(unsigned int col, unsigned int row);
-  
-  // old stuff down ------------------------------------------------------------
-  /*
+
+    static const unsigned int TILE_SIZE = 48;
+
+    // Isometric sizes:
+    static const unsigned int TILE_SIZE_VERTICAL = 48;
+    static const unsigned int TILE_SIZE_HORIZONTAL = 96;
+    static const unsigned int TILE_SIZE_HEIGHT = 24; //Mountain
+
+    Map();
+    virtual ~Map();
+
+    void setUpSample();
+
+    void create(genie::ScnMap mapDescription);
+
+    unsigned int getRows();
+    unsigned int getCols();
+
+    MapTile getTileAt(unsigned int col, unsigned int row);
+
+    // old stuff down ------------------------------------------------------------
+    /*
   gdat::Terrain getTerrain(unsigned int col, unsigned int row) { return terrain_[col][row]; }
   
   //TODO: Outsource to RenderMap!
   void draw(sf::RenderTarget *render_target);
   */
-  
+
 private:
-  
-  static Logger &log;
-  
-  // cols_ = x, rows_ = y
-  unsigned int rows_, cols_;
-  
-  typedef std::vector<MapTile> MapTileArray;
-  MapTileArray tiles_;
-  
-  // old stuff down ------------------------------------------------------------
-  /*
+    static Logger &log;
+
+    // cols_ = x, rows_ = y
+    unsigned int rows_, cols_;
+
+    typedef std::vector<MapTile> MapTileArray;
+    MapTileArray tiles_;
+
+    // old stuff down ------------------------------------------------------------
+    /*
   gdat::Terrain terrain_[4][4];
   sf::RenderTexture *map_txt_;
   sf::Texture *s_map_txt_;

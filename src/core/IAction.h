@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef IACTION_H
 #define IACTION_H
 
@@ -28,15 +27,15 @@ class IAction
 {
 
 public:
-  IAction();
-  virtual ~IAction();
-  
-  /// @return true if action is done
-  virtual bool update(Time time) = 0;
-  
-  //isDone?
+    IAction();
+    virtual ~IAction();
+
+    /// @return true if action is done
+    virtual bool update(Time time) = 0;
+
+    //isDone?
 };
 
-typedef std::shared_ptr< IAction > ActionPtr;
+typedef std::shared_ptr<IAction> ActionPtr;
 
 #endif // IACTION_H

@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef CAMERA_H
 #define CAMERA_H
 #include <global/Types.h>
@@ -28,18 +27,18 @@ class Camera
 {
 
 public:
-  Camera();
-  virtual ~Camera();
-  
-  /// Returns the map position the camera is pointing at
-  MapPos getTargetPosition(void) const;
-  
-  void setTargetPosition(MapPos target);
-  
-  //void move(int x, int y);
-  
+    Camera();
+    virtual ~Camera();
+
+    /// Returns the map position the camera is pointing at
+    MapPos getTargetPosition(void) const;
+
+    void setTargetPosition(MapPos target);
+
+    //void move(int x, int y);
+
 private:
-  MapPos target_;
+    MapPos target_;
 };
 
 typedef std::shared_ptr<Camera> CameraPtr;

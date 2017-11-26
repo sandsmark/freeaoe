@@ -21,19 +21,19 @@
 
 bool TunnelToServer::dataAvailable()
 {
-  return !data_.empty();
+    return !data_.empty();
 }
 
 UnitStatus TunnelToServer::getData()
 {
-  UnitStatus data(data_.at(0));
+    UnitStatus data(data_.at(0));
 
-  data_.pop_front();
-  
-  return data;
+    data_.pop_front();
+
+    return data;
 }
 
 void TunnelToServer::queueData(UnitStatus &data)
 {
-  data_.push_back(data);
+    data_.push_back(data);
 }

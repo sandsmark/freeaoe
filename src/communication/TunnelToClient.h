@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef TUNNELTOCLIENT_H
 #define TUNNELTOCLIENT_H
 
@@ -31,24 +30,23 @@
 class TunnelToClient
 {
 public:
-  virtual ~TunnelToClient() {}
-  
-  /// Send data back to client  
-  virtual void sendData(UnitStatus data) = 0;
-  
-  /// Is a command queued?
-  bool commandAvailable();
-  
-  /// Get the first command from the queue.
-  //
-  ICommand *getCommand();       //TODO: auto_ptr
-  
+    virtual ~TunnelToClient() {}
+
+    /// Send data back to client
+    virtual void sendData(UnitStatus data) = 0;
+
+    /// Is a command queued?
+    bool commandAvailable();
+
+    /// Get the first command from the queue.
+    //
+    ICommand *getCommand(); //TODO: auto_ptr
+
 protected:
-  void queueCommand(ICommand *cmd);
-  
+    void queueCommand(ICommand *cmd);
+
 private:
-  
-  std::deque<ICommand *> commands_;
+    std::deque<ICommand *> commands_;
 };
 
 #endif // ITUNNELTOCLIENT_H

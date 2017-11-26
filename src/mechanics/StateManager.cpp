@@ -16,34 +16,29 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include "StateManager.h"
 
-StateManager::StateManager() : active_state_(0)
+StateManager::StateManager() :
+    active_state_(0)
 {
-
 }
 
 StateManager::~StateManager()
 {
-
 }
 
-void StateManager::addActiveState(GameState* state)
+void StateManager::addActiveState(GameState *state)
 {
-  if (active_state_ != 0)
-  {
-    active_state_->cleanUp();
-  }
-  
-  state->init();
-  
-  active_state_ = state;
+    if (active_state_ != 0) {
+        active_state_->cleanUp();
+    }
+
+    state->init();
+
+    active_state_ = state;
 }
 
-GameState* StateManager::getActiveState()
+GameState *StateManager::getActiveState()
 {
-  return active_state_;
+    return active_state_;
 }
-
-

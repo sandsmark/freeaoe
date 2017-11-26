@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include "DataManager.h"
 
 #include "global/Config.h"
@@ -24,47 +23,43 @@
 #include "genie/dat/Civ.h"
 #include "genie/dat/Terrain.h"
 
+Logger &DataManager::log = Logger::getLogger("freeaoe.DataManager");
 
-Logger& DataManager::log = Logger::getLogger("freeaoe.DataManager");
-
-DataManager& DataManager::Inst()
+DataManager &DataManager::Inst()
 {
-  static DataManager inst;
-  return inst;
+    static DataManager inst;
+    return inst;
 }
 
 genie::Graphic DataManager::getGraphic(unsigned int id)
 {
-  return dat_file_.Graphics[id];
+    return dat_file_.Graphics[id];
 }
 
 genie::Unit DataManager::getUnit(unsigned int id)
 {
-  return dat_file_.Civs[0].Units[id];
+    return dat_file_.Civs[0].Units[id];
 }
 
 genie::Terrain DataManager::getTerrain(unsigned int id)
 {
-  return dat_file_.TerrainBlock.Terrains[id];
+    return dat_file_.TerrainBlock.Terrains[id];
 }
-
-
 
 DataManager::DataManager()
 {
-  initialize();
+    initialize();
 }
 
 DataManager::~DataManager()
 {
-
 }
 
 void DataManager::initialize()
 {
-  dat_file_.setGameVersion(genie::GV_TC);
-  
-  std::string filePath = Config::Inst()->getDataPath() + "empires2_x1_p1.dat";
-  
-  dat_file_.load(filePath.c_str());
+    dat_file_.setGameVersion(genie::GV_TC);
+
+    std::string filePath = Config::Inst()->getDataPath() + "empires2_x1_p1.dat";
+
+    dat_file_.load(filePath.c_str());
 }
