@@ -46,20 +46,48 @@ genie::Terrain DataManager::getTerrain(unsigned int id)
     return dat_file_.TerrainBlock.Terrains[id];
 }
 
-DataManager::DataManager()
+std::string DataManager::gameName(const genie::GameVersion version)
 {
-    initialize();
+    switch (version) {
+    case genie::GV_AoE:
+        return "Age of Empires";
+    case genie::GV_RoR:
+        return "Rise of Rome";
+    case genie::GV_AoK:
+        return "Age of Empires 2: Age of Kings";
+    case genie::GV_TC:
+        return "Age of Empires 2: The Conquerors";
+    default:
+        return "Unknown";
+    }
+}
+
+DataManager::DataManager() :
+    m_dataFileNames({
+        { genie::GV_AoE, "Empires.dat" },
+        { genie::GV_RoR, "empires_x1.dat" },
+        { genie::GV_AoK, "empires2.dat" },
+        { genie::GV_TC, "empires2_x1_p1.dat" },
+    })
+{
 }
 
 DataManager::~DataManager()
 {
 }
 
-void DataManager::initialize()
+bool DataManager::initialize()
 {
     dat_file_.setGameVersion(genie::GV_TC);
 
     std::string filePath = Config::Inst()->getDataPath() + "empires2_x1_p1.dat";
 
-    dat_file_.load(filePath.c_str());
+    try {
+        dat_file_.load(filePath.c_str());
+    } catch (const std::exception &error) {
+        std::cerr << "Failed to load " << filePath << ": " << error.what() << std::endl;
+        return false;
+    }
+
+    return true;
 }

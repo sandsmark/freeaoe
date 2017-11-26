@@ -27,6 +27,7 @@
 #include <genie/dat/Civ.h>
 
 #include <map>
+#include <unordered_map>
 #include <SFML/Config.hpp>
 
 //------------------------------------------------------------------------------
@@ -35,6 +36,8 @@
 class DataManager
 {
 public:
+    bool initialize();
+
     DataManager(const DataManager &) = delete;
     DataManager &operator=(const DataManager &) = delete;
 
@@ -44,15 +47,16 @@ public:
     genie::Unit getUnit(unsigned int id);
     genie::Terrain getTerrain(unsigned int id);
 
+    static std::string gameName(const genie::GameVersion version);
+
 private:
     DataManager();
     virtual ~DataManager();
 
-    void initialize();
-
     static Logger &log;
 
     genie::DatFile dat_file_;
+    const std::unordered_map<genie::GameVersion, std::string> m_dataFileNames;
 };
 
 #endif // DATAMANAGER_H

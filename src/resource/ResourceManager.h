@@ -92,6 +92,8 @@ public:
 
     void addBinaFile(BinaFile *bina);
 
+    bool initialize();
+
 private:
     ResourceManager();
     virtual ~ResourceManager();
@@ -118,7 +120,6 @@ private:
     //----------------------------------------------------------------------------
     /// Loads all resource headers.
     //
-    void initialize();
 
     void loadDrs(std::string file_name);
 };

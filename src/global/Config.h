@@ -41,7 +41,7 @@ public:
     /// Parses command line options and config file if present.
     ///
     //
-    void parseOptions(int argc, char **argv);
+    bool parseOptions(int argc, char **argv);
 
     //----------------------------------------------------------------------------
     /// Get path to the game.
@@ -69,6 +69,8 @@ private:
     virtual ~Config();
 
     boost::program_options::variables_map options_;
+
+    std::string m_dataPath;
 };
 
 #endif // CONFIG_H

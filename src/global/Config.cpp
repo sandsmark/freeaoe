@@ -19,6 +19,7 @@
 #include "Config.h"
 
 #include <fstream>
+#include <iostream>
 
 namespace po = boost::program_options;
 
@@ -30,7 +31,7 @@ Config *Config::Inst()
 }
 
 //------------------------------------------------------------------------------
-void Config::parseOptions(int argc, char **argv)
+bool Config::parseOptions(int argc, char **argv)
 {
 
     // options allowed only on commandline
@@ -49,7 +50,14 @@ void Config::parseOptions(int argc, char **argv)
     po::options_description config_file_options;
     config_file_options.add(config);
 
-    po::store(po::parse_command_line(argc, argv, cmdline_options), options_);
+    try {
+        po::store(po::parse_command_line(argc, argv, cmdline_options), options_);
+    } catch (const std::exception &error) {
+        std::cerr << "Error parsing command line: " << error.what() << std::endl;
+        std::cerr << cmdline_options << std::endl;
+        return false;
+    }
+
     po::notify(options_);
 
     std::ifstream cfg_file(options_["config-file"].as<std::string>().c_str());
@@ -58,6 +66,8 @@ void Config::parseOptions(int argc, char **argv)
         po::store(po::parse_config_file(cfg_file, config_file_options), options_);
         po::notify(options_);
     }
+
+    return true;
 }
 
 //------------------------------------------------------------------------------
@@ -69,7 +79,7 @@ std::string Config::getGamePath()
 //------------------------------------------------------------------------------
 std::string Config::getDataPath()
 {
-    return getGamePath() + "Data/";
+    return getGamePath() + "/Data/";
 }
 
 //------------------------------------------------------------------------------

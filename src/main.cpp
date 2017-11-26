@@ -18,7 +18,9 @@
 
 #include <iostream>
 
-#include <Engine.h>
+#include "Engine.h"
+#include "resource/DataManager.h"
+#include "resource/ResourceManager.h".h"
 
 #include "mechanics/EntityFactory.h"
 #include "global/Config.h"
@@ -33,8 +35,18 @@ int main(int argc, char **argv)
 {
   Logger::setLogLevel(Logger::L_INFO);
   
-  Config::Inst()->parseOptions(argc, argv);
-  
+  if (!Config::Inst()->parseOptions(argc, argv)) {
+      return 1;
+  }
+
+  if (!DataManager::Inst().initialize()) {
+      return 1;
+  }
+
+  if (!ResourceManager::Inst()->initialize()) {
+      return 1;
+  }
+
   Engine en;
   en.start();
   

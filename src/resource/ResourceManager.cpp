@@ -140,7 +140,6 @@ void ResourceManager::addBinaFile(BinaFile *bina)
 //------------------------------------------------------------------------------
 ResourceManager::ResourceManager()
 {
-    initialize();
 }
 
 //------------------------------------------------------------------------------
@@ -165,13 +164,20 @@ ResourceManager::~ResourceManager()
 }
 
 //------------------------------------------------------------------------------
-void ResourceManager::initialize()
+bool ResourceManager::initialize()
 {
     log.debug("Initializing ResourceManager");
 
-    loadDrs("graphics.drs");
-    loadDrs("terrain.drs");
-    loadDrs("interfac.drs");
+    try {
+        loadDrs("graphics.drs");
+        loadDrs("terrain.drs");
+        loadDrs("interfac.drs");
+    } catch (const std::exception &error) {
+        std::cerr << "Failed to load resource: " << error.what() << std::endl;
+        return false;
+    }
+
+    return true;
 }
 
 //------------------------------------------------------------------------------
