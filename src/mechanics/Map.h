@@ -80,7 +80,7 @@ public:
   
   void setUpSample();
   
-  void create(genie::MapDescription mapDescription);
+  void create(genie::ScnMap mapDescription);
   
   unsigned int getRows();
   unsigned int getCols();
@@ -137,6 +137,6 @@ private:
   */
 };
 
-typedef boost::shared_ptr<Map> MapPtr;
+typedef std::shared_ptr<Map> MapPtr;
 
 #endif // MAP_H

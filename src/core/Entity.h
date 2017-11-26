@@ -21,7 +21,6 @@
 #define ENTITY_H
 
 #include <map>
-#include <boost/smart_ptr/shared_ptr.hpp>
 #include "Utility.h"
 
 #include "IComponent.h"
@@ -42,10 +41,10 @@ public:
   void addComponent(const std::string &name, ComponentPtr comp);
   
   template <class T>
-  boost::shared_ptr< T > getComponent(const std::string &name)
+  std::shared_ptr< T > getComponent(const std::string &name)
   {
     ComponentPtr ptr = components_[name.c_str()];
-    return boost::dynamic_pointer_cast<T>(ptr);
+    return std::dynamic_pointer_cast<T>(ptr);
   }
   
   unsigned int getComponentSize() { return components_.size(); }
@@ -59,7 +58,7 @@ private:
   
 };
 
-typedef boost::shared_ptr< Entity > EntityPtr;
+typedef std::shared_ptr< Entity > EntityPtr;
 
 
 /// A generic class representing an entity on screen
@@ -78,6 +77,6 @@ private:
   //EntityForm(const EntityForm& other);
 };
 
-typedef boost::shared_ptr< EntityForm > EntityFormPtr;
+typedef std::shared_ptr< EntityForm > EntityFormPtr;
 
 #endif // ENTITY_H

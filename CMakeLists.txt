@@ -83,6 +83,7 @@ target_link_libraries(freeaoe
                       ${SFML_GRAPHICS_LIBRARY}
                       #${Genieutils_LIBRARY}
                       genieutils
+                      boost_program_options
                       )
                       
 

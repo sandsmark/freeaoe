@@ -31,7 +31,7 @@ IRenderer::~IRenderer()
 }
 
 //------------------------------------------------------------------------------
-void IRenderer::setRenderTarget(boost::shared_ptr< IRenderTarget > renderTarget)
+void IRenderer::setRenderTarget(std::shared_ptr< IRenderTarget > renderTarget)
 {
   renderTarget_ = renderTarget;
 }

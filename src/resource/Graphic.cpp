@@ -48,8 +48,8 @@ sf::Image Graphic::getImage(uint32_t frame_num, bool mirrored)
   genie::SlpFramePtr frame = slp_->getFrame(frame_num);
   
   sf::Image img = convertPixelsToImage(frame->getWidth(), frame->getHeight(),
-                                       frame->getPixelIndexes(), 
-                                       frame->getTransparentPixelIndex(), 
+                                       frame->img_data.pixel_indexes, 
+                                       //frame->getTransparentPixelIndex(), 
                                        ResourceManager::Inst()->getPalette(50500) 
                                       );
   
@@ -66,18 +66,18 @@ ScreenPos Graphic::getHotspot(uint32_t frame_num, bool mirrored) const
 {
   genie::SlpFramePtr frame = slp_->getFrame(frame_num);
   
-  int32_t hot_spot_x = frame->getHotspotX();
+  int32_t hot_spot_x = frame->hotspot_x;
   
   if (mirrored)
     hot_spot_x = frame->getWidth() - hot_spot_x;
   
-  return ScreenPos(hot_spot_x, frame->getHotspotY());
+  return ScreenPos(hot_spot_x, frame->hotspot_y);
 }
 
 //------------------------------------------------------------------------------
 float Graphic::getFrameRate(void ) const
 {
-  return data_->FrameRate;
+  return data_->FrameDuration;
 }
 
 //------------------------------------------------------------------------------

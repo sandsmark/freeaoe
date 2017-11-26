@@ -190,7 +190,7 @@ void ResourceManager::loadDrs(std::string file_name)
   
   std::string file_path = Config::Inst()->getDataPath() + file_name;
   
-  boost::shared_ptr<genie::DrsFile> drs_file(new genie::DrsFile());
+  std::shared_ptr<genie::DrsFile> drs_file(new genie::DrsFile());
   
   drs_file->setGameVersion(Config::Inst()->getGameVersion());
   drs_file->load(file_path.c_str());

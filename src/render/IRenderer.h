@@ -19,8 +19,8 @@
 #ifndef I_RENDERER_H
 #define I_RENDERER_H
 
-#include <boost/shared_ptr.hpp>
 #include <global/Types.h>
+#include <memory>
 
 class IRenderTarget;
 
@@ -34,7 +34,7 @@ public:
   virtual ~IRenderer();
   
   //----------------------------------------------------------------------------
-  void setRenderTarget(boost::shared_ptr<IRenderTarget> renderTarget);
+  void setRenderTarget(std::shared_ptr<IRenderTarget> renderTarget);
   
   //----------------------------------------------------------------------------
   virtual void update(Time time);
@@ -43,7 +43,7 @@ public:
   virtual void display() = 0;
   
 protected:
-  boost::shared_ptr<IRenderTarget> renderTarget_;
+  std::shared_ptr<IRenderTarget> renderTarget_;
   
 };
 

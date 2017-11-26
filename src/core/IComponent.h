@@ -22,10 +22,10 @@
 
 #include <map>
 
-#include <boost/smart_ptr/shared_ptr.hpp>
-
 #include "Utility.h"
 #include <global/Types.h>
+
+#include <memory>
 
 class IComponent
 {
@@ -44,6 +44,6 @@ public:
 private:
 };
 
-typedef boost::shared_ptr< IComponent > ComponentPtr;
+typedef std::shared_ptr< IComponent > ComponentPtr;
 
 #endif // ICOMPONENT_H

@@ -95,7 +95,7 @@ private:
   ResourceManager();
   virtual ~ResourceManager();
   
-  typedef std::vector< boost::shared_ptr<genie::DrsFile> > DrsFileVector;
+  typedef std::vector<std::shared_ptr<genie::DrsFile>> DrsFileVector;
   DrsFileVector drs_files_;
   /*
   std::map<unsigned int, SlpFile *> slp_files_;

@@ -57,8 +57,8 @@ sf::Image Terrain::getImage(void )
       genie::SlpFramePtr frame = slp_->getFrame(0);
       
       sf::Image img = Resource::convertPixelsToImage(frame->getWidth(), frame->getHeight(),
-                                          frame->getPixelIndexes(), 
-                                          frame->getTransparentPixelIndex(), 
+                                          frame->img_data.pixel_indexes, 
+                                          //frame->getTransparentPixelIndex(), 
                                           ResourceManager::Inst()->getPalette(50500) 
                                           );
       image_ = new sf::Image(img);

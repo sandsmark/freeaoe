@@ -20,7 +20,8 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 #include <global/Types.h>
-#include <boost/shared_ptr.hpp>
+
+#include <memory>
 
 //TODO maybe observer pattern
 class Camera
@@ -41,6 +42,6 @@ private:
   MapPos target_;
 };
 
-typedef boost::shared_ptr<Camera> CameraPtr;
+typedef std::shared_ptr<Camera> CameraPtr;
 
 #endif // CAMERA_H

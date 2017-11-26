@@ -83,6 +83,6 @@ private:
   sf::Image mapImage_;
 };
 
-typedef boost::shared_ptr<MapRenderer> MapRendererPtr;
+typedef std::shared_ptr<MapRenderer> MapRendererPtr;
 
 #endif // MAP_RENDERER_H

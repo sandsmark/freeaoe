@@ -25,7 +25,7 @@
 #include "CompUnitData.h"
 #include "ActionMove.h"
 
-using boost::shared_ptr;
+using std::shared_ptr;
 
 EntityFactory& EntityFactory::Inst()
 {
@@ -44,7 +44,7 @@ EntityFactory::~EntityFactory()
 
 }
 
-boost::shared_ptr< Entity > EntityFactory::createUnit(int ID)
+std::shared_ptr< Entity > EntityFactory::createUnit(int ID)
 {
   //genie::Unit gunit = DataManager::Inst().getUnit(ID);
   

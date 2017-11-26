@@ -33,7 +33,7 @@ const std::string GRAPHIC_RENDER("comp_graphic");
   
 class GraphicRender;
 
-typedef boost::shared_ptr< GraphicRender > GraphicPtr;
+typedef std::shared_ptr< GraphicRender > GraphicPtr;
 
 /// Draws and manages Graphics for EntityForm objects.
 class GraphicRender : public IRenderableComponent

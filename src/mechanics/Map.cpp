@@ -77,7 +77,7 @@ void Map::setUpSample()
   */
 }
 
-void Map::create(genie::MapDescription mapDescription)
+void Map::create(genie::ScnMap mapDescription)
 {  
   tiles_.clear();
   
@@ -90,10 +90,10 @@ void Map::create(genie::MapDescription mapDescription)
   {
     genie::MapTile tile = mapDescription.tiles[i];
 
-    tiles_[i].terrain_id_ = tile.terrainId;
+    tiles_[i].terrain_id_ = tile.terrainID;
     tiles_[i].elevation_ = tile.elevation;
     
-    tiles_[i].terrain_ = DataManager::Inst().getTerrain(tile.terrainId);
+    tiles_[i].terrain_ = DataManager::Inst().getTerrain(tile.terrainID);
   }
   
 }

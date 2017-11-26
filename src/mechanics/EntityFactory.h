@@ -20,14 +20,13 @@
 #ifndef ENTITYFACTORY_H
 #define ENTITYFACTORY_H
 #include "../core/Entity.h"
-#include <boost/smart_ptr/shared_ptr.hpp>
 
 class EntityFactory
 {
 public:
   static EntityFactory & Inst();
   
-  boost::shared_ptr<Entity> createUnit(int ID);
+  std::shared_ptr<Entity> createUnit(int ID);
 
 private:
   EntityFactory();

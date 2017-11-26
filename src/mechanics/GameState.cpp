@@ -48,7 +48,7 @@ GameState::~GameState()
 {
 }
 
-void GameState::setScenario(boost::shared_ptr< genie::ScnFile > scenario)
+void GameState::setScenario(std::shared_ptr< genie::ScnFile > scenario)
 {
   scenario_ = scenario;
 }

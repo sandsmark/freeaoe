@@ -42,7 +42,7 @@ private:
   genie::Unit data_;
 };
 
-typedef boost::shared_ptr< UnitData > UnitDataPtr;
+typedef std::shared_ptr< UnitData > UnitDataPtr;
 
 }
 

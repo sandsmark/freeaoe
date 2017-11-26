@@ -101,7 +101,7 @@ void Engine::setup()
   
   if (!scnFile.empty())
   {
-    boost::shared_ptr<genie::ScnFile> scenario(new genie::ScnFile());
+    std::shared_ptr<genie::ScnFile> scenario(new genie::ScnFile());
     scenario->load(scnFile.c_str());
     gameState->setScenario(scenario);
   }

@@ -76,8 +76,8 @@ void Resource::setLoaded(bool loaded)
 
 //------------------------------------------------------------------------------
 sf::Image Resource::convertPixelsToImage(uint32_t width, uint32_t height,
-                                               const uint8_t *pixels,
-                                               uint8_t transparent_pixel,
+                                               const std::vector<uint8_t> &pixels,
+        //                                       uint8_t transparent_pixel,
                                                genie::PalFilePtr palette)
 {
   sf::Image img;
@@ -89,11 +89,14 @@ sf::Image Resource::convertPixelsToImage(uint32_t width, uint32_t height,
     {
       uint8_t c_index = pixels[row * width + col];
       
-      if (c_index != transparent_pixel)
-      {
+ //     if (c_index != transparent_pixel)
+ //     {
         genie::Color g_color = (*palette)[c_index];
+        if (g_color.a == 0) {
+            continue;
+        }
         img.setPixel(col, row, sf::Color(g_color.r, g_color.g, g_color.b));
-      }           
+      //}           
     }
   
   return img;

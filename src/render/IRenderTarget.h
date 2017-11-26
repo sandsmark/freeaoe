@@ -57,6 +57,6 @@ public:
   
 };
 
-typedef boost::shared_ptr<IRenderTarget> IRenderTargetPtr;
+typedef std::shared_ptr<IRenderTarget> IRenderTargetPtr;
 
 #endif // I_RENDER_TARGET_H

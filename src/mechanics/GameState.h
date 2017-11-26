@@ -46,7 +46,7 @@ public:
   GameState(IRenderTargetPtr renderTarget);
   virtual ~GameState();
   
-  void setScenario(boost::shared_ptr<genie::ScnFile> scenario);
+  void setScenario(std::shared_ptr<genie::ScnFile> scenario);
   
   virtual void init();
   
@@ -72,7 +72,7 @@ private:
   
   CameraPtr camera_;
     
-  boost::shared_ptr<genie::ScnFile> scenario_;
+  std::shared_ptr<genie::ScnFile> scenario_;
 };
 
 #endif // GAMESTATE_H

@@ -45,7 +45,7 @@ genie::Unit DataManager::getUnit(unsigned int id)
 
 genie::Terrain DataManager::getTerrain(unsigned int id)
 {
-  return dat_file_.Terrains[id];
+  return dat_file_.TerrainBlock.Terrains[id];
 }
 
 

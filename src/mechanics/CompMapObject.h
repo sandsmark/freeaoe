@@ -20,6 +20,8 @@
 #ifndef COMPMAPOBJECT_H
 #define COMPMAPOBJECT_H
 
+#include <memory>
+
 #include "core/IComponent.h"
 
 #include "global/Types.h"
@@ -55,7 +57,7 @@ private:
   
 };
 
-typedef boost::shared_ptr< MapObject > MapObjectPtr;
+typedef std::shared_ptr< MapObject > MapObjectPtr;
 
 namespace act
 {
