@@ -27,10 +27,12 @@ namespace res {
 //------------------------------------------------------------------------------
 /// Resource is the basic class of resources managed by the ResourceManager.
 //
-class Resource : public boost::noncopyable
+class Resource
 {
 
 public:
+    Resource(const Resource &) = delete;
+
     //----------------------------------------------------------------------------
     /// Resource types
     enum Type { TYPE_UNDEFINED,

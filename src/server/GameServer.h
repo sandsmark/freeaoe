@@ -23,7 +23,6 @@
 #include <map>
 #include <vector>
 #include <global/Types.h>
-#include <boost/noncopyable.hpp>
 
 class IAction;
 
@@ -31,10 +30,13 @@ class Unit;
 
 class TunnelToClient;
 
-class GameServer : public boost::noncopyable
+class GameServer
 {
 
 public:
+    GameServer (const GameServer &) = delete;
+    GameServer &operator=(const GameServer&) = delete;
+
     GameServer();
     virtual ~GameServer();
 

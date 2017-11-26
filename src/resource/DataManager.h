@@ -32,9 +32,12 @@
 //------------------------------------------------------------------------------
 /// Class for receiving and managing data files (.dat)
 //
-class DataManager : public boost::noncopyable
+class DataManager
 {
 public:
+    DataManager(const DataManager &) = delete;
+    DataManager &operator=(const DataManager &) = delete;
+
     static DataManager &Inst();
 
     genie::Graphic getGraphic(unsigned int id);

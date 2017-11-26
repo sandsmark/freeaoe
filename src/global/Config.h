@@ -22,12 +22,14 @@
 
 #include <boost/program_options.hpp>
 #include <genie/Types.h>
-#include <boost/noncopyable.hpp>
 
 //
-class Config : public boost::noncopyable
+class Config
 {
 public:
+    Config(const Config &) = delete;
+    Config &operator=(const Config &) = delete;
+
     //----------------------------------------------------------------------------
     /// Get instance (singleton pattern)
     ///

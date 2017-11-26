@@ -42,9 +42,12 @@ class DrsFile;
 //------------------------------------------------------------------------------
 /// The resource manager is the primary interface for getting recourses. At
 //
-class ResourceManager : public boost::noncopyable
+class ResourceManager
 {
 public:
+    ResourceManager(const ResourceManager &) = delete;
+    ResourceManager &operator=(const ResourceManager &) = delete;
+
     //----------------------------------------------------------------------------
     /// Initializes the resource manager once and returns its reference. On
     /// calling inst the first time the manager will load header information from
