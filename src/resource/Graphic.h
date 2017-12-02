@@ -29,6 +29,8 @@
 
 #include <genie/resource/SlpFile.h>
 
+#include <unordered_map>
+
 class SlpFile;
 
 namespace res {
@@ -102,6 +104,8 @@ private:
 
     genie::Graphic *data_;
     genie::SlpFilePtr slp_;
+    std::unordered_map<int, sf::Image> m_images;
+    std::unordered_map<int, sf::Image> m_flippedImages;
 
     //TODO: collection with all frames, playercolors and outlines loaded
     //      And rewrite SlpFile/Frame so that it will not store any data.

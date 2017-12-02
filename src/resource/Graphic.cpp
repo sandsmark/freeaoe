@@ -42,14 +42,20 @@ Graphic::~Graphic()
 //------------------------------------------------------------------------------
 sf::Image Graphic::getImage(uint32_t frame_num, bool mirrored)
 {
+    std::unordered_map<int, sf::Image> &cache = mirrored ? m_flippedImages : m_images;
+
+    if (cache.find(frame_num) != cache.end()) {
+        return cache[frame_num];
+    }
     sf::Image img = convertFrameToImage(slp_->getFrame(frame_num),
-                                        ResourceManager::Inst()->getPalette(50500));
+                                            ResourceManager::Inst()->getPalette(50500));
 
     if (mirrored) {
         img.flipHorizontally();
     }
+    cache[frame_num] = img;
 
-    return img;
+    return cache[frame_num];
 }
 
 //------------------------------------------------------------------------------
