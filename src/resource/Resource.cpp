@@ -72,28 +72,22 @@ void Resource::setLoaded(bool loaded)
 }
 
 //------------------------------------------------------------------------------
-sf::Image Resource::convertPixelsToImage(uint32_t width, uint32_t height,
-                                         const std::vector<uint8_t> &pixels,
-                                         //                                       uint8_t transparent_pixel,
-                                         genie::PalFilePtr palette)
+sf::Image Resource::convertPixelsToImage(const uint32_t width, const uint32_t height,
+                                         const genie::SlpFrameData &frameData,
+                                         const genie::PalFilePtr palette)
 {
     sf::Image img;
 
-    img.create(width, height, sf::Color::Transparent);
+    img.create(width, height, sf::Color::Red);
 
-    for (uint32_t row = 0; row < height; row++)
+    for (uint32_t row = 0; row < height; row++) {
         for (uint32_t col = 0; col < width; col++) {
-            uint8_t c_index = pixels[row * width + col];
-
-            //     if (c_index != transparent_pixel)
-            //     {
-            genie::Color g_color = (*palette)[c_index];
-            if (g_color.a == 0) {
-                continue;
-            }
-            img.setPixel(col, row, sf::Color(g_color.r, g_color.g, g_color.b));
-            //}
+            const uint8_t paletteIndex = frameData.pixel_indexes[row * width + col];
+            genie::Color g_color = (*palette)[paletteIndex];
+            g_color.a = frameData.alpha_channel[row * width + col];
+            img.setPixel(col, row, sf::Color(g_color.r, g_color.g, g_color.b, g_color.a));
         }
+    }
 
     return img;
 }

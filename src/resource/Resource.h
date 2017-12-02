@@ -21,6 +21,7 @@
 #include <SFML/Config.hpp>
 #include <SFML/Graphics/Image.hpp>
 #include <genie/resource/PalFile.h>
+#include <genie/resource/SlpFrame.h>
 
 namespace res {
 
@@ -94,10 +95,9 @@ protected:
     //----------------------------------------------------------------------------
     void setLoaded(bool loaded);
 
-    static sf::Image convertPixelsToImage(uint32_t width, uint32_t height,
-                                          const std::vector<uint8_t> &pixels,
-                                          //uint8_t transparent_pixel,
-                                          genie::PalFilePtr palette);
+    static sf::Image convertPixelsToImage(const uint32_t width, const uint32_t height,
+                                          const genie::SlpFrameData &frameData,
+                                          const genie::PalFilePtr palette);
 
 private:
     sf::Uint32 id_;
