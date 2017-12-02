@@ -208,9 +208,7 @@ void MapRenderer::updateTexture()
 
             spos.y -= Map::TILE_SIZE_VERTICAL / 2;
 
-            const sf::Image img = t->image(col, row);
-
-            m_textureTarget.draw(img, spos);
+            m_textureTarget.draw(t->image(col, row), spos);
         }
     }
 }

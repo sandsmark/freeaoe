@@ -21,7 +21,7 @@
 
 //#include "Resource.h"
 #include "ResourcePtr.h"
-#include <SFML/Graphics/Image.hpp>
+#include <SFML/Graphics/Texture.hpp>
 #include <genie/dat/Terrain.h>
 #include <global/Logger.h>
 
@@ -42,7 +42,7 @@ public:
     Terrain(unsigned int Id);
     virtual ~Terrain();
 
-    const sf::Image &image(int x, int y);
+    const sf::Texture &image(int x, int y);
 
     virtual void load();
 
@@ -52,7 +52,7 @@ private:
     genie::Terrain m_data;
     genie::SlpFilePtr m_slp;
 
-    std::unordered_map<int, sf::Image> m_images; // TODO Frames?
+    std::unordered_map<int, sf::Texture> m_images; // TODO Frames?
 };
 
 typedef ResourcePtr<Terrain> TerrainPtr;

@@ -44,8 +44,8 @@ Map::~Map()
 
 void Map::setUpSample()
 {
-    cols_ = 4;
-    rows_ = 4;
+    cols_ = 100;
+    rows_ = 100;
 
     tiles_.clear();
 

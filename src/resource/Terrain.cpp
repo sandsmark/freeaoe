@@ -39,7 +39,7 @@ Terrain::~Terrain()
 {
 }
 
-const sf::Image &Terrain::image(int x, int y)
+const sf::Texture &Terrain::image(int x, int y)
 {
     const int tileSquareCount = sqrt(m_slp->getFrameCount());
     const int frameNum = (x % tileSquareCount) + (y % tileSquareCount) * tileSquareCount;
@@ -48,17 +48,23 @@ const sf::Image &Terrain::image(int x, int y)
         return m_images[frameNum];
     }
 
+    sf::Texture tex;
+
     if (!m_slp) {
-        static sf::Image img;
-        if (!img.getSize().x) {
-            img.create(Map::TILE_SIZE_HORIZONTAL, Map::TILE_SIZE_VERTICAL, sf::Color::Red);
+        static sf::Image nullImg;
+        if (!nullImg.getSize().x) {
+            nullImg.create(Map::TILE_SIZE_HORIZONTAL, Map::TILE_SIZE_VERTICAL, sf::Color::Red);
         }
 
-        return img;
+        tex.loadFromImage(nullImg);
+        return tex;
     }
 
-    m_images[frameNum] = Resource::convertFrameToImage(m_slp->getFrame(frameNum),
-                                                        ResourceManager::Inst()->getPalette(50500));
+
+    sf::Image img = Resource::convertFrameToImage(m_slp->getFrame(frameNum),
+                                                  ResourceManager::Inst()->getPalette(50500));
+
+    m_images[frameNum].loadFromImage(img);
 
     return m_images[frameNum];
 }
