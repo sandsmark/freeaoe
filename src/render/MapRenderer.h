@@ -68,18 +68,18 @@ public:
     //   MapPos cameraPos_;
 
 private:
-    CameraPtr camera_;
-    MapPos lastCameraPos_;
-    bool camChanged_;
+    CameraPtr m_camera;
+    MapPos m_lastCameraPos;
+    bool m_camChanged;
 
-    MapPtr map_;
+    MapPtr m_map;
 
-    int xOffset_, yOffset_; //TODO: ScreenPos?
-    int rRowBegin_, rRowEnd_;
-    int rColBegin_, rColEnd_;
+    int m_xOffset, m_yOffset; //TODO: ScreenPos?
+    int m_rRowBegin, m_rRowEnd;
+    int m_rColBegin, m_rColEnd;
 
-    sf::RenderTexture mapTexture_;
-    sf::Image mapImage_;
+    sf::RenderTexture m_mapTexture;
+    sf::Image m_mapImage;
 };
 
 typedef std::shared_ptr<MapRenderer> MapRendererPtr;
