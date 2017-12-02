@@ -154,7 +154,7 @@ void MapRenderer::display(void)
 
             spos.y -= Map::TILE_SIZE_VERTICAL / 2;
 
-            sf::Image img = t->image();
+            sf::Image img = t->image(col, row);
 
             renderTarget_->draw(img, spos);
         }

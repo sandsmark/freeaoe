@@ -27,6 +27,8 @@
 
 #include <genie/resource/SlpFile.h>
 
+#include <unordered_map>
+
 class SlpFile;
 
 namespace res {
@@ -40,7 +42,7 @@ public:
     Terrain(unsigned int Id);
     virtual ~Terrain();
 
-    const sf::Image &image();
+    const sf::Image &image(int x, int y);
 
     virtual void load();
 
@@ -50,7 +52,7 @@ private:
     genie::Terrain m_data;
     genie::SlpFilePtr m_slp;
 
-    std::unique_ptr<sf::Image> m_image; // TODO Frames?
+    std::unordered_map<int, sf::Image> m_images; // TODO Frames?
 };
 
 typedef ResourcePtr<Terrain> TerrainPtr;

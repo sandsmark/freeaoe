@@ -24,6 +24,8 @@
 #include <genie/resource/SlpFrame.h>
 #include <mechanics/Map.h>
 
+#include <cmath>
+
 namespace res {
 
 Logger &Terrain::log = Logger::getLogger("freeaoe.resource.Terrain");
@@ -37,23 +39,31 @@ Terrain::~Terrain()
 {
 }
 
-const sf::Image &Terrain::image()
+const sf::Image &Terrain::image(int x, int y)
 {
-    if (!m_image) {
-        if (!m_slp) {
-            m_image = std::make_unique<sf::Image>();
-            m_image->create(Map::TILE_SIZE_HORIZONTAL, Map::TILE_SIZE_VERTICAL,
-                           sf::Color::Transparent);
-        } else {
-            genie::SlpFramePtr frame = m_slp->getFrame(0);
+    const int tileSquareCount = sqrt(m_slp->getFrameCount());
+    const int frameNum = (x % tileSquareCount) + (y % tileSquareCount) * tileSquareCount;
 
-            sf::Image img = Resource::convertPixelsToImage(frame->getWidth(), frame->getHeight(),
-                                                           frame->img_data,
-                                                           ResourceManager::Inst()->getPalette(50500));
-            m_image = std::make_unique<sf::Image>(img);
-        }
+    if (m_images.find(frameNum) != m_images.end()) {
+        return m_images[frameNum];
     }
-    return *m_image;
+
+    if (!m_slp) {
+        static sf::Image img;
+        if (!img.getSize().x) {
+            img.create(Map::TILE_SIZE_HORIZONTAL, Map::TILE_SIZE_VERTICAL, sf::Color::Red);
+        }
+
+        return img;
+    }
+
+    const genie::SlpFramePtr frame = m_slp->getFrame(frameNum);
+
+    m_images[frameNum] = Resource::convertPixelsToImage(frame->getWidth(), frame->getHeight(),
+                                                   frame->img_data,
+                                                   ResourceManager::Inst()->getPalette(50500));
+
+    return m_images[frameNum];
 }
 
 void Terrain::load()

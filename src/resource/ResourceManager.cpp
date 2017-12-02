@@ -84,18 +84,16 @@ res::GraphicPtr ResourceManager::getGraphic(Uint32 id)
 }
 
 //------------------------------------------------------------------------------
-res::TerrainPtr ResourceManager::getTerrain(unsigned int id)
+res::TerrainPtr ResourceManager::getTerrain(unsigned int type)
 {
-    res::TerrainPtr terrain;
-
-    if (terrains_.find(id) != terrains_.end()) {
-        terrain = terrains_[id];
-    } else {
-        terrain = res::TerrainPtr(new res::Terrain(id));
-        terrain->load();
-
-        terrains_[id] = terrain;
+    if (terrains_.find(type) != terrains_.end()) {
+        return terrains_[type];
     }
+
+    res::TerrainPtr terrain = res::TerrainPtr(new res::Terrain(type));
+    terrain->load();
+
+    terrains_[type] = terrain;
 
     return terrain;
 }
