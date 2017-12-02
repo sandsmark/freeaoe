@@ -20,7 +20,8 @@
 
 #include "Engine.h"
 #include "resource/DataManager.h"
-#include "resource/ResourceManager.h".h"
+#include "resource/ResourceManager.h"
+#include "resource/LanguageManager.h"
 
 #include "mechanics/EntityFactory.h"
 #include "global/Config.h"
@@ -36,6 +37,10 @@ int main(int argc, char **argv)
   Logger::setLogLevel(Logger::L_INFO);
   
   if (!Config::Inst()->parseOptions(argc, argv)) {
+      return 1;
+  }
+
+  if (!LanguageManager::Inst()->initialize()) {
       return 1;
   }
 

@@ -38,8 +38,11 @@ public:
 
     genie::Unit getData(void) const;
 
+    std::string readableName();
+
 private:
     genie::Unit data_;
+    std::string m_readableName;
 };
 
 typedef std::shared_ptr<UnitData> UnitDataPtr;

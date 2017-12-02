@@ -21,6 +21,8 @@
 #include <mechanics/CompUnitData.h>
 #include "IRenderTarget.h"
 
+#include "resource/LanguageManager.h"
+
 UnitRenderer::UnitRenderer()
 {
 }
@@ -42,7 +44,7 @@ void UnitRenderer::createForms(EntityPtr entity)
         return;
     }
 
-    std::cout << "Creating form for " << gunit->getData().Name << std::endl;
+    std::cout << "Creating form for " << gunit->readableName() << std::endl;
 
     EntityForm form(entity);
 

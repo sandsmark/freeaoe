@@ -35,6 +35,7 @@ set(RESOURCE_SRC
     src/resource/DataManager.cpp 
     src/resource/Resource.cpp
     src/resource/Graphic.cpp
+    src/resource/LanguageManager.cpp
     )
 
 set(MECHANICS_SRC 

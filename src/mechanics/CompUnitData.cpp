@@ -18,6 +18,7 @@
 
 #include "CompUnitData.h"
 #include <resource/DataManager.h>
+#include "resource/LanguageManager.h"
 
 namespace comp {
 
@@ -37,10 +38,24 @@ bool UnitData::update(Time /*time*/)
 void UnitData::setUnit(unsigned int unit_id)
 {
     data_ = DataManager::Inst().getUnit(unit_id);
+
+    m_readableName = LanguageManager::getString(data_.LanguageDLLName);
+    if (m_readableName.empty()) {
+        m_readableName = data_.Name;
+    }
+    if (m_readableName.empty()) {
+        m_readableName = data_.Name2;
+    }
 }
 
 genie::Unit UnitData::getData(void) const
 {
     return data_;
 }
+
+std::string UnitData::readableName()
+{
+    return m_readableName;
+}
+
 }
