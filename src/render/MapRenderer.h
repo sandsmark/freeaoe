@@ -22,6 +22,7 @@
 #include "IRenderer.h"
 #include "mechanics/Map.h"
 #include "Camera.h"
+#include "render/SfmlRenderTarget.h"
 
 class MapRenderer : public IRenderer
 {
@@ -68,6 +69,8 @@ public:
     //   MapPos cameraPos_;
 
 private:
+    void updateTexture();
+
     CameraPtr m_camera;
     MapPos m_lastCameraPos;
     bool m_camChanged;
@@ -78,7 +81,9 @@ private:
     int m_rRowBegin, m_rRowEnd;
     int m_rColBegin, m_rColEnd;
 
-    sf::RenderTexture m_mapTexture;
+    sf::RenderTexture m_mapRenderTexture;
+    SfmlRenderTarget m_textureTarget;
+
     sf::Image m_mapImage;
 };
 

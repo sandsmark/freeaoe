@@ -25,10 +25,11 @@ MapRenderer::MapRenderer() :
     m_camChanged(false),
     m_xOffset(0),
     m_yOffset(0),
+    m_rRowBegin(0),
+    m_rRowEnd(0),
     m_rColBegin(0),
     m_rColEnd(0),
-    m_rRowBegin(0),
-    m_rRowEnd(0)
+    m_textureTarget(m_mapRenderTexture)
 {
 }
 
@@ -132,33 +133,17 @@ void MapRenderer::update(Time time)
 
     m_lastCameraPos = m_camera->getTargetPosition();
     m_camChanged = false;
+
+    updateTexture();
 }
 
 void MapRenderer::display(void)
 {
-    //TODO: change to RenderTexture if it's working correctly
-    for (unsigned int col = m_rColBegin; col < m_rColEnd; col++) {
-        for (unsigned int row = m_rRowBegin; row < m_rRowEnd; row++) {
-            res::TerrainPtr t = ResourceManager::Inst()->getTerrain(m_map->getTileAt(col, row).terrain_id_);
-
-            //TODO: MapPos to screenpos (Tile 0,0 is drawn at MapPos 0,0
-            MapPos mpos(0, 0, 0);
-
-            mpos.x += (col - m_rColBegin) * Map::TILE_SIZE;
-            mpos.y += (row - m_rRowBegin) * Map::TILE_SIZE;
-
-            ScreenPos spos = mapToScreenPos(mpos);
-
-            spos.x += m_xOffset;
-            spos.y += m_yOffset;
-
-            spos.y -= Map::TILE_SIZE_VERTICAL / 2;
-
-            sf::Image img = t->image(col, row);
-
-            renderTarget_->draw(img, spos);
-        }
+    if (m_mapRenderTexture.getSize() != renderTarget_->getSize()) {
+        updateTexture();
     }
+
+    renderTarget_->draw(m_mapRenderTexture.getTexture(), ScreenPos(0, 0));
 }
 
 void MapRenderer::setMap(MapPtr map)
@@ -190,4 +175,40 @@ void MapRenderer::setCamera(CameraPtr camera)
 {
     m_camera = camera;
     m_camChanged = true;
+}
+
+void MapRenderer::updateTexture()
+{
+    if (m_mapRenderTexture.getSize() != renderTarget_->getSize()) {
+        m_mapRenderTexture.create(renderTarget_->getSize().x, renderTarget_->getSize().y, false);
+    }
+
+    m_mapRenderTexture.clear();
+
+    if (!m_mapRenderTexture.getSize().x || !m_mapRenderTexture.getSize().y) {
+        return;
+    }
+
+    for (unsigned int col = m_rColBegin; col < m_rColEnd; col++) {
+        for (unsigned int row = m_rRowBegin; row < m_rRowEnd; row++) {
+            res::TerrainPtr t = ResourceManager::Inst()->getTerrain(m_map->getTileAt(col, row).terrain_id_);
+
+            //TODO: MapPos to screenpos (Tile 0,0 is drawn at MapPos 0,0
+            MapPos mpos(0, 0, 0);
+
+            mpos.x += (col - m_rColBegin) * Map::TILE_SIZE;
+            mpos.y += (row - m_rRowBegin) * Map::TILE_SIZE;
+
+            ScreenPos spos = mapToScreenPos(mpos);
+
+            spos.x += m_xOffset;
+            spos.y += m_yOffset;
+
+            spos.y -= Map::TILE_SIZE_VERTICAL / 2;
+
+            const sf::Image img = t->image(col, row);
+
+            m_textureTarget.draw(img, spos);
+        }
+    }
 }
