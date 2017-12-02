@@ -40,17 +40,17 @@ public:
     Terrain(unsigned int Id);
     virtual ~Terrain();
 
-    sf::Image getImage(void);
+    const sf::Image &image();
 
-    virtual void load(void);
+    virtual void load();
 
 private:
     static Logger &log;
 
-    genie::Terrain data_;
-    genie::SlpFilePtr slp_;
+    genie::Terrain m_data;
+    genie::SlpFilePtr m_slp;
 
-    sf::Image *image_; // TODO Frames?
+    std::unique_ptr<sf::Image> m_image; // TODO Frames?
 };
 
 typedef ResourcePtr<Terrain> TerrainPtr;

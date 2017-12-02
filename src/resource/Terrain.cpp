@@ -31,45 +31,43 @@ Logger &Terrain::log = Logger::getLogger("freeaoe.resource.Terrain");
 Terrain::Terrain(unsigned int Id) :
     Resource(Id, TYPE_TERRAIN)
 {
-
-    image_ = 0;
 }
 
 Terrain::~Terrain()
 {
-    delete image_;
 }
 
-sf::Image Terrain::getImage(void)
+const sf::Image &Terrain::image()
 {
-    if (image_ == 0) {
-        if (slp_.get() == 0) {
-            image_ = new sf::Image();
-            image_->create(Map::TILE_SIZE_HORIZONTAL, Map::TILE_SIZE_VERTICAL,
+    if (!m_image) {
+        if (!m_slp) {
+            m_image = std::make_unique<sf::Image>();
+            m_image->create(Map::TILE_SIZE_HORIZONTAL, Map::TILE_SIZE_VERTICAL,
                            sf::Color::Transparent);
         } else {
-
-            genie::SlpFramePtr frame = slp_->getFrame(0);
+            genie::SlpFramePtr frame = m_slp->getFrame(0);
 
             sf::Image img = Resource::convertPixelsToImage(frame->getWidth(), frame->getHeight(),
                                                            frame->img_data,
                                                            ResourceManager::Inst()->getPalette(50500));
-            image_ = new sf::Image(img);
+            m_image = std::make_unique<sf::Image>(img);
         }
     }
-    return *image_;
+    return *m_image;
 }
 
-void Terrain::load(void)
+void Terrain::load()
 {
     if (!isLoaded()) {
-        data_ = DataManager::Inst().getTerrain(getId());
+        m_data = DataManager::Inst().getTerrain(getId());
 
-        if (slp_.get() == 0)
-            slp_ = ResourceManager::Inst()->getSlp(data_.SLP);
+        if (!m_slp) {
+            m_slp = ResourceManager::Inst()->getSlp(m_data.SLP);
+        }
 
-        if (!slp_.get() == 0)
-            slp_ = ResourceManager::Inst()->getSlp(15000); // TODO Loading grass if -1
+        if (!m_slp) {
+            m_slp = ResourceManager::Inst()->getSlp(15000); // TODO Loading grass if -1
+        }
 
         Resource::load();
     }
