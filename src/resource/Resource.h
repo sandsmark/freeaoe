@@ -95,8 +95,7 @@ protected:
     //----------------------------------------------------------------------------
     void setLoaded(bool loaded);
 
-    static sf::Image convertPixelsToImage(const uint32_t width, const uint32_t height,
-                                          const genie::SlpFrameData &frameData,
+    static sf::Image convertFrameToImage(const genie::SlpFramePtr frame,
                                           const genie::PalFilePtr palette);
 
 private:

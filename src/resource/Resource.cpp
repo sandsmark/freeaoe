@@ -72,12 +72,14 @@ void Resource::setLoaded(bool loaded)
 }
 
 //------------------------------------------------------------------------------
-sf::Image Resource::convertPixelsToImage(const uint32_t width, const uint32_t height,
-                                         const genie::SlpFrameData &frameData,
+sf::Image Resource::convertFrameToImage(const genie::SlpFramePtr frame,
                                          const genie::PalFilePtr palette)
 {
-    sf::Image img;
+    const int width = frame->getWidth();
+    const int height = frame->getHeight();
+    const genie::SlpFrameData &frameData = frame->img_data;
 
+    sf::Image img;
     img.create(width, height, sf::Color::Red);
 
     for (uint32_t row = 0; row < height; row++) {

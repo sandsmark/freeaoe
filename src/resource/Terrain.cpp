@@ -57,11 +57,8 @@ const sf::Image &Terrain::image(int x, int y)
         return img;
     }
 
-    const genie::SlpFramePtr frame = m_slp->getFrame(frameNum);
-
-    m_images[frameNum] = Resource::convertPixelsToImage(frame->getWidth(), frame->getHeight(),
-                                                   frame->img_data,
-                                                   ResourceManager::Inst()->getPalette(50500));
+    m_images[frameNum] = Resource::convertFrameToImage(m_slp->getFrame(frameNum),
+                                                        ResourceManager::Inst()->getPalette(50500));
 
     return m_images[frameNum];
 }

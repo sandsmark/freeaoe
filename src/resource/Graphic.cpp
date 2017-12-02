@@ -42,11 +42,8 @@ Graphic::~Graphic()
 //------------------------------------------------------------------------------
 sf::Image Graphic::getImage(uint32_t frame_num, bool mirrored)
 {
-    genie::SlpFramePtr frame = slp_->getFrame(frame_num);
-
-    sf::Image img = convertPixelsToImage(frame->getWidth(), frame->getHeight(),
-                                         frame->img_data,
-                                         ResourceManager::Inst()->getPalette(50500));
+    sf::Image img = convertFrameToImage(slp_->getFrame(frame_num),
+                                        ResourceManager::Inst()->getPalette(50500));
 
     if (mirrored) {
         img.flipHorizontally();
