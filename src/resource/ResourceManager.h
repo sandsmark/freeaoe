@@ -22,7 +22,7 @@
 #include "ResourcePtr.h"
 
 #include <memory>
-#include <map>
+#include <unordered_map>
 #include <fstream>
 #include "Graphic.h"
 #include "Terrain.h"
@@ -105,10 +105,10 @@ private:
   std::map<unsigned int, BinaFile*> bina_files_;
   */
     //TODO: All resources into one map?
-    typedef std::map<unsigned int, res::Graphic *> GraphicMap;
+    typedef std::unordered_map<unsigned int, res::Graphic *> GraphicMap;
     GraphicMap graphics_;
 
-    typedef std::map<unsigned int, res::TerrainPtr> TerrainMap;
+    typedef std::unordered_map<unsigned int, res::TerrainPtr> TerrainMap;
     TerrainMap terrains_;
     /*
   std::fstream terrain_file_;
