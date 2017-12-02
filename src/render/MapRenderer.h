@@ -31,9 +31,9 @@ public:
     MapRenderer();
     virtual ~MapRenderer();
 
-    virtual void update(Time time);
+    bool update(Time time) override;
 
-    virtual void display(void);
+    void display(void) override;
 
     void setMap(MapPtr map);
 

@@ -40,7 +40,7 @@ public:
     MapObject();
     virtual ~MapObject();
 
-    virtual void update(Time time) {}
+    bool update(Time time) override;
 
     void setPos(MapPos pos);
 

@@ -29,6 +29,11 @@ UnitData::~UnitData()
 {
 }
 
+bool UnitData::update(Time /*time*/)
+{
+    return false;
+}
+
 void UnitData::setUnit(unsigned int unit_id)
 {
     data_ = DataManager::Inst().getUnit(unit_id);

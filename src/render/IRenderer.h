@@ -37,7 +37,7 @@ public:
     void setRenderTarget(std::shared_ptr<IRenderTarget> renderTarget);
 
     //----------------------------------------------------------------------------
-    virtual void update(Time time);
+    virtual bool update(Time time) = 0;
 
     //----------------------------------------------------------------------------
     virtual void display() = 0;

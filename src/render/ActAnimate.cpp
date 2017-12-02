@@ -28,7 +28,4 @@ Animate::~Animate()
 {
 }
 
-bool Animate::update(Time time)
-{
-}
 }

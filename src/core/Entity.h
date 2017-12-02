@@ -35,7 +35,7 @@ public:
     Entity();
     virtual ~Entity();
 
-    virtual void update(Time time);
+    virtual bool update(Time time);
 
     void addComponent(const std::string &name, ComponentPtr comp);
 

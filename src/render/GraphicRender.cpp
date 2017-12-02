@@ -42,12 +42,13 @@ GraphicRender::~GraphicRender()
 {
 }
 
-void GraphicRender::update(Time time)
+bool GraphicRender::update(Time time)
 {
+    int newFrame = current_frame_;
 
     if (time_last_frame_ == 0) {
         time_last_frame_ = time;
-        current_frame_ = 0;
+        newFrame = 0;
     } else {
         Time frame_rate = graphic_->getFrameRate() * 1000;
 
@@ -55,17 +56,26 @@ void GraphicRender::update(Time time)
             frame_rate += replay_delay_ * 1000;
 
         if ((time - time_last_frame_) > frame_rate) {
-            if (current_frame_ < graphic_->getFrameCount() - 1) {
-                current_frame_++;
+            if (newFrame < graphic_->getFrameCount() - 1) {
+                newFrame++;
                 replay_delay_ = false;
             } else {
-                current_frame_ = 0;
+                newFrame = 0;
                 replay_delay_ = true;
             }
 
             time_last_frame_ = time;
         }
     }
+
+    bool updated = false;
+    if (newFrame != current_frame_) {
+        updated = true;
+    }
+
+    current_frame_ = newFrame;
+
+    return updated;
 }
 
 void GraphicRender::drawOn(IRenderTarget &renderer)

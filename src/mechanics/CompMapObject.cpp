@@ -28,6 +28,11 @@ MapObject::~MapObject()
 {
 }
 
+bool MapObject::update(Time time)
+{
+    return false;
+}
+
 MapPos MapObject::getPos(void) const
 {
     return pos_;

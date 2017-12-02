@@ -55,11 +55,14 @@ void UnitRenderer::createForms(EntityPtr entity)
     forms_.push_back(form);
 }
 
-void UnitRenderer::update(Time time)
+bool UnitRenderer::update(Time time)
 {
+    bool updated = false;
     for (EntityForm &form : forms_) {
-        form.update(time);
+        updated = form.update(time) || updated;
     }
+
+    return updated;
 }
 
 void UnitRenderer::display()

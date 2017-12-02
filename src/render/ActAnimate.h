@@ -32,7 +32,7 @@ public:
     Animate(EntityFormPtr form);
     virtual ~Animate();
 
-    virtual bool update(Time time);
+    virtual bool update(Time time) = 0;
 };
 }
 

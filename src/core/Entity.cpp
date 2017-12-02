@@ -31,12 +31,18 @@ void Entity::addComponent(const std::string &name, ComponentPtr comp)
     components_[name.c_str()] = comp;
 }
 
-void Entity::update(Time time)
+bool Entity::update(Time time)
 {
-    for (ComponentMap::iterator it = components_.begin(); it != components_.end();
-         it++)
-        (*it).second->update(time);
+    bool updated = false;
 
-    if (current_action_.get() != 0)
-        current_action_->update(time);
+    for (ComponentMap::iterator it = components_.begin(); it != components_.end();
+         it++) {
+        updated = (*it).second->update(time) || updated;
+    }
+
+    if (current_action_.get() != 0) {
+        updated = current_action_->update(time) || updated;
+    }
+
+    return updated;
 }

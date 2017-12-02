@@ -32,6 +32,8 @@ public:
     UnitData();
     virtual ~UnitData();
 
+    bool update(Time) override;
+
     void setUnit(unsigned int unit_id);
 
     genie::Unit getData(void) const;

@@ -35,6 +35,3 @@ void IRenderer::setRenderTarget(std::shared_ptr<IRenderTarget> renderTarget)
 }
 
 //------------------------------------------------------------------------------
-void IRenderer::update(Time time)
-{
-}

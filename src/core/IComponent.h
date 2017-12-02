@@ -38,7 +38,7 @@ public:
 
     // virtual const char *getCompName() const = 0;
 
-    virtual void update(Time time) {}
+    virtual bool update(Time time) = 0;
 
 private:
 };

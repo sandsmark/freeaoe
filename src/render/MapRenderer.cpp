@@ -37,14 +37,14 @@ MapRenderer::~MapRenderer()
 {
 }
 
-void MapRenderer::update(Time time)
+bool MapRenderer::update(Time time)
 {
     if (!m_map) {
-        return;
+        return false;
     }
 
     if (!m_camChanged && m_lastCameraPos == m_camera->getTargetPosition()) { // check for camera change
-        return;
+        return false;
     }
 
     //TODO: split up (refactor)
@@ -135,6 +135,8 @@ void MapRenderer::update(Time time)
     m_camChanged = false;
 
     updateTexture();
+
+    return true;
 }
 
 void MapRenderer::display(void)

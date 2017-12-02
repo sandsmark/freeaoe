@@ -36,8 +36,8 @@ public:
 
     void createForms(EntityPtr entity);
 
-    virtual void update(Time time);
-    virtual void display();
+    bool update(Time time) override;
+    void display() override;
 
 private:
     typedef std::vector<EntityForm> EFVector;

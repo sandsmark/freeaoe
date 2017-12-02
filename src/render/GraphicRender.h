@@ -41,9 +41,9 @@ public:
     GraphicRender();
     virtual ~GraphicRender();
 
-    virtual void update(Time time);
+    bool update(Time time) override;
 
-    virtual void drawOn(IRenderTarget &renderer);
+    void drawOn(IRenderTarget &renderer) override;
 
     void setGraphic(res::GraphicPtr graphic);
 
