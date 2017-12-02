@@ -16,6 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "global/Types.h"
+
 #include <SFML/Window/Event.hpp>
 
 class IState
@@ -34,7 +36,7 @@ public:
     //----------------------------------------------------------------------------
     /// Update game state before drawin
     //
-    virtual void update() = 0;
+    virtual bool update(Time time) = 0;
 
     //----------------------------------------------------------------------------
     /// Draw state

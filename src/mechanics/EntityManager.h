@@ -32,7 +32,7 @@ public:
 
     void add(EntityPtr entity);
 
-    void update(Time time);
+    bool update(Time time);
 
 private:
     typedef std::vector<EntityPtr> EntityVector;

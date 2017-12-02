@@ -31,9 +31,13 @@ void EntityManager::add(EntityPtr entity)
     entities_.push_back(entity);
 }
 
-void EntityManager::update(Time time)
+bool EntityManager::update(Time time)
 {
+    bool updated = false;
     for (EntityVector::iterator it = entities_.begin(); it != entities_.end();
-         it++)
-        (*it)->update(time);
+         it++) {
+        updated = (*it)->update(time) || updated;
+    }
+
+    return updated;
 }

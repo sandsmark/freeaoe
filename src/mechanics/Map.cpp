@@ -104,6 +104,16 @@ unsigned int Map::getRows()
     return rows_;
 }
 
+unsigned int Map::height()
+{
+    return rows_ * TILE_SIZE;
+}
+
+unsigned int Map::width()
+{
+    return cols_ * TILE_SIZE;
+}
+
 MapTile Map::getTileAt(unsigned int col, unsigned int row)
 {
     unsigned int index = row * cols_ + col;

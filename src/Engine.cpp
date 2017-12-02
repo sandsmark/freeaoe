@@ -50,40 +50,44 @@ Engine::~Engine()
 //------------------------------------------------------------------------------
 void Engine::start()
 {
-  Logger::setLogLevel(Logger::L_INFO);
-  
-  log.info("Starting engine.");
-  
-  setup();
-  
-  // Start the game loop
-  while (renderWindow_->isOpen())
-  {
-    IState *state = state_manager_.getActiveState();
-    
-    // Process events
-    sf::Event event;
-    while (renderWindow_->pollEvent(event))
-    {
-      // Close window : exit
-      if (event.type == sf::Event::Closed)
-        renderWindow_->close();
+    Logger::setLogLevel(Logger::L_INFO);
 
-      state->handleEvent(event);
+    log.info("Starting engine.");
+
+    setup();
+
+    // Start the game loop
+    while (renderWindow_->isOpen()) {
+        IState *state = state_manager_.getActiveState();
+
+        bool updated = false;
+
+        // Process events
+        sf::Event event;
+        while (renderWindow_->pollEvent(event)) {
+            // Close window : exit
+            if (event.type == sf::Event::Closed)
+                renderWindow_->close();
+
+            state->handleEvent(event);
+
+            updated = true;
+        }
+
+        updated = state->update(GameClock.getElapsedTime().asMilliseconds()) || updated;
+
+        if (updated) {
+            // Clear screen
+            renderWindow_->clear();
+            state->draw();
+            drawFps();
+            // Update the window
+            renderWindow_->display();
+        } else {
+            sf::sleep(sf::milliseconds(1000 / 60));
+        }
+
     }
-     
-    // Clear screen
-    renderWindow_->clear();
-    
-    state->update();
-    state->draw();
-    
-    //drawFps();
-         
-    // Update the window
-    renderWindow_->display();
-  }
-
 }
 
 //------------------------------------------------------------------------------

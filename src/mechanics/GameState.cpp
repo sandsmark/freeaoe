@@ -33,7 +33,12 @@
 #include "render/MapRenderer.h"
 #include "render/SfmlRenderTarget.h"
 
-GameState::GameState(IRenderTargetPtr renderTarget)
+#define MOUSE_MOVE_EDGE_SIZE 100
+
+GameState::GameState(IRenderTargetPtr renderTarget) :
+    m_cameraDeltaX(0),
+    m_cameraDeltaY(0),
+    m_lastUpdate(0)
 {
     renderTarget_ = renderTarget;
 }
@@ -119,19 +124,62 @@ void GameState::draw()
     entity_form_manager_.display();
 }
 
-void GameState::update()
+bool GameState::update(Time time)
 {
-    mapRenderer_.update(Engine::GameClock.getElapsedTime().asMilliseconds());
+    bool updated = false;
+    updated = mapRenderer_.update(time) || updated;
 
-    entity_manager_.update(Engine::GameClock.getElapsedTime().asMilliseconds());
-    entity_form_manager_.update(Engine::GameClock.getElapsedTime().asMilliseconds());
+    updated = entity_manager_.update(time) || updated;
+    updated = entity_form_manager_.update(time) || updated;
+
+    if (m_cameraDeltaX != 0 || m_cameraDeltaY != 0) {
+        const int deltaTime = time - m_lastUpdate;
+
+        ScreenPos cameraScreenPos = MapRenderer::mapToScreenPos(camera_->getTargetPosition());
+        cameraScreenPos.x += m_cameraDeltaX * deltaTime;
+        cameraScreenPos.y += m_cameraDeltaY * deltaTime;
+
+        MapPos cameraMapPos = MapRenderer::screenToMapPos(cameraScreenPos);
+        if (cameraMapPos.x < 0) cameraMapPos.x = 0;
+        if (cameraMapPos.y < 0) cameraMapPos.y = 0;
+        if (cameraMapPos.x > map_->width()) cameraMapPos.x = map_->width();
+        if (cameraMapPos.y > map_->height()) cameraMapPos.y = map_->height();
+        camera_->setTargetPosition(cameraMapPos);
+
+        updated = true;
+    }
+
+    m_lastUpdate = time;
 
     //game_server_->update();
     //game_client_->update();
+
+    return updated;
 }
 
 void GameState::handleEvent(sf::Event event)
 {
+    if (event.type == sf::Event::MouseMoved) {
+        if (event.mouseMove.x < MOUSE_MOVE_EDGE_SIZE) {
+            m_cameraDeltaX = -1;
+        } else if (event.mouseMove.x > renderTarget_->getSize().x - MOUSE_MOVE_EDGE_SIZE) {
+            m_cameraDeltaX = 1;
+        } else {
+            m_cameraDeltaX = 0;
+        }
+
+        if (event.mouseMove.y < MOUSE_MOVE_EDGE_SIZE) {
+            std::cout << event.mouseMove.x << ", " << event.mouseMove.y << std::endl;
+            m_cameraDeltaY = 1;
+        } else if (event.mouseMove.y > renderTarget_->getSize().y - MOUSE_MOVE_EDGE_SIZE) {
+            m_cameraDeltaY = -1;
+        } else {
+            m_cameraDeltaY = 0;
+        }
+
+        return;
+    }
+
     if (event.type == sf::Event::MouseButtonReleased) {
         ScreenPos p;
         p.x = event.mouseButton.x;

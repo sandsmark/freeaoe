@@ -84,6 +84,9 @@ public:
     unsigned int getRows();
     unsigned int getCols();
 
+    unsigned int height();
+    unsigned int width();
+
     MapTile getTileAt(unsigned int col, unsigned int row);
 
     // old stuff down ------------------------------------------------------------

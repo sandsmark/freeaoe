@@ -47,11 +47,11 @@ public:
 
     void setScenario(std::shared_ptr<genie::ScnFile> scenario);
 
-    virtual void init();
+    void init() override;
 
-    virtual void draw();
-    virtual void update();
-    virtual void handleEvent(sf::Event event);
+    void draw() override;
+    bool update(Time time) override;
+    void handleEvent(sf::Event event) override;
 
 private:
     GameState(const GameState &other);
@@ -71,6 +71,10 @@ private:
     CameraPtr camera_;
 
     std::shared_ptr<genie::ScnFile> scenario_;
+
+    float m_cameraDeltaX;
+    float m_cameraDeltaY;
+    Time m_lastUpdate;
 };
 
 #endif // GAMESTATE_H
