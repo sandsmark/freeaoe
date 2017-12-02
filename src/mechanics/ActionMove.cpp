@@ -54,7 +54,6 @@ bool MoveOnMap::update(Time time)
 // TODO: UUUUGGGLYYY 
 void ActionMove::update(void )
 {
-  /*
   float time_step = 30;
   
   sf::Uint32 time = Engine::GameClock.GetElapsedTime();

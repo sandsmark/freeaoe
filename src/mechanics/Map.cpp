@@ -108,11 +108,12 @@ MapTile Map::getTileAt(unsigned int col, unsigned int row)
 {
     unsigned int index = row * cols_ + col;
 
-    if (index >= tiles_.size())
+    if (index >= tiles_.size()) {
         log.error("Trying to get MapTile out of index!");
-    else {
-        return tiles_[index];
+        return MapTile();
     }
+
+    return tiles_[index];
 }
 
 /*
@@ -131,7 +132,6 @@ void Map::draw(sf::RenderTarget* render_target)
 {
   x_offset_ = 512;
   y_offset_ = 0;
-/*
   sf::Image img;
 
   img.Create(5,3,sf::Color(0,0,0,0));
@@ -151,7 +151,7 @@ void Map::draw(sf::RenderTarget* render_target)
     spr.SetX((it->second)->x_pos + x_offset_);
     spr.SetY((it->second)->y_pos + y_offset_);
     
-    /*if (true || (*it)->col == 7 && (*it)->row == 3)
+    if (true || (*it)->col == 7 && (*it)->row == 3)
     {
       sf::Texture ter;
       ter.LoadFromImage(*ResourceManager::Inst()->getSlp(15000)->getImage());
@@ -188,7 +188,6 @@ void Map::draw(sf::RenderTarget* render_target)
   }*
 
 }
-/*
 void Map::makeGrid(bool topDown )
 {
            
@@ -259,7 +258,7 @@ void Map::updateElevation(MapNode* node, Int32 elevation)
 
 void Map::updateElevations(void )
 {
-/*  for (MapTileArray::iterator it = tiles_.begin(); it != tiles_.end(); it++)
+  for (MapTileArray::iterator it = tiles_.begin(); it != tiles_.end(); it++)
   {
     Int32 elev;
     
@@ -274,7 +273,6 @@ void Map::updateElevations(void )
     updateElevation((*it)->west, elev);
   }*
 }
-/*
 
 MapNode* Map::getNodeByCoords(sf::Uint32 col, sf::Uint32 row)
 {
