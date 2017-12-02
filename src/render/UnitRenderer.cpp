@@ -29,7 +29,7 @@ UnitRenderer::~UnitRenderer()
 {
 }
 
-void UnitRenderer::add(EntityForm &form)
+void UnitRenderer::add(const EntityForm &form)
 {
     forms_.push_back(form);
 }
@@ -38,29 +38,33 @@ void UnitRenderer::createForms(EntityPtr entity)
 {
     comp::UnitDataPtr gunit = entity->getComponent<comp::UnitData>(comp::UNIT_DATA);
 
-    if (gunit.get()) {
-        std::cout << "Creating form for " << gunit->getData().Name << std::endl;
-
-        EntityForm form(entity);
-
-        comp::GraphicPtr graphic = comp::GraphicRender::create(gunit->getData().StandingGraphic.first);
-
-        graphic->setMapObject(entity->getComponent<comp::MapObject>(comp::MAP_OBJECT));
-
-        form.addComponent(comp::GRAPHIC_RENDER, graphic);
-
-        forms_.push_back(form);
+    if (!gunit) {
+        return;
     }
+
+    std::cout << "Creating form for " << gunit->getData().Name << std::endl;
+
+    EntityForm form(entity);
+
+    comp::GraphicPtr graphic = comp::GraphicRender::create(gunit->getData().StandingGraphic.first);
+
+    graphic->setMapObject(entity->getComponent<comp::MapObject>(comp::MAP_OBJECT));
+
+    form.addComponent(comp::GRAPHIC_RENDER, graphic);
+
+    forms_.push_back(form);
 }
 
 void UnitRenderer::update(Time time)
 {
-    for (EFVector::iterator it = forms_.begin(); it != forms_.end(); it++)
-        (*it).update(time);
+    for (EntityForm &form : forms_) {
+        form.update(time);
+    }
 }
 
 void UnitRenderer::display()
 {
-    for (EFVector::iterator it = forms_.begin(); it != forms_.end(); it++)
-        renderTarget_->draw(*it);
+    for (EntityForm &form : forms_) {
+        renderTarget_->draw(form);
+    }
 }

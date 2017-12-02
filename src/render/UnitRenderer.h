@@ -32,7 +32,7 @@ public:
     UnitRenderer();
     virtual ~UnitRenderer();
 
-    void add(EntityForm &form);
+    void add(const EntityForm &form);
 
     void createForms(EntityPtr entity);
 
