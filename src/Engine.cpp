@@ -108,6 +108,8 @@ void Engine::setup()
     std::shared_ptr<genie::ScnFile> scenario(new genie::ScnFile());
     scenario->load(scnFile.c_str());
     gameState->setScenario(scenario);
+  } else {
+    gameState->setScenario(ResourceManager::Inst()->getScn(56009));
   }
   state_manager_.addActiveState(gameState);
 

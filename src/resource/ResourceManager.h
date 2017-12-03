@@ -31,6 +31,7 @@
 
 #include <genie/resource/PalFile.h>
 #include <genie/resource/SlpFile.h>
+#include <genie/script/ScnFile.h>
 
 class ColorPalette;
 class BinaFile;
@@ -63,6 +64,8 @@ public:
     /// @return slp file
     //
     genie::SlpFilePtr getSlp(unsigned int id);
+
+    genie::ScnFilePtr getScn(unsigned int id);
 
     //----------------------------------------------------------------------------
     /// Get a Graphic resource object.

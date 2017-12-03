@@ -35,6 +35,21 @@ ResourceManager *ResourceManager::Inst()
     return &rm;
 }
 
+genie::ScnFilePtr ResourceManager::getScn(unsigned int id)
+{
+    for (std::shared_ptr<genie::DrsFile> drsFile : drs_files_) {
+        genie::ScnFilePtr scnfile = drsFile->getScnFile(id);
+
+        if (scnfile) {
+            log.info("found scn file v %s", scnfile->version.c_str());
+            std::cout << scnfile->scenarioInstructions << std::endl;
+            return scnfile;
+        }
+    }
+
+    return genie::ScnFilePtr();
+}
+
 //------------------------------------------------------------------------------
 genie::SlpFilePtr ResourceManager::getSlp(sf::Uint32 id)
 {
@@ -104,12 +119,12 @@ genie::PalFilePtr ResourceManager::getPalette(sf::Uint32 id)
     //   return bina_files_[id]->readPalette();
     genie::PalFilePtr pal_ptr;
 
-    for (DrsFileVector::iterator i = drs_files_.begin(); i != drs_files_.end();
-         i++) {
-        pal_ptr = (*i)->getPalFile(id);
+    for (std::shared_ptr<genie::DrsFile> drsFile : drs_files_) {
+        pal_ptr = drsFile->getPalFile(id);
 
-        if (pal_ptr.get() != 0)
+        if (pal_ptr) {
             return pal_ptr;
+        }
     }
 
     log.warn("No pal file with id [%u] found!", id);
@@ -170,6 +185,9 @@ bool ResourceManager::initialize()
         loadDrs("graphics.drs");
         loadDrs("terrain.drs");
         loadDrs("interfac.drs");
+        loadDrs("gamedata_x1_p1.drs");
+        loadDrs("gamedata.drs");
+        loadDrs("gamedata_x1.drs");
     } catch (const std::exception &error) {
         std::cerr << "Failed to load resource: " << error.what() << std::endl;
         return false;
