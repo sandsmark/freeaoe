@@ -51,6 +51,9 @@ public:
     void draw(const sf::Texture &texture, ScreenPos pos) override;
 
     //----------------------------------------------------------------------------
+    void draw(const sf::Shape &shape) override;
+
+    //----------------------------------------------------------------------------
     /// Displays frame.
     //
     void display(void) override;

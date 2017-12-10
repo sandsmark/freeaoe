@@ -49,7 +49,8 @@ std::shared_ptr<Entity> EntityFactory::createUnit(int ID)
     //std::cout << gunit.Name << std::endl;
 
     comp::MapObjectPtr mo(new comp::MapObject());
-    mo->setPos(MapPos(500, 100, 0));
+    mo->setPos(MapPos(48*2, 48*3, 0));
+//    mo->setPos(MapPos(48*2, 48*3, 0));
 
     entity->addComponent(comp::MAP_OBJECT, mo);
 
@@ -58,9 +59,9 @@ std::shared_ptr<Entity> EntityFactory::createUnit(int ID)
 
     entity->addComponent(comp::UNIT_DATA, gunit);
 
-    ActionPtr act(new act::MoveOnMap(entity, MapPos(300, 20, 0)));
+//    ActionPtr act(new act::MoveOnMap(entity, MapPos(48 * 4, 48 * 2, 0)));
 
-    entity->current_action_ = act;
+//    entity->current_action_ = act;
 
     /*  entity->addAttribute(attr::id::NAME,
     shared_ptr< attr::String > (new attr::String(gunit.Name)) 

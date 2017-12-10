@@ -34,10 +34,13 @@ public:
 
     bool update(Time time);
 
+    void selectEntities(const ScreenRect &screenRect);
+
 private:
     typedef std::vector<EntityPtr> EntityVector;
 
     EntityVector entities_;
+    EntityVector m_selectedEntities;
 };
 
 #endif // ENTITYMANAGER_H

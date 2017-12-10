@@ -44,8 +44,8 @@ Map::~Map()
 
 void Map::setUpSample()
 {
-    cols_ = 100;
-    rows_ = 100;
+    cols_ = 10;
+    rows_ = 10;
 
     tiles_.clear();
 
@@ -58,14 +58,14 @@ void Map::setUpSample()
 
     genie::Terrain water_dat = DataManager::Inst().getTerrain(1);
 
-    tiles_[7].terrain_ = water_dat;
-    tiles_[7].terrain_id_ = 1;
-    tiles_[9].terrain_ = water_dat;
-    tiles_[9].terrain_id_ = 1;
+    tiles_[0].terrain_ = water_dat;
+    tiles_[0].terrain_id_ = 1;
+    tiles_[1].terrain_ = water_dat;
+    tiles_[1].terrain_id_ = 1;
     tiles_[10].terrain_ = water_dat;
     tiles_[10].terrain_id_ = 1;
-    tiles_[11].terrain_ = water_dat;
-    tiles_[11].terrain_id_ = 1;
+    tiles_[20].terrain_ = water_dat;
+    tiles_[20].terrain_id_ = 1;
 
     std::cout << tiles_[0].terrain_id_ << std::endl;
 
@@ -77,6 +77,8 @@ void Map::setUpSample()
 
 void Map::create(genie::ScnMap mapDescription)
 {
+    std::cout << "tile count " << mapDescription.tiles.size() << std::endl;
+    std::cout << "size: " << mapDescription.width << "x" << mapDescription.height << std::endl;
     tiles_.clear();
 
     cols_ = mapDescription.width;
@@ -89,6 +91,9 @@ void Map::create(genie::ScnMap mapDescription)
 
         tiles_[i].terrain_id_ = tile.terrainID;
         tiles_[i].elevation_ = tile.elevation;
+        if (tiles_[i].elevation_ != 1) {
+            std::cout << "el " << tiles_[i].elevation_ << std::endl;
+        }
 
         tiles_[i].terrain_ = DataManager::Inst().getTerrain(tile.terrainID);
     }

@@ -35,7 +35,8 @@
 int main(int argc, char **argv)
 {
   Logger::setLogLevel(Logger::L_INFO);
-  
+  genie::Logger::setLogLevel(genie::Logger::L_INFO);
+
   if (!Config::Inst()->parseOptions(argc, argv)) {
       return 1;
   }

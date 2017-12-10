@@ -41,3 +41,9 @@ bool EntityManager::update(Time time)
 
     return updated;
 }
+
+void EntityManager::selectEntities(const ScreenRect &screenRect)
+{
+    m_selectedEntities.clear();
+
+}

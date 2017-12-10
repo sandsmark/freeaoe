@@ -22,6 +22,7 @@
 #include <core/Entity.h>
 #include <resource/Graphic.h>
 #include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/Shape.hpp>
 #include "render/Camera.h"
 
 class IRenderTarget
@@ -50,6 +51,10 @@ public:
     //----------------------------------------------------------------------------
     /// TODO: Remove sf:: from api
     virtual void draw(const sf::Texture &texture, ScreenPos pos) = 0;
+
+    //----------------------------------------------------------------------------
+    /// TODO: Remove sf:: from api
+    virtual void draw(const sf::Shape &shape) = 0;
 
     //----------------------------------------------------------------------------
     /// Displays frame.

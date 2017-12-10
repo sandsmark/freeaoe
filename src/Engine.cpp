@@ -114,7 +114,7 @@ void Engine::setup()
   state_manager_.addActiveState(gameState);
 
   fps_label_.setPosition(sf::Vector2f(10,10));
-  fps_label_.setColor(sf::Color::Green);
+  fps_label_.setFillColor(sf::Color::Green);
 }
 
 //------------------------------------------------------------------------------

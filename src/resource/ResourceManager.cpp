@@ -25,6 +25,7 @@
 #include <global/Config.h>
 
 #include <genie/resource/DrsFile.h>
+#include <genie/resource/UIFile.h>
 
 Logger &ResourceManager::log = Logger::getLogger("freeaoe.ResourceManager");
 

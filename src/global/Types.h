@@ -26,7 +26,7 @@ using sf::Uint8;
 using sf::Int32;
 
 // for now TODO Maybe switch to boost vectors or something
-using sf::Vector2i;
+using sf::Vector2u;
 
 struct ScreenPos;
 
@@ -78,13 +78,18 @@ struct ScreenPos {
 
     ScreenPos (float x_, float y_) :
         x(x_),
-        y(y_) {}
+        y(y_)
+    {}
 
     float x = 0.;
     float y = 0.;
 
     inline operator sf::Vector2f() const {
         return sf::Vector2f(x, y);
+    }
+
+    inline bool operator!=(const sf::Vector2f &other) const {
+        return (other.x != x || other.y != y);
     }
 
     /// screen position to relative map position (map(0,0,0) is on screen(0,0)
@@ -115,6 +120,46 @@ inline MapPos ScreenPos::toMap() const
     );
 
 }
+
+struct ScreenRect
+{
+    float x = 0;
+    float y = 0;
+    float width = 0;
+    float height = 0;
+
+    ScreenRect() = default;
+
+    ScreenRect(const ScreenPos &a, const ScreenPos &b)
+    {
+        x = std::min(a.x, b.x);
+        y = std::min(a.y, b.y);
+
+        width  = std::abs(a.x - b.x);
+        height = std::abs(a.y - b.y);
+    }
+
+    ScreenPos topLeft() const {
+        return ScreenPos(x, y);
+    }
+    ScreenPos topRight() const {
+        return ScreenPos(x + width, y);
+    }
+    ScreenPos bottomLeft() const {
+        return ScreenPos(x, y + height);
+    }
+    ScreenPos bottomRight() const {
+        return ScreenPos(x + width, y + height);
+    }
+
+    bool isEmpty() const {
+        return !(width > 0 && height > 0);
+    }
+
+    operator bool() const {
+        return (width > 0 && height > 0);
+    }
+};
 
 
 /// Time in milliseconds

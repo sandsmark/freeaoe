@@ -31,7 +31,7 @@ SfmlRenderTarget::~SfmlRenderTarget()
 {
 }
 
-Vector2u SfmlRenderTarget::getSize(void)
+Vector2u SfmlRenderTarget::getSize(void) const
 {
     return renderTarget_->getSize();
 }
@@ -68,6 +68,11 @@ void SfmlRenderTarget::draw(const sf::Texture &texture, ScreenPos pos)
     sprite.setPosition(pos);
 
     renderTarget_->draw(sprite);
+}
+
+void SfmlRenderTarget::draw(const sf::Shape &shape)
+{
+    renderTarget_->draw(shape);
 }
 
 void SfmlRenderTarget::display(void)

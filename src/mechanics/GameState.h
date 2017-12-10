@@ -25,6 +25,7 @@
 #include "render/UnitRenderer.h"
 #include "render/MapRenderer.h"
 #include "EntityManager.h"
+#include <SFML/Graphics/RectangleShape.hpp>
 
 #include "genie/script/ScnFile.h"
 
@@ -73,6 +74,11 @@ private:
     float m_cameraDeltaX;
     float m_cameraDeltaY;
     Time m_lastUpdate;
+
+
+    std::shared_ptr<sf::RectangleShape> m_selectionShape;
+    ScreenPos m_selectionStart;
+    ScreenPos m_selectionCurr;
 };
 
 #endif // GAMESTATE_H

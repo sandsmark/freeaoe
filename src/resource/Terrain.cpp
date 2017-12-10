@@ -51,13 +51,14 @@ const sf::Texture &Terrain::image(int x, int y)
     sf::Texture tex;
 
     if (!m_slp) {
-        static sf::Image nullImg;
-        if (!nullImg.getSize().x) {
+        static sf::Texture nullTex;
+        if (nullTex.getSize().x == 0) {
+            sf::Image nullImg;
             nullImg.create(Map::TILE_SIZE_HORIZONTAL, Map::TILE_SIZE_VERTICAL, sf::Color::Red);
+            nullTex.loadFromImage(nullImg);
         }
 
-        tex.loadFromImage(nullImg);
-        return tex;
+        return nullTex;
     }
 
 
@@ -79,6 +80,7 @@ void Terrain::load()
         }
 
         if (!m_slp) {
+            log.error("Failed to get slp for %d", m_data.SLP);
             m_slp = ResourceManager::Inst()->getSlp(15000); // TODO Loading grass if -1
         }
 

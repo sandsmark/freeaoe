@@ -37,14 +37,37 @@ MoveOnMap::~MoveOnMap()
 
 bool MoveOnMap::update(Time time)
 {
-    if (last_update_ == 0 || (time - last_update_) >= 1000) //test!
-    {
+//    if (last_update_ == 0 || (time - last_update_) >= 1000) {
+    int elapsed = time - last_update_;
+    if (!last_update_) {
+        elapsed = 0;
+    }
+    last_update_ = time;
+
         comp::MapObjectPtr ptr = entity_->getComponent<comp::MapObject>(comp::MAP_OBJECT);
 
-        ptr->setPos(ptr->getPos() + MapPos(10, 10, 0));
+        MapPos m(1, 1, 1);
+        if (ptr->getPos().x < dest_.x) {
+            m.x = m.x;
+        } else if (ptr->getPos().x > dest_.x) {
+            m.x = -m.x;
+        } else {
+            m.x = 0;
+        }
+        if (ptr->getPos().y < dest_.y) {
+            m.y = m.y;
+        } else if (ptr->getPos().y > dest_.y) {
+            m.y = -m.y;
+        } else {
+            m.y = 0;
+        }
 
-        last_update_ = time;
-    }
+        if (m.x || m.y) {
+            ptr->setPos(ptr->getPos() + m);
+            return true;
+        }
+
+//    }
 
     return false;
 }
