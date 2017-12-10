@@ -36,24 +36,24 @@ public:
     virtual ~SfmlRenderTarget();
 
     //----------------------------------------------------------------------------
-    virtual Vector2u getSize(void);
+    Vector2u getSize(void) const override;
 
     //----------------------------------------------------------------------------
-    void draw(EntityForm &form);
+    void draw(EntityForm &form) override;
 
     //----------------------------------------------------------------------------
-    void draw(res::GraphicPtr graph, ScreenPos pos, int frame = 0, int angle = 0);
+    void draw(res::GraphicPtr graph, ScreenPos pos, int frame = 0, int angle = 0) override;
 
     //----------------------------------------------------------------------------
-    void draw(const sf::Image &image, ScreenPos pos);
+    void draw(const sf::Image &image, ScreenPos pos) override;
 
     //----------------------------------------------------------------------------
-    void draw(const sf::Texture &texture, ScreenPos pos);
+    void draw(const sf::Texture &texture, ScreenPos pos) override;
 
     //----------------------------------------------------------------------------
     /// Displays frame.
     //
-    void display(void);
+    void display(void) override;
 
 private:
     sf::RenderTarget *renderTarget_;

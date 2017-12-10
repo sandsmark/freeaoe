@@ -22,7 +22,7 @@
 #include <SFML/Graphics/Sprite.hpp>
 
 MapRenderer::MapRenderer() :
-    m_camChanged(false),
+    m_camChanged(true),
     m_xOffset(0),
     m_yOffset(0),
     m_rRowBegin(0),
@@ -43,12 +43,13 @@ bool MapRenderer::update(Time time)
         return false;
     }
 
-    if (!m_camChanged && m_lastCameraPos == m_camera->getTargetPosition()) { // check for camera change
+    const MapPos cameraPos = renderTarget_->camera()->getTargetPosition();
+
+    if (!m_camChanged && m_lastCameraPos == cameraPos) { // check for camera change
         return false;
     }
 
     //TODO: split up (refactor)
-    MapPos cameraPos = m_camera->getTargetPosition();
 
     // Get the absolute map positions of the rendertarget corners
     ScreenPos camCenter;
@@ -56,11 +57,11 @@ bool MapRenderer::update(Time time)
     camCenter.y = renderTarget_->getSize().y / 2.0;
 
     // relative map positions (from center) //only changes if renderTargets resolution does
-    MapPos nullCenterMp = screenToMapPos(camCenter);
+    MapPos nullCenterMp = camCenter.toMap();
     //     MapPos nulltopLeftMp = screenToMapPos(ScreenPos(0,0));
-    MapPos nullbotLeftMp = screenToMapPos(ScreenPos(0, renderTarget_->getSize().y));
-    MapPos nullTopRightMp = screenToMapPos(ScreenPos(renderTarget_->getSize().x, 0));
-    MapPos nullBotRightMp = screenToMapPos(ScreenPos(renderTarget_->getSize().x, renderTarget_->getSize().y));
+    MapPos nullbotLeftMp = ScreenPos(0, renderTarget_->getSize().y).toMap();
+    MapPos nullTopRightMp = ScreenPos(renderTarget_->getSize().x, 0).toMap();
+    MapPos nullBotRightMp = ScreenPos(renderTarget_->getSize().x, renderTarget_->getSize().y).toMap();
 
     // absolute map positions
     MapPos topLeftMp = cameraPos - nullCenterMp;
@@ -69,9 +70,9 @@ bool MapRenderer::update(Time time)
     MapPos topRightMp = cameraPos + (nullTopRightMp - nullCenterMp);
     MapPos botLeftMp = cameraPos + (nullbotLeftMp - nullCenterMp);
 
-    std::cout << "nulC " << nullCenterMp.x << " " << nullCenterMp.y << std::endl;
-    std::cout << "topLeftMp " << topLeftMp.x << " " << topLeftMp.y << std::endl;
-    std::cout << "botRightMp " << botRightMp.x << " " << botRightMp.y << std::endl;
+//    std::cout << "nulC " << nullCenterMp.x << " " << nullCenterMp.y << std::endl;
+//    std::cout << "topLeftMp " << topLeftMp.x << " " << topLeftMp.y << std::endl;
+//    std::cout << "botRightMp " << botRightMp.x << " " << botRightMp.y << std::endl;
 
     // get column and row boundaries for rendering
     m_rColBegin = botLeftMp.x / Map::TILE_SIZE; //int = round down //TODO Platform independent?
@@ -119,19 +120,19 @@ bool MapRenderer::update(Time time)
     offsetMp.y = m_rRowBegin * Map::TILE_SIZE;
     offsetMp.z = 0;
 
-    ScreenPos offsetSp = mapToScreenPos(offsetMp - topLeftMp);
+    ScreenPos offsetSp = (offsetMp - topLeftMp).toScreen();
 
-    std::cout << "\nrColBegin: " << m_rColBegin << std::endl;
-    std::cout << "rColEnd: " << m_rColEnd << std::endl;
-    std::cout << "rRowEnd: " << m_rRowEnd << std::endl;
+//    std::cout << "\nrColBegin: " << m_rColBegin << std::endl;
+//    std::cout << "rColEnd: " << m_rColEnd << std::endl;
+//    std::cout << "rRowEnd: " << m_rRowEnd << std::endl;
 
-    std::cout << "\noffsetMp = " << offsetMp.x << " " << offsetMp.y << std::endl;
-    std::cout << "offsetSp = " << offsetSp.x << " " << offsetSp.y << std::endl;
+//    std::cout << "\noffsetMp = " << offsetMp.x << " " << offsetMp.y << std::endl;
+//    std::cout << "offsetSp = " << offsetSp.x << " " << offsetSp.y << std::endl;
 
     m_xOffset = offsetSp.x;
     m_yOffset = offsetSp.y;
 
-    m_lastCameraPos = m_camera->getTargetPosition();
+    m_lastCameraPos = cameraPos;
     m_camChanged = false;
 
     updateTexture();
@@ -163,25 +164,25 @@ MapPos MapRenderer::getMapPosition(ScreenPos pos)
     camCenter.x = renderTarget_->getSize().x / 2.0;
     camCenter.y = renderTarget_->getSize().y / 2.0;
 
+    pos.y = renderTarget_->getSize().y - pos.y;
+
     // relative map positions (from center)
-    MapPos nullCenterMp = screenToMapPos(camCenter);
+    MapPos nullCenterMp = camCenter.toMap();
 
-    MapPos nullPos = screenToMapPos(pos);
+    MapPos nullPos = pos.toMap();
 
-    MapPos absMapPos = m_camera->getTargetPosition() + (nullPos - nullCenterMp);
+    MapPos relPos;
+    relPos.x = nullPos.x - nullCenterMp.x;
+    relPos.y = nullPos.y - nullCenterMp.y;
+
+    MapPos absMapPos = renderTarget_->camera()->getTargetPosition() + relPos;//(nullPos - nullCenterMp);
 
     return absMapPos;
 }
 
-void MapRenderer::setCamera(CameraPtr camera)
-{
-    m_camera = camera;
-    m_camChanged = true;
-}
-
 void MapRenderer::updateTexture()
 {
-    if (m_mapRenderTexture.getSize() != renderTarget_->getSize()) {
+    if (m_mapRenderTexture.getSize().x != renderTarget_->getSize().x || m_mapRenderTexture.getSize().y != renderTarget_->getSize().y) {
         m_mapRenderTexture.create(renderTarget_->getSize().x, renderTarget_->getSize().y, false);
     }
 
@@ -201,7 +202,7 @@ void MapRenderer::updateTexture()
             mpos.x += (col - m_rColBegin) * Map::TILE_SIZE;
             mpos.y += (row - m_rRowBegin) * Map::TILE_SIZE;
 
-            ScreenPos spos = mapToScreenPos(mpos);
+            ScreenPos spos = mpos.toScreen();
 
             spos.x += m_xOffset;
             spos.y += m_yOffset;

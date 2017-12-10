@@ -81,7 +81,7 @@ bool GraphicRender::update(Time time)
 void GraphicRender::drawOn(IRenderTarget &renderer)
 {
 
-    screen_pos_ = MapRenderer::mapToScreenPos(map_object_->getPos());
+    screen_pos_ = renderer.absoluteScreenPos(map_object_->getPos());
 
     renderer.draw(graphic_, screen_pos_, current_frame_);
 }

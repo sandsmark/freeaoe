@@ -68,8 +68,6 @@ private:
     MapPtr map_;
     MapRenderer mapRenderer_;
 
-    CameraPtr camera_;
-
     std::shared_ptr<genie::ScnFile> scenario_;
 
     float m_cameraDeltaX;

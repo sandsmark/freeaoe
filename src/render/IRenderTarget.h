@@ -22,18 +22,19 @@
 #include <core/Entity.h>
 #include <resource/Graphic.h>
 #include <SFML/Graphics/Texture.hpp>
+#include "render/Camera.h"
 
 class IRenderTarget
 {
 public:
     //----------------------------------------------------------------------------
-    IRenderTarget() {}
+    IRenderTarget() : m_camera(std::make_shared<Camera>()) {}
 
     //----------------------------------------------------------------------------
     virtual ~IRenderTarget() {}
 
     //----------------------------------------------------------------------------
-    virtual Vector2u getSize(void) = 0;
+    virtual Vector2u getSize(void) const = 0;
 
     //----------------------------------------------------------------------------
     virtual void draw(EntityForm &form) = 0;
@@ -54,6 +55,22 @@ public:
     /// Displays frame.
     //
     virtual void display(void) = 0;
+
+    CameraPtr camera() { return m_camera; }
+
+    ScreenPos absoluteScreenPos(MapPos mpos) {
+        const MapPos absoluteMapPos = camera()->getTargetPosition() - mpos;
+        ScreenPos spos = absoluteMapPos.toScreen();
+
+        const ScreenPos screenCenter(getSize().x / 2.0, getSize().y / 2.0);
+        spos.x = screenCenter.x - spos.x;
+        spos.y = screenCenter.y + spos.y;
+
+        return spos;
+    }
+
+private:
+    CameraPtr m_camera;
 };
 
 typedef std::shared_ptr<IRenderTarget> IRenderTargetPtr;

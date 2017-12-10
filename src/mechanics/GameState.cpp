@@ -66,22 +66,21 @@ void GameState::init()
 
     EntityPtr unit = EntityFactory::Inst().createUnit(531);
 
-    //   entity_manager_.add(unit);
-    //   entity_form_manager_.createForms(unit);
+    entity_manager_.add(unit);
+    entity_form_manager_.createForms(unit);
 
     //Map test
     map_ = MapPtr(new Map());
 
-    if (scenario_.get())
+    if (scenario_.get()) {
+        std::cout << "Setting up scenario" << std::endl;
         map_->create(scenario_->map);
-    else
+    } else {
         map_->setUpSample();
-
-    camera_ = CameraPtr(new Camera());
+    }
 
     mapRenderer_.setRenderTarget(renderTarget_);
     mapRenderer_.setMap(map_);
-    mapRenderer_.setCamera(camera_);
 
     /*
   EntityForm form;
@@ -135,16 +134,16 @@ bool GameState::update(Time time)
     if (m_cameraDeltaX != 0 || m_cameraDeltaY != 0) {
         const int deltaTime = time - m_lastUpdate;
 
-        ScreenPos cameraScreenPos = MapRenderer::mapToScreenPos(camera_->getTargetPosition());
+        ScreenPos cameraScreenPos = renderTarget_->camera()->getTargetPosition().toScreen();
         cameraScreenPos.x += m_cameraDeltaX * deltaTime;
         cameraScreenPos.y += m_cameraDeltaY * deltaTime;
 
-        MapPos cameraMapPos = MapRenderer::screenToMapPos(cameraScreenPos);
+        MapPos cameraMapPos = cameraScreenPos.toMap();
         if (cameraMapPos.x < 0) cameraMapPos.x = 0;
         if (cameraMapPos.y < 0) cameraMapPos.y = 0;
         if (cameraMapPos.x > map_->width()) cameraMapPos.x = map_->width();
         if (cameraMapPos.y > map_->height()) cameraMapPos.y = map_->height();
-        camera_->setTargetPosition(cameraMapPos);
+        renderTarget_->camera()->setTargetPosition(cameraMapPos);
 
         updated = true;
     }
@@ -185,7 +184,7 @@ void GameState::handleEvent(sf::Event event)
         p.x = event.mouseButton.x;
         p.y = event.mouseButton.y;
 
-        MapPos m = MapRenderer::screenToMapPos(p);
+        MapPos m = p.toMap();
         MapPos absM = mapRenderer_.getMapPosition(p);
 
         std::cout << "Screenpos: (" << p.x << ", " << p.y << ")" << std::endl;
@@ -193,6 +192,6 @@ void GameState::handleEvent(sf::Event event)
         std::cout << "Abs mpos : (" << absM.x << ", " << absM.y << ", " << absM.z << ")" << std::endl;
         std::cout << "---------------------------------------------------------" << std::endl;
 
-        camera_->setTargetPosition(absM);
+//        renderTarget_->camera()->setTargetPosition(absM);
     }
 }
