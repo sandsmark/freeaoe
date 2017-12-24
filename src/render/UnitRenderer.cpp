@@ -23,6 +23,7 @@
 #include <resource/DataManager.h>
 
 #include "resource/LanguageManager.h"
+#include "mechanics/EntityFactory.h"
 
 UnitRenderer::UnitRenderer()
 {
@@ -45,7 +46,7 @@ void UnitRenderer::createForms(EntityPtr entity)
         return;
     }
 
-    std::cout << "Creating form for " << gunit->readableName() << std::endl;
+    std::cout << "Creating form for " << gunit->readableName() << " (" << gunit->getData().ID << ")" << std::endl;
 
     EntityForm form(entity);
 
@@ -60,6 +61,15 @@ void UnitRenderer::createForms(EntityPtr entity)
     form.addComponent(comp::GRAPHIC_RENDER, graphic);
 
     forms_.push_back(form);
+
+    for (const genie::unit::BuildingAnnex &annex : gunit->getData().Building.Annexes) {
+        if (annex.UnitID < 0) {
+            continue;
+        }
+        MapPos offset(annex.Misplacement.first * -48, annex.Misplacement.second * -48);
+        EntityPtr annexUnit = EntityFactory::Inst().createUnit(annex.UnitID, graphic->map_object_->getPos() + offset);
+        createForms(annexUnit);
+    }
 }
 
 bool UnitRenderer::update(Time time)
