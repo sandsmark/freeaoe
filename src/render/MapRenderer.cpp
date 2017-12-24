@@ -212,13 +212,13 @@ void MapRenderer::updateTexture()
 
             m_textureTarget.draw(t->image(col, row), spos);
 
-            sf::RectangleShape rect;
-            rect.setFillColor(sf::Color::Transparent);
-            rect.setOutlineColor(sf::Color::Red);
-            rect.setPosition(spos);
-            rect.setOutlineThickness(1);
-            rect.setSize(sf::Vector2f(Map::TILE_SIZE_HORIZONTAL, Map::TILE_SIZE_VERTICAL));
-            m_textureTarget.draw(rect);
+//            sf::RectangleShape rect;
+//            rect.setFillColor(sf::Color::Transparent);
+//            rect.setOutlineColor(sf::Color::Red);
+//            rect.setPosition(spos);
+//            rect.setOutlineThickness(1);
+//            rect.setSize(sf::Vector2f(Map::TILE_SIZE_HORIZONTAL, Map::TILE_SIZE_VERTICAL));
+//            m_textureTarget.draw(rect);
         }
     }
 }
