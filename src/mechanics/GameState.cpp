@@ -32,6 +32,7 @@
 #include <Engine.h>
 #include "render/MapRenderer.h"
 #include "render/SfmlRenderTarget.h"
+#include "CompUnitData.h"
 
 #define MOUSE_MOVE_EDGE_SIZE 100
 
@@ -64,11 +65,6 @@ void GameState::init()
 
     //TODO: Test
 
-    EntityPtr unit = EntityFactory::Inst().createUnit(293);
-//    EntityPtr unit = EntityFactory::Inst().createUnit(83);
-
-    entity_manager_.add(unit);
-    entity_form_manager_.createForms(unit);
 
     //Map test
     map_ = MapPtr(new Map());
@@ -76,8 +72,32 @@ void GameState::init()
     if (scenario_.get()) {
         std::cout << "Setting up scenario" << std::endl;
         map_->create(scenario_->map);
+
+        for (genie::ScnPlayerUnits &units : scenario_->playerUnits) {
+            for (const genie::ScnUnit &scnunit : units.units) {
+                EntityPtr unit = EntityFactory::Inst().createUnit(scnunit.objectID, MapPos(scnunit.positionX * Map::TILE_SIZE, scnunit.positionY * Map::TILE_SIZE, scnunit.positionZ));
+                entity_manager_.add(unit);
+                entity_form_manager_.createForms(unit);
+            }
+        }
     } else {
         map_->setUpSample();
+
+
+        EntityPtr unit = EntityFactory::Inst().createUnit(109, MapPos(48*3, 48*3, 0));
+        comp::UnitDataPtr gunit = unit->getComponent<comp::UnitData>(comp::UNIT_DATA);
+
+        if (gunit->getData().Building.FoundationTerrainID > 0) {
+            int width = gunit->getData().CollisionSize.x;
+            int height = gunit->getData().CollisionSize.y;
+            for (int x = 0; x < width*2; x++) {
+                for (int y = 0; y < height*2; y++) {
+                    map_->setTileAt(3 - width + x, 3 - height + y, gunit->getData().Building.FoundationTerrainID);
+                }
+            }
+        }
+        entity_manager_.add(unit);
+        entity_form_manager_.createForms(unit);
     }
 
     mapRenderer_.setRenderTarget(renderTarget_);
@@ -142,8 +162,8 @@ bool GameState::update(Time time)
         const int deltaTime = time - m_lastUpdate;
 
         ScreenPos cameraScreenPos = renderTarget_->camera()->getTargetPosition().toScreen();
-        cameraScreenPos.x += m_cameraDeltaX * deltaTime;
-        cameraScreenPos.y += m_cameraDeltaY * deltaTime;
+        cameraScreenPos.x += m_cameraDeltaX * deltaTime * 2;
+        cameraScreenPos.y += m_cameraDeltaY * deltaTime * 2;
 
         MapPos cameraMapPos = cameraScreenPos.toMap();
         if (cameraMapPos.x < 0) cameraMapPos.x = 0;
@@ -195,7 +215,6 @@ void GameState::handleEvent(sf::Event event)
         }
 
         if (event.mouseMove.y < MOUSE_MOVE_EDGE_SIZE) {
-            std::cout << event.mouseMove.x << ", " << event.mouseMove.y << std::endl;
             m_cameraDeltaY = 1;
         } else if (event.mouseMove.y > renderTarget_->getSize().y - MOUSE_MOVE_EDGE_SIZE) {
             m_cameraDeltaY = -1;

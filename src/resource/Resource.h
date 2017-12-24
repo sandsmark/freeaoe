@@ -63,7 +63,7 @@ public:
     //----------------------------------------------------------------------------
     /// Load the resource from disk
     //
-    virtual void load();
+    virtual bool load();
 
     //----------------------------------------------------------------------------
     /// Free memory reserved for the resource

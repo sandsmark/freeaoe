@@ -61,7 +61,10 @@ void SfmlRenderTarget::draw(EntityForm &form)
 
 void SfmlRenderTarget::draw(res::GraphicPtr graph, ScreenPos pos, int frame, float angle)
 {
-    //TODO: angle
+    for (const res::GraphicPtr delta : graph->getDeltas()) {
+        draw(delta->getImage(frame, false, angle), pos - delta->getHotspot(frame) - delta->offset_);
+    }
+
     draw(graph->getImage(frame, false, angle), pos - graph->getHotspot(frame));
 }
 

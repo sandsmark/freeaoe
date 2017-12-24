@@ -54,11 +54,11 @@ public:
 
     static comp::GraphicPtr create(unsigned int graphic_id);
 
+    MapObjectPtr map_object_;
 private:
     res::GraphicPtr graphic_;
     res::GraphicPtr m_movingGraphic;
 
-    MapObjectPtr map_object_;
 
     ScreenPos screen_pos_;
 

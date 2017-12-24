@@ -70,7 +70,7 @@ const sf::Texture &Terrain::image(int x, int y)
     return m_images[frameNum];
 }
 
-void Terrain::load()
+bool Terrain::load()
 {
     if (!isLoaded()) {
         m_data = DataManager::Inst().getTerrain(getId());
@@ -82,9 +82,13 @@ void Terrain::load()
         if (!m_slp) {
             log.error("Failed to get slp for %d", m_data.SLP);
             m_slp = ResourceManager::Inst()->getSlp(15000); // TODO Loading grass if -1
+
+            return false;
         }
 
-        Resource::load();
+        return Resource::load();
     }
+
+    return true;
 }
 }

@@ -88,6 +88,7 @@ public:
     unsigned int width();
 
     MapTile getTileAt(unsigned int col, unsigned int row);
+    void setTileAt(unsigned col, unsigned row, unsigned id);
 
     // old stuff down ------------------------------------------------------------
     /*

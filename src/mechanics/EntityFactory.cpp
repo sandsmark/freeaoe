@@ -40,7 +40,7 @@ EntityFactory::~EntityFactory()
 {
 }
 
-std::shared_ptr<Entity> EntityFactory::createUnit(int ID)
+std::shared_ptr<Entity> EntityFactory::createUnit(int ID, const MapPos &position)
 {
     //genie::Unit gunit = DataManager::Inst().getUnit(ID);
 
@@ -49,8 +49,8 @@ std::shared_ptr<Entity> EntityFactory::createUnit(int ID)
     //std::cout << gunit.Name << std::endl;
 
     comp::MapObjectPtr mo(new comp::MapObject());
-    mo->setPos(MapPos(48*2, 48*3, 0));
-//    mo->setPos(MapPos(48*2, 48*3, 0));
+    std::cout << "added unit at " << position.x << " " << position.y << std::endl;
+    mo->setPos(position);
 
     entity->addComponent(comp::MAP_OBJECT, mo);
 

@@ -42,6 +42,15 @@ Graphic::~Graphic()
 //------------------------------------------------------------------------------
 sf::Image Graphic::getImage(uint32_t frame_num, bool mirrored, float angle)
 {
+    if (!data_) {
+        log.error("Failed to load data");
+        return sf::Image();
+    }
+    if (!slp_) {
+        log.error("Failed to load slp");
+        return sf::Image();
+    }
+
     if (data_->AngleCount > 1) {
         while (angle < 0) {
             angle += M_PI * 2.;
@@ -74,6 +83,11 @@ sf::Image Graphic::getImage(uint32_t frame_num, bool mirrored, float angle)
     cache[frame_num] = img;
 
     return cache[frame_num];
+}
+
+std::vector<GraphicPtr> Graphic::getDeltas()
+{
+    return m_deltas;
 }
 
 //------------------------------------------------------------------------------
@@ -114,20 +128,39 @@ uint32_t Graphic::getAngleCount(void) const
 }
 
 //------------------------------------------------------------------------------
-void Graphic::load(void)
+bool Graphic::load(void)
 {
-
     if (!isLoaded()) {
         data_ = new genie::Graphic(DataManager::Inst().getGraphic(getId()));
 
+        for (const genie::GraphicDelta &delta : data_->Deltas) {
+            if (delta.GraphicID < 0) {
+                continue;
+            }
+
+            GraphicPtr deltaPtr = ResourceManager::Inst()->getGraphic(delta.GraphicID);
+            deltaPtr->offset_ = ScreenPos(delta.OffsetX, delta.OffsetY);
+            m_deltas.push_back(deltaPtr);
+        }
+        if (!m_deltas.empty()) {
+            std::reverse(m_deltas.begin(), m_deltas.end());
+        }
+
         slp_ = ResourceManager::Inst()->getSlp(data_->SLP);
+        if (!slp_) {
+            log.warn("Failed to get slp for id %d", data_->SLP);
+            slp_ = ResourceManager::Inst()->getSlp(15000); // TODO Loading grass if -1
+            return false;
+        }
 
-        if (slp_->getFrameCount() != data_->FrameCount * (data_->AngleCount / 2 + 1))
-            log.warn("Graphic [%d]: Framecount between data and slp differs.",
-                     getId());
+        if (slp_->getFrameCount() != data_->FrameCount * (data_->AngleCount / 2 + 1)) {
+            log.warn("Graphic [%d]: Framecount between data and slp differs (%d vs %d, %d angles, %d frames)",
+                     getId(), data_->FrameCount * (data_->AngleCount / 2 + 1), slp_->getFrameCount(), data_->AngleCount, data_->FrameCount);
+        }
 
-        Resource::load();
+        return Resource::load();
     }
+    return true;
 }
 
 //------------------------------------------------------------------------------

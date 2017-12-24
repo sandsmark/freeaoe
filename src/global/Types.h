@@ -109,6 +109,14 @@ inline ScreenPos operator -(const ScreenPos& left, const ScreenPos& right)
     );
 }
 
+inline ScreenPos operator +(const ScreenPos& left, const ScreenPos& right)
+{
+    return ScreenPos(
+        left.x + right.x,
+        left.y + right.y
+    );
+}
+
 inline ScreenPos MapPos::toScreen() const
 {
     return ScreenPos(

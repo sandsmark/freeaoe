@@ -61,6 +61,8 @@ public:
     //
     sf::Image getImage(uint32_t frame_num = 0, bool mirrored = false, float angle = 0.);
 
+    std::vector<ResourcePtr<Graphic>> getDeltas();
+
     //----------------------------------------------------------------------------
     /// Get the hotspot of a frame.
     // TODO: Maybe inherit from sf::Image and include this property
@@ -94,8 +96,10 @@ public:
     //
     uint32_t getAngleCount(void) const;
 
-    virtual void load(void);
-    virtual void unload(void);
+    bool load(void) override;
+    void unload(void) override;
+
+    ScreenPos offset_;
 
 private:
     static Logger &log;
@@ -106,6 +110,8 @@ private:
     genie::SlpFilePtr slp_;
     std::unordered_map<int, sf::Image> m_images;
     std::unordered_map<int, sf::Image> m_flippedImages;
+
+    std::vector<ResourcePtr<Graphic>> m_deltas;
 
     //TODO: collection with all frames, playercolors and outlines loaded
     //      And rewrite SlpFile/Frame so that it will not store any data.

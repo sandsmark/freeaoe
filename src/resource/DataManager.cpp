@@ -33,6 +33,10 @@ DataManager &DataManager::Inst()
 
 genie::Graphic DataManager::getGraphic(unsigned int id)
 {
+    if (id >= dat_file_.Graphics.size()) {
+        log.warn("graphic id %d is out of range", id);
+        return genie::Graphic();
+    }
     return dat_file_.Graphics[id];
 }
 
@@ -43,6 +47,11 @@ genie::Unit DataManager::getUnit(unsigned int id)
 
 genie::Terrain DataManager::getTerrain(unsigned int id)
 {
+    if (id >= dat_file_.TerrainBlock.Terrains.size()) {
+        log.warn("terrain id %d is out of range", id);
+        return genie::Terrain();
+    }
+
     return dat_file_.TerrainBlock.Terrains[id];
 }
 

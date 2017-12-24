@@ -131,6 +131,19 @@ MapTile Map::getTileAt(unsigned int col, unsigned int row)
     return tiles_[index];
 }
 
+void Map::setTileAt(unsigned col, unsigned row, unsigned id)
+{
+    unsigned int index = row * cols_ + col;
+
+    if (index >= tiles_.size()) {
+        log.error("Trying to get MapTile out of index!");
+        return;
+    }
+
+    tiles_[index].terrain_id_ = id;
+    tiles_[index].terrain_ = DataManager::Inst().getTerrain(id);
+}
+
 /*
 void Map::addNodeToShape(sf::Shape *shape, MapNode *node, sf::Color *point_col)
 {

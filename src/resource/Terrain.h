@@ -44,7 +44,7 @@ public:
 
     const sf::Texture &image(int x, int y);
 
-    virtual void load();
+    virtual bool load();
 
 private:
     static Logger &log;

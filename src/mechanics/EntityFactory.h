@@ -25,7 +25,7 @@ class EntityFactory
 public:
     static EntityFactory &Inst();
 
-    std::shared_ptr<Entity> createUnit(int ID);
+    std::shared_ptr<Entity> createUnit(int ID, const MapPos &position);
 
 private:
     EntityFactory();
