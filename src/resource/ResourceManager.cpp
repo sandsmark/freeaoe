@@ -183,12 +183,14 @@ bool ResourceManager::initialize()
     log.debug("Initializing ResourceManager");
 
     try {
-        loadDrs("graphics.drs");
-        loadDrs("terrain.drs");
-        loadDrs("interfac.drs");
-        loadDrs("gamedata_x1_p1.drs");
         loadDrs("gamedata.drs");
         loadDrs("gamedata_x1.drs");
+        loadDrs("gamedata_x1_p1.drs");
+        loadDrs("graphics.drs");
+        loadDrs("interfac.drs");
+        loadDrs("sounds.drs");
+        loadDrs("sounds_x1.drs");
+        loadDrs("terrain.drs");
     } catch (const std::exception &error) {
         std::cerr << "Failed to load resource: " << error.what() << std::endl;
         return false;
