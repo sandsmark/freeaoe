@@ -91,6 +91,12 @@ sf::Image Resource::convertFrameToImage(const genie::SlpFramePtr frame,
         }
     }
 
+    const sf::Color shadow(0, 0, 0, 128);
+    for (const genie::XY pos : frameData.shadow_mask) {
+        img.setPixel(pos.x, pos.y, shadow);
+
+    }
+
     return img;
 }
 }
