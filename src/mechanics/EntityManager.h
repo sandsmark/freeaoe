@@ -20,6 +20,7 @@
 #define ENTITYMANAGER_H
 #include <vector>
 #include <core/Entity.h>
+#include "Map.h"
 
 // IDEA: Class containing all entities, (adds, removes, updates them).
 // Base class (EntitySpace?)
@@ -27,6 +28,7 @@ class EntityManager
 {
 
 public:
+
     EntityManager();
     virtual ~EntityManager();
 
@@ -34,13 +36,17 @@ public:
 
     bool update(Time time);
 
-    void selectEntities(const ScreenRect &screenRect);
+    void onRightClick(const MapPos &mapPos);
+
+    void selectEntities(const MapRect &selectionRect);
+    void setMap(MapPtr map);
 
 private:
     typedef std::vector<EntityPtr> EntityVector;
 
     EntityVector entities_;
     EntityVector m_selectedEntities;
+    MapPtr m_map;
 };
 
 #endif // ENTITYMANAGER_H

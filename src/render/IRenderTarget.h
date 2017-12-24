@@ -42,7 +42,7 @@ public:
 
     //----------------------------------------------------------------------------
     virtual void draw(res::GraphicPtr graph, ScreenPos pos, int frame = 0,
-                      int angle = 0) = 0;
+                      float angle = 0) = 0;
 
     //----------------------------------------------------------------------------
     /// TODO: Remove sf:: from api
@@ -72,6 +72,32 @@ public:
         spos.y = screenCenter.y + spos.y;
 
         return spos;
+    }
+
+    MapPos absoluteMapPos(ScreenPos pos) {
+        ScreenPos camCenter;
+        camCenter.x = getSize().x / 2.0;
+        camCenter.y = getSize().y / 2.0;
+
+        pos.y = getSize().y - pos.y;
+
+        // relative map positions (from center)
+        MapPos nullCenterMp = camCenter.toMap();
+
+        MapPos nullPos = pos.toMap();
+
+        MapPos relPos;
+        relPos.x = nullPos.x - nullCenterMp.x;
+        relPos.y = nullPos.y - nullCenterMp.y;
+
+        MapPos absMapPos = camera()->getTargetPosition() + (nullPos - nullCenterMp);
+
+        return absMapPos;
+
+    }
+
+    MapRect absoluteMapRect(const ScreenRect &screenRect) {
+        return MapRect(absoluteMapPos(screenRect.topLeft()), absoluteMapPos(screenRect.bottomRight()));
     }
 
 private:

@@ -46,6 +46,9 @@ public:
 
     MapPos getPos(void) const;
 
+    float angle_ = 0.f;
+    bool moving_ = false;
+
 private:
     MapPos pos_;
 

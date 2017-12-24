@@ -21,6 +21,8 @@
 
 #include "core/IAction.h"
 #include "core/Entity.h"
+#include "Map.h"
+#include <genie/dat/TerrainRestriction.h>
 
 namespace act {
 
@@ -28,18 +30,29 @@ class MoveOnMap : public IAction
 {
 
 public:
-    MoveOnMap(EntityPtr entity, MapPos destination);
+    MoveOnMap(EntityPtr entity, MapPos destination, MapPtr map);
     virtual ~MoveOnMap();
 
     virtual bool update(Time time);
 
 private:
+    std::vector<MapPos> findPath(const MapPos &start, const MapPos &end);
+    bool isPassable(int x, int y);
+
+    static Logger &log;
+
+    MapPtr m_map;
     EntityPtr entity_;
     MapPos dest_;
+    std::vector<MapPos> m_path;
+    MapPos m_currentTarget;
+    float speed_;
 
     Time last_update_;
 
     bool target_reached;
+
+    genie::TerrainRestriction m_terrainRestriction;
 };
 }
 

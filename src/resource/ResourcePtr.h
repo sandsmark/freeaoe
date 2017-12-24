@@ -81,6 +81,9 @@ public:
     {
         return dynamic_cast<T *>(res_);
     }
+    operator bool() const {
+        return (res_ != nullptr);
+    }
 
 private:
     Resource *res_;

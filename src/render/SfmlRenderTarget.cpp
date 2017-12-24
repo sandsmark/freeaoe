@@ -21,6 +21,8 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include "GraphicRender.h"
 #include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
+#include "mechanics/Map.h"
 
 SfmlRenderTarget::SfmlRenderTarget(sf::RenderTarget &render_target)
 {
@@ -39,12 +41,28 @@ Vector2u SfmlRenderTarget::getSize(void) const
 void SfmlRenderTarget::draw(EntityForm &form)
 {
     form.getComponent<comp::GraphicRender>(comp::GRAPHIC_RENDER)->drawOn(*this);
+
+    if (form.getRoot()->selected) {
+        comp::MapObjectPtr mapObject = form.getRoot()->getComponent<comp::MapObject>(comp::MAP_OBJECT);
+
+        ScreenPos pos = absoluteScreenPos(mapObject->getPos());
+        pos.x -= Map::TILE_SIZE_HORIZONTAL / 8;
+        pos.y -= Map::TILE_SIZE_VERTICAL;
+
+        sf::RectangleShape rect;
+        rect.setFillColor(sf::Color::Green);
+        rect.setOutlineColor(sf::Color::Transparent);
+
+        rect.setPosition(pos);
+        rect.setSize(sf::Vector2f(Map::TILE_SIZE_HORIZONTAL / 4, 2));
+        renderTarget_->draw(rect);
+    }
 }
 
-void SfmlRenderTarget::draw(res::GraphicPtr graph, ScreenPos pos, int frame, int angle)
+void SfmlRenderTarget::draw(res::GraphicPtr graph, ScreenPos pos, int frame, float angle)
 {
     //TODO: angle
-    draw(graph->getImage(frame), pos - graph->getHotspot(frame));
+    draw(graph->getImage(frame, false, angle), pos - graph->getHotspot(frame));
 }
 
 void SfmlRenderTarget::draw(const sf::Image &image, ScreenPos pos)

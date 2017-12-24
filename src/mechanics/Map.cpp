@@ -58,14 +58,14 @@ void Map::setUpSample()
 
     genie::Terrain water_dat = DataManager::Inst().getTerrain(1);
 
-    tiles_[0].terrain_ = water_dat;
-    tiles_[0].terrain_id_ = 1;
-    tiles_[1].terrain_ = water_dat;
-    tiles_[1].terrain_id_ = 1;
-    tiles_[10].terrain_ = water_dat;
-    tiles_[10].terrain_id_ = 1;
-    tiles_[20].terrain_ = water_dat;
-    tiles_[20].terrain_id_ = 1;
+    tiles_[53].terrain_ = water_dat;
+    tiles_[53].terrain_id_ = 1;
+    tiles_[54].terrain_ = water_dat;
+    tiles_[54].terrain_id_ = 1;
+    tiles_[55].terrain_ = water_dat;
+    tiles_[55].terrain_id_ = 1;
+    tiles_[56].terrain_ = water_dat;
+    tiles_[56].terrain_id_ = 1;
 
     std::cout << tiles_[0].terrain_id_ << std::endl;
 

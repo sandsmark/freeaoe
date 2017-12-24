@@ -40,8 +40,26 @@ Graphic::~Graphic()
 }
 
 //------------------------------------------------------------------------------
-sf::Image Graphic::getImage(uint32_t frame_num, bool mirrored)
+sf::Image Graphic::getImage(uint32_t frame_num, bool mirrored, float angle)
 {
+    if (data_->AngleCount > 1) {
+        while (angle < 0) {
+            angle += M_PI * 2.;
+        }
+
+        while (angle >= M_PI * 2.) {
+            angle -= M_PI * 2.;
+        }
+
+        int lookupAngle = data_->AngleCount - (int(std::round(data_->AngleCount * (angle + M_PI_2) / (M_PI * 2.))) % data_->AngleCount);
+        if (lookupAngle > (data_->AngleCount/2)) {
+            lookupAngle = (data_->AngleCount/2) -  (lookupAngle % (data_->AngleCount/2));
+
+            mirrored = true;
+        }
+        frame_num += lookupAngle * data_->FrameCount;
+    }
+
     std::unordered_map<int, sf::Image> &cache = mirrored ? m_flippedImages : m_images;
 
     if (cache.find(frame_num) != cache.end()) {
@@ -98,6 +116,7 @@ uint32_t Graphic::getAngleCount(void) const
 //------------------------------------------------------------------------------
 void Graphic::load(void)
 {
+
     if (!isLoaded()) {
         data_ = new genie::Graphic(DataManager::Inst().getGraphic(getId()));
 

@@ -19,6 +19,7 @@
 #pragma once
 
 #include <SFML/System.hpp>
+#include <cmath>
 
 using sf::Uint32;
 using sf::Uint8;
@@ -48,6 +49,10 @@ struct MapPos {
             other.y == y &&
             other.z == z
         );
+    }
+
+    float distance(const MapPos &other) const {
+        return std::sqrt((other.x - x) * (other.x - x) + (other.y - y) * (other.y - y));
     }
 
     /// relative map position to screen position (map(0,0,0) is on screen(0,0)
@@ -158,6 +163,63 @@ struct ScreenRect
 
     operator bool() const {
         return (width > 0 && height > 0);
+    }
+
+    bool contains(const ScreenPos &point) const {
+        return (
+            point.x > x &&
+            point.x < x + width &&
+            point.y > y &&
+            point.y < y + height
+        );
+    }
+};
+
+struct MapRect {
+    float x = 0;
+    float y = 0;
+    float width = 0;
+    float height = 0;
+
+    MapRect() = default;
+
+    MapRect(const MapPos &a, const MapPos &b)
+    {
+        x = std::min(a.x, b.x);
+        y = std::min(a.y, b.y);
+
+        width  = std::abs(a.x - b.x);
+        height = std::abs(a.y - b.y);
+    }
+
+    MapPos topLeft() const {
+        return MapPos(x, y);
+    }
+    MapPos topRight() const {
+        return MapPos(x + width, y);
+    }
+    MapPos bottomLeft() const {
+        return MapPos(x, y + height);
+    }
+    MapPos bottomRight() const {
+        return MapPos(x + width, y + height);
+    }
+
+    bool isEmpty() const {
+        return !(width > 0 && height > 0);
+    }
+
+    operator bool() const {
+        return (width > 0 && height > 0);
+    }
+
+    bool contains(const MapPos &point) const {
+        return (
+            point.x > x &&
+            point.x < x + width &&
+            point.y > y &&
+            point.y < y + height
+        );
     }
 };
 

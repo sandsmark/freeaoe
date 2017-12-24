@@ -18,6 +18,11 @@
 
 #include "EntityManager.h"
 
+#include "CompMapObject.h"
+#include "ActionMove.h"
+
+#include <iostream>
+
 EntityManager::EntityManager()
 {
 }
@@ -42,8 +47,38 @@ bool EntityManager::update(Time time)
     return updated;
 }
 
-void EntityManager::selectEntities(const ScreenRect &screenRect)
+void EntityManager::onRightClick(const MapPos &mapPos)
 {
+    if (m_selectedEntities.empty()) {
+        return;
+    }
+
+
+    for (EntityPtr entity : m_selectedEntities) {
+        ActionPtr act(new act::MoveOnMap(entity, mapPos, m_map));
+        entity->current_action_ = act;
+    }
+
+}
+
+void EntityManager::selectEntities(const MapRect &selectionRect)
+{
+    for (EntityPtr entity : m_selectedEntities) {
+        entity->selected = false;
+    }
+
     m_selectedEntities.clear();
 
+    for (EntityPtr entity : entities_) {
+        comp::MapObjectPtr mapObject = entity->getComponent<comp::MapObject>(comp::MAP_OBJECT);
+        if (selectionRect.contains(mapObject->getPos())) {
+            m_selectedEntities.push_back(entity);
+            entity->selected = true;
+        }
+    }
+}
+
+void EntityManager::setMap(MapPtr map)
+{
+    m_map = map;
 }

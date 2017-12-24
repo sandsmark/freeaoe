@@ -46,6 +46,11 @@ genie::Terrain DataManager::getTerrain(unsigned int id)
     return dat_file_.TerrainBlock.Terrains[id];
 }
 
+genie::TerrainRestriction DataManager::getTerrainRestriction(unsigned int id)
+{
+    return dat_file_.TerrainRestrictions[id];
+}
+
 std::string DataManager::gameName(const genie::GameVersion version)
 {
     switch (version) {

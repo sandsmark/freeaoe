@@ -20,6 +20,7 @@
 #include "GraphicRender.h"
 #include <mechanics/CompUnitData.h>
 #include "IRenderTarget.h"
+#include <resource/DataManager.h>
 
 #include "resource/LanguageManager.h"
 
@@ -49,6 +50,10 @@ void UnitRenderer::createForms(EntityPtr entity)
     EntityForm form(entity);
 
     comp::GraphicPtr graphic = comp::GraphicRender::create(gunit->getData().StandingGraphic.first);
+
+    if (gunit->getData().DeadFish.WalkingGraphic > 0) {
+        graphic->setMovingGraphic(gunit->getData().DeadFish.WalkingGraphic);
+    }
 
     graphic->setMapObject(entity->getComponent<comp::MapObject>(comp::MAP_OBJECT));
 

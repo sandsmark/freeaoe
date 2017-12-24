@@ -46,13 +46,17 @@ public:
     void drawOn(IRenderTarget &renderer) override;
 
     void setGraphic(res::GraphicPtr graphic);
+    ScreenPos getHotspot() const { return graphic_->getHotspot(current_frame_); }
 
     void setMapObject(MapObjectPtr map_object);
+
+    void setMovingGraphic(unsigned graphic_id);
 
     static comp::GraphicPtr create(unsigned int graphic_id);
 
 private:
     res::GraphicPtr graphic_;
+    res::GraphicPtr m_movingGraphic;
 
     MapObjectPtr map_object_;
 

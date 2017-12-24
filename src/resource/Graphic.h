@@ -59,7 +59,7 @@ public:
     /// @param mirrored If set, the image will be returned mirrored
     /// @return Image
     //
-    sf::Image getImage(uint32_t frame_num = 0, bool mirrored = false);
+    sf::Image getImage(uint32_t frame_num = 0, bool mirrored = false, float angle = 0.);
 
     //----------------------------------------------------------------------------
     /// Get the hotspot of a frame.

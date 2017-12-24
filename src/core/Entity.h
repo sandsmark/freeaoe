@@ -50,6 +50,7 @@ public:
 
 public:
     ActionPtr current_action_;
+    bool selected = false;
 
 private:
     typedef std::map<const char *, ComponentPtr, util::cstr_comp> ComponentMap;
@@ -67,7 +68,7 @@ public:
         root_(root) {}
     virtual ~EntityForm() {}
 
-    EntityPtr getRoot(void) { return root_; }
+    EntityPtr getRoot() const { return root_; }
 
 private:
     EntityPtr root_;

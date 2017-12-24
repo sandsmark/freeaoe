@@ -64,7 +64,8 @@ void GameState::init()
 
     //TODO: Test
 
-    EntityPtr unit = EntityFactory::Inst().createUnit(531);
+    EntityPtr unit = EntityFactory::Inst().createUnit(293);
+//    EntityPtr unit = EntityFactory::Inst().createUnit(83);
 
     entity_manager_.add(unit);
     entity_form_manager_.createForms(unit);
@@ -81,6 +82,8 @@ void GameState::init()
 
     mapRenderer_.setRenderTarget(renderTarget_);
     mapRenderer_.setMap(map_);
+
+    entity_manager_.setMap(map_);
 
     /*
   EntityForm form;
@@ -217,6 +220,7 @@ void GameState::handleEvent(sf::Event event)
         m_selectionCurr = ScreenPos(event.mouseButton.x, event.mouseButton.y);
     }
 
+
     if (event.type == sf::Event::MouseButtonReleased) {
         ScreenPos p;
         p.x = event.mouseButton.x;
@@ -240,7 +244,15 @@ void GameState::handleEvent(sf::Event event)
         std::cout << "---------------------------------------------------------" << std::endl;
 
         if (m_selectionShape) {
+            ScreenRect selectionRect(m_selectionStart, m_selectionCurr);
+            MapRect mapSelectionRect = renderTarget_->absoluteMapRect(selectionRect);
+            entity_manager_.selectEntities(mapSelectionRect);
+
             m_selectionShape.reset();
+        }
+
+        if (event.mouseButton.button == sf::Mouse::Button::Right) {
+            entity_manager_.onRightClick(renderTarget_->absoluteMapPos(ScreenPos(event.mouseButton.x, event.mouseButton.y)));
         }
     }
 }

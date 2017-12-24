@@ -36,7 +36,7 @@ public:
 
     void setUnit(unsigned int unit_id);
 
-    genie::Unit getData(void) const;
+    const genie::Unit &getData(void) const;
 
     std::string readableName();
 

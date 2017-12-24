@@ -42,7 +42,7 @@ public:
     void draw(EntityForm &form) override;
 
     //----------------------------------------------------------------------------
-    void draw(res::GraphicPtr graph, ScreenPos pos, int frame = 0, int angle = 0) override;
+    void draw(res::GraphicPtr graph, ScreenPos pos, int frame = 0, float angle = 0) override;
 
     //----------------------------------------------------------------------------
     void draw(const sf::Image &image, ScreenPos pos) override;

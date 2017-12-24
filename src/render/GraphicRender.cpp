@@ -50,18 +50,19 @@ bool GraphicRender::update(Time time)
         time_last_frame_ = time;
         newFrame = 0;
     } else {
-        Time frame_rate = graphic_->getFrameRate() * 1000;
+        Time elapsed = time - time_last_frame_;
+        float framerate = 10;
+        if (map_object_->moving_ && m_movingGraphic) {
+           framerate = m_movingGraphic->getFrameRate();
+        } else {
+           framerate = graphic_->getFrameRate();
+        }
 
-        if (replay_delay_)
-            frame_rate += replay_delay_ * 1000;
-
-        if ((time - time_last_frame_) > frame_rate) {
+        if (elapsed > framerate / 0.0015) {
             if (newFrame < graphic_->getFrameCount() - 1) {
                 newFrame++;
-                replay_delay_ = false;
             } else {
                 newFrame = 0;
-                replay_delay_ = true;
             }
 
             time_last_frame_ = time;
@@ -80,15 +81,24 @@ bool GraphicRender::update(Time time)
 
 void GraphicRender::drawOn(IRenderTarget &renderer)
 {
-
     screen_pos_ = renderer.absoluteScreenPos(map_object_->getPos());
 
-    renderer.draw(graphic_, screen_pos_, current_frame_);
+    //, map_object_->angle_
+    if (map_object_->moving_ && m_movingGraphic) {
+        renderer.draw(m_movingGraphic, screen_pos_, current_frame_, map_object_->angle_);
+    } else {
+        renderer.draw(graphic_, screen_pos_, current_frame_, map_object_->angle_);
+    }
 }
 
 void GraphicRender::setMapObject(MapObjectPtr map_object)
 {
     map_object_ = map_object;
+}
+
+void GraphicRender::setMovingGraphic(unsigned graphic_id)
+{
+    m_movingGraphic = ResourceManager::Inst()->getGraphic(graphic_id);
 }
 
 GraphicPtr GraphicRender::create(unsigned int graphic_id)
