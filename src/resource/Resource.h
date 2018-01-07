@@ -96,7 +96,7 @@ protected:
     void setLoaded(bool loaded);
 
     static sf::Image convertFrameToImage(const genie::SlpFramePtr frame,
-                                          const genie::PalFilePtr palette);
+                                         const genie::PalFilePtr palette);
 
 private:
     sf::Uint32 id_;

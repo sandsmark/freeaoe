@@ -195,7 +195,8 @@ void MapRenderer::updateTexture()
 
     for (unsigned int col = m_rColBegin; col < m_rColEnd; col++) {
         for (unsigned int row = m_rRowBegin; row < m_rRowEnd; row++) {
-            res::TerrainPtr t = ResourceManager::Inst()->getTerrain(m_map->getTileAt(col, row).terrain_id_);
+            MapTile &mapTile = m_map->getTileAt(col, row);
+            res::TerrainPtr t = ResourceManager::Inst()->getTerrain(mapTile.terrain_id_);
 
             //TODO: MapPos to screenpos (Tile 0,0 is drawn at MapPos 0,0
             MapPos mpos(0, 0, 0);

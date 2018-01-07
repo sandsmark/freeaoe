@@ -119,13 +119,14 @@ unsigned int Map::width()
     return cols_ * TILE_SIZE;
 }
 
-MapTile Map::getTileAt(unsigned int col, unsigned int row)
+MapTile &Map::getTileAt(unsigned int col, unsigned int row)
 {
     unsigned int index = row * cols_ + col;
 
     if (index >= tiles_.size()) {
         log.error("Trying to get MapTile out of index!");
-        return MapTile();
+        static MapTile nulltile;
+        return nulltile;
     }
 
     return tiles_[index];
@@ -142,6 +143,27 @@ void Map::setTileAt(unsigned col, unsigned row, unsigned id)
 
     tiles_[index].terrain_id_ = id;
     tiles_[index].terrain_ = DataManager::Inst().getTerrain(id);
+}
+
+void Map::updateMapData()
+{
+    for (unsigned int col = 1; col < cols_ - 1; col++) {
+        for (unsigned int row = 1; row < rows_ - 1; row++) {
+            MapTile &tile = tiles_[row * cols_ + col];
+            tile.north = &tiles_[(row - 1) * cols_ + col];
+            tile.south = &tiles_[(row + 1) * cols_ + col];
+            tile.east = &tiles_[row * cols_ + col + 1];
+            tile.west = &tiles_[row * cols_ + col - 1];
+
+            if (tile.north->terrain_id_ == tile.terrain_id_ &&
+                tile.south->terrain_id_ == tile.terrain_id_ &&
+                tile.east->terrain_id_ == tile.terrain_id_ &&
+                tile.west->terrain_id_ == tile.terrain_id_) {
+                tile.blendIndex = -1;
+                continue;
+            }
+        }
+    }
 }
 
 /*

@@ -84,11 +84,21 @@ sf::Image Resource::convertFrameToImage(const genie::SlpFramePtr frame,
     sf::Image img;
     img.create(width, height, sf::Color::Red);
 
+//    for (uint32_t row = 0; row < height; row++) {
+//        for (uint32_t col = 0; col < width; col++) {
+//            const int index = row * width + col;
+//            if (alphamask[index] <= 0) {
+//                continue;
+//            }
+//            alphamask[index] = 255 * ((alphamask[index]/255.) * (frameData.alpha_channel[index] / 255.));
+//        }
+//    }
+
     for (uint32_t row = 0; row < height; row++) {
         for (uint32_t col = 0; col < width; col++) {
             const uint8_t paletteIndex = frameData.pixel_indexes[row * width + col];
             genie::Color g_color = (*palette)[paletteIndex];
-            g_color.a = frameData.alpha_channel[row * width + col];
+            g_color.a = frameData.alpha_channel[index];
             img.setPixel(col, row, sf::Color(g_color.r, g_color.g, g_color.b, g_color.a));
         }
     }

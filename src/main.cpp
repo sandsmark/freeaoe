@@ -41,9 +41,7 @@ int main(int argc, char **argv)
       return 1;
   }
 
-  if (!LanguageManager::Inst()->initialize()) {
-      return 1;
-  }
+  LanguageManager::Inst()->initialize();
 
   if (!DataManager::Inst().initialize()) {
       return 1;

@@ -48,8 +48,6 @@ const sf::Texture &Terrain::image(int x, int y)
         return m_images[frameNum];
     }
 
-    sf::Texture tex;
-
     if (!m_slp) {
         static sf::Texture nullTex;
         if (nullTex.getSize().x == 0) {
@@ -61,9 +59,52 @@ const sf::Texture &Terrain::image(int x, int y)
         return nullTex;
     }
 
+    std::vector<uint8_t> alphamask;
+    if (m_blendIndex >= 0) {
+         alphamask = ResourceManager::Inst()->getBlendmode(m_data.BlendType)->bytemasks[m_blendIndex];
+    }
+
+    const int width = frame->getWidth();
+    const int height = frame->getHeight();
+    const genie::SlpFrameData &frameData = frame->img_data;
+
+    sf::Image img;
+    img.create(width, height, sf::Color::Red);
+
+    if (alphamask.size() != height * width) {
+        if (!alphamask.empty()) {
+//            std::cerr << "wrong alphamask size: " << alphamask.size() << ", expected " << (height * width) << std::endl;
+        }
+
+        alphamask.resize(height * width, 128);
+    }
+
+//    for (uint32_t row = 0; row < height; row++) {
+//        for (uint32_t col = 0; col < width; col++) {
+//            const int index = row * width + col;
+//            if (alphamask[index] <= 0) {
+//                continue;
+//            }
+//            alphamask[index] = 255 * ((alphamask[index]/255.) * (frameData.alpha_channel[index] / 255.));
+//        }
+//    }
+
+    for (uint32_t row = 0; row < height; row++) {
+        for (uint32_t col = 0; col < width; col++) {
+            const uint8_t paletteIndex = frameData.pixel_indexes[row * width + col];
+            genie::Color g_color = (*palette)[paletteIndex];
+//            g_color.g = 0;
+//            g_color.b = 0;
+//            g_color.a = 255;
+//            g_color.r = alphamask[row * width + col];
+            g_color.a = alphamask[row * width + col];
+            img.setPixel(col, row, sf::Color(g_color.r, g_color.g, g_color.b, g_color.a));
+        }
+    }
 
     sf::Image img = Resource::convertFrameToImage(m_slp->getFrame(frameNum),
-                                                  ResourceManager::Inst()->getPalette(50500));
+                                                  ResourceManager::Inst()->getPalette(50500)
+                                                  );
 
     m_images[frameNum].loadFromImage(img);
 

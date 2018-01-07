@@ -46,11 +46,15 @@ public:
 
     virtual bool load();
 
+    void setBlendIndex(int index) { m_blendIndex = index; }
+
 private:
     static Logger &log;
 
     genie::Terrain m_data;
     genie::SlpFilePtr m_slp;
+
+    int m_blendIndex = 0;
 
     std::unordered_map<int, sf::Texture> m_images; // TODO Frames?
 };

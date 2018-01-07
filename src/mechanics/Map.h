@@ -47,11 +47,12 @@ public:
 class MapTile
 {
 public:
-    MapNode *north, *east, *south, *west;
+    MapTile *north, *east, *south, *west;
 
     unsigned int elevation_;
     genie::Terrain terrain_;
     unsigned int terrain_id_;
+    int blendIndex = -1;
 };
 
 class Map : public Entity
@@ -87,7 +88,7 @@ public:
     unsigned int height();
     unsigned int width();
 
-    MapTile getTileAt(unsigned int col, unsigned int row);
+    MapTile &getTileAt(unsigned int col, unsigned int row);
     void setTileAt(unsigned col, unsigned row, unsigned id);
 
     // old stuff down ------------------------------------------------------------
@@ -99,6 +100,8 @@ public:
   */
 
 private:
+    void updateMapData();
+
     static Logger &log;
 
     // cols_ = x, rows_ = y
