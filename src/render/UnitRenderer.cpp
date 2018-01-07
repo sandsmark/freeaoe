@@ -46,7 +46,7 @@ void UnitRenderer::createForms(EntityPtr entity)
         return;
     }
 
-    std::cout << "Creating form for " << gunit->readableName() << " (" << gunit->getData().ID << ")" << std::endl;
+//    std::cout << "Creating form for " << gunit->readableName() << " (" << gunit->getData().ID << ")" << std::endl;
 
     EntityForm form(entity);
 
@@ -62,13 +62,16 @@ void UnitRenderer::createForms(EntityPtr entity)
 
     forms_.push_back(form);
 
-    for (const genie::unit::BuildingAnnex &annex : gunit->getData().Building.Annexes) {
-        if (annex.UnitID < 0) {
-            continue;
+    if (gunit->getData().Type >= genie::UT_Building) {
+        for (const genie::unit::BuildingAnnex &annex : gunit->getData().Building.Annexes) {
+            if (annex.UnitID < 0) {
+                continue;
+            }
+
+            MapPos offset(annex.Misplacement.first * -48, annex.Misplacement.second * -48);
+            EntityPtr annexUnit = EntityFactory::Inst().createUnit(annex.UnitID, graphic->map_object_->getPos() + offset);
+            createForms(annexUnit);
         }
-        MapPos offset(annex.Misplacement.first * -48, annex.Misplacement.second * -48);
-        EntityPtr annexUnit = EntityFactory::Inst().createUnit(annex.UnitID, graphic->map_object_->getPos() + offset);
-        createForms(annexUnit);
     }
 }
 
