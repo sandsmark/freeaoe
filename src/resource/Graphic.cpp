@@ -139,9 +139,16 @@ bool Graphic::load(void)
             }
 
             GraphicPtr deltaPtr = ResourceManager::Inst()->getGraphic(delta.GraphicID);
+
+            if (!deltaPtr) {
+                log.error("Failed to load delta graphic %d", delta.GraphicID);
+                continue;
+            }
+
             deltaPtr->offset_ = ScreenPos(delta.OffsetX, delta.OffsetY);
             m_deltas.push_back(deltaPtr);
         }
+
         if (!m_deltas.empty()) {
             std::reverse(m_deltas.begin(), m_deltas.end());
         }
