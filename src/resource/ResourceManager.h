@@ -31,6 +31,7 @@
 
 #include <genie/resource/PalFile.h>
 #include <genie/resource/SlpFile.h>
+#include <genie/resource/BlendomaticFile.h>
 #include <genie/script/ScnFile.h>
 
 class ColorPalette;
@@ -85,6 +86,8 @@ public:
 
     genie::PalFilePtr getPalette(unsigned int id);
 
+    genie::BlendModePtr getBlendmode(unsigned int id = 0);
+
     //----------------------------------------------------------------------------
     /// Adds an slp file that will be managed by the ResourceManager.
     /// TODO: Maybe auto_ptr
@@ -103,6 +106,8 @@ private:
 
     typedef std::vector<std::shared_ptr<genie::DrsFile>> DrsFileVector;
     DrsFileVector drs_files_;
+
+    genie::BlendomaticFilePtr blendomatic_file_;
     /*
   std::map<unsigned int, SlpFile *> slp_files_;
   std::map<unsigned int, BinaFile*> bina_files_;
@@ -113,6 +118,7 @@ private:
 
     typedef std::unordered_map<unsigned int, res::TerrainPtr> TerrainMap;
     TerrainMap terrains_;
+
     /*
   std::fstream terrain_file_;
   std::fstream graphics_file_;

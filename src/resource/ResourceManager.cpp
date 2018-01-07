@@ -91,7 +91,10 @@ res::GraphicPtr ResourceManager::getGraphic(Uint32 id)
         graph = graphics_[id];
     } else {
         graph = new res::Graphic(id);
-        graph->load();
+
+        if (!graph->load()) {
+            return nullptr;
+        }
 
         graphics_[id] = graph;
     }
@@ -112,6 +115,16 @@ res::TerrainPtr ResourceManager::getTerrain(unsigned int type)
     terrains_[type] = terrain;
 
     return terrain;
+}
+
+genie::BlendModePtr ResourceManager::getBlendmode(unsigned int id)
+{
+    if (!blendomatic_file_) {
+        log.warn("No blendomatic file loaded");
+        return nullptr;
+    }
+
+    return blendomatic_file_->getBlendMode(id);
 }
 
 //------------------------------------------------------------------------------
@@ -191,6 +204,11 @@ bool ResourceManager::initialize()
         loadDrs("sounds.drs");
         loadDrs("sounds_x1.drs");
         loadDrs("terrain.drs");
+
+        blendomatic_file_ = std::make_unique<genie::BlendomaticFile>();
+        std::string blendomaticPath = Config::Inst()->getDataPath() + "blendomatic.dat";
+        blendomatic_file_->load(blendomaticPath.c_str());
+
     } catch (const std::exception &error) {
         std::cerr << "Failed to load resource: " << error.what() << std::endl;
         return false;
