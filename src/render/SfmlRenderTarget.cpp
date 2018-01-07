@@ -24,6 +24,8 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include "mechanics/Map.h"
 
+#define SCALE 3.
+
 SfmlRenderTarget::SfmlRenderTarget(sf::RenderTarget &render_target)
 {
     renderTarget_ = &render_target;
@@ -35,7 +37,7 @@ SfmlRenderTarget::~SfmlRenderTarget()
 
 Vector2u SfmlRenderTarget::getSize(void) const
 {
-    return renderTarget_->getSize();
+    return sf::Vector2u(renderTarget_->getSize().x / SCALE, renderTarget_->getSize().y / SCALE);
 }
 
 void SfmlRenderTarget::draw(EntityForm &form)
@@ -72,10 +74,12 @@ void SfmlRenderTarget::draw(const sf::Image &image, ScreenPos pos)
 {
     sf::Texture texture;
 
+
     texture.loadFromImage(image);
 
     sf::Sprite sprite;
     sprite.setTexture(texture);
+    sprite.setScale(SCALE, SCALE);
 
     sprite.setPosition(pos);
 
@@ -86,6 +90,7 @@ void SfmlRenderTarget::draw(const sf::Texture &texture, ScreenPos pos)
 {
     sf::Sprite sprite;
     sprite.setTexture(texture);
+    sprite.setScale(SCALE, SCALE);
     sprite.setPosition(pos);
 
     renderTarget_->draw(sprite);
