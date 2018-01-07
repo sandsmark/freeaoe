@@ -84,6 +84,9 @@ public:
     //
     bool isLoaded() const;
 
+    static sf::Image convertFrameToImage(const genie::SlpFramePtr frame,
+                                          const genie::PalFilePtr palette);
+
 protected:
     //----------------------------------------------------------------------------
     /// Sets resources' id
@@ -94,9 +97,6 @@ protected:
 
     //----------------------------------------------------------------------------
     void setLoaded(bool loaded);
-
-    static sf::Image convertFrameToImage(const genie::SlpFramePtr frame,
-                                         const genie::PalFilePtr palette);
 
 private:
     sf::Uint32 id_;

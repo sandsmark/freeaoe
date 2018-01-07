@@ -79,6 +79,7 @@ private:
     std::shared_ptr<sf::RectangleShape> m_selectionShape;
     ScreenPos m_selectionStart;
     ScreenPos m_selectionCurr;
+    sf::Texture m_uiOverlay;
 };
 
 #endif // GAMESTATE_H

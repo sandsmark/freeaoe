@@ -70,7 +70,7 @@ void GameState::init()
     map_ = MapPtr(new Map());
 
     if (scenario_.get()) {
-        std::cout << "Setting up scenario" << std::endl;
+        std::cout << "Setting up scenario: " << scenario_->scenarioInstructions << std::endl;
         map_->create(scenario_->map);
 
         for (genie::ScnPlayerUnits &units : scenario_->playerUnits) {
@@ -108,6 +108,13 @@ void GameState::init()
     mapRenderer_.setMap(map_);
 
     entity_manager_.setMap(map_);
+
+    genie::SlpFilePtr overlayFile = ResourceManager::Inst()->getSlp(51141);
+    if (overlayFile) {
+        m_uiOverlay.loadFromImage(res::Resource::convertFrameToImage(overlayFile->getFrame(), ResourceManager::Inst()->getPalette(50500)));
+    } else {
+        std::cerr << "Failed to load ui overlay" << std::endl;
+    }
 
     /*
   EntityForm form;
@@ -152,6 +159,8 @@ void GameState::draw()
     if (m_selectionShape) {
         renderTarget_->draw(*m_selectionShape);
     }
+
+    renderTarget_->draw(m_uiOverlay, ScreenPos(0, 0));
 }
 
 bool GameState::update(Time time)
