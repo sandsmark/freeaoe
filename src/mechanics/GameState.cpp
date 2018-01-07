@@ -80,6 +80,10 @@ void GameState::init()
                 entity_form_manager_.createForms(unit);
             }
         }
+
+        EntityPtr unit = EntityFactory::Inst().createUnit(293, MapPos(48*3, 48*3, 0));
+        entity_manager_.add(unit);
+        entity_form_manager_.createForms(unit);
     } else {
         map_->setUpSample();
 
@@ -174,8 +178,8 @@ bool GameState::update(Time time)
 
 
         if (m_selectionShape) {
-            m_selectionStart.x -= m_cameraDeltaX * deltaTime;
-            m_selectionStart.y += m_cameraDeltaY * deltaTime;
+            m_selectionStart.x -= m_cameraDeltaX * deltaTime * 2;
+            m_selectionStart.y += m_cameraDeltaY * deltaTime * 2;
         }
 
         updated = true;
@@ -229,6 +233,39 @@ void GameState::handleEvent(sf::Event event)
         return;
     }
 
+    if (event.type == sf::Event::KeyPressed) {
+        ScreenPos cameraScreenPos = renderTarget_->camera()->getTargetPosition().toScreen();
+
+
+        switch(event.key.code) {
+        case sf::Keyboard::Left:
+            cameraScreenPos.x -= 20;
+            break;
+
+        case sf::Keyboard::Right:
+            cameraScreenPos.x += 20;
+            break;
+
+        case sf::Keyboard::Down:
+            cameraScreenPos.y += 20;
+            break;
+
+        case sf::Keyboard::Up:
+            cameraScreenPos.y -= 20;
+            break;
+
+        default:
+            return;
+        }
+
+        MapPos cameraMapPos = cameraScreenPos.toMap();
+        if (cameraMapPos.x < 0) cameraMapPos.x = 0;
+        if (cameraMapPos.y < 0) cameraMapPos.y = 0;
+        if (cameraMapPos.x > map_->width()) cameraMapPos.x = map_->width();
+        if (cameraMapPos.y > map_->height()) cameraMapPos.y = map_->height();
+        renderTarget_->camera()->setTargetPosition(cameraMapPos);
+    }
+
     if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Button::Left) {
         m_selectionShape = std::make_shared<sf::RectangleShape>();
         m_selectionShape->setFillColor(sf::Color::Transparent);
@@ -238,7 +275,6 @@ void GameState::handleEvent(sf::Event event)
         m_selectionStart = ScreenPos(event.mouseButton.x, event.mouseButton.y);
         m_selectionCurr = ScreenPos(event.mouseButton.x, event.mouseButton.y);
     }
-
 
     if (event.type == sf::Event::MouseButtonReleased) {
         ScreenPos p;
