@@ -23,3 +23,9 @@ extern/thor/src/
 
 
 raw.dat
+
+CMakeCache.txt
+CMakeFiles
+Makefile
+cmake_install.cmake
+build-*/
