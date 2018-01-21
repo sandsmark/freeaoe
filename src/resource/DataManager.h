@@ -45,8 +45,10 @@ public:
 
     genie::Graphic getGraphic(unsigned int id);
     genie::Unit getUnit(unsigned int id);
-    genie::Terrain getTerrain(unsigned int id);
+    const genie::Terrain &getTerrain(unsigned int id);
     genie::TerrainRestriction getTerrainRestriction(unsigned int id);
+
+    const genie::TerrainBlock &terrainBlock();
 
     static std::string gameName(const genie::GameVersion version);
 

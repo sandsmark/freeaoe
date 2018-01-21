@@ -98,7 +98,7 @@ sf::Image Resource::convertFrameToImage(const genie::SlpFramePtr frame,
         for (uint32_t col = 0; col < width; col++) {
             const uint8_t paletteIndex = frameData.pixel_indexes[row * width + col];
             genie::Color g_color = (*palette)[paletteIndex];
-            g_color.a = frameData.alpha_channel[index];
+            g_color.a = frameData.alpha_channel[row * width + col];
             img.setPixel(col, row, sf::Color(g_color.r, g_color.g, g_color.b, g_color.a));
         }
     }
@@ -106,7 +106,6 @@ sf::Image Resource::convertFrameToImage(const genie::SlpFramePtr frame,
     const sf::Color shadow(0, 0, 0, 128);
     for (const genie::XY pos : frameData.shadow_mask) {
         img.setPixel(pos.x, pos.y, shadow);
-
     }
 
     return img;

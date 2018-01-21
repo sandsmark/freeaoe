@@ -45,11 +45,12 @@ genie::Unit DataManager::getUnit(unsigned int id)
     return dat_file_.Civs[0].Units[id];
 }
 
-genie::Terrain DataManager::getTerrain(unsigned int id)
+const genie::Terrain &DataManager::getTerrain(unsigned int id)
 {
     if (id >= dat_file_.TerrainBlock.Terrains.size()) {
+        static genie::Terrain nullterrain;
         log.warn("terrain id %d is out of range", id);
-        return genie::Terrain();
+        return nullterrain;
     }
 
     return dat_file_.TerrainBlock.Terrains[id];
@@ -58,6 +59,11 @@ genie::Terrain DataManager::getTerrain(unsigned int id)
 genie::TerrainRestriction DataManager::getTerrainRestriction(unsigned int id)
 {
     return dat_file_.TerrainRestrictions[id];
+}
+
+const genie::TerrainBlock &DataManager::terrainBlock()
+{
+    return dat_file_.TerrainBlock;
 }
 
 std::string DataManager::gameName(const genie::GameVersion version)

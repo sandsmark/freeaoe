@@ -22,6 +22,8 @@
 #include "ResourceManager.h"
 
 #include <genie/resource/SlpFrame.h>
+#include <genie/resource/Color.h>
+
 #include <mechanics/Map.h>
 
 #include <cmath>
@@ -44,10 +46,6 @@ const sf::Texture &Terrain::image(int x, int y)
     const int tileSquareCount = sqrt(m_slp->getFrameCount());
     const int frameNum = (x % tileSquareCount) + (y % tileSquareCount) * tileSquareCount;
 
-    if (m_images.find(frameNum) != m_images.end()) {
-        return m_images[frameNum];
-    }
-
     if (!m_slp) {
         static sf::Texture nullTex;
         if (nullTex.getSize().x == 0) {
@@ -59,55 +57,14 @@ const sf::Texture &Terrain::image(int x, int y)
         return nullTex;
     }
 
-    std::vector<uint8_t> alphamask;
-    if (m_blendIndex >= 0) {
-         alphamask = ResourceManager::Inst()->getBlendmode(m_data.BlendType)->bytemasks[m_blendIndex];
+    if (m_images.find(frameNum) != m_images.end()) {
+        return m_images[frameNum];
     }
-
-    const int width = frame->getWidth();
-    const int height = frame->getHeight();
-    const genie::SlpFrameData &frameData = frame->img_data;
-
-    sf::Image img;
-    img.create(width, height, sf::Color::Red);
-
-    if (alphamask.size() != height * width) {
-        if (!alphamask.empty()) {
-//            std::cerr << "wrong alphamask size: " << alphamask.size() << ", expected " << (height * width) << std::endl;
-        }
-
-        alphamask.resize(height * width, 128);
-    }
-
-//    for (uint32_t row = 0; row < height; row++) {
-//        for (uint32_t col = 0; col < width; col++) {
-//            const int index = row * width + col;
-//            if (alphamask[index] <= 0) {
-//                continue;
-//            }
-//            alphamask[index] = 255 * ((alphamask[index]/255.) * (frameData.alpha_channel[index] / 255.));
-//        }
-//    }
-
-    for (uint32_t row = 0; row < height; row++) {
-        for (uint32_t col = 0; col < width; col++) {
-            const uint8_t paletteIndex = frameData.pixel_indexes[row * width + col];
-            genie::Color g_color = (*palette)[paletteIndex];
-//            g_color.g = 0;
-//            g_color.b = 0;
-//            g_color.a = 255;
-//            g_color.r = alphamask[row * width + col];
-            g_color.a = alphamask[row * width + col];
-            img.setPixel(col, row, sf::Color(g_color.r, g_color.g, g_color.b, g_color.a));
-        }
-    }
-
     sf::Image img = Resource::convertFrameToImage(m_slp->getFrame(frameNum),
                                                   ResourceManager::Inst()->getPalette(50500)
                                                   );
 
     m_images[frameNum].loadFromImage(img);
-
     return m_images[frameNum];
 }
 
@@ -132,4 +89,107 @@ bool Terrain::load()
 
     return true;
 }
+
+const genie::Terrain &Terrain::data()
+{
+    return m_data;
+}
+
+uint8_t Terrain::blendMode(const uint8_t ownMode, const uint8_t neighborMode)
+{
+    const std::array<std::array<uint8_t, 8>, 8> blendmodeTable ({{
+        {{ 2, 3, 2, 1, 1, 6, 5, 4 }},
+        {{ 3, 3, 3, 1, 1, 6, 5, 4 }},
+        {{ 2, 3, 2, 1, 1, 6, 1, 4 }},
+        {{ 1, 1, 1, 0, 7, 6, 5, 4 }},
+        {{ 1, 1, 1, 7, 7, 6, 5, 4 }},
+        {{ 6, 6, 6, 6, 6, 6, 5, 4 }},
+        {{ 5, 5, 1, 5, 5, 5, 5, 4 }},
+        {{ 4, 3, 4, 4, 4, 4, 4, 4 }}
+    }});
+
+    if (IS_UNLIKELY(ownMode > blendmodeTable.size() || neighborMode > blendmodeTable[ownMode].size())) {
+        log.error("invalid mode %d %d", ownMode, neighborMode);
+        return 0;
+    }
+
+    return blendmodeTable[ownMode][neighborMode];
+}
+
+bool Terrain::blendImage(sf::Image *image, ResourcePtr<Terrain> other, uint8_t blendFrame)
+{
+    if (!image) {
+        log.error("No image passed for blending");
+        return false;
+    }
+
+    if (!other->m_slp) {
+        log.error("other doesn't have slp loaded");
+        return false;
+    }
+
+    genie::BlendModePtr blend = ResourceManager::Inst()->getBlendmode(blendMode(m_data.BlendType, other->m_data.BlendType));
+//    genie::BlendModePtr blend = ResourceManager::Inst()->getBlendmode(0);
+    if (!blend) {
+        log.error("Failed to get blend mode");
+        return false;
+    }
+
+    genie::SlpFramePtr overlay = other->m_slp->getFrame();
+
+    const int width = overlay->getWidth();
+    const int height = overlay->getHeight();
+    const genie::SlpFrameData &overlayData = overlay->img_data;
+
+    if (width == 0 || height == 0) {
+        log.warn("Invalid dimensions of overlay (%dx%d)", width, height);
+        return false;
+    }
+
+    if (image->getSize().x == 0 || image->getSize().y == 0) {
+        image->create(width, height, sf::Color::Transparent);
+    } else if (image->getSize().x < width || image->getSize().y < height) {
+        log.warn("Passed image is too small (%dx%d)", image->getSize().x, image->getSize().y);
+        sf::Image img;
+        img.create(width, height, sf::Color::Transparent);
+        img.copy(*image, 0, 0);
+        *image = img;
+    }
+
+    genie::PalFilePtr palette = ResourceManager::Inst()->getPalette(50500);
+
+    int blendOffset = 0;
+    for (int y = 0; y < height; y++) {
+        int lineWidth = 0;
+        if (y < height/2) {
+            lineWidth = 1 + (4 * y);
+        } else {
+            lineWidth = (height * 2 - 1) - (4 * (y - height/2));
+        }
+
+        int offsetLeft = height - 1 - (lineWidth  / 2);
+
+        if (blendOffset + lineWidth > blend->alphaValues[blendFrame].size()) {
+            log.error("Trying to read out of bounds (blendoffset %d + linewidth %d = %d, > %d", blendOffset, lineWidth, blendOffset + lineWidth, blend->alphaValues.size());
+            return false;
+        }
+
+        for (int x = 0; x < lineWidth; x++) {
+            sf::Color sourceColor = image->getPixel(x + offsetLeft, y);
+
+            const float overlayAlpha = 1. - blend->alphaValues[blendFrame][blendOffset++] / 128.;
+            const uint8_t overlayIndex = overlayData.pixel_indexes[y * width + x + offsetLeft];
+            genie::Color overlayColor = (*palette)[overlayIndex];
+            sourceColor.r = overlayAlpha * overlayColor.r + (1. - overlayAlpha) * sourceColor.r;
+            sourceColor.g = overlayAlpha * overlayColor.g + (1. - overlayAlpha) * sourceColor.r;
+            sourceColor.b = overlayAlpha * overlayColor.b + (1. - overlayAlpha) * sourceColor.b;
+            sourceColor.a = overlayAlpha * overlayColor.a + (1. - overlayAlpha) * sourceColor.a;
+
+            image->setPixel(x + offsetLeft, y, sourceColor);
+        }
+    }
+
+    return true;
+}
+
 }

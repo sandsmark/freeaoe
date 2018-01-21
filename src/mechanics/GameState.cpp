@@ -18,6 +18,8 @@
 
 #include "GameState.h"
 
+#include <genie/resource/Color.h>
+
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Window/Mouse.hpp>
 #include <communication/commands/CommandSpawn.h>
@@ -35,6 +37,7 @@
 #include "CompUnitData.h"
 
 #define MOUSE_MOVE_EDGE_SIZE 100
+#define CAMERA_SPEED 1.
 
 GameState::GameState(IRenderTargetPtr renderTarget) :
     m_cameraDeltaX(0),
@@ -109,13 +112,6 @@ void GameState::init()
 
     entity_manager_.setMap(map_);
 
-    genie::SlpFilePtr overlayFile = ResourceManager::Inst()->getSlp(51141);
-    if (overlayFile) {
-        m_uiOverlay.loadFromImage(res::Resource::convertFrameToImage(overlayFile->getFrame(), ResourceManager::Inst()->getPalette(50500)));
-    } else {
-        std::cerr << "Failed to load ui overlay" << std::endl;
-    }
-
     /*
   EntityForm form;
   
@@ -159,8 +155,6 @@ void GameState::draw()
     if (m_selectionShape) {
         renderTarget_->draw(*m_selectionShape);
     }
-
-    renderTarget_->draw(m_uiOverlay, ScreenPos(0, 0));
 }
 
 bool GameState::update(Time time)
@@ -175,8 +169,8 @@ bool GameState::update(Time time)
         const int deltaTime = time - m_lastUpdate;
 
         ScreenPos cameraScreenPos = renderTarget_->camera()->getTargetPosition().toScreen();
-        cameraScreenPos.x += m_cameraDeltaX * deltaTime * 2;
-        cameraScreenPos.y += m_cameraDeltaY * deltaTime * 2;
+        cameraScreenPos.x += m_cameraDeltaX * deltaTime * CAMERA_SPEED;
+        cameraScreenPos.y += m_cameraDeltaY * deltaTime * CAMERA_SPEED;
 
         MapPos cameraMapPos = cameraScreenPos.toMap();
         if (cameraMapPos.x < 0) cameraMapPos.x = 0;
@@ -187,8 +181,8 @@ bool GameState::update(Time time)
 
 
         if (m_selectionShape) {
-            m_selectionStart.x -= m_cameraDeltaX * deltaTime * 2;
-            m_selectionStart.y += m_cameraDeltaY * deltaTime * 2;
+            m_selectionStart.x -= m_cameraDeltaX * deltaTime * CAMERA_SPEED;
+            m_selectionStart.y += m_cameraDeltaY * deltaTime * CAMERA_SPEED;
         }
 
         updated = true;

@@ -19,6 +19,7 @@
 #include "MapRenderer.h"
 #include "IRenderTarget.h"
 #include <resource/ResourceManager.h>
+#include <resource/DataManager.h>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 
@@ -196,10 +197,9 @@ void MapRenderer::updateTexture()
     for (unsigned int col = m_rColBegin; col < m_rColEnd; col++) {
         for (unsigned int row = m_rRowBegin; row < m_rRowEnd; row++) {
             MapTile &mapTile = m_map->getTileAt(col, row);
-            res::TerrainPtr t = ResourceManager::Inst()->getTerrain(mapTile.terrain_id_);
 
             //TODO: MapPos to screenpos (Tile 0,0 is drawn at MapPos 0,0
-            MapPos mpos(0, 0, 0);
+            MapPos mpos(0, 0, mapTile.elevation_ * DataManager::Inst().terrainBlock().ElevHeight);
 
             mpos.x += (col - m_rColBegin) * Map::TILE_SIZE;
             mpos.y += (row - m_rRowBegin) * Map::TILE_SIZE;
@@ -211,7 +211,11 @@ void MapRenderer::updateTexture()
 
             spos.y -= Map::TILE_SIZE_VERTICAL / 2;
 
-            m_textureTarget.draw(t->image(col, row), spos);
+            m_textureTarget.draw(mapTile.terrain_->image(col, row), spos);
+
+            if (mapTile.blendOverlay.getSize().x > 0) {
+                m_textureTarget.draw(mapTile.blendOverlay, spos);
+            }
 
 //            sf::RectangleShape rect;
 //            rect.setFillColor(sf::Color::Transparent);

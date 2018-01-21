@@ -44,15 +44,22 @@ public:
     sf::Int32 x_pos, y_pos, z_pos;
 };
 
-class MapTile
+struct MapTile
 {
-public:
-    MapTile *north, *east, *south, *west;
+    MapTile *north = nullptr, *east = nullptr, *south = nullptr, *west = nullptr;
+
+    void reset() {
+        north = east = south = west = nullptr;
+        blendIndex = -1;
+        overlayId = -1;
+    }
 
     unsigned int elevation_;
-    genie::Terrain terrain_;
-    unsigned int terrain_id_;
+    res::TerrainPtr terrain_;
     int blendIndex = -1;
+    int overlayId = -1;
+
+    sf::Texture blendOverlay;
 };
 
 class Map : public Entity
@@ -101,6 +108,7 @@ public:
 
 private:
     void updateMapData();
+    void updateTileBlend(int tileX, int tileY);
 
     static Logger &log;
 

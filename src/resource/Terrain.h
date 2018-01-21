@@ -36,6 +36,14 @@ namespace res {
 class Terrain : public Resource
 {
 public:
+    enum Slope {
+        Flat = 0x0,
+        North = 0x1,
+        East = 0x2,
+        West = 0x4,
+        South = 0x8
+    };
+
     //----------------------------------------------------------------------------
     /// @param Id resource id
     //
@@ -46,15 +54,16 @@ public:
 
     virtual bool load();
 
-    void setBlendIndex(int index) { m_blendIndex = index; }
+    const genie::Terrain &data();
+
+    static uint8_t blendMode(const uint8_t ownMode, const uint8_t neighborMode);
+    bool blendImage(sf::Image *image, ResourcePtr<Terrain> other, uint8_t blendFrame);
 
 private:
     static Logger &log;
 
     genie::Terrain m_data;
     genie::SlpFilePtr m_slp;
-
-    int m_blendIndex = 0;
 
     std::unordered_map<int, sf::Texture> m_images; // TODO Frames?
 };

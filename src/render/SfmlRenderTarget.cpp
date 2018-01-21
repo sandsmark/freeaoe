@@ -24,7 +24,7 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include "mechanics/Map.h"
 
-#define SCALE 3.
+#define SCALE 1.
 
 SfmlRenderTarget::SfmlRenderTarget(sf::RenderTarget &render_target)
 {

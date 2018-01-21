@@ -254,7 +254,7 @@ std::vector<MapPos> MoveOnMap::findPath(const MapPos &start, const MapPos &end)
 
 bool MoveOnMap::isPassable(int x, int y)
 {
-    return (m_terrainRestriction.PassableBuildableDmgMultiplier[m_map->getTileAt(x / Map::TILE_SIZE, y / Map::TILE_SIZE).terrain_id_] > 0);
+    return (m_terrainRestriction.PassableBuildableDmgMultiplier[m_map->getTileAt(x / Map::TILE_SIZE, y / Map::TILE_SIZE).terrain_->getId()] > 0);
 }
 
 }
