@@ -57,7 +57,7 @@ public:
     const genie::Terrain &data();
 
     static uint8_t blendMode(const uint8_t ownMode, const uint8_t neighborMode);
-    bool blendImage(sf::Image *image, ResourcePtr<Terrain> other, uint8_t blendFrame);
+    sf::Image blendImage(uint8_t blendFrame, uint8_t mode);
 
 private:
     static Logger &log;
@@ -66,6 +66,7 @@ private:
     genie::SlpFilePtr m_slp;
 
     std::unordered_map<int, sf::Texture> m_images; // TODO Frames?
+    std::unordered_map<int, sf::Image> m_blendImages;
 };
 
 typedef ResourcePtr<Terrain> TerrainPtr;

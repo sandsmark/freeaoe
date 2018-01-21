@@ -171,11 +171,8 @@ enum Direction : int {
 
 enum BlendTile {
     LowerLeft1 = 0,
-
     UpperLeft1 = 4,
-
     LowerRight1 = 8,
-
     UpperRight1 = 12,
 
     Right = 16,
@@ -185,6 +182,7 @@ enum BlendTile {
 
     UpperRightAndLowerLeft = 20,
     UpperLeftAndLowerRight = 21,
+
     OnlyRight = 22,
     OnlyDown = 23,
     OnlyUp = 24,
@@ -265,7 +263,7 @@ void Map::updateTileBlend(int tileX, int tileY)
 
     std::vector<uint8_t> idsToDraw(neighborIds.begin(), neighborIds.end());
     std::sort(idsToDraw.begin(), idsToDraw.end(), [&](const uint8_t a, const uint8_t b){
-        return blendPriorities[a] < blendDirections[b];
+        return blendPriorities[a] < blendPriorities[b];
     });
 
     sf::Image blendImage;
@@ -318,17 +316,19 @@ void Map::updateTileBlend(int tileX, int tileY)
         case North:
             blendFrame = UpperRight1;
             break;
+
         case East | West:
             blendFrame = UpperRightAndLowerLeft;
             break;
+        case North | South:
+            blendFrame = UpperLeftAndLowerRight;
+            break;
+
         case North | East:
             blendFrame = OnlyDown;
             break;
         case North | West:
             blendFrame = OnlyRight;
-            break;
-        case North | South:
-            blendFrame = UpperLeftAndLowerRight;
             break;
         case South | West:
             blendFrame = OnlyUp;
@@ -336,6 +336,7 @@ void Map::updateTileBlend(int tileX, int tileY)
         case South | East:
             blendFrame = OnlyLeft;
             break;
+
         case South | East | West:
             blendFrame = KeepUpperLeft;
             break;
@@ -348,11 +349,15 @@ void Map::updateTileBlend(int tileX, int tileY)
         case North | South | East:
             blendFrame = KeepLowerLeft;
             break;
+
         case North | South | East | West:
             blendFrame = All;
             break;
+
         default:
-            std::cout << "unhandled: " << blendDirections[id]<< std::endl;
+            if (blends.empty()) {
+                std::cout << "unhandled: " << blendDirections[id]<< std::endl;
+            }
             break;
         }
 
@@ -361,17 +366,13 @@ void Map::updateTileBlend(int tileX, int tileY)
         }
 
         for (const BlendTile blend : blends) {
-            sf::Image overlay;
-            tile.terrain_->blendImage(&overlay, terrain, int(blend));
+            sf::Image overlay = terrain->blendImage(int(blend), res::Terrain::blendMode(tileData.BlendType, terrain->data().BlendType));
             if (blendImage.getSize().x == 0) {
                 blendImage = overlay;
             } else {
                 blendImage.copy(overlay, 0, 0, sf::IntRect(0,0,0,0), true);
             }
         }
-//        if (!tile.terrain_->blendImage(&blendImage, terrain, blendFrame)) {
-//            return;
-//        }
     }
 
     if (blendImage.getSize().x == 0 || blendImage.getSize().y == 0) {
