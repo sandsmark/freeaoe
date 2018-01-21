@@ -21,6 +21,9 @@
 
 #include <cstring>
 
+#define IS_LIKELY(x)      __builtin_expect(!!(x), 1)
+#define IS_UNLIKELY(x)    __builtin_expect(!!(x), 0)
+
 namespace util {
 
 //------------------------------------------------------------------------------
