@@ -134,6 +134,8 @@ inline MapPos ScreenPos::toMap() const
 
 }
 
+struct MapRect;
+
 struct ScreenRect
 {
     float x = 0;
@@ -168,6 +170,8 @@ struct ScreenRect
     bool isEmpty() const {
         return !(width > 0 && height > 0);
     }
+
+    MapRect toMap() const;
 
     operator bool() const {
         return (width > 0 && height > 0);
@@ -217,6 +221,8 @@ struct MapRect {
         return !(width > 0 && height > 0);
     }
 
+    ScreenRect toScreen() const;
+
     operator bool() const {
         return (width > 0 && height > 0);
     }
@@ -234,3 +240,20 @@ struct MapRect {
 
 /// Time in milliseconds
 typedef unsigned int Time;
+
+inline MapRect ScreenRect::toMap() const
+{
+    return MapRect(
+        ScreenPos(x, y).toMap(),
+        ScreenPos(x + width, y + height).toMap()
+    );
+}
+
+inline ScreenRect MapRect::toScreen() const
+{
+    return ScreenRect(
+        MapPos(x, y).toScreen(),
+        MapPos(x + width, y + height).toScreen()
+    );
+
+}
