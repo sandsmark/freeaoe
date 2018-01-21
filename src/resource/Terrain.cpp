@@ -129,7 +129,6 @@ bool Terrain::blendImage(sf::Image *image, ResourcePtr<Terrain> other, uint8_t b
     }
 
     genie::BlendModePtr blend = ResourceManager::Inst()->getBlendmode(blendMode(m_data.BlendType, other->m_data.BlendType));
-//    genie::BlendModePtr blend = ResourceManager::Inst()->getBlendmode(0);
     if (!blend) {
         log.error("Failed to get blend mode");
         return false;
@@ -148,12 +147,6 @@ bool Terrain::blendImage(sf::Image *image, ResourcePtr<Terrain> other, uint8_t b
 
     if (image->getSize().x == 0 || image->getSize().y == 0) {
         image->create(width, height, sf::Color::Transparent);
-    } else if (image->getSize().x < width || image->getSize().y < height) {
-        log.warn("Passed image is too small (%dx%d)", image->getSize().x, image->getSize().y);
-        sf::Image img;
-        img.create(width, height, sf::Color::Transparent);
-        img.copy(*image, 0, 0);
-        *image = img;
     }
 
     genie::PalFilePtr palette = ResourceManager::Inst()->getPalette(50500);
@@ -177,9 +170,17 @@ bool Terrain::blendImage(sf::Image *image, ResourcePtr<Terrain> other, uint8_t b
         for (int x = 0; x < lineWidth; x++) {
             sf::Color sourceColor = image->getPixel(x + offsetLeft, y);
 
-            const float overlayAlpha = 1. - blend->alphaValues[blendFrame][blendOffset++] / 128.;
+            float overlayAlpha = 1. - blend->alphaValues[blendFrame][blendOffset++] / 128.;
             const uint8_t overlayIndex = overlayData.pixel_indexes[y * width + x + offsetLeft];
             genie::Color overlayColor = (*palette)[overlayIndex];
+
+            overlayColor.a = overlayData.alpha_channel[y * width + x + offsetLeft];
+            if (!overlayColor.a) {
+                continue;
+            }
+
+            overlayAlpha *= overlayColor.a / 255.;
+
             sourceColor.r = overlayAlpha * overlayColor.r + (1. - overlayAlpha) * sourceColor.r;
             sourceColor.g = overlayAlpha * overlayColor.g + (1. - overlayAlpha) * sourceColor.r;
             sourceColor.b = overlayAlpha * overlayColor.b + (1. - overlayAlpha) * sourceColor.b;

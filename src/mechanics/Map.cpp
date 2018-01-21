@@ -71,6 +71,7 @@ void Map::setUpSample()
     tiles_[63].terrain_ = water_dat;
     tiles_[65].terrain_ = water_dat;
     tiles_[66].terrain_ = water_dat;
+    tiles_[73].terrain_ = water_dat;
     updateMapData();
 }
 
@@ -156,7 +157,7 @@ void Map::updateMapData()
     }
 }
 
-enum Direction {
+enum Direction : int {
     None = 0,
     West = 1 << 0,
     North = 1 << 1,
@@ -269,71 +270,108 @@ void Map::updateTileBlend(int tileX, int tileY)
 
     sf::Image blendImage;
     for (const uint8_t id : idsToDraw) {
+        std::vector<BlendTile> blends;
         res::TerrainPtr terrain = neighborTerrains[id];
 
-        int blendFrame = 30;
+        int direction = blendDirections[id];
+        if (direction & South) {
+            direction &= ~SouthWest;
+            direction &= ~SouthEast;
+        }
+        if (direction & North) {
+            direction &= ~NorthWest;
+            direction &= ~NorthEast;
+        }
+        if (direction & West) {
+            direction &= ~NorthWest;
+            direction &= ~SouthWest;
+        }
+        if (direction & East) {
+            direction &= ~NorthEast;
+            direction &= ~SouthEast;
+        }
 
-        switch (blendDirections[id]) {
-        case SouthWest:
-            blendFrame = Down;
-            break;
-        case NorthWest:
-            blendFrame = Left;
-            break;
-        case NorthEast:
-            blendFrame = Up;
-            break;
-        case SouthEast:
-            blendFrame = Right;
-            break;
+        if (direction & NorthWest) {
+            blends.push_back(Left);
+        }
+        if (direction & NorthEast) {
+            blends.push_back(Up);
+        }
+        if (direction & SouthWest) {
+            blends.push_back(Down);
+        }
+        if (direction & SouthEast) {
+            blends.push_back(Right);
+        }
 
+        int blendFrame = -1;
+        switch (direction) {
         case East:
-        case East | NorthEast:
-        case East | SouthEast:
-        case East | NorthEast | SouthEast:
             blendFrame = UpperLeft1;
             break;
-
-        case West:
-        case West | NorthWest:
-        case West | SouthWest:
-        case West | SouthWest | NorthWest:
-            blendFrame = LowerRight1;
-            break;
-
-        case North:
-        case North | NorthWest:
-        case North | NorthEast:
-        case North | NorthEast | NorthWest:
-            blendFrame = UpperRight1;
-            break;
-
         case South:
-        case South | SouthEast:
-        case South | SouthWest:
-        case South | SouthEast | SouthWest:
             blendFrame = LowerLeft1;
             break;
-
-        case NorthWest | West | North:
+        case West:
+            blendFrame = LowerRight1;
+            break;
+        case North:
+            blendFrame = UpperRight1;
+            break;
+        case East | West:
+            blendFrame = UpperRightAndLowerLeft;
+            break;
+        case North | East:
+            blendFrame = OnlyDown;
+            break;
+        case North | West:
             blendFrame = OnlyRight;
             break;
-
-        case NorthWest | NorthEast:
+        case North | South:
+            blendFrame = UpperLeftAndLowerRight;
+            break;
+        case South | West:
+            blendFrame = OnlyUp;
+            break;
+        case South | East:
+            blendFrame = OnlyLeft;
+            break;
+        case South | East | West:
+            blendFrame = KeepUpperLeft;
+            break;
+        case North | East | West:
+            blendFrame = KeepUpperRight;
+            break;
+        case North | South | West:
             blendFrame = KeepLowerRight;
             break;
-        case North| West | East | NorthWest | NorthEast:
-            blendFrame = KeepLowerRight;
+        case North | South | East:
+            blendFrame = KeepLowerLeft;
             break;
-
+        case North | South | East | West:
+            blendFrame = All;
+            break;
         default:
             std::cout << "unhandled: " << blendDirections[id]<< std::endl;
-            continue;
+            break;
         }
 
-        if (!tile.terrain_->blendImage(&blendImage, terrain, blendFrame)) {
-            return;
+        if (blendFrame >= 0) {
+            blends.push_back(BlendTile(blendFrame));
         }
+
+        for (const BlendTile blend : blends) {
+            sf::Image overlay;
+            tile.terrain_->blendImage(&overlay, terrain, int(blend));
+            if (blendImage.getSize().x == 0) {
+                blendImage = overlay;
+            } else {
+                blendImage.copy(overlay, 0, 0, sf::IntRect(0,0,0,0), true);
+            }
+        }
+//        if (!tile.terrain_->blendImage(&blendImage, terrain, blendFrame)) {
+//            return;
+//        }
     }
 
     if (blendImage.getSize().x == 0 || blendImage.getSize().y == 0) {
