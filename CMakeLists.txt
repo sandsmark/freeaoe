@@ -1,22 +1,16 @@
 cmake_minimum_required(VERSION 2.6)
 
-set (CMAKE_CXX_STANDARD 14)
+set (CMAKE_CXX_STANDARD 17)
 
 project(freeaoe)
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/)
 
-set(Boost_USE_STATIC_LIBS        ON)
-set(Boost_USE_MULTITHREADED      ON)
-set(Boost_USE_STATIC_RUNTIME    OFF)
-
-find_package(Boost 1.42 COMPONENTS iostreams program_options REQUIRED)
 find_package(SFML COMPONENTS SYSTEM WINDOW GRAPHICS REQUIRED)
 find_package(OpenGL REQUIRED)
 
 include_directories(src/
   ${CMAKE_HOME_DIRECTORY}/extern/genieutils/include
-  ${Boost_INCLUDE_DIRS}
   ${SFML_INCLUDE_DIR})
 
 add_subdirectory( extern/genieutils )
@@ -86,7 +80,7 @@ target_link_libraries(freeaoe
                       ${SFML_GRAPHICS_LIBRARY}
                       #${Genieutils_LIBRARY}
                       genieutils
-                      boost_program_options
+                      stdc++fs
                       )
                       
 

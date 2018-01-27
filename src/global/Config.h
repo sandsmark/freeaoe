@@ -20,7 +20,6 @@
 #define CONFIG_H
 #include <string>
 
-#include <boost/program_options.hpp>
 #include <genie/Types.h>
 
 //
@@ -68,9 +67,19 @@ private:
     Config();
     virtual ~Config();
 
-    boost::program_options::variables_map options_;
+    void printUsage(const std::string &programName);
+
+    std::string configPath();
+
+    bool parseOption(const std::string &option);
+    bool checkOption(const std::string &name, const std::string &value);
+
+    void parseConfigFile(const std::string &path);
+    void writeConfigFile(const std::string &path);
 
     std::string m_dataPath;
+    std::string m_gamePath;
+    std::string m_scenarioFile;
 };
 
 #endif // CONFIG_H
