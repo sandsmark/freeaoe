@@ -12,13 +12,13 @@ LanguageManager *LanguageManager::Inst()
     return &instance;
 }
 
-bool LanguageManager::initialize()
+bool LanguageManager::initialize(const std::string dataPath)
 {
     std::string filename;
     try {
-        loadLangFile("language.dll");
-        loadLangFile("language_x1.dll");
-        loadLangFile("language_x1_p1.dll");
+        loadLangFile(dataPath + "language.dll");
+        loadLangFile(dataPath + "language_x1.dll");
+        loadLangFile(dataPath + "language_x1_p1.dll");
     } catch (const std::exception &error) {
         std::cerr << "Failed to load language file " << filename << ": " << error.what() << std::endl;
         return false;
@@ -61,10 +61,8 @@ void LanguageManager::loadLangFile(std::string filename)
 {
     log.info("Loading %s", filename.c_str());
 
-    std::string filePath = Config::Inst()->getDataPath() + filename;
-
     std::shared_ptr<genie::LangFile> ret (new genie::LangFile);
-    ret->load(filePath.c_str());
+    ret->load(filename.c_str());
 
     m_langFiles.push_back(ret);
 }

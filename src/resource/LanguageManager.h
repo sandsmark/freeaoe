@@ -15,7 +15,7 @@ class LanguageManager
 {
 public:
     static LanguageManager *Inst();
-    bool initialize();
+    bool initialize(const std::string dataPath);
 
     static std::string getString(unsigned int id);
 

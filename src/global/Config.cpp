@@ -18,40 +18,99 @@
 
 #include "Config.h"
 
+#include <assert.h>
 #include <fstream>
 #include <iostream>
 #include <iomanip>
+#include <unordered_set>
 #include <experimental/filesystem>
 
-using namespace std::experimental;
 
 #if defined(_WINDOWS)
 #include <Shlobj.h>
 #endif
 
-//------------------------------------------------------------------------------
-Config *Config::Inst()
+using namespace std::experimental;
+
+void Config::printUsage(const std::string &programName)
 {
-    static Config config;
-    return &config;
+    std::cerr << "Usage: " << programName << " [options]" << std::endl;
+    std::cerr << "Options:" << std::endl;
+
+    for (const auto &[name, description] : m_allowedOptions) {
+        static_assert(std::is_same<decltype(name), const std::string>()); // fuck auto
+        static_assert(std::is_same<decltype(description), const std::string>()); // fuck auto x2
+
+        std::cerr << std::setw(25) << std::left;
+        std::cerr << ("  --" + name + "=value");
+        std::cerr << description << std::endl;
+
+    }
+
+    return;
 }
 
-std::string Config::configPath()
+//------------------------------------------------------------------------------
+bool Config::parseOptions(int argc, char **argv)
 {
-    std::string path;
+    parseConfigFile(m_filePath);
+
+    std::unordered_map<std::string, std::string> configuredOptions = m_options;
+
+    for (int i=1; i<argc; i++) {
+        std::string argument = argv[i];
+        if (argument.find("--") != 0) {
+            printUsage(argv[0]);
+            return false;
+        }
+
+        // strip the --
+        if (!parseOption(argument.substr(2))) {
+            printUsage(argv[0]);
+            return false;
+        }
+    }
+
+    if (m_options != configuredOptions) {
+        writeConfigFile(m_filePath);
+    }
+
+    return true;
+}
+
+void Config::setAllowedOptions(const std::unordered_map<std::string, std::string> options)
+{
+    m_allowedOptions = options;
+}
+
+const std::string Config::getValue(const std::string &name)
+{
+    return m_options[name];
+}
+
+void Config::setValue(const std::string &name, const std::string &value)
+{
+    m_options[name] = value;
+
+    writeConfigFile(m_filePath);
+}
+
+//------------------------------------------------------------------------------
+Config::Config(const std::string &applicationName)
+{
 #if defined(__linux__)
     char *rawPath = getenv("XDG_CONFIG_HOME");
     if (rawPath) {
-        path = std::string(rawPath);
+        m_filePath = std::string(rawPath);
     }
-    if (path.empty()) {
+    if (m_filePath.empty()) {
         rawPath = getenv("HOME");
         if (rawPath) {
-            path = getenv("HOME");
-            path += "/.config";
+            m_filePath = getenv("HOME");
+            m_filePath += "/.config";
         }
-    } else if (path.find(':') != std::string::npos) {
-        std::istringstream stream(path);
+    } else if (m_filePath.find(':') != std::string::npos) {
+        std::istringstream stream(m_filePath);
         std::string testPath;
         while (std::getline(stream, testPath, ':')) {
             if (!filesystem::exists(testPath)) {
@@ -60,11 +119,11 @@ std::string Config::configPath()
                 continue;
             }
 
-            path = testPath;
+            m_filePath = testPath;
             break;
         }
     }
-    path += "/";
+    m_filePath += "/";
 #elif defined(_WINDOWS)
     //FIXME: don't really windows, and not tested
     PWSTR rawPath = nullptr;
@@ -80,81 +139,7 @@ std::string Config::configPath()
     CoTaskMemFree(rawPath);
 #endif
 
-    path += "freeaoe.cfg";
-
-    return path;
-}
-
-void Config::printUsage(const std::string &programName)
-{
-    std::cerr << "Usage: " << programName << " [options]" << std::endl;
-    std::cerr << "Options:" << std::endl;
-    std::cerr << std::setw(25) << std::left;
-    std::cerr << "\t--game-path=path" << "Path to AoE installation with data files" << std::endl;
-    std::cerr << std::setw(25) << std::left;
-    std::cerr << "\t--scenario-file=path" << "Path to scenario file to load" << std::endl;
-
-    return;
-}
-
-//------------------------------------------------------------------------------
-bool Config::parseOptions(int argc, char **argv)
-{
-    parseConfigFile(configPath());
-    const std::string pathBefore = m_gamePath;
-
-    for (int i=1; i<argc; i++) {
-        if (!parseOption(argv[i])) {
-            printUsage(argv[0]);
-            return false;
-        }
-    }
-
-    if (!filesystem::exists(getDataPath())) {
-        std::cerr << "No game path";
-        printUsage(argv[0]);
-        return false;
-    }
-
-    if (pathBefore != m_gamePath) {
-        writeConfigFile(configPath());
-    }
-
-    return true;
-}
-
-//------------------------------------------------------------------------------
-std::string Config::getGamePath()
-{
-    return m_gamePath;
-}
-
-//------------------------------------------------------------------------------
-std::string Config::getDataPath()
-{
-    return m_gamePath + "/Data/";
-}
-
-//------------------------------------------------------------------------------
-std::string Config::getScenarioFile()
-{
-    return m_scenarioFile;
-}
-
-//------------------------------------------------------------------------------
-genie::GameVersion Config::getGameVersion() const
-{
-    return genie::GV_TC;
-}
-
-//------------------------------------------------------------------------------
-Config::Config()
-{
-}
-
-//------------------------------------------------------------------------------
-Config::~Config()
-{
+    m_filePath += applicationName + ".cfg";
 }
 
 bool Config::parseOption(const std::string &option)
@@ -181,6 +166,7 @@ bool Config::parseOption(const std::string &option)
 
 void Config::parseConfigFile(const std::string &path)
 {
+    std::cout << "parsing config file  " << path << std::endl;
     if (!filesystem::exists(path)) {
         return;
     }
@@ -199,31 +185,29 @@ void Config::parseConfigFile(const std::string &path)
 
 void Config::writeConfigFile(const std::string &path)
 {
+    std::cout << "storing config" << std::endl;
     std::ofstream file(path);
     if (!file.is_open()) {
         std::cerr << "Failed to open config file " << path << std::endl;
         return;
     }
-    if (!m_gamePath.empty()) {
-        file << "game-path=" << m_gamePath << "\n";
-    }
-    if (!m_scenarioFile.empty()) {
-        file << "scenario-file" << m_gamePath << "\n";
+
+    for (const auto &[name, value] : m_options) {
+        static_assert(std::is_same<decltype(name), const std::string>()); // fuck auto
+        static_assert(std::is_same<decltype(value), const std::string>()); // fuck auto x2
+
+        file << name << "=" << value << "\n";
     }
 }
 
 bool Config::checkOption(const std::string &name, const std::string &value)
 {
-    if (name.find("game-path") != std::string::npos) {
-        m_gamePath = value;
-        return true;
-    }
-    if (name.find("scenario-file") != std::string::npos) {
-        m_scenarioFile = value;
-        return true;
+    std::cout << "checking " << name << " " << value << std::endl;
+    if (m_allowedOptions.find(name) == m_allowedOptions.end()) {
+        std::cerr << "Unknown option " << name << std::endl;
+        return false;
     }
 
-    std::cerr << "Unknown option " << name << std::endl;
-
-    return false;
+    m_options[name] = value;
+    return true;
 }

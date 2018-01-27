@@ -191,22 +191,22 @@ ResourceManager::~ResourceManager()
 }
 
 //------------------------------------------------------------------------------
-bool ResourceManager::initialize()
+bool ResourceManager::initialize(const std::string dataPath)
 {
     log.debug("Initializing ResourceManager");
 
     try {
-        loadDrs("gamedata.drs");
-        loadDrs("gamedata_x1.drs");
-        loadDrs("gamedata_x1_p1.drs");
-        loadDrs("graphics.drs");
-        loadDrs("interfac.drs");
-        loadDrs("sounds.drs");
-        loadDrs("sounds_x1.drs");
-        loadDrs("terrain.drs");
+        loadDrs(dataPath + "gamedata.drs");
+        loadDrs(dataPath + "gamedata_x1.drs");
+        loadDrs(dataPath + "gamedata_x1_p1.drs");
+        loadDrs(dataPath + "graphics.drs");
+        loadDrs(dataPath + "interfac.drs");
+        loadDrs(dataPath + "sounds.drs");
+        loadDrs(dataPath + "sounds_x1.drs");
+        loadDrs(dataPath + "terrain.drs");
 
         blendomatic_file_ = std::make_unique<genie::BlendomaticFile>();
-        std::string blendomaticPath = Config::Inst()->getDataPath() + "blendomatic.dat";
+        std::string blendomaticPath = dataPath + "blendomatic.dat";
         blendomatic_file_->load(blendomaticPath.c_str());
 
     } catch (const std::exception &error) {
@@ -222,12 +222,10 @@ void ResourceManager::loadDrs(std::string file_name)
 {
     log.info("Loading %s", file_name.c_str());
 
-    std::string file_path = Config::Inst()->getDataPath() + file_name;
-
     std::shared_ptr<genie::DrsFile> drs_file(new genie::DrsFile());
 
-    drs_file->setGameVersion(Config::Inst()->getGameVersion());
-    drs_file->load(file_path.c_str());
+    drs_file->setGameVersion(genie::GV_TC);
+    drs_file->load(file_name.c_str());
 
     drs_files_.push_back(drs_file);
 

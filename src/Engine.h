@@ -39,6 +39,7 @@ public:
   Engine();
   virtual ~Engine();
   
+  bool setup(const std::string &scnFile);
   void start();
   
 private:
@@ -52,8 +53,6 @@ private:
   sf::Texture m_uiOverlay;
 
   sf::Text fps_label_;
-  
-  bool setup();
   
   void drawFps();
   

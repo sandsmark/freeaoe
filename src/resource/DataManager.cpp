@@ -96,11 +96,11 @@ DataManager::~DataManager()
 {
 }
 
-bool DataManager::initialize()
+bool DataManager::initialize(const std::string dataPath)
 {
     dat_file_.setGameVersion(genie::GV_TC);
 
-    std::string filePath = Config::Inst()->getDataPath() + "empires2_x1_p1.dat";
+    std::string filePath = dataPath + "empires2_x1_p1.dat";
 
     try {
         dat_file_.load(filePath.c_str());

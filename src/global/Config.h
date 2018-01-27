@@ -18,7 +18,9 @@
 
 #ifndef CONFIG_H
 #define CONFIG_H
+
 #include <string>
+#include <unordered_map>
 
 #include <genie/Types.h>
 
@@ -26,8 +28,7 @@
 class Config
 {
 public:
-    Config(const Config &) = delete;
-    Config &operator=(const Config &) = delete;
+    Config(const std::string &applicationName);
 
     //----------------------------------------------------------------------------
     /// Get instance (singleton pattern)
@@ -41,35 +42,15 @@ public:
     ///
     //
     bool parseOptions(int argc, char **argv);
+    void setAllowedOptions(const std::unordered_map<std::string, std::string> options);
 
-    //----------------------------------------------------------------------------
-    /// Get path to the game.
-    ///
-    /// @return path pointing to the game dir
-    //
-    std::string getGamePath();
 
-    //----------------------------------------------------------------------------
-    /// Get path of the data directory.
-    ///
-    /// @return path of data directory
-    //
-    std::string getDataPath();
-
-    //----------------------------------------------------------------------------
-    /// Returns a given scenario file or an empty string if unused
-    //
-    std::string getScenarioFile();
-
-    genie::GameVersion getGameVersion() const;
-
-private:
-    Config();
-    virtual ~Config();
+    const std::string getValue(const std::string &name);
+    void setValue(const std::string &name, const std::string &value);
 
     void printUsage(const std::string &programName);
 
-    std::string configPath();
+private:
 
     bool parseOption(const std::string &option);
     bool checkOption(const std::string &name, const std::string &value);
@@ -80,6 +61,9 @@ private:
     std::string m_dataPath;
     std::string m_gamePath;
     std::string m_scenarioFile;
+    std::string m_filePath;
+    std::unordered_map<std::string, std::string> m_options;
+    std::unordered_map<std::string, std::string> m_allowedOptions;
 };
 
 #endif // CONFIG_H

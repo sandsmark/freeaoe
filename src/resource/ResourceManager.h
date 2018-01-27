@@ -98,7 +98,7 @@ public:
 
     void addBinaFile(BinaFile *bina);
 
-    bool initialize();
+    bool initialize(const std::string dataPath);
 
 private:
     ResourceManager();

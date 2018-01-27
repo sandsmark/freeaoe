@@ -54,10 +54,6 @@ void Engine::start()
 
     log.info("Starting engine.");
 
-    if (!setup()) {
-        return;
-    }
-
     // Start the game loop
     while (renderWindow_->isOpen()) {
         IState *state = state_manager_.getActiveState();
@@ -94,7 +90,7 @@ void Engine::start()
 }
 
 //------------------------------------------------------------------------------
-bool Engine::setup()
+bool Engine::setup(const std::string &scnFile)
 {
 
   std::shared_ptr<genie::SlpFile> overlayFile = ResourceManager::Inst()->getSlp(51141);
@@ -111,16 +107,18 @@ bool Engine::setup()
   renderTarget_ = IRenderTargetPtr(new SfmlRenderTarget(*renderWindow_));
   
   GameState *gameState = new GameState(renderTarget_);
-  
-  std::string scnFile = Config::Inst()->getScenarioFile();
-  
-  if (!scnFile.empty())
-  {
-    std::shared_ptr<genie::ScnFile> scenario(new genie::ScnFile());
-    scenario->load(scnFile.c_str());
-    gameState->setScenario(scenario);
+
+  if (!scnFile.empty()) {
+      try {
+          std::shared_ptr<genie::ScnFile> scenario(new genie::ScnFile());
+          scenario->load(scnFile.c_str());
+          gameState->setScenario(scenario);
+      } catch (const std::exception &error) {
+          std::cerr << "Failed to load " << scnFile << ": " << error.what() << std::endl;
+          return false;
+      }
   } else {
-    gameState->setScenario(ResourceManager::Inst()->getScn(56009));
+      gameState->setScenario(ResourceManager::Inst()->getScn(56009));
   }
 
   state_manager_.addActiveState(gameState);

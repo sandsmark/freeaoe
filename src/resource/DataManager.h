@@ -36,7 +36,7 @@
 class DataManager
 {
 public:
-    bool initialize();
+    bool initialize(const std::string dataPath);
 
     DataManager(const DataManager &) = delete;
     DataManager &operator=(const DataManager &) = delete;
