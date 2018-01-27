@@ -19,8 +19,7 @@
 #ifndef FREEAOE_TERRAIN_H
 #define FREEAOE_TERRAIN_H
 
-//#include "Resource.h"
-#include "ResourcePtr.h"
+#include "Resource.h"
 #include <SFML/Graphics/Texture.hpp>
 #include <genie/dat/Terrain.h>
 #include <global/Logger.h>
@@ -69,7 +68,7 @@ private:
     std::unordered_map<int, sf::Image> m_blendImages;
 };
 
-typedef ResourcePtr<Terrain> TerrainPtr;
+typedef std::shared_ptr<Terrain> TerrainPtr;
 }
 
 #endif // FREEAOE_TERRAIN_H

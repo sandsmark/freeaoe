@@ -93,6 +93,7 @@ res::GraphicPtr ResourceManager::getGraphic(Uint32 id)
         graph = new res::Graphic(id);
 
         if (!graph->load()) {
+            delete graph;
             return nullptr;
         }
 

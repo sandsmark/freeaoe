@@ -23,7 +23,6 @@
 
 #include <SFML/Graphics/Image.hpp>
 #include <global/Types.h>
-#include "ResourcePtr.h"
 #include <global/Logger.h>
 #include <genie/dat/Graphic.h>
 
@@ -61,7 +60,7 @@ public:
     //
     sf::Image getImage(uint32_t frame_num = 0, bool mirrored = false, float angle = 0.);
 
-    std::vector<ResourcePtr<Graphic>> getDeltas();
+    std::vector<std::shared_ptr<Graphic>> getDeltas();
 
     //----------------------------------------------------------------------------
     /// Get the hotspot of a frame.
@@ -106,18 +105,18 @@ private:
 
     uint32_t id_;
 
-    genie::Graphic *data_;
+    std::unique_ptr<genie::Graphic> data_;
     genie::SlpFilePtr slp_;
     std::unordered_map<int, sf::Image> m_images;
     std::unordered_map<int, sf::Image> m_flippedImages;
 
-    std::vector<ResourcePtr<Graphic>> m_deltas;
+    std::vector<std::shared_ptr<Graphic>> m_deltas;
 
     //TODO: collection with all frames, playercolors and outlines loaded
     //      And rewrite SlpFile/Frame so that it will not store any data.
 };
 
-typedef ResourcePtr<Graphic> GraphicPtr;
+typedef std::shared_ptr<Graphic> GraphicPtr;
 }
 
 #endif // FREEAOE_GRAPHIC_H

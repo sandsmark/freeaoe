@@ -19,8 +19,6 @@
 #ifndef RESOURCEMANAGER_H
 #define RESOURCEMANAGER_H
 
-#include "ResourcePtr.h"
-
 #include <memory>
 #include <unordered_map>
 #include <fstream>

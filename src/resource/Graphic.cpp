@@ -30,7 +30,7 @@ Logger &Graphic::log = Logger::getLogger("freeaoe.resource.Graphic");
 
 //------------------------------------------------------------------------------
 Graphic::Graphic(uint32_t id) :
-    Resource(id, TYPE_GRAPHIC), data_(0)
+    Resource(id, TYPE_GRAPHIC)
 {
 }
 
@@ -131,7 +131,7 @@ uint32_t Graphic::getAngleCount(void) const
 bool Graphic::load(void)
 {
     if (!isLoaded()) {
-        data_ = new genie::Graphic(DataManager::Inst().getGraphic(getId()));
+        data_ = std::make_unique<genie::Graphic>(DataManager::Inst().getGraphic(getId()));
 
         for (const genie::GraphicDelta &delta : data_->Deltas) {
             if (delta.GraphicID < 0) {
@@ -174,9 +174,6 @@ bool Graphic::load(void)
 void Graphic::unload(void)
 {
     if (isLoaded()) {
-        delete data_;
-        data_ = 0;
-
         slp_->unload();
         Resource::unload();
     }
