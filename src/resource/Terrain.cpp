@@ -41,11 +41,8 @@ Terrain::~Terrain()
 {
 }
 
-const sf::Texture &Terrain::image(int x, int y)
+const sf::Texture &Terrain::texture(int x, int y)
 {
-    const int tileSquareCount = sqrt(m_slp->getFrameCount());
-    const int frameNum = (x % tileSquareCount) + (y % tileSquareCount) * tileSquareCount;
-
     if (!m_slp) {
         static sf::Texture nullTex;
         if (nullTex.getSize().x == 0) {
@@ -57,15 +54,30 @@ const sf::Texture &Terrain::image(int x, int y)
         return nullTex;
     }
 
+    const int tileSquareCount = sqrt(m_slp->getFrameCount());
+    const int frameNum = (x % tileSquareCount) + (y % tileSquareCount) * tileSquareCount;
+
     if (m_images.find(frameNum) != m_images.end()) {
         return m_images[frameNum];
     }
-    sf::Image img = Resource::convertFrameToImage(m_slp->getFrame(frameNum),
-                                                  ResourceManager::Inst()->getPalette(50500)
-                                                  );
+
+    sf::Image img = Resource::convertFrameToImage(m_slp->getFrame(frameNum));
 
     m_images[frameNum].loadFromImage(img);
+
     return m_images[frameNum];
+}
+
+const sf::Image Terrain::image(int x, int y)
+{
+    if (!m_slp) {
+        return sf::Image();
+    }
+
+    const int tileSquareCount = sqrt(m_slp->getFrameCount());
+    const int frameNum = (x % tileSquareCount) + (y % tileSquareCount) * tileSquareCount;
+
+    return Resource::convertFrameToImage(m_slp->getFrame(frameNum));
 }
 
 bool Terrain::load()
@@ -116,26 +128,23 @@ uint8_t Terrain::blendMode(const uint8_t ownMode, const uint8_t neighborMode)
     return blendmodeTable[ownMode][neighborMode];
 }
 
-sf::Image Terrain::blendImage(uint8_t blendFrame, uint8_t mode)
+void Terrain::blendImage(sf::Image *image, uint8_t blendFrame, uint8_t mode, int x, int y)
 {
-    int cacheKey = mode * 32 + blendFrame;
-    if (m_blendImages.find(cacheKey) != m_blendImages.end()) {
-        return m_blendImages[cacheKey];
-    }
-
-    sf::Image image;
     if (!m_slp) {
         log.error("doesn't have slp loaded");
-        return image;
+        return;
     }
 
     genie::BlendModePtr blend = ResourceManager::Inst()->getBlendmode(mode);
     if (!blend) {
         log.error("Failed to get blend mode");
-        return image;
+        return;
     }
 
-    genie::SlpFramePtr overlay = m_slp->getFrame();
+    const int tileSquareCount = sqrt(m_slp->getFrameCount());
+    const int frameNum = (x % tileSquareCount) + (y % tileSquareCount) * tileSquareCount;
+
+    genie::SlpFramePtr overlay = m_slp->getFrame(frameNum);
 
     const int width = overlay->getWidth();
     const int height = overlay->getHeight();
@@ -143,14 +152,18 @@ sf::Image Terrain::blendImage(uint8_t blendFrame, uint8_t mode)
 
     if (width == 0 || height == 0) {
         log.warn("Invalid dimensions of overlay (%dx%d)", width, height);
-        return image;
+        return;
     }
 
-    image.create(width, height, sf::Color::Transparent);
+    if (image->getSize().x == 0 || image->getSize().y == 0) {
+        log.warn("Passed empty image", width, height);
+        image->create(width, height, sf::Color::Red);
+    }
 
     genie::PalFilePtr palette = ResourceManager::Inst()->getPalette(50500);
 
     int blendOffset = 0;
+    const Uint8 *sourcePixels = image->getPixelsPtr();
     for (int y = 0; y < height; y++) {
         int lineWidth = 0;
         if (y < height/2) {
@@ -161,32 +174,27 @@ sf::Image Terrain::blendImage(uint8_t blendFrame, uint8_t mode)
 
         int offsetLeft = height - 1 - (lineWidth  / 2);
 
-        if (blendOffset + lineWidth > blend->alphaValues[blendFrame].size()) {
+        if (IS_UNLIKELY(blendOffset + lineWidth > blend->alphaValues[blendFrame].size())) {
             log.error("Trying to read out of bounds (blendoffset %d + linewidth %d = %d, > %d", blendOffset, lineWidth, blendOffset + lineWidth, blend->alphaValues.size());
-            return image;
+            return;
         }
 
         for (int x = 0; x < lineWidth; x++) {
-            const uint8_t overlayIndex = overlayData.pixel_indexes[y * width + x + offsetLeft];
+            const int paletteIndex = y * width + x + offsetLeft;
+            const uint8_t overlayIndex = overlayData.pixel_indexes[paletteIndex];
             genie::Color overlayColor = (*palette)[overlayIndex];
-
-            overlayColor.a = overlayData.alpha_channel[y * width + x + offsetLeft];
-            if (overlayColor.a < 10) {
-                continue;
-            }
+            overlayColor.a = overlayData.alpha_channel[paletteIndex];
 
             sf::Color color;
-            color.r = overlayColor.r;
-            color.g = overlayColor.g;
-            color.b = overlayColor.b;
-            color.a = 255 - 255 * blend->alphaValues[blendFrame][blendOffset++] / 128;
+            const float overlayAlpha = 1. - blend->alphaValues[blendFrame][blendOffset++] / 128.;
+            color.r = overlayAlpha * overlayColor.r + (1. - overlayAlpha) * sourcePixels[paletteIndex * 4 + 0];
+            color.g = overlayAlpha * overlayColor.g + (1. - overlayAlpha) * sourcePixels[paletteIndex * 4 + 1];
+            color.b = overlayAlpha * overlayColor.b + (1. - overlayAlpha) * sourcePixels[paletteIndex * 4 + 2];
+            color.a = overlayAlpha * overlayColor.a + (1. - overlayAlpha) * sourcePixels[paletteIndex * 4 + 3];
 
-            image.setPixel(x + offsetLeft, y, color);
+            image->setPixel(x + offsetLeft, y, color);
         }
     }
-    m_blendImages[cacheKey] = image;
-
-    return m_blendImages[cacheKey];
 }
 
 }

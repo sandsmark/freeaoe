@@ -82,7 +82,7 @@ public:
     //
     res::TerrainPtr getTerrain(unsigned int id);
 
-    genie::PalFilePtr getPalette(unsigned int id);
+    genie::PalFilePtr getPalette(unsigned int id = 50500);
 
     genie::BlendModePtr getBlendmode(unsigned int id = 0);
 

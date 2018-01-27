@@ -74,8 +74,7 @@ sf::Image Graphic::getImage(uint32_t frame_num, bool mirrored, float angle)
     if (cache.find(frame_num) != cache.end()) {
         return cache[frame_num];
     }
-    sf::Image img = convertFrameToImage(slp_->getFrame(frame_num),
-                                            ResourceManager::Inst()->getPalette(50500));
+    sf::Image img = convertFrameToImage(slp_->getFrame(frame_num));
 
     if (mirrored) {
         img.flipHorizontally();

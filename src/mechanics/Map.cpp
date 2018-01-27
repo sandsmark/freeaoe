@@ -139,8 +139,6 @@ void Map::setTileAt(unsigned col, unsigned row, unsigned id)
         return;
     }
 
-//    tiles_[index].terrain_id_ = id;
-//    tiles_[index].terrain_ = DataManager::Inst().getTerrain(id);
     tiles_[index].terrain_ = ResourceManager::Inst()->getTerrain(id);
 }
 
@@ -150,8 +148,8 @@ void Map::updateMapData()
         tile.reset();
     }
 
-    for (unsigned int col = 1; col < cols_ - 1; col++) {
-        for (unsigned int row = 1; row < rows_ - 1; row++) {
+    for (unsigned int col = 0; col < cols_; col++) {
+        for (unsigned int row = 0; row < rows_; row++) {
             updateTileBlend(col, row);
         }
     }
@@ -214,6 +212,14 @@ void Map::updateTileBlend(int tileX, int tileY)
                 continue;
             }
 
+            if (tileX + dx < 0 || tileX + dx >= cols_) {
+                continue;
+            }
+            if (tileY + dy < 0 || tileY + dy >= rows_) {
+                continue;
+            }
+
+
             MapTile &neighbor = getTileAt(tileX + dx, tileY + dy);
             const uint8_t neighborId = neighbor.terrain_->getId();
             if (tileId == neighborId) {
@@ -266,7 +272,8 @@ void Map::updateTileBlend(int tileX, int tileY)
         return blendPriorities[a] < blendPriorities[b];
     });
 
-    sf::Image blendImage;
+    sf::Image blendImage = tile.terrain_->image(tileX, tileY);
+
     for (const uint8_t id : idsToDraw) {
         std::vector<BlendTile> blends;
         res::TerrainPtr terrain = neighborTerrains[id];
@@ -303,7 +310,9 @@ void Map::updateTileBlend(int tileX, int tileY)
         }
 
         int blendFrame = -1;
-        switch (direction) {
+        switch (direction & 0xF) {
+        case None:
+            break;
         case East:
             blendFrame = UpperLeft1;
             break;
@@ -355,9 +364,7 @@ void Map::updateTileBlend(int tileX, int tileY)
             break;
 
         default:
-            if (blends.empty()) {
-                std::cout << "unhandled: " << blendDirections[id]<< std::endl;
-            }
+            log.warn("Unhandled terrain borders: 0x%x (raw: 0x%x)", direction, blendDirections[id]);
             break;
         }
 
@@ -366,12 +373,7 @@ void Map::updateTileBlend(int tileX, int tileY)
         }
 
         for (const BlendTile blend : blends) {
-            sf::Image overlay = terrain->blendImage(int(blend), res::Terrain::blendMode(tileData.BlendType, terrain->data().BlendType));
-            if (blendImage.getSize().x == 0) {
-                blendImage = overlay;
-            } else {
-                blendImage.copy(overlay, 0, 0, sf::IntRect(0,0,0,0), true);
-            }
+            terrain->blendImage(&blendImage, int(blend), res::Terrain::blendMode(tileData.BlendType, terrain->data().BlendType), tileX, tileY);
         }
     }
 

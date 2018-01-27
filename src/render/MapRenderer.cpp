@@ -211,10 +211,10 @@ void MapRenderer::updateTexture()
 
             spos.y -= Map::TILE_SIZE_VERTICAL / 2;
 
-            m_textureTarget.draw(mapTile.terrain_->image(col, row), spos);
-
             if (mapTile.blendOverlay.getSize().x > 0) {
                 m_textureTarget.draw(mapTile.blendOverlay, spos);
+            } else {
+                m_textureTarget.draw(mapTile.terrain_->texture(col, row), spos);
             }
 
 //            sf::RectangleShape rect;

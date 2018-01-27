@@ -49,14 +49,15 @@ public:
     Terrain(unsigned int Id);
     virtual ~Terrain();
 
-    const sf::Texture &image(int x, int y);
+    const sf::Texture &texture(int x, int y);
+    const sf::Image image(int x, int y);
 
     virtual bool load();
 
     const genie::Terrain &data();
 
     static uint8_t blendMode(const uint8_t ownMode, const uint8_t neighborMode);
-    sf::Image blendImage(uint8_t blendFrame, uint8_t mode);
+    void blendImage(sf::Image *image, uint8_t blendFrame, uint8_t mode, int x, int y);
 
 private:
     static Logger &log;

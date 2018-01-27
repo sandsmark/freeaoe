@@ -85,7 +85,7 @@ public:
     bool isLoaded() const;
 
     static sf::Image convertFrameToImage(const genie::SlpFramePtr frame,
-                                          const genie::PalFilePtr palette);
+                                          genie::PalFilePtr palette = nullptr);
 
 protected:
     //----------------------------------------------------------------------------

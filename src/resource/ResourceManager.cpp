@@ -131,6 +131,11 @@ genie::BlendModePtr ResourceManager::getBlendmode(unsigned int id)
 //------------------------------------------------------------------------------
 genie::PalFilePtr ResourceManager::getPalette(sf::Uint32 id)
 {
+    static genie::PalFilePtr defaultPalette;
+    if (id == 50500 && defaultPalette) {
+        return defaultPalette;
+    }
+
     //   return bina_files_[id]->readPalette();
     genie::PalFilePtr pal_ptr;
 
@@ -138,6 +143,10 @@ genie::PalFilePtr ResourceManager::getPalette(sf::Uint32 id)
         pal_ptr = drsFile->getPalFile(id);
 
         if (pal_ptr) {
+            if (id == 50500) {
+                defaultPalette = pal_ptr;
+            }
+
             return pal_ptr;
         }
     }

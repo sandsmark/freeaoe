@@ -20,6 +20,7 @@
 
 #include <global/Types.h>
 #include <genie/resource/Color.h>
+#include "ResourceManager.h"
 
 namespace res {
 
@@ -75,8 +76,12 @@ void Resource::setLoaded(bool loaded)
 
 //------------------------------------------------------------------------------
 sf::Image Resource::convertFrameToImage(const genie::SlpFramePtr frame,
-                                         const genie::PalFilePtr palette)
+                                         genie::PalFilePtr palette)
 {
+    if (!palette) {
+        palette = ResourceManager::Inst()->getPalette(50500);
+    }
+
     const int width = frame->getWidth();
     const int height = frame->getHeight();
     const genie::SlpFrameData &frameData = frame->img_data;
