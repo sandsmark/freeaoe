@@ -91,6 +91,38 @@ void GraphicRender::drawOn(IRenderTarget &renderer)
     }
 }
 
+sf::Image GraphicRender::image()
+{
+    if (!graphic_) {
+        return sf::Image();
+    }
+    if (!map_object_) {
+        return sf::Image();
+    }
+
+    if (map_object_->moving_ && m_movingGraphic) {
+        return m_movingGraphic->getImage(current_frame_, map_object_->angle_);
+    } else {
+        return graphic_->getImage(current_frame_, map_object_->angle_);
+    }
+}
+
+sf::Image GraphicRender::overlay()
+{
+    if (!graphic_) {
+        return sf::Image();
+    }
+    if (!map_object_) {
+        return sf::Image();
+    }
+
+    if (map_object_->moving_ && m_movingGraphic) {
+        return m_movingGraphic->overlayImage(current_frame_, map_object_->angle_, 2);
+    } else {
+        return graphic_->overlayImage(current_frame_, map_object_->angle_, 2);
+    }
+}
+
 void GraphicRender::setMapObject(MapObjectPtr map_object)
 {
     map_object_ = map_object;

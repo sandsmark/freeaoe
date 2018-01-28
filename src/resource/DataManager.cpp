@@ -61,6 +61,11 @@ genie::TerrainRestriction DataManager::getTerrainRestriction(unsigned int id)
     return dat_file_.TerrainRestrictions[id];
 }
 
+const genie::PlayerColour &DataManager::getPlayerColor(unsigned int id)
+{
+    return dat_file_.PlayerColours[id];
+}
+
 const genie::TerrainBlock &DataManager::terrainBlock()
 {
     return dat_file_.TerrainBlock;

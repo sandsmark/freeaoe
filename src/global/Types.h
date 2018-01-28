@@ -140,8 +140,8 @@ struct ScreenRect
 {
     float x = 0;
     float y = 0;
-    float width = 0;
-    float height = 0;
+    float width = -1;
+    float height = -1;
 
     ScreenRect() = default;
 
@@ -174,7 +174,7 @@ struct ScreenRect
     MapRect toMap() const;
 
     operator bool() const {
-        return (width > 0 && height > 0);
+        return (width >= 0 && height >= 0);
     }
 
     bool contains(const ScreenPos &point) const {
@@ -184,6 +184,16 @@ struct ScreenRect
             point.y > y &&
             point.y < y + height
         );
+    }
+
+    bool operator==(const ScreenRect &other) const {
+        return x == other.x && y == other.y &&
+               width == other.width && height == other.height;
+    }
+
+    bool operator!=(const ScreenRect &other) const {
+        return x != other.x || y != other.y ||
+               width != other.width || height != other.height;
     }
 };
 

@@ -47,6 +47,7 @@ public:
     genie::Unit getUnit(unsigned int id);
     const genie::Terrain &getTerrain(unsigned int id);
     genie::TerrainRestriction getTerrainRestriction(unsigned int id);
+    const genie::PlayerColour &getPlayerColor(unsigned int id);
 
     const genie::TerrainBlock &terrainBlock();
 

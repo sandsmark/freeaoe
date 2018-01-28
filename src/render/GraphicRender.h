@@ -45,6 +45,9 @@ public:
 
     void drawOn(IRenderTarget &renderer) override;
 
+    sf::Image image();
+    sf::Image overlay();
+
     void setGraphic(res::GraphicPtr graphic);
     ScreenPos getHotspot() const { return graphic_->getHotspot(current_frame_); }
 
@@ -55,8 +58,8 @@ public:
     static comp::GraphicPtr create(unsigned int graphic_id);
 
     MapObjectPtr map_object_;
-private:
     res::GraphicPtr graphic_;
+private:
     res::GraphicPtr m_movingGraphic;
 
 

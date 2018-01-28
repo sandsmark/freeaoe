@@ -76,9 +76,9 @@ private:
     Time m_lastUpdate;
 
 
-    std::shared_ptr<sf::RectangleShape> m_selectionShape;
     ScreenPos m_selectionStart;
     ScreenPos m_selectionCurr;
+    ScreenRect m_selectionRect;
 };
 
 #endif // GAMESTATE_H

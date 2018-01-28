@@ -19,6 +19,7 @@
 #ifndef UNIT_RENDERER_H
 #define UNIT_RENDERER_H
 
+#include <SFML/Graphics/RenderTexture.hpp>
 #include <vector>
 
 #include "IRenderer.h"
@@ -42,6 +43,7 @@ public:
 private:
     typedef std::vector<EntityForm> EFVector;
     EFVector forms_;
+    sf::RenderTexture m_outlineOverlay;
 };
 
 #endif // UNIT_RENDERER_H

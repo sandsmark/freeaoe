@@ -49,7 +49,7 @@ std::shared_ptr<Entity> EntityFactory::createUnit(int ID, const MapPos &position
     //std::cout << gunit.Name << std::endl;
 
     comp::MapObjectPtr mo(new comp::MapObject());
-    std::cout << "added unit at " << position.x << " " << position.y << std::endl;
+//    std::cout << "added unit at " << position.x << " " << position.y << std::endl;
     mo->setPos(position);
 
     entity->addComponent(comp::MAP_OBJECT, mo);

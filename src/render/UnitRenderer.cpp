@@ -21,6 +21,9 @@
 #include <mechanics/CompUnitData.h>
 #include "IRenderTarget.h"
 #include <resource/DataManager.h>
+#include "mechanics/Map.h"
+#include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/Sprite.hpp>
 
 #include "resource/LanguageManager.h"
 #include "mechanics/EntityFactory.h"
@@ -46,14 +49,14 @@ void UnitRenderer::createForms(EntityPtr entity)
         return;
     }
 
-//    std::cout << "Creating form for " << gunit->readableName() << " (" << gunit->getData().ID << ")" << std::endl;
+    std::cout << "Creating form for " << gunit->readableName() << " (" << gunit->getData().ID << ")" << std::endl;
 
     EntityForm form(entity);
 
     comp::GraphicPtr graphic = comp::GraphicRender::create(gunit->getData().StandingGraphic.first);
 
-    if (gunit->getData().DeadFish.WalkingGraphic > 0) {
-        graphic->setMovingGraphic(gunit->getData().DeadFish.WalkingGraphic);
+    if (gunit->getData().Moving.WalkingGraphic > 0) {
+        graphic->setMovingGraphic(gunit->getData().Moving.WalkingGraphic);
     }
 
     graphic->setMapObject(entity->getComponent<comp::MapObject>(comp::MAP_OBJECT));
@@ -87,7 +90,71 @@ bool UnitRenderer::update(Time time)
 
 void UnitRenderer::display()
 {
-    for (EntityForm &form : forms_) {
-        renderTarget_->draw(form);
+    if (m_outlineOverlay.getSize() != renderTarget_->getSize()) {
+        m_outlineOverlay.create(renderTarget_->getSize().x, renderTarget_->getSize().y, false);
     }
+
+    m_outlineOverlay.clear(sf::Color::Transparent);
+    for (EntityForm &form : forms_) {
+        comp::UnitDataPtr gunit = form.getRoot()->getComponent<comp::UnitData>(comp::UNIT_DATA);
+        if (gunit->getData().Type < genie::UT_Building) {
+            continue;
+        }
+
+        comp::GraphicPtr graph = form.getComponent<comp::GraphicRender>(comp::GRAPHIC_RENDER);
+        comp::MapObjectPtr mapObject = form.getRoot()->getComponent<comp::MapObject>(comp::MAP_OBJECT);
+
+        std::vector<std::shared_ptr<res::Graphic>> graphics = graph->graphic_->getDeltas();
+        graphics.push_back(graph->graphic_);
+
+        for (const res::GraphicPtr graphic : graphics) {
+            ScreenPos pos = renderTarget_->absoluteScreenPos(mapObject->getPos()) - graphic->getHotspot() - graphic->offset_;
+            sf::Texture texture;
+            texture.loadFromImage(graphic->getImage());
+            sf::Sprite sprite;
+            sprite.setTexture(texture);
+            sprite.setPosition(pos);
+            m_outlineOverlay.draw(sprite);
+        }
+    }
+
+
+    for (EntityForm &form : forms_) {
+        comp::MapObjectPtr mapObject = form.getRoot()->getComponent<comp::MapObject>(comp::MAP_OBJECT);
+
+        if (form.getRoot()->selected) { // draw health indicator
+            ScreenPos pos = renderTarget_->absoluteScreenPos(mapObject->getPos());
+            pos.x -= Map::TILE_SIZE_HORIZONTAL / 8;
+            pos.y -= Map::TILE_SIZE_VERTICAL;
+
+            sf::RectangleShape rect;
+            rect.setFillColor(sf::Color::Green);
+            rect.setOutlineColor(sf::Color::Transparent);
+
+            rect.setPosition(pos);
+            rect.setSize(sf::Vector2f(Map::TILE_SIZE_HORIZONTAL / 4, 2));
+            m_outlineOverlay.draw(rect);
+        }
+
+        comp::UnitDataPtr gunit = form.getRoot()->getComponent<comp::UnitData>(comp::UNIT_DATA);
+        if (gunit->getData().Type >= genie::UT_Building) {
+            continue;
+        }
+        renderTarget_->draw(form);
+
+        comp::GraphicPtr graph = form.getComponent<comp::GraphicRender>(comp::GRAPHIC_RENDER);
+        ScreenPos pos = renderTarget_->absoluteScreenPos(mapObject->getPos()) - graph->graphic_->getHotspot() - graph->graphic_->offset_;
+
+        sf::Texture texture;
+        texture.loadFromImage(graph->overlay());
+        sf::Sprite sprite;
+        sprite.setTexture(texture);
+        sprite.setPosition(pos);
+        sf::BlendMode blendMode = sf::BlendAlpha;
+        blendMode.alphaSrcFactor = sf::BlendMode::DstAlpha;
+        m_outlineOverlay.draw(sprite, blendMode);
+    }
+
+    m_outlineOverlay.display();
+    renderTarget_->draw(m_outlineOverlay.getTexture(), ScreenPos(0, 0));
 }

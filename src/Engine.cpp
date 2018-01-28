@@ -95,7 +95,7 @@ bool Engine::setup(const std::string &scnFile)
 
   std::shared_ptr<genie::SlpFile> overlayFile = ResourceManager::Inst()->getSlp(51141);
   if (overlayFile) {
-      m_uiOverlay.loadFromImage(res::Resource::convertFrameToImage(overlayFile->getFrame(), ResourceManager::Inst()->getPalette(50500)));
+      m_uiOverlay.loadFromImage(res::Resource::convertFrameToImage(overlayFile->getFrame()));
   } else {
       std::cerr << "Failed to load ui overlay" << std::endl;
       return false;

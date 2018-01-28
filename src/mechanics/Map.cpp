@@ -54,11 +54,12 @@ void Map::setUpSample()
 
     MapTile grass;
     grass.elevation_ = 0;
-    grass.terrain_ = ResourceManager::Inst()->getTerrain(2);
+    grass.terrain_ = ResourceManager::Inst()->getTerrain(0);
 
     tiles_.resize(cols_ * rows_, grass);
 
     res::TerrainPtr water_dat = ResourceManager::Inst()->getTerrain(1);
+    std::cout << "animframes " << grass.terrain_->data().AnimationFrames << std::endl;
 
     for (int i=1; i<8; i++) {
         tiles_[2 * 10 + i].elevation_ = 1;
@@ -72,7 +73,6 @@ void Map::setUpSample()
     tiles_[65].terrain_ = water_dat;
     tiles_[66].terrain_ = water_dat;
     tiles_[73].terrain_ = water_dat;
-    updateMapData();
 }
 
 void Map::create(genie::ScnMap mapDescription)
@@ -93,8 +93,6 @@ void Map::create(genie::ScnMap mapDescription)
 
         tiles_[i].terrain_ = ResourceManager::Inst()->getTerrain(tile.terrainID);
     }
-
-    updateMapData();
 }
 
 unsigned int Map::getCols()

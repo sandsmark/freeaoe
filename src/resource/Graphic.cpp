@@ -40,7 +40,7 @@ Graphic::~Graphic()
 }
 
 //------------------------------------------------------------------------------
-sf::Image Graphic::getImage(uint32_t frame_num, bool mirrored, float angle)
+sf::Image Graphic::getImage(uint32_t frame_num, float angle)
 {
     if (!data_) {
         log.error("Failed to load data");
@@ -51,24 +51,13 @@ sf::Image Graphic::getImage(uint32_t frame_num, bool mirrored, float angle)
         return sf::Image();
     }
 
+    bool mirrored = false;
     if (data_->AngleCount > 1) {
-        // The graphics start pointing south, and goes clock-wise
-        angle = - angle - M_PI_2;
-
-        int lookupAngle = std::round(data_->AngleCount * angle / (M_PI * 2.));
-
-        // The angle we get in isn't normalized
-        while (lookupAngle > data_->AngleCount) {
-            lookupAngle -= data_->AngleCount;
-        }
-        while (lookupAngle < 0) {
-            lookupAngle += data_->AngleCount;
-        }
+        int lookupAngle = angleToOrientation(angle);
         if (lookupAngle > data_->AngleCount/2) {
             mirrored = true;
             lookupAngle = data_->AngleCount - lookupAngle;
         }
-
         frame_num += lookupAngle * data_->FrameCount;
     }
 
@@ -85,6 +74,51 @@ sf::Image Graphic::getImage(uint32_t frame_num, bool mirrored, float angle)
     cache[frame_num] = img;
 
     return cache[frame_num];
+}
+
+sf::Image Graphic::overlayImage(uint32_t frame_num, float angle, uint8_t playerId)
+{
+    if (!data_) {
+        log.error("Failed to load data");
+        return sf::Image();
+    }
+    if (!slp_) {
+        log.error("Failed to load slp");
+        return sf::Image();
+    }
+
+    genie::PlayerColour pc  = DataManager::Inst().getPlayerColor(playerId);
+    genie::PalFilePtr palette = ResourceManager::Inst()->getPalette(50500);
+
+    bool mirrored = false;
+    if (data_->AngleCount > 1) {
+        int lookupAngle = angleToOrientation(angle);
+        if (lookupAngle > data_->AngleCount/2) {
+            mirrored = true;
+            lookupAngle = data_->AngleCount - lookupAngle;
+        }
+        frame_num += lookupAngle * data_->FrameCount;
+    }
+
+    const genie::SlpFramePtr frame = slp_->getFrame(frame_num);
+    const genie::SlpFrameData &frameData = frame->img_data;
+
+    const int width = frame->getWidth();
+    const int height = frame->getHeight();
+    sf::Image img;
+    img.create(width, height, sf::Color::Transparent);
+
+    genie::Color outlineColor = (*palette)[pc.UnitOutlineColor];
+    const sf::Color outline(outlineColor.r, outlineColor.g, outlineColor.b);
+    for (const genie::XY pos : frameData.outline_pc_mask) {
+        img.setPixel(pos.x, pos.y, outline);
+    }
+
+    if (mirrored) {
+        img.flipHorizontally();
+    }
+
+    return img;
 }
 
 std::vector<GraphicPtr> Graphic::getDeltas()
@@ -180,4 +214,23 @@ void Graphic::unload(void)
         Resource::unload();
     }
 }
+
+int Graphic::angleToOrientation(float angle) const
+{
+    // The graphics start pointing south, and goes clock-wise
+    angle = - angle - M_PI_2;
+
+    int lookupAngle = std::round(data_->AngleCount * angle / (M_PI * 2.));
+
+    // The angle we get in isn't normalized
+    while (lookupAngle > data_->AngleCount) {
+        lookupAngle -= data_->AngleCount;
+    }
+    while (lookupAngle < 0) {
+        lookupAngle += data_->AngleCount;
+    }
+
+    return lookupAngle;
+}
+
 }

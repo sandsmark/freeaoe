@@ -58,7 +58,8 @@ public:
     /// @param mirrored If set, the image will be returned mirrored
     /// @return Image
     //
-    sf::Image getImage(uint32_t frame_num = 0, bool mirrored = false, float angle = 0.);
+    sf::Image getImage(uint32_t frame_num = 0, float angle = 0.);
+    sf::Image overlayImage(uint32_t frame_num, float angle, uint8_t playerId);
 
     std::vector<std::shared_ptr<Graphic>> getDeltas();
 
@@ -101,9 +102,9 @@ public:
     ScreenPos offset_;
 
 private:
-    static Logger &log;
+    int angleToOrientation(float angle) const;
 
-    uint32_t id_;
+    static Logger &log;
 
     std::unique_ptr<genie::Graphic> data_;
     genie::SlpFilePtr slp_;

@@ -90,8 +90,12 @@ void GameState::init()
     } else {
         map_->setUpSample();
 
+        EntityPtr unit = EntityFactory::Inst().createUnit(293, MapPos(48*3, 48*3, 0));
+        entity_manager_.add(unit);
+        entity_form_manager_.createForms(unit);
 
-        EntityPtr unit = EntityFactory::Inst().createUnit(109, MapPos(48*3, 48*3, 0));
+
+        unit = EntityFactory::Inst().createUnit(109, MapPos(48*3, 48*3, 0));
         comp::UnitDataPtr gunit = unit->getComponent<comp::UnitData>(comp::UNIT_DATA);
 
         if (gunit->getData().Building.FoundationTerrainID > 0) {
@@ -103,10 +107,12 @@ void GameState::init()
                 }
             }
         }
+
         entity_manager_.add(unit);
         entity_form_manager_.createForms(unit);
     }
 
+    map_->updateMapData();
     mapRenderer_.setRenderTarget(renderTarget_);
     mapRenderer_.setMap(map_);
 
@@ -152,8 +158,8 @@ void GameState::draw()
     mapRenderer_.display();
     entity_form_manager_.display();
 
-    if (m_selectionShape) {
-        renderTarget_->draw(*m_selectionShape);
+    if (m_selectionRect) {
+        renderTarget_->draw(m_selectionRect, sf::Color::Transparent, sf::Color::White);
     }
 }
 
@@ -180,7 +186,7 @@ bool GameState::update(Time time)
         renderTarget_->camera()->setTargetPosition(cameraMapPos);
 
 
-        if (m_selectionShape) {
+        if (m_selectionRect) {
             m_selectionStart.x -= m_cameraDeltaX * deltaTime * CAMERA_SPEED;
             m_selectionStart.y += m_cameraDeltaY * deltaTime * CAMERA_SPEED;
         }
@@ -188,16 +194,10 @@ bool GameState::update(Time time)
         updated = true;
     }
 
-    if (m_selectionShape) {
+    if (m_selectionRect) {
         ScreenRect selectionRect(m_selectionStart, m_selectionCurr);
-        if (selectionRect.topLeft() != m_selectionShape->getPosition()) {
-            m_selectionShape->setPosition(selectionRect.topLeft());
-            updated = true;
-        }
-
-        sf::Vector2f size(selectionRect.width, selectionRect.height);
-        if (size != m_selectionShape->getSize()) {
-            m_selectionShape->setSize(size);
+        if (selectionRect != m_selectionRect) {
+            m_selectionRect = selectionRect;
             updated = true;
         }
     }
@@ -229,7 +229,7 @@ void GameState::handleEvent(sf::Event event)
             m_cameraDeltaY = 0;
         }
 
-        if (m_selectionShape) {
+        if (m_selectionRect) {
             m_selectionCurr = ScreenPos(event.mouseMove.x, event.mouseMove.y);
         }
 
@@ -250,11 +250,11 @@ void GameState::handleEvent(sf::Event event)
             break;
 
         case sf::Keyboard::Down:
-            cameraScreenPos.y += 20;
+            cameraScreenPos.y -= 20;
             break;
 
         case sf::Keyboard::Up:
-            cameraScreenPos.y -= 20;
+            cameraScreenPos.y += 20;
             break;
 
         default:
@@ -270,43 +270,16 @@ void GameState::handleEvent(sf::Event event)
     }
 
     if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Button::Left) {
-        m_selectionShape = std::make_shared<sf::RectangleShape>();
-        m_selectionShape->setFillColor(sf::Color::Transparent);
-        m_selectionShape->setOutlineColor(sf::Color::White);
-        m_selectionShape->setOutlineThickness(1);
-
         m_selectionStart = ScreenPos(event.mouseButton.x, event.mouseButton.y);
-        m_selectionCurr = ScreenPos(event.mouseButton.x, event.mouseButton.y);
+        m_selectionCurr = ScreenPos(event.mouseButton.x+1, event.mouseButton.y+1);
+        m_selectionRect = ScreenRect(m_selectionStart, m_selectionCurr);
     }
 
     if (event.type == sf::Event::MouseButtonReleased) {
-        ScreenPos p;
-        p.x = event.mouseButton.x;
-        p.y = event.mouseButton.y;
-
-        MapPos m = p.toMap();
-        MapPos absM = mapRenderer_.getMapPosition(p);
-
-        ScreenPos absPos = renderTarget_->absoluteScreenPos(absM);
-
-        ScreenPos screenCenter;
-        screenCenter.x = renderTarget_->getSize().x / 2.0;
-        screenCenter.y = renderTarget_->getSize().y / 2.0;
-        MapPos cameraOffset = renderTarget_->camera()->getTargetPosition() - screenCenter.toMap();
-
-        std::cout << "Screenpos: (" << p.x << ", " << p.y << ")" << std::endl;
-        std::cout << "Mappos   : (" << m.x << ", " << m.y << ")" << std::endl;
-        std::cout << "Abs mpos : (" << absM.x << ", " << absM.y << ", " << absM.z << ")" << std::endl;
-        std::cout << "Abs spos : (" << absPos.x << ", " << absPos.y << ")" << std::endl;
-        std::cout << "Camera offset: (" << cameraOffset.x << ", " << cameraOffset.y << ")" << std::endl;
-        std::cout << "---------------------------------------------------------" << std::endl;
-
-        if (m_selectionShape) {
-            ScreenRect selectionRect(m_selectionStart, m_selectionCurr);
-            MapRect mapSelectionRect = renderTarget_->absoluteMapRect(selectionRect);
+        if (m_selectionRect) {
+            MapRect mapSelectionRect = renderTarget_->absoluteMapRect(m_selectionRect);
             entity_manager_.selectEntities(mapSelectionRect);
-
-            m_selectionShape.reset();
+            m_selectionRect = ScreenRect();
         }
 
         if (event.mouseButton.button == sf::Mouse::Button::Right) {
