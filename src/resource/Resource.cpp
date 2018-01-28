@@ -21,6 +21,7 @@
 #include <global/Types.h>
 #include <genie/resource/Color.h>
 #include "ResourceManager.h"
+#include "DataManager.h"
 
 namespace res {
 
@@ -75,7 +76,7 @@ void Resource::setLoaded(bool loaded)
 }
 
 //------------------------------------------------------------------------------
-sf::Image Resource::convertFrameToImage(const genie::SlpFramePtr frame,
+sf::Image Resource::convertFrameToImage(const genie::SlpFramePtr frame, int playerId,
                                          genie::PalFilePtr palette)
 {
     if (!palette) {
@@ -89,16 +90,6 @@ sf::Image Resource::convertFrameToImage(const genie::SlpFramePtr frame,
     sf::Image img;
     img.create(width, height, sf::Color::Red);
 
-//    for (uint32_t row = 0; row < height; row++) {
-//        for (uint32_t col = 0; col < width; col++) {
-//            const int index = row * width + col;
-//            if (alphamask[index] <= 0) {
-//                continue;
-//            }
-//            alphamask[index] = 255 * ((alphamask[index]/255.) * (frameData.alpha_channel[index] / 255.));
-//        }
-//    }
-
     for (uint32_t row = 0; row < height; row++) {
         for (uint32_t col = 0; col < width; col++) {
             const uint8_t paletteIndex = frameData.pixel_indexes[row * width + col];
@@ -111,6 +102,14 @@ sf::Image Resource::convertFrameToImage(const genie::SlpFramePtr frame,
     const sf::Color shadow(0, 0, 0, 128);
     for (const genie::XY pos : frameData.shadow_mask) {
         img.setPixel(pos.x, pos.y, shadow);
+    }
+
+    genie::PlayerColour pc  = DataManager::Inst().getPlayerColor(playerId);
+    if (playerId > 0) {
+        for (const genie::PlayerColorXY mask : frameData.player_color_mask) {
+            genie::Color color = (*palette)[mask.index + pc.PlayerColorBase];
+            img.setPixel(mask.x, mask.y, sf::Color(color.r, color.g, color.b));
+        }
     }
 
     return img;
