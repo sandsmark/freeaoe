@@ -19,6 +19,7 @@
 #include "EntityManager.h"
 
 #include "CompMapObject.h"
+#include "CompUnitData.h"
 #include "ActionMove.h"
 
 #include <iostream>
@@ -70,6 +71,11 @@ void EntityManager::selectEntities(const MapRect &selectionRect)
 
     for (EntityPtr entity : entities_) {
         comp::MapObjectPtr mapObject = entity->getComponent<comp::MapObject>(comp::MAP_OBJECT);
+        genie::Unit gunit = entity->getComponent<comp::UnitData>(comp::UNIT_DATA)->getData();
+        if (gunit.Type >= genie::UT_Building) {
+            continue;
+        }
+
         if (selectionRect.contains(mapObject->getPos())) {
             m_selectedEntities.push_back(entity);
             entity->selected = true;
