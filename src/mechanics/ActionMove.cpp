@@ -91,7 +91,10 @@ MoveOnMap::~MoveOnMap()
 
 bool MoveOnMap::update(Time time)
 {
-    if (target_reached) {
+    comp::MapObjectPtr ptr = entity_->getComponent<comp::MapObject>(comp::MAP_OBJECT);
+    if (target_reached || m_path.empty()) {
+        target_reached = true;
+        ptr->moving_ = false;
         return false;
     }
 
@@ -105,37 +108,29 @@ bool MoveOnMap::update(Time time)
     last_update_ = time;
     float movement = elapsed * speed_ * 0.15;
 
-    comp::MapObjectPtr ptr = entity_->getComponent<comp::MapObject>(comp::MAP_OBJECT);
 
     float distanceLeft = std::hypot(m_path.back().x - ptr->getPos().x, m_path.back().y - ptr->getPos().y);
-    while (distanceLeft <= movement) {
-        if (m_path.empty()) {
-            target_reached = true;
-            ptr->moving_ = false;
-            return false;
-        }
+    while (distanceLeft <= movement && !m_path.empty()) {
 
         m_path.pop_back();
         distanceLeft = std::hypot(m_path.back().x - ptr->getPos().x, m_path.back().y - ptr->getPos().y);
     }
-
-    MapPos nextPos = m_path.back();
-
-    ptr->angle_ = std::atan2(nextPos.y - ptr->getPos().y, nextPos.x - ptr->getPos().x);
-
-    MapPos newPos = ptr->getPos();
-    newPos.x += cos(ptr->angle_) * movement;
-    newPos.y += sin(ptr->angle_) * movement;
-
-    ScreenPos sourceScreen = ptr->getPos().toScreen();
-    ScreenPos targetScreen = nextPos.toScreen();
-    ptr->angle_ = std::atan2(targetScreen.y - sourceScreen.y, targetScreen.x - sourceScreen.x);
-
-    if (!isPassable(newPos.x, newPos.y)) {
+    if (m_path.empty()) {
         target_reached = true;
         ptr->moving_ = false;
         return false;
     }
+
+    MapPos nextPos = m_path.back();
+
+    const float direction = std::atan2(nextPos.y - ptr->getPos().y, nextPos.x - ptr->getPos().x);
+    MapPos newPos = ptr->getPos();
+    newPos.x += cos(direction) * movement;
+    newPos.y += sin(direction) * movement;
+
+    ScreenPos sourceScreen = ptr->getPos().toScreen();
+    ScreenPos targetScreen = newPos.toScreen();
+    ptr->angle_ = std::atan2((targetScreen.y - sourceScreen.y), (targetScreen.x - sourceScreen.x));
 
     ptr->setPos(newPos);
 
@@ -254,7 +249,13 @@ std::vector<MapPos> MoveOnMap::findPath(const MapPos &start, const MapPos &end)
 
 bool MoveOnMap::isPassable(int x, int y)
 {
-    return (m_terrainRestriction.PassableBuildableDmgMultiplier[m_map->getTileAt(x / Map::TILE_SIZE, y / Map::TILE_SIZE).terrain_->getId()] > 0);
+    x /= Map::TILE_SIZE;
+    y /= Map::TILE_SIZE;
+    if (IS_UNLIKELY(x < 0 || y < 0 || x >= m_map->getCols() || y >= m_map->getRows())) {
+        return false;
+    }
+
+    return (m_terrainRestriction.PassableBuildableDmgMultiplier[m_map->getTileAt(x, y).terrain_->getId()] > 0);
 }
 
 }
