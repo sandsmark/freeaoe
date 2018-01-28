@@ -52,20 +52,23 @@ sf::Image Graphic::getImage(uint32_t frame_num, bool mirrored, float angle)
     }
 
     if (data_->AngleCount > 1) {
-        while (angle < 0) {
-            angle += M_PI * 2.;
+        // The graphics start pointing south, and goes clock-wise
+        angle = - angle - M_PI_2;
+
+        int lookupAngle = std::round(data_->AngleCount * angle / (M_PI * 2.));
+
+        // The angle we get in isn't normalized
+        while (lookupAngle > data_->AngleCount) {
+            lookupAngle -= data_->AngleCount;
         }
-
-        while (angle >= M_PI * 2.) {
-            angle -= M_PI * 2.;
+        while (lookupAngle < 0) {
+            lookupAngle += data_->AngleCount;
         }
-
-        int lookupAngle = data_->AngleCount - (int(std::round(data_->AngleCount * (angle + M_PI_2) / (M_PI * 2.))) % data_->AngleCount);
-        if (lookupAngle > (data_->AngleCount/2)) {
-            lookupAngle = (data_->AngleCount/2) -  (lookupAngle % (data_->AngleCount/2));
-
+        if (lookupAngle > data_->AngleCount/2) {
             mirrored = true;
+            lookupAngle = data_->AngleCount - lookupAngle;
         }
+
         frame_num += lookupAngle * data_->FrameCount;
     }
 
