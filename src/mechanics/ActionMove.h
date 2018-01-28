@@ -24,35 +24,41 @@
 #include "Map.h"
 #include <genie/dat/TerrainRestriction.h>
 
+namespace comp {
+class MapObject;
+}
+
 namespace act {
 
 class MoveOnMap : public IAction
 {
 
 public:
-    MoveOnMap(EntityPtr entity, MapPos destination, MapPtr map);
     virtual ~MoveOnMap();
 
     virtual bool update(Time time);
 
+    static bool moveUnitTo(EntityPtr entity, MapPos destination, MapPtr map);
+
 private:
-    std::vector<MapPos> findPath(const MapPos &start, const MapPos &end);
+    MoveOnMap(MapPos destination, MapPtr map);
+
+    std::vector<MapPos> findPath(const MapPos &start, const MapPos &end, int coarseness);
     bool isPassable(int x, int y);
 
     static Logger &log;
 
     MapPtr m_map;
-    EntityPtr entity_;
     MapPos dest_;
     std::vector<MapPos> m_path;
+    std::shared_ptr<comp::MapObject> m_mapObject;
     MapPos m_currentTarget;
+    std::vector<float> m_terrainMoveMultiplier;
     float speed_;
 
     Time last_update_;
 
     bool target_reached;
-
-    genie::TerrainRestriction m_terrainRestriction;
 };
 }
 

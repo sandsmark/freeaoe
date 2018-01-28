@@ -53,6 +53,9 @@ struct MapTile
         blendIndex = -1;
         overlayId = -1;
     }
+    uint32_t terrainId() {
+        return terrain_->getId();
+    }
 
     unsigned int elevation_;
     res::TerrainPtr terrain_;
@@ -106,8 +109,9 @@ public:
   void draw(sf::RenderTarget *render_target);
   */
 
-private:
     void updateMapData();
+
+private:
     void updateTileBlend(int tileX, int tileY);
 
     static Logger &log;

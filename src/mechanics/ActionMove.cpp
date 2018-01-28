@@ -65,24 +65,15 @@ namespace act {
 
 Logger &MoveOnMap::log = Logger::getLogger("freeaoe.MoveOnMap");
 
-static const int PATHFINDING_COARSE = 10;
 static const float PATHFINDING_HEURISTIC_WEIGHT = 1.;
 
-MoveOnMap::MoveOnMap(EntityPtr entity, MapPos destination, MapPtr map) :
+MoveOnMap::MoveOnMap(MapPos destination, MapPtr map) :
     m_map(map),
-    entity_(entity),
     target_reached(false)
 {
-    comp::UnitDataPtr gunit = entity->getComponent<comp::UnitData>(comp::UNIT_DATA);
-    m_terrainRestriction = DataManager::Inst().getTerrainRestriction(gunit->getData().TerrainRestriction);
-    speed_ = gunit->getData().Speed;
-
     dest_ = destination;
     last_update_ = 0;
 
-    comp::MapObjectPtr ptr = entity_->getComponent<comp::MapObject>(comp::MAP_OBJECT);
-    m_path = findPath(ptr->getPos(), destination);
-    ptr->moving_ = true;
 }
 
 MoveOnMap::~MoveOnMap()
@@ -91,10 +82,9 @@ MoveOnMap::~MoveOnMap()
 
 bool MoveOnMap::update(Time time)
 {
-    comp::MapObjectPtr ptr = entity_->getComponent<comp::MapObject>(comp::MAP_OBJECT);
     if (target_reached || m_path.empty()) {
         target_reached = true;
-        ptr->moving_ = false;
+        m_mapObject->moving_ = false;
         return false;
     }
 
@@ -109,54 +99,89 @@ bool MoveOnMap::update(Time time)
     float movement = elapsed * speed_ * 0.15;
 
 
-    float distanceLeft = std::hypot(m_path.back().x - ptr->getPos().x, m_path.back().y - ptr->getPos().y);
+    float distanceLeft = std::hypot(m_path.back().x - m_mapObject->getPos().x, m_path.back().y - m_mapObject->getPos().y);
     while (distanceLeft <= movement && !m_path.empty()) {
 
         m_path.pop_back();
-        distanceLeft = std::hypot(m_path.back().x - ptr->getPos().x, m_path.back().y - ptr->getPos().y);
+        distanceLeft = std::hypot(m_path.back().x - m_mapObject->getPos().x, m_path.back().y - m_mapObject->getPos().y);
     }
     if (m_path.empty()) {
         target_reached = true;
-        ptr->moving_ = false;
+        m_mapObject->moving_ = false;
         return false;
     }
 
     MapPos nextPos = m_path.back();
 
-    const float direction = std::atan2(nextPos.y - ptr->getPos().y, nextPos.x - ptr->getPos().x);
-    MapPos newPos = ptr->getPos();
+    const float direction = std::atan2(nextPos.y - m_mapObject->getPos().y, nextPos.x - m_mapObject->getPos().x);
+    MapPos newPos = m_mapObject->getPos();
     newPos.x += cos(direction) * movement;
     newPos.y += sin(direction) * movement;
 
-    ScreenPos sourceScreen = ptr->getPos().toScreen();
+    ScreenPos sourceScreen = m_mapObject->getPos().toScreen();
     ScreenPos targetScreen = newPos.toScreen();
-    ptr->angle_ = std::atan2((targetScreen.y - sourceScreen.y), (targetScreen.x - sourceScreen.x));
+    m_mapObject->angle_ = std::atan2((targetScreen.y - sourceScreen.y), (targetScreen.x - sourceScreen.x));
 
-    ptr->setPos(newPos);
+    m_mapObject->setPos(newPos);
 
     if (std::hypot(newPos.x - dest_.x, newPos.y - dest_.y) < movement) {
         target_reached = true;
-        ptr->moving_ = false;
+        m_mapObject->moving_ = false;
     }
 
     return true;
 }
 
-
-std::vector<MapPos> MoveOnMap::findPath(const MapPos &start, const MapPos &end)
+bool MoveOnMap::moveUnitTo(EntityPtr entity, MapPos destination, MapPtr map)
 {
+    comp::UnitDataPtr gunit = entity->getComponent<comp::UnitData>(comp::UNIT_DATA);
+    if (!gunit->getData().Speed) {
+        log.info("Handled unit that can't move %s", gunit->readableName().c_str());
+        return false;
+    }
+    std::shared_ptr<MoveOnMap> action(new act::MoveOnMap(destination, map));
+
+    action->m_terrainMoveMultiplier = DataManager::Inst().getTerrainRestriction(gunit->getData().TerrainRestriction).PassableBuildableDmgMultiplier;
+    action->speed_ = gunit->getData().Speed;
+    action->m_mapObject = entity->getComponent<comp::MapObject>(comp::MAP_OBJECT);
+
+    action->m_path = action->findPath(action->m_mapObject->getPos(), destination, 1);
+
+    // Try coarser
+    // Uglier, but hopefully faster
+    if (action->m_path.empty()) {
+        action->m_path = action->findPath(action->m_mapObject->getPos(), destination, 20);
+    }
+
+    if (action->m_path.empty()) {
+        log.info("Failed to find path for %s", gunit->readableName().c_str());
+        return false;
+    }
+
+    action->m_mapObject->moving_ = true;
+
+    entity->current_action_ = action;
+
+    return true;
+}
+
+
+std::vector<MapPos> MoveOnMap::findPath(const MapPos &start, const MapPos &end, int coarseness)
+{
+    sf::Clock clock;
+
     std::vector<MapPos> path;
 
-    int startX = std::round(start.x / PATHFINDING_COARSE);
-    int startY = std::round(start.y / PATHFINDING_COARSE);
-    if (!isPassable(startX * PATHFINDING_COARSE, startY * PATHFINDING_COARSE)) {
+    int startX = std::round(start.x / coarseness);
+    int startY = std::round(start.y / coarseness);
+    if (!isPassable(startX * coarseness, startY * coarseness)) {
         log.warn("handed unpassable start");
         return path;
     }
 
-    int endX = std::round(end.x / PATHFINDING_COARSE);
-    int endY = std::round(end.y / PATHFINDING_COARSE);
-    if (!isPassable(endX * PATHFINDING_COARSE, endY * PATHFINDING_COARSE)) {
+    int endX = std::round(end.x / coarseness);
+    int endY = std::round(end.y / coarseness);
+    if (!isPassable(endX * coarseness, endY * coarseness)) {
         log.warn("handed unpassable target");
         return path;
     }
@@ -197,7 +222,7 @@ std::vector<MapPos> MoveOnMap::findPath(const MapPos &start, const MapPos &end)
                 const int ny = pathPoint.y + dy;
                 PathPoint neighbor(nx, ny);
 
-                if (!isPassable(nx * PATHFINDING_COARSE, ny * PATHFINDING_COARSE)) {
+                if (!isPassable(nx * coarseness, ny * coarseness)) {
                     visited.insert(neighbor);
                     continue;
                 }
@@ -223,8 +248,13 @@ std::vector<MapPos> MoveOnMap::findPath(const MapPos &start, const MapPos &end)
                 cameFrom[neighbor] = pathPoint;
             }
         }
+
+        if (clock.getElapsedTime().asMilliseconds() > 50) {
+            log.error("Timeout while pathing (%d nodes in %d ms)", tried, clock.getElapsedTime().asMilliseconds());
+            return path;
+        }
     }
-    log.debug("walked %d nodes", tried);
+    log.debug("walked %d nodes in %d ms", tried, clock.getElapsedTime().asMilliseconds());
 
     if (cameFrom.find(pathPoint) == cameFrom.end()) {
         log.error("Failed to find path from %d,%d to %d,%d", startX, startY, endX, endY);
@@ -235,7 +265,7 @@ std::vector<MapPos> MoveOnMap::findPath(const MapPos &start, const MapPos &end)
 
     while (cameFrom[pathPoint].x != startX || cameFrom[pathPoint].y != startY) {
         pathPoint = cameFrom[pathPoint];
-        path.push_back(MapPos(pathPoint.x * PATHFINDING_COARSE, pathPoint.y * PATHFINDING_COARSE));
+        path.push_back(MapPos(pathPoint.x * coarseness, pathPoint.y * coarseness));
 
         if (cameFrom.find(pathPoint) == cameFrom.end()) {
             log.error("invalid path, failed to find previous step");
@@ -255,7 +285,7 @@ bool MoveOnMap::isPassable(int x, int y)
         return false;
     }
 
-    return (m_terrainRestriction.PassableBuildableDmgMultiplier[m_map->getTileAt(x, y).terrain_->getId()] > 0);
+    return (m_terrainMoveMultiplier[m_map->getTileAt(x, y).terrainId()] > 0);
 }
 
 }

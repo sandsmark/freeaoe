@@ -55,8 +55,7 @@ void EntityManager::onRightClick(const MapPos &mapPos)
 
 
     for (EntityPtr entity : m_selectedEntities) {
-        ActionPtr act(new act::MoveOnMap(entity, mapPos, m_map));
-        entity->current_action_ = act;
+        act::MoveOnMap::moveUnitTo(entity, mapPos, m_map);
     }
 
 }
