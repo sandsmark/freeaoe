@@ -292,3 +292,8 @@ inline ScreenRect MapRect::toScreen() const
     );
 
 }
+
+inline std::ostream &operator <<(std::ostream &os, const MapRect &rect) {
+    os << "MapRect(x: "  << rect.x << ", y: " << rect.y << ", width: " << rect.width << ", height: " << rect.height << ")";
+    return os;
+}
