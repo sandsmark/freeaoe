@@ -42,15 +42,17 @@ public:
 
     bool update(Time time) override;
 
-    void setPos(MapPos pos);
+    void setPos(const MapPos pos);
 
     MapPos getPos(void) const;
+    MapRect getRect();
+    void setRect(const MapRect &rect);
 
     float angle_ = 0.f;
     bool moving_ = false;
 
 private:
-    MapPos pos_;
+    MapRect rect_;
 
     //FacingDirection
 

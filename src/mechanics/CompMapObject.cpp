@@ -35,11 +35,23 @@ bool MapObject::update(Time time)
 
 MapPos MapObject::getPos(void) const
 {
-    return pos_;
+    return rect_.topLeft();
 }
 
-void MapObject::setPos(MapPos pos)
+MapRect MapObject::getRect()
 {
-    pos_ = pos;
+    return rect_;
 }
+
+void MapObject::setRect(const MapRect &rect)
+{
+    rect_ = rect;
+}
+
+void MapObject::setPos(const MapPos pos)
+{
+    rect_.x = pos.x;
+    rect_.y = pos.y;
+}
+
 }
