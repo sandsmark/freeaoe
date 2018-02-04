@@ -50,13 +50,15 @@ std::shared_ptr<Entity> EntityFactory::createUnit(int ID, const MapPos &position
 
     comp::MapObjectPtr mo(new comp::MapObject());
 //    std::cout << "added unit at " << position.x << " " << position.y << std::endl;
-    mo->setPos(position);
-
-    entity->addComponent(comp::MAP_OBJECT, mo);
-
     comp::UnitDataPtr gunit(new comp::UnitData());
     gunit->setUnit(ID);
 
+    int width = gunit->getData().CollisionSize.x * Map::TILE_SIZE;
+    int height = gunit->getData().CollisionSize.y * Map::TILE_SIZE;
+    MapRect unitRect(position.x, position.y, width, height);
+    mo->setRect(unitRect);
+
+    entity->addComponent(comp::MAP_OBJECT, mo);
     entity->addComponent(comp::UNIT_DATA, gunit);
 
 //    ActionPtr act(new act::MoveOnMap(entity, MapPos(48 * 4, 48 * 2, 0)));
