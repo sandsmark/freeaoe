@@ -69,17 +69,28 @@ void EntityManager::selectEntities(const MapRect &selectionRect)
 
     m_selectedEntities.clear();
 
+    std::vector<EntityPtr> containedEntities;
+    int8_t requiredInteraction = genie::Unit::ObjectInteraction;
     for (EntityPtr entity : entities_) {
         comp::MapObjectPtr mapObject = entity->getComponent<comp::MapObject>(comp::MAP_OBJECT);
-        genie::Unit gunit = entity->getComponent<comp::UnitData>(comp::UNIT_DATA)->getData();
-        if (gunit.Type >= genie::UT_Building) {
+        const genie::Unit &gunit = entity->getComponent<comp::UnitData>(comp::UNIT_DATA)->getData();
+
+        if (!selectionRect.overlaps(mapObject->getRect())) {
             continue;
         }
 
-        if (selectionRect.contains(mapObject->getPos())) {
-            m_selectedEntities.push_back(entity);
-            entity->selected = true;
+        requiredInteraction = std::max(gunit.InteractionMode, requiredInteraction);
+        containedEntities.push_back(entity);
+    }
+
+    for (EntityPtr entity : containedEntities) {
+        const genie::Unit &gunit = entity->getComponent<comp::UnitData>(comp::UNIT_DATA)->getData();
+        if (gunit.InteractionMode < requiredInteraction) {
+            continue;
         }
+
+        m_selectedEntities.push_back(entity);
+        entity->selected = true;
     }
 }
 
