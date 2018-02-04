@@ -252,6 +252,24 @@ struct MapRect {
             point.y < y + height
         );
     }
+
+    bool contains(const float otherX, const float otherY) const {
+        return contains(MapPos(otherX, otherY));
+    }
+
+    bool overlaps(const MapRect &otherRect) const {
+        return (
+            otherRect.contains(x, y) ||
+            otherRect.contains(x + width, y) ||
+            otherRect.contains(x, y + height) ||
+            otherRect.contains(x + width, y + height)
+        ) || (
+            contains(otherRect.x, otherRect.y) ||
+            contains(otherRect.x + otherRect.width, otherRect.y) ||
+            contains(otherRect.x, otherRect.y + otherRect.height) ||
+            contains(otherRect.x + otherRect.width, otherRect.y + otherRect.height)
+        );
+    }
 };
 
 
