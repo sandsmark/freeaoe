@@ -205,6 +205,13 @@ struct MapRect {
 
     MapRect() = default;
 
+    MapRect(const float x_, const float y_, const float width_, const float height_) :
+        x(x_),
+        y(y_),
+        width(width_),
+        height(height_)
+    {}
+
     MapRect(const MapPos &a, const MapPos &b)
     {
         x = std::min(a.x, b.x);
