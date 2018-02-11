@@ -19,6 +19,7 @@
 #pragma once
 
 #include <SFML/System.hpp>
+#include <SFML/Graphics/Rect.hpp>
 #include <cmath>
 
 using sf::Uint32;
@@ -272,6 +273,31 @@ struct MapRect {
     }
 };
 
+struct Size {
+    float width = 0.f;
+    float height = 0.f;
+
+    Size(const sf::Vector2f &sfVector) :
+        width(sfVector.x), height(sfVector.y)
+    {}
+
+    Size(const sf::Vector2u &sfVector) :
+        width(sfVector.x), height(sfVector.y)
+    {}
+
+    inline operator sf::Vector2f() const {
+        return sf::Vector2f(width, height);
+    }
+
+    inline operator sf::Vector2u() const {
+        return sf::Vector2u(width, height);
+    }
+
+    inline operator sf::FloatRect() const {
+        return sf::FloatRect(0, 0, width, height);
+    }
+};
+
 
 /// Time in milliseconds
 typedef unsigned int Time;
@@ -290,10 +316,19 @@ inline ScreenRect MapRect::toScreen() const
         MapPos(x, y).toScreen(),
         MapPos(x + width, y + height).toScreen()
     );
-
 }
 
 inline std::ostream &operator <<(std::ostream &os, const MapRect &rect) {
     os << "MapRect(x: "  << rect.x << ", y: " << rect.y << ", width: " << rect.width << ", height: " << rect.height << ")";
+    return os;
+}
+
+inline std::ostream &operator <<(std::ostream &os, const ScreenRect &rect) {
+    os << "ScreenRect(x: "  << rect.x << ", y: " << rect.y << ", width: " << rect.width << ", height: " << rect.height << ")";
+    return os;
+}
+
+inline std::ostream &operator <<(std::ostream &os, const Size &size) {
+    os << "Size(width: " << size.width << ", height: " << size.height << ")";
     return os;
 }
