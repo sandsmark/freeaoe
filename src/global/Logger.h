@@ -1,6 +1,7 @@
 /*
-    <one line to give the program's name and a brief idea of what it does.>
-    Copyright (C) 2011  <copyright holder> <email>
+    Log handling
+    Copyright (C) 2011  Armin Preiml
+    Copyright (C) 2018 Martin Sandsmark
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -24,7 +25,7 @@
 #define LOGGER_H_
 
 #include <string>
-#include <stdarg.h>
+#include <iostream>
 
 //------------------------------------------------------------------------------
 /// Simple logging class
@@ -66,20 +67,33 @@ public:
     //
     static void setLogLevel(LogLevel loglevel);
 
+    static std::ostream *getGlobalOutputStream(void);
+    static void setGlobalOutputStream(std::ostream &ostream);
+
     //----------------------------------------------------------------------------
     /// Logs messages which aren't very important, but they highlight the
     /// program status.
     ///
     /// @param msg message to print
     //
-    void info(const char *msg, ...);
+    void info(const std::string &msg);
+    template <typename... Types>
+    void info(const char *fmt, Types... args)
+    {
+        log(L_INFO, fmt, args...);
+    }
 
     //----------------------------------------------------------------------------
     /// Messages crucial for debugging can be printed using this method.
     ///
     /// @param msg message to print
     //
-    void debug(const char *msg, ...);
+    void debug(const std::string &msg);
+    template <typename... Types>
+    void debug(const char *fmt, Types... args)
+    {
+        log(L_DEBUG, fmt, args...);
+    }
 
     //----------------------------------------------------------------------------
     /// Message that could interfere the programms behaviour should be printed
@@ -87,7 +101,12 @@ public:
     ///
     /// @param msg message to print
     //
-    void warn(const char *msg, ...);
+    void warn(const std::string &msg);
+    template <typename... Types>
+    void warn(const char *fmt, Types... args)
+    {
+        log(L_WARNING, fmt, args...);
+    }
 
     //----------------------------------------------------------------------------
     /// Method for printing information about a malfunction which are serious
@@ -95,24 +114,68 @@ public:
     ///
     /// @param msg message to print
     //
-    void error(const char *msg, ...);
+    void error(const std::string &msg);
+    template <typename... Types>
+    void error(const char *fmt, Types... args)
+    {
+        log(L_ERROR, fmt, args...);
+    }
 
     //----------------------------------------------------------------------------
     /// Prints messages that crashes the program.
     ///
     /// @param msg message to print
     //
-    void fatal(const char *msg, ...);
+
+    template <typename... Types>
+    void fatal(const char *fmt, Types... args)
+    {
+        log(L_FATAL, fmt, args...);
+    }
+    void fatal(const std::string &msg);
 
 protected:
-    void log(LogLevel loglevel, va_list vlist, const char *msg);
-    void log(LogLevel loglevel, const char *msg, ...);
+    void log(LogLevel logLevel, const std::string &format);
+
+    void printLog(const char *format)
+    {
+        *global_out_ << format << std::endl;
+    }
+
+    template <typename ValueType, typename... Types>
+    void printLog(const char *format, ValueType value, Types... arguments)
+    {
+
+        for (; *format != '\0'; format++) {
+            if (*format == '%') {
+                *global_out_ << value;
+
+                printLog(format + 1, arguments...);
+                return;
+            }
+
+            *global_out_ << *format;
+        }
+    }
+
+    template <typename... Types>
+    void log(LogLevel loglevel, const char *format, Types... arguments)
+    {
+        if (loglevel < Logger::LOG_LEVEL) {
+            return;
+        }
+
+        *global_out_ << getLogLevelName(loglevel) << ": ";
+        printLog(format, arguments...);
+    }
 
     std::string getLogLevelName(LogLevel loglevel);
 
 private:
     Logger();
     virtual ~Logger();
+
+    static std::ostream *global_out_;
 
 private:
     static LogLevel LOG_LEVEL;

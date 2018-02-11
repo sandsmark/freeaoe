@@ -1,6 +1,7 @@
 /*
-    <one line to give the program's name and a brief idea of what it does.>
-    Copyright (C) 2011  <copyright holder> <email>
+    Log handling
+    Copyright (C) 2011  Armin Preiml
+    Copyright (C) 2018 Martin Sandsmark
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -23,6 +24,8 @@
 
 Logger::LogLevel Logger::LOG_LEVEL = L_OFF;
 
+std::ostream *Logger::global_out_ = &std::cout;
+
 //------------------------------------------------------------------------------
 Logger &Logger::getRootLogger(void)
 {
@@ -42,6 +45,41 @@ void Logger::setLogLevel(Logger::LogLevel loglevel)
     Logger::LOG_LEVEL = loglevel;
 }
 
+void Logger::setGlobalOutputStream(std::ostream &ostream)
+{
+    global_out_ = &ostream;
+}
+
+void Logger::info(const std::string &msg)
+{
+    log(L_INFO, msg);
+}
+
+void Logger::debug(const std::string &msg)
+{
+    log(L_DEBUG, msg);
+}
+
+void Logger::warn(const std::string &msg)
+{
+    log(L_WARNING, msg);
+}
+
+void Logger::error(const std::string &msg)
+{
+    log(L_ERROR, msg);
+}
+
+void Logger::fatal(const std::string &msg)
+{
+    log(L_FATAL, msg);
+}
+
+std::ostream *Logger::getGlobalOutputStream(void)
+{
+    return global_out_;
+}
+
 //------------------------------------------------------------------------------
 Logger::Logger()
 {
@@ -52,65 +90,9 @@ Logger::~Logger()
 {
 }
 
-//------------------------------------------------------------------------------
-void Logger::log(Logger::LogLevel loglevel, const char *msg, ...)
+void Logger::log(LogLevel loglevel, const std::string &format)
 {
-    va_list args;
-    va_start(args, msg);
-
-    this->log(loglevel, args, msg);
-}
-
-//------------------------------------------------------------------------------
-void Logger::log(Logger::LogLevel loglevel, va_list args, const char *msg)
-{
-    if (loglevel >= Logger::LOG_LEVEL) {
-        char msgBuf[1024]; //TODO: reserve memory on time
-        vsprintf(msgBuf, msg, args);
-
-        //TODO: should be selectable if log goes to stdout or file
-        std::cout << getLogLevelName(loglevel) << ": " << msgBuf << std::endl;
-    }
-}
-
-//------------------------------------------------------------------------------
-void Logger::error(const char *msg, ...)
-{
-    va_list args;
-    va_start(args, msg);
-    this->log(L_ERROR, args, msg);
-}
-
-//------------------------------------------------------------------------------
-void Logger::warn(const char *msg, ...)
-{
-    va_list args;
-    va_start(args, msg);
-    this->log(L_WARNING, args, msg);
-}
-
-//------------------------------------------------------------------------------
-void Logger::info(const char *msg, ...)
-{
-    va_list args;
-    va_start(args, msg);
-    this->log(L_INFO, args, msg);
-}
-
-//------------------------------------------------------------------------------
-void Logger::fatal(const char *msg, ...)
-{
-    va_list args;
-    va_start(args, msg);
-    this->log(L_FATAL, args, msg);
-}
-
-//------------------------------------------------------------------------------
-void Logger::debug(const char *msg, ...)
-{
-    va_list args;
-    va_start(args, msg);
-    this->log(L_DEBUG, args, msg);
+    *global_out_ << getLogLevelName(loglevel) << ": " << format << std::endl;
 }
 
 //------------------------------------------------------------------------------
