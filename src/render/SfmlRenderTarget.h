@@ -37,6 +37,7 @@ public:
 
     //----------------------------------------------------------------------------
     Vector2u getSize(void) const override;
+    void setSize(const Size size) const override;
 
     //----------------------------------------------------------------------------
     void draw(EntityForm &form) override;

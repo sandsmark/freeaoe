@@ -40,6 +40,11 @@ Vector2u SfmlRenderTarget::getSize(void) const
     return sf::Vector2u(renderTarget_->getSize().x / SCALE, renderTarget_->getSize().y / SCALE);
 }
 
+void SfmlRenderTarget::setSize(const Size size) const
+{
+    renderTarget_->setView(sf::View(sf::FloatRect(0, 0, size.width, size.height)));
+}
+
 void SfmlRenderTarget::draw(EntityForm &form)
 {
     form.getComponent<comp::GraphicRender>(comp::GRAPHIC_RENDER)->drawOn(*this);

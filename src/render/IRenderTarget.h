@@ -37,6 +37,8 @@ public:
     //----------------------------------------------------------------------------
     virtual Vector2u getSize(void) const = 0;
 
+    virtual void setSize(const Size size) const = 0;
+
     //----------------------------------------------------------------------------
     virtual void draw(EntityForm &form) = 0;
 

@@ -50,7 +50,6 @@ private:
   IRenderTargetPtr renderTarget_;
   
   StateManager state_manager_;
-  sf::Texture m_uiOverlay;
 
   sf::Text fps_label_;
   

@@ -45,6 +45,33 @@ class DrsFile;
 class ResourceManager
 {
 public:
+    enum UiResolution {
+        Ui800x600 = 51100,
+        Ui1024x768 = 51120,
+        Ui1280x1024 = 51140
+    };
+
+    enum UiCiv {
+        Briton = 1,
+        Frank = 2,
+        Goth = 3,
+        Teuton = 4,
+        Japanese = 5,
+        Chinese = 6,
+        Byzantine = 7,
+        Persian = 8,
+        Saracen = 9,
+        Turkish = 10,
+        Viking = 11,
+        Mongol = 12,
+        Celtic = 13,
+        Spanish = 14,
+        Aztec = 15,
+        Mayan = 16,
+        Hunnic = 17,
+        Korean = 18,
+
+    };
     ResourceManager(const ResourceManager &) = delete;
     ResourceManager &operator=(const ResourceManager &) = delete;
 
@@ -63,6 +90,8 @@ public:
     /// @return slp file
     //
     genie::SlpFilePtr getSlp(unsigned int id);
+
+    genie::SlpFilePtr getUiOverlay(const UiResolution res, const UiCiv civ);
 
     genie::ScnFilePtr getScn(unsigned int id);
 

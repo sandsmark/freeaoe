@@ -36,6 +36,11 @@ ResourceManager *ResourceManager::Inst()
     return &rm;
 }
 
+genie::SlpFilePtr ResourceManager::getUiOverlay(const ResourceManager::UiResolution res, const ResourceManager::UiCiv civ)
+{
+    return getSlp(uint32_t(res) + uint32_t(civ));
+}
+
 genie::ScnFilePtr ResourceManager::getScn(unsigned int id)
 {
     for (std::shared_ptr<genie::DrsFile> drsFile : drs_files_) {

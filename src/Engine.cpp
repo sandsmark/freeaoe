@@ -79,7 +79,6 @@ void Engine::start()
             renderWindow_->clear();
             state->draw();
             drawFps();
-            renderTarget_->draw(m_uiOverlay, ScreenPos(0, 0));
             // Update the window
             renderWindow_->display();
         } else {
@@ -92,20 +91,11 @@ void Engine::start()
 //------------------------------------------------------------------------------
 bool Engine::setup(const std::string &scnFile)
 {
-
-  std::shared_ptr<genie::SlpFile> overlayFile = ResourceManager::Inst()->getSlp(51141);
-  if (overlayFile) {
-      m_uiOverlay.loadFromImage(res::Resource::convertFrameToImage(overlayFile->getFrame()));
-  } else {
-      std::cerr << "Failed to load ui overlay" << std::endl;
-      return false;
-  }
-
-  renderWindow_ = new sf::RenderWindow(sf::VideoMode(m_uiOverlay.getSize().x, m_uiOverlay.getSize().y), "freeaoe");
+  renderWindow_ = new sf::RenderWindow(sf::VideoMode(640, 480), "freeaoe");
   renderWindow_->setFramerateLimit(60);
   
   renderTarget_ = IRenderTargetPtr(new SfmlRenderTarget(*renderWindow_));
-  
+
   GameState *gameState = new GameState(renderTarget_);
 
   if (!scnFile.empty()) {
@@ -122,6 +112,8 @@ bool Engine::setup(const std::string &scnFile)
   }
 
   state_manager_.addActiveState(gameState);
+  renderWindow_->setSize(gameState->uiSize());
+  renderTarget_->setSize(gameState->uiSize());
 
   fps_label_.setPosition(sf::Vector2f(10,10));
   fps_label_.setFillColor(sf::Color::Green);

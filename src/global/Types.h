@@ -277,6 +277,10 @@ struct Size {
     float width = 0.f;
     float height = 0.f;
 
+    Size (const float w, const float h) :
+        width(w), height(h)
+    {}
+
     Size(const sf::Vector2f &sfVector) :
         width(sfVector.x), height(sfVector.y)
     {}

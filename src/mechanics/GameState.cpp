@@ -39,6 +39,8 @@
 #define MOUSE_MOVE_EDGE_SIZE 100
 #define CAMERA_SPEED 1.
 
+Logger& GameState::log = Logger::getLogger("freeaoe.GameState");
+
 GameState::GameState(IRenderTargetPtr renderTarget) :
     m_cameraDeltaX(0),
     m_cameraDeltaY(0),
@@ -63,6 +65,15 @@ void GameState::setScenario(std::shared_ptr<genie::ScnFile> scenario)
 void GameState::init()
 {
     IState::init();
+
+    std::shared_ptr<genie::SlpFile> overlayFile = ResourceManager::Inst()->getUiOverlay(ResourceManager::Ui1280x1024, ResourceManager::Viking);
+    if (overlayFile) {
+        m_uiOverlay.loadFromImage(res::Resource::convertFrameToImage(overlayFile->getFrame()));
+        log.info("Loaded UI overlay with size %dx%d", m_uiOverlay.getSize().x, m_uiOverlay.getSize().y);
+    } else {
+        m_uiOverlay = sf::Texture();
+        log.error("Failed to load ui overlay");
+    }
 
     entity_form_manager_.setRenderTarget(renderTarget_);
 
@@ -161,6 +172,8 @@ void GameState::draw()
     if (m_selectionRect) {
         renderTarget_->draw(m_selectionRect, sf::Color::Transparent, sf::Color::White);
     }
+
+    renderTarget_->draw(m_uiOverlay, ScreenPos(0, 0));
 }
 
 bool GameState::update(Time time)
@@ -286,4 +299,13 @@ void GameState::handleEvent(sf::Event event)
             entity_manager_.onRightClick(renderTarget_->absoluteMapPos(ScreenPos(event.mouseButton.x, event.mouseButton.y)));
         }
     }
+}
+
+Size GameState::uiSize() const
+{
+    if (m_uiOverlay.getSize().x == 0 || m_uiOverlay.getSize().y == 0) {
+        log.error("We don't have a valid UI overlay");
+        return Size(640, 480);
+    }
+    return m_uiOverlay.getSize();
 }

@@ -20,6 +20,7 @@
 #define GAMESTATE_H
 
 #include "mechanics/IState.h"
+#include "global/Logger.h"
 #include "Map.h"
 #include "render/SfmlRenderTarget.h"
 #include "render/UnitRenderer.h"
@@ -50,11 +51,15 @@ public:
 
     void init() override;
 
+    Size uiSize() const;
+
     void draw() override;
     bool update(Time time) override;
     void handleEvent(sf::Event event) override;
 
 private:
+    static Logger &log;
+
     GameState(const GameState &other);
 
     IRenderTargetPtr renderTarget_;
@@ -79,6 +84,8 @@ private:
     ScreenPos m_selectionStart;
     ScreenPos m_selectionCurr;
     ScreenRect m_selectionRect;
+
+    sf::Texture m_uiOverlay;
 };
 
 #endif // GAMESTATE_H
