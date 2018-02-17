@@ -52,6 +52,11 @@ public:
     const genie::TerrainBlock &terrainBlock();
 
     static std::string gameName(const genie::GameVersion version);
+    const genie::GameVersion gameVersion() const;
+
+    const std::vector<genie::Civ> &civilizations();
+
+    const genie::DatFile &datFile();
 
 private:
     DataManager();
@@ -60,7 +65,6 @@ private:
     static Logger &log;
 
     genie::DatFile dat_file_;
-    const std::unordered_map<genie::GameVersion, std::string> m_dataFileNames;
 };
 
 #endif // DATAMANAGER_H

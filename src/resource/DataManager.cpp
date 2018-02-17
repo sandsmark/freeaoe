@@ -23,6 +23,12 @@
 #include "genie/dat/Civ.h"
 #include "genie/dat/Terrain.h"
 
+#include "LanguageManager.h"
+
+#include <experimental/filesystem>
+
+using namespace std::experimental;
+
 Logger &DataManager::log = Logger::getLogger("freeaoe.DataManager");
 
 DataManager &DataManager::Inst()
@@ -86,14 +92,22 @@ std::string DataManager::gameName(const genie::GameVersion version)
         return "Unknown";
     }
 }
+const genie::GameVersion DataManager::gameVersion() const
+{
+    return dat_file_.getGameVersion();
+}
 
-DataManager::DataManager() :
-    m_dataFileNames({
-        { genie::GV_AoE, "Empires.dat" },
-        { genie::GV_RoR, "empires_x1.dat" },
-        { genie::GV_AoK, "empires2.dat" },
-        { genie::GV_TC, "empires2_x1_p1.dat" },
-    })
+const std::vector<genie::Civ> &DataManager::civilizations()
+{
+    return dat_file_.Civs;
+}
+
+const genie::DatFile &DataManager::datFile()
+{
+    return dat_file_;
+}
+
+DataManager::DataManager()
 {
 }
 
@@ -103,14 +117,34 @@ DataManager::~DataManager()
 
 bool DataManager::initialize(const std::string dataPath)
 {
-    dat_file_.setGameVersion(genie::GV_TC);
 
-    std::string filePath = dataPath + "empires2_x1_p1.dat";
+    std::vector<std::pair<std::string, genie::GameVersion>> datFilenames({
+        {"Empires.dat",        genie::GV_AoE },
+        {"empires_x1.dat",     genie::GV_RoR },
+        {"empires2_x1_p1.dat", genie::GV_TC  }, // the conquerors, patch 1
+        {"empires2_x1.dat",    genie::GV_TC  }, // the conquerors
+        {"empires2.dat",       genie::GV_AoK }, // age of kings
+    });
+
+    std::string filePath;
+    for (const std::pair<std::string, genie::GameVersion> &datfile : datFilenames) {
+        std::string potential = dataPath + datfile.first;
+        if (filesystem::exists(potential)) {
+            filePath = potential;
+            dat_file_.setGameVersion(datfile.second);
+            break;
+        }
+    }
+
+    if (filePath == "") {
+        std::cerr << "Failed to find any dat files in " << dataPath << std::endl;
+        return false;
+    }
 
     try {
         dat_file_.load(filePath.c_str());
     } catch (const std::exception &error) {
-        std::cerr << "Failed to load " << filePath << ": " << error.what() << std::endl;
+        log.error("Failed to load dat file %: %", error.what());
         return false;
     }
 
