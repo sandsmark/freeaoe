@@ -62,7 +62,7 @@ int main(int argc, char **argv)
       return 1;
   }
 
-  if (!ResourceManager::Inst()->initialize(dataPath)) {
+  if (!ResourceManager::Inst()->initialize(dataPath, DataManager::Inst().gameVersion())) {
       return 1;
   }
 

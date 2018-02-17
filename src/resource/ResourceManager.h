@@ -44,11 +44,23 @@ class DrsFile;
 //
 class ResourceManager
 {
+private:
+    ResourceManager();
+    virtual ~ResourceManager();
+
 public:
     enum UiResolution {
         Ui800x600 = 51100,
         Ui1024x768 = 51120,
         Ui1280x1024 = 51140
+    };
+
+    enum ResourceType {
+        Undefined,
+        GameData,
+        Interface,
+        Graphics,
+        Terrain,
     };
 
     enum UiCiv {
@@ -70,8 +82,8 @@ public:
         Mayan = 16,
         Hunnic = 17,
         Korean = 18,
-
     };
+
     ResourceManager(const ResourceManager &) = delete;
     ResourceManager &operator=(const ResourceManager &) = delete;
 
@@ -89,7 +101,7 @@ public:
     /// @param id id of the slp file
     /// @return slp file
     //
-    genie::SlpFilePtr getSlp(unsigned int id);
+    genie::SlpFilePtr getSlp(unsigned int id, const ResourceType type = Undefined);
 
     genie::SlpFilePtr getUiOverlay(const UiResolution res, const UiCiv civ);
 
@@ -115,49 +127,35 @@ public:
 
     genie::BlendModePtr getBlendmode(unsigned int id = 0);
 
-    //----------------------------------------------------------------------------
-    /// Adds an slp file that will be managed by the ResourceManager.
-    /// TODO: Maybe auto_ptr
-    ///
-    /// @param slp reference to the slp file
-    //
-    void addSlpFile(SlpFile *slp);
-
-    void addBinaFile(BinaFile *bina);
-
-    bool initialize(const std::string dataPath);
+    bool initialize(const std::string &dataPath, const genie::GameVersion gameVersion);
 
 private:
-    ResourceManager();
-    virtual ~ResourceManager();
+    static Logger &log;
 
     typedef std::vector<std::shared_ptr<genie::DrsFile>> DrsFileVector;
-    DrsFileVector drs_files_;
+    DrsFileVector loadDrs(const std::vector<std::string> &filenames);
+    std::shared_ptr<genie::DrsFile> loadDrs(const std::string filePath);
+
+    DrsFileVector m_gamedataFiles;
+    DrsFileVector m_soundFiles;
+
+    std::shared_ptr<genie::DrsFile> m_interfaceFile;
+    std::shared_ptr<genie::DrsFile> m_graphicsFile;
+    std::shared_ptr<genie::DrsFile> m_terrainFile;
+
+    DrsFileVector m_allFiles;
 
     genie::BlendomaticFilePtr blendomatic_file_;
-    /*
-  std::map<unsigned int, SlpFile *> slp_files_;
-  std::map<unsigned int, BinaFile*> bina_files_;
-  */
+
     //TODO: All resources into one map?
-    typedef std::unordered_map<unsigned int, res::Graphic *> GraphicMap;
+    typedef std::unordered_map<unsigned int, res::GraphicPtr> GraphicMap;
     GraphicMap graphics_;
 
     typedef std::unordered_map<unsigned int, res::TerrainPtr> TerrainMap;
     TerrainMap terrains_;
 
-    /*
-  std::fstream terrain_file_;
-  std::fstream graphics_file_;
-  */
-
-    static Logger &log;
-
-    //----------------------------------------------------------------------------
-    /// Loads all resource headers.
-    //
-
-    void loadDrs(std::string file_name);
+    genie::GameVersion m_gameVersion;
+    std::string m_dataPath;
 };
 
 #endif // RESOURCEMANAGER_H

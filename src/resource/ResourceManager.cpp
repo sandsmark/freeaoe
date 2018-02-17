@@ -27,6 +27,11 @@
 #include <genie/resource/DrsFile.h>
 #include <genie/resource/UIFile.h>
 
+#include <experimental/filesystem>
+
+using namespace std::experimental;
+
+
 Logger &ResourceManager::log = Logger::getLogger("freeaoe.ResourceManager");
 
 //------------------------------------------------------------------------------
@@ -38,12 +43,12 @@ ResourceManager *ResourceManager::Inst()
 
 genie::SlpFilePtr ResourceManager::getUiOverlay(const ResourceManager::UiResolution res, const ResourceManager::UiCiv civ)
 {
-    return getSlp(uint32_t(res) + uint32_t(civ));
+    return getSlp(uint32_t(res) + uint32_t(civ), Interface);
 }
 
 genie::ScnFilePtr ResourceManager::getScn(unsigned int id)
 {
-    for (std::shared_ptr<genie::DrsFile> drsFile : drs_files_) {
+    for (std::shared_ptr<genie::DrsFile> drsFile : m_gamedataFiles) {
         genie::ScnFilePtr scnfile = drsFile->getScnFile(id);
 
         if (scnfile) {
@@ -57,55 +62,71 @@ genie::ScnFilePtr ResourceManager::getScn(unsigned int id)
 }
 
 //------------------------------------------------------------------------------
-genie::SlpFilePtr ResourceManager::getSlp(sf::Uint32 id)
+genie::SlpFilePtr ResourceManager::getSlp(sf::Uint32 id, const ResourceType type)
 {
     genie::SlpFilePtr slp_ptr;
 
-    log.info("Loading slp with id [%d]", id);
+    switch (type) {
+    case GameData:
+        for (const std::shared_ptr<genie::DrsFile> &drsFile : m_gamedataFiles) {
+            slp_ptr = drsFile->getSlpFile(id);
+            if (slp_ptr) {
+                return slp_ptr;
+            }
+        }
+        break;
+    case Interface:
+        slp_ptr = m_interfaceFile->getSlpFile(id);
+        break;
+    case Graphics:
+        slp_ptr = m_graphicsFile->getSlpFile(id);
+        break;
+    case Terrain:
+        slp_ptr = m_terrainFile->getSlpFile(id);
+        break;
+    case Undefined:
+    default:
+        break;
+    }
 
-    for (DrsFileVector::iterator i = drs_files_.begin(); i != drs_files_.end();
-         i++) {
-        slp_ptr = (*i)->getSlpFile(id);
+    if (slp_ptr) {
+        return slp_ptr;
+    }
 
-        if (slp_ptr.get() != 0)
+    for (const std::shared_ptr<genie::DrsFile> &drsFile : m_allFiles) {
+        slp_ptr = drsFile->getSlpFile(id);
+        if (slp_ptr) {
             return slp_ptr;
+        }
+    }
+
+    if (type != Undefined) {
+        log.warn("Unable to find %d in file for type %d, trying to look through all", id, type);
+        return getSlp(id, Undefined);
     }
 
     log.warn("No slp file with id [%d] found!", id);
     return slp_ptr;
-    /*std::map<sf::Uint32, SlpFile *>::iterator it = slp_files_.find(id);
-  
-  if (it == slp_files_.end())
-  {
-    log.warn("Trying to get slp file with id [%u] that doesn't exist!", id);
-    return 0;
-  }
-  
-  SlpFile *slp = slp_files_[id];
-  slp->load();
-  
-  return slp;*/
 }
 
 //------------------------------------------------------------------------------
 res::GraphicPtr ResourceManager::getGraphic(Uint32 id)
 {
-    res::Graphic *graph;
+    res::GraphicPtr graph;
 
     if (graphics_.find(id) != graphics_.end()) {
         graph = graphics_[id];
     } else {
-        graph = new res::Graphic(id);
+        graph = std::make_shared<res::Graphic>(id);
 
         if (!graph->load()) {
-            delete graph;
             return nullptr;
         }
 
         graphics_[id] = graph;
     }
 
-    return res::GraphicPtr(graph);
+    return graph;
 }
 
 //------------------------------------------------------------------------------
@@ -141,10 +162,15 @@ genie::PalFilePtr ResourceManager::getPalette(sf::Uint32 id)
         return defaultPalette;
     }
 
-    //   return bina_files_[id]->readPalette();
-    genie::PalFilePtr pal_ptr;
+    genie::PalFilePtr pal_ptr = m_interfaceFile->getPalFile(id);
+    if (pal_ptr) {
+        if (id == 50500) {
+            defaultPalette = pal_ptr;
+        }
+        return pal_ptr;
+    }
 
-    for (std::shared_ptr<genie::DrsFile> drsFile : drs_files_) {
+    for (std::shared_ptr<genie::DrsFile> drsFile : m_allFiles) {
         pal_ptr = drsFile->getPalFile(id);
 
         if (pal_ptr) {
@@ -161,25 +187,6 @@ genie::PalFilePtr ResourceManager::getPalette(sf::Uint32 id)
 }
 
 //------------------------------------------------------------------------------
-void ResourceManager::addSlpFile(SlpFile *slp)
-{
-    /*
-  std::map<sf::Uint32, SlpFile *>::iterator it = slp_files_.find(slp->getId());
-  
-  if (it != slp_files_.end())
-    log.warn("Slp file with id: [%u] already exists!", slp->getId());
-  else
-    slp_files_[slp->getId()] = slp;
-  */
-}
-
-//------------------------------------------------------------------------------
-void ResourceManager::addBinaFile(BinaFile *bina)
-{
-    //   bina_files_[bina->getId()] = bina;
-}
-
-//------------------------------------------------------------------------------
 ResourceManager::ResourceManager()
 {
 }
@@ -187,45 +194,64 @@ ResourceManager::ResourceManager()
 //------------------------------------------------------------------------------
 ResourceManager::~ResourceManager()
 {
-    /*
-  for (std::map<sf::Uint32, SlpFile *>::iterator it = slp_files_.begin();
-       it != slp_files_.end(); it++)
-    delete it->second;
-  
-  for (std::map<sf::Uint32, BinaFile*>::iterator it = bina_files_.begin();
-       it != bina_files_.end(); it++)
-    delete it->second;
-  
-  for (std::vector<DrsFile *>::iterator it = drs_files_.begin();
-       it != drs_files_.end(); it++)
-     delete (*it);
-  
-  for (GraphicMap::iterator it = graphics_.begin(); it != graphics_.end(); it++)
-    delete it->second;
-  */
 }
 
 //------------------------------------------------------------------------------
-bool ResourceManager::initialize(const std::string dataPath)
+bool ResourceManager::initialize(const std::string &dataPath, const genie::GameVersion gameVersion)
 {
     log.debug("Initializing ResourceManager");
 
+    m_dataPath = dataPath;
+    m_gameVersion = gameVersion;
+
     try {
-        loadDrs(dataPath + "gamedata.drs");
-        loadDrs(dataPath + "gamedata_x1.drs");
-        loadDrs(dataPath + "gamedata_x1_p1.drs");
-        loadDrs(dataPath + "graphics.drs");
-        loadDrs(dataPath + "interfac.drs");
-        loadDrs(dataPath + "sounds.drs");
-        loadDrs(dataPath + "sounds_x1.drs");
-        loadDrs(dataPath + "terrain.drs");
+        const std::vector<std::string> gamedataFiles({
+                { "gamedata.drs" },
+                { "gamedata_x1.drs" },
+                { "gamedata_x1_p1.drs" },
+        });
+
+        m_gamedataFiles = loadDrs(gamedataFiles);
+        if (m_gamedataFiles.empty()) {
+            std::cerr << "Failed to find any gamedata files in " << dataPath << std::endl;
+            return false;
+        }
+
+        m_interfaceFile = loadDrs(m_dataPath + "interfac.drs");
+        if (!m_interfaceFile) {
+            log.error("Failed to load interface file");
+            return false;
+        }
+
+        m_graphicsFile = loadDrs(m_dataPath + "graphics.drs");
+        if (!m_graphicsFile) {
+            log.error("Failed to load graphics file");
+            return false;
+        }
+
+        m_terrainFile = loadDrs(m_dataPath + "terrain.drs");
+        if (!m_terrainFile) {
+            log.error("Failed to load terrain file");
+            return false;
+        }
+
+        const std::vector<std::string> soundFiles({
+                { "sounds.drs" },
+                { "sounds_x1.drs" },
+        });
+
+        m_soundFiles = loadDrs(soundFiles);
+
+        if (m_soundFiles.empty()) {
+            std::cerr << "Failed to find any sound files in " << dataPath << std::endl;
+            return false;
+        }
 
         blendomatic_file_ = std::make_unique<genie::BlendomaticFile>();
         std::string blendomaticPath = dataPath + "blendomatic.dat";
         blendomatic_file_->load(blendomaticPath.c_str());
-
     } catch (const std::exception &error) {
-        std::cerr << "Failed to load resource: " << error.what() << std::endl;
+        log.error("Failed to load resource: %", error.what());
         return false;
     }
 
@@ -233,21 +259,37 @@ bool ResourceManager::initialize(const std::string dataPath)
 }
 
 //------------------------------------------------------------------------------
-void ResourceManager::loadDrs(std::string file_name)
+ResourceManager::DrsFileVector ResourceManager::loadDrs(const std::vector<std::string> &filenames)
 {
-    log.info("Loading %s", file_name.c_str());
+    DrsFileVector files;
 
-    std::shared_ptr<genie::DrsFile> drs_file(new genie::DrsFile());
+    for (const std::string &filename : filenames) {
+        const std::string filePath = m_dataPath + filename;
+        if (!filesystem::exists(filePath)) {
+            log.debug("Skipping non-existing file %", filePath);
+            continue;
+        }
 
-    drs_file->setGameVersion(genie::GV_TC);
-    drs_file->load(file_name.c_str());
+        std::shared_ptr<genie::DrsFile> file = loadDrs(filePath);
+        if (!file) {
+            continue;
+        }
+        files.push_back(file);
+    }
 
-    drs_files_.push_back(drs_file);
+    return files;
+}
 
-    /*
-  DrsFile *drs = new DrsFile(Config::Inst()->getDataPath() + file_name, this);
-  drs->loadHeader();
-  
-  drs_files_.push_back(drs);
-  */
+std::shared_ptr<genie::DrsFile> ResourceManager::loadDrs(const std::string filePath)
+{
+    if (!filesystem::exists(filePath)) {
+        log.debug("Can't find file %", filePath);
+        return nullptr;
+    }
+
+    std::shared_ptr<genie::DrsFile> file = std::make_shared<genie::DrsFile>();
+    file->setGameVersion(m_gameVersion);
+    file->load(filePath.c_str());
+    m_allFiles.push_back(file);
+    return file;
 }
