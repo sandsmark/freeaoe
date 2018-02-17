@@ -83,6 +83,17 @@ void GameState::init()
         m_civilizations.push_back(std::make_shared<Civilization>(i, DataManager::Inst().datFile()));
     }
 
+    m_unitIconsSlp = ResourceManager::Inst()->getSlp(50730);
+    if (!m_unitIconsSlp) {
+        std::cerr << "Failed to load icons" << std::endl;
+    }
+
+    m_buildingIconsSlp = ResourceManager::Inst()->getSlp(50705);
+    if (!m_buildingIconsSlp) {
+        std::cerr << "Failed to load icons" << std::endl;
+    }
+
+
     //Map test
     map_ = MapPtr(new Map());
 
@@ -107,7 +118,6 @@ void GameState::init()
         EntityPtr unit = EntityFactory::Inst().createUnit(293, MapPos(48*3, 48*3, 0));
         entity_manager_.add(unit);
         entity_form_manager_.createForms(unit);
-
 
         unit = EntityFactory::Inst().createUnit(109, MapPos(48*3, 48*3, 0));
         comp::UnitDataPtr gunit = unit->getComponent<comp::UnitData>(comp::UNIT_DATA);
@@ -177,6 +187,16 @@ void GameState::draw()
     }
 
     renderTarget_->draw(m_uiOverlay, ScreenPos(0, 0));
+
+    for (const Button &button : m_currentIcons) {
+        ScreenPos position;
+        position.x = button.pos % 5;
+        position.x = (position.x + 1) * 40;
+        position.y = button.pos / 5;
+        position.y *= 40;
+        position.y += m_uiOverlay.getSize().y  - 40 * 4;
+        renderTarget_->draw(button.tex, position);
+    }
 }
 
 bool GameState::update(Time time)
@@ -292,10 +312,32 @@ void GameState::handleEvent(sf::Event event)
     }
 
     if (event.type == sf::Event::MouseButtonReleased) {
-        if (m_selectionRect) {
+        if (event.mouseButton.button == sf::Mouse::Button::Left) {
             MapRect mapSelectionRect = renderTarget_->absoluteMapRect(m_selectionRect);
             entity_manager_.selectEntities(mapSelectionRect);
             m_selectionRect = ScreenRect();
+
+            if (!entity_manager_.selected().empty()) {
+                EntityPtr entity = entity_manager_.selected()[0];
+                const genie::Unit &gunit = entity->getComponent<comp::UnitData>(comp::UNIT_DATA)->getData();
+                m_currentIcons.clear();
+                for (const genie::Unit *creatable : m_civilizations[0]->creatableUnits(gunit.ID)) {
+                    if (creatable->IconID >= m_unitIconsSlp->getFrameCount()) {
+                        std::cerr << "invalid icon id: " << creatable->IconID << std::endl;
+                    }
+
+                    Button button;
+                    if (gunit.Class == genie::Unit::Civilian) {
+                        button.tex.loadFromImage(res::Resource::convertFrameToImage(m_buildingIconsSlp->getFrame(creatable->IconID)));
+                    } else {
+                        button.tex.loadFromImage(res::Resource::convertFrameToImage(m_unitIconsSlp->getFrame(creatable->IconID)));
+                    }
+                    button.pos = std::max(creatable->Creatable.ButtonID - 1, 0);
+
+                    m_currentIcons.push_back(button);
+
+                }
+            }
         }
 
         if (event.mouseButton.button == sf::Mouse::Button::Right) {

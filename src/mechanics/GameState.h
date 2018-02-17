@@ -44,6 +44,10 @@ class RenderTarget;
 //
 class GameState : public IState
 {
+    struct Button {
+        sf::Texture tex;
+        int pos = 0;
+    };
 
 public:
     GameState(IRenderTargetPtr renderTarget);
@@ -53,11 +57,12 @@ public:
 
     void init() override;
 
-    Size uiSize() const;
-
     void draw() override;
     bool update(Time time) override;
     void handleEvent(sf::Event event) override;
+    void setBuildableIcons();
+
+    Size uiSize() const;
 
 private:
     static Logger &log;
@@ -75,6 +80,9 @@ private:
 
     MapPtr map_;
     MapRenderer mapRenderer_;
+    genie::SlpFilePtr m_unitIconsSlp;
+    genie::SlpFilePtr m_buildingIconsSlp;
+    std::vector<Button> m_currentIcons;
 
     std::shared_ptr<genie::ScnFile> scenario_;
 
