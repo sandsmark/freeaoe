@@ -37,6 +37,7 @@ set(MECHANICS_SRC
     src/mechanics/StateManager.cpp 
     src/mechanics/GameState.cpp 
     src/mechanics/ActionMove.cpp
+    src/mechanics/Civilization.cpp
     )
 
 set(RENDER_SRC 
