@@ -28,6 +28,8 @@
 #include "EntityManager.h"
 #include <SFML/Graphics/RectangleShape.hpp>
 
+#include "Civilization.h"
+
 #include "genie/script/ScnFile.h"
 
 class GameClient;
@@ -86,6 +88,8 @@ private:
     ScreenRect m_selectionRect;
 
     sf::Texture m_uiOverlay;
+
+    std::vector<std::shared_ptr<Civilization>> m_civilizations;
 };
 
 #endif // GAMESTATE_H

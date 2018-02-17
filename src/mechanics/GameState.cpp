@@ -35,6 +35,7 @@
 #include "render/MapRenderer.h"
 #include "render/SfmlRenderTarget.h"
 #include "CompUnitData.h"
+#include "resource/DataManager.h"
 
 #define MOUSE_MOVE_EDGE_SIZE 100
 #define CAMERA_SPEED 1.
@@ -77,8 +78,10 @@ void GameState::init()
 
     entity_form_manager_.setRenderTarget(renderTarget_);
 
-    //TODO: Test
-
+    const std::vector<genie::Civ> &civilizations = DataManager::Inst().civilizations();
+    for (int i=0; i<civilizations.size(); i++) {
+        m_civilizations.push_back(std::make_shared<Civilization>(i, DataManager::Inst().datFile()));
+    }
 
     //Map test
     map_ = MapPtr(new Map());
