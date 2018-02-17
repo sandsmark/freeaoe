@@ -46,20 +46,21 @@ bool GraphicRender::update(Time time)
 {
     int newFrame = current_frame_;
 
+    res::GraphicPtr currentGraphic = graphic_;
+    if (map_object_->moving_ && m_movingGraphic) {
+        currentGraphic = m_movingGraphic;
+    }
+
     if (time_last_frame_ == 0) {
         time_last_frame_ = time;
         newFrame = 0;
     } else {
         Time elapsed = time - time_last_frame_;
         float framerate = 10;
-        if (map_object_->moving_ && m_movingGraphic) {
-           framerate = m_movingGraphic->getFrameRate();
-        } else {
-           framerate = graphic_->getFrameRate();
-        }
+        framerate = currentGraphic->getFrameRate();
 
         if (elapsed > framerate / 0.0015) {
-            if (newFrame < graphic_->getFrameCount() - 1) {
+            if (newFrame < currentGraphic->getFrameCount() - 1) {
                 newFrame++;
             } else {
                 newFrame = 0;
