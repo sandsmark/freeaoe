@@ -31,6 +31,9 @@ using namespace std::experimental;
 
 Logger &DataManager::log = Logger::getLogger("freeaoe.DataManager");
 
+const genie::Unit DataManager::nullUnit;
+const genie::Tech DataManager::nullTech;
+
 DataManager &DataManager::Inst()
 {
     static DataManager inst;
@@ -46,8 +49,22 @@ genie::Graphic DataManager::getGraphic(unsigned int id)
     return dat_file_.Graphics[id];
 }
 
+const genie::Tech &DataManager::getTech(unsigned int id)
+{
+    if (id >= dat_file_.Techs.size()) {
+        return nullTech;
+    }
+
+    return dat_file_.Techs.at(id);
+}
+
 genie::Unit DataManager::getUnit(unsigned int id)
 {
+    if (id >= dat_file_.Civs[0].Units.size()) {
+        log.error("Invalid unit id %d", id);
+        return nullUnit;
+    }
+
     return dat_file_.Civs[0].Units[id];
 }
 

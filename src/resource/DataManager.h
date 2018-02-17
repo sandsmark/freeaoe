@@ -36,6 +36,9 @@
 class DataManager
 {
 public:
+    static const genie::Unit nullUnit;
+    static const genie::Tech nullTech;
+
     bool initialize(const std::string dataPath);
 
     DataManager(const DataManager &) = delete;
@@ -45,6 +48,7 @@ public:
 
     genie::Graphic getGraphic(unsigned int id);
     genie::Unit getUnit(unsigned int id);
+    const genie::Tech &getTech(unsigned int id);
     const genie::Terrain &getTerrain(unsigned int id);
     genie::TerrainRestriction getTerrainRestriction(unsigned int id);
     const genie::PlayerColour &getPlayerColor(unsigned int id);
