@@ -98,3 +98,8 @@ void EntityManager::setMap(MapPtr map)
 {
     m_map = map;
 }
+
+const EntityVector &EntityManager::selected()
+{
+    return m_selectedEntities;
+}

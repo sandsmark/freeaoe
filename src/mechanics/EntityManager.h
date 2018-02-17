@@ -24,6 +24,9 @@
 
 // IDEA: Class containing all entities, (adds, removes, updates them).
 // Base class (EntitySpace?)
+
+typedef std::vector<EntityPtr> EntityVector;
+
 class EntityManager
 {
 
@@ -41,8 +44,9 @@ public:
     void selectEntities(const MapRect &selectionRect);
     void setMap(MapPtr map);
 
+    const EntityVector &selected();
+
 private:
-    typedef std::vector<EntityPtr> EntityVector;
 
     EntityVector entities_;
     EntityVector m_selectedEntities;
