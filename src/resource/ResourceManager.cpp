@@ -67,23 +67,16 @@ genie::SlpFilePtr ResourceManager::getSlp(sf::Uint32 id, const ResourceType type
     genie::SlpFilePtr slp_ptr;
 
     switch (type) {
-    case GameData:
-        for (const std::shared_ptr<genie::DrsFile> &drsFile : m_gamedataFiles) {
-            slp_ptr = drsFile->getSlpFile(id);
-            if (slp_ptr) {
-                return slp_ptr;
-            }
-        }
-        break;
     case Interface:
-        slp_ptr = m_interfaceFile->getSlpFile(id);
+        return m_interfaceFile->getSlpFile(id);
         break;
     case Graphics:
-        slp_ptr = m_graphicsFile->getSlpFile(id);
+        return m_graphicsFile->getSlpFile(id);
         break;
     case Terrain:
-        slp_ptr = m_terrainFile->getSlpFile(id);
+        return m_terrainFile->getSlpFile(id);
         break;
+    case GameData:
     case Undefined:
     default:
         break;
@@ -93,19 +86,14 @@ genie::SlpFilePtr ResourceManager::getSlp(sf::Uint32 id, const ResourceType type
         return slp_ptr;
     }
 
-    for (const std::shared_ptr<genie::DrsFile> &drsFile : m_allFiles) {
+    for (const std::shared_ptr<genie::DrsFile> &drsFile : type == GameData ? m_gamedataFiles : m_allFiles) {
         slp_ptr = drsFile->getSlpFile(id);
         if (slp_ptr) {
             return slp_ptr;
         }
     }
 
-    if (type != Undefined) {
-        log.warn("Unable to find %d in file for type %d, trying to look through all", id, type);
-        return getSlp(id, Undefined);
-    }
-
-    log.warn("No slp file with id [%d] found!", id);
+    log.debug("No slp file with id [%d] found!", id);
     return slp_ptr;
 }
 

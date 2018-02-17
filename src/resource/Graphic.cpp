@@ -47,7 +47,7 @@ sf::Image Graphic::getImage(uint32_t frame_num, float angle)
         return sf::Image();
     }
     if (!slp_) {
-        log.error("Failed to load slp");
+//        log.error("Failed to load slp");
         return sf::Image();
     }
 
@@ -66,6 +66,12 @@ sf::Image Graphic::getImage(uint32_t frame_num, float angle)
     if (cache.find(frame_num) != cache.end()) {
         return cache[frame_num];
     }
+
+    if (frame_num >= slp_->getFrameCount()) {
+        log.error("trying to look up %d, but we only have %", frame_num, slp_->getFrameCount());
+        frame_num = 0;
+    }
+
     sf::Image img = convertFrameToImage(slp_->getFrame(frame_num));
 
     if (mirrored) {
@@ -100,6 +106,11 @@ sf::Image Graphic::overlayImage(uint32_t frame_num, float angle, uint8_t playerI
         frame_num += lookupAngle * data_->FrameCount;
     }
 
+    if (frame_num >= slp_->getFrameCount()) {
+        log.error("trying to look up %d, but we only have %", frame_num, slp_->getFrameCount());
+        frame_num = 0;
+    }
+
     const genie::SlpFramePtr frame = slp_->getFrame(frame_num);
     const genie::SlpFrameData &frameData = frame->img_data;
 
@@ -129,6 +140,9 @@ std::vector<GraphicPtr> Graphic::getDeltas()
 //------------------------------------------------------------------------------
 ScreenPos Graphic::getHotspot(uint32_t frame_num, bool mirrored) const
 {
+    if (frame_num >= slp_->getFrameCount()) {
+        frame_num = 0;
+    }
     genie::SlpFramePtr frame = slp_->getFrame(frame_num);
 
     int32_t hot_spot_x = frame->hotspot_x;
@@ -177,7 +191,7 @@ bool Graphic::load(void)
             GraphicPtr deltaPtr = ResourceManager::Inst()->getGraphic(delta.GraphicID);
 
             if (!deltaPtr) {
-                log.error("Failed to load delta graphic %d", delta.GraphicID);
+                log.debug("Failed to load delta graphic %d", delta.GraphicID);
                 continue;
             }
 
@@ -189,9 +203,10 @@ bool Graphic::load(void)
             std::reverse(m_deltas.begin(), m_deltas.end());
         }
 
-        slp_ = ResourceManager::Inst()->getSlp(data_->SLP);
+        slp_ = ResourceManager::Inst()->getSlp(data_->SLP, ResourceManager::Graphics);
+
         if (!slp_) {
-            log.warn("Failed to get slp for id %d", data_->SLP);
+            log.debug("Failed to get slp for id %d", data_->SLP);
             slp_ = ResourceManager::Inst()->getSlp(15000); // TODO Loading grass if -1
             return false;
         }
