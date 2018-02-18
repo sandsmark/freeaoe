@@ -41,19 +41,27 @@ void UnitRenderer::add(const EntityForm &form)
     forms_.push_back(form);
 }
 
-void UnitRenderer::createForms(EntityPtr entity)
+bool UnitRenderer::createForms(EntityPtr entity)
 {
     comp::UnitDataPtr gunit = entity->getComponent<comp::UnitData>(comp::UNIT_DATA);
 
     if (!gunit) {
-        return;
+        return false;
     }
 
     std::cout << "Creating form for " << gunit->readableName() << " (" << gunit->getData().ID << ")" << std::endl;
 
     EntityForm form(entity);
 
+    if (gunit->getData().StandingGraphic.first < 0) {
+        std::cerr << "No standing graphic" << std::endl;
+        return false;
+    }
+
     comp::GraphicPtr graphic = comp::GraphicRender::create(gunit->getData().StandingGraphic.first);
+    if (!graphic) {
+        return false;
+    }
 
     if (gunit->getData().Moving.WalkingGraphic > 0) {
         graphic->setMovingGraphic(gunit->getData().Moving.WalkingGraphic);
@@ -76,6 +84,8 @@ void UnitRenderer::createForms(EntityPtr entity)
             createForms(annexUnit);
         }
     }
+
+    return true;
 }
 
 bool UnitRenderer::update(Time time)
