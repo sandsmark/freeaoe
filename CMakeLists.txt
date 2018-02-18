@@ -20,7 +20,6 @@ add_definitions(-Wall)
 
 set(GLOBAL_SRC 
     src/global/Config.cpp 
-    src/global/FileException.cpp
     src/global/Logger.cpp
     )
              
