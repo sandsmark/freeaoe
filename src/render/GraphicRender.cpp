@@ -139,6 +139,10 @@ GraphicPtr GraphicRender::create(unsigned int graphic_id)
     comp::GraphicPtr ptr(new comp::GraphicRender());
 
     ptr->graphic_ = ResourceManager::Inst()->getGraphic(graphic_id);
+    if (!ptr->graphic_) {
+        return nullptr;
+    }
+
     ptr->screen_pos_ = ScreenPos(100, 100);
 
     return ptr;
