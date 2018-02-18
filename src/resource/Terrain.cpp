@@ -182,17 +182,17 @@ void Terrain::blendImage(sf::Image *image, uint8_t blendFrame, uint8_t mode, int
         for (int x = 0; x < lineWidth; x++) {
             const int paletteIndex = y * width + x + offsetLeft;
             const uint8_t overlayIndex = overlayData.pixel_indexes[paletteIndex];
-            genie::Color overlayColor = (*palette)[overlayIndex];
-            overlayColor.a = overlayData.alpha_channel[paletteIndex];
+            const genie::Color &overlayColor = (*palette)[overlayIndex];
 
-            sf::Color color;
-            const float overlayAlpha = 1. - blend->alphaValues[blendFrame][blendOffset++] / 128.;
-            color.r = overlayAlpha * overlayColor.r + (1. - overlayAlpha) * sourcePixels[paletteIndex * 4 + 0];
-            color.g = overlayAlpha * overlayColor.g + (1. - overlayAlpha) * sourcePixels[paletteIndex * 4 + 1];
-            color.b = overlayAlpha * overlayColor.b + (1. - overlayAlpha) * sourcePixels[paletteIndex * 4 + 2];
-            color.a = overlayAlpha * overlayColor.a + (1. - overlayAlpha) * sourcePixels[paletteIndex * 4 + 3];
+            const int sourceAlpha = blend->alphaValues[blendFrame][blendOffset];
+            const int overlayAlpha = 128 - blend->alphaValues[blendFrame][blendOffset];
+            const int r = overlayAlpha * overlayColor.r + sourceAlpha * sourcePixels[paletteIndex * 4 + 0];
+            const int g = overlayAlpha * overlayColor.g + sourceAlpha * sourcePixels[paletteIndex * 4 + 1];
+            const int b = overlayAlpha * overlayColor.b + sourceAlpha * sourcePixels[paletteIndex * 4 + 2];
+            const int a = overlayAlpha * overlayData.alpha_channel[paletteIndex] + sourceAlpha * sourcePixels[paletteIndex * 4 + 3];
+            blendOffset++;
 
-            image->setPixel(x + offsetLeft, y, color);
+            image->setPixel(x + offsetLeft, y, sf::Color(r >> 7, g >> 7, b >> 7, a >> 7));
         }
     }
 }
