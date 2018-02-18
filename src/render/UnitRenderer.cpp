@@ -65,7 +65,7 @@ void UnitRenderer::createForms(EntityPtr entity)
 
     forms_.push_back(form);
 
-    if (gunit->getData().Type >= genie::UT_Building) {
+    if (gunit->getData().Type >= genie::Unit::BuildingType) {
         for (const genie::unit::BuildingAnnex &annex : gunit->getData().Building.Annexes) {
             if (annex.UnitID < 0) {
                 continue;
@@ -97,7 +97,7 @@ void UnitRenderer::display()
     m_outlineOverlay.clear(sf::Color::Transparent);
     for (EntityForm &form : forms_) {
         comp::UnitDataPtr gunit = form.getRoot()->getComponent<comp::UnitData>(comp::UNIT_DATA);
-        if (gunit->getData().Type < genie::UT_Building) {
+        if (gunit->getData().Type < genie::Unit::BuildingType) {
             continue;
         }
 
@@ -137,7 +137,7 @@ void UnitRenderer::display()
         }
 
         comp::UnitDataPtr gunit = form.getRoot()->getComponent<comp::UnitData>(comp::UNIT_DATA);
-        if (gunit->getData().Type >= genie::UT_Building) {
+        if (gunit->getData().Type >= genie::Unit::BuildingType) {
             continue;
         }
         renderTarget_->draw(form);
