@@ -42,7 +42,7 @@
 
 Logger& GameState::log = Logger::getLogger("freeaoe.GameState");
 
-GameState::GameState(IRenderTargetPtr renderTarget) :
+GameState::GameState(std::shared_ptr<SfmlRenderTarget> renderTarget) :
     m_cameraDeltaX(0),
     m_cameraDeltaY(0),
     m_lastUpdate(0)
@@ -76,8 +76,6 @@ void GameState::init()
         log.error("Failed to load ui overlay");
     }
 
-    entity_form_manager_.setRenderTarget(renderTarget_);
-
     const std::vector<genie::Civ> &civilizations = DataManager::Inst().civilizations();
     for (int i=0; i<civilizations.size(); i++) {
         m_civilizations.push_back(std::make_shared<Civilization>(i, DataManager::Inst().datFile()));
@@ -105,35 +103,30 @@ void GameState::init()
             for (const genie::ScnUnit &scnunit : units.units) {
                 EntityPtr unit = EntityFactory::Inst().createUnit(scnunit.objectID, MapPos(scnunit.positionX * Map::TILE_SIZE, scnunit.positionY * Map::TILE_SIZE, scnunit.positionZ));
                 entity_manager_.add(unit);
-                entity_form_manager_.createForms(unit);
             }
         }
 
         EntityPtr unit = EntityFactory::Inst().createUnit(293, MapPos(48*3, 48*3, 0));
         entity_manager_.add(unit);
-        entity_form_manager_.createForms(unit);
     } else {
         map_->setUpSample();
 
         EntityPtr unit = EntityFactory::Inst().createUnit(293, MapPos(48*3, 48*3, 0));
         entity_manager_.add(unit);
-        entity_form_manager_.createForms(unit);
 
         unit = EntityFactory::Inst().createUnit(109, MapPos(48*3, 48*3, 0));
-        comp::UnitDataPtr gunit = unit->getComponent<comp::UnitData>(comp::UNIT_DATA);
 
-        if (gunit->getData().Building.FoundationTerrainID > 0) {
-            int width = gunit->getData().CollisionSize.x;
-            int height = gunit->getData().CollisionSize.y;
+        if (unit->data.Building.FoundationTerrainID > 0) {
+            int width = unit->data.CollisionSize.x;
+            int height = unit->data.CollisionSize.y;
             for (int x = 0; x < width*2; x++) {
                 for (int y = 0; y < height*2; y++) {
-                    map_->setTileAt(3 - width + x, 3 - height + y, gunit->getData().Building.FoundationTerrainID);
+                    map_->setTileAt(3 - width + x, 3 - height + y, unit->data.Building.FoundationTerrainID);
                 }
             }
         }
 
         entity_manager_.add(unit);
-        entity_form_manager_.createForms(unit);
     }
 
     map_->updateMapData();
@@ -180,7 +173,7 @@ void GameState::draw()
     //std::cout << map_form_->getComponent<comp::MapRender>(comp::MAP_RENDER).get() << std::endl;
 
     mapRenderer_.display();
-    entity_form_manager_.display();
+    entity_manager_.render(renderTarget_);
 
     if (m_selectionRect) {
         renderTarget_->draw(m_selectionRect, sf::Color::Transparent, sf::Color::White);
@@ -205,7 +198,6 @@ bool GameState::update(Time time)
     updated = mapRenderer_.update(time) || updated;
 
     updated = entity_manager_.update(time) || updated;
-    updated = entity_form_manager_.update(time) || updated;
 
     if (m_cameraDeltaX != 0 || m_cameraDeltaY != 0) {
         const int deltaTime = time - m_lastUpdate;
@@ -318,16 +310,15 @@ void GameState::handleEvent(sf::Event event)
             m_selectionRect = ScreenRect();
 
             if (!entity_manager_.selected().empty()) {
-                EntityPtr entity = entity_manager_.selected()[0];
-                const genie::Unit &gunit = entity->getComponent<comp::UnitData>(comp::UNIT_DATA)->getData();
+                EntityPtr entity = *entity_manager_.selected().begin();
                 m_currentIcons.clear();
-                for (const genie::Unit *creatable : m_civilizations[0]->creatableUnits(gunit.ID)) {
+                for (const genie::Unit *creatable : m_civilizations[0]->creatableUnits(entity->data.ID)) {
                     if (creatable->IconID >= m_unitIconsSlp->getFrameCount()) {
                         std::cerr << "invalid icon id: " << creatable->IconID << std::endl;
                     }
 
                     Button button;
-                    if (gunit.Class == genie::Unit::Civilian) {
+                    if (entity->data.InterfaceKind == genie::Unit::CiviliansInterface) {
                         button.tex.loadFromImage(res::Resource::convertFrameToImage(m_buildingIconsSlp->getFrame(creatable->IconID)));
                     } else {
                         button.tex.loadFromImage(res::Resource::convertFrameToImage(m_unitIconsSlp->getFrame(creatable->IconID)));

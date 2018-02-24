@@ -39,8 +39,9 @@ namespace res {
 /// the graphic.
 // TODO: Player mask, outline
 //
-class Graphic : public Resource
+class Graphic
 {
+    static const sf::Image nullImage;
 
 public:
     //----------------------------------------------------------------------------
@@ -48,7 +49,7 @@ public:
     ///
     /// @param id Id of the graphic struct in .dat file.
     //
-    Graphic(uint32_t id);
+    Graphic(const genie::Graphic &data);
     virtual ~Graphic();
 
     //----------------------------------------------------------------------------
@@ -58,10 +59,8 @@ public:
     /// @param mirrored If set, the image will be returned mirrored
     /// @return Image
     //
-    sf::Image getImage(uint32_t frame_num = 0, float angle = 0.);
-    sf::Image overlayImage(uint32_t frame_num, float angle, uint8_t playerId);
-
-    std::vector<std::shared_ptr<Graphic>> getDeltas();
+    const sf::Image &getImage(uint32_t frame_num = 0, bool mirrored = false);
+    const sf::Image &overlayImage(uint32_t frame_num, float angle, uint8_t playerId);
 
     //----------------------------------------------------------------------------
     /// Get the hotspot of a frame.
@@ -69,49 +68,54 @@ public:
     //
     ScreenPos getHotspot(uint32_t frame_num = 0, bool mirrored = false) const;
 
+    const std::vector<genie::GraphicDelta> deltas() const;
+
     //----------------------------------------------------------------------------
     /// Get the frame rate of the graphic
     ///
     /// @return frame rate
     //
-    float getFrameRate(void) const;
+    float getFrameRate() const;
 
     //----------------------------------------------------------------------------
     ///
     /// @return replay delay
     //
-    float getReplayDelay(void) const;
+    float getReplayDelay() const;
 
     //----------------------------------------------------------------------------
     /// Get the graphics frame count.
     ///
     /// @return frame count
     //
-    uint32_t getFrameCount(void) const;
+    uint32_t getFrameCount() const;
 
     //----------------------------------------------------------------------------
     /// Get the graphics angle count
     ///
     /// @return angle count
     //
-    uint32_t getAngleCount(void) const;
+    uint32_t getAngleCount() const;
 
-    bool load(void) override;
-    void unload(void) override;
+    bool load();
+    void unload();
 
     ScreenPos offset_;
+
+    bool isValid();
 
 private:
     int angleToOrientation(float angle) const;
 
     static Logger &log;
 
-    std::unique_ptr<genie::Graphic> data_;
+    const genie::Graphic &data_;
     genie::SlpFilePtr slp_;
+
     std::unordered_map<int, sf::Image> m_images;
     std::unordered_map<int, sf::Image> m_flippedImages;
 
-    std::vector<std::shared_ptr<Graphic>> m_deltas;
+    std::unordered_map<int, sf::Image> m_overlays;
 
     //TODO: collection with all frames, playercolors and outlines loaded
     //      And rewrite SlpFile/Frame so that it will not store any data.

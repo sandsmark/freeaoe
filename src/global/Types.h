@@ -52,6 +52,13 @@ struct MapPos {
         );
     }
 
+    inline MapPos &operator+=(const MapPos &other) {
+        x += other.x;
+        y += other.y;
+        z += other.z;
+        return *this;
+    }
+
     float distance(const MapPos &other) const {
         return std::sqrt((other.x - x) * (other.x - x) + (other.y - y) * (other.y - y));
     }
@@ -96,6 +103,18 @@ struct ScreenPos {
 
     inline bool operator!=(const sf::Vector2f &other) const {
         return (other.x != x || other.y != y);
+    }
+
+    inline ScreenPos &operator+=(const ScreenPos &other) {
+        x += other.x;
+        y += other.y;
+        return *this;
+    }
+
+    inline ScreenPos &operator-=(const ScreenPos &other) {
+        x -= other.x;
+        y -= other.y;
+        return *this;
     }
 
     /// screen position to relative map position (map(0,0,0) is on screen(0,0)

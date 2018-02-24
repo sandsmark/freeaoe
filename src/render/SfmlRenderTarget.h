@@ -40,10 +40,7 @@ public:
     void setSize(const Size size) const override;
 
     //----------------------------------------------------------------------------
-    void draw(EntityForm &form) override;
-
-    //----------------------------------------------------------------------------
-    void draw(res::GraphicPtr graph, ScreenPos pos, int frame = 0, float angle = 0) override;
+//    void draw(res::GraphicPtr graph, ScreenPos pos, int frame = 0, float angle = 0) override;
 
     //----------------------------------------------------------------------------
     void draw(const sf::Image &image, ScreenPos pos) override;
@@ -61,8 +58,8 @@ public:
     //
     void display(void) override;
 
-private:
     sf::RenderTarget *renderTarget_;
+private:
 };
 
 #endif // GAMERENDERER_H

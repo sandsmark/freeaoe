@@ -28,10 +28,18 @@ namespace res {
 
 Logger &Graphic::log = Logger::getLogger("freeaoe.resource.Graphic");
 
+const sf::Image Graphic::nullImage;
+
 //------------------------------------------------------------------------------
-Graphic::Graphic(uint32_t id) :
-    Resource(id, TYPE_GRAPHIC)
+Graphic::Graphic(const genie::Graphic &data) :
+    data_(data)
 {
+    slp_ = ResourceManager::Inst()->getSlp(data_.SLP, ResourceManager::Graphics);
+
+    if (!slp_) {
+        log.debug("Failed to get slp for id %d", data_.SLP);
+        return;
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -40,30 +48,15 @@ Graphic::~Graphic()
 }
 
 //------------------------------------------------------------------------------
-sf::Image Graphic::getImage(uint32_t frame_num, float angle)
+const sf::Image &Graphic::getImage(uint32_t frame_num, bool mirrored)
 {
-    if (!data_) {
-        log.error("Failed to load data");
-        return sf::Image();
-    }
     if (!slp_) {
-//        log.error("Failed to load slp");
-        return sf::Image();
-    }
-
-    bool mirrored = false;
-    if (data_->AngleCount > 1) {
-        int lookupAngle = angleToOrientation(angle);
-        if (lookupAngle > data_->AngleCount/2) {
-            mirrored = true;
-            lookupAngle = data_->AngleCount - lookupAngle;
-        }
-        frame_num += lookupAngle * data_->FrameCount;
+        return nullImage;
     }
 
     std::unordered_map<int, sf::Image> &cache = mirrored ? m_flippedImages : m_images;
 
-    if (cache.find(frame_num) != cache.end()) {
+    if (cache.count(frame_num)) {
         return cache[frame_num];
     }
 
@@ -72,7 +65,7 @@ sf::Image Graphic::getImage(uint32_t frame_num, float angle)
         frame_num = 0;
     }
 
-    sf::Image img = convertFrameToImage(slp_->getFrame(frame_num));
+    sf::Image img = Resource::convertFrameToImage(slp_->getFrame(frame_num));
 
     if (mirrored) {
         img.flipHorizontally();
@@ -82,33 +75,33 @@ sf::Image Graphic::getImage(uint32_t frame_num, float angle)
     return cache[frame_num];
 }
 
-sf::Image Graphic::overlayImage(uint32_t frame_num, float angle, uint8_t playerId)
+const sf::Image &Graphic::overlayImage(uint32_t frame_num, float angle, uint8_t playerId)
 {
-    if (!data_) {
-        log.error("Failed to load data");
-        return sf::Image();
-    }
     if (!slp_) {
         log.error("Failed to load slp");
-        return sf::Image();
+        return nullImage;
     }
 
-    genie::PlayerColour pc  = DataManager::Inst().getPlayerColor(playerId);
+    genie::PlayerColour pc = DataManager::Inst().getPlayerColor(playerId);
     genie::PalFilePtr palette = ResourceManager::Inst()->getPalette(50500);
 
     bool mirrored = false;
-    if (data_->AngleCount > 1) {
+    if (data_.AngleCount > 1) {
         int lookupAngle = angleToOrientation(angle);
-        if (lookupAngle > data_->AngleCount/2) {
+        if (lookupAngle > data_.AngleCount/2) {
             mirrored = true;
-            lookupAngle = data_->AngleCount - lookupAngle;
+            lookupAngle = data_.AngleCount - lookupAngle;
         }
-        frame_num += lookupAngle * data_->FrameCount;
+        frame_num += lookupAngle * data_.FrameCount;
     }
 
     if (frame_num >= slp_->getFrameCount()) {
         log.error("trying to look up %d, but we only have %", frame_num, slp_->getFrameCount());
         frame_num = 0;
+    }
+
+    if (m_overlays.count(frame_num)) {
+        return m_overlays[frame_num];
     }
 
     const genie::SlpFramePtr frame = slp_->getFrame(frame_num);
@@ -128,13 +121,9 @@ sf::Image Graphic::overlayImage(uint32_t frame_num, float angle, uint8_t playerI
     if (mirrored) {
         img.flipHorizontally();
     }
+    m_overlays[frame_num] = img;
 
-    return img;
-}
-
-std::vector<GraphicPtr> Graphic::getDeltas()
-{
-    return m_deltas;
+    return m_overlays[frame_num];
 }
 
 //------------------------------------------------------------------------------
@@ -153,81 +142,38 @@ ScreenPos Graphic::getHotspot(uint32_t frame_num, bool mirrored) const
     return ScreenPos(hot_spot_x, frame->hotspot_y);
 }
 
-//------------------------------------------------------------------------------
-float Graphic::getFrameRate(void) const
+const std::vector<genie::GraphicDelta> Graphic::deltas() const
 {
-    return data_->FrameDuration;
+    return data_.Deltas;
 }
 
 //------------------------------------------------------------------------------
-float Graphic::getReplayDelay(void) const
+float Graphic::getFrameRate() const
 {
-    return data_->ReplayDelay;
+    return data_.FrameDuration;
 }
 
 //------------------------------------------------------------------------------
-uint32_t Graphic::getFrameCount(void) const
+float Graphic::getReplayDelay() const
 {
-    return data_->FrameCount;
+    return data_.ReplayDelay;
 }
 
 //------------------------------------------------------------------------------
-uint32_t Graphic::getAngleCount(void) const
+uint32_t Graphic::getFrameCount() const
 {
-    return data_->AngleCount;
+    return data_.FrameCount;
 }
 
 //------------------------------------------------------------------------------
-bool Graphic::load(void)
+uint32_t Graphic::getAngleCount() const
 {
-    if (!isLoaded()) {
-        data_ = std::make_unique<genie::Graphic>(DataManager::Inst().getGraphic(getId()));
-
-        for (const genie::GraphicDelta &delta : data_->Deltas) {
-            if (delta.GraphicID < 0) {
-                continue;
-            }
-
-            GraphicPtr deltaPtr = ResourceManager::Inst()->getGraphic(delta.GraphicID);
-
-            if (!deltaPtr) {
-                log.debug("Failed to load delta graphic %d", delta.GraphicID);
-                continue;
-            }
-
-            deltaPtr->offset_ = ScreenPos(delta.OffsetX, delta.OffsetY);
-            m_deltas.push_back(deltaPtr);
-        }
-
-        if (!m_deltas.empty()) {
-            std::reverse(m_deltas.begin(), m_deltas.end());
-        }
-
-        slp_ = ResourceManager::Inst()->getSlp(data_->SLP, ResourceManager::Graphics);
-
-        if (!slp_) {
-            log.debug("Failed to get slp for id %d", data_->SLP);
-            slp_ = ResourceManager::Inst()->getSlp(15000); // TODO Loading grass if -1
-            return false;
-        }
-
-        if (slp_->getFrameCount() != data_->FrameCount * (data_->AngleCount / 2 + 1)) {
-            log.warn("Graphic [%d]: Framecount between data and slp differs (%d vs %d, %d angles, %d frames)",
-                     getId(), data_->FrameCount * (data_->AngleCount / 2 + 1), slp_->getFrameCount(), data_->AngleCount, data_->FrameCount);
-        }
-
-        return Resource::load();
-    }
-    return true;
+    return data_.AngleCount;
 }
 
-//------------------------------------------------------------------------------
-void Graphic::unload(void)
+bool Graphic::isValid()
 {
-    if (isLoaded()) {
-        slp_->unload();
-        Resource::unload();
-    }
+    return slp_ != nullptr;
 }
 
 int Graphic::angleToOrientation(float angle) const
@@ -235,14 +181,14 @@ int Graphic::angleToOrientation(float angle) const
     // The graphics start pointing south, and goes clock-wise
     angle = - angle - M_PI_2;
 
-    int lookupAngle = std::round(data_->AngleCount * angle / (M_PI * 2.));
+    int lookupAngle = std::round(data_.AngleCount * angle / (M_PI * 2.));
 
     // The angle we get in isn't normalized
-    while (lookupAngle > data_->AngleCount) {
-        lookupAngle -= data_->AngleCount;
+    while (lookupAngle > data_.AngleCount) {
+        lookupAngle -= data_.AngleCount;
     }
     while (lookupAngle < 0) {
-        lookupAngle += data_->AngleCount;
+        lookupAngle += data_.AngleCount;
     }
 
     return lookupAngle;

@@ -94,7 +94,7 @@ bool Engine::setup(const std::string &scnFile)
   renderWindow_ = new sf::RenderWindow(sf::VideoMode(640, 480), "freeaoe");
   renderWindow_->setFramerateLimit(60);
   
-  renderTarget_ = IRenderTargetPtr(new SfmlRenderTarget(*renderWindow_));
+  renderTarget_ = std::make_shared<SfmlRenderTarget>(*renderWindow_);
 
   GameState *gameState = new GameState(renderTarget_);
 
@@ -108,7 +108,7 @@ bool Engine::setup(const std::string &scnFile)
           return false;
       }
   } else {
-      gameState->setScenario(ResourceManager::Inst()->getScn(56009));
+//      gameState->setScenario(ResourceManager::Inst()->getScn(56009));
   }
 
   state_manager_.addActiveState(gameState);

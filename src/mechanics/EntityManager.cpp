@@ -21,6 +21,10 @@
 #include "CompMapObject.h"
 #include "CompUnitData.h"
 #include "ActionMove.h"
+#include "render/SfmlRenderTarget.h"
+
+#include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/Sprite.hpp>
 
 #include <iostream>
 
@@ -34,18 +38,72 @@ EntityManager::~EntityManager()
 
 void EntityManager::add(EntityPtr entity)
 {
-    entities_.push_back(entity);
+    m_entities.insert(entity);
 }
 
 bool EntityManager::update(Time time)
 {
     bool updated = false;
-    for (EntityVector::iterator it = entities_.begin(); it != entities_.end();
-         it++) {
-        updated = (*it)->update(time) || updated;
+
+    for (EntityPtr entity : m_entities) {
+        updated = entity->update(time) || updated;
     }
 
     return updated;
+}
+
+void EntityManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
+{
+    for (EntityPtr entity : m_entities) {
+        entity->renderer().drawOn(*renderTarget->renderTarget_, renderTarget->absoluteScreenPos(entity->position));
+
+        for (const Entity::Annex &annex : entity->annexes) {
+            annex.entity->renderer().drawOn(*renderTarget->renderTarget_, renderTarget->absoluteScreenPos(entity->position + annex.offset));
+        }
+    }
+
+//    if (m_outlineOverlay.getSize() != renderTarget->getSize()) {
+//        m_outlineOverlay.create(renderTarget->getSize().x, renderTarget->getSize().y, false);
+//    }
+
+//    m_outlineOverlay.clear(sf::Color::Transparent);
+//    for (EntityPtr entity : m_entities) {
+//        if (entity->data.Type < genie::Unit::BuildingType) {
+//            continue;
+//        }
+
+//        entity->renderer().drawOn(m_outlineOverlay, renderTarget->absoluteScreenPos(entity->position));
+
+//        for (EntityPtr annex : entity->annexes) {
+//            annex->renderer().drawOn(m_outlineOverlay, renderTarget->absoluteScreenPos(annex->position));
+//        }
+//    }
+
+//    for (const EntityPtr &entity : m_entities) {
+//        if (m_selectedEntities.count(entity)) { // draw health indicator
+//            ScreenPos pos = renderTarget->absoluteScreenPos(entity->position);
+//            pos.x -= Map::TILE_SIZE_HORIZONTAL / 8;
+//            pos.y -= Map::TILE_SIZE_VERTICAL;
+
+//            sf::RectangleShape rect;
+//            rect.setFillColor(sf::Color::Green);
+//            rect.setOutlineColor(sf::Color::Transparent);
+
+//            rect.setPosition(pos);
+//            rect.setSize(sf::Vector2f(Map::TILE_SIZE_HORIZONTAL / 4, 2));
+//            m_outlineOverlay.draw(rect);
+//        }
+
+//        if (entity->data.Type >= genie::Unit::BuildingType) {
+//            continue;
+//        }
+
+//        ScreenPos pos = renderTarget->absoluteScreenPos(entity->position);
+//        entity->renderer().drawOutlineOn(m_outlineOverlay, pos);
+//    }
+
+//    m_outlineOverlay.display();
+//    renderTarget->draw(m_outlineOverlay.getTexture(), ScreenPos(0, 0));
 }
 
 void EntityManager::onRightClick(const MapPos &mapPos)
@@ -55,42 +113,35 @@ void EntityManager::onRightClick(const MapPos &mapPos)
     }
 
 
-    for (EntityPtr entity : m_selectedEntities) {
-        act::MoveOnMap::moveUnitTo(entity, mapPos, m_map);
+    for (const EntityPtr &entity : m_selectedEntities) {
+        if (entity->type == Entity::Type::Unit) {
+            Entity::asUnit(entity)->setCurrentAction(act::MoveOnMap::moveUnitTo(entity, mapPos, m_map));
+        }
     }
-
 }
 
 void EntityManager::selectEntities(const MapRect &selectionRect)
 {
-    for (EntityPtr entity : m_selectedEntities) {
-        entity->selected = false;
-    }
-
     m_selectedEntities.clear();
 
     std::vector<EntityPtr> containedEntities;
     int8_t requiredInteraction = genie::Unit::ObjectInteraction;
-    for (EntityPtr entity : entities_) {
-        comp::MapObjectPtr mapObject = entity->getComponent<comp::MapObject>(comp::MAP_OBJECT);
-        const genie::Unit &gunit = entity->getComponent<comp::UnitData>(comp::UNIT_DATA)->getData();
+    for (EntityPtr entity : m_entities) {
 
-        if (!selectionRect.overlaps(mapObject->getRect())) {
+        if (!selectionRect.contains(entity->position)) {
             continue;
         }
 
-        requiredInteraction = std::max(gunit.InteractionMode, requiredInteraction);
+        requiredInteraction = std::max(entity->data.InteractionMode, requiredInteraction);
         containedEntities.push_back(entity);
     }
 
     for (EntityPtr entity : containedEntities) {
-        const genie::Unit &gunit = entity->getComponent<comp::UnitData>(comp::UNIT_DATA)->getData();
-        if (gunit.InteractionMode < requiredInteraction) {
+        if (entity->data.InteractionMode < requiredInteraction) {
             continue;
         }
 
-        m_selectedEntities.push_back(entity);
-        entity->selected = true;
+        m_selectedEntities.insert(entity);
     }
 }
 
@@ -99,7 +150,7 @@ void EntityManager::setMap(MapPtr map)
     m_map = map;
 }
 
-const EntityVector &EntityManager::selected()
+const EntitySet &EntityManager::selected()
 {
     return m_selectedEntities;
 }

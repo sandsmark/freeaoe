@@ -22,8 +22,9 @@
 #include <core/IComponent.h>
 #include <resource/Graphic.h>
 #include <resource/ResourceManager.h>
-#include <mechanics/CompMapObject.h>
 #include "IRenderableComponent.h"
+
+struct Entity;
 
 namespace comp {
 
@@ -31,49 +32,47 @@ const std::string GRAPHIC_RENDER("comp_graphic");
 
 class GraphicRender;
 
+
 typedef std::shared_ptr<GraphicRender> GraphicPtr;
 
 /// Draws and manages Graphics for EntityForm objects.
-class GraphicRender : public IRenderableComponent
+class GraphicRender
 {
+    static const sf::Image nullImage;
 
 public:
     GraphicRender();
     virtual ~GraphicRender();
 
-    bool update(Time time) override;
+    bool update(Time time);
 
-    void drawOn(IRenderTarget &renderer) override;
+    void drawOn(sf::RenderTarget &renderTarget, ScreenPos screenPos);
+    void drawOutlineOn(sf::RenderTarget &renderer, ScreenPos screenPos);
 
-    sf::Image image();
-    sf::Image overlay();
+    const sf::Image &image();
+    const sf::Image &outline();
+
+    void setPlayerId(int playerId);
 
     void setGraphic(res::GraphicPtr graphic);
     ScreenPos getHotspot() const { return graphic_->getHotspot(current_frame_); }
 
-    void setMapObject(MapObjectPtr map_object);
+    float angle;
 
-    void setMovingGraphic(unsigned graphic_id);
-
-    static comp::GraphicPtr create(unsigned int graphic_id);
-
-    MapObjectPtr map_object_;
     res::GraphicPtr graphic_;
+
 private:
-    res::GraphicPtr m_movingGraphic;
-
-
-    ScreenPos screen_pos_;
+    struct GraphicDelta {
+        res::GraphicPtr graphic;
+        ScreenPos offset;
+    };
 
     unsigned int current_frame_;
     Time time_last_frame_;
+    std::vector<GraphicDelta> m_deltas;
 
     bool replay_delay_;
-
-    uint16_t current_angle_;
-    unsigned int angle_diff_;
-
-    bool mirror_frame_;
+    int m_playerId = 2;
 };
 }
 

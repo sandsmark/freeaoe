@@ -21,61 +21,84 @@
 
 #include <map>
 #include "Utility.h"
+#include "render/GraphicRender.h"
 
 #include "IComponent.h"
 #include "IAction.h"
 
-class EntityForm;
+namespace genie {
+class Unit;
+}
 
-/// Entity is a generic class for game objects.
-class Entity
-{ //TODO: entity collections, actions
+struct Unit;
+struct Entity;
 
+namespace comp {
+class GraphicRender;
+}
+
+typedef std::shared_ptr<Entity> EntityPtr;
+
+struct Entity
+{
 public:
-    Entity();
+    enum class Type {
+        None,
+        Unit
+    };
+    const Type type = Type::None;
+
+    struct Annex {
+        EntityPtr entity;
+        MapPos offset;
+    };
+
+    Entity() = delete;
+
+    const genie::Unit &data;
+    int playerId;
+
+    std::string readableName();
+
     virtual ~Entity();
 
     virtual bool update(Time time);
 
-    void addComponent(const std::string &name, ComponentPtr comp);
+    MapPos position;
 
-    template <class T>
-    std::shared_ptr<T> getComponent(const std::string &name)
-    {
-        ComponentPtr ptr = components_[name.c_str()];
-        return std::dynamic_pointer_cast<T>(ptr);
-    }
+    comp::GraphicRender &renderer() { return m_graphics; }
 
-    unsigned int getComponentSize() { return components_.size(); }
+    static std::shared_ptr<Unit> asUnit(EntityPtr entity);
 
-public:
-    ActionPtr current_action_;
+    std::vector<Annex> annexes;
+
+protected:
+    Entity(const genie::Unit &data_, int playerId_, const Type type_);
+
+    comp::GraphicRender m_graphics;
+
+    res::GraphicPtr defaultGraphics;
+};
+
+struct Unit : public Entity
+{
+    Unit() = delete;
+
+    Unit(const genie::Unit &data_, int playerId);
+
     bool selected = false;
 
-private:
-    typedef std::map<const char *, ComponentPtr, util::cstr_comp> ComponentMap;
-    ComponentMap components_;
+    void setAngle(const float angle);
+    void setCurrentAction(ActionPtr action);
+    void removeAction(IAction *action);
+
+    bool update(Time time) override;
+
+protected:
+    res::GraphicPtr movingGraphics;
+    ActionPtr currentAction;
 };
+typedef std::shared_ptr<Unit> UnitPtr;
 
-typedef std::shared_ptr<Entity> EntityPtr;
-
-/// A generic class representing an entity on screen
-class EntityForm : public Entity
-{
-public:
-    EntityForm() {}
-    EntityForm(EntityPtr root) :
-        root_(root) {}
-    virtual ~EntityForm() {}
-
-    EntityPtr getRoot() const { return root_; }
-
-private:
-    EntityPtr root_;
-
-    //EntityForm(const EntityForm& other);
-};
-
-typedef std::shared_ptr<EntityForm> EntityFormPtr;
 
 #endif // ENTITY_H

@@ -40,11 +40,8 @@ public:
     virtual void setSize(const Size size) const = 0;
 
     //----------------------------------------------------------------------------
-    virtual void draw(EntityForm &form) = 0;
-
-    //----------------------------------------------------------------------------
-    virtual void draw(res::GraphicPtr graph, ScreenPos pos, int frame = 0,
-                      float angle = 0) = 0;
+//    virtual void draw(res::GraphicPtr graph, ScreenPos pos, int frame = 0,
+//                      float angle = 0) = 0;
 
     //----------------------------------------------------------------------------
     /// TODO: Remove sf:: from api

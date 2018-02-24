@@ -17,32 +17,96 @@
 */
 
 #include "Entity.h"
+#include "resource/DataManager.h"
+#include "resource/LanguageManager.h"
+#include "render/GraphicRender.h"
+#include <genie/dat/Unit.h>
 
-Entity::Entity()
+Entity::Entity(const genie::Unit &data_, int playerId_, const Entity::Type type_) :
+    type(type_),
+    data(data_),
+    playerId(playerId_),
+    defaultGraphics(ResourceManager::Inst()->getGraphic(data.StandingGraphic.first))
 {
+    m_graphics.setGraphic(defaultGraphics);
 }
 
 Entity::~Entity()
 {
 }
 
-void Entity::addComponent(const std::string &name, ComponentPtr comp)
-{
-    components_[name.c_str()] = comp;
-}
-
 bool Entity::update(Time time)
 {
     bool updated = false;
 
-    for (ComponentMap::iterator it = components_.begin(); it != components_.end();
-         it++) {
-        updated = (*it).second->update(time) || updated;
-    }
+    updated = m_graphics.update(time) || updated;
 
-    if (current_action_.get() != 0) {
-        updated = current_action_->update(time) || updated;
+    for (Annex &annex : annexes) {
+        updated = annex.entity->update(time) || updated;
     }
 
     return updated;
+}
+
+std::string Entity::readableName()
+{
+    return LanguageManager::getString(data.LanguageDLLName);
+}
+
+std::shared_ptr<Unit> Entity::asUnit(EntityPtr entity)
+{
+    if (!entity) {
+        return nullptr;
+    }
+
+    if (entity->type != Type::Unit) {
+        return nullptr;
+    }
+    return std::static_pointer_cast<Unit>(entity);
+}
+
+Unit::Unit(const genie::Unit &data_, int playerId_) :
+    Entity(data_, playerId_, Type::Unit)
+{
+    movingGraphics = ResourceManager::Inst()->getGraphic(data.Moving.WalkingGraphic);
+}
+
+bool Unit::update(Time time)
+{
+    bool updated = false;
+
+    updated = m_graphics.update(time) || updated;
+
+    if (currentAction) {
+        updated = currentAction->update(time) || updated;
+    }
+
+    return updated || Entity::update(time);
+}
+
+void Unit::setAngle(const float angle)
+{
+    m_graphics.angle = angle;
+}
+
+void Unit::setCurrentAction(ActionPtr action)
+{
+    currentAction = action;
+
+    if (!action) {
+        return;
+    }
+
+    if (action->type == IAction::Type::Move) {
+        m_graphics.setGraphic(movingGraphics);
+    } else {
+        m_graphics.setGraphic(defaultGraphics);
+    }
+}
+
+void Unit::removeAction(IAction *action)
+{
+    if (currentAction.get() == action) {
+        currentAction.reset();
+    }
 }

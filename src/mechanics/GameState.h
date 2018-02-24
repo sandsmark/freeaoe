@@ -50,7 +50,7 @@ class GameState : public IState
     };
 
 public:
-    GameState(IRenderTargetPtr renderTarget);
+    GameState(std::shared_ptr<SfmlRenderTarget> renderTarget);
     virtual ~GameState();
 
     void setScenario(std::shared_ptr<genie::ScnFile> scenario);
@@ -69,10 +69,9 @@ private:
 
     GameState(const GameState &other);
 
-    IRenderTargetPtr renderTarget_;
+    std::shared_ptr<SfmlRenderTarget> renderTarget_;
 
     EntityManager entity_manager_;
-    UnitRenderer entity_form_manager_;
     /*
   GameServer *game_server_;
   GameClient *game_client_;

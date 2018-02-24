@@ -21,21 +21,20 @@
 #include <resource/ResourceManager.h>
 #include <resource/DataManager.h>
 #include <mechanics/CompMapObject.h>
+#include <SFML/Graphics/Sprite.hpp>
 #include "IRenderTarget.h"
 
 #include "MapRenderer.h"
+#include "core/Entity.h"
 
 namespace comp {
 
-GraphicRender::GraphicRender() :
-    screen_pos_(0, 0)
+const sf::Image GraphicRender::nullImage;
+
+GraphicRender::GraphicRender()
 {
     current_frame_ = 0;
     time_last_frame_ = 0;
-    current_angle_ = 0;
-    angle_diff_ = 0;
-    mirror_frame_ = false;
-    replay_delay_ = false;
 }
 
 GraphicRender::~GraphicRender()
@@ -46,21 +45,16 @@ bool GraphicRender::update(Time time)
 {
     int newFrame = current_frame_;
 
-    res::GraphicPtr currentGraphic = graphic_;
-    if (map_object_->moving_ && m_movingGraphic) {
-        currentGraphic = m_movingGraphic;
-    }
-
     if (time_last_frame_ == 0) {
         time_last_frame_ = time;
         newFrame = 0;
     } else {
         Time elapsed = time - time_last_frame_;
         float framerate = 10;
-        framerate = currentGraphic->getFrameRate();
+        framerate = graphic_->getFrameRate();
 
         if (elapsed > framerate / 0.0015) {
-            if (newFrame < currentGraphic->getFrameCount() - 1) {
+            if (newFrame < graphic_->getFrameCount() - 1) {
                 newFrame++;
             } else {
                 newFrame = 0;
@@ -77,74 +71,103 @@ bool GraphicRender::update(Time time)
 
     current_frame_ = newFrame;
 
+//    for (GraphicDelta &delta : m_deltas) {
+//        updated = delta->update(time) || updated;
+//    }
+
     return updated;
 }
 
-void GraphicRender::drawOn(IRenderTarget &renderer)
+void GraphicRender::drawOn(sf::RenderTarget &renderTarget, ScreenPos screenPos)
 {
-    screen_pos_ = renderer.absoluteScreenPos(map_object_->getPos());
+//    screenPos -= graphic_->getHotspot(current_frame_);
 
-    //, map_object_->angle_
-    if (map_object_->moving_ && m_movingGraphic) {
-        renderer.draw(m_movingGraphic, screen_pos_, current_frame_, map_object_->angle_);
-    } else {
-        renderer.draw(graphic_, screen_pos_, current_frame_, map_object_->angle_);
+    sf::Texture texture;
+    texture.loadFromImage(image());
+    sf::Sprite sprite;
+    sprite.setTexture(texture);
+    sprite.setPosition(screenPos - graphic_->getHotspot(current_frame_));
+    renderTarget.draw(sprite);
+
+    for (const GraphicDelta &delta : m_deltas) {
+        sf::Texture texture;
+        texture.loadFromImage(delta.graphic->getImage());
+        sf::Sprite sprite;
+        sprite.setTexture(texture);
+        sprite.setPosition(screenPos - delta.graphic->getHotspot() - delta.offset);
+//        sprite.setPosition(screenPos - delta.offset - delta.graphic->getHotspot());
+        renderTarget.draw(sprite);
     }
 }
 
-sf::Image GraphicRender::image()
+void GraphicRender::drawOutlineOn(sf::RenderTarget &renderTarget, ScreenPos screenPos)
+{
+    screenPos = graphic_->getHotspot();
+
+    sf::Texture texture;
+    texture.loadFromImage(outline());
+    sf::Sprite sprite;
+    sprite.setTexture(texture);
+    sprite.setPosition(screenPos);
+    sf::BlendMode blendMode = sf::BlendAlpha;
+    blendMode.alphaSrcFactor = sf::BlendMode::DstAlpha;
+    renderTarget.draw(sprite, blendMode);
+
+    for (const GraphicDelta &delta : m_deltas) {
+        sf::Texture texture;
+        texture.loadFromImage(delta.graphic->getImage());
+        sf::Sprite sprite;
+        sprite.setTexture(texture);
+        sprite.setPosition(screenPos + delta.offset);
+        sf::BlendMode blendMode = sf::BlendAlpha;
+        blendMode.alphaSrcFactor = sf::BlendMode::DstAlpha;
+        renderTarget.draw(sprite, blendMode);
+    }
+}
+
+const sf::Image &GraphicRender::image()
 {
     if (!graphic_) {
-        return sf::Image();
+        return nullImage;
     }
-    if (!map_object_) {
-        return sf::Image();
-    }
-
-    if (map_object_->moving_ && m_movingGraphic) {
-        return m_movingGraphic->getImage(current_frame_, map_object_->angle_);
-    } else {
-        return graphic_->getImage(current_frame_, map_object_->angle_);
-    }
+    return graphic_->getImage(current_frame_);
 }
 
-sf::Image GraphicRender::overlay()
+const sf::Image &GraphicRender::outline()
 {
     if (!graphic_) {
-        return sf::Image();
-    }
-    if (!map_object_) {
-        return sf::Image();
+        return nullImage;
     }
 
-    if (map_object_->moving_ && m_movingGraphic) {
-        return m_movingGraphic->overlayImage(current_frame_, map_object_->angle_, 2);
-    } else {
-        return graphic_->overlayImage(current_frame_, map_object_->angle_, 2);
-    }
+    return graphic_->overlayImage(current_frame_, angle, m_playerId);
 }
 
-void GraphicRender::setMapObject(MapObjectPtr map_object)
+void GraphicRender::setGraphic(res::GraphicPtr graphic)
 {
-    map_object_ = map_object;
-}
+    graphic_ = graphic;
 
-void GraphicRender::setMovingGraphic(unsigned graphic_id)
-{
-    m_movingGraphic = ResourceManager::Inst()->getGraphic(graphic_id);
-}
+    m_deltas.clear();
 
-GraphicPtr GraphicRender::create(unsigned int graphic_id)
-{
-    comp::GraphicPtr ptr(new comp::GraphicRender());
+    for (const genie::GraphicDelta &delta : graphic->deltas()) {
+        if (delta.GraphicID < 0) {
+            continue;
+        }
 
-    ptr->graphic_ = ResourceManager::Inst()->getGraphic(graphic_id);
-    if (!ptr->graphic_) {
-        return nullptr;
+        GraphicDelta graphicDelta;
+        graphicDelta.graphic = ResourceManager::Inst()->getGraphic(delta.GraphicID);
+        if (!graphicDelta.graphic->isValid()) {
+            std::cerr << "failed to get delta" << std::endl;
+            continue;
+        }
+
+        graphicDelta.offset = ScreenPos(delta.OffsetX, delta.OffsetY);
+
+        m_deltas.push_back(graphicDelta);
     }
 
-    ptr->screen_pos_ = ScreenPos(100, 100);
-
-    return ptr;
+    if (!m_deltas.empty()) {
+        std::reverse(m_deltas.begin(), m_deltas.end());
+    }
 }
+
 }

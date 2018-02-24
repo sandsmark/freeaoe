@@ -42,24 +42,34 @@ EntityFactory::~EntityFactory()
 
 std::shared_ptr<Entity> EntityFactory::createUnit(int ID, const MapPos &position)
 {
-    //genie::Unit gunit = DataManager::Inst().getUnit(ID);
+    const genie::Unit &gunit = DataManager::Inst().getUnit(ID);
 
-    EntityPtr entity(new Entity());
+    EntityPtr entity = std::make_shared<Unit>(gunit, 0);
+    entity->position = position;
+
+    if (gunit.Type >= genie::Unit::BuildingType) {
+        for (const genie::unit::BuildingAnnex &annexData : gunit.Building.Annexes) {
+            if (annexData.UnitID < 0) {
+                continue;
+            }
+
+            Entity::Annex annex;
+            annex.offset = MapPos(annexData.Misplacement.first * -48, annexData.Misplacement.second * -48);
+            annex.entity = createUnit(annexData.UnitID, position);
+            entity->annexes.push_back(annex);
+        }
+
+        if (!entity->annexes.empty()) {
+            std::reverse(entity->annexes.begin(), entity->annexes.end());
+        }
+    }
 
     //std::cout << gunit.Name << std::endl;
 
-    comp::MapObjectPtr mo(new comp::MapObject());
-//    std::cout << "added unit at " << position.x << " " << position.y << std::endl;
-    comp::UnitDataPtr gunit(new comp::UnitData());
-    gunit->setUnit(ID);
-
-    int width = gunit->getData().CollisionSize.x * Map::TILE_SIZE;
-    int height = gunit->getData().CollisionSize.y * Map::TILE_SIZE;
-    MapRect unitRect(position.x, position.y, width, height);
-    mo->setRect(unitRect);
-
-    entity->addComponent(comp::MAP_OBJECT, mo);
-    entity->addComponent(comp::UNIT_DATA, gunit);
+//    int width = gunit->getData().CollisionSize.x * Map::TILE_SIZE;
+//    int height = gunit->getData().CollisionSize.y * Map::TILE_SIZE;
+//    MapRect unitRect(position.x, position.y, width, height);
+//    mo->setRect(unitRect);
 
 //    ActionPtr act(new act::MoveOnMap(entity, MapPos(48 * 4, 48 * 2, 0)));
 

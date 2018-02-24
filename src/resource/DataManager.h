@@ -46,8 +46,8 @@ public:
 
     static DataManager &Inst();
 
-    genie::Graphic getGraphic(unsigned int id);
-    genie::Unit getUnit(unsigned int id);
+    const genie::Graphic &getGraphic(unsigned int id);
+    const genie::Unit &getUnit(unsigned int id);
     const genie::Tech &getTech(unsigned int id);
     const genie::Terrain &getTerrain(unsigned int id);
     genie::TerrainRestriction getTerrainRestriction(unsigned int id);

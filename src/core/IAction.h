@@ -25,14 +25,21 @@
 
 class IAction
 {
-
 public:
-    IAction();
+    enum class Type {
+        None,
+        Move,
+        PlaceOnMap
+    };
+    const Type type = Type::None;
+
     virtual ~IAction();
 
     /// @return true if action is done
     virtual bool update(Time time) = 0;
 
+protected:
+    IAction(const Type type_);
     //isDone?
 };
 

@@ -47,7 +47,7 @@ private:
   
   sf::RenderWindow *renderWindow_;
   
-  IRenderTargetPtr renderTarget_;
+  std::shared_ptr<SfmlRenderTarget> renderTarget_;
   
   StateManager state_manager_;
 

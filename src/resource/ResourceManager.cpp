@@ -17,6 +17,7 @@
 */
 
 #include "ResourceManager.h"
+#include "DataManager.h"
 
 #include <fstream>
 #include <iostream>
@@ -105,11 +106,7 @@ res::GraphicPtr ResourceManager::getGraphic(Uint32 id)
     if (graphics_.find(id) != graphics_.end()) {
         graph = graphics_[id];
     } else {
-        graph = std::make_shared<res::Graphic>(id);
-
-        if (!graph->load()) {
-            return nullptr;
-        }
+        graph = std::make_shared<res::Graphic>(DataManager::Inst().getGraphic(id));
 
         graphics_[id] = graph;
     }

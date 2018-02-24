@@ -39,7 +39,6 @@ void UnitData::setUnit(unsigned int unit_id)
 {
     data_ = DataManager::Inst().getUnit(unit_id);
 
-    m_readableName = LanguageManager::getString(data_.LanguageDLLName);
     if (m_readableName.empty()) {
         m_readableName = data_.Name;
     }

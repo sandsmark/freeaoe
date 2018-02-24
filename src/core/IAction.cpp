@@ -18,7 +18,8 @@
 
 #include "IAction.h"
 
-IAction::IAction()
+IAction::IAction(const Type type_) :
+    type(type_)
 {
 }
 

@@ -29,7 +29,7 @@ class Animate : public IAction
 {
 
 public:
-    Animate(EntityFormPtr form);
+//    Animate(EntityFormPtr form);
     virtual ~Animate();
 
     virtual bool update(Time time) = 0;

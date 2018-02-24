@@ -29,13 +29,15 @@ namespace { // anonymous namespace, don't export this
 struct PathPoint {
     PathPoint() = default;
     PathPoint(const PathPoint &other) :
-    x(other.x),
-    y(other.y),
-    pathLength(other.pathLength),
-    distance(other.distance){
-
+        x(other.x),
+        y(other.y),
+        pathLength(other.pathLength),
+        distance(other.distance)
+    {
     }
+
     PathPoint(int _x, int _y) : x(_x), y(_y) {}
+
     int x = 0;
     int y = 0;
     float pathLength = 0;
@@ -67,9 +69,11 @@ Logger &MoveOnMap::log = Logger::getLogger("freeaoe.MoveOnMap");
 
 static const float PATHFINDING_HEURISTIC_WEIGHT = 1.;
 
-MoveOnMap::MoveOnMap(MapPos destination, MapPtr map) :
+MoveOnMap::MoveOnMap(MapPos destination, MapPtr map, UnitPtr unit) :
+    IAction(Type::Move),
     m_map(map),
-    target_reached(false)
+    target_reached(false),
+    m_unit(unit)
 {
     dest_ = destination;
     last_update_ = 0;
@@ -82,9 +86,15 @@ MoveOnMap::~MoveOnMap()
 
 bool MoveOnMap::update(Time time)
 {
+    std::shared_ptr<Unit> unit = m_unit.lock();
+    if (!unit) {
+        log.warn("My unit got deleted");
+        return false;
+    }
+
     if (target_reached || m_path.empty()) {
         target_reached = true;
-        m_mapObject->moving_ = false;
+        unit->removeAction(this);
         return false;
     }
 
@@ -99,70 +109,70 @@ bool MoveOnMap::update(Time time)
     float movement = elapsed * speed_ * 0.15;
 
 
-    float distanceLeft = std::hypot(m_path.back().x - m_mapObject->getPos().x, m_path.back().y - m_mapObject->getPos().y);
+    float distanceLeft = std::hypot(m_path.back().x - unit->position.x, m_path.back().y - unit->position.y);
     while (distanceLeft <= movement && !m_path.empty()) {
 
         m_path.pop_back();
-        distanceLeft = std::hypot(m_path.back().x - m_mapObject->getPos().x, m_path.back().y - m_mapObject->getPos().y);
+        distanceLeft = std::hypot(m_path.back().x - unit->position.x, m_path.back().y - unit->position.y);
     }
     if (m_path.empty()) {
         target_reached = true;
-        m_mapObject->moving_ = false;
+        unit->removeAction(this);
         return false;
     }
 
     MapPos nextPos = m_path.back();
 
-    const float direction = std::atan2(nextPos.y - m_mapObject->getPos().y, nextPos.x - m_mapObject->getPos().x);
-    MapPos newPos = m_mapObject->getPos();
+    const float direction = std::atan2(nextPos.y - unit->position.y, nextPos.x - unit->position.x);
+    MapPos newPos = unit->position;
     newPos.x += cos(direction) * movement;
     newPos.y += sin(direction) * movement;
 
-    ScreenPos sourceScreen = m_mapObject->getPos().toScreen();
+    ScreenPos sourceScreen = unit->position.toScreen();
     ScreenPos targetScreen = newPos.toScreen();
-    m_mapObject->angle_ = std::atan2((targetScreen.y - sourceScreen.y), (targetScreen.x - sourceScreen.x));
+    unit->setAngle(std::atan2((targetScreen.y - sourceScreen.y), (targetScreen.x - sourceScreen.x)));
 
-    m_mapObject->setPos(newPos);
+    unit->position = newPos;
 
     if (std::hypot(newPos.x - dest_.x, newPos.y - dest_.y) < movement) {
         target_reached = true;
-        m_mapObject->moving_ = false;
+        unit->removeAction(this);
     }
 
     return true;
 }
 
-bool MoveOnMap::moveUnitTo(EntityPtr entity, MapPos destination, MapPtr map)
+std::shared_ptr<MoveOnMap> MoveOnMap::moveUnitTo(EntityPtr entity, MapPos destination, MapPtr map)
 {
-    comp::UnitDataPtr gunit = entity->getComponent<comp::UnitData>(comp::UNIT_DATA);
-    if (!gunit->getData().Speed) {
-        log.info("Handled unit that can't move %s", gunit->readableName().c_str());
-        return false;
+    std::shared_ptr<Unit> unit = Entity::asUnit(entity);
+    if (!unit) {
+        log.info("Handed something that can't move %s", entity->readableName());
+        return nullptr;
     }
-    std::shared_ptr<MoveOnMap> action(new act::MoveOnMap(destination, map));
 
-    action->m_terrainMoveMultiplier = DataManager::Inst().getTerrainRestriction(gunit->getData().TerrainRestriction).PassableBuildableDmgMultiplier;
-    action->speed_ = gunit->getData().Speed;
-    action->m_mapObject = entity->getComponent<comp::MapObject>(comp::MAP_OBJECT);
+    if (!unit->data.Speed) {
+        log.info("Handled unit that can't move %s", entity->readableName());
+        return nullptr;
+    }
+    std::shared_ptr<MoveOnMap> action (new act::MoveOnMap(destination, map, unit));
 
-    action->m_path = action->findPath(action->m_mapObject->getPos(), destination, 1);
+    action->m_terrainMoveMultiplier = DataManager::Inst().getTerrainRestriction(entity->data.TerrainRestriction).PassableBuildableDmgMultiplier;
+    action->speed_ = entity->data.Speed;
+
+    action->m_path = action->findPath(unit->position, destination, 1);
 
     // Try coarser
     // Uglier, but hopefully faster
     if (action->m_path.empty()) {
-        action->m_path = action->findPath(action->m_mapObject->getPos(), destination, 20);
+        action->m_path = action->findPath(unit->position, destination, 20);
     }
 
     if (action->m_path.empty()) {
-        log.info("Failed to find path for %s", gunit->readableName().c_str());
-        return false;
+        log.info("Failed to find path for %s", unit->readableName().c_str());
+        return nullptr;
     }
 
-    action->m_mapObject->moving_ = true;
-
-    entity->current_action_ = action;
-
-    return true;
+    return action;
 }
 
 

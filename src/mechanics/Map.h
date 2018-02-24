@@ -65,7 +65,7 @@ struct MapTile
     sf::Texture blendOverlay;
 };
 
-class Map : public Entity
+class Map
 {
 
 public:

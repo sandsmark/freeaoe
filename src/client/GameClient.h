@@ -24,7 +24,7 @@
 #include <SFML/System/Vector2.hpp>
 #include <global/Logger.h>
 
-class Unit;
+struct Unit;
 class RenderGame;
 class TunnelToServer;
 class GameClient

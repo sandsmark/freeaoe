@@ -25,25 +25,22 @@
 #include "IRenderer.h"
 #include "core/Entity.h"
 
-/// Handles entity forms and draws them properly to screen
-class UnitRenderer : public IRenderer
-{
+///// Handles entity forms and draws them properly to screen
+//class UnitRenderer : public IRenderer
+//{
 
-public:
-    UnitRenderer();
-    virtual ~UnitRenderer();
+//public:
+//    UnitRenderer();
+//    virtual ~UnitRenderer();
 
-    void add(const EntityForm &form);
+//    void add(const EntityPtr &form);
 
-    void createForms(EntityPtr entity);
+//    bool update(Time time) override;
+//    void display() override;
 
-    bool update(Time time) override;
-    void display() override;
-
-private:
-    typedef std::vector<EntityForm> EFVector;
-    EFVector forms_;
-    sf::RenderTexture m_outlineOverlay;
-};
+//private:
+//    typedef std::vector<EntityPtr> EFVector;
+//    EFVector forms_;
+//};
 
 #endif // UNIT_RENDERER_H

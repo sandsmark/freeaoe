@@ -40,11 +40,12 @@ DataManager &DataManager::Inst()
     return inst;
 }
 
-genie::Graphic DataManager::getGraphic(unsigned int id)
+const genie::Graphic &DataManager::getGraphic(unsigned int id)
 {
+    static const genie::Graphic nullGraphic;
     if (id >= dat_file_.Graphics.size()) {
         log.warn("graphic id %d is out of range", id);
-        return genie::Graphic();
+        return nullGraphic;
     }
     return dat_file_.Graphics[id];
 }
@@ -58,7 +59,7 @@ const genie::Tech &DataManager::getTech(unsigned int id)
     return dat_file_.Techs.at(id);
 }
 
-genie::Unit DataManager::getUnit(unsigned int id)
+const genie::Unit &DataManager::getUnit(unsigned int id)
 {
     if (id >= dat_file_.Civs[0].Units.size()) {
         log.error("Invalid unit id %d", id);
@@ -163,6 +164,12 @@ bool DataManager::initialize(const std::string dataPath)
     } catch (const std::exception &error) {
         log.error("Failed to load dat file %: %", error.what());
         return false;
+    }
+
+    for (const genie::Unit &u : dat_file_.Civs[0].Units) {
+        if (u.InterfaceKind != genie::Unit::CiviliansInterface) {
+            continue;
+        }
     }
 
     return true;

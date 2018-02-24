@@ -18,14 +18,14 @@
 
 #ifndef ENTITYMANAGER_H
 #define ENTITYMANAGER_H
-#include <vector>
+#include <unordered_set>
 #include <core/Entity.h>
 #include "Map.h"
+class SfmlRenderTarget;
 
 // IDEA: Class containing all entities, (adds, removes, updates them).
 // Base class (EntitySpace?)
-
-typedef std::vector<EntityPtr> EntityVector;
+typedef std::unordered_set<EntityPtr> EntitySet;
 
 class EntityManager
 {
@@ -38,19 +38,20 @@ public:
     void add(EntityPtr entity);
 
     bool update(Time time);
+    void render(std::shared_ptr<SfmlRenderTarget> renderTarget);
 
     void onRightClick(const MapPos &mapPos);
 
     void selectEntities(const MapRect &selectionRect);
     void setMap(MapPtr map);
 
-    const EntityVector &selected();
+    const EntitySet &selected();
 
 private:
-
-    EntityVector entities_;
-    EntityVector m_selectedEntities;
+    EntitySet m_entities;
+    EntitySet m_selectedEntities;
     MapPtr m_map;
+    sf::RenderTexture m_outlineOverlay;
 };
 
 #endif // ENTITYMANAGER_H

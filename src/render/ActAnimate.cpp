@@ -20,9 +20,9 @@
 
 namespace act {
 
-Animate::Animate(EntityFormPtr form)
-{
-}
+//Animate::Animate(EntityFormPtr form)
+//{
+//}
 
 Animate::~Animate()
 {

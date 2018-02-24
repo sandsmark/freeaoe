@@ -53,10 +53,6 @@ public:
 
 private:
     MapRect rect_;
-
-    //FacingDirection
-
-    //*map
 };
 
 typedef std::shared_ptr<MapObject> MapObjectPtr;
@@ -67,13 +63,14 @@ namespace act {
     {
     public:
         PlaceMapObject(EntityPtr entity, MapPos pos) :
+            IAction(IAction::Type::PlaceOnMap),
             target_(entity), new_pos_(pos)
         {
         }
 
         virtual bool update(Time time)
         {
-            target_->getComponent<comp::MapObject>(comp::MAP_OBJECT)->setPos(new_pos_);
+            target_->position = new_pos_;
             return true;
         }
 

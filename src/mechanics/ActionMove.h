@@ -38,10 +38,10 @@ public:
 
     virtual bool update(Time time);
 
-    static bool moveUnitTo(EntityPtr entity, MapPos destination, MapPtr map);
+    static std::shared_ptr<MoveOnMap> moveUnitTo(EntityPtr entity, MapPos destination, MapPtr map);
 
 private:
-    MoveOnMap(MapPos destination, MapPtr map);
+    MoveOnMap(MapPos destination, MapPtr map, UnitPtr unit);
 
     std::vector<MapPos> findPath(const MapPos &start, const MapPos &end, int coarseness);
     bool isPassable(int x, int y);
@@ -51,7 +51,6 @@ private:
     MapPtr m_map;
     MapPos dest_;
     std::vector<MapPos> m_path;
-    std::shared_ptr<comp::MapObject> m_mapObject;
     MapPos m_currentTarget;
     std::vector<float> m_terrainMoveMultiplier;
     float speed_;
@@ -59,6 +58,7 @@ private:
     Time last_update_;
 
     bool target_reached;
+    std::weak_ptr<Unit> m_unit;
 };
 }
 

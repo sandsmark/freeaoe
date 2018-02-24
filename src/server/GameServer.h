@@ -26,7 +26,7 @@
 
 class IAction;
 
-class Unit;
+struct Unit;
 
 class TunnelToClient;
 
