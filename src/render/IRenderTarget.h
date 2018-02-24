@@ -40,10 +40,6 @@ public:
     virtual void setSize(const Size size) const = 0;
 
     //----------------------------------------------------------------------------
-//    virtual void draw(res::GraphicPtr graph, ScreenPos pos, int frame = 0,
-//                      float angle = 0) = 0;
-
-    //----------------------------------------------------------------------------
     /// TODO: Remove sf:: from api
     virtual void draw(const sf::Image &image, ScreenPos pos) = 0;
 

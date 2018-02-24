@@ -23,7 +23,6 @@
 #include "global/Logger.h"
 #include "Map.h"
 #include "render/SfmlRenderTarget.h"
-#include "render/UnitRenderer.h"
 #include "render/MapRenderer.h"
 #include "EntityManager.h"
 #include <SFML/Graphics/RectangleShape.hpp>

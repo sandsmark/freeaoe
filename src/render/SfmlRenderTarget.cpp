@@ -45,15 +45,6 @@ void SfmlRenderTarget::setSize(const Size size) const
     renderTarget_->setView(sf::View(sf::FloatRect(0, 0, size.width, size.height)));
 }
 
-//void SfmlRenderTarget::draw(res::GraphicPtr graph, ScreenPos pos, int frame, float angle)
-//{
-//    for (const res::GraphicPtr delta : graph->getDeltas()) {
-//        draw(delta->getImage(frame, angle), pos - delta->getHotspot(frame) - delta->offset_);
-//    }
-
-//    draw(graph->getImage(frame, angle), pos - graph->getHotspot(frame));
-//}
-
 void SfmlRenderTarget::draw(const sf::Image &image, ScreenPos pos)
 {
     sf::Texture texture;

@@ -43,7 +43,6 @@ set(RENDER_SRC
     src/render/IRenderer.cpp
     src/render/GraphicRender.cpp 
     src/render/MapRenderer.cpp
-    src/render/UnitRenderer.cpp 
     src/render/SfmlRenderTarget.cpp
     )
 

@@ -40,9 +40,6 @@ public:
     void setSize(const Size size) const override;
 
     //----------------------------------------------------------------------------
-//    void draw(res::GraphicPtr graph, ScreenPos pos, int frame = 0, float angle = 0) override;
-
-    //----------------------------------------------------------------------------
     void draw(const sf::Image &image, ScreenPos pos) override;
 
     //----------------------------------------------------------------------------
