@@ -80,8 +80,6 @@ bool GraphicRender::update(Time time)
 
 void GraphicRender::drawOn(sf::RenderTarget &renderTarget, ScreenPos screenPos)
 {
-//    screenPos -= graphic_->getHotspot(current_frame_);
-
     sf::Texture texture;
     texture.loadFromImage(image());
     sf::Sprite sprite;
@@ -95,34 +93,20 @@ void GraphicRender::drawOn(sf::RenderTarget &renderTarget, ScreenPos screenPos)
         sf::Sprite sprite;
         sprite.setTexture(texture);
         sprite.setPosition(screenPos - delta.graphic->getHotspot() - delta.offset);
-//        sprite.setPosition(screenPos - delta.offset - delta.graphic->getHotspot());
         renderTarget.draw(sprite);
     }
 }
 
 void GraphicRender::drawOutlineOn(sf::RenderTarget &renderTarget, ScreenPos screenPos)
 {
-    screenPos = graphic_->getHotspot();
-
     sf::Texture texture;
     texture.loadFromImage(outline());
     sf::Sprite sprite;
     sprite.setTexture(texture);
-    sprite.setPosition(screenPos);
+    sprite.setPosition(screenPos - graphic_->getHotspot(current_frame_));
     sf::BlendMode blendMode = sf::BlendAlpha;
     blendMode.alphaSrcFactor = sf::BlendMode::DstAlpha;
     renderTarget.draw(sprite, blendMode);
-
-    for (const GraphicDelta &delta : m_deltas) {
-        sf::Texture texture;
-        texture.loadFromImage(delta.graphic->getImage());
-        sf::Sprite sprite;
-        sprite.setTexture(texture);
-        sprite.setPosition(screenPos + delta.offset);
-        sf::BlendMode blendMode = sf::BlendAlpha;
-        blendMode.alphaSrcFactor = sf::BlendMode::DstAlpha;
-        renderTarget.draw(sprite, blendMode);
-    }
 }
 
 const sf::Image &GraphicRender::image()
@@ -130,7 +114,7 @@ const sf::Image &GraphicRender::image()
     if (!graphic_) {
         return nullImage;
     }
-    return graphic_->getImage(current_frame_);
+    return graphic_->getImage(current_frame_, angle);
 }
 
 const sf::Image &GraphicRender::outline()
@@ -156,7 +140,6 @@ void GraphicRender::setGraphic(res::GraphicPtr graphic)
         GraphicDelta graphicDelta;
         graphicDelta.graphic = ResourceManager::Inst()->getGraphic(delta.GraphicID);
         if (!graphicDelta.graphic->isValid()) {
-            std::cerr << "failed to get delta" << std::endl;
             continue;
         }
 

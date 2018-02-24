@@ -54,56 +54,51 @@ bool EntityManager::update(Time time)
 
 void EntityManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
 {
+    if (m_outlineOverlay.getSize() != renderTarget->getSize()) {
+        m_outlineOverlay.create(renderTarget->getSize().x, renderTarget->getSize().y, false);
+    }
+
+    m_outlineOverlay.clear(sf::Color::Transparent);
+
     for (EntityPtr entity : m_entities) {
-        entity->renderer().drawOn(*renderTarget->renderTarget_, renderTarget->absoluteScreenPos(entity->position));
+        if (entity->data.Type < genie::Unit::BuildingType) {
+            continue;
+        }
+
+        entity->renderer().drawOn(m_outlineOverlay, renderTarget->absoluteScreenPos(entity->position));
 
         for (const Entity::Annex &annex : entity->annexes) {
-            annex.entity->renderer().drawOn(*renderTarget->renderTarget_, renderTarget->absoluteScreenPos(entity->position + annex.offset));
+            annex.entity->renderer().drawOn(m_outlineOverlay, renderTarget->absoluteScreenPos(entity->position + annex.offset));
         }
     }
 
-//    if (m_outlineOverlay.getSize() != renderTarget->getSize()) {
-//        m_outlineOverlay.create(renderTarget->getSize().x, renderTarget->getSize().y, false);
-//    }
+    for (const EntityPtr &entity : m_entities) {
+        if (m_selectedEntities.count(entity)) { // draw health indicator
+            ScreenPos pos = renderTarget->absoluteScreenPos(entity->position);
+            pos.x -= Map::TILE_SIZE_HORIZONTAL / 8;
+            pos.y -= Map::TILE_SIZE_VERTICAL;
 
-//    m_outlineOverlay.clear(sf::Color::Transparent);
-//    for (EntityPtr entity : m_entities) {
-//        if (entity->data.Type < genie::Unit::BuildingType) {
-//            continue;
-//        }
+            sf::RectangleShape rect;
+            rect.setFillColor(sf::Color::Green);
+            rect.setOutlineColor(sf::Color::Transparent);
 
-//        entity->renderer().drawOn(m_outlineOverlay, renderTarget->absoluteScreenPos(entity->position));
+            rect.setPosition(pos);
+            rect.setSize(sf::Vector2f(Map::TILE_SIZE_HORIZONTAL / 4, 2));
+            m_outlineOverlay.draw(rect);
+        }
 
-//        for (EntityPtr annex : entity->annexes) {
-//            annex->renderer().drawOn(m_outlineOverlay, renderTarget->absoluteScreenPos(annex->position));
-//        }
-//    }
+        if (entity->data.Type >= genie::Unit::BuildingType) {
+            continue;
+        }
 
-//    for (const EntityPtr &entity : m_entities) {
-//        if (m_selectedEntities.count(entity)) { // draw health indicator
-//            ScreenPos pos = renderTarget->absoluteScreenPos(entity->position);
-//            pos.x -= Map::TILE_SIZE_HORIZONTAL / 8;
-//            pos.y -= Map::TILE_SIZE_VERTICAL;
+        entity->renderer().drawOn(*renderTarget->renderTarget_, renderTarget->absoluteScreenPos(entity->position));
 
-//            sf::RectangleShape rect;
-//            rect.setFillColor(sf::Color::Green);
-//            rect.setOutlineColor(sf::Color::Transparent);
+        ScreenPos pos = renderTarget->absoluteScreenPos(entity->position);
+        entity->renderer().drawOutlineOn(m_outlineOverlay, pos);
+    }
 
-//            rect.setPosition(pos);
-//            rect.setSize(sf::Vector2f(Map::TILE_SIZE_HORIZONTAL / 4, 2));
-//            m_outlineOverlay.draw(rect);
-//        }
-
-//        if (entity->data.Type >= genie::Unit::BuildingType) {
-//            continue;
-//        }
-
-//        ScreenPos pos = renderTarget->absoluteScreenPos(entity->position);
-//        entity->renderer().drawOutlineOn(m_outlineOverlay, pos);
-//    }
-
-//    m_outlineOverlay.display();
-//    renderTarget->draw(m_outlineOverlay.getTexture(), ScreenPos(0, 0));
+    m_outlineOverlay.display();
+    renderTarget->draw(m_outlineOverlay.getTexture(), ScreenPos(0, 0));
 }
 
 void EntityManager::onRightClick(const MapPos &mapPos)

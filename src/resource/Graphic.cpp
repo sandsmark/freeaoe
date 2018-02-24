@@ -48,10 +48,20 @@ Graphic::~Graphic()
 }
 
 //------------------------------------------------------------------------------
-const sf::Image &Graphic::getImage(uint32_t frame_num, bool mirrored)
+const sf::Image &Graphic::getImage(uint32_t frame_num, float angle)
 {
     if (!slp_) {
         return nullImage;
+    }
+
+    bool mirrored = false;
+    if (data_.AngleCount > 1) {
+        int lookupAngle = angleToOrientation(angle);
+        if (lookupAngle > data_.AngleCount/2) {
+            mirrored = true;
+            lookupAngle = data_.AngleCount - lookupAngle;
+        }
+        frame_num += lookupAngle * data_.FrameCount;
     }
 
     std::unordered_map<int, sf::Image> &cache = mirrored ? m_flippedImages : m_images;

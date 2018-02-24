@@ -108,5 +108,6 @@ void Unit::removeAction(IAction *action)
 {
     if (currentAction.get() == action) {
         currentAction.reset();
+        m_graphics.setGraphic(defaultGraphics);
     }
 }

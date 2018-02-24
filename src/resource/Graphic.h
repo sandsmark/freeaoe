@@ -59,7 +59,7 @@ public:
     /// @param mirrored If set, the image will be returned mirrored
     /// @return Image
     //
-    const sf::Image &getImage(uint32_t frame_num = 0, bool mirrored = false);
+    const sf::Image &getImage(uint32_t frame_num = 0, float angle = false);
     const sf::Image &overlayImage(uint32_t frame_num, float angle, uint8_t playerId);
 
     //----------------------------------------------------------------------------
