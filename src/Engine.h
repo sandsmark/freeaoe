@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef ENGINE_H
 #define ENGINE_H
 
@@ -34,28 +33,26 @@ class Engine
 {
 
 public:
-  static const sf::Clock GameClock;
-  
-  Engine();
-  virtual ~Engine();
-  
-  bool setup(const std::string &scnFile);
-  void start();
-  
-private:
-  static Logger &log;
-  
-  sf::RenderWindow *renderWindow_;
-  
-  std::shared_ptr<SfmlRenderTarget> renderTarget_;
-  
-  StateManager state_manager_;
+    static const sf::Clock GameClock;
 
-  sf::Text fps_label_;
-  
-  void drawFps();
-  
-  
+    Engine();
+    virtual ~Engine();
+
+    bool setup(const std::string &scnFile);
+    void start();
+
+private:
+    static Logger &log;
+
+    sf::RenderWindow *renderWindow_;
+
+    std::shared_ptr<SfmlRenderTarget> renderTarget_;
+
+    StateManager state_manager_;
+
+    sf::Text fps_label_;
+
+    void drawFps();
 };
 
 #endif // ENGINE_H

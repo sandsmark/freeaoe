@@ -37,7 +37,7 @@
 #include "CompUnitData.h"
 #include "resource/DataManager.h"
 
-#define MOUSE_MOVE_EDGE_SIZE 100
+#define MOUSE_MOVE_EDGE_SIZE 10
 #define CAMERA_SPEED 1.
 
 Logger& GameState::log = Logger::getLogger("freeaoe.GameState");
@@ -74,6 +74,14 @@ void GameState::init()
     } else {
         m_uiOverlay = sf::Texture();
         log.error("Failed to load ui overlay");
+    }
+
+    m_cursors = ResourceManager::Inst()->getSlp(51000);
+    if (m_cursors) {
+        m_cursorTexture.loadFromImage(res::Resource::convertFrameToImage(m_cursors->getFrame(0)));
+        m_cursor.setTexture(m_cursorTexture);
+    } else {
+        log.error("Failed to get cursors");
     }
 
     const std::vector<genie::Civ> &civilizations = DataManager::Inst().civilizations();
@@ -190,6 +198,8 @@ void GameState::draw()
         position.y += m_uiOverlay.getSize().y  - 40 * 4;
         renderTarget_->draw(button.tex, position);
     }
+
+    renderTarget_->renderTarget_->draw(m_cursor);
 }
 
 bool GameState::update(Time time)
@@ -241,6 +251,8 @@ bool GameState::update(Time time)
 void GameState::handleEvent(sf::Event event)
 {
     if (event.type == sf::Event::MouseMoved) {
+        m_cursor.setPosition(event.mouseMove.x, event.mouseMove.y);
+
         if (event.mouseMove.x < MOUSE_MOVE_EDGE_SIZE) {
             m_cameraDeltaX = -1;
         } else if (event.mouseMove.x > renderTarget_->getSize().x - MOUSE_MOVE_EDGE_SIZE) {

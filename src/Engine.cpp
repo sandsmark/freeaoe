@@ -92,6 +92,7 @@ void Engine::start()
 bool Engine::setup(const std::string &scnFile)
 {
   renderWindow_ = new sf::RenderWindow(sf::VideoMode(640, 480), "freeaoe");
+  renderWindow_->setMouseCursorVisible(false);
   renderWindow_->setFramerateLimit(60);
   
   renderTarget_ = std::make_shared<SfmlRenderTarget>(*renderWindow_);
