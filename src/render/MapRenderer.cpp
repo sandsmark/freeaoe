@@ -47,7 +47,8 @@ bool MapRenderer::update(Time time)
 
     const MapPos cameraPos = renderTarget_->camera()->getTargetPosition();
 
-    if (!m_camChanged && m_lastCameraPos == cameraPos) { // check for camera change
+    if (!m_camChanged && m_lastCameraPos == cameraPos &&
+        m_mapRenderTexture.getSize() == renderTarget_->getSize()) {
         return false;
     }
 

@@ -201,9 +201,6 @@ bool GameState::init()
 
 void GameState::draw()
 {
-    //map_->draw(render_target_);
-    //std::cout << map_form_->getComponent<comp::MapRender>(comp::MAP_RENDER).get() << std::endl;
-
     mapRenderer_.display();
     entity_manager_.render(renderTarget_);
 
