@@ -20,15 +20,13 @@
 #include "resource/DataManager.h"
 #include "resource/LanguageManager.h"
 #include "render/GraphicRender.h"
+#include "mechanics/Civilization.h"
 #include <genie/dat/Unit.h>
 
-Entity::Entity(const genie::Unit &data_, int playerId_, const Entity::Type type_) :
+Entity::Entity(const Entity::Type type_, const std::string &name) :
     type(type_),
-    data(data_),
-    playerId(playerId_),
-    defaultGraphics(ResourceManager::Inst()->getGraphic(data.StandingGraphic.first))
+    readableName(name)
 {
-    m_graphics.setGraphic(defaultGraphics);
 }
 
 Entity::~Entity()
@@ -41,16 +39,7 @@ bool Entity::update(Time time)
 
     updated = m_graphics.update(time) || updated;
 
-    for (Annex &annex : annexes) {
-        updated = annex.entity->update(time) || updated;
-    }
-
     return updated;
-}
-
-std::string Entity::readableName()
-{
-    return LanguageManager::getString(data.LanguageDLLName);
 }
 
 std::shared_ptr<Unit> Entity::asUnit(EntityPtr entity)
@@ -65,23 +54,39 @@ std::shared_ptr<Unit> Entity::asUnit(EntityPtr entity)
     return std::static_pointer_cast<Unit>(entity);
 }
 
-Unit::Unit(const genie::Unit &data_, int playerId_) :
-    Entity(data_, playerId_, Type::Unit)
+Unit::Unit(const genie::Unit &data_, int playerId_, std::shared_ptr<Civilization> civilization) :
+    Entity(Type::Unit, LanguageManager::getString(data_.LanguageDLLName)),
+    data(data_),
+    playerId(playerId_),
+    m_civilization(civilization)
 {
+    defaultGraphics = ResourceManager::Inst()->getGraphic(data.StandingGraphic.first),
     movingGraphics = ResourceManager::Inst()->getGraphic(data.Moving.WalkingGraphic);
+    if (!defaultGraphics) {
+        std::cerr << "Failed to load default graphics" << std::endl;
+    }
+
+    m_graphics.setGraphic(defaultGraphics);
 }
 
 bool Unit::update(Time time)
 {
     bool updated = false;
 
-    updated = m_graphics.update(time) || updated;
+    for (Annex &annex : annexes) {
+        updated = annex.entity->update(time) || updated;
+    }
 
     if (currentAction) {
         updated = currentAction->update(time) || updated;
     }
 
-    return updated || Entity::update(time);
+    return Entity::update(time) || updated;
+}
+
+const std::vector<const genie::Unit *> Unit::creatableEntities()
+{
+    return m_civilization->creatableUnits(data.ID);
 }
 
 void Unit::setAngle(const float angle)
@@ -110,4 +115,18 @@ void Unit::removeAction(IAction *action)
         currentAction.reset();
         m_graphics.setGraphic(defaultGraphics);
     }
+}
+
+MoveTargetMarker::MoveTargetMarker() :
+    Entity(Type::MoveTargetMarker, "Move target marker")
+{
+    m_graphics.setGraphic(ResourceManager::Inst()->getGraphic(2961));
+
+    m_graphics.current_frame_ = m_graphics.graphic_->data_.FrameCount; // don't play immediately
+}
+
+void MoveTargetMarker::moveTo(const MapPos &pos)
+{
+    position = pos;
+    m_graphics.current_frame_ = 0;
 }

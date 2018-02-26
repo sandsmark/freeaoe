@@ -69,7 +69,7 @@ Logger &MoveOnMap::log = Logger::getLogger("freeaoe.MoveOnMap");
 
 static const float PATHFINDING_HEURISTIC_WEIGHT = 1.;
 
-MoveOnMap::MoveOnMap(MapPos destination, MapPtr map, UnitPtr unit) :
+MoveOnMap::MoveOnMap(MapPos destination, MapPtr map, Unit::Ptr unit) :
     IAction(Type::Move),
     m_map(map),
     target_reached(false),
@@ -131,6 +131,7 @@ bool MoveOnMap::update(Time time)
     ScreenPos sourceScreen = unit->position.toScreen();
     ScreenPos targetScreen = newPos.toScreen();
     unit->setAngle(std::atan2((targetScreen.y - sourceScreen.y), (targetScreen.x - sourceScreen.x)));
+    newPos.z = m_map->elevationAt(newPos);
 
     unit->position = newPos;
 
@@ -146,18 +147,18 @@ std::shared_ptr<MoveOnMap> MoveOnMap::moveUnitTo(EntityPtr entity, MapPos destin
 {
     std::shared_ptr<Unit> unit = Entity::asUnit(entity);
     if (!unit) {
-        log.info("Handed something that can't move %s", entity->readableName());
+        log.info("Handed something that can't move %s", entity->readableName);
         return nullptr;
     }
 
     if (!unit->data.Speed) {
-        log.info("Handled unit that can't move %s", entity->readableName());
+        log.info("Handled unit that can't move %s", entity->readableName);
         return nullptr;
     }
     std::shared_ptr<MoveOnMap> action (new act::MoveOnMap(destination, map, unit));
 
-    action->m_terrainMoveMultiplier = DataManager::Inst().getTerrainRestriction(entity->data.TerrainRestriction).PassableBuildableDmgMultiplier;
-    action->speed_ = entity->data.Speed;
+    action->m_terrainMoveMultiplier = DataManager::Inst().getTerrainRestriction(unit->data.TerrainRestriction).PassableBuildableDmgMultiplier;
+    action->speed_ = unit->data.Speed;
 
     action->m_path = action->findPath(unit->position, destination, 1);
 
@@ -168,7 +169,7 @@ std::shared_ptr<MoveOnMap> MoveOnMap::moveUnitTo(EntityPtr entity, MapPos destin
     }
 
     if (action->m_path.empty()) {
-        log.info("Failed to find path for %s", unit->readableName().c_str());
+        log.info("Failed to find path for %s", unit->readableName.c_str());
         return nullptr;
     }
 

@@ -98,6 +98,8 @@ public:
     unsigned int height();
     unsigned int width();
 
+    float elevationAt(const MapPos &position);
+
     MapTile &getTileAt(unsigned int col, unsigned int row);
     void setTileAt(unsigned col, unsigned row, unsigned id);
 

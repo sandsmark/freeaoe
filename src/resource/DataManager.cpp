@@ -166,11 +166,5 @@ bool DataManager::initialize(const std::string dataPath)
         return false;
     }
 
-    for (const genie::Unit &u : dat_file_.Civs[0].Units) {
-        if (u.InterfaceKind != genie::Unit::CiviliansInterface) {
-            continue;
-        }
-    }
-
     return true;
 }

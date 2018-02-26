@@ -41,7 +41,7 @@ public:
     static std::shared_ptr<MoveOnMap> moveUnitTo(EntityPtr entity, MapPos destination, MapPtr map);
 
 private:
-    MoveOnMap(MapPos destination, MapPtr map, UnitPtr unit);
+    MoveOnMap(MapPos destination, MapPtr map, Unit::Ptr unit);
 
     std::vector<MapPos> findPath(const MapPos &start, const MapPos &end, int coarseness);
     bool isPassable(int x, int y);

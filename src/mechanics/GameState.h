@@ -44,18 +44,13 @@ class RenderTarget;
 //
 class GameState : public IState
 {
-    struct Button {
-        sf::Texture tex;
-        int pos = 0;
-    };
-
 public:
     GameState(std::shared_ptr<SfmlRenderTarget> renderTarget);
     virtual ~GameState();
 
     void setScenario(std::shared_ptr<genie::ScnFile> scenario);
 
-    void init() override;
+    bool init() override;
 
     void draw() override;
     bool update(Time time) override;
@@ -79,10 +74,6 @@ private:
 
     MapPtr map_;
     MapRenderer mapRenderer_;
-    genie::SlpFilePtr m_unitIconsSlp;
-    genie::SlpFilePtr m_buildingIconsSlp;
-    genie::SlpFilePtr m_cursors;
-    std::vector<Button> m_currentIcons;
 
     std::shared_ptr<genie::ScnFile> scenario_;
 
@@ -94,12 +85,20 @@ private:
     ScreenPos m_selectionStart;
     ScreenPos m_selectionCurr;
     ScreenRect m_selectionRect;
+    bool m_selecting = false;
 
     sf::Texture m_uiOverlay;
-    sf::Sprite m_cursor;
-    sf::Texture m_cursorTexture;
+    sf::Texture m_buttonBackground;
 
-    std::vector<std::shared_ptr<Civilization>> m_civilizations;
+    sf::Texture m_cursorTexture;
+    sf::Sprite m_cursor;
+    genie::SlpFilePtr m_cursors;
+
+    genie::SlpFilePtr m_waypointFlag;
+
+    int m_interfacePage = 0;
+
+    std::vector<Civilization::Ptr> m_civilizations;
 };
 
 #endif // GAMESTATE_H

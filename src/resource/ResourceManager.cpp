@@ -29,6 +29,7 @@
 #include <genie/resource/UIFile.h>
 
 #include <experimental/filesystem>
+#include <unordered_map>
 
 using namespace std::experimental;
 
@@ -44,7 +45,12 @@ ResourceManager *ResourceManager::Inst()
 
 genie::SlpFilePtr ResourceManager::getUiOverlay(const ResourceManager::UiResolution res, const ResourceManager::UiCiv civ)
 {
-    return getSlp(uint32_t(res) + uint32_t(civ), Interface);
+    // wtf
+    if (res == UiResolution::Ui1280x1024 && civ > UiCiv::Spanish) {
+        return getSlp(51142 + uint32_t(civ), ResourceType::Interface);
+    }
+
+    return getSlp(uint32_t(res) + uint32_t(civ), ResourceType::Interface);
 }
 
 genie::ScnFilePtr ResourceManager::getScn(unsigned int id)
@@ -62,23 +68,33 @@ genie::ScnFilePtr ResourceManager::getScn(unsigned int id)
     return genie::ScnFilePtr();
 }
 
+genie::SlpFramePtr ResourceManager::getTemplatedSlp(unsigned int slp, const genie::SlpTemplateFile::Slope slope)
+{
+    return m_stemplatesFile->getFrame(getSlp(slp, ResourceType::Terrain), slope);
+}
+
 //------------------------------------------------------------------------------
 genie::SlpFilePtr ResourceManager::getSlp(sf::Uint32 id, const ResourceType type)
 {
     genie::SlpFilePtr slp_ptr;
 
     switch (type) {
-    case Interface:
+    case ResourceType::Interface:
         return m_interfaceFile->getSlpFile(id);
-        break;
-    case Graphics:
+    case ResourceType::Graphics:
         return m_graphicsFile->getSlpFile(id);
-        break;
-    case Terrain:
+    case ResourceType::Terrain:
         return m_terrainFile->getSlpFile(id);
+    case ResourceType::GameData:
+        for (const std::shared_ptr<genie::DrsFile> &drsFile : m_gamedataFiles) {
+            slp_ptr = drsFile->getSlpFile(id);
+            if (slp_ptr) {
+                return slp_ptr;
+            }
+        }
+        log.debug("failed to find % in gamedata files, falling back to all files", id);
         break;
-    case GameData:
-    case Undefined:
+    case ResourceType::Undefined:
     default:
         break;
     }
@@ -87,14 +103,14 @@ genie::SlpFilePtr ResourceManager::getSlp(sf::Uint32 id, const ResourceType type
         return slp_ptr;
     }
 
-    for (const std::shared_ptr<genie::DrsFile> &drsFile : type == GameData ? m_gamedataFiles : m_allFiles) {
+    for (const std::shared_ptr<genie::DrsFile> &drsFile : m_allFiles) {
         slp_ptr = drsFile->getSlpFile(id);
         if (slp_ptr) {
             return slp_ptr;
         }
     }
 
-    log.debug("No slp file with id [%d] found!", id);
+    log.debug("No slp file with id [%] found!", id);
     return slp_ptr;
 }
 
@@ -181,6 +197,29 @@ ResourceManager::~ResourceManager()
 {
 }
 
+std::string ResourceManager::uiFilename(const ResourceManager::UiResolution resolution, const ResourceManager::UiCiv civ)
+{
+    std::string ret = "game_";
+    switch (resolution) {
+    case (UiResolution::Ui800x600):
+      ret += "a";
+        break;
+    case (UiResolution::Ui1024x768):
+      ret += "b";
+        break;
+    case (UiResolution::Ui1280x1024):
+      ret += "c";
+        break;
+    case (UiResolution::Ui1600x1200):
+      ret += "d";
+        break;
+    }
+    ret += std::to_string(int(civ));
+    ret += ".slp";
+
+    return ret;
+}
+
 //------------------------------------------------------------------------------
 bool ResourceManager::initialize(const std::string &dataPath, const genie::GameVersion gameVersion)
 {
@@ -239,8 +278,85 @@ bool ResourceManager::initialize(const std::string &dataPath, const genie::GameV
         log.error("Failed to load resource: %", error.what());
         return false;
     }
+    std::cerr << "Loaded " << m_allFiles.size() << " files" << std::endl;
 
     return true;
+}
+
+int ResourceManager::filenameID(const std::string &filename)
+{
+    const std::unordered_map<std::string, int> idMap = {
+        { "btncmd.shp", 50721    },
+        { "btngame2x.shp", 50754 },
+        { "btngame.shp", 50751   },
+        { "btnmain.shp", 52064   },
+        { "btntech.shp", 50729   },
+        { "btnunit.shp", 50730   },
+        { "dlg_plbn.shp", 50746  },
+        { "groupnum.shp", 50403  },
+        { "health.shp", 50745    },
+        { "ico_game.shp", 50752  },
+        { "ico_misc.shp", 53011  },
+        { "ico_unit.shp", 50730  },
+        { "itemicon.shp", 50731  },
+        { "mcursors.shp", 51000  },
+        { "meet.shp", 53010      },
+        { "moveto.shp", 50405    },
+        { "sundial.shp", 50764   },
+        { "tradicon.shp", 50732  },
+        { "unithalo.shp", 53003  },
+        { "waypoint.shp", 50404  },
+
+        { "ico_bld1.shp", 50705  },
+        { "ico_bld2.shp", 50706  },
+        { "ico_bld3.shp", 50707  },
+        { "ico_bld4.shp", 50708  },
+
+        { "btnbrda2.shp", 50715   },
+        { "btnbrdb2.shp", 50719   },
+        { "btnbrdc2.shp", 50749   },
+
+        { "2logos.slp", 53012     },
+        { "AchDecal.slp", 50766   },
+        { "AchTeam.slp", 50769    },
+        { "arrows.slp", 53004     },
+        { "btn_hist.slp", 50613   },
+        { "btn_mute.slp", 50791   },
+        { "c_logo.slp", 53207     },
+        { "colbar.slp", 50792     },
+        { "defcheck.slp", 52002   },
+        { "eslogo1.slp", 53202    },
+        { "eslogo2.slp", 53203    },
+        { "g_wtr.slp", 15002      },
+        { "hourglas.slp", 53001   },
+        { "icomap_b.slp", 50788   },
+        { "icomap_c.slp", 50789   },
+        { "icomap_d.slp", 50790   },
+        { "mslogo1.slp", 53200    },
+        { "mslogo2.slp", 53201    },
+        { "objtabs.slp", 53005    },
+        { "PNBnr1.slp", 50762     },
+        { "PNBnr2.slp", 50767     },
+        { "rollback.slp", 50150   },
+        { "sat_btn.slp", 50768    },
+        { "sat_tabs.slp", 50765   },
+        { "sshot_text.slp", 53204 },
+        { "techages.slp", 50342   },
+        { "techback.slp", 50341   },
+        { "technodex.slp", 53206  },
+        { "tech_tile.slp", 50343  },
+        { "tml_bck.slp", 50763    },
+        { "ttx.slp", 53211        },
+        { "viccheck.slp", 52001   },
+        { "xmain.slp", 50189      },
+    };
+
+    if (idMap.find(filename) != idMap.end()) {
+        return idMap.at(filename);
+    } else {
+        log.error("Failed to find known id for filename %", filename);
+        return -1;
+    }
 }
 
 //------------------------------------------------------------------------------

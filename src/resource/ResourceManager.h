@@ -29,6 +29,7 @@
 
 #include <genie/resource/PalFile.h>
 #include <genie/resource/SlpFile.h>
+#include <genie/resource/SlpTemplate.h>
 #include <genie/resource/BlendomaticFile.h>
 #include <genie/script/ScnFile.h>
 
@@ -52,10 +53,11 @@ public:
     enum UiResolution {
         Ui800x600 = 51100,
         Ui1024x768 = 51120,
-        Ui1280x1024 = 51140
+        Ui1280x1024 = 51140,
+        Ui1600x1200 = 51150
     };
 
-    enum ResourceType {
+    enum class ResourceType {
         Undefined,
         GameData,
         Interface,
@@ -84,6 +86,8 @@ public:
         Korean = 18,
     };
 
+    static std::string uiFilename(const UiResolution resolution, const UiCiv civ);
+
     ResourceManager(const ResourceManager &) = delete;
     ResourceManager &operator=(const ResourceManager &) = delete;
 
@@ -101,11 +105,13 @@ public:
     /// @param id id of the slp file
     /// @return slp file
     //
-    genie::SlpFilePtr getSlp(unsigned int id, const ResourceType type = Undefined);
+    genie::SlpFilePtr getSlp(unsigned int id, const ResourceType type = ResourceType::Undefined);
 
     genie::SlpFilePtr getUiOverlay(const UiResolution res, const UiCiv civ);
 
     genie::ScnFilePtr getScn(unsigned int id);
+
+    genie::SlpFramePtr getTemplatedSlp(unsigned int slp, const genie::SlpTemplateFile::Slope slope);
 
     //----------------------------------------------------------------------------
     /// Get a Graphic resource object.
@@ -129,6 +135,8 @@ public:
 
     bool initialize(const std::string &dataPath, const genie::GameVersion gameVersion);
 
+    static int filenameID(const std::string &filename);
+
 private:
     static Logger &log;
 
@@ -146,6 +154,7 @@ private:
     DrsFileVector m_allFiles;
 
     genie::BlendomaticFilePtr blendomatic_file_;
+    genie::SlpTemplateFilePtr m_stemplatesFile;
 
     //TODO: All resources into one map?
     typedef std::unordered_map<unsigned int, res::GraphicPtr> GraphicMap;

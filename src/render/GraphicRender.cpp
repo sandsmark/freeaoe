@@ -43,6 +43,14 @@ GraphicRender::~GraphicRender()
 
 bool GraphicRender::update(Time time)
 {
+    if (!graphic_) {
+        return false;
+    }
+
+    if (graphic_->runOnce() && current_frame_ >= graphic_->getFrameCount() - 1) {
+        return false;
+    }
+
     int newFrame = current_frame_;
 
     if (time_last_frame_ == 0) {

@@ -124,13 +124,6 @@ bool MapRenderer::update(Time time)
 
     ScreenPos offsetSp = (offsetMp - topLeftMp).toScreen();
 
-//    std::cout << "\nrColBegin: " << m_rColBegin << std::endl;
-//    std::cout << "rColEnd: " << m_rColEnd << std::endl;
-//    std::cout << "rRowEnd: " << m_rRowEnd << std::endl;
-
-//    std::cout << "\noffsetMp = " << offsetMp.x << " " << offsetMp.y << std::endl;
-//    std::cout << "offsetSp = " << offsetSp.x << " " << offsetSp.y << std::endl;
-
     m_xOffset = offsetSp.x;
     m_yOffset = offsetSp.y;
 
@@ -158,6 +151,8 @@ void MapRenderer::setMap(MapPtr map)
     m_rRowBegin = m_rColBegin = 0;
     m_rRowEnd = m_map->getRows();
     m_rColEnd = m_map->getCols();
+
+    m_camChanged = true;
 }
 
 MapPos MapRenderer::getMapPosition(ScreenPos pos)

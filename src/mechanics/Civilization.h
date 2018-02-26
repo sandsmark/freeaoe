@@ -19,6 +19,8 @@ class DatFile;
 class Civilization
 {
 public:
+    typedef std::shared_ptr<Civilization> Ptr;
+
     Civilization(const int civId, const genie::DatFile &dataFile);
 
     int id() { return m_civId; }
@@ -40,7 +42,6 @@ private:
     const genie::Civ m_data;
 
     std::unordered_map<uint16_t, genie::Tech> m_techs;
-
 };
 
 #endif // CIVILIZATION_H

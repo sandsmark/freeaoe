@@ -61,13 +61,14 @@ public:
 
     res::GraphicPtr graphic_;
 
+    unsigned int current_frame_;
+
 private:
     struct GraphicDelta {
         res::GraphicPtr graphic;
         ScreenPos offset;
     };
 
-    unsigned int current_frame_;
     Time time_last_frame_;
     std::vector<GraphicDelta> m_deltas;
 

@@ -34,7 +34,7 @@ const sf::Image Graphic::nullImage;
 Graphic::Graphic(const genie::Graphic &data) :
     data_(data)
 {
-    slp_ = ResourceManager::Inst()->getSlp(data_.SLP, ResourceManager::Graphics);
+    slp_ = ResourceManager::Inst()->getSlp(data_.SLP, ResourceManager::ResourceType::Graphics);
 
     if (!slp_) {
         log.debug("Failed to get slp for id %d", data_.SLP);
@@ -184,6 +184,11 @@ uint32_t Graphic::getAngleCount() const
 bool Graphic::isValid()
 {
     return slp_ != nullptr;
+}
+
+bool Graphic::runOnce() const
+{
+    return (data_.SequenceType & genie::Graphic::SequenceOnce) || (data_.SequenceType & genie::Graphic::SequenceAnimated);
 }
 
 int Graphic::angleToOrientation(float angle) const

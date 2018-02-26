@@ -18,14 +18,16 @@
 
 #ifndef ENTITYFACTORY_H
 #define ENTITYFACTORY_H
+
 #include "../core/Entity.h"
+#include "mechanics/Civilization.h"
 
 class EntityFactory
 {
 public:
     static EntityFactory &Inst();
 
-    std::shared_ptr<Entity> createUnit(int ID, const MapPos &position);
+    Unit::Ptr createUnit(int ID, const MapPos &position, int playerId, Civilization::Ptr civ);
 
 private:
     EntityFactory();

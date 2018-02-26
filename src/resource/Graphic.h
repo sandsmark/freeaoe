@@ -104,12 +104,14 @@ public:
 
     bool isValid();
 
+    bool runOnce() const;
+
+    const genie::Graphic &data_;
 private:
     int angleToOrientation(float angle) const;
 
     static Logger &log;
 
-    const genie::Graphic &data_;
     genie::SlpFilePtr slp_;
 
     std::unordered_map<int, sf::Image> m_images;

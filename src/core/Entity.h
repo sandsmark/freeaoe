@@ -38,13 +38,15 @@ class GraphicRender;
 }
 
 typedef std::shared_ptr<Entity> EntityPtr;
+class Civilization;
 
 struct Entity
 {
 public:
     enum class Type {
         None,
-        Unit
+        Unit,
+        MoveTargetMarker
     };
     const Type type = Type::None;
 
@@ -54,11 +56,6 @@ public:
     };
 
     Entity() = delete;
-
-    const genie::Unit &data;
-    int playerId;
-
-    std::string readableName();
 
     virtual ~Entity();
 
@@ -70,21 +67,33 @@ public:
 
     static std::shared_ptr<Unit> asUnit(EntityPtr entity);
 
-    std::vector<Annex> annexes;
+    const std::string readableName;
 
 protected:
-    Entity(const genie::Unit &data_, int playerId_, const Type type_);
+    Entity(const Type type_, const std::string &name);
 
     comp::GraphicRender m_graphics;
-
     res::GraphicPtr defaultGraphics;
+};
+
+struct MoveTargetMarker : public Entity
+{
+    typedef std::shared_ptr<MoveTargetMarker> Ptr;
+
+    MoveTargetMarker();
+
+    void moveTo(const MapPos &pos);
 };
 
 struct Unit : public Entity
 {
+    typedef std::shared_ptr<Unit> Ptr;
+
+    const genie::Unit &data;
+
     Unit() = delete;
 
-    Unit(const genie::Unit &data_, int playerId);
+    Unit(const genie::Unit &data_, int playerId, std::shared_ptr<Civilization> civilization);
 
     bool selected = false;
 
@@ -94,11 +103,17 @@ struct Unit : public Entity
 
     bool update(Time time) override;
 
+    const std::vector<const genie::Unit *> creatableEntities();
+
+    int playerId;
+
+    std::vector<Annex> annexes;
+
 protected:
     res::GraphicPtr movingGraphics;
     ActionPtr currentAction;
+    std::shared_ptr<Civilization> m_civilization;
 };
-typedef std::shared_ptr<Unit> UnitPtr;
 
 
 #endif // ENTITY_H

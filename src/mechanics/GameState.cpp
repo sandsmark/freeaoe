@@ -63,11 +63,13 @@ void GameState::setScenario(std::shared_ptr<genie::ScnFile> scenario)
     scenario_ = scenario;
 }
 
-void GameState::init()
+bool GameState::init()
 {
-    IState::init();
+    if (!entity_manager_.init()) {
+        return false;
+    }
 
-    std::shared_ptr<genie::SlpFile> overlayFile = ResourceManager::Inst()->getUiOverlay(ResourceManager::Ui1280x1024, ResourceManager::Briton);
+    std::shared_ptr<genie::SlpFile> overlayFile = ResourceManager::Inst()->getUiOverlay(ResourceManager::Ui1280x1024, ResourceManager::Viking);
     if (overlayFile) {
         m_uiOverlay.loadFromImage(res::Resource::convertFrameToImage(overlayFile->getFrame()));
         log.info("Loaded UI overlay with size %dx%d", m_uiOverlay.getSize().x, m_uiOverlay.getSize().y);
@@ -107,21 +109,16 @@ void GameState::init()
         log.error("Failed to get cursors");
     }
 
+    // graphic 2962
+    m_waypointFlag = ResourceManager::Inst()->getSlp(3404);
+    if (!m_waypointFlag) {
+        log.error("Failed to load waypoint animation");
+    }
+
     const std::vector<genie::Civ> &civilizations = DataManager::Inst().civilizations();
     for (int i=0; i<civilizations.size(); i++) {
         m_civilizations.push_back(std::make_shared<Civilization>(i, DataManager::Inst().datFile()));
     }
-
-    m_unitIconsSlp = ResourceManager::Inst()->getSlp(50730);
-    if (!m_unitIconsSlp) {
-        std::cerr << "Failed to load icons" << std::endl;
-    }
-
-    m_buildingIconsSlp = ResourceManager::Inst()->getSlp(50706);
-    if (!m_buildingIconsSlp) {
-        std::cerr << "Failed to load icons" << std::endl;
-    }
-
 
     //Map test
     map_ = MapPtr(new Map());
@@ -129,23 +126,25 @@ void GameState::init()
     if (scenario_.get()) {
         std::cout << "Setting up scenario: " << scenario_->scenarioInstructions << std::endl;
         map_->create(scenario_->map);
+        std::cout << scenario_->playerCount << " " << scenario_->playerUnits.size() << " " << scenario_->playerData.resourcesPlusPlayerInfo.size() << std::endl;
 
-        for (genie::ScnPlayerUnits &units : scenario_->playerUnits) {
-            for (const genie::ScnUnit &scnunit : units.units) {
-                EntityPtr unit = EntityFactory::Inst().createUnit(scnunit.objectID, MapPos(scnunit.positionX * Map::TILE_SIZE, scnunit.positionY * Map::TILE_SIZE, scnunit.positionZ));
+        for (int playerNum = 0; playerNum < scenario_->playerUnits.size(); playerNum++) {
+            for (const genie::ScnUnit &scnunit : scenario_->playerUnits[playerNum].units) {
+                MapPos unitPos(scnunit.positionX * Map::TILE_SIZE, scnunit.positionY * Map::TILE_SIZE, scnunit.positionZ);
+                EntityPtr unit = EntityFactory::Inst().createUnit(scnunit.objectID, unitPos, playerNum, m_civilizations[0]);
                 entity_manager_.add(unit);
             }
         }
 
-        EntityPtr unit = EntityFactory::Inst().createUnit(293, MapPos(48*3, 48*3, 0));
+        EntityPtr unit = EntityFactory::Inst().createUnit(293, MapPos(48*3, 48*3, 0), 0, m_civilizations[0]);
         entity_manager_.add(unit);
     } else {
         map_->setUpSample();
 
-        EntityPtr unit = EntityFactory::Inst().createUnit(293, MapPos(48*3, 48*3, 0));
+        Unit::Ptr unit = EntityFactory::Inst().createUnit(293, MapPos(48*3, 48*3, 0), 0, m_civilizations[0]);
         entity_manager_.add(unit);
 
-        unit = EntityFactory::Inst().createUnit(109, MapPos(48*3, 48*3, 0));
+        unit = EntityFactory::Inst().createUnit(109, MapPos(48*3, 48*3, 0), 0, m_civilizations[0]);
 
         if (unit->data.Building.FoundationTerrainID > 0) {
             int width = unit->data.CollisionSize.x;
@@ -165,6 +164,8 @@ void GameState::init()
     mapRenderer_.setMap(map_);
 
     entity_manager_.setMap(map_);
+
+    return true;
 
     /*
   EntityForm form;
@@ -206,19 +207,22 @@ void GameState::draw()
     mapRenderer_.display();
     entity_manager_.render(renderTarget_);
 
-    if (m_selectionRect) {
+    if (m_selecting) {
         renderTarget_->draw(m_selectionRect, sf::Color::Transparent, sf::Color::White);
     }
 
     renderTarget_->draw(m_uiOverlay, ScreenPos(0, 0));
 
-    for (const Button &button : m_currentIcons) {
+    for (const EntityManager::InterfaceButton &button : entity_manager_.currentButtons) {
         ScreenPos position;
-        position.x = button.pos % 5;
+        position.x = button.index % 5;
         position.x = (position.x + 1) * 40;
-        position.y = button.pos / 5;
+        position.y = button.index / 5;
         position.y *= 40;
         position.y += m_uiOverlay.getSize().y  - 40 * 4;
+        renderTarget_->draw(m_buttonBackground, button.position(m_uiOverlay.getSize()));
+        position.x += 2;
+        position.y += 2;
         renderTarget_->draw(button.tex, position);
     }
 
@@ -247,7 +251,7 @@ bool GameState::update(Time time)
         renderTarget_->camera()->setTargetPosition(cameraMapPos);
 
 
-        if (m_selectionRect) {
+        if (m_selecting) {
             m_selectionStart.x -= m_cameraDeltaX * deltaTime * CAMERA_SPEED;
             m_selectionStart.y += m_cameraDeltaY * deltaTime * CAMERA_SPEED;
         }
@@ -255,7 +259,7 @@ bool GameState::update(Time time)
         updated = true;
     }
 
-    if (m_selectionRect) {
+    if (m_selecting) {
         ScreenRect selectionRect(m_selectionStart, m_selectionCurr);
         if (selectionRect != m_selectionRect) {
             m_selectionRect = selectionRect;
@@ -292,7 +296,7 @@ void GameState::handleEvent(sf::Event event)
             m_cameraDeltaY = 0;
         }
 
-        if (m_selectionRect) {
+        if (m_selecting) {
             m_selectionCurr = ScreenPos(event.mouseMove.x, event.mouseMove.y);
         }
 
@@ -332,42 +336,35 @@ void GameState::handleEvent(sf::Event event)
         renderTarget_->camera()->setTargetPosition(cameraMapPos);
     }
 
-    if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Button::Left) {
-        m_selectionStart = ScreenPos(event.mouseButton.x, event.mouseButton.y);
-        m_selectionCurr = ScreenPos(event.mouseButton.x+1, event.mouseButton.y+1);
-        m_selectionRect = ScreenRect(m_selectionStart, m_selectionCurr);
+    if (event.type == sf::Event::MouseButtonPressed) {
+        if (event.mouseButton.y < 25) {
+            // top bar
+        } else if (event.mouseButton.y > 590) {
+
+            // bottom
+        } else {
+            if (event.mouseButton.button == sf::Mouse::Button::Left) {
+                m_selectionStart = ScreenPos(event.mouseButton.x, event.mouseButton.y);
+                m_selectionCurr = ScreenPos(event.mouseButton.x+1, event.mouseButton.y+1);
+                m_selectionRect = ScreenRect(m_selectionStart, m_selectionCurr);
+                m_selecting = true;
+            } else if (event.mouseButton.button == sf::Mouse::Button::Right) {
+                entity_manager_.onRightClick(renderTarget_->absoluteMapPos(ScreenPos(event.mouseButton.x, event.mouseButton.y)));
+            }
+        }
     }
 
     if (event.type == sf::Event::MouseButtonReleased) {
-        if (event.mouseButton.button == sf::Mouse::Button::Left) {
+        if (event.mouseButton.button == sf::Mouse::Button::Left && m_selecting) {
             MapRect mapSelectionRect = renderTarget_->absoluteMapRect(m_selectionRect);
             entity_manager_.selectEntities(mapSelectionRect);
             m_selectionRect = ScreenRect();
-
-            if (!entity_manager_.selected().empty()) {
-                EntityPtr entity = *entity_manager_.selected().begin();
-                m_currentIcons.clear();
-                for (const genie::Unit *creatable : m_civilizations[0]->creatableUnits(entity->data.ID)) {
-                    if (creatable->IconID >= m_unitIconsSlp->getFrameCount()) {
-                        std::cerr << "invalid icon id: " << creatable->IconID << std::endl;
-                    }
-
-                    Button button;
-                    if (entity->data.InterfaceKind == genie::Unit::CiviliansInterface) {
-                        button.tex.loadFromImage(res::Resource::convertFrameToImage(m_buildingIconsSlp->getFrame(creatable->IconID)));
-                    } else {
-                        button.tex.loadFromImage(res::Resource::convertFrameToImage(m_unitIconsSlp->getFrame(creatable->IconID)));
-                    }
-                    button.pos = std::max(creatable->Creatable.ButtonID - 1, 0);
-
-                    m_currentIcons.push_back(button);
-
-                }
-            }
+            m_selecting = false;
         }
-
-        if (event.mouseButton.button == sf::Mouse::Button::Right) {
-            entity_manager_.onRightClick(renderTarget_->absoluteMapPos(ScreenPos(event.mouseButton.x, event.mouseButton.y)));
+        for (const EntityManager::InterfaceButton &button : entity_manager_.currentButtons) {
+            if (button.rect(m_uiOverlay.getSize()).contains(ScreenPos(event.mouseButton.x, event.mouseButton.y))) {
+                std::cerr << "================ " << button.index << std::endl;
+            }
         }
     }
 }
@@ -378,5 +375,6 @@ Size GameState::uiSize() const
         log.error("We don't have a valid UI overlay");
         return Size(640, 480);
     }
+
     return m_uiOverlay.getSize();
 }

@@ -115,6 +115,11 @@ unsigned int Map::width()
     return cols_ * TILE_SIZE;
 }
 
+float Map::elevationAt(const MapPos &position)
+{
+    return getTileAt(position.x / Map::TILE_SIZE, position.y / Map::TILE_SIZE).elevation_ * DataManager::Inst().terrainBlock().ElevHeight;
+}
+
 MapTile &Map::getTileAt(unsigned int col, unsigned int row)
 {
     unsigned int index = row * cols_ + col;
