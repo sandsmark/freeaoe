@@ -202,19 +202,19 @@ bool ResourceManager::initialize(const std::string &dataPath, const genie::GameV
             return false;
         }
 
-        m_interfaceFile = loadDrs(m_dataPath + "interfac.drs");
+        m_interfaceFile = loadDrs("interfac.drs");
         if (!m_interfaceFile) {
             log.error("Failed to load interface file");
             return false;
         }
 
-        m_graphicsFile = loadDrs(m_dataPath + "graphics.drs");
+        m_graphicsFile = loadDrs("graphics.drs");
         if (!m_graphicsFile) {
             log.error("Failed to load graphics file");
             return false;
         }
 
-        m_terrainFile = loadDrs(m_dataPath + "terrain.drs");
+        m_terrainFile = loadDrs("terrain.drs");
         if (!m_terrainFile) {
             log.error("Failed to load terrain file");
             return false;
@@ -249,13 +249,7 @@ ResourceManager::DrsFileVector ResourceManager::loadDrs(const std::vector<std::s
     DrsFileVector files;
 
     for (const std::string &filename : filenames) {
-        const std::string filePath = m_dataPath + filename;
-        if (!filesystem::exists(filePath)) {
-            log.debug("Skipping non-existing file %", filePath);
-            continue;
-        }
-
-        std::shared_ptr<genie::DrsFile> file = loadDrs(filePath);
+        std::shared_ptr<genie::DrsFile> file = loadDrs(filename);
         if (!file) {
             continue;
         }
@@ -265,16 +259,33 @@ ResourceManager::DrsFileVector ResourceManager::loadDrs(const std::vector<std::s
     return files;
 }
 
-std::shared_ptr<genie::DrsFile> ResourceManager::loadDrs(const std::string filePath)
+inline std::string toLowercase(std::string input)
 {
-    if (!filesystem::exists(filePath)) {
-        log.debug("Can't find file %", filePath);
-        return nullptr;
+    std::transform(input.begin(), input.end(), input.begin(), ::tolower);
+    return input;
+}
+
+std::shared_ptr<genie::DrsFile> ResourceManager::loadDrs(std::string filename)
+{
+    if (!filesystem::exists(m_dataPath + filename)) {
+        std::string compareFilename = toLowercase(filename);
+        filename = "";
+        for (const filesystem::directory_entry &entry : filesystem::directory_iterator(m_dataPath)) {
+            std::string candidate = toLowercase(entry.path().filename());
+            if (candidate == compareFilename) {
+                filename = entry.path().filename();
+                break;
+            }
+        }
+        if (filename.empty()) {
+            //log.debug("Can't find file %", filename);
+            return nullptr;
+        }
     }
 
     std::shared_ptr<genie::DrsFile> file = std::make_shared<genie::DrsFile>();
     file->setGameVersion(m_gameVersion);
-    file->load(filePath.c_str());
+    file->load((m_dataPath + filename).c_str());
     m_allFiles.push_back(file);
     return file;
 }

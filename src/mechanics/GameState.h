@@ -26,6 +26,7 @@
 #include "render/MapRenderer.h"
 #include "EntityManager.h"
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/Sprite.hpp>
 
 #include "Civilization.h"
 
@@ -80,6 +81,7 @@ private:
     MapRenderer mapRenderer_;
     genie::SlpFilePtr m_unitIconsSlp;
     genie::SlpFilePtr m_buildingIconsSlp;
+    genie::SlpFilePtr m_cursors;
     std::vector<Button> m_currentIcons;
 
     std::shared_ptr<genie::ScnFile> scenario_;
@@ -94,6 +96,8 @@ private:
     ScreenRect m_selectionRect;
 
     sf::Texture m_uiOverlay;
+    sf::Sprite m_cursor;
+    sf::Texture m_cursorTexture;
 
     std::vector<std::shared_ptr<Civilization>> m_civilizations;
 };

@@ -51,7 +51,7 @@ int main(int argc, char **argv)
   const std::string dataPath = config.getValue("game-path") + "/Data/";
 
   if (!filesystem::exists(dataPath)) {
-      std::cerr << "No game path" << std::endl;
+      std::cerr << "Game path " << dataPath << " does not exist" << std::endl;
       config.printUsage(argv[0]);
       return 1;
   }

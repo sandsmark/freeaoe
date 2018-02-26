@@ -67,13 +67,36 @@ void GameState::init()
 {
     IState::init();
 
-    std::shared_ptr<genie::SlpFile> overlayFile = ResourceManager::Inst()->getUiOverlay(ResourceManager::Ui1280x1024, ResourceManager::Viking);
+    std::shared_ptr<genie::SlpFile> overlayFile = ResourceManager::Inst()->getUiOverlay(ResourceManager::Ui1280x1024, ResourceManager::Briton);
     if (overlayFile) {
         m_uiOverlay.loadFromImage(res::Resource::convertFrameToImage(overlayFile->getFrame()));
         log.info("Loaded UI overlay with size %dx%d", m_uiOverlay.getSize().x, m_uiOverlay.getSize().y);
     } else {
-        m_uiOverlay = sf::Texture();
-        log.error("Failed to load ui overlay");
+        ResourceManager::UiResolution attemptedResolution = ResourceManager::Ui1280x1024;
+        ResourceManager::UiCiv attemptedCiv = ResourceManager::Briton;
+        do {
+            attemptedCiv = ResourceManager::UiCiv(attemptedCiv + 1);
+            if (attemptedCiv > ResourceManager::Korean) {
+                if (attemptedResolution == ResourceManager::Ui1280x1024) {
+                    attemptedResolution = ResourceManager::Ui1024x768;
+                } else if (attemptedResolution == ResourceManager::Ui1024x768) {
+                    attemptedResolution = ResourceManager::Ui800x600;
+                } else {
+                    m_uiOverlay = sf::Texture();
+                    break;
+                }
+
+                attemptedCiv = ResourceManager::Briton;
+            }
+            overlayFile = ResourceManager::Inst()->getUiOverlay(attemptedResolution, attemptedCiv);
+        } while (!overlayFile);
+
+        if (overlayFile) {
+            log.warn("Loaded fallback ui overlay res % for civ %", attemptedResolution, attemptedCiv);
+            m_uiOverlay.loadFromImage(res::Resource::convertFrameToImage(overlayFile->getFrame()));
+        } else {
+            log.error("Failed to load ui overlay");
+        }
     }
 
     m_cursors = ResourceManager::Inst()->getSlp(51000);
@@ -94,7 +117,7 @@ void GameState::init()
         std::cerr << "Failed to load icons" << std::endl;
     }
 
-    m_buildingIconsSlp = ResourceManager::Inst()->getSlp(50705);
+    m_buildingIconsSlp = ResourceManager::Inst()->getSlp(50706);
     if (!m_buildingIconsSlp) {
         std::cerr << "Failed to load icons" << std::endl;
     }
