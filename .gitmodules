@@ -1,6 +1,6 @@
 [submodule "extern/genieutils"]
 	path = extern/genieutils
-	url = git@github.com:apreiml/genieutils.git
+	url = git@github.com:sandsmark/genieutils.git
 [submodule "extern/geniedoc"]
 	path = extern/geniedoc
 	url = git@github.com:aap/geniedoc.git
