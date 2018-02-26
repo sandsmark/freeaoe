@@ -71,7 +71,7 @@ const sf::Image &Graphic::getImage(uint32_t frame_num, float angle)
     }
 
     if (frame_num >= slp_->getFrameCount()) {
-        log.error("trying to look up %d, but we only have %", frame_num, slp_->getFrameCount());
+        log.error("trying to look up %, but we only have %", frame_num, slp_->getFrameCount());
         frame_num = 0;
     }
 
@@ -188,7 +188,7 @@ bool Graphic::isValid()
 
 bool Graphic::runOnce() const
 {
-    return (data_.SequenceType & genie::Graphic::SequenceOnce) || (data_.SequenceType & genie::Graphic::SequenceAnimated);
+    return (data_.SequenceType & genie::Graphic::SequenceOnce);
 }
 
 int Graphic::angleToOrientation(float angle) const

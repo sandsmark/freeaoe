@@ -122,11 +122,27 @@ MoveTargetMarker::MoveTargetMarker() :
 {
     m_graphics.setGraphic(ResourceManager::Inst()->getGraphic(2961));
 
-    m_graphics.current_frame_ = m_graphics.graphic_->data_.FrameCount; // don't play immediately
+    m_graphics.current_frame_ = m_graphics.graphic_->data_.FrameCount - 1; // don't play immediately
 }
 
 void MoveTargetMarker::moveTo(const MapPos &pos)
 {
     position = pos;
     m_graphics.current_frame_ = 0;
+    m_isRunning = true;
+}
+
+bool MoveTargetMarker::update(Time time)
+{
+    if (!m_isRunning) {
+        return false;
+    }
+
+    bool updated = Entity::update(time);
+
+    if (m_graphics.current_frame_ >= m_graphics.graphic_->data_.FrameCount - 1) {
+        m_isRunning = false;
+    }
+
+    return updated;
 }

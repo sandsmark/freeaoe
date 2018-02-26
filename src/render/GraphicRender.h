@@ -72,7 +72,6 @@ private:
     Time time_last_frame_;
     std::vector<GraphicDelta> m_deltas;
 
-    bool replay_delay_;
     int m_playerId = 2;
 };
 }

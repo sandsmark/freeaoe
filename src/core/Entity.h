@@ -83,6 +83,11 @@ struct MoveTargetMarker : public Entity
     MoveTargetMarker();
 
     void moveTo(const MapPos &pos);
+
+    bool update(Time time) override;
+
+private:
+    bool m_isRunning = false;
 };
 
 struct Unit : public Entity

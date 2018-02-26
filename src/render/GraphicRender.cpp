@@ -138,6 +138,8 @@ void GraphicRender::setGraphic(res::GraphicPtr graphic)
 {
     graphic_ = graphic;
 
+    current_frame_ = 0;
+
     m_deltas.clear();
 
     for (const genie::GraphicDelta &delta : graphic->deltas()) {
