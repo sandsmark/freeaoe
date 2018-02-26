@@ -4,3 +4,6 @@
 [submodule "extern/geniedoc"]
 	path = extern/geniedoc
 	url = git@github.com:aap/geniedoc.git
+[submodule "extern/pcrio"]
+	path = extern/pcrio
+	url = git@github.com:sandsmark/pcrio.git
