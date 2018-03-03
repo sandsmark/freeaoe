@@ -46,6 +46,9 @@ bool GraphicRender::update(Time time)
     if (!graphic_) {
         return false;
     }
+    if (!graphic_->getFrameRate()) {
+        return false;
+    }
 
     if (graphic_->runOnce() && current_frame_ >= graphic_->getFrameCount() - 1) {
         return false;
