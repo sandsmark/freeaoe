@@ -139,6 +139,13 @@ const sf::Image &Graphic::overlayImage(uint32_t frame_num, float angle, uint8_t 
 //------------------------------------------------------------------------------
 ScreenPos Graphic::getHotspot(uint32_t frame_num, bool mirrored) const
 {
+    if (!slp_) {
+        return ScreenPos();
+    }
+    if (slp_->getFrameCount() == 0) {
+        return ScreenPos();
+    }
+
     if (frame_num >= slp_->getFrameCount()) {
         frame_num = 0;
     }
@@ -199,9 +206,7 @@ int Graphic::angleToOrientation(float angle) const
     int lookupAngle = std::round(data_.AngleCount * angle / (M_PI * 2.));
 
     // The angle we get in isn't normalized
-    while (lookupAngle > data_.AngleCount) {
-        lookupAngle -= data_.AngleCount;
-    }
+    lookupAngle %= data_.AngleCount;
     while (lookupAngle < 0) {
         lookupAngle += data_.AngleCount;
     }
