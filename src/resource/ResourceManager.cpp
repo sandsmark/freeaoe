@@ -402,6 +402,7 @@ std::shared_ptr<genie::DrsFile> ResourceManager::loadDrs(std::string filename)
     std::shared_ptr<genie::DrsFile> file = std::make_shared<genie::DrsFile>();
     file->setGameVersion(m_gameVersion);
     file->load((m_dataPath + filename).c_str());
+
     m_allFiles.push_back(file);
     return file;
 }

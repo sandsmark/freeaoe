@@ -25,6 +25,7 @@
 #include "resource/LanguageManager.h"
 
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
 #include <iostream>
@@ -104,11 +105,22 @@ void EntityManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
         if (unit->data.Type < genie::Unit::BuildingType) {
             continue;
         }
+        const ScreenPos unitPosition = renderTarget->camera()->absoluteScreenPos(entity->position);
 
-        entity->renderer().drawOn(m_outlineOverlay, renderTarget->absoluteScreenPos(entity->position));
+        ScreenRect unitRect = unit->renderer().rect() + unitPosition;
+        if (renderTarget->camera()->isVisible(unitRect)) {
+            entity->renderer().drawOn(m_outlineOverlay, unitPosition);
+        }
+
 
         for (const Entity::Annex &annex : unit->annexes) {
-            annex.entity->renderer().drawOn(m_outlineOverlay, renderTarget->absoluteScreenPos(entity->position + annex.offset));
+            const ScreenPos annexPosition = renderTarget->camera()->absoluteScreenPos(entity->position + annex.offset);
+            ScreenRect annexRect = annex.entity->renderer().rect() + annexPosition;
+            if (!renderTarget->camera()->isVisible(annexRect)) {
+                continue;
+            }
+
+            annex.entity->renderer().drawOn(m_outlineOverlay, renderTarget->camera()->absoluteScreenPos(entity->position + annex.offset));
         }
     }
 
@@ -118,12 +130,31 @@ void EntityManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
             continue;
         }
 
+        if (!renderTarget->camera()->isVisible(MapRect(unit->position.x, unit->position.y, 10, 10))) {
+            continue;
+        }
+
         if (m_selectedEntities.count(entity)) { // draw health indicator
-            ScreenPos pos = renderTarget->absoluteScreenPos(entity->position);
+            ScreenPos pos = renderTarget->camera()->absoluteScreenPos(entity->position);
+            pos.x -= unit->data.CollisionSize.x * Map::TILE_SIZE_HORIZONTAL;
+            pos.y -= unit->data.CollisionSize.y * Map::TILE_SIZE_VERTICAL;
+
+            sf::RectangleShape rect;
+            sf::CircleShape circle;
+            circle.setFillColor(sf::Color::Transparent);
+            circle.setOutlineColor(sf::Color::White);
+            circle.setOutlineThickness(1);
+
+            circle.setPosition(pos);
+            circle.setRadius(unit->data.CollisionSize.x * Map::TILE_SIZE);
+            const float ratio = unit->data.CollisionSize.y * Map::TILE_SIZE_VERTICAL / (unit->data.CollisionSize.x * Map::TILE_SIZE_HORIZONTAL);
+            circle.setScale(1, ratio);
+            renderTarget->draw(circle);
+
+            pos = renderTarget->camera()->absoluteScreenPos(entity->position);
             pos.x -= Map::TILE_SIZE_HORIZONTAL / 8;
             pos.y -= Map::TILE_SIZE_VERTICAL;
 
-            sf::RectangleShape rect;
             rect.setFillColor(sf::Color::Green);
             rect.setOutlineColor(sf::Color::Transparent);
 
@@ -136,16 +167,16 @@ void EntityManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
             continue;
         }
 
-        entity->renderer().drawOn(*renderTarget->renderTarget_, renderTarget->absoluteScreenPos(entity->position));
+        entity->renderer().drawOn(*renderTarget->renderTarget_, renderTarget->camera()->absoluteScreenPos(entity->position));
 
-        ScreenPos pos = renderTarget->absoluteScreenPos(entity->position);
+        ScreenPos pos = renderTarget->camera()->absoluteScreenPos(entity->position);
         entity->renderer().drawOutlineOn(m_outlineOverlay, pos);
     }
 
     m_outlineOverlay.display();
     renderTarget->draw(m_outlineOverlay.getTexture(), ScreenPos(0, 0));
 
-    m_moveTargetMarker->renderer().drawOn(*renderTarget->renderTarget_, renderTarget->absoluteScreenPos(m_moveTargetMarker->position));
+    m_moveTargetMarker->renderer().drawOn(*renderTarget->renderTarget_, renderTarget->camera()->absoluteScreenPos(m_moveTargetMarker->position));
 }
 
 void EntityManager::onRightClick(const MapPos &mapPos)
@@ -231,9 +262,9 @@ void EntityManager::updateButtons()
         }
         button.index = std::max(creatable->Creatable.ButtonID - 1, 0);
         button.interfacePage = creatable->InterfaceKind;
-        std::cerr << button.index << " " << LanguageManager::getString(creatable->LanguageDLLName) << " " << LanguageManager::getString(creatable->LanguageDLLCreation) << std::endl;;
-        std::cerr << int(creatable->InterfaceKind) << std::endl;
-        std::cerr << int(unit->data.InterfaceKind) << std::endl;
+//        std::cerr << button.index << " " << LanguageManager::getString(creatable->LanguageDLLName) << " " << LanguageManager::getString(creatable->LanguageDLLCreation) << std::endl;;
+//        std::cerr << int(creatable->InterfaceKind) << std::endl;
+//        std::cerr << int(unit->data.InterfaceKind) << std::endl;
 
 
         currentButtons.push_back(std::move(button));

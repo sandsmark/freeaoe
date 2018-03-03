@@ -46,7 +46,7 @@ public:
 
     bool update(Time time);
 
-    void drawOn(sf::RenderTarget &renderTarget, ScreenPos screenPos);
+    void drawOn(sf::RenderTarget &renderTarget, const ScreenPos screenPos);
     void drawOutlineOn(sf::RenderTarget &renderer, ScreenPos screenPos);
 
     const sf::Image &image();
@@ -56,6 +56,8 @@ public:
 
     void setGraphic(res::GraphicPtr graphic);
     ScreenPos getHotspot() const { return graphic_->getHotspot(current_frame_); }
+
+    ScreenRect rect();
 
     float angle;
 

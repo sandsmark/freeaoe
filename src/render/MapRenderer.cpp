@@ -22,6 +22,7 @@
 #include <resource/DataManager.h>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/CircleShape.hpp>
 
 MapRenderer::MapRenderer() :
     m_camChanged(true),
@@ -45,7 +46,7 @@ bool MapRenderer::update(Time time)
         return false;
     }
 
-    const MapPos cameraPos = renderTarget_->camera()->getTargetPosition();
+    const MapPos cameraPos = renderTarget_->camera()->targetPosition();
 
     if (!m_camChanged && m_lastCameraPos == cameraPos &&
         m_mapRenderTexture.getSize() == renderTarget_->getSize()) {
@@ -54,75 +55,55 @@ bool MapRenderer::update(Time time)
 
     //TODO: split up (refactor)
 
-    // Get the absolute map positions of the rendertarget corners
-    ScreenPos camCenter;
-    camCenter.x = renderTarget_->getSize().x / 2.0;
-    camCenter.y = renderTarget_->getSize().y / 2.0;
+//     Get the absolute map positions of the rendertarget corners
+    const ScreenPos camCenter(renderTarget_->getSize().x / 2.0, renderTarget_->getSize().y / 2.0);
 
     // relative map positions (from center) //only changes if renderTargets resolution does
-    MapPos nullCenterMp = camCenter.toMap();
-    //     MapPos nulltopLeftMp = screenToMapPos(ScreenPos(0,0));
-    MapPos nullbotLeftMp = ScreenPos(0, renderTarget_->getSize().y).toMap();
-    MapPos nullTopRightMp = ScreenPos(renderTarget_->getSize().x, 0).toMap();
-    MapPos nullBotRightMp = ScreenPos(renderTarget_->getSize().x, renderTarget_->getSize().y).toMap();
+    const MapPos center = camCenter.toMap();
+    const MapPos bottomLeft = ScreenPos(0, renderTarget_->getSize().y).toMap();
+    const MapPos topRight = ScreenPos(renderTarget_->getSize().x, 0).toMap();
+    const MapPos bottomRight = ScreenPos(renderTarget_->getSize().x, renderTarget_->getSize().y).toMap();
 
     // absolute map positions
-    MapPos topLeftMp = cameraPos - nullCenterMp;
-    MapPos botRightMp = cameraPos + (nullBotRightMp - nullCenterMp);
+    MapPos topLeftMp = cameraPos - center;
+    MapPos botRightMp = cameraPos + (bottomRight - center);
 
-    MapPos topRightMp = cameraPos + (nullTopRightMp - nullCenterMp);
-    MapPos botLeftMp = cameraPos + (nullbotLeftMp - nullCenterMp);
+    MapPos topRightMp = cameraPos + (topRight - center);
+    MapPos botLeftMp = cameraPos + (bottomLeft - center);
 
 //    std::cout << "nulC " << nullCenterMp.x << " " << nullCenterMp.y << std::endl;
 //    std::cout << "topLeftMp " << topLeftMp.x << " " << topLeftMp.y << std::endl;
 //    std::cout << "botRightMp " << botRightMp.x << " " << botRightMp.y << std::endl;
 
     // get column and row boundaries for rendering
-    m_rColBegin = botLeftMp.x / Map::TILE_SIZE; //int = round down //TODO Platform independent?
-
-    if (m_rColBegin < 0)
-        m_rColBegin = 0;
+    m_rColBegin = botLeftMp.x / Map::TILE_SIZE;
     if (m_rColBegin > m_map->getCols()) {
-        m_rColBegin = m_map->getCols();
         std::cout << "E: Somethings fishy... (rColBegin_ > map_->getCols())" << std::endl;
     }
+    m_rColBegin = std::clamp(m_rColBegin, 0, m_map->getCols());
 
     m_rColEnd = topRightMp.x / Map::TILE_SIZE;
     m_rColEnd++; //round up
-
     if (m_rColEnd < 0) {
-        m_rColEnd = 0;
         std::cout << "E: Somethings fishy... (rColEnd_ < 0)" << std::endl;
     }
-    if (m_rColEnd > m_map->getCols())
-        m_rColEnd = m_map->getCols();
+    m_rColEnd = std::clamp(m_rColEnd, 0, m_map->getCols());
 
     m_rRowBegin = topLeftMp.y / Map::TILE_SIZE;
-
-    if (m_rRowBegin < 0)
-        m_rRowBegin = 0;
     if (m_rRowBegin > m_map->getRows()) {
         std::cout << "E: Somethings fishy... (rRowBegin > map_->getRows())" << std::endl;
-        m_rRowBegin = m_map->getRows();
     }
+    m_rRowBegin = std::clamp(m_rRowBegin, 0, m_map->getRows());
 
     m_rRowEnd = botRightMp.y / Map::TILE_SIZE;
     m_rRowEnd++; // round up
-
     if (m_rRowEnd < 0) {
-        m_rRowEnd = 0;
         std::cout << "E: Somethings fishy... (rColEnd_ < 0)" << std::endl;
     }
-    if (m_rRowEnd > m_map->getRows())
-        m_rRowEnd = m_map->getRows();
+    m_rRowEnd = std::clamp(m_rRowEnd, 0, m_map->getRows());
 
     // Calculating screen offset to MapPos(rColBegin, rColEnd):
-
-    MapPos offsetMp;
-    offsetMp.x = m_rColBegin * Map::TILE_SIZE;
-    offsetMp.y = m_rRowBegin * Map::TILE_SIZE;
-    offsetMp.z = 0;
-
+    const MapPos offsetMp(m_rColBegin * Map::TILE_SIZE, m_rRowBegin * Map::TILE_SIZE);
     ScreenPos offsetSp = (offsetMp - topLeftMp).toScreen();
 
     m_xOffset = offsetSp.x;
@@ -143,6 +124,8 @@ void MapRenderer::display(void)
     }
 
     renderTarget_->draw(m_mapRenderTexture.getTexture(), ScreenPos(0, 0));
+    renderTarget_->draw(renderTarget_->camera()->m_visibleArea, sf::Color(0, 255, 0, 32));
+
 }
 
 void MapRenderer::setMap(MapPtr map)
@@ -154,28 +137,6 @@ void MapRenderer::setMap(MapPtr map)
     m_rColEnd = m_map->getCols();
 
     m_camChanged = true;
-}
-
-MapPos MapRenderer::getMapPosition(ScreenPos pos)
-{
-    ScreenPos camCenter;
-    camCenter.x = renderTarget_->getSize().x / 2.0;
-    camCenter.y = renderTarget_->getSize().y / 2.0;
-
-    pos.y = renderTarget_->getSize().y - pos.y;
-
-    // relative map positions (from center)
-    MapPos nullCenterMp = camCenter.toMap();
-
-    MapPos nullPos = pos.toMap();
-
-    MapPos relPos;
-    relPos.x = nullPos.x - nullCenterMp.x;
-    relPos.y = nullPos.y - nullCenterMp.y;
-
-    MapPos absMapPos = renderTarget_->camera()->getTargetPosition() + relPos;//(nullPos - nullCenterMp);
-
-    return absMapPos;
 }
 
 void MapRenderer::updateTexture()
@@ -190,36 +151,53 @@ void MapRenderer::updateTexture()
         return;
     }
 
+    sf::CircleShape outline(Map::TILE_SIZE, 4);
+    outline.setScale(1, 0.5);
+    outline.setFillColor(sf::Color::Transparent);
+    outline.setOutlineThickness(1);
+    outline.setOutlineColor(sf::Color(255, 255, 255, 128));
+
     for (unsigned int col = m_rColBegin; col < m_rColEnd; col++) {
         for (unsigned int row = m_rRowBegin; row < m_rRowEnd; row++) {
             MapTile &mapTile = m_map->getTileAt(col, row);
 
             //TODO: MapPos to screenpos (Tile 0,0 is drawn at MapPos 0,0
-            MapPos mpos(0, 0, mapTile.elevation_ * DataManager::Inst().terrainBlock().ElevHeight);
+            MapRect rect;
+            rect.x = col * Map::TILE_SIZE;
+            rect.y = row * Map::TILE_SIZE;
+            rect.z = mapTile.elevation_ * DataManager::Inst().terrainBlock().ElevHeight;
+            rect.width = Map::TILE_SIZE;
+            rect.height = Map::TILE_SIZE;
 
-            mpos.x += (col - m_rColBegin) * Map::TILE_SIZE;
-            mpos.y += (row - m_rRowBegin) * Map::TILE_SIZE;
+            // col and row are in map coordinates, so the top corners when rotated 45° we don't need to draw
+            if (!renderTarget_->camera()->isVisible(rect)) {
+                continue;
+            }
 
-            ScreenPos spos = mpos.toScreen();
-
+            rect.x -= m_rColBegin * Map::TILE_SIZE;
+            rect.y -= m_rRowBegin * Map::TILE_SIZE;
+            ScreenPos spos = rect.topLeft().toScreen();
             spos.x += m_xOffset;
             spos.y += m_yOffset;
-
             spos.y -= Map::TILE_SIZE_VERTICAL / 2;
+
+            if (!mapTile.terrain_) {
+                sf::RectangleShape rect;
+                rect.setFillColor(sf::Color(255, 0, 0, 32));
+                rect.setPosition(spos);
+                rect.setSize(sf::Vector2f(Map::TILE_SIZE_HORIZONTAL, Map::TILE_SIZE_VERTICAL));
+                m_textureTarget.draw(rect);
+                continue;
+            }
+
 
             if (mapTile.blendOverlay.getSize().x > 0) {
                 m_textureTarget.draw(mapTile.blendOverlay, spos);
             } else {
                 m_textureTarget.draw(mapTile.terrain_->texture(col, row), spos);
             }
-
-//            sf::RectangleShape rect;
-//            rect.setFillColor(sf::Color::Transparent);
-//            rect.setOutlineColor(sf::Color::Red);
-//            rect.setPosition(spos);
-//            rect.setOutlineThickness(1);
-//            rect.setSize(sf::Vector2f(Map::TILE_SIZE_HORIZONTAL, Map::TILE_SIZE_VERTICAL));
-//            m_textureTarget.draw(rect);
+            outline.setPosition(spos.x, spos.y);
+            m_textureTarget.draw(outline);
         }
     }
 }

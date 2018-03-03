@@ -91,7 +91,7 @@ void Engine::start()
 //------------------------------------------------------------------------------
 bool Engine::setup(const std::string &scnFile)
 {
-  renderWindow_ = new sf::RenderWindow(sf::VideoMode(640, 480), "freeaoe");
+  renderWindow_ = new sf::RenderWindow(sf::VideoMode(1280, 1024), "freeaoe");
   renderWindow_->setMouseCursorVisible(false);
   renderWindow_->setFramerateLimit(60);
   
@@ -109,7 +109,7 @@ bool Engine::setup(const std::string &scnFile)
           return false;
       }
   } else {
-//      gameState->setScenario(ResourceManager::Inst()->getScn(56009));
+      gameState->setScenario(ResourceManager::Inst()->getScn(56005));
   }
 
   state_manager_.addActiveState(gameState);

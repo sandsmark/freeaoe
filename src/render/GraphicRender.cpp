@@ -89,8 +89,12 @@ bool GraphicRender::update(Time time)
     return updated;
 }
 
-void GraphicRender::drawOn(sf::RenderTarget &renderTarget, ScreenPos screenPos)
+void GraphicRender::drawOn(sf::RenderTarget &renderTarget, const ScreenPos screenPos)
 {
+    if (!graphic_ || !graphic_->isValid()) {
+        return;
+    }
+
     sf::Texture texture;
     texture.loadFromImage(image());
     sf::Sprite sprite;
@@ -110,6 +114,10 @@ void GraphicRender::drawOn(sf::RenderTarget &renderTarget, ScreenPos screenPos)
 
 void GraphicRender::drawOutlineOn(sf::RenderTarget &renderTarget, ScreenPos screenPos)
 {
+    if (!graphic_ || !graphic_->isValid()) {
+        return;
+    }
+
     sf::Texture texture;
     texture.loadFromImage(outline());
     sf::Sprite sprite;
@@ -164,6 +172,30 @@ void GraphicRender::setGraphic(res::GraphicPtr graphic)
     if (!m_deltas.empty()) {
         std::reverse(m_deltas.begin(), m_deltas.end());
     }
+}
+
+ScreenRect GraphicRender::rect()
+{
+    ScreenRect ret;
+    const ScreenPos hotspot = graphic_->getHotspot(current_frame_);
+    ret.x = -hotspot.x;
+    ret.y = -hotspot.y;
+    const sf::Vector2u size = image().getSize();
+    ret.width = size.x;
+    ret.height = size.y;
+
+    for (const GraphicDelta &delta : m_deltas) {
+        ScreenPos position = delta.graphic->getHotspot() - delta.offset;
+        const sf::Image &deltaImage = delta.graphic->getImage();
+        ScreenRect deltaRect;
+        deltaRect.x = -position.x;
+        deltaRect.y = -position.y;
+        deltaRect.width = deltaImage.getSize().x;
+        deltaRect.height = deltaImage.getSize().y;
+        ret += deltaRect;
+    }
+
+    return ret;
 }
 
 }

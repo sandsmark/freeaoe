@@ -36,8 +36,6 @@ public:
 
     void setMap(MapPtr map);
 
-    MapPos getMapPosition(ScreenPos pos);
-
 private:
     void updateTexture();
 

@@ -92,11 +92,11 @@ public:
 
     void create(genie::ScnMap mapDescription);
 
-    unsigned int getRows();
-    unsigned int getCols();
+    int getRows();
+    int getCols();
 
-    unsigned int height();
-    unsigned int width();
+    int height();
+    int width();
 
     float elevationAt(const MapPos &position);
 

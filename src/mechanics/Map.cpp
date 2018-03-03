@@ -47,8 +47,8 @@ Map::~Map()
 
 void Map::setUpSample()
 {
-    cols_ = 10;
-    rows_ = 10;
+    cols_ = 50;
+    rows_ = 50;
 
     tiles_.clear();
 
@@ -95,22 +95,22 @@ void Map::create(genie::ScnMap mapDescription)
     }
 }
 
-unsigned int Map::getCols()
+int Map::getCols()
 {
     return cols_;
 }
 
-unsigned int Map::getRows()
+int Map::getRows()
 {
     return rows_;
 }
 
-unsigned int Map::height()
+int Map::height()
 {
     return rows_ * TILE_SIZE;
 }
 
-unsigned int Map::width()
+int Map::width()
 {
     return cols_ * TILE_SIZE;
 }
@@ -125,7 +125,7 @@ MapTile &Map::getTileAt(unsigned int col, unsigned int row)
     unsigned int index = row * cols_ + col;
 
     if (index >= tiles_.size()) {
-        log.error("Trying to get MapTile out of index!");
+        log.error("Trying to get MapTile (%x%) out of bounds!", col, row);
         static MapTile nulltile;
         return nulltile;
     }

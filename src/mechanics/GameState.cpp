@@ -123,28 +123,27 @@ bool GameState::init()
     //Map test
     map_ = MapPtr(new Map());
 
-    if (scenario_.get()) {
+    if (scenario_) {
         std::cout << "Setting up scenario: " << scenario_->scenarioInstructions << std::endl;
         map_->create(scenario_->map);
-        std::cout << scenario_->playerCount << " " << scenario_->playerUnits.size() << " " << scenario_->playerData.resourcesPlusPlayerInfo.size() << std::endl;
 
         for (int playerNum = 0; playerNum < scenario_->playerUnits.size(); playerNum++) {
             for (const genie::ScnUnit &scnunit : scenario_->playerUnits[playerNum].units) {
                 MapPos unitPos(scnunit.positionX * Map::TILE_SIZE, scnunit.positionY * Map::TILE_SIZE, scnunit.positionZ);
-                EntityPtr unit = EntityFactory::Inst().createUnit(scnunit.objectID, unitPos, playerNum, m_civilizations[0]);
+                Unit::Ptr unit = EntityFactory::Inst().createUnit(scnunit.objectID, unitPos, playerNum, m_civilizations[0]);
+                if (scnunit.rotation > 0) {
+                    unit->setAngle(scnunit.rotation * M_PI * 2. / 16.);
+                }
                 entity_manager_.add(unit);
             }
         }
-
-        EntityPtr unit = EntityFactory::Inst().createUnit(293, MapPos(48*3, 48*3, 0), 0, m_civilizations[0]);
-        entity_manager_.add(unit);
     } else {
         map_->setUpSample();
 
         Unit::Ptr unit = EntityFactory::Inst().createUnit(293, MapPos(48*3, 48*3, 0), 0, m_civilizations[0]);
         entity_manager_.add(unit);
 
-        unit = EntityFactory::Inst().createUnit(109, MapPos(48*3, 48*3, 0), 0, m_civilizations[0]);
+        unit = EntityFactory::Inst().createUnit(109, MapPos(48*10, 48*10, 0), 0, m_civilizations[0]);
 
         if (unit->data.Building.FoundationTerrainID > 0) {
             int width = unit->data.CollisionSize.x;
@@ -236,7 +235,7 @@ bool GameState::update(Time time)
     if (m_cameraDeltaX != 0 || m_cameraDeltaY != 0) {
         const int deltaTime = time - m_lastUpdate;
 
-        ScreenPos cameraScreenPos = renderTarget_->camera()->getTargetPosition().toScreen();
+        ScreenPos cameraScreenPos = renderTarget_->camera()->targetPosition().toScreen();
         cameraScreenPos.x += m_cameraDeltaX * deltaTime * CAMERA_SPEED;
         cameraScreenPos.y += m_cameraDeltaY * deltaTime * CAMERA_SPEED;
 
@@ -301,8 +300,7 @@ void GameState::handleEvent(sf::Event event)
     }
 
     if (event.type == sf::Event::KeyPressed) {
-        ScreenPos cameraScreenPos = renderTarget_->camera()->getTargetPosition().toScreen();
-
+        ScreenPos cameraScreenPos = renderTarget_->camera()->targetPosition().toScreen();
 
         switch(event.key.code) {
         case sf::Keyboard::Left:
@@ -334,30 +332,31 @@ void GameState::handleEvent(sf::Event event)
     }
 
     if (event.type == sf::Event::MouseButtonPressed) {
-        if (event.mouseButton.y < 25) {
-            // top bar
-        } else if (event.mouseButton.y > 590) {
+//        if (event.mouseButton.y < 25) {
+//            // top bar
+//        } else if (event.mouseButton.y > 590) {
 
-            // bottom
-        } else {
+//            // bottom
+//        } else {
             if (event.mouseButton.button == sf::Mouse::Button::Left) {
                 m_selectionStart = ScreenPos(event.mouseButton.x, event.mouseButton.y);
                 m_selectionCurr = ScreenPos(event.mouseButton.x+1, event.mouseButton.y+1);
                 m_selectionRect = ScreenRect(m_selectionStart, m_selectionCurr);
                 m_selecting = true;
-            } else if (event.mouseButton.button == sf::Mouse::Button::Right) {
-                entity_manager_.onRightClick(renderTarget_->absoluteMapPos(ScreenPos(event.mouseButton.x, event.mouseButton.y)));
             }
-        }
+//        }
     }
 
     if (event.type == sf::Event::MouseButtonReleased) {
         if (event.mouseButton.button == sf::Mouse::Button::Left && m_selecting) {
-            MapRect mapSelectionRect = renderTarget_->absoluteMapRect(m_selectionRect);
+            MapRect mapSelectionRect = renderTarget_->camera()->absoluteMapRect(m_selectionRect);
             entity_manager_.selectEntities(mapSelectionRect);
             m_selectionRect = ScreenRect();
             m_selecting = false;
+        } else if (event.mouseButton.button == sf::Mouse::Button::Right) {
+            entity_manager_.onRightClick(renderTarget_->camera()->absoluteMapPos(ScreenPos(event.mouseButton.x, event.mouseButton.y)));
         }
+
         for (const EntityManager::InterfaceButton &button : entity_manager_.currentButtons) {
             if (button.rect(m_uiOverlay.getSize()).contains(ScreenPos(event.mouseButton.x, event.mouseButton.y))) {
                 std::cerr << "================ " << button.index << std::endl;

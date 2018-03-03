@@ -18,23 +18,55 @@
 
 #include "Camera.h"
 
-Camera::Camera()
+#include <iostream>
+
+bool Camera::isVisible(const MapRect &rect)
 {
-    target_.x = 0;
-    target_.y = 0;
-    target_.z = 0;
+    return m_visibleArea.contains(absoluteScreenPos(rect.topLeft())) ||
+            m_visibleArea.contains(absoluteScreenPos(rect.topRight())) ||
+            m_visibleArea.contains(absoluteScreenPos(rect.bottomLeft())) ||
+            m_visibleArea.contains(absoluteScreenPos(rect.bottomRight()));
 }
 
-Camera::~Camera()
+void Camera::setTargetPosition(const MapPos &pos)
 {
+    m_target = pos;
 }
 
-MapPos Camera::getTargetPosition(void) const
+void Camera::setViewportSize(const Size &size)
 {
-    return target_;
+    m_viewportSize = size;
+    m_visibleArea.width = size.width;
+    m_visibleArea.height = size.height;
 }
 
-void Camera::setTargetPosition(MapPos target)
+ScreenPos Camera::absoluteScreenPos(const MapPos &mpos)
 {
-    target_ = target;
+    const MapPos absoluteMapPos = m_target - mpos;
+    const ScreenPos screenPosition = absoluteMapPos.toScreen();
+    const ScreenPos screenCenter(m_viewportSize.width / 2.f, m_viewportSize.height / 2.f);
+
+    return ScreenPos(screenCenter.x - screenPosition.x, screenCenter.y + screenPosition.y);
+}
+
+MapPos Camera::absoluteMapPos(ScreenPos pos)
+{
+    ScreenPos camCenter;
+    camCenter.x = m_viewportSize.width / 2.0;
+    camCenter.y = m_viewportSize.height / 2.0;
+
+    pos.y = m_viewportSize.height - pos.y;
+
+    // relative map positions (from center)
+    MapPos nullCenterMp = camCenter.toMap();
+
+    MapPos nullPos = pos.toMap();
+
+    MapPos relPos;
+    relPos.x = nullPos.x - nullCenterMp.x;
+    relPos.y = nullPos.y - nullCenterMp.y;
+
+    MapPos absMapPos = m_target + (nullPos - nullCenterMp);
+
+    return absMapPos;
 }

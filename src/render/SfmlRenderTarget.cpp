@@ -43,6 +43,7 @@ Vector2u SfmlRenderTarget::getSize(void) const
 void SfmlRenderTarget::setSize(const Size size) const
 {
     renderTarget_->setView(sf::View(sf::FloatRect(0, 0, size.width, size.height)));
+    m_camera->setViewportSize(size);
 }
 
 void SfmlRenderTarget::draw(const sf::Image &image, ScreenPos pos)

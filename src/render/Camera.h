@@ -22,23 +22,40 @@
 
 #include <memory>
 
-//TODO maybe observer pattern
-class Camera
+struct Camera
 {
+    bool isVisible(const MapRect &rect);
+    bool isVisible(const ScreenRect &rect) {
+        return m_visibleArea.overlaps(rect);
+    }
 
-public:
-    Camera();
-    virtual ~Camera();
+    const MapPos &targetPosition() { return m_target; }
 
-    /// Returns the map position the camera is pointing at
-    MapPos getTargetPosition(void) const;
+    void setTargetPosition(const MapPos &pos);
+    void setViewportSize(const Size &size);
 
-    void setTargetPosition(MapPos target);
+    bool operator==(const Camera &other) {
+        return m_visibleArea == other.m_visibleArea &&
+               m_target == other.m_target;
+    }
 
-    //void move(int x, int y);
+    ScreenPos absoluteScreenPos(const MapPos &mpos);
 
+    MapPos absoluteMapPos(ScreenPos pos);
+
+    MapRect absoluteMapRect(const ScreenRect &screenRect) {
+        return MapRect(absoluteMapPos(screenRect.topLeft()), absoluteMapPos(screenRect.bottomRight()));
+    }
+
+    ScreenRect absoluteScreenRect(const MapRect &mapRect)
+    {
+        return ScreenRect(absoluteScreenPos(mapRect.topRight()), absoluteScreenPos(mapRect.bottomRight()));
+    }
+
+    ScreenRect m_visibleArea;
 private:
-    MapPos target_;
+    MapPos m_target;
+    Size m_viewportSize;
 };
 
 typedef std::shared_ptr<Camera> CameraPtr;
