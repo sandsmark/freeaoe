@@ -97,13 +97,13 @@ void GraphicRender::drawOn(sf::RenderTarget &renderTarget, const ScreenPos scree
 
     sf::Sprite sprite;
     sprite.setTexture(image());
-    sprite.setPosition(screenPos - graphic_->getHotspot(current_frame_));
+    sprite.setPosition(screenPos - graphic_->getHotspot(current_frame_, angle));
     renderTarget.draw(sprite);
 
     for (const GraphicDelta &delta : m_deltas) {
         sf::Sprite sprite;
         sprite.setTexture(delta.graphic->getImage());
-        sprite.setPosition(screenPos - delta.graphic->getHotspot() - delta.offset);
+        sprite.setPosition(screenPos - delta.graphic->getHotspot(0, 0) - delta.offset);
         renderTarget.draw(sprite);
     }
 }
@@ -116,7 +116,7 @@ void GraphicRender::drawOutlineOn(sf::RenderTarget &renderTarget, ScreenPos scre
 
     sf::Sprite sprite;
     sprite.setTexture(outline());
-    sprite.setPosition(screenPos - graphic_->getHotspot(current_frame_));
+    sprite.setPosition(screenPos - graphic_->getHotspot(current_frame_, angle));
     sf::BlendMode blendMode = sf::BlendAlpha;
     blendMode.alphaSrcFactor = sf::BlendMode::DstAlpha;
     renderTarget.draw(sprite, blendMode);
@@ -171,7 +171,7 @@ void GraphicRender::setGraphic(res::GraphicPtr graphic)
 ScreenRect GraphicRender::rect()
 {
     ScreenRect ret;
-    const ScreenPos hotspot = graphic_->getHotspot(current_frame_);
+    const ScreenPos hotspot = graphic_->getHotspot(current_frame_, angle);
     ret.x = -hotspot.x;
     ret.y = -hotspot.y;
     const sf::Vector2u size = image().getSize();
@@ -179,7 +179,7 @@ ScreenRect GraphicRender::rect()
     ret.height = size.y;
 
     for (const GraphicDelta &delta : m_deltas) {
-        ScreenPos position = delta.graphic->getHotspot() - delta.offset;
+        ScreenPos position = delta.graphic->getHotspot(0, 0) - delta.offset;
         const sf::Texture &deltaImage = delta.graphic->getImage();
         ScreenRect deltaRect;
         deltaRect.x = -position.x;

@@ -56,7 +56,6 @@ public:
     void setPlayerId(int playerId);
 
     void setGraphic(res::GraphicPtr graphic);
-    ScreenPos getHotspot() const { return graphic_->getHotspot(current_frame_); }
 
     ScreenRect rect();
 

@@ -137,7 +137,7 @@ const sf::Texture &Graphic::overlayImage(uint32_t frame_num, float angle, uint8_
 }
 
 //------------------------------------------------------------------------------
-ScreenPos Graphic::getHotspot(uint32_t frame_num, bool mirrored) const
+ScreenPos Graphic::getHotspot(uint32_t frame_num, float angle) const
 {
     if (!slp_) {
         return ScreenPos();
@@ -146,9 +146,21 @@ ScreenPos Graphic::getHotspot(uint32_t frame_num, bool mirrored) const
         return ScreenPos();
     }
 
+    bool mirrored = false;
+    if (data_.AngleCount > 1) {
+        int lookupAngle = angleToOrientation(angle);
+        if (lookupAngle > data_.AngleCount/2) {
+            mirrored = true;
+            lookupAngle = data_.AngleCount - lookupAngle;
+        }
+        frame_num += lookupAngle * data_.FrameCount;
+    }
+
     if (frame_num >= slp_->getFrameCount()) {
+        log.error("trying to look up %d, but we only have %", frame_num, slp_->getFrameCount());
         frame_num = 0;
     }
+
     genie::SlpFramePtr frame = slp_->getFrame(frame_num);
 
     int32_t hot_spot_x = frame->hotspot_x;

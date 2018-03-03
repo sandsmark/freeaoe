@@ -66,7 +66,7 @@ public:
     /// Get the hotspot of a frame.
     // TODO: Maybe inherit from sf::Image and include this property
     //
-    ScreenPos getHotspot(uint32_t frame_num = 0, bool mirrored = false) const;
+    ScreenPos getHotspot(uint32_t frame_num, float angle) const;
 
     const std::vector<genie::GraphicDelta> deltas() const;
 
