@@ -220,6 +220,7 @@ void EntityManager::selectEntities(const MapRect &selectionRect)
             continue;
         }
 
+        std::cout << "Selected " << entity->readableName << std::endl;
         m_selectedEntities.insert(entity);
     }
 

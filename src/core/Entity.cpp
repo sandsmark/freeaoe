@@ -55,7 +55,7 @@ std::shared_ptr<Unit> Entity::asUnit(EntityPtr entity)
 }
 
 Unit::Unit(const genie::Unit &data_, int playerId_, std::shared_ptr<Civilization> civilization) :
-    Entity(Type::Unit, LanguageManager::getString(data_.LanguageDLLName)),
+    Entity(Type::Unit, LanguageManager::getString(data_.LanguageDLLName) + " (" + std::to_string(data_.ID) + ")"),
     data(data_),
     playerId(playerId_),
     m_civilization(civilization)

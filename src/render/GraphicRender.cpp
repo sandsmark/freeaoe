@@ -50,22 +50,27 @@ bool GraphicRender::update(Time time)
         return false;
     }
 
-    if (graphic_->runOnce() && current_frame_ >= graphic_->getFrameCount() - 1) {
+    if (graphic_->runOnce() && current_frame_ >= graphic_->data_.FrameCount - 1) {
         return false;
     }
 
     int newFrame = current_frame_;
 
+    Time elapsed = time - time_last_frame_;
+
+    if (newFrame >= graphic_->data_.FrameCount - 1 && elapsed < graphic_->data_.ReplayDelay / 0.0015) {
+        return false;
+    }
+
     if (time_last_frame_ == 0) {
         time_last_frame_ = time;
         newFrame = 0;
     } else {
-        Time elapsed = time - time_last_frame_;
         float framerate = 10;
         framerate = graphic_->getFrameRate();
 
         if (elapsed > framerate / 0.0015) {
-            if (newFrame < graphic_->getFrameCount() - 1) {
+            if (newFrame < graphic_->data_.FrameCount - 1) {
                 newFrame++;
             } else {
                 newFrame = 0;

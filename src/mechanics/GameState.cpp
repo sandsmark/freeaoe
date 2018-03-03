@@ -140,8 +140,13 @@ bool GameState::init()
     } else {
         map_->setUpSample();
 
-        Unit::Ptr unit = EntityFactory::Inst().createUnit(531, MapPos(48*3, 48*3, 0), 0, m_civilizations[0]);
+        // Mangudai
+        Unit::Ptr unit = EntityFactory::Inst().createUnit(11, MapPos(48*3, 48*3, 0), 0, m_civilizations[0]);
         entity_manager_.add(unit);
+
+        unit = EntityFactory::Inst().createUnit(293, MapPos(48*5, 48*3, 0), 0, m_civilizations[0]);
+        entity_manager_.add(unit);
+
 
         unit = EntityFactory::Inst().createUnit(109, MapPos(48*10, 48*10, 0), 0, m_civilizations[0]);
 
