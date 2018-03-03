@@ -59,7 +59,7 @@ public:
 
     ScreenRect rect();
 
-    float angle;
+    void setAngle(float angle);
 
     res::GraphicPtr graphic_;
 
@@ -67,7 +67,7 @@ public:
 
 private:
     struct GraphicDelta {
-        res::GraphicPtr graphic;
+        GraphicPtr graphic;
         ScreenPos offset;
     };
 
@@ -75,6 +75,8 @@ private:
     std::vector<GraphicDelta> m_deltas;
 
     int m_playerId = 2;
+
+    float m_angle = 0;
 };
 }
 

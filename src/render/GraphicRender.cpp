@@ -43,23 +43,29 @@ GraphicRender::~GraphicRender()
 
 bool GraphicRender::update(Time time)
 {
+    bool updated = false;
+    for (GraphicDelta &delta : m_deltas) {
+        updated = delta.graphic->update(time) || updated;
+    }
+
     if (!graphic_) {
-        return false;
+        return updated;
     }
     if (!graphic_->getFrameRate()) {
-        return false;
+        return updated;
     }
 
     if (graphic_->runOnce() && current_frame_ >= graphic_->data_.FrameCount - 1) {
-        return false;
+        return updated;
     }
 
     int newFrame = current_frame_;
 
     Time elapsed = time - time_last_frame_;
 
+
     if (newFrame >= graphic_->data_.FrameCount - 1 && elapsed < graphic_->data_.ReplayDelay / 0.0015) {
-        return false;
+        return updated;
     }
 
     if (time_last_frame_ == 0) {
@@ -80,16 +86,11 @@ bool GraphicRender::update(Time time)
         }
     }
 
-    bool updated = false;
     if (newFrame != current_frame_) {
         updated = true;
     }
 
     current_frame_ = newFrame;
-
-//    for (GraphicDelta &delta : m_deltas) {
-//        updated = delta->update(time) || updated;
-//    }
 
     return updated;
 }
@@ -102,14 +103,11 @@ void GraphicRender::drawOn(sf::RenderTarget &renderTarget, const ScreenPos scree
 
     sf::Sprite sprite;
     sprite.setTexture(image());
-    sprite.setPosition(screenPos - graphic_->getHotspot(current_frame_, angle));
+    sprite.setPosition(screenPos - graphic_->getHotspot(current_frame_, m_angle));
     renderTarget.draw(sprite);
 
     for (const GraphicDelta &delta : m_deltas) {
-        sf::Sprite sprite;
-        sprite.setTexture(delta.graphic->getImage());
-        sprite.setPosition(screenPos - delta.graphic->getHotspot(0, 0) - delta.offset);
-        renderTarget.draw(sprite);
+        delta.graphic->drawOn(renderTarget, screenPos + delta.offset);
     }
 }
 
@@ -121,7 +119,7 @@ void GraphicRender::drawOutlineOn(sf::RenderTarget &renderTarget, ScreenPos scre
 
     sf::Sprite sprite;
     sprite.setTexture(outline());
-    sprite.setPosition(screenPos - graphic_->getHotspot(current_frame_, angle));
+    sprite.setPosition(screenPos - graphic_->getHotspot(current_frame_, m_angle));
     sf::BlendMode blendMode = sf::BlendAlpha;
     blendMode.alphaSrcFactor = sf::BlendMode::DstAlpha;
     renderTarget.draw(sprite, blendMode);
@@ -132,7 +130,7 @@ const sf::Texture &GraphicRender::image()
     if (!graphic_) {
         return nullImage;
     }
-    return graphic_->getImage(current_frame_, angle);
+    return graphic_->getImage(current_frame_, m_angle);
 }
 
 const sf::Texture &GraphicRender::outline()
@@ -141,31 +139,36 @@ const sf::Texture &GraphicRender::outline()
         return nullImage;
     }
 
-    return graphic_->overlayImage(current_frame_, angle, m_playerId);
+    return graphic_->overlayImage(current_frame_, m_angle, m_playerId);
 }
 
 void GraphicRender::setGraphic(res::GraphicPtr graphic)
 {
     graphic_ = graphic;
-
     current_frame_ = 0;
-
     m_deltas.clear();
 
-    for (const genie::GraphicDelta &delta : graphic->deltas()) {
-        if (delta.GraphicID < 0) {
+    if (!graphic->isValid()) {
+        return;
+    }
+
+    for (const genie::GraphicDelta &deltaData : graphic->deltas()) {
+        if (deltaData.GraphicID < 0) {
             continue;
         }
 
-        GraphicDelta graphicDelta;
-        graphicDelta.graphic = ResourceManager::Inst()->getGraphic(delta.GraphicID);
-        if (!graphicDelta.graphic->isValid()) {
+        GraphicDelta delta;
+        delta.graphic = std::make_shared<GraphicRender>();
+
+        // Don't use setGraphic, to avoid recursive adding of deltas
+        delta.graphic->graphic_ =  ResourceManager::Inst()->getGraphic(deltaData.GraphicID);
+        if (!delta.graphic->graphic_->isValid()) {
             continue;
         }
 
-        graphicDelta.offset = ScreenPos(delta.OffsetX, delta.OffsetY);
+        delta.offset = ScreenPos(deltaData.OffsetX, deltaData.OffsetY);
 
-        m_deltas.push_back(graphicDelta);
+        m_deltas.push_back(delta);
     }
 
     if (!m_deltas.empty()) {
@@ -176,7 +179,7 @@ void GraphicRender::setGraphic(res::GraphicPtr graphic)
 ScreenRect GraphicRender::rect()
 {
     ScreenRect ret;
-    const ScreenPos hotspot = graphic_->getHotspot(current_frame_, angle);
+    const ScreenPos hotspot = graphic_->getHotspot(current_frame_, m_angle);
     ret.x = -hotspot.x;
     ret.y = -hotspot.y;
     const sf::Vector2u size = image().getSize();
@@ -184,17 +187,18 @@ ScreenRect GraphicRender::rect()
     ret.height = size.y;
 
     for (const GraphicDelta &delta : m_deltas) {
-        ScreenPos position = delta.graphic->getHotspot(0, 0) - delta.offset;
-        const sf::Texture &deltaImage = delta.graphic->getImage();
-        ScreenRect deltaRect;
-        deltaRect.x = -position.x;
-        deltaRect.y = -position.y;
-        deltaRect.width = deltaImage.getSize().x;
-        deltaRect.height = deltaImage.getSize().y;
-        ret += deltaRect;
+        ret += delta.graphic->rect();
     }
 
     return ret;
+}
+
+void GraphicRender::setAngle(float angle)
+{
+    m_angle = angle;
+    for (GraphicDelta &delta : m_deltas) {
+        delta.graphic->setAngle(angle);
+    }
 }
 
 }

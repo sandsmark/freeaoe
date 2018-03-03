@@ -91,7 +91,7 @@ const std::vector<const genie::Unit *> Unit::creatableEntities()
 
 void Unit::setAngle(const float angle)
 {
-    m_graphics.angle = angle;
+    m_graphics.setAngle(angle);
 }
 
 void Unit::setCurrentAction(ActionPtr action)
