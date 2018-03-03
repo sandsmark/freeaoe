@@ -27,8 +27,38 @@ using sf::Uint8;
 
 using sf::Int32;
 
-// for now TODO Maybe switch to boost vectors or something
 using sf::Vector2u;
+
+struct Size {
+    float width = 0.f;
+    float height = 0.f;
+
+    Size() = default;
+
+    Size (const float w, const float h) :
+        width(w), height(h)
+    {}
+
+    Size(const sf::Vector2f &sfVector) :
+        width(sfVector.x), height(sfVector.y)
+    {}
+
+    Size(const sf::Vector2u &sfVector) :
+        width(sfVector.x), height(sfVector.y)
+    {}
+
+    inline operator sf::Vector2f() const {
+        return sf::Vector2f(width, height);
+    }
+
+    inline operator sf::Vector2u() const {
+        return sf::Vector2u(width, height);
+    }
+
+    inline operator sf::FloatRect() const {
+        return sf::FloatRect(0, 0, width, height);
+    }
+};
 
 struct ScreenPos;
 
@@ -57,6 +87,21 @@ struct MapPos {
         y += other.y;
         z += other.z;
         return *this;
+    }
+
+    inline MapPos &operator/=(float divisor) {
+        x /= divisor;
+        y /= divisor;
+        z /= divisor;
+        return *this;
+    }
+
+    inline MapPos operator/(float divisor) {
+        MapPos ret(*this);
+        ret.x /= divisor;
+        ret.y /= divisor;
+        ret.z /= divisor;
+        return ret;
     }
 
     float distance(const MapPos &other) const {
@@ -191,19 +236,45 @@ struct ScreenRect
         return !(width > 0 && height > 0);
     }
 
+    Size size() const {
+        return Size(width, height);
+    }
+
+    inline ScreenRect &operator +=(const ScreenRect& other)
+    {
+        float x1 = std::min(x, other.x);
+        float y1 = std::min(y, other.y);
+
+        float x2 = std::max(x + width, other.x + other.width);
+        float y2 = std::max(y + height, other.y + other.height);
+
+
+        x = x1;
+        y = y1;
+
+        width  = x2 - x1;
+        height = y2 - y1;
+
+        return *this;
+    }
+
     MapRect toMap() const;
 
     operator bool() const {
         return (width >= 0 && height >= 0);
     }
 
-    bool contains(const ScreenPos &point) const {
+    bool contains(const float x_, const float y_) const {
         return (
-            point.x > x &&
-            point.x < x + width &&
-            point.y > y &&
-            point.y < y + height
+            x_ >= x &&
+            x_ <= x + width &&
+            y_ >= y &&
+            y_ <= y + height
         );
+
+    }
+    bool contains(const ScreenPos &point) const {
+        return contains(point.x, point.y);
     }
 
     bool operator==(const ScreenRect &other) const {
@@ -215,21 +286,62 @@ struct ScreenRect
         return x != other.x || y != other.y ||
                width != other.width || height != other.height;
     }
+
+    bool overlaps(const ScreenRect &otherRect) const {
+        return (
+            otherRect.contains(x, y) ||
+            otherRect.contains(x + width, y) ||
+            otherRect.contains(x, y + height) ||
+            otherRect.contains(x + width, y + height)
+        ) || (
+            contains(otherRect.x, otherRect.y) ||
+            contains(otherRect.x + otherRect.width, otherRect.y) ||
+            contains(otherRect.x, otherRect.y + otherRect.height) ||
+            contains(otherRect.x + otherRect.width, otherRect.y + otherRect.height)
+        );
+    }
 };
+
+inline ScreenRect operator +(const ScreenRect& rect, const ScreenPos& pos)
+{
+    ScreenRect ret = rect;
+    ret.x += pos.x;
+    ret.y += pos.y;
+    return ret;
+}
+
+inline ScreenRect operator -(const ScreenRect& rect, const ScreenPos& pos)
+{
+    ScreenRect ret = rect;
+    ret.x -= pos.x;
+    ret.y -= pos.y;
+    return ret;
+}
+
 
 struct MapRect {
     float x = 0;
     float y = 0;
+    float z = 0;
     float width = 0;
     float height = 0;
 
     MapRect() = default;
 
-    MapRect(const float x_, const float y_, const float width_, const float height_) :
+    MapRect(const float x_, const float y_, const float width_, const float height_, const float z_ = 0) :
         x(x_),
         y(y_),
+        z(z_),
         width(width_),
         height(height_)
+    {}
+
+    MapRect(const MapPos &pos, const Size &size) :
+        x(pos.x),
+        y(pos.y),
+        z(pos.z),
+        width(size.width),
+        height(size.height)
     {}
 
     MapRect(const MapPos &a, const MapPos &b)
@@ -239,19 +351,21 @@ struct MapRect {
 
         width  = std::abs(a.x - b.x);
         height = std::abs(a.y - b.y);
+
+        z = (a.z + b.z) / 2.f;
     }
 
     MapPos topLeft() const {
-        return MapPos(x, y);
+        return MapPos(x, y, z);
     }
     MapPos topRight() const {
-        return MapPos(x + width, y);
+        return MapPos(x + width, y, z);
     }
     MapPos bottomLeft() const {
-        return MapPos(x, y + height);
+        return MapPos(x, y + height , z);
     }
     MapPos bottomRight() const {
-        return MapPos(x + width, y + height);
+        return MapPos(x + width, y + height, z);
     }
 
     bool isEmpty() const {
@@ -273,54 +387,42 @@ struct MapRect {
         );
     }
 
-    bool contains(const float otherX, const float otherY) const {
-        return contains(MapPos(otherX, otherY));
+    bool contains(const float otherX, const float otherY, const float otherZ = 0.f) const {
+        return contains(MapPos(otherX, otherY, otherZ));
     }
 
     bool overlaps(const MapRect &otherRect) const {
         return (
-            otherRect.contains(x, y) ||
-            otherRect.contains(x + width, y) ||
-            otherRect.contains(x, y + height) ||
-            otherRect.contains(x + width, y + height)
+            otherRect.contains(x, y, z) ||
+            otherRect.contains(x + width, y, z) ||
+            otherRect.contains(x, y + height, z) ||
+            otherRect.contains(x + width, y + height, z)
         ) || (
-            contains(otherRect.x, otherRect.y) ||
-            contains(otherRect.x + otherRect.width, otherRect.y) ||
-            contains(otherRect.x, otherRect.y + otherRect.height) ||
-            contains(otherRect.x + otherRect.width, otherRect.y + otherRect.height)
+            contains(otherRect.x, otherRect.y, z) ||
+            contains(otherRect.x + otherRect.width, otherRect.y, z) ||
+            contains(otherRect.x, otherRect.y + otherRect.height, z) ||
+            contains(otherRect.x + otherRect.width, otherRect.y + otherRect.height, z)
         );
     }
 };
 
-struct Size {
-    float width = 0.f;
-    float height = 0.f;
+inline MapRect operator -(const MapRect& rect, const MapPos& pos)
+{
+    MapRect ret = rect;
+    ret.x -= pos.x;
+    ret.y -= pos.y;
+    ret.z -= pos.z;
+    return ret;
+}
 
-    Size (const float w, const float h) :
-        width(w), height(h)
-    {}
-
-    Size(const sf::Vector2f &sfVector) :
-        width(sfVector.x), height(sfVector.y)
-    {}
-
-    Size(const sf::Vector2u &sfVector) :
-        width(sfVector.x), height(sfVector.y)
-    {}
-
-    inline operator sf::Vector2f() const {
-        return sf::Vector2f(width, height);
-    }
-
-    inline operator sf::Vector2u() const {
-        return sf::Vector2u(width, height);
-    }
-
-    inline operator sf::FloatRect() const {
-        return sf::FloatRect(0, 0, width, height);
-    }
-};
-
+inline MapRect operator +(const MapRect& rect, const MapPos& pos)
+{
+    MapRect ret = rect;
+    ret.x += pos.x;
+    ret.y += pos.y;
+    ret.z += pos.z;
+    return ret;
+}
 
 /// Time in milliseconds
 typedef unsigned int Time;
@@ -336,13 +438,13 @@ inline MapRect ScreenRect::toMap() const
 inline ScreenRect MapRect::toScreen() const
 {
     return ScreenRect(
-        MapPos(x, y).toScreen(),
-        MapPos(x + width, y + height).toScreen()
+        MapPos(x, y, z).toScreen(),
+        MapPos(x + width, y + height, z).toScreen()
     );
 }
 
 inline std::ostream &operator <<(std::ostream &os, const MapRect &rect) {
-    os << "MapRect(x: "  << rect.x << ", y: " << rect.y << ", width: " << rect.width << ", height: " << rect.height << ")";
+    os << "MapRect(x: "  << rect.x << ", y: " << rect.y << ", width: " << rect.width << ", height: " << rect.height << ", z:" << rect.z << ")";
     return os;
 }
 
@@ -353,5 +455,16 @@ inline std::ostream &operator <<(std::ostream &os, const ScreenRect &rect) {
 
 inline std::ostream &operator <<(std::ostream &os, const Size &size) {
     os << "Size(width: " << size.width << ", height: " << size.height << ")";
+    return os;
+}
+
+inline std::ostream &operator <<(std::ostream &os, const MapPos &pos) {
+    os << "MapPos(x: " << pos.x << ", y: " << pos.y << ")";
+    return os;
+}
+
+
+inline std::ostream &operator <<(std::ostream &os, const ScreenPos &pos) {
+    os << "ScreenPos(x: " << pos.x << ", y: " << pos.y << ")";
     return os;
 }
