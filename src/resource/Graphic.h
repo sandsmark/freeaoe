@@ -21,7 +21,7 @@
 
 #include "Resource.h"
 
-#include <SFML/Graphics/Image.hpp>
+#include <SFML/Graphics/Texture.hpp>
 #include <global/Types.h>
 #include <global/Logger.h>
 #include <genie/dat/Graphic.h>
@@ -41,7 +41,7 @@ namespace res {
 //
 class Graphic
 {
-    static const sf::Image nullImage;
+    static const sf::Texture nullImage;
 
 public:
     //----------------------------------------------------------------------------
@@ -59,8 +59,8 @@ public:
     /// @param mirrored If set, the image will be returned mirrored
     /// @return Image
     //
-    const sf::Image &getImage(uint32_t frame_num = 0, float angle = false);
-    const sf::Image &overlayImage(uint32_t frame_num, float angle, uint8_t playerId);
+    const sf::Texture &getImage(uint32_t frame_num = 0, float angle = false);
+    const sf::Texture &overlayImage(uint32_t frame_num, float angle, uint8_t playerId);
 
     //----------------------------------------------------------------------------
     /// Get the hotspot of a frame.
@@ -114,10 +114,10 @@ private:
 
     genie::SlpFilePtr slp_;
 
-    std::unordered_map<int, sf::Image> m_images;
-    std::unordered_map<int, sf::Image> m_flippedImages;
+    std::unordered_map<int, sf::Texture> m_images;
+    std::unordered_map<int, sf::Texture> m_flippedImages;
 
-    std::unordered_map<int, sf::Image> m_overlays;
+    std::unordered_map<int, sf::Texture> m_overlays;
 
     //TODO: collection with all frames, playercolors and outlines loaded
     //      And rewrite SlpFile/Frame so that it will not store any data.

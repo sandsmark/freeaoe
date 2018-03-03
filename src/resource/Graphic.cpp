@@ -28,7 +28,7 @@ namespace res {
 
 Logger &Graphic::log = Logger::getLogger("freeaoe.resource.Graphic");
 
-const sf::Image Graphic::nullImage;
+const sf::Texture Graphic::nullImage;
 
 //------------------------------------------------------------------------------
 Graphic::Graphic(const genie::Graphic &data) :
@@ -48,7 +48,7 @@ Graphic::~Graphic()
 }
 
 //------------------------------------------------------------------------------
-const sf::Image &Graphic::getImage(uint32_t frame_num, float angle)
+const sf::Texture &Graphic::getImage(uint32_t frame_num, float angle)
 {
     if (!slp_) {
         return nullImage;
@@ -64,7 +64,7 @@ const sf::Image &Graphic::getImage(uint32_t frame_num, float angle)
         frame_num += lookupAngle * data_.FrameCount;
     }
 
-    std::unordered_map<int, sf::Image> &cache = mirrored ? m_flippedImages : m_images;
+    std::unordered_map<int, sf::Texture> &cache = mirrored ? m_flippedImages : m_images;
 
     if (cache.count(frame_num)) {
         return cache[frame_num];
@@ -80,12 +80,12 @@ const sf::Image &Graphic::getImage(uint32_t frame_num, float angle)
     if (mirrored) {
         img.flipHorizontally();
     }
-    cache[frame_num] = img;
+    cache[frame_num].loadFromImage(img);
 
     return cache[frame_num];
 }
 
-const sf::Image &Graphic::overlayImage(uint32_t frame_num, float angle, uint8_t playerId)
+const sf::Texture &Graphic::overlayImage(uint32_t frame_num, float angle, uint8_t playerId)
 {
     if (!slp_) {
         log.error("Failed to load slp");
@@ -131,7 +131,7 @@ const sf::Image &Graphic::overlayImage(uint32_t frame_num, float angle, uint8_t 
     if (mirrored) {
         img.flipHorizontally();
     }
-    m_overlays[frame_num] = img;
+    m_overlays[frame_num].loadFromImage(img);
 
     return m_overlays[frame_num];
 }

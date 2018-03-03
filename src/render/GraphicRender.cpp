@@ -29,7 +29,7 @@
 
 namespace comp {
 
-const sf::Image GraphicRender::nullImage;
+const sf::Texture GraphicRender::nullImage;
 
 GraphicRender::GraphicRender()
 {
@@ -95,18 +95,14 @@ void GraphicRender::drawOn(sf::RenderTarget &renderTarget, const ScreenPos scree
         return;
     }
 
-    sf::Texture texture;
-    texture.loadFromImage(image());
     sf::Sprite sprite;
-    sprite.setTexture(texture);
+    sprite.setTexture(image());
     sprite.setPosition(screenPos - graphic_->getHotspot(current_frame_));
     renderTarget.draw(sprite);
 
     for (const GraphicDelta &delta : m_deltas) {
-        sf::Texture texture;
-        texture.loadFromImage(delta.graphic->getImage());
         sf::Sprite sprite;
-        sprite.setTexture(texture);
+        sprite.setTexture(delta.graphic->getImage());
         sprite.setPosition(screenPos - delta.graphic->getHotspot() - delta.offset);
         renderTarget.draw(sprite);
     }
@@ -118,17 +114,15 @@ void GraphicRender::drawOutlineOn(sf::RenderTarget &renderTarget, ScreenPos scre
         return;
     }
 
-    sf::Texture texture;
-    texture.loadFromImage(outline());
     sf::Sprite sprite;
-    sprite.setTexture(texture);
+    sprite.setTexture(outline());
     sprite.setPosition(screenPos - graphic_->getHotspot(current_frame_));
     sf::BlendMode blendMode = sf::BlendAlpha;
     blendMode.alphaSrcFactor = sf::BlendMode::DstAlpha;
     renderTarget.draw(sprite, blendMode);
 }
 
-const sf::Image &GraphicRender::image()
+const sf::Texture &GraphicRender::image()
 {
     if (!graphic_) {
         return nullImage;
@@ -136,7 +130,7 @@ const sf::Image &GraphicRender::image()
     return graphic_->getImage(current_frame_, angle);
 }
 
-const sf::Image &GraphicRender::outline()
+const sf::Texture &GraphicRender::outline()
 {
     if (!graphic_) {
         return nullImage;
@@ -186,7 +180,7 @@ ScreenRect GraphicRender::rect()
 
     for (const GraphicDelta &delta : m_deltas) {
         ScreenPos position = delta.graphic->getHotspot() - delta.offset;
-        const sf::Image &deltaImage = delta.graphic->getImage();
+        const sf::Texture &deltaImage = delta.graphic->getImage();
         ScreenRect deltaRect;
         deltaRect.x = -position.x;
         deltaRect.y = -position.y;

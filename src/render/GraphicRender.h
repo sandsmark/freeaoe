@@ -22,6 +22,7 @@
 #include <core/IComponent.h>
 #include <resource/Graphic.h>
 #include <resource/ResourceManager.h>
+#include <SFML/Graphics/Texture.hpp>
 #include "IRenderableComponent.h"
 
 struct Entity;
@@ -38,7 +39,7 @@ typedef std::shared_ptr<GraphicRender> GraphicPtr;
 /// Draws and manages Graphics for EntityForm objects.
 class GraphicRender
 {
-    static const sf::Image nullImage;
+    static const sf::Texture nullImage;
 
 public:
     GraphicRender();
@@ -49,8 +50,8 @@ public:
     void drawOn(sf::RenderTarget &renderTarget, const ScreenPos screenPos);
     void drawOutlineOn(sf::RenderTarget &renderer, ScreenPos screenPos);
 
-    const sf::Image &image();
-    const sf::Image &outline();
+    const sf::Texture &image();
+    const sf::Texture &outline();
 
     void setPlayerId(int playerId);
 
