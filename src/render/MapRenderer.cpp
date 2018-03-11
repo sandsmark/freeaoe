@@ -124,8 +124,6 @@ void MapRenderer::display(void)
     }
 
     renderTarget_->draw(m_mapRenderTexture.getTexture(), ScreenPos(0, 0));
-    renderTarget_->draw(renderTarget_->camera()->m_visibleArea, sf::Color(0, 255, 0, 32));
-
 }
 
 void MapRenderer::setMap(MapPtr map)
@@ -200,4 +198,5 @@ void MapRenderer::updateTexture()
             m_textureTarget.draw(outline);
         }
     }
+    m_mapRenderTexture.display();
 }
