@@ -59,7 +59,7 @@ template<> struct std::hash<PathPoint>
 {
     std::size_t operator()(const PathPoint& point) const
     {
-        return point.x * 10 + point.y;
+        return point.y * 255 * 96 + point.x;
     }
 };
 
@@ -111,8 +111,10 @@ bool MoveOnMap::update(Time time)
 
     float distanceLeft = std::hypot(m_path.back().x - unit->position.x, m_path.back().y - unit->position.y);
     while (distanceLeft <= movement && !m_path.empty()) {
-
         m_path.pop_back();
+        if (m_path.empty()) {
+            break;
+        }
         distanceLeft = std::hypot(m_path.back().x - unit->position.x, m_path.back().y - unit->position.y);
     }
     if (m_path.empty()) {

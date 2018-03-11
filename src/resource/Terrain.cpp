@@ -55,15 +55,17 @@ const sf::Texture &Terrain::texture(int x, int y)
     }
 
     const int tileSquareCount = sqrt(m_slp->getFrameCount());
-    const int frameNum = (x % tileSquareCount) + (y % tileSquareCount) * tileSquareCount;
+    const int frameNum = (y % tileSquareCount) + (x % tileSquareCount) * tileSquareCount;
 
     if (m_images.find(frameNum) != m_images.end()) {
         return m_images[frameNum];
     }
 
 //    std::cerr << "------------------------ " << int(m_data.SLP) << std::endl;
-//    sf::Image img = Resource::convertFrameToImage(ResourceManager::Inst()->getTemplatedSlp(m_data.SLP, genie::SlpTemplateFile::SlopeSouthUp));
+//    sf::Image img = Resource::convertFrameToImage(ResourceManager::Inst()->getTemplatedSlp(m_data.SLP, genie::SlopeFlat));
+//    sf::Image img = Resource::convertFrameToImage(ResourceManager::Inst()->getTemplatedSlp(m_data.SLP, genie::SlopeWestDown));
     sf::Image img = Resource::convertFrameToImage(m_slp->getFrame(frameNum));
+//    sf::Image img = Resource::convertFrameToImage(ResourceManager::Inst()->getSlp(m_data.SLP)->getFrame(0));
 
     m_images[frameNum].loadFromImage(img);
 
@@ -77,7 +79,7 @@ const sf::Image Terrain::image(int x, int y)
     }
 
     const int tileSquareCount = sqrt(m_slp->getFrameCount());
-    const int frameNum = (x % tileSquareCount) + (y % tileSquareCount) * tileSquareCount;
+    const int frameNum = (y % tileSquareCount) + (x % tileSquareCount) * tileSquareCount;
 
     return Resource::convertFrameToImage(m_slp->getFrame(frameNum));
 }
@@ -144,7 +146,7 @@ void Terrain::blendImage(sf::Image *image, uint8_t blendFrame, uint8_t mode, int
     }
 
     const int tileSquareCount = sqrt(m_slp->getFrameCount());
-    const int frameNum = (x % tileSquareCount) + (y % tileSquareCount) * tileSquareCount;
+    const int frameNum = (y % tileSquareCount) + (x % tileSquareCount) * tileSquareCount;
 
     genie::SlpFramePtr overlay = m_slp->getFrame(frameNum);
 

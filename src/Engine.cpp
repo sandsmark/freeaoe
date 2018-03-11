@@ -76,7 +76,7 @@ void Engine::start()
 
         if (updated) {
             // Clear screen
-            renderWindow_->clear();
+            renderWindow_->clear(sf::Color::Green);
             state->draw();
             drawFps();
             // Update the window

@@ -136,8 +136,8 @@ void EntityManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
 
         if (m_selectedEntities.count(entity)) { // draw health indicator
             ScreenPos pos = renderTarget->camera()->absoluteScreenPos(entity->position);
-            pos.x -= unit->data.CollisionSize.x * Map::TILE_SIZE_HORIZONTAL;
-            pos.y -= unit->data.CollisionSize.y * Map::TILE_SIZE_VERTICAL;
+            pos.x -= unit->data.CollisionSize.x * Map::TILE_SIZE_HORIZONTAL/2;
+            pos.y -= unit->data.CollisionSize.y * Map::TILE_SIZE_VERTICAL/2;
 
             sf::RectangleShape rect;
             sf::CircleShape circle;
@@ -220,8 +220,11 @@ void EntityManager::selectEntities(const MapRect &selectionRect)
             continue;
         }
 
-        std::cout << "Selected " << entity->readableName << std::endl;
+        std::cout << "Selected " << entity->readableName << " at " << entity->position << std::endl;
         m_selectedEntities.insert(entity);
+    }
+    if (m_selectedEntities.empty()) {
+        std::cout << "Unable to find anything to select in " << selectionRect << std::endl;
     }
 
     updateButtons();

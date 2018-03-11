@@ -20,6 +20,7 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <resource/ResourceManager.h>
+#include <resource/Resource.h>
 
 #include <genie/resource/SlpFrame.h>
 
@@ -47,32 +48,38 @@ Map::~Map()
 
 void Map::setUpSample()
 {
-    cols_ = 50;
-    rows_ = 50;
+    cols_ = 20;
+    rows_ = 20;
 
     tiles_.clear();
 
     MapTile grass;
     grass.elevation_ = 0;
-    grass.terrain_ = ResourceManager::Inst()->getTerrain(0);
+    grass.terrain_ = ResourceManager::Inst()->getTerrain(2);
 
     tiles_.resize(cols_ * rows_, grass);
 
     res::TerrainPtr water_dat = ResourceManager::Inst()->getTerrain(1);
-    std::cout << "animframes " << grass.terrain_->data().AnimationFrames << std::endl;
 
-    for (int i=1; i<8; i++) {
-        tiles_[2 * 10 + i].elevation_ = 1;
+    for (int i=3; i<6; i++) {
+        getTileAt(15, i).elevation_ = 1;
     }
 
-    tiles_[53].terrain_ = water_dat;
-    tiles_[54].terrain_ = water_dat;
-    tiles_[55].terrain_ = water_dat;
-    tiles_[56].terrain_ = water_dat;
-    tiles_[63].terrain_ = water_dat;
-    tiles_[65].terrain_ = water_dat;
-    tiles_[66].terrain_ = water_dat;
-    tiles_[73].terrain_ = water_dat;
+    getTileAt(6, 6).terrain_ = water_dat;
+    getTileAt(6, 10).terrain_ = water_dat;
+    getTileAt(6, 5).terrain_ = water_dat;
+    getTileAt(4, 5).terrain_ = water_dat;
+//    getTileAt(5, 5).terrain_ = water_dat;
+    getTileAt(5, 6).terrain_ = water_dat;
+    getTileAt(3, 7).terrain_ = water_dat;
+    getTileAt(4, 7).terrain_ = water_dat;
+    getTileAt(5, 7).terrain_ = water_dat;
+    getTileAt(6, 7).terrain_ = water_dat;
+    getTileAt(7, 7).terrain_ = water_dat;
+//    getTileAt(5, 8).terrain_ = water_dat;
+    getTileAt(5, 9).terrain_ = water_dat;
+    getTileAt(6, 9).terrain_ = water_dat;
+    getTileAt(4, 10).terrain_ = water_dat;
 }
 
 void Map::create(genie::ScnMap mapDescription)
@@ -209,6 +216,9 @@ void Map::updateTileBlend(int tileX, int tileY)
 
     std::unordered_map<uint8_t, res::TerrainPtr> neighborTerrains;
 
+    uint8_t neighborsAbove = 0;
+    uint8_t neighborsBelow = 0;
+
     for (int dx = -1; dx <= 1; dx++) {
         for (int dy = -1; dy <= 1; dy++) {
             if (!dx && !dy) {
@@ -222,21 +232,6 @@ void Map::updateTileBlend(int tileX, int tileY)
                 continue;
             }
 
-
-            MapTile &neighbor = getTileAt(tileX + dx, tileY + dy);
-            const uint8_t neighborId = neighbor.terrain_->getId();
-            if (tileId == neighborId) {
-                continue;
-            }
-            const genie::Terrain &neighborData = neighbor.terrain_->data();
-
-            if (tileData.BlendPriority >= neighborData.BlendPriority) {
-                continue;
-            }
-            blendPriorities[neighborId] = neighborData.BlendPriority;
-            neighborTerrains[neighborId] = neighbor.terrain_;
-
-            neighborIds.insert(neighborId);
             Direction direction = None;
             if (dx < 0) {
                 if (dy > 0) {
@@ -262,8 +257,82 @@ void Map::updateTileBlend(int tileX, int tileY)
                 }
             }
 
+            MapTile &neighbor = getTileAt(tileX + dx, tileY + dy);
+
+            if (neighbor.elevation_ > tile.elevation_) {
+                neighborsAbove |= direction;
+            } else if (neighbor.elevation_ < tile.elevation_) {
+                neighborsBelow |= direction;
+            }
+
+            const uint8_t neighborId = neighbor.terrain_->getId();
+            if (tileId == neighborId) {
+                continue;
+            }
+            const genie::Terrain &neighborData = neighbor.terrain_->data();
+
+            if (tileData.BlendPriority >= neighborData.BlendPriority) {
+                continue;
+            }
+            blendPriorities[neighborId] = neighborData.BlendPriority;
+            neighborTerrains[neighborId] = neighbor.terrain_;
+
+            neighborIds.insert(neighborId);
+
             blendDirections[neighborId] |= direction;
         }
+    }
+
+//    if (neighborsAbove & West) {
+//        neighborsAbove &= ~NorthWest;
+//        neighborsAbove &= ~SouthWest;
+//    }
+
+//        if (direction & South) {
+//            direction &= ~SouthWest;
+//            direction &= ~SouthEast;
+//        }
+//        if (direction & North) {
+//            direction &= ~NorthWest;
+//            direction &= ~NorthEast;
+//        }
+//        if (direction & West) {
+//            direction &= ~NorthWest;
+//            direction &= ~SouthWest;
+//        }
+//        if (direction & East) {
+//            direction &= ~NorthEast;
+//            direction &= ~SouthEast;
+//        }
+
+    tile.z = tile.elevation_ * DataManager::Inst().terrainBlock().ElevHeight;
+    if (neighborsBelow == None) {
+        if (neighborsAbove & North) {
+            tile.slope = genie::SlopeSouthWestUp;
+        } else if (neighborsAbove & South) {
+            tile.slope = genie::SlopeNorthEastUp ;
+            tile.z += DataManager::Inst().terrainBlock().ElevHeight;
+        } else if (neighborsAbove & East) {
+            tile.slope = genie::SlopeSouthEastUp;
+        } else if (neighborsAbove & West) {
+            tile.slope = genie::SlopeNorthWestUp;
+            tile.z += DataManager::Inst().terrainBlock().ElevHeight;
+        } else if (neighborsAbove == NorthWest) {
+            tile.slope = genie::SlopeWestUp;
+        } else if (neighborsAbove == NorthEast) {
+            tile.slope = genie::SlopeSouthUp;
+        } else if (neighborsAbove == SouthWest) {
+            tile.slope = genie::SlopeNorthUp;
+            tile.z += DataManager::Inst().terrainBlock().ElevHeight;
+        } else if (neighborsAbove == SouthEast) {
+            tile.slope = genie::SlopeEastUp;
+        }
+    }
+
+    if (tile.slope) {
+        sf::Image img = res::Resource::convertFrameToImage(ResourceManager::Inst()->getTemplatedSlp(tile.terrain_->data().SLP, tile.slope));
+        tile.texture.loadFromImage(img);
+        return;
     }
 
     if (neighborIds.empty()) {
@@ -303,54 +372,70 @@ void Map::updateTileBlend(int tileX, int tileY)
             blends.push_back(Left);
         }
         if (direction & NorthEast) {
-            blends.push_back(Up);
+            blends.push_back(Down);
         }
         if (direction & SouthWest) {
-            blends.push_back(Down);
+            blends.push_back(Up);
         }
         if (direction & SouthEast) {
             blends.push_back(Right);
         }
 
+        if (direction & East) {
+            blends.push_back(LowerLeft1);
+        }
+        if (direction & South) {
+            blends.push_back(UpperLeft1);
+        }
+        if (direction & West) {
+            blends.push_back(UpperRight1);
+        }
+        if (direction & North) {
+            blends.push_back(LowerRight1);
+        }
+
+
+
         int blendFrame = -1;
         switch (direction & 0xF) {
         case None:
             break;
-        case East:
-            blendFrame = UpperLeft1;
-            break;
-        case South:
-            blendFrame = LowerLeft1;
-            break;
-        case West:
-            blendFrame = LowerRight1;
-            break;
-        case North:
-            blendFrame = UpperRight1;
-            break;
+//        case East:
+//            blendFrame = LowerLeft1;
+//            break;
+//        case South:
+//            blendFrame = UpperLeft1;
+//            break;
+//        case West:
+//            blendFrame = UpperRight1;
+//            break;
+//        case North:
+//            blendFrame = LowerRight1;
+//            break;
 
         case East | West:
-            blendFrame = UpperRightAndLowerLeft;
+            blendFrame = UpperLeftAndLowerRight;
             break;
         case North | South:
-            blendFrame = UpperLeftAndLowerRight;
+            blendFrame = UpperRightAndLowerLeft;
             break;
 
         case North | East:
-            blendFrame = OnlyDown;
+            blendFrame = OnlyUp;
             break;
         case North | West:
             blendFrame = OnlyRight;
             break;
         case South | West:
-            blendFrame = OnlyUp;
+            blendFrame = OnlyDown;
             break;
         case South | East:
             blendFrame = OnlyLeft;
             break;
+            //// OK ///////
 
         case South | East | West:
-            blendFrame = KeepUpperLeft;
+            blendFrame = KeepLowerLeft;
             break;
         case North | East | West:
             blendFrame = KeepUpperRight;
@@ -359,7 +444,7 @@ void Map::updateTileBlend(int tileX, int tileY)
             blendFrame = KeepLowerRight;
             break;
         case North | South | East:
-            blendFrame = KeepLowerLeft;
+            blendFrame = KeepUpperLeft;
             break;
 
         case North | South | East | West:
@@ -367,7 +452,7 @@ void Map::updateTileBlend(int tileX, int tileY)
             break;
 
         default:
-            log.warn("Unhandled terrain borders: 0x%x (raw: 0x%x)", direction, blendDirections[id]);
+//            log.warn("Unhandled terrain borders: 0x%x (raw: 0x%x)", direction, blendDirections[id]);
             break;
         }
 
@@ -385,7 +470,7 @@ void Map::updateTileBlend(int tileX, int tileY)
         return;
     }
 
-    tile.blendOverlay.loadFromImage(blendImage);
+    tile.texture.loadFromImage(blendImage);
 }
 
 /*

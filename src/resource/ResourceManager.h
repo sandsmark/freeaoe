@@ -111,7 +111,7 @@ public:
 
     genie::ScnFilePtr getScn(unsigned int id);
 
-    genie::SlpFramePtr getTemplatedSlp(unsigned int slp, const genie::SlpTemplateFile::Slope slope);
+    genie::SlpFramePtr getTemplatedSlp(unsigned int slp, const genie::Slope slope);
 
     //----------------------------------------------------------------------------
     /// Get a Graphic resource object.

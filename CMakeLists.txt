@@ -16,7 +16,9 @@ include_directories(src/
 add_subdirectory( extern/genieutils )
 
 # additional compiler flags 
-add_definitions(-Wall)
+#add_definitions(-Wall )
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=undefined")
 
 set(GLOBAL_SRC 
     src/global/Config.cpp 

@@ -68,9 +68,20 @@ genie::ScnFilePtr ResourceManager::getScn(unsigned int id)
     return genie::ScnFilePtr();
 }
 
-genie::SlpFramePtr ResourceManager::getTemplatedSlp(unsigned int slp, const genie::SlpTemplateFile::Slope slope)
+genie::SlpFramePtr ResourceManager::getTemplatedSlp(unsigned int slp, const genie::Slope slope)
 {
-    return m_stemplatesFile->getFrame(getSlp(slp, ResourceType::Terrain), slope);
+    std::vector<genie::PatternMasksFile::Pattern> patterns;
+    patterns.push_back(genie::PatternMasksFile::FlatPattern);
+    genie::SlpFilePtr sourceFile = getSlp(slp);
+    if (!sourceFile) {
+        return nullptr;
+    }
+    genie::SlpFramePtr sourceFrame = sourceFile->getFrame(0);
+    if (!sourceFrame) {
+        return nullptr;
+    }
+
+    return m_stemplatesFile->getFrame(sourceFrame, slope, patterns, getPalette()->getColors());
 }
 
 //------------------------------------------------------------------------------
@@ -274,6 +285,16 @@ bool ResourceManager::initialize(const std::string &dataPath, const genie::GameV
         blendomatic_file_ = std::make_unique<genie::BlendomaticFile>();
         std::string blendomaticPath = dataPath + "blendomatic.dat";
         blendomatic_file_->load(blendomaticPath.c_str());
+
+
+        m_stemplatesFile = std::make_unique<genie::SlpTemplateFile>();
+        m_stemplatesFile->load("/home/sandsmark/src/freeaoe/Data/STemplet.dat");
+        m_stemplatesFile->filtermapFile.load(dataPath + "FilterMaps.dat");
+        m_stemplatesFile->filtermapFile.patternmasksFile.load(dataPath + "PatternMasks.dat");
+        m_stemplatesFile->filtermapFile.patternmasksFile.icmFile.load(dataPath + "view_icm.dat");
+        m_stemplatesFile->filtermapFile.patternmasksFile.lightmapFile.load(dataPath + "lightMaps.dat");
+//        m_stemplatesFile->getFrame(getSlp(15000), genie::SlopeSouthUp, {});
+//        exit(0);
     } catch (const std::exception &error) {
         log.error("Failed to load resource: %", error.what());
         return false;

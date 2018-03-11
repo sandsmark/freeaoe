@@ -46,23 +46,23 @@ public:
 
 struct MapTile
 {
-    MapTile *north = nullptr, *east = nullptr, *south = nullptr, *west = nullptr;
-
     void reset() {
-        north = east = south = west = nullptr;
         blendIndex = -1;
         overlayId = -1;
+        z = 0;
     }
     uint32_t terrainId() {
         return terrain_->getId();
     }
 
     unsigned int elevation_;
+    unsigned int z;
     res::TerrainPtr terrain_;
     int blendIndex = -1;
     int overlayId = -1;
+    genie::Slope slope = genie::SlopeFlat;
 
-    sf::Texture blendOverlay;
+    sf::Texture texture;
 };
 
 class Map

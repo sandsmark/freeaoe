@@ -123,32 +123,33 @@ bool GameState::init()
     //Map test
     map_ = MapPtr(new Map());
 
-    if (scenario_) {
+    if (scenario_ && false) {
         std::cout << "Setting up scenario: " << scenario_->scenarioInstructions << std::endl;
         map_->create(scenario_->map);
 
-        for (int playerNum = 0; playerNum < scenario_->playerUnits.size(); playerNum++) {
-            for (const genie::ScnUnit &scnunit : scenario_->playerUnits[playerNum].units) {
-                MapPos unitPos(scnunit.positionX * Map::TILE_SIZE, scnunit.positionY * Map::TILE_SIZE, scnunit.positionZ);
-                Unit::Ptr unit = EntityFactory::Inst().createUnit(scnunit.objectID, unitPos, playerNum, m_civilizations[0]);
-                if (scnunit.rotation > 0) {
-                    unit->setAngle(scnunit.rotation * M_PI * 2. / 16.);
-                }
-                entity_manager_.add(unit);
-            }
-        }
+//        for (int playerNum = 0; playerNum < scenario_->playerUnits.size(); playerNum++) {
+//            for (const genie::ScnUnit &scnunit : scenario_->playerUnits[playerNum].units) {
+//                MapPos unitPos(scnunit.positionX * Map::TILE_SIZE, scnunit.positionY * Map::TILE_SIZE, scnunit.positionZ);
+//                Unit::Ptr unit = EntityFactory::Inst().createUnit(scnunit.objectID, unitPos, playerNum, m_civilizations[0]);
+//                if (scnunit.rotation > 0) {
+//                    unit->setAngle(scnunit.rotation * M_PI * 2. / 16.);
+//                }
+//                entity_manager_.add(unit);
+//            }
+//        }
     } else {
         map_->setUpSample();
 
-        // Mangudai
+//        // Mangudai
         Unit::Ptr unit = EntityFactory::Inst().createUnit(11, MapPos(48*3, 48*3, 0), 0, m_civilizations[0]);
         entity_manager_.add(unit);
 
-        unit = EntityFactory::Inst().createUnit(293, MapPos(48*5, 48*3, 0), 0, m_civilizations[0]);
-        entity_manager_.add(unit);
+        entity_manager_.add(EntityFactory::Inst().createUnit(293, MapPos(48*5, 48*5, 0), 0, m_civilizations[0]));
+
+        entity_manager_.add(EntityFactory::Inst().createUnit(280, MapPos(48*10, 48*10, 0), 0, m_civilizations[0]));
 
 
-        unit = EntityFactory::Inst().createUnit(109, MapPos(48*10, 48*10, 0), 0, m_civilizations[0]);
+        unit = EntityFactory::Inst().createUnit(109, MapPos(48*3, 48*3, 0), 0, m_civilizations[0]);
 
         if (unit->data.Building.FoundationTerrainID > 0) {
             int width = unit->data.CollisionSize.x;
@@ -161,6 +162,7 @@ bool GameState::init()
         }
 
         entity_manager_.add(unit);
+        log.debug("Added unit at %", unit->position);
     }
 
     map_->updateMapData();

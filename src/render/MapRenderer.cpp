@@ -155,15 +155,17 @@ void MapRenderer::updateTexture()
     outline.setOutlineThickness(1);
     outline.setOutlineColor(sf::Color(255, 255, 255, 128));
 
-    for (unsigned int col = m_rColBegin; col < m_rColEnd; col++) {
-        for (unsigned int row = m_rRowBegin; row < m_rRowEnd; row++) {
+//    for (int col = m_rColEnd-1; col >= 0; col--) {
+    for (int col = 0; col < m_rColEnd; col++) {
+        for (int row = m_rRowEnd-1; row >= 0; row--) {
             MapTile &mapTile = m_map->getTileAt(col, row);
 
             //TODO: MapPos to screenpos (Tile 0,0 is drawn at MapPos 0,0
             MapRect rect;
             rect.x = col * Map::TILE_SIZE;
             rect.y = row * Map::TILE_SIZE;
-            rect.z = mapTile.elevation_ * DataManager::Inst().terrainBlock().ElevHeight;
+            rect.z = mapTile.z;
+//            rect.z = mapTile.elevation_ * DataManager::Inst().terrainBlock().ElevHeight;
             rect.width = Map::TILE_SIZE;
             rect.height = Map::TILE_SIZE;
 
@@ -172,11 +174,12 @@ void MapRenderer::updateTexture()
                 continue;
             }
 
-            rect.x -= m_rColBegin * Map::TILE_SIZE;
-            rect.y -= m_rRowBegin * Map::TILE_SIZE;
-            ScreenPos spos = rect.topLeft().toScreen();
-            spos.x += m_xOffset;
-            spos.y += m_yOffset;
+//            rect.x -= m_rColBegin * Map::TILE_SIZE;
+//            rect.y -= m_rRowBegin * Map::TILE_SIZE;
+            ScreenPos spos = renderTarget_->camera()->absoluteScreenPos(rect.topLeft());
+//            ScreenPos spos = rect.topLeft().toScreen();
+//            spos.x += m_xOffset;
+//            spos.y += m_yOffset;
             spos.y -= Map::TILE_SIZE_VERTICAL / 2;
 
             if (!mapTile.terrain_) {
@@ -189,14 +192,15 @@ void MapRenderer::updateTexture()
             }
 
 
-            if (mapTile.blendOverlay.getSize().x > 0) {
-                m_textureTarget.draw(mapTile.blendOverlay, spos);
+            if (mapTile.texture.getSize().x > 0) {
+                m_textureTarget.draw(mapTile.texture, spos);
             } else {
                 m_textureTarget.draw(mapTile.terrain_->texture(col, row), spos);
             }
             outline.setPosition(spos.x, spos.y);
-            m_textureTarget.draw(outline);
+//            m_textureTarget.draw(outline);
         }
     }
+
     m_mapRenderTexture.display();
 }
