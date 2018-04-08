@@ -139,8 +139,8 @@ void Terrain::blendImage(sf::Image *image, uint8_t blendFrame, uint8_t mode, int
         return;
     }
 
-    genie::BlendModePtr blend = ResourceManager::Inst()->getBlendmode(mode);
-    if (!blend) {
+    const genie::BlendMode &blend = ResourceManager::Inst()->getBlendmode(mode);
+    if (!blend.pixelCount) {
         log.error("Failed to get blend mode");
         return;
     }
@@ -164,7 +164,7 @@ void Terrain::blendImage(sf::Image *image, uint8_t blendFrame, uint8_t mode, int
         image->create(width, height, sf::Color::Red);
     }
 
-    genie::PalFilePtr palette = ResourceManager::Inst()->getPalette(50500);
+    const genie::PalFile &palette = ResourceManager::Inst()->getPalette(50500);
 
     int blendOffset = 0;
     const Uint8 *sourcePixels = image->getPixelsPtr();
@@ -178,18 +178,18 @@ void Terrain::blendImage(sf::Image *image, uint8_t blendFrame, uint8_t mode, int
 
         int offsetLeft = height - 1 - (lineWidth  / 2);
 
-        if (IS_UNLIKELY(blendOffset + lineWidth > blend->alphaValues[blendFrame].size())) {
-            log.error("Trying to read out of bounds (blendoffset %d + linewidth %d = %d, > %d", blendOffset, lineWidth, blendOffset + lineWidth, blend->alphaValues.size());
+        if (IS_UNLIKELY(blendOffset + lineWidth > blend.alphaValues[blendFrame].size())) {
+            log.error("Trying to read out of bounds (blendoffset %d + linewidth %d = %d, > %d", blendOffset, lineWidth, blendOffset + lineWidth, blend.alphaValues.size());
             return;
         }
 
         for (int x = 0; x < lineWidth; x++) {
             const int paletteIndex = y * width + x + offsetLeft;
             const uint8_t overlayIndex = overlayData.pixel_indexes[paletteIndex];
-            const genie::Color &overlayColor = (*palette)[overlayIndex];
+            const genie::Color &overlayColor = palette[overlayIndex];
 
-            const int sourceAlpha = blend->alphaValues[blendFrame][blendOffset];
-            const int overlayAlpha = 128 - blend->alphaValues[blendFrame][blendOffset];
+            const int sourceAlpha = blend.alphaValues[blendFrame][blendOffset];
+            const int overlayAlpha = 128 - blend.alphaValues[blendFrame][blendOffset];
             const int r = overlayAlpha * overlayColor.r + sourceAlpha * sourcePixels[paletteIndex * 4 + 0];
             const int g = overlayAlpha * overlayColor.g + sourceAlpha * sourcePixels[paletteIndex * 4 + 1];
             const int b = overlayAlpha * overlayColor.b + sourceAlpha * sourcePixels[paletteIndex * 4 + 2];

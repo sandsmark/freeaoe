@@ -81,7 +81,7 @@ genie::SlpFramePtr ResourceManager::getTemplatedSlp(unsigned int slp, const geni
         return nullptr;
     }
 
-    return m_stemplatesFile->getFrame(sourceFrame, slope, patterns, getPalette()->getColors());
+    return m_stemplatesFile->getFrame(sourceFrame, slope, patterns, getPalette().getColors());
 }
 
 //------------------------------------------------------------------------------
@@ -156,46 +156,35 @@ res::TerrainPtr ResourceManager::getTerrain(unsigned int type)
     return terrain;
 }
 
-genie::BlendModePtr ResourceManager::getBlendmode(unsigned int id)
+const genie::BlendMode &ResourceManager::getBlendmode(unsigned int id)
 {
     if (!blendomatic_file_) {
         log.warn("No blendomatic file loaded");
-        return nullptr;
+        return genie::BlendMode::null;
     }
 
     return blendomatic_file_->getBlendMode(id);
 }
 
 //------------------------------------------------------------------------------
-genie::PalFilePtr ResourceManager::getPalette(sf::Uint32 id)
+const genie::PalFile &ResourceManager::getPalette(sf::Uint32 id)
 {
-    static genie::PalFilePtr defaultPalette;
-    if (id == 50500 && defaultPalette) {
-        return defaultPalette;
-    }
-
-    genie::PalFilePtr pal_ptr = m_interfaceFile->getPalFile(id);
-    if (pal_ptr) {
-        if (id == 50500) {
-            defaultPalette = pal_ptr;
-        }
-        return pal_ptr;
+    const genie::PalFile &palette = m_interfaceFile->getPalFile(id);
+    if (palette.isValid()) {
+        return palette;
     }
 
     for (std::shared_ptr<genie::DrsFile> drsFile : m_allFiles) {
-        pal_ptr = drsFile->getPalFile(id);
+        const genie::PalFile &palette = drsFile->getPalFile(id);
 
-        if (pal_ptr) {
-            if (id == 50500) {
-                defaultPalette = pal_ptr;
-            }
-
-            return pal_ptr;
+        if (palette.isValid()) {
+            return palette;
         }
     }
 
     log.warn("No pal file with id [%u] found!", id);
-    return pal_ptr;
+
+    return palette;
 }
 
 //------------------------------------------------------------------------------

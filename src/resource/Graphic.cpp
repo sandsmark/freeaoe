@@ -75,7 +75,8 @@ const sf::Texture &Graphic::getImage(uint32_t frame_num, float angle)
         frame_num = 0;
     }
 
-    sf::Image img = Resource::convertFrameToImage(slp_->getFrame(frame_num));
+    const genie::PalFile &palette = ResourceManager::Inst()->getPalette(50500);
+    sf::Image img = Resource::convertFrameToImage(slp_->getFrame(frame_num), palette);
 
     if (mirrored) {
         img.flipHorizontally();
@@ -93,7 +94,7 @@ const sf::Texture &Graphic::overlayImage(uint32_t frame_num, float angle, uint8_
     }
 
     genie::PlayerColour pc = DataManager::Inst().getPlayerColor(playerId);
-    genie::PalFilePtr palette = ResourceManager::Inst()->getPalette(50500);
+    const genie::PalFile &palette = ResourceManager::Inst()->getPalette(50500);
 
     bool mirrored = false;
     if (data_.AngleCount > 1) {
@@ -122,7 +123,7 @@ const sf::Texture &Graphic::overlayImage(uint32_t frame_num, float angle, uint8_
     sf::Image img;
     img.create(width, height, sf::Color::Transparent);
 
-    genie::Color outlineColor = (*palette)[pc.UnitOutlineColor];
+    genie::Color outlineColor = palette[pc.UnitOutlineColor];
     const sf::Color outline(outlineColor.r, outlineColor.g, outlineColor.b);
     for (const genie::XY pos : frameData.outline_pc_mask) {
         img.setPixel(pos.x, pos.y, outline);

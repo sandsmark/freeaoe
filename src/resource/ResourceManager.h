@@ -129,9 +129,9 @@ public:
     //
     res::TerrainPtr getTerrain(unsigned int id);
 
-    genie::PalFilePtr getPalette(unsigned int id = 50500);
+    const genie::PalFile &getPalette(unsigned int id = 50500);
 
-    genie::BlendModePtr getBlendmode(unsigned int id = 0);
+    const genie::BlendMode &getBlendmode(unsigned int id = 0);
 
     bool initialize(const std::string &dataPath, const genie::GameVersion gameVersion);
 

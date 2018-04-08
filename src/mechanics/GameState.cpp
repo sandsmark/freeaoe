@@ -123,20 +123,20 @@ bool GameState::init()
     //Map test
     map_ = MapPtr(new Map());
 
-    if (scenario_ && false) {
+    if (scenario_) {
         std::cout << "Setting up scenario: " << scenario_->scenarioInstructions << std::endl;
         map_->create(scenario_->map);
 
-//        for (int playerNum = 0; playerNum < scenario_->playerUnits.size(); playerNum++) {
-//            for (const genie::ScnUnit &scnunit : scenario_->playerUnits[playerNum].units) {
-//                MapPos unitPos(scnunit.positionX * Map::TILE_SIZE, scnunit.positionY * Map::TILE_SIZE, scnunit.positionZ);
-//                Unit::Ptr unit = EntityFactory::Inst().createUnit(scnunit.objectID, unitPos, playerNum, m_civilizations[0]);
-//                if (scnunit.rotation > 0) {
-//                    unit->setAngle(scnunit.rotation * M_PI * 2. / 16.);
-//                }
-//                entity_manager_.add(unit);
-//            }
-//        }
+        for (int playerNum = 0; playerNum < scenario_->playerUnits.size(); playerNum++) {
+            for (const genie::ScnUnit &scnunit : scenario_->playerUnits[playerNum].units) {
+                MapPos unitPos(scnunit.positionX * Map::TILE_SIZE, scnunit.positionY * Map::TILE_SIZE, scnunit.positionZ);
+                Unit::Ptr unit = EntityFactory::Inst().createUnit(scnunit.objectID, unitPos, playerNum, m_civilizations[0]);
+                if (scnunit.rotation > 0) {
+                    unit->setAngle(scnunit.rotation * M_PI * 2. / 16.);
+                }
+                entity_manager_.add(unit);
+            }
+        }
     } else {
         map_->setUpSample();
 
