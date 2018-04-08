@@ -277,7 +277,7 @@ bool ResourceManager::initialize(const std::string &dataPath, const genie::GameV
 
 
         m_stemplatesFile = std::make_unique<genie::SlpTemplateFile>();
-        m_stemplatesFile->load("/home/sandsmark/src/freeaoe/Data/STemplet.dat");
+        m_stemplatesFile->load(dataPath + "STemplet.dat");
         m_stemplatesFile->filtermapFile.load(dataPath + "FilterMaps.dat");
         m_stemplatesFile->filtermapFile.patternmasksFile.load(dataPath + "PatternMasks.dat");
         m_stemplatesFile->filtermapFile.patternmasksFile.icmFile.load(dataPath + "view_icm.dat");
