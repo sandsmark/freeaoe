@@ -26,6 +26,7 @@
 
 #include <string>
 #include <iostream>
+#include <chrono>
 
 //------------------------------------------------------------------------------
 /// Simple logging class
@@ -180,5 +181,26 @@ private:
 private:
     static LogLevel LOG_LEVEL;
 };
+
+class LifeTimePrinter
+{
+public:
+    LifeTimePrinter(const std::string &name, Logger &logger) : m_name(name), m_logger(logger) {
+        m_startTime = std::chrono::steady_clock::now();
+    }
+
+    ~LifeTimePrinter() {
+        std::chrono::steady_clock::duration elapsed = std::chrono::steady_clock::now() - m_startTime;
+
+        m_logger.debug("% %ms", m_name, std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count());
+    }
+
+private:
+    std::chrono::steady_clock::time_point m_startTime;
+    std::string m_name;
+    Logger &m_logger;
+};
+
+#define TIME_THIS LifeTimePrinter lifetime_printer(__PRETTY_FUNCTION__, log)
 
 #endif /* LOGGER_H_ */

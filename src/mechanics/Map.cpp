@@ -154,6 +154,8 @@ void Map::setTileAt(unsigned col, unsigned row, unsigned id)
 
 void Map::updateMapData()
 {
+    TIME_THIS;
+
     for (MapTile &tile : tiles_) {
         tile.reset();
     }
