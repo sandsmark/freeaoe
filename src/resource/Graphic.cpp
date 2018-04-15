@@ -34,10 +34,15 @@ const sf::Texture Graphic::nullImage;
 Graphic::Graphic(const genie::Graphic &data) :
     data_(data)
 {
+    if (data_.SLP < 0) {
+        log.debug("% doesn't have a SLP id", data_.Name);
+        return;
+    }
+
     slp_ = ResourceManager::Inst()->getSlp(data_.SLP, ResourceManager::ResourceType::Graphics);
 
     if (!slp_) {
-        log.debug("Failed to get slp for id %d", data_.SLP);
+//        log.debug("Failed to get slp % for ", data_.SLP, data_.Name);
         return;
     }
 }

@@ -185,6 +185,12 @@ void Map::updateTileBlend(int tileX, int tileY)
 {
     MapTile &tile = getTileAt(tileX, tileY);
     const genie::Terrain &tileData = tile.terrain_->data();
+
+//    if (tileData.SLP < 0) {
+//        log.error("Invalid tile data");
+//        return;
+//    }
+
     uint32_t tileId = tile.terrain_->getId();
 
     std::unordered_map<uint8_t, int> blendDirections;
@@ -307,8 +313,8 @@ void Map::updateTileBlend(int tileX, int tileY)
         }
     }
 
-    if (tile.slope) {
-        sf::Image img = res::Resource::convertFrameToImage(ResourceManager::Inst()->getTemplatedSlp(tile.terrain_->data().SLP, tile.slope));
+    if (tile.slope && tileData.SLP != -1) {
+        sf::Image img = res::Resource::convertFrameToImage(ResourceManager::Inst()->getTemplatedSlp(tileData.SLP, tile.slope));
         sf::Texture t;
         t.loadFromImage(img);
         tile.textures.push_back(t);

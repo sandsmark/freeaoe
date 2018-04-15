@@ -21,8 +21,13 @@
 
 #include <cstring>
 
+#if __has_cpp_attribute(likely) && __has_cpp_attribute(likely)
+#define IS_LIKELY(x) [[likely(x)]]
+#define IS_UNLIKELY(x) [[unlikely(x)]]
+#else
 #define IS_LIKELY(x)      __builtin_expect(!!(x), 1)
 #define IS_UNLIKELY(x)    __builtin_expect(!!(x), 0)
+#endif
 
 namespace util {
 

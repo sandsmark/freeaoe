@@ -74,6 +74,7 @@ genie::SlpFramePtr ResourceManager::getTemplatedSlp(unsigned int slp, const geni
     patterns.push_back(genie::PatternMasksFile::FlatPattern);
     genie::SlpFilePtr sourceFile = getSlp(slp);
     if (!sourceFile) {
+        log.error("Invalid slp %", slp);
         return nullptr;
     }
     genie::SlpFramePtr sourceFrame = sourceFile->getFrame(0);
@@ -106,6 +107,7 @@ genie::SlpFilePtr ResourceManager::getSlp(sf::Uint32 id, const ResourceType type
         log.debug("failed to find % in gamedata files, falling back to all files", id);
         break;
     case ResourceType::Undefined:
+        [[fallthrough]];
     default:
         break;
     }
