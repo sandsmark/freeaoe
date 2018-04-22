@@ -177,31 +177,83 @@ enum Direction : int {
     SouthEast = 1 << 7,
 };
 
-enum BlendTile {
-    LowerLeft1 = 0,
-    UpperLeft1 = 4,
-    LowerRight1 = 8,
-    UpperRight1 = 12,
+struct Blend  {
+    enum BlendTile {
+        LowerLeft1 = 0,
+        UpperLeft1 = 4,
+        LowerRight1 = 8,
+        UpperRight1 = 12,
 
-    Right = 16,
-    Down = 17,
-    Up = 18,
-    Left = 19,
+        Right = 16,
+        Down = 17,
+        Up = 18,
+        Left = 19,
 
-    UpperRightAndLowerLeft = 20,
-    UpperLeftAndLowerRight = 21,
+        UpperRightAndLowerLeft = 20,
+        UpperLeftAndLowerRight = 21,
 
-    OnlyRight = 22,
-    OnlyDown = 23,
-    OnlyUp = 24,
-    OnlyLeft = 25,
+        OnlyRight = 22,
+        OnlyDown = 23,
+        OnlyUp = 24,
+        OnlyLeft = 25,
 
-    KeepUpperLeft = 26,
-    KeepUpperRight = 27,
-    KeepLowerRight = 28,
-    KeepLowerLeft = 29,
-    All = 30,
+        KeepUpperLeft = 26,
+        KeepUpperRight = 27,
+        KeepLowerRight = 28,
+        KeepLowerLeft = 29,
+
+        All = 30,
+
+        BlendTileCount
+    };
+
+    inline void addBlend(const BlendTile blend)
+    {
+        bits |= 1 << blend;
+    }
+
+    sf::Image blendTile(res::TerrainPtr terrain, uint8_t mode, int x, int y) const
+    {
+        // FIXME: this is dumb
+        sf::Image sourceImage = terrain->image(x, y);
+        const Size size = sourceImage.getSize();
+
+        // Clear alpha channel
+        const size_t byteCount = size.width * size.height * 4;
+        Uint8 pixels[byteCount];
+        memcpy(pixels, sourceImage.getPixelsPtr(), byteCount);
+        for (int i=3; i<size.width * size.height * 4; i+=4) {
+            pixels[i] = 0;
+        }
+
+        sf::Image blendImage;
+        blendImage.create(size.width, size.height, pixels);
+
+        for (int i=0; i < BlendTileCount; i++) {
+            if ((bits & (1 << i)) == 0) {
+                continue;
+            }
+
+            terrain->blendImage(&blendImage, i, mode, x, y);
+        }
+
+        return blendImage;
+    }
+
+    inline bool operator ==(const Blend other) const { return bits == other.bits; }
+
+    uint32_t bits = 0;
 };
+
+namespace std {
+template<> struct hash<Blend>
+{
+    size_t operator()(const Blend b) const {
+        return hash<uint32_t>()(b.bits);
+    }
+};
+}
+
 
 void Map::updateTileBlend(int tileX, int tileY)
 {
@@ -331,7 +383,9 @@ void Map::updateTileBlend(int tileX, int tileY)
 
     if (tile.slope) {
         sf::Image img = res::Resource::convertFrameToImage(ResourceManager::Inst()->getTemplatedSlp(tile.terrain_->data().SLP, tile.slope));
-        tile.texture.loadFromImage(img);
+        sf::Texture t;
+        t.loadFromImage(img);
+        tile.textures.push_back(t);
         return;
     }
 
@@ -344,11 +398,8 @@ void Map::updateTileBlend(int tileX, int tileY)
         return blendPriorities[a] < blendPriorities[b];
     });
 
-    sf::Image blendImage = tile.terrain_->image(tileX, tileY);
-
     for (const uint8_t id : idsToDraw) {
-        std::vector<BlendTile> blends;
-        res::TerrainPtr terrain = neighborTerrains[id];
+        Blend blends;
 
         int direction = blendDirections[id];
         if (direction & South) {
@@ -369,34 +420,33 @@ void Map::updateTileBlend(int tileX, int tileY)
         }
 
         if (direction & NorthWest) {
-            blends.push_back(Left);
+            blends.addBlend(Blend::Left);
         }
         if (direction & NorthEast) {
-            blends.push_back(Down);
+            blends.addBlend(Blend::Down);
         }
         if (direction & SouthWest) {
-            blends.push_back(Up);
+            blends.addBlend(Blend::Up);
         }
         if (direction & SouthEast) {
-            blends.push_back(Right);
+            blends.addBlend(Blend::Right);
         }
 
         if (direction & East) {
-            blends.push_back(LowerLeft1);
+            blends.addBlend(Blend::LowerLeft1);
         }
         if (direction & South) {
-            blends.push_back(UpperLeft1);
+            blends.addBlend(Blend::UpperLeft1);
         }
         if (direction & West) {
-            blends.push_back(UpperRight1);
+            blends.addBlend(Blend::UpperRight1);
         }
         if (direction & North) {
-            blends.push_back(LowerRight1);
+            blends.addBlend(Blend::LowerRight1);
         }
 
 
 
-        int blendFrame = -1;
         switch (direction & 0xF) {
         case None:
             break;
@@ -414,41 +464,41 @@ void Map::updateTileBlend(int tileX, int tileY)
 //            break;
 
         case East | West:
-            blendFrame = UpperLeftAndLowerRight;
+            blends.addBlend(Blend::UpperLeftAndLowerRight);
             break;
         case North | South:
-            blendFrame = UpperRightAndLowerLeft;
+            blends.addBlend(Blend::UpperRightAndLowerLeft);
             break;
 
         case North | East:
-            blendFrame = OnlyUp;
+            blends.addBlend(Blend::OnlyUp);
             break;
         case North | West:
-            blendFrame = OnlyRight;
+            blends.addBlend(Blend::OnlyRight);
             break;
         case South | West:
-            blendFrame = OnlyDown;
+            blends.addBlend(Blend::OnlyDown);
             break;
         case South | East:
-            blendFrame = OnlyLeft;
+            blends.addBlend(Blend::OnlyLeft);
             break;
             //// OK ///////
 
         case South | East | West:
-            blendFrame = KeepLowerLeft;
+            blends.addBlend(Blend::KeepLowerLeft);
             break;
         case North | East | West:
-            blendFrame = KeepUpperRight;
+            blends.addBlend(Blend::KeepUpperRight);
             break;
         case North | South | West:
-            blendFrame = KeepLowerRight;
+            blends.addBlend(Blend::KeepLowerRight);
             break;
         case North | South | East:
-            blendFrame = KeepUpperLeft;
+            blends.addBlend(Blend::KeepUpperLeft);
             break;
 
         case North | South | East | West:
-            blendFrame = All;
+            blends.addBlend(Blend::All);
             break;
 
         default:
@@ -456,21 +506,13 @@ void Map::updateTileBlend(int tileX, int tileY)
             break;
         }
 
-        if (blendFrame >= 0) {
-            blends.push_back(BlendTile(blendFrame));
-        }
 
-        for (const BlendTile blend : blends) {
-            terrain->blendImage(&blendImage, int(blend), res::Terrain::blendMode(tileData.BlendType, terrain->data().BlendType), tileX, tileY);
-        }
+        res::TerrainPtr neighbor = neighborTerrains[id];
+
+        sf::Texture t;
+        t.loadFromImage(blends.blendTile(tile.terrain_, neighbor, res::Terrain::blendMode(tileData.BlendType, neighbor->data().BlendType), tileX, tileY));
+        tile.textures.push_back(std::move(t));
     }
-
-    if (blendImage.getSize().x == 0 || blendImage.getSize().y == 0) {
-        log.error("Failed to create blend image");
-        return;
-    }
-
-    tile.texture.loadFromImage(blendImage);
 }
 
 /*

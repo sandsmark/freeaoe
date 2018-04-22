@@ -109,7 +109,7 @@ bool Engine::setup(const std::string &scnFile)
           return false;
       }
   } else {
-      gameState->setScenario(ResourceManager::Inst()->getScn(56005));
+//      gameState->setScenario(ResourceManager::Inst()->getScn(56005));
   }
 
   state_manager_.addActiveState(gameState);

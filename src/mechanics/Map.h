@@ -62,13 +62,15 @@ struct MapTile
     int overlayId = -1;
     genie::Slope slope = genie::SlopeFlat;
 
-    sf::Texture texture;
+    std::vector<sf::Texture> textures;
 };
 
 class Map
 {
 
 public:
+
+
     /*
    * A tiny-size map? 72 x 72.
    * A small-size map? 96 x 96.
