@@ -177,83 +177,7 @@ enum Direction : int {
     SouthEast = 1 << 7,
 };
 
-struct Blend  {
-    enum BlendTile {
-        LowerLeft1 = 0,
-        UpperLeft1 = 4,
-        LowerRight1 = 8,
-        UpperRight1 = 12,
-
-        Right = 16,
-        Down = 17,
-        Up = 18,
-        Left = 19,
-
-        UpperRightAndLowerLeft = 20,
-        UpperLeftAndLowerRight = 21,
-
-        OnlyRight = 22,
-        OnlyDown = 23,
-        OnlyUp = 24,
-        OnlyLeft = 25,
-
-        KeepUpperLeft = 26,
-        KeepUpperRight = 27,
-        KeepLowerRight = 28,
-        KeepLowerLeft = 29,
-
-        All = 30,
-
-        BlendTileCount
-    };
-
-    inline void addBlend(const BlendTile blend)
-    {
-        bits |= 1 << blend;
-    }
-
-    sf::Image blendTile(res::TerrainPtr terrain, uint8_t mode, int x, int y) const
-    {
-        // FIXME: this is dumb
-        sf::Image sourceImage = terrain->image(x, y);
-        const Size size = sourceImage.getSize();
-
-        // Clear alpha channel
-        const size_t byteCount = size.width * size.height * 4;
-        Uint8 pixels[byteCount];
-        memcpy(pixels, sourceImage.getPixelsPtr(), byteCount);
-        for (int i=3; i<size.width * size.height * 4; i+=4) {
-            pixels[i] = 0;
-        }
-
-        sf::Image blendImage;
-        blendImage.create(size.width, size.height, pixels);
-
-        for (int i=0; i < BlendTileCount; i++) {
-            if ((bits & (1 << i)) == 0) {
-                continue;
-            }
-
-            terrain->blendImage(&blendImage, i, mode, x, y);
-        }
-
-        return blendImage;
-    }
-
-    inline bool operator ==(const Blend other) const { return bits == other.bits; }
-
-    uint32_t bits = 0;
-};
-
-namespace std {
-template<> struct hash<Blend>
-{
-    size_t operator()(const Blend b) const {
-        return hash<uint32_t>()(b.bits);
-    }
-};
-}
-
+using res::Blend;
 
 void Map::updateTileBlend(int tileX, int tileY)
 {
@@ -506,12 +430,9 @@ void Map::updateTileBlend(int tileX, int tileY)
             break;
         }
 
-
         res::TerrainPtr neighbor = neighborTerrains[id];
 
-        sf::Texture t;
-        t.loadFromImage(blends.blendTile(tile.terrain_, neighbor, res::Terrain::blendMode(tileData.BlendType, neighbor->data().BlendType), tileX, tileY));
-        tile.textures.push_back(std::move(t));
+        tile.textures.push_back(neighbor->blendImage(blends, tileX, tileY));
     }
 }
 

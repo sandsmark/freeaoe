@@ -132,6 +132,17 @@ uint8_t Terrain::blendMode(const uint8_t ownMode, const uint8_t neighborMode)
     return blendmodeTable[ownMode][neighborMode];
 }
 
+const sf::Texture &Terrain::blendImage(const Blend blend, int tileX, int tileY)
+{
+    if (m_blendImages.find(blend) != m_blendImages.end()) {
+        return m_blendImages[blend];
+    }
+
+    m_blendImages[blend].loadFromImage(blend.blendTile(this, tileX, tileY));
+
+    return m_blendImages[blend];
+}
+
 void Terrain::blendImage(sf::Image *image, uint8_t blendFrame, uint8_t mode, int x, int y)
 {
     if (!m_slp) {
@@ -196,9 +207,38 @@ void Terrain::blendImage(sf::Image *image, uint8_t blendFrame, uint8_t mode, int
             const int a = overlayAlpha * overlayData.alpha_channel[paletteIndex] + sourceAlpha * sourcePixels[paletteIndex * 4 + 3];
             blendOffset++;
 
-            image->setPixel(x + offsetLeft, y, sf::Color(r >> 7, g >> 7, b >> 7, a >> 7));
+            image->setPixel(x + offsetLeft, y, sf::Color(overlayColor.r, overlayColor.g, overlayColor.b, a >> 7));
+//            image->setPixel(x + offsetLeft, y, sf::Color(r >> 7, g >> 7, b >> 7, a >> 7));
         }
     }
+}
+
+sf::Image Blend::blendTile(Terrain *terrain, int x, int y) const
+{
+    // FIXME: this is dumb
+    sf::Image sourceImage = terrain->image(x, y);
+    const Size size = sourceImage.getSize();
+
+    // Clear alpha channel
+    const size_t byteCount = size.width * size.height * 4;
+    Uint8 pixels[byteCount];
+    memcpy(pixels, sourceImage.getPixelsPtr(), byteCount);
+    for (int i=3; i<size.width * size.height * 4; i+=4) {
+        pixels[i] = 0;
+    }
+
+    sf::Image blendImage;
+    blendImage.create(size.width, size.height, pixels);
+
+    for (int i=0; i < BlendTileCount; i++) {
+        if ((bits & (1 << i)) == 0) {
+            continue;
+        }
+
+        terrain->blendImage(&blendImage, i, blendMode, x, y);
+    }
+
+    return blendImage;
 }
 
 }

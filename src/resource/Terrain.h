@@ -32,6 +32,63 @@ class SlpFile;
 
 namespace res {
 
+class Terrain;
+typedef std::shared_ptr<Terrain> TerrainPtr;
+
+struct Blend  {
+    enum BlendTile {
+        LowerLeft1 = 0,
+        UpperLeft1 = 4,
+        LowerRight1 = 8,
+        UpperRight1 = 12,
+
+        Right = 16,
+        Down = 17,
+        Up = 18,
+        Left = 19,
+
+        UpperRightAndLowerLeft = 20,
+        UpperLeftAndLowerRight = 21,
+
+        OnlyRight = 22,
+        OnlyDown = 23,
+        OnlyUp = 24,
+        OnlyLeft = 25,
+
+        KeepUpperLeft = 26,
+        KeepUpperRight = 27,
+        KeepLowerRight = 28,
+        KeepLowerLeft = 29,
+
+        All = 30,
+
+        BlendTileCount
+    };
+
+    inline void addBlend(const BlendTile blend)
+    {
+        bits |= 1 << blend;
+    }
+
+    sf::Image blendTile(Terrain *terrain, int x, int y) const;
+
+    inline bool operator ==(const Blend other) const { return bits == other.bits; }
+
+    uint32_t bits = 0;
+    uint8_t blendMode = 0;
+};
+}
+
+namespace std {
+template<> struct hash<res::Blend>
+{
+    size_t operator()(const res::Blend b) const {
+        return hash<uint32_t>()(b.bits) ^ hash<uint8_t>()(b.blendMode);
+    }
+};
+}
+
+namespace res {
 class Terrain : public Resource
 {
 public:
@@ -57,6 +114,7 @@ public:
     const genie::Terrain &data();
 
     static uint8_t blendMode(const uint8_t ownMode, const uint8_t neighborMode);
+    const sf::Texture &blendImage(const Blend blend, int tileX, int tileY);
     void blendImage(sf::Image *image, uint8_t blendFrame, uint8_t mode, int x, int y);
 
 private:
@@ -66,10 +124,9 @@ private:
     genie::SlpFilePtr m_slp;
 
     std::unordered_map<int, sf::Texture> m_images; // TODO Frames?
-    std::unordered_map<int, sf::Image> m_blendImages;
+    std::unordered_map<Blend, sf::Texture> m_blendImages;
 };
 
-typedef std::shared_ptr<Terrain> TerrainPtr;
 }
 
 #endif // FREEAOE_TERRAIN_H

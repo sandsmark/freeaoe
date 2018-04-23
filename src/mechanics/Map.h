@@ -67,10 +67,7 @@ struct MapTile
 
 class Map
 {
-
 public:
-
-
     /*
    * A tiny-size map? 72 x 72.
    * A small-size map? 96 x 96.
