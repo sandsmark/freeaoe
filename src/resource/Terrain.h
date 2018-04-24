@@ -70,8 +70,6 @@ struct Blend  {
         bits |= 1 << blend;
     }
 
-    sf::Image blendTile(Terrain *terrain, int x, int y) const;
-
     inline bool operator ==(const Blend other) const { return bits == other.bits; }
 
     uint32_t bits = 0;
@@ -114,8 +112,7 @@ public:
     const genie::Terrain &data();
 
     static uint8_t blendMode(const uint8_t ownMode, const uint8_t neighborMode);
-    const sf::Texture &blendImage(const Blend blend, int tileX, int tileY);
-    void blendImage(sf::Image *image, uint8_t blendFrame, uint8_t mode, int x, int y);
+    const sf::Texture &blendImage(const Blend blends, int tileX, int tileY);
 
 private:
     static Logger &log;
