@@ -192,13 +192,16 @@ void MapRenderer::updateTexture()
             }
 
 
-            m_textureTarget.draw(mapTile.terrain_->texture(col, row), spos);
-            for (const sf::Texture &t : mapTile.textures) {
-                m_textureTarget.draw(t, spos);
+            if (mapTile.textures.empty()) {
+                m_textureTarget.draw(mapTile.terrain_->texture(col, row), spos);
+            } else {
+                for (const sf::Texture &t : mapTile.textures) {
+                    m_textureTarget.draw(t, spos);
+                }
             }
 
             outline.setPosition(spos.x, spos.y);
-//            m_textureTarget.draw(outline);
+            m_textureTarget.draw(outline);
         }
     }
 

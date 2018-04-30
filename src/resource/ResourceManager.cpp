@@ -68,10 +68,8 @@ genie::ScnFilePtr ResourceManager::getScn(unsigned int id)
     return genie::ScnFilePtr();
 }
 
-genie::SlpFramePtr ResourceManager::getTemplatedSlp(unsigned int slp, const genie::Slope slope)
+genie::SlpFramePtr ResourceManager::getTemplatedSlp(unsigned int slp, const genie::Slope slope, const std::vector<genie::Pattern> &patterns)
 {
-    std::vector<genie::PatternMasksFile::Pattern> patterns;
-    patterns.push_back(genie::PatternMasksFile::FlatPattern);
     genie::SlpFilePtr sourceFile = getSlp(slp);
     if (!sourceFile) {
         log.error("Invalid slp %", slp);
