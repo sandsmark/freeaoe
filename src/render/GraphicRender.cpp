@@ -182,7 +182,7 @@ ScreenRect GraphicRender::rect()
     const ScreenPos hotspot = graphic_->getHotspot(current_frame_, m_angle);
     ret.x = -hotspot.x;
     ret.y = -hotspot.y;
-    const sf::Vector2u size = image().getSize();
+    const sf::Vector2u size = graphic_->size(current_frame_);
     ret.width = size.x;
     ret.height = size.y;
 

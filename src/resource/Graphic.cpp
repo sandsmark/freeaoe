@@ -142,6 +142,20 @@ const sf::Texture &Graphic::overlayImage(uint32_t frame_num, float angle, uint8_
     return m_overlays[frame_num];
 }
 
+const Size Graphic::size(uint32_t frame_num) const
+{
+    if (frame_num >= slp_->getFrameCount()) {
+        log.error("trying to look up %d, but we only have %", frame_num, slp_->getFrameCount());
+        frame_num = 0;
+    }
+
+    genie::SlpFramePtr frame = slp_->getFrame(frame_num);
+
+    return Size(frame->getWidth(), frame->getHeight());
+
+
+}
+
 //------------------------------------------------------------------------------
 ScreenPos Graphic::getHotspot(uint32_t frame_num, float angle) const
 {

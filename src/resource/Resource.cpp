@@ -122,6 +122,10 @@ sf::Image Resource::convertFrameToImage(const genie::SlpFramePtr frame,
             img.setPixel(mask.x, mask.y, sf::Color(color.r, color.g, color.b));
         }
     }
+    const sf::Color shield(255, 0, 0, 255);
+    for (const genie::XY pos : frameData.shield_mask) {
+        img.setPixel(pos.x, pos.y, shield);
+    }
 
     return img;
 }

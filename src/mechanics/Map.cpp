@@ -796,7 +796,7 @@ void Map::updateTileSlopes(int tileX, int tileY)
     }
 
 
-    sf::Image img = res::Resource::convertFrameToImage(ResourceManager::Inst()->getTemplatedSlp(tileData.SLP, genie::Slope(tile.slope), patterns));
+    sf::Image img = res::Resource::convertFrameToImage(ResourceManager::Inst()->getTemplatedSlp(tileData.SLP, tile.slope, patterns));
     sf::Texture t;
     t.loadFromImage(img);
     tile.textures.clear();

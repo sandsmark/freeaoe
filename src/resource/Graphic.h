@@ -62,6 +62,8 @@ public:
     const sf::Texture &getImage(uint32_t frame_num = 0, float angle = false);
     const sf::Texture &overlayImage(uint32_t frame_num, float angle, uint8_t playerId);
 
+    const Size size(uint32_t frame_num) const;
+
     //----------------------------------------------------------------------------
     /// Get the hotspot of a frame.
     // TODO: Maybe inherit from sf::Image and include this property
