@@ -335,6 +335,10 @@ void Map::updateTileBlend(int tileX, int tileY)
         return blendPriorities[a] < blendPriorities[b];
     });
 
+    sf::Texture t;
+    t.loadFromImage(tile.terrain_->image(tileX, tileY));
+    tile.textures.push_back(t);
+
     for (const uint8_t id : idsToDraw) {
         Blend blends;
 
@@ -448,10 +452,6 @@ void Map::updateTileBlend(int tileX, int tileY)
 
         tile.textures.push_back(neighbor->blendImage(blends, tileX, tileY));
     }
-
-    sf::Texture t;
-    t.loadFromImage(tile.terrain_->image(tileX, tileY));
-    tile.textures.push_back(t);
 }
 
 void Map::updateTileSlopes(int tileX, int tileY)
