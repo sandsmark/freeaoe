@@ -136,8 +136,8 @@ void EntityManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
 
         if (m_selectedEntities.count(entity)) { // draw health indicator
             ScreenPos pos = renderTarget->camera()->absoluteScreenPos(entity->position);
-            pos.x -= unit->data.CollisionSize.x * Map::TILE_SIZE_HORIZONTAL/2;
-            pos.y -= unit->data.CollisionSize.y * Map::TILE_SIZE_VERTICAL/2;
+            pos.x -= unit->data.CollisionSize.first * Map::TILE_SIZE_HORIZONTAL/2;
+            pos.y -= unit->data.CollisionSize.second * Map::TILE_SIZE_VERTICAL/2;
 
             sf::RectangleShape rect;
             sf::CircleShape circle;
@@ -146,8 +146,8 @@ void EntityManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
             circle.setOutlineThickness(1);
 
             circle.setPosition(pos);
-            circle.setRadius(unit->data.CollisionSize.x * Map::TILE_SIZE);
-            const float ratio = unit->data.CollisionSize.y * Map::TILE_SIZE_VERTICAL / (unit->data.CollisionSize.x * Map::TILE_SIZE_HORIZONTAL);
+            circle.setRadius(unit->data.CollisionSize.first * Map::TILE_SIZE);
+            const float ratio = unit->data.CollisionSize.second * Map::TILE_SIZE_VERTICAL / (unit->data.CollisionSize.first * Map::TILE_SIZE_HORIZONTAL);
             circle.setScale(1, ratio);
             renderTarget->draw(circle);
 

@@ -152,8 +152,8 @@ bool GameState::init()
         unit = EntityFactory::Inst().createUnit(109, MapPos(48*3, 48*3, 0), 0, m_civilizations[0]);
 
         if (unit->data.Building.FoundationTerrainID > 0) {
-            int width = unit->data.CollisionSize.x;
-            int height = unit->data.CollisionSize.y;
+            int width = unit->data.CollisionSize.first;
+            int height = unit->data.CollisionSize.second;
             for (int x = 0; x < width*2; x++) {
                 for (int y = 0; y < height*2; y++) {
                     map_->setTileAt(3 - width + x, 3 - height + y, unit->data.Building.FoundationTerrainID);
