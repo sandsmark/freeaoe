@@ -48,8 +48,16 @@ struct TileSlopes
         SouthEastUp = 7,
         NorthEastUp = 8,
 
-        SouthWestEastUp = 9,
-        NorthWestEastUp = 10,
+        NorthDown   = 13,
+        SouthDown   = 14,
+        WestDown    = 15,
+        EastDown    = 16,
+
+        SouthWestEastUp,
+        NorthWestEastUp,
+
+        NorthSouthEastUp,
+        NorthSouthWestUp,
     };
     Slope self = Flat;
 
@@ -75,6 +83,10 @@ struct TileSlopes
             return genie::SlopeSouthWestEastUp;
         case NorthWestEastUp:
             return genie::SlopeNorthWestEastUp;
+        case NorthSouthEastUp:
+            return genie::SlopeWestDown;
+        case NorthSouthWestUp:
+            return genie::SlopeEastDown;
         default:
             return genie::SlopeInvalid;
         }
