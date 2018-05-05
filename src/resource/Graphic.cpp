@@ -144,6 +144,9 @@ const sf::Texture &Graphic::overlayImage(uint32_t frame_num, float angle, uint8_
 
 const Size Graphic::size(uint32_t frame_num) const
 {
+    if (!slp_) {
+        return Size(0, 0);
+    }
     if (frame_num >= slp_->getFrameCount()) {
         log.error("trying to look up %d, but we only have %", frame_num, slp_->getFrameCount());
         frame_num = 0;

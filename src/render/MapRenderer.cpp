@@ -192,12 +192,13 @@ void MapRenderer::updateTexture()
             }
 
 
-            if (mapTile.textures.empty()) {
+            if (mapTile.slopes.self == res::TileSlopes::Flat) {
                 m_textureTarget.draw(mapTile.terrain_->texture(col, row), spos);
-            } else {
-                for (const sf::Texture &t : mapTile.textures) {
-                    m_textureTarget.draw(t, spos);
+                for (const res::Blend b : mapTile.blends) {
+                    m_textureTarget.draw(mapTile.terrain_->blendImage(b, col, row), spos);
                 }
+            } else {
+                m_textureTarget.draw(mapTile.terrain_->slopedImage(mapTile.slopes, col, row), spos);
             }
 
             outline.setPosition(spos.x, spos.y);

@@ -61,9 +61,10 @@ struct MapTile
     int blendIndex = -1;
     int overlayId = -1;
 
-    genie::Slope slope = genie::SlopeFlat;
-
     std::vector<sf::Texture> textures;
+    std::vector<res::Blend> blends;
+
+    res::TileSlopes slopes;
 };
 
 class Map
@@ -116,7 +117,7 @@ public:
 private:
     void updateTileBlend(int tileX, int tileY);
     void updateTileSlopes(int tileX, int tileY);
-    const genie::Slope slopeAt(const int x, const int y);
+    const res::TileSlopes::Slope slopeAt(const int x, const int y);
 
     static Logger &log;
 

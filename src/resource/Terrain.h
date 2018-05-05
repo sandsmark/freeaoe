@@ -35,6 +35,63 @@ namespace res {
 class Terrain;
 typedef std::shared_ptr<Terrain> TerrainPtr;
 
+struct TileSlopes
+{
+    enum Slope {
+        Flat = 0,
+        SouthUp = 1,
+        NorthUp     = 2,
+        WestUp      = 3,
+        EastUp      = 4,
+        SouthWestUp = 5,
+        NorthWestUp = 6,
+        SouthEastUp = 7,
+        NorthEastUp = 8,
+
+        SouthWestEastUp = 9,
+        NorthWestEastUp = 10,
+    };
+    Slope self = Flat;
+
+    Slope north = Flat;
+    Slope south = Flat;
+
+    Slope west = Flat;
+    Slope east = Flat;
+
+    Slope southWest = Flat;
+    Slope southEast = Flat;
+
+    Slope northWest = Flat;
+    Slope northEast = Flat;
+
+    static genie::Slope genieSlope(const Slope s) {
+        if (s < SouthWestEastUp) {
+            return genie::Slope(s);
+        }
+
+        switch (s) {
+        case SouthWestEastUp:
+            return genie::SlopeSouthWestEastUp;
+        case NorthWestEastUp:
+            return genie::SlopeNorthWestEastUp;
+        default:
+            return genie::SlopeInvalid;
+        }
+    }
+    bool operator==(const TileSlopes &other) const {
+        return self == other.self &&
+               north == other.north &&
+               south == other.south &&
+               west == other.west &&
+               east == other.east &&
+               southWest == other.southWest &&
+               southEast == other.southEast &&
+               northWest == other.northWest &&
+               northEast == other.northEast;
+    }
+};
+
 struct Blend  {
     enum BlendTile {
         LowerLeft1 = 0,
@@ -78,6 +135,22 @@ struct Blend  {
 }
 
 namespace std {
+
+template<> struct hash<res::TileSlopes>
+{
+    size_t operator()(const res::TileSlopes s) const {
+        return hash<int8_t>()(s.self) ^
+               hash<int8_t>()(s.north) ^
+               hash<int8_t>()(s.south) ^
+               hash<int8_t>()(s.west) ^
+               hash<int8_t>()(s.east) ^
+               hash<int8_t>()(s.southWest) ^
+               hash<int8_t>()(s.southEast) ^
+               hash<int8_t>()(s.northWest) ^
+               hash<int8_t>()(s.northEast);
+    }
+};
+
 template<> struct hash<res::Blend>
 {
     size_t operator()(const res::Blend b) const {
@@ -114,6 +187,8 @@ public:
     static uint8_t blendMode(const uint8_t ownMode, const uint8_t neighborMode);
     const sf::Texture &blendImage(const Blend blends, int tileX, int tileY);
 
+    const sf::Texture &slopedImage(const TileSlopes &slopes, int tileX, int tileY);
+
 private:
     static Logger &log;
 
@@ -122,6 +197,7 @@ private:
 
     std::unordered_map<int, sf::Texture> m_images; // TODO Frames?
     std::unordered_map<Blend, sf::Texture> m_blendImages;
+    std::unordered_map<TileSlopes, sf::Texture> m_slopeImages;
 };
 
 }

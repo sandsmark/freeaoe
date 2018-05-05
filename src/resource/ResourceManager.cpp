@@ -68,21 +68,6 @@ genie::ScnFilePtr ResourceManager::getScn(unsigned int id)
     return genie::ScnFilePtr();
 }
 
-genie::SlpFramePtr ResourceManager::getTemplatedSlp(unsigned int slp, const genie::Slope slope, const std::vector<genie::Pattern> &patterns)
-{
-    genie::SlpFilePtr sourceFile = getSlp(slp);
-    if (!sourceFile) {
-        log.error("Invalid slp %", slp);
-        return nullptr;
-    }
-    genie::SlpFramePtr sourceFrame = sourceFile->getFrame(0);
-    if (!sourceFrame) {
-        return nullptr;
-    }
-
-    return m_stemplatesFile->getFrame(sourceFrame, slope, patterns, getPalette().getColors());
-}
-
 //------------------------------------------------------------------------------
 genie::SlpFilePtr ResourceManager::getSlp(sf::Uint32 id, const ResourceType type)
 {

@@ -189,6 +189,7 @@ enum Direction : int {
 };
 
 using res::Blend;
+using res::TileSlopes;
 
 void Map::updateTileBlend(int tileX, int tileY)
 {
@@ -301,28 +302,28 @@ void Map::updateTileBlend(int tileX, int tileY)
     tile.z = tile.elevation_ * DataManager::Inst().terrainBlock().ElevHeight;
     if (neighborsBelow == None) {
         if (neighborsAbove & North) {
-            tile.slope = genie::SlopeSouthWestUp;
+            tile.slopes.self = TileSlopes::SouthWestUp;
         } else if (neighborsAbove & South) {
-            tile.slope = genie::SlopeNorthEastUp ;
+            tile.slopes.self = TileSlopes::NorthEastUp ;
             tile.z += DataManager::Inst().terrainBlock().ElevHeight;
         } else if (neighborsAbove & East) {
-            tile.slope = genie::SlopeSouthEastUp;
+            tile.slopes.self = TileSlopes::SouthEastUp;
         } else if (neighborsAbove & West) {
-            tile.slope = genie::SlopeNorthWestUp;
+            tile.slopes.self = TileSlopes::NorthWestUp;
             tile.z += DataManager::Inst().terrainBlock().ElevHeight;
         } else if (neighborsAbove == NorthWest) {
-            tile.slope = genie::SlopeWestUp;
+            tile.slopes.self = TileSlopes::WestUp;
         } else if (neighborsAbove == NorthEast) {
-            tile.slope = genie::SlopeSouthUp;
+            tile.slopes.self = TileSlopes::SouthUp;
         } else if (neighborsAbove == SouthWest) {
-            tile.slope = genie::SlopeNorthUp;
+            tile.slopes.self = TileSlopes::NorthUp;
             tile.z += DataManager::Inst().terrainBlock().ElevHeight;
         } else if (neighborsAbove == SouthEast) {
-            tile.slope = genie::SlopeEastUp;
+            tile.slopes.self = TileSlopes::EastUp;
         }
     }
 
-    if (tile.slope) {
+    if (tile.slopes.self) {
         return;
     }
 
@@ -450,368 +451,42 @@ void Map::updateTileBlend(int tileX, int tileY)
         res::TerrainPtr neighbor = neighborTerrains[id];
         blends.blendMode = res::Terrain::blendMode(tileData.BlendType, neighbor->data().BlendType);
 
-        tile.textures.push_back(neighbor->blendImage(blends, tileX, tileY));
+        tile.blends.push_back(blends);
     }
 }
 
 void Map::updateTileSlopes(int tileX, int tileY)
 {
     MapTile &tile = getTileAt(tileX, tileY);
-    if (!tile.slope) {
+    if (!tile.slopes.self) {
         return;
     }
     const genie::Terrain &tileData = tile.terrain_->data();
     if (tileData.SLP == -1) {
+        tile.slopes.self = TileSlopes::Flat;
         return;
     }
 
-    const genie::Slope slopeNorth = slopeAt(tileX - 1, tileY + 1);
-    const genie::Slope slopeSouth = slopeAt(tileX + 1, tileY - 1);
+    tile.slopes.north = slopeAt(tileX - 1, tileY + 1);
+    tile.slopes.south = slopeAt(tileX + 1, tileY - 1);
 
-    const genie::Slope slopeWest = slopeAt(tileX - 1, tileY - 1);
-    const genie::Slope slopeEast = slopeAt(tileX + 1, tileY + 1);
+    tile.slopes.west = slopeAt(tileX - 1, tileY - 1);
+    tile.slopes.east = slopeAt(tileX + 1, tileY + 1);
 
-    const genie::Slope slopeSouthWest = slopeAt(tileX, tileY - 1);
-    const genie::Slope slopeSouthEast = slopeAt(tileX + 1, tileY);
+    tile.slopes.southWest = slopeAt(tileX, tileY - 1);
+    tile.slopes.southEast = slopeAt(tileX + 1, tileY);
 
-    const genie::Slope slopeNorthWest = slopeAt(tileX - 1, tileY);
-    const genie::Slope slopeNorthEast = slopeAt(tileX, tileY + 1);
-
-
-    std::vector<genie::Pattern> patterns;
-    switch (tile.slope) {
-    case genie::SlopeSouthUp:
-    case genie::SLOPE_S_UP2:
-        patterns.push_back(genie::DiagDownPattern);
-
-        if (slopeSouth == genie::SlopeFlat) {
-            patterns.push_back(genie::Pattern18);
-        }
-
-        if ((slopeNorthWest == genie::SlopeFlat) + (slopeNorth == genie::SlopeFlat) + (slopeNorthEast == genie::SlopeFlat) > 1) {
-            patterns.push_back(genie::Pattern19);
-        }
-
-        if (slopeNorthWest == genie::SlopeFlat || slopeNorthWest == genie::SlopeNorthUp || slopeNorthWest == genie::SlopeWestUp || slopeNorthWest == genie::SlopeNorthWestUp) {
-            patterns.push_back(genie::DownPattern);
-        } else if (slopeWest == genie::SlopeFlat) {
-            patterns.push_back(genie::Pattern26);
-        }
-
-        if (slopeNorthEast != genie::SlopeFlat && slopeNorthEast != genie::SlopeNorthUp && slopeNorthEast != genie::SlopeEastUp && slopeNorthEast != genie::SlopeNorthEastUp) {
-            if (slopeEast != genie::SlopeFlat) {
-                patterns.push_back(genie::Pattern28);
-            }
-        } else {
-            patterns.push_back(genie::HalfRightPattern);
-        }
-
-        if (slopeNorthEast == genie::SlopeSouthWestEastUp || slopeSouthEast == genie::SlopeSouthWestEastUp || slopeEast == genie::SlopeFlat) {
-            patterns.push_back(genie::Pattern22);
-        }
-        if (slopeNorthWest == genie::SlopeSouthWestEastUp || slopeSouthWest == genie::SlopeSouthWestEastUp || slopeWest == genie::SlopeFlat) {
-            patterns.push_back(genie::Pattern21);
-        }
-
-        break;
-
-    case genie::SlopeNorthUp:
-    case genie::SLOPE_N_UP2:
-        patterns.push_back(genie::DiagDownPattern);
-        if (slopeNorth == genie::SlopeFlat) {
-            patterns.push_back(genie::Pattern16);
-        }
-        if ((slopeSouthWest == genie::SlopeFlat) + (slopeSouth == genie::SlopeFlat) + (slopeSouthEast == genie::SlopeFlat) > 1) {
-            patterns.push_back(genie::Pattern17);
-        }
-
-        if (slopeSouthWest == genie::SlopeFlat || slopeSouthWest == genie::SlopeSouthUp || slopeNorthWest == genie::SlopeWestUp || slopeSouthWest == genie::SlopeSouthWestUp) {
-            patterns.push_back(genie::LeftPattern);
-        } else if (slopeWest == genie::SlopeFlat) {
-            patterns.push_back(genie::Pattern26);
-        }
-
-        if (slopeSouthEast != genie::SlopeFlat && slopeSouthEast != genie::SlopeSouthUp && slopeSouthEast != genie::SlopeEastUp && slopeSouthEast != genie::SlopeSouthEastUp) {
-            if (slopeEast != genie::SlopeFlat) {
-                patterns.push_back(genie::Pattern28);
-            }
-        } else {
-            patterns.push_back(genie::HalfUpPattern);
-        }
-        if (slopeNorthWest == genie::SlopeNorthWestEastUp || slopeSouthWest == genie::SlopeNorthWestEastUp || slopeWest == genie::SlopeFlat) {
-            patterns.push_back(genie::Pattern21);
-        }
-
-        if (slopeNorthEast == genie::SlopeNorthWestEastUp || slopeSouthEast == genie::SlopeNorthWestEastUp || slopeEast == genie::SlopeFlat) {
-            patterns.push_back(genie::Pattern22);
-        }
-
-        break;
-    case genie::SlopeWestUp:
-    case genie::SLOPE_W_UP2:
-        patterns.push_back(genie::FlatPattern);
-        if (slopeWest == genie::SlopeFlat) {
-            patterns.push_back(genie::Pattern12);
-        }
-
-        if ((slopeNorthEast == genie::SlopeFlat) + (slopeEast == genie::SlopeFlat) + (slopeSouthEast == genie::SlopeFlat) > 1) {
-            patterns.push_back(genie::Pattern13);
-        }
-
-        if (slopeNorthEast == genie::SlopeFlat || slopeNorthEast == genie::SlopeNorthUp || slopeNorthEast == genie::SlopeEastUp || slopeSouthWest == genie::SlopeNorthEastUp) {
-            patterns.push_back(genie::HalfRightPattern);
-        } else if (slopeNorth == genie::SlopeFlat) {
-            patterns.push_back(genie::Pattern34);
-        }
-
-        if (slopeSouthEast != genie::SlopeFlat && slopeSouthEast != genie::SlopeSouthUp && slopeNorthEast != genie::SlopeEastUp && slopeNorthEast != genie::SlopeSouthEastUp) {
-            if (slopeSouth != genie::SlopeFlat) {
-                patterns.push_back(genie::Pattern35);
-            }
-        } else {
-            patterns.push_back(genie::HalfUpPattern);
-        }
-
-
-        break;
-    case genie::SlopeEastUp:
-    case genie::SLOPE_E_UP2:
-        patterns.push_back(genie::BlackPattern);
-
-        if (slopeEast == genie::SlopeFlat) {
-            patterns.push_back(genie::Pattern14);
-        }
-
-        if ((slopeNorthWest == genie::SlopeFlat) + (slopeWest == genie::SlopeFlat) + (slopeSouthWest == genie::SlopeFlat) > 1) {
-            patterns.push_back(genie::Pattern15);
-        }
-
-        if (slopeSouthWest == genie::SlopeFlat || slopeSouthWest == genie::SlopeSouthUp || slopeSouthWest == genie::SlopeWestUp || slopeSouthWest == genie::SlopeSouthWestUp) {
-            patterns.push_back(genie::LeftPattern);
-        } else if (slopeSouth == genie::SlopeFlat) {
-            patterns.push_back(genie::Pattern37);
-        }
-
-        if (slopeNorthWest != genie::SlopeFlat && slopeNorthWest != genie::SlopeNorthUp && slopeNorthWest != genie::SlopeWestUp && slopeNorthWest != genie::SlopeNorthWestUp) {
-            if (slopeNorth != genie::SlopeFlat) {
-                patterns.push_back(genie::Pattern36);
-            }
-        } else {
-            patterns.push_back(genie::DownPattern);
-        }
-
-        break;
-    case genie::SlopeSouthWestUp:
-        patterns.push_back(genie::FlatPattern);
-        if (slopeSouthWest == genie::SlopeFlat || slopeSouthWest == genie::SlopeNorthUp || slopeSouthWest == genie::SlopeEastUp || slopeSouthWest == genie::SlopeNorthEastUp) {
-            patterns.push_back(genie::HalfLeftPattern);
-        } else {
-            if (slopeWest == genie::SlopeFlat) {
-                patterns.push_back(genie::Pattern12);
-            }
-
-            if (slopeSouth == genie::SlopeFlat) {
-                patterns.push_back(genie::Pattern35);
-            }
-        }
-
-        if (slopeNorthEast == genie::SlopeFlat || slopeNorthEast == genie::SlopeNorthUp || slopeNorthEast == genie::SlopeEastUp || slopeNorthEast == genie::SlopeNorthEastUp) {
-            patterns.push_back(genie::HalfRightPattern);
-        } else {
-            if (slopeNorth == genie::SlopeFlat || slopeNorth == genie::SlopeSouthUp) {
-                patterns.push_back(genie::Pattern34);
-            }
-            if (slopeEast == genie::SlopeFlat || slopeEast == genie::SlopeEastUp) {
-                patterns.push_back(genie::Pattern28);
-            }
-        }
-
-        if (slopeSouth == genie::SlopeSouthUp && slopeSouthWest == genie::SlopeWestUp) {
-            patterns.push_back(genie::Pattern35);
-        }
-
-        if (slopeSouthWest == genie::SlopeSouthUp && slopeWest == genie::SlopeWestUp) {
-            patterns.push_back(genie::Pattern12);
-        }
-
-        if (slopeNorthEast == genie::SlopeSouthWestEastUp || slopeSouthEast == genie::SlopeSouthWestEastUp) {
-            patterns.push_back(genie::Pattern22);
-        }
-
-        if (slopeNorthWest == genie::SlopeSouthUp) {
-            patterns.push_back(genie::Pattern23);
-        }
-
-        if (slopeEast == genie::SlopeFlat) {
-            patterns.push_back(genie::Pattern28);
-        }
-
-        break;
-    case genie::SlopeNorthWestUp:
-        patterns.push_back(genie::FlatPattern);
-        if (slopeNorthWest == genie::SlopeFlat || slopeNorthWest == genie::SlopeSouthUp || slopeNorthWest == genie::SlopeEastUp || slopeNorthWest == genie::SlopeSouthEastUp) {
-            patterns.push_back(genie::HalfDownPattern);
-        } else {
-            if (slopeWest == genie::SlopeFlat) {
-                patterns.push_back(genie::Pattern12);
-            }
-            if (slopeNorth == genie::SlopeFlat) {
-                patterns.push_back(genie::Pattern34);
-            }
-        }
-
-        if (slopeSouthEast == genie::SlopeFlat || slopeSouthEast == genie::SlopeSouthUp || slopeSouthEast == genie::SlopeEastUp || slopeSouthEast == genie::SlopeSouthEastUp) {
-            patterns.push_back(genie::HalfUpPattern);
-        } else {
-            if (slopeSouth == genie::SlopeFlat || slopeSouth == genie::SlopeSouthUp) {
-                patterns.push_back(genie::Pattern35);
-            }
-
-            if (slopeEast == genie::SlopeFlat || slopeEast == genie::SlopeEastUp) {
-                patterns.push_back(genie::Pattern28);
-            }
-        }
-
-        if (slopeSouthWest == genie::SlopeNorthUp) {
-            patterns.push_back(genie::Pattern23);
-        }
-
-        if (slopeWest == genie::SlopeFlat) {
-            patterns.push_back(genie::Pattern12);
-        }
-
-        if (slopeNorthEast == genie::SlopeNorthWestEastUp) {
-            patterns.push_back(genie::Pattern22);
-        }
-
-        if (slopeEast == genie::SlopeFlat) {
-            patterns.push_back(genie::Pattern28);
-        }
-
-        if (slopeNorth == genie::SlopeFlat) {
-            patterns.push_back(genie::Pattern34);
-        }
-
-        if (slopeWest == genie::SlopeWestUp && slopeNorthWest == genie::SlopeNorthUp) {
-            patterns.push_back(genie::Pattern12);
-        }
-
-        if (slopeNorthWest == genie::SlopeWestUp && slopeNorth == genie::SlopeNorthUp) {
-            patterns.push_back(genie::Pattern34);
-        }
-
-        break;
-    case genie::SlopeSouthEastUp:
-        patterns.push_back(genie::BlackPattern);
-
-        if (slopeNorthWest == genie::SlopeFlat || slopeNorthWest == genie::SlopeNorthUp || slopeNorthWest == genie::SlopeWestUp || slopeNorthWest == genie::SlopeNorthWestUp) {
-            patterns.push_back(genie::DownPattern);
-        } else if (slopeWest == genie::SlopeFlat || slopeWest == genie::SlopeWestUp) {
-            patterns.push_back(genie::Pattern26);
-        }
-
-        if (slopeNorth == genie::SlopeFlat || slopeNorth == genie::SlopeNorthUp) {
-            patterns.push_back(genie::Pattern36);
-        }
-
-        if (slopeSouthEast == genie::SlopeFlat || slopeSouthEast == genie::SlopeSouthUp || slopeSouthEast == genie::SlopeEastUp || slopeSouthEast == genie::SlopeSouthEastUp) {
-            patterns.push_back(genie::UpPattern);
-        } else {
-            if (slopeEast == genie::SlopeFlat){
-                patterns.push_back(genie::Pattern14);
-            }
-            if (slopeSouth == genie::SlopeFlat){
-                patterns.push_back(genie::Pattern37);
-            }
-        }
-
-        if (slopeSouth == genie::SlopeSouthUp && slopeSouthEast == genie::SlopeEastUp) {
-            patterns.push_back(genie::Pattern37);
-        }
-
-        if (slopeSouthEast == genie::SlopeSouthUp && slopeEast == genie::SlopeEastUp) {
-            patterns.push_back(genie::Pattern14);
-        }
-
-        if (slopeNorthEast == genie::SlopeSouthUp) {
-            patterns.push_back(genie::Pattern20);
-        }
-
-        if (slopeWest == genie::SlopeSouthUp) {
-            patterns.push_back(genie::Pattern21);
-        }
-
-        if (slopeNorthWest == genie::SlopeSouthWestEastUp) {
-            patterns.push_back(genie::Pattern21);
-        }
-
-        break;
-    case genie::SlopeNorthEastUp:
-        patterns.push_back(genie::BlackPattern);
-
-        if (slopeSouthWest == genie::SlopeFlat || slopeSouthWest == genie::SlopeSouthWestUp || slopeSouthWest == genie::SlopeWestUp || slopeSouthWest == genie::SlopeSouthUp) {
-            patterns.push_back(genie::LeftPattern);
-        } else {
-            if (slopeWest == genie::SlopeFlat || slopeWest == genie::SlopeWestUp) {
-                patterns.push_back(genie::Pattern26);
-            }
-            if (slopeSouth == genie::SlopeFlat || slopeSouth == genie::SlopeSouthUp) {
-                patterns.push_back(genie::Pattern37);
-            }
-        }
-
-        if (slopeNorthEast == genie::SlopeFlat || slopeNorthEast == genie::SlopeSouthUp || slopeNorthEast == genie::SlopeWestUp || slopeNorthEast == genie::SlopeSouthWestUp) {
-            patterns.push_back(genie::RightPattern);
-        } else {
-            if(slopeNorth == genie::SlopeFlat) {
-                patterns.push_back(genie::Pattern36);
-            }
-            if (slopeEast == genie::SlopeFlat) {
-                patterns.push_back(genie::Pattern14);
-            }
-        }
-
-        if (slopeEast == genie::SlopeEastUp || slopeNorthEast == genie::SlopeNorthUp) {
-            patterns.push_back(genie::Pattern14);
-        }
-
-        if (slopeNorthEast == genie::SlopeEastUp || slopeNorth == genie::SlopeNorthUp) {
-            patterns.push_back(genie::Pattern36);
-        }
-
-        if (slopeSouthEast == genie::SlopeNorthUp) {
-            patterns.push_back(genie::Pattern20);
-        }
-
-        if (slopeNorthWest == genie::SlopeNorthWestEastUp) {
-            patterns.push_back(genie::Pattern21);
-        }
-        if (slopeWest == genie::SlopeFlat) {
-            patterns.push_back(genie::Pattern26);
-        }
-
-        break;
-    default:
-        break;
-    }
-
-
-    sf::Image img = res::Resource::convertFrameToImage(ResourceManager::Inst()->getTemplatedSlp(tileData.SLP, tile.slope, patterns));
-    sf::Texture t;
-    t.loadFromImage(img);
-    tile.textures.clear();
-    tile.textures.push_back(t);
-    return;
-
+    tile.slopes.northWest = slopeAt(tileX - 1, tileY);
+    tile.slopes.northEast = slopeAt(tileX, tileY + 1);
 }
 
-const genie::Slope Map::slopeAt(const int x, const int y)
+const TileSlopes::Slope Map::slopeAt(const int x, const int y)
 {
     if (x < 0 || y < 0) {
-        return genie::SlopeFlat;
+        return TileSlopes::Flat;
     }
 
-    return getTileAt(x, y).slope;
+    return getTileAt(x, y).slopes.self;
 }
 
 /*
