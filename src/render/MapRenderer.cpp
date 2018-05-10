@@ -153,7 +153,7 @@ void MapRenderer::updateTexture()
     outline.setScale(1, 0.5);
     outline.setFillColor(sf::Color::Transparent);
     outline.setOutlineThickness(3);
-    outline.setOutlineColor(sf::Color(255, 255, 255, 192));
+    outline.setOutlineColor(sf::Color(255, 255, 255, 64));
 
 //    for (int col = m_rColEnd-1; col >= 0; col--) {
     for (int col = 0; col < m_rColEnd; col++) {
@@ -193,8 +193,9 @@ void MapRenderer::updateTexture()
 
             if (mapTile.slopes.self == res::TileSlopes::Flat) {
                 m_textureTarget.draw(mapTile.terrain_->texture(col, row), spos);
+
                 for (const res::Blend b : mapTile.blends) {
-                    m_textureTarget.draw(mapTile.terrain_->blendImage(b, col, row), spos);
+                    m_textureTarget.draw(b.terrain->blendImage(b, col, row), spos);
                 }
             } else {
                 m_textureTarget.draw(mapTile.terrain_->slopedImage(mapTile.slopes, col, row), spos);

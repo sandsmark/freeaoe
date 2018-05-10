@@ -466,6 +466,7 @@ void Map::updateTileBlend(int tileX, int tileY)
 
         res::TerrainPtr neighbor = neighborTerrains[id];
         blends.blendMode = res::Terrain::blendMode(tileData.BlendType, neighbor->data().BlendType);
+        blends.terrain = neighbor;
 
         tile.blends.push_back(blends);
     }
