@@ -68,24 +68,6 @@ void Map::setUpSample()
     for (int i=3; i<6; i++) {
         getTileAt(6, i).elevation_ = 1;
     }
-
-    getTileAt(6, 2).elevation_ = 1;
-
-    getTileAt(6, 6).terrain_ = water_dat;
-    getTileAt(6, 10).terrain_ = water_dat;
-    getTileAt(6, 5).terrain_ = water_dat;
-    getTileAt(4, 5).terrain_ = water_dat;
-//    getTileAt(5, 5).terrain_ = water_dat;
-    getTileAt(5, 6).terrain_ = water_dat;
-    getTileAt(3, 7).terrain_ = water_dat;
-    getTileAt(4, 7).terrain_ = water_dat;
-    getTileAt(5, 7).terrain_ = water_dat;
-    getTileAt(6, 7).terrain_ = water_dat;
-    getTileAt(7, 7).terrain_ = water_dat;
-//    getTileAt(5, 8).terrain_ = water_dat;
-    getTileAt(5, 9).terrain_ = water_dat;
-    getTileAt(6, 9).terrain_ = water_dat;
-    getTileAt(4, 10).terrain_ = water_dat;
 }
 
 void Map::create(genie::ScnMap mapDescription)
@@ -130,7 +112,44 @@ int Map::width()
 
 float Map::elevationAt(const MapPos &position)
 {
-    return getTileAt(position.x / Map::TILE_SIZE, position.y / Map::TILE_SIZE).elevation_ * DataManager::Inst().terrainBlock().ElevHeight;
+    const int tileX = position.x / Map::TILE_SIZE;
+    const int tileY = position.y / Map::TILE_SIZE;
+    const MapTile &tile = getTileAt(tileX, tileY);
+    const float localX = position.x - tileX * Map::TILE_SIZE;
+    const float localY = position.y - tileY * Map::TILE_SIZE;
+
+    float elevation = tile.elevation_;
+
+    switch(tile.slopes.self) {
+    case res::TileSlopes::NorthWestUp:
+        elevation += 1. - localX / Map::TILE_SIZE;
+        break;
+    case res::TileSlopes::SouthEastUp:
+        elevation += localX / Map::TILE_SIZE;
+        break;
+    case res::TileSlopes::SouthWestUp:
+        elevation += 1. - localY / Map::TILE_SIZE;
+        break;
+    case res::TileSlopes::NorthEastUp:
+        elevation += localY / Map::TILE_SIZE;
+        break;
+    case res::TileSlopes::EastUp:
+        elevation += (localX + localY) / (Map::TILE_SIZE * 2);
+        break;
+    case res::TileSlopes::WestUp:
+        elevation += 1. - (localX + localY) / (Map::TILE_SIZE * 2);
+        break;
+    case res::TileSlopes::NorthUp:
+        elevation += ((Map::TILE_SIZE - localX) + localY) / (Map::TILE_SIZE * 2);
+        break;
+    case res::TileSlopes::SouthUp:
+        elevation += (localX + (Map::TILE_SIZE - localY)) / (Map::TILE_SIZE * 2);
+        break;
+    case res::TileSlopes::Flat:
+    default:
+        break;
+    }
+    return elevation * DataManager::Inst().terrainBlock().ElevHeight;
 }
 
 MapTile &Map::getTileAt(unsigned int col, unsigned int row)
