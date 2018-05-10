@@ -53,11 +53,11 @@ struct TileSlopes
         WestDown    = 15,
         EastDown    = 16,
 
-        SouthWestEastUp,
-        NorthWestEastUp,
+        SouthWestEastUp = 17,
+        NorthWestEastUp = 18,
 
-        NorthSouthEastUp,
-        NorthSouthWestUp,
+        NorthSouthEastUp = 19,
+        NorthSouthWestUp = 20,
     };
     Slope self = Flat;
 

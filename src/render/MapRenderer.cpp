@@ -140,7 +140,7 @@ void MapRenderer::setMap(MapPtr map)
 void MapRenderer::updateTexture()
 {
     if (m_mapRenderTexture.getSize().x != renderTarget_->getSize().x || m_mapRenderTexture.getSize().y != renderTarget_->getSize().y) {
-        m_mapRenderTexture.create(renderTarget_->getSize().x, renderTarget_->getSize().y, false);
+        m_mapRenderTexture.create(renderTarget_->getSize().x, renderTarget_->getSize().y);
     }
 
     m_mapRenderTexture.clear();
@@ -152,8 +152,8 @@ void MapRenderer::updateTexture()
     sf::CircleShape outline(Map::TILE_SIZE, 4);
     outline.setScale(1, 0.5);
     outline.setFillColor(sf::Color::Transparent);
-    outline.setOutlineThickness(1);
-    outline.setOutlineColor(sf::Color(255, 255, 255, 128));
+    outline.setOutlineThickness(3);
+    outline.setOutlineColor(sf::Color(255, 255, 255, 192));
 
 //    for (int col = m_rColEnd-1; col >= 0; col--) {
     for (int col = 0; col < m_rColEnd; col++) {
@@ -165,7 +165,6 @@ void MapRenderer::updateTexture()
             rect.x = col * Map::TILE_SIZE;
             rect.y = row * Map::TILE_SIZE;
             rect.z = mapTile.z;
-//            rect.z = mapTile.elevation_ * DataManager::Inst().terrainBlock().ElevHeight;
             rect.width = Map::TILE_SIZE;
             rect.height = Map::TILE_SIZE;
 

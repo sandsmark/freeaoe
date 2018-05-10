@@ -62,14 +62,14 @@ void Map::setUpSample()
     res::TerrainPtr water_dat = ResourceManager::Inst()->getTerrain(1);
 
     for (int i=3; i<6; i++) {
-        getTileAt(15, i).elevation_ = 1;
+        getTileAt(5, i).elevation_ = 1;
     }
 
     for (int i=3; i<6; i++) {
-        getTileAt(16, i).elevation_ = 1;
+        getTileAt(6, i).elevation_ = 1;
     }
 
-    getTileAt(14, 6).elevation_ = 1;
+    getTileAt(6, 2).elevation_ = 1;
 
     getTileAt(6, 6).terrain_ = water_dat;
     getTileAt(6, 10).terrain_ = water_dat;
@@ -318,6 +318,15 @@ void Map::updateTileBlend(int tileX, int tileY)
     } else if (neighborsAbove & East && neighborsAbove & South) {
         tile.slopes.self = TileSlopes::NorthSouthEastUp;
         tile.z += DataManager::Inst().terrainBlock().ElevHeight;
+    } else if (neighborsAbove == NorthWest) {
+        tile.slopes.self = TileSlopes::WestUp;
+    } else if (neighborsAbove == NorthEast) {
+        tile.slopes.self = TileSlopes::SouthUp;
+    } else if (neighborsAbove == SouthWest) {
+        tile.slopes.self = TileSlopes::NorthUp;
+        tile.z += DataManager::Inst().terrainBlock().ElevHeight;
+    } else if (neighborsAbove == SouthEast) {
+        tile.slopes.self = TileSlopes::EastUp;
     } else if (neighborsAbove & North) {
         tile.slopes.self = TileSlopes::SouthWestUp;
     } else if (neighborsAbove & South) {
@@ -328,15 +337,6 @@ void Map::updateTileBlend(int tileX, int tileY)
     } else if (neighborsAbove & West) {
         tile.slopes.self = TileSlopes::NorthWestUp;
         tile.z += DataManager::Inst().terrainBlock().ElevHeight;
-    } else if (neighborsAbove == NorthWest) {
-        tile.slopes.self = TileSlopes::WestUp;
-    } else if (neighborsAbove == NorthEast) {
-        tile.slopes.self = TileSlopes::SouthUp;
-    } else if (neighborsAbove == SouthWest) {
-        tile.slopes.self = TileSlopes::NorthUp;
-        tile.z += DataManager::Inst().terrainBlock().ElevHeight;
-    } else if (neighborsAbove == SouthEast) {
-        tile.slopes.self = TileSlopes::EastUp;
     }
 
     if (tile.slopes.self) {

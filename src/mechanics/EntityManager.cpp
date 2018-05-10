@@ -91,7 +91,7 @@ bool EntityManager::update(Time time)
 void EntityManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
 {
     if (m_outlineOverlay.getSize() != renderTarget->getSize()) {
-        m_outlineOverlay.create(renderTarget->getSize().x, renderTarget->getSize().y, false);
+        m_outlineOverlay.create(renderTarget->getSize().x, renderTarget->getSize().y);
     }
 
     m_outlineOverlay.clear(sf::Color::Transparent);
