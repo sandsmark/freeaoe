@@ -524,6 +524,9 @@ void Map::updateTileSlopes(int tileX, int tileY)
 
     tile.slopes.northWest = slopeAt(tileX - 1, tileY);
     tile.slopes.northEast = slopeAt(tileX, tileY + 1);
+
+    // Preload
+    tile.terrain_->slopedImage(tile.slopes, tileX, tileY);
 }
 
 const TileSlopes::Slope Map::slopeAt(const int x, const int y)

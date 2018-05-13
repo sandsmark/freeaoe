@@ -202,7 +202,7 @@ void MapRenderer::updateTexture()
                 m_textureTarget.draw(mapTile.terrain_->slopedImage(mapTile.slopes, col, row), spos);
             }
 
-            outline.setPosition(spos.x, spos.y);
+//            outline.setPosition(spos.x, spos.y);
 //            m_textureTarget.draw(outline);
         }
     }
