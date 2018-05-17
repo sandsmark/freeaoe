@@ -34,6 +34,7 @@
 
 class GameClient;
 class GameServer;
+class ActionPanel;
 
 namespace sf {
 class RenderTarget;
@@ -59,14 +60,17 @@ public:
 
     Size uiSize() const;
 
+    const std::shared_ptr<EntityManager> &entityManager() { return m_entityManager; }
+
 private:
     static Logger &log;
 
-    GameState(const GameState &other);
+    GameState(const GameState &other) = delete;
 
     std::shared_ptr<SfmlRenderTarget> renderTarget_;
 
-    EntityManager entity_manager_;
+    std::shared_ptr<EntityManager> m_entityManager;
+    std::unique_ptr<ActionPanel> m_actionPanel;
     /*
   GameServer *game_server_;
   GameClient *game_client_;

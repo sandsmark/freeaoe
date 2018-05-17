@@ -28,12 +28,12 @@ public:
     StateManager();
     virtual ~StateManager();
 
-    void addActiveState(GameState *state);
+    void addActiveState(std::shared_ptr<GameState> state);
 
-    GameState *getActiveState();
+    const std::shared_ptr<GameState> &getActiveState();
 
 private:
-    GameState *active_state_;
+    std::shared_ptr<GameState> active_state_;
 
     StateManager(const StateManager &other);
 };

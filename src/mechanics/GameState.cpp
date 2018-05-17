@@ -36,6 +36,7 @@
 #include "render/SfmlRenderTarget.h"
 #include "CompUnitData.h"
 #include "resource/DataManager.h"
+#include "render/ActionPanel.h"
 
 #define MOUSE_MOVE_EDGE_SIZE 10
 #define CAMERA_SPEED 1.
@@ -47,11 +48,11 @@ GameState::GameState(std::shared_ptr<SfmlRenderTarget> renderTarget) :
     m_cameraDeltaY(0),
     m_lastUpdate(0)
 {
+    m_entityManager = std::make_shared<EntityManager>();
     renderTarget_ = renderTarget;
-}
 
-GameState::GameState(const GameState &other)
-{
+    m_actionPanel = std::make_unique<ActionPanel>(renderTarget_);
+    m_actionPanel->setEntityManager(m_entityManager);
 }
 
 GameState::~GameState()
@@ -65,7 +66,7 @@ void GameState::setScenario(std::shared_ptr<genie::ScnFile> scenario)
 
 bool GameState::init()
 {
-    if (!entity_manager_.init()) {
+    if (!m_entityManager->init()) {
         return false;
     }
 
@@ -134,7 +135,7 @@ bool GameState::init()
                 if (scnunit.rotation > 0) {
                     unit->setAngle(scnunit.rotation * M_PI * 2. / 16.);
                 }
-                entity_manager_.add(unit);
+                m_entityManager->add(unit);
             }
         }
     } else {
@@ -142,11 +143,11 @@ bool GameState::init()
 
 //        // Mangudai
         Unit::Ptr unit = EntityFactory::Inst().createUnit(11, MapPos(48*3, 48*3, 0), 0, m_civilizations[0]);
-        entity_manager_.add(unit);
+        m_entityManager->add(unit);
 
-        entity_manager_.add(EntityFactory::Inst().createUnit(293, MapPos(48*5, 48*5, 0), 0, m_civilizations[0]));
+        m_entityManager->add(EntityFactory::Inst().createUnit(293, MapPos(48*5, 48*5, 0), 0, m_civilizations[0]));
 
-        entity_manager_.add(EntityFactory::Inst().createUnit(280, MapPos(48*10, 48*10, 0), 0, m_civilizations[0]));
+        m_entityManager->add(EntityFactory::Inst().createUnit(280, MapPos(48*10, 48*10, 0), 0, m_civilizations[0]));
 
 
         unit = EntityFactory::Inst().createUnit(109, MapPos(48*3, 48*3, 0), 0, m_civilizations[0]);
@@ -161,7 +162,7 @@ bool GameState::init()
             }
         }
 
-        entity_manager_.add(unit);
+        m_entityManager->add(unit);
         log.debug("Added unit at %", unit->position);
     }
 
@@ -169,7 +170,7 @@ bool GameState::init()
     mapRenderer_.setRenderTarget(renderTarget_);
     mapRenderer_.setMap(map_);
 
-    entity_manager_.setMap(map_);
+    m_entityManager->setMap(map_);
 
     return true;
 
@@ -208,26 +209,14 @@ bool GameState::init()
 void GameState::draw()
 {
     mapRenderer_.display();
-    entity_manager_.render(renderTarget_);
+    m_entityManager->render(renderTarget_);
 
     if (m_selecting) {
         renderTarget_->draw(m_selectionRect, sf::Color::Transparent, sf::Color::White);
     }
 
     renderTarget_->draw(m_uiOverlay, ScreenPos(0, 0));
-
-    for (const EntityManager::InterfaceButton &button : entity_manager_.currentButtons) {
-        ScreenPos position;
-        position.x = button.index % 5;
-        position.x = (position.x + 1) * 40;
-        position.y = button.index / 5;
-        position.y *= 40;
-        position.y += m_uiOverlay.getSize().y  - 40 * 4;
-        renderTarget_->draw(m_buttonBackground, button.position(m_uiOverlay.getSize()));
-        position.x += 2;
-        position.y += 2;
-        renderTarget_->draw(button.tex, position);
-    }
+    m_actionPanel->draw();
 
     renderTarget_->renderTarget_->draw(m_cursor);
 }
@@ -237,7 +226,7 @@ bool GameState::update(Time time)
     bool updated = false;
     updated = mapRenderer_.update(time) || updated;
 
-    updated = entity_manager_.update(time) || updated;
+    updated = m_entityManager->update(time) || updated;
 
     if (m_cameraDeltaX != 0 || m_cameraDeltaY != 0) {
         const int deltaTime = time - m_lastUpdate;
@@ -338,11 +327,22 @@ void GameState::handleEvent(sf::Event event)
         renderTarget_->camera()->setTargetPosition(cameraMapPos);
     }
 
+    if ((event.type != sf::Event::MouseButtonPressed && event.type != sf::Event::MouseButtonReleased)) {
+        return;
+    }
+
+    const ScreenPos mousePos(event.mouseButton.x, event.mouseButton.y);
+    if (m_actionPanel->rect().contains(mousePos)) {
+        m_actionPanel->handleEvent(event);
+        return;
+    } else {
+        m_actionPanel->releaseButtons();
+    }
+
     if (event.type == sf::Event::MouseButtonPressed) {
 //        if (event.mouseButton.y < 25) {
 //            // top bar
-//        } else if (event.mouseButton.y > 590) {
-
+//        } else if (event.mouseButton.y > uiSize().height - 210) {
 //            // bottom
 //        } else {
             if (event.mouseButton.button == sf::Mouse::Button::Left) {
@@ -357,18 +357,13 @@ void GameState::handleEvent(sf::Event event)
     if (event.type == sf::Event::MouseButtonReleased) {
         if (event.mouseButton.button == sf::Mouse::Button::Left && m_selecting) {
             MapRect mapSelectionRect = renderTarget_->camera()->absoluteMapRect(m_selectionRect);
-            entity_manager_.selectEntities(mapSelectionRect);
+            m_entityManager->selectEntities(mapSelectionRect);
             m_selectionRect = ScreenRect();
             m_selecting = false;
         } else if (event.mouseButton.button == sf::Mouse::Button::Right) {
-            entity_manager_.onRightClick(renderTarget_->camera()->absoluteMapPos(ScreenPos(event.mouseButton.x, event.mouseButton.y)));
+            m_entityManager->onRightClick(renderTarget_->camera()->absoluteMapPos(ScreenPos(event.mouseButton.x, event.mouseButton.y)));
         }
 
-        for (const EntityManager::InterfaceButton &button : entity_manager_.currentButtons) {
-            if (button.rect(m_uiOverlay.getSize()).contains(ScreenPos(event.mouseButton.x, event.mouseButton.y))) {
-                std::cerr << "================ " << button.index << std::endl;
-            }
-        }
     }
 }
 

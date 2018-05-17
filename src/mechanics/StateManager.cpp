@@ -27,7 +27,7 @@ StateManager::~StateManager()
 {
 }
 
-void StateManager::addActiveState(GameState *state)
+void StateManager::addActiveState(std::shared_ptr<GameState> state)
 {
     if (active_state_ != 0) {
         active_state_->cleanUp();
@@ -38,7 +38,7 @@ void StateManager::addActiveState(GameState *state)
     active_state_ = state;
 }
 
-GameState *StateManager::getActiveState()
+const std::shared_ptr<GameState> &StateManager::getActiveState()
 {
     return active_state_;
 }

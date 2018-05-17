@@ -34,14 +34,15 @@ public:
         sf::Texture tex;
         int index = 0;
         int interfacePage = 0;
+        bool pressed = false;
 
         ScreenPos position(const Size &screenSize) const {
             ScreenPos position;
             position.x = index % 5;
-            position.x = (position.x + 1) * 40;
+            position.x = (position.x) * 50 + 55;
             position.y = index / 5;
-            position.y *= 40;
-            position.y += screenSize.height  - 40 * 4;
+            position.y *= 50;
+            position.y += screenSize.height  - 170;
             return position;
         }
 

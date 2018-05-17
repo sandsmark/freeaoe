@@ -46,6 +46,7 @@ set(RENDER_SRC
     src/render/GraphicRender.cpp 
     src/render/MapRenderer.cpp
     src/render/SfmlRenderTarget.cpp
+    src/render/ActionPanel.cpp
     )
 
 set(SERVER_SRC 

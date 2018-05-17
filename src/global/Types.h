@@ -228,6 +228,9 @@ struct ScreenRect
     ScreenPos bottomLeft() const {
         return ScreenPos(x, y + height);
     }
+    float bottom() const {
+        return y + height;
+    }
     ScreenPos bottomRight() const {
         return ScreenPos(x + width, y + height);
     }

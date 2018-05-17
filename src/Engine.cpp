@@ -34,7 +34,7 @@ const sf::Clock Engine::GameClock;
 
 
 //------------------------------------------------------------------------------
-Engine::Engine() : renderWindow_(0)
+Engine::Engine()
 {
 
 }
@@ -43,8 +43,6 @@ Engine::Engine() : renderWindow_(0)
 Engine::~Engine()
 {
   log.info("Closing engine");
-  
-  delete renderWindow_;
 }
 
 //------------------------------------------------------------------------------
@@ -56,7 +54,7 @@ void Engine::start()
 
     // Start the game loop
     while (renderWindow_->isOpen()) {
-        IState *state = state_manager_.getActiveState();
+        std::shared_ptr<GameState> state = state_manager_.getActiveState();
 
         bool updated = false;
 
@@ -91,13 +89,13 @@ void Engine::start()
 //------------------------------------------------------------------------------
 bool Engine::setup(const std::string &scnFile)
 {
-  renderWindow_ = new sf::RenderWindow(sf::VideoMode(1280, 1024), "freeaoe");
+  renderWindow_ = std::make_unique<sf::RenderWindow>(sf::VideoMode(1280, 1024), "freeaoe");
   renderWindow_->setMouseCursorVisible(false);
   renderWindow_->setFramerateLimit(60);
   
   renderTarget_ = std::make_shared<SfmlRenderTarget>(*renderWindow_);
 
-  GameState *gameState = new GameState(renderTarget_);
+  std::shared_ptr<GameState> gameState = std::make_shared<GameState>(renderTarget_);
 
   if (!scnFile.empty()) {
       try {
