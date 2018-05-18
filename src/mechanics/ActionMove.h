@@ -28,6 +28,8 @@ namespace comp {
 class MapObject;
 }
 
+class EntityManager;
+
 namespace act {
 
 class MoveOnMap : public IAction
@@ -38,19 +40,20 @@ public:
 
     virtual bool update(Time time);
 
-    static std::shared_ptr<MoveOnMap> moveUnitTo(EntityPtr entity, MapPos destination, MapPtr map);
+    static std::shared_ptr<MoveOnMap> moveUnitTo(EntityPtr entity, MapPos destination, MapPtr map, EntityManager *entityManager);
 
 private:
-    MoveOnMap(MapPos destination, MapPtr map, Unit::Ptr unit);
+    MoveOnMap(MapPos destination, MapPtr map, Unit::Ptr unit, EntityManager *entityManager);
 
     std::vector<MapPos> findPath(const MapPos &start, const MapPos &end, int coarseness);
-    bool isPassable(int x, int y);
+    bool isPassable(const int x, const int y);
 
     static Logger &log;
 
     MapPtr m_map;
     MapPos dest_;
     std::vector<MapPos> m_path;
+    EntityManager *m_entityManager;
     MapPos m_currentTarget;
     std::vector<float> m_terrainMoveMultiplier;
     float speed_;

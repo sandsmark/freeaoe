@@ -188,7 +188,7 @@ void EntityManager::onRightClick(const MapPos &mapPos)
 
     for (const EntityPtr &entity : m_selectedEntities) {
         if (entity->type == Entity::Type::Unit) {
-            Entity::asUnit(entity)->setCurrentAction(act::MoveOnMap::moveUnitTo(entity, mapPos, m_map));
+            Entity::asUnit(entity)->setCurrentAction(act::MoveOnMap::moveUnitTo(entity, mapPos, m_map, this));
         }
     }
 

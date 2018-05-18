@@ -74,6 +74,8 @@ public:
 
     const EntitySet &selected();
 
+    const EntitySet &entities() const { return m_entities; }
+
     std::vector<InterfaceButton> currentButtons;
 
 private:

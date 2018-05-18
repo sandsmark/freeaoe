@@ -69,11 +69,12 @@ Logger &MoveOnMap::log = Logger::getLogger("freeaoe.MoveOnMap");
 
 static const float PATHFINDING_HEURISTIC_WEIGHT = 1.;
 
-MoveOnMap::MoveOnMap(MapPos destination, MapPtr map, Unit::Ptr unit) :
+MoveOnMap::MoveOnMap(MapPos destination, MapPtr map, Unit::Ptr unit, EntityManager *entityManager) :
     IAction(Type::Move),
     m_map(map),
     target_reached(false),
-    m_unit(unit)
+    m_unit(unit),
+    m_entityManager(entityManager)
 {
     dest_ = destination;
     last_update_ = 0;
@@ -117,6 +118,7 @@ bool MoveOnMap::update(Time time)
         }
         distanceLeft = std::hypot(m_path.back().x - unit->position.x, m_path.back().y - unit->position.y);
     }
+
     if (m_path.empty()) {
         target_reached = true;
         unit->removeAction(this);
@@ -124,11 +126,28 @@ bool MoveOnMap::update(Time time)
     }
 
     MapPos nextPos = m_path.back();
+    if (!isPassable(nextPos.x, nextPos.y)) {
+        m_path = findPath(unit->position, dest_, 1);
+        if (m_path.empty()) {
+            m_path = findPath(unit->position, dest_, 20);
+            if (m_path.empty()) {
+                target_reached = true;
+                unit->removeAction(this);
+            }
+        }
+
+        return false;
+    }
 
     const float direction = std::atan2(nextPos.y - unit->position.y, nextPos.x - unit->position.x);
     MapPos newPos = unit->position;
     newPos.x += cos(direction) * movement;
     newPos.y += sin(direction) * movement;
+
+    if (!isPassable(newPos.x, newPos.y)) {
+        newPos = nextPos;
+    }
+
 
     ScreenPos sourceScreen = unit->position.toScreen();
     ScreenPos targetScreen = newPos.toScreen();
@@ -145,7 +164,7 @@ bool MoveOnMap::update(Time time)
     return true;
 }
 
-std::shared_ptr<MoveOnMap> MoveOnMap::moveUnitTo(EntityPtr entity, MapPos destination, MapPtr map)
+std::shared_ptr<MoveOnMap> MoveOnMap::moveUnitTo(EntityPtr entity, MapPos destination, MapPtr map, EntityManager *entityManager)
 {
     std::shared_ptr<Unit> unit = Entity::asUnit(entity);
     if (!unit) {
@@ -157,7 +176,7 @@ std::shared_ptr<MoveOnMap> MoveOnMap::moveUnitTo(EntityPtr entity, MapPos destin
         log.info("Handled unit that can't move %s", entity->readableName);
         return nullptr;
     }
-    std::shared_ptr<MoveOnMap> action (new act::MoveOnMap(destination, map, unit));
+    std::shared_ptr<MoveOnMap> action (new act::MoveOnMap(destination, map, unit, entityManager));
 
     action->m_terrainMoveMultiplier = DataManager::Inst().getTerrainRestriction(unit->data.TerrainRestriction).PassableBuildableDmgMultiplier;
     action->speed_ = unit->data.Speed;
@@ -287,18 +306,52 @@ std::vector<MapPos> MoveOnMap::findPath(const MapPos &start, const MapPos &end, 
     }
 
     return path;
+    std::vector<MapPos> cleanedPath;
+    cleanedPath.push_back(path[0]);
+    for (int i=1; i<path.size() - 1; i++) {
+        double lastAngle = std::atan2((path[i].y - path[i-1].y), (path[i].x - path[i-1].x));
+        double nextAngle = std::atan2((path[i+1].y - path[i].y), (path[i+1].x - path[i].x));
+        if (lastAngle != nextAngle) {
+            cleanedPath.push_back(path[i]);
+        }
+    }
+    cleanedPath.push_back(path.back());
+
+    std::cout << cleanedPath.size() << "/" << path.size() << std::endl;
+
+    return cleanedPath;
 
 }
 
-bool MoveOnMap::isPassable(int x, int y)
+bool MoveOnMap::isPassable(const int x, const int y)
 {
-    x /= Map::TILE_SIZE;
-    y /= Map::TILE_SIZE;
-    if (IS_UNLIKELY(x < 0 || y < 0 || x >= m_map->getCols() || y >= m_map->getRows())) {
+    const int tileX = x / Map::TILE_SIZE;
+    const int tileY = y / Map::TILE_SIZE;
+    if (IS_UNLIKELY(tileX < 0 || tileY < 0 || tileX >= m_map->getCols() || tileY >= m_map->getRows())) {
         return false;
     }
 
-    return (m_terrainMoveMultiplier[m_map->getTileAt(x, y).terrainId()] > 0);
+    if (m_terrainMoveMultiplier[m_map->getTileAt(tileX, tileY).terrainId()] == 0) {
+        return false;
+    }
+
+    const MapPos mapPos(x, y);
+    Unit::Ptr unit = m_unit.lock();
+    for (const EntityPtr &other : m_entityManager->entities()) {
+        if (other.get() == unit.get() || other->type != Entity::Type::Unit) {
+            continue;
+        }
+        const Unit::Ptr otherUnit = Entity::asUnit(other);
+
+        if (std::abs(other->position.x - mapPos.x) > (otherUnit->data.CollisionSize.first + unit->data.CollisionSize.first) * Map::TILE_SIZE) {
+            continue;
+        }
+        if (std::abs(other->position.y - mapPos.y) < (otherUnit->data.CollisionSize.second  + unit->data.CollisionSize.second) * Map::TILE_SIZE) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 }
