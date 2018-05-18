@@ -95,6 +95,7 @@ void ActionPanel::handleEvent(sf::Event event)
                 m_dirty = true;
             }
             button.pressed = false;
+            handleButtonClick(button);
         }
     }
 }
@@ -203,6 +204,8 @@ void ActionPanel::updateButtons()
 
 void ActionPanel::addCreateButtons(const std::shared_ptr<Unit> &unit)
 {
+    m_currentPage = 0;
+
     bool hasNext = false;
     bool hasPrevious = false;
     for (const genie::Unit *creatable : unit->creatableEntities()) {
@@ -224,11 +227,8 @@ void ActionPanel::addCreateButtons(const std::shared_ptr<Unit> &unit)
         }
         button.index = std::max(creatable->Creatable.ButtonID - 1, 0);
         button.interfacePage = creatable->InterfaceKind;
-        button.createId = creatable->ID;
+        button.targetId = creatable->ID;
         button.iconId = creatable->IconID;
-
-        // hax for testing
-        m_currentPage = button.interfacePage;
 
         currentButtons.push_back(std::move(button));
     }
@@ -240,13 +240,53 @@ void ActionPanel::addCreateButtons(const std::shared_ptr<Unit> &unit)
         currentButtons.push_back(rightButton);
     }
 
-    if (hasPrevious) {
-        InterfaceButton leftButton;
-        leftButton.action = Command::PreviousPage;
-        leftButton.index = 14;
-        currentButtons.push_back(leftButton);
+    if (unit->data.InterfaceKind == genie::Unit::CiviliansInterface) {
+        InterfaceButton backButton;
+        backButton.action = Command::PreviousPage;
+        backButton.index = 14;
+        backButton.interfacePage = genie::Unit::BuildingsInterface;
+        currentButtons.push_back(backButton);
+        backButton.interfacePage = genie::Unit::MilitaryBuildingsInterface;
+        currentButtons.push_back(backButton);
     }
 
+    if (unit->data.InterfaceKind == genie::Unit::CiviliansInterface) {
+        InterfaceButton civilianButton;
+        civilianButton.action = Command::BuildCivilian;
+        civilianButton.index = 0;
+        currentButtons.push_back(civilianButton);
+
+        InterfaceButton militaryButton;
+        militaryButton.action = Command::BuildMilitary;
+        militaryButton.index = 1;
+        currentButtons.push_back(militaryButton);
+
+        InterfaceButton repairButton;
+        repairButton.action = Command::Repair;
+        repairButton.index = 2;
+        currentButtons.push_back(repairButton);
+    }
+}
+
+void ActionPanel::handleButtonClick(const ActionPanel::InterfaceButton &button)
+{
+    if (button.type != InterfaceButton::Other) {
+        return;
+    }
+
+    switch(button.action) {
+    case Command::BuildMilitary:
+        m_currentPage = genie::Unit::MilitaryBuildingsInterface;
+        break;
+    case Command::BuildCivilian:
+        m_currentPage = genie::Unit::BuildingsInterface;
+        break;
+    case Command::PreviousPage:
+        m_currentPage = 0;
+        break;
+    default:
+        break;
+    }
 }
 
 ScreenPos ActionPanel::buttonPosition(const int index) const

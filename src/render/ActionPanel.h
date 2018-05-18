@@ -114,7 +114,7 @@ private:
             Other
         };
 
-        int createId = 0;
+        int targetId = 0;
         int iconId = 0;
 
         Command action;
@@ -128,6 +128,7 @@ private:
 
     void updateButtons();
     void addCreateButtons(const std::shared_ptr<Unit> &unit);
+    void handleButtonClick(const InterfaceButton &button);
 
     ScreenPos buttonPosition(const int index) const;
     ScreenRect buttonRect(const int index) const;
