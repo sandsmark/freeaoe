@@ -14,15 +14,10 @@ class SfmlRenderTarget;
 class EntityManager;
 typedef std::unordered_set<std::shared_ptr<Entity>> EntitySet;
 
-namespace genie{
-class SlpFile;
-typedef std::shared_ptr<SlpFile> SlpFilePtr;
-}
-
 class ActionPanel : public IState
 {
 public:
-    enum class Icon : int {
+    enum class Command : int {
         Cancel,
         AbortPatrol,
         Ungarrison,
@@ -112,10 +107,23 @@ public:
 
 private:
     struct InterfaceButton {
-        sf::Texture tex;
+        enum Type {
+            CreateUnit,
+            CreateBuilding,
+            Research,
+            Other
+        };
+
+        int createId = 0;
+        int iconId = 0;
+
+        Command action;
+
         int index = 0;
         bool pressed = false;
         int interfacePage = 0;
+
+        Type type = Other;
     };
 
     void updateButtons();
@@ -127,11 +135,12 @@ private:
     std::shared_ptr<SfmlRenderTarget> m_renderTarget;
     std::shared_ptr<EntityManager> m_entityManager;
     ScreenRect m_rect;
-    std::unordered_map<Icon, sf::Texture> m_icons;
-    genie::SlpFilePtr m_unitIconsSlp;
-    genie::SlpFilePtr m_buildingIconsSlp;
-    genie::SlpFilePtr m_actionIconsSlp;
-    genie::SlpFilePtr m_researchIconsSlp;
+
+    std::unordered_map<Command, sf::Texture> m_commandIcons;
+    std::unordered_map<int, sf::Texture> m_unitIcons;
+    std::unordered_map<int, sf::Texture> m_buildingIcons;
+    std::unordered_map<int, sf::Texture> m_researchIcons;
+
     int m_currentPage = 3;
     int m_buttonOffset = 0;
 

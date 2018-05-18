@@ -15,46 +15,51 @@ ActionPanel::ActionPanel(const std::shared_ptr<SfmlRenderTarget> &renderTarget) 
 
 bool ActionPanel::init()
 {
-    m_unitIconsSlp = ResourceManager::Inst()->getSlp(ResourceManager::filenameID("btnunit.shp"));
-    if (!m_unitIconsSlp) {
+    genie::SlpFilePtr unitIconsSlp = ResourceManager::Inst()->getSlp(ResourceManager::filenameID("btnunit.shp"), ResourceManager::ResourceType::Interface);
+    if (!unitIconsSlp) {
         std::cerr << "Failed to load unit icons" << std::endl;
         return false;
     }
+    for (int i=0; i<unitIconsSlp->getFrameCount(); i++) {
+        m_unitIcons[i].loadFromImage(res::Resource::convertFrameToImage(unitIconsSlp->getFrame(i)));
+    }
 
     // ico_bld1-4.shp looks identical, for some reason
-    m_buildingIconsSlp = ResourceManager::Inst()->getSlp(ResourceManager::filenameID("ico_bld2.shp"));
-    if (!m_buildingIconsSlp) {
+    genie::SlpFilePtr buildingIconsSlp = ResourceManager::Inst()->getSlp(ResourceManager::filenameID("ico_bld2.shp"), ResourceManager::ResourceType::Interface);
+    if (!buildingIconsSlp) {
         std::cerr << "Failed to load building icons" << std::endl;
         return false;
     }
-
-    m_actionIconsSlp = ResourceManager::Inst()->getSlp(ResourceManager::filenameID("btncmd.shp"));
-    if (!m_actionIconsSlp) {
-        std::cerr << "Failed to load action icons" << std::endl;
-        return false;
+    for (int i=0; i<buildingIconsSlp->getFrameCount(); i++) {
+        m_buildingIcons[i].loadFromImage(res::Resource::convertFrameToImage(buildingIconsSlp->getFrame(i)));
     }
 
-    m_researchIconsSlp = ResourceManager::Inst()->getSlp(ResourceManager::filenameID("btntech.shp"));
-    if (!m_researchIconsSlp) {
+    genie::SlpFilePtr researchIconsSlp = ResourceManager::Inst()->getSlp(ResourceManager::filenameID("btntech.shp"), ResourceManager::ResourceType::Interface);
+    if (!researchIconsSlp) {
         std::cerr << "Failed to load research icons" << std::endl;
         return false;
     }
+    for (int i=0; i<researchIconsSlp->getFrameCount(); i++) {
+        m_researchIcons[i].loadFromImage(res::Resource::convertFrameToImage(researchIconsSlp->getFrame(i)));
+    }
 
-    genie::SlpFilePtr icons = ResourceManager::Inst()->getSlp(50721, ResourceManager::ResourceType::Interface);
-    std::cout << icons->getFrameCount() << std::endl;
-    std::cout << int(Icon::IconCount) << std::endl;
-    for (int i=0; i<int(Icon::IconCount); i++) {
-        if (i >= icons->getFrameCount()) {
+    genie::SlpFilePtr commandIconsSlp = ResourceManager::Inst()->getSlp(ResourceManager::filenameID("btncmd.shp"), ResourceManager::ResourceType::Interface);
+    if (!commandIconsSlp) {
+        std::cerr << "Failed to load action icons" << std::endl;
+        return false;
+    }
+    for (int i=0; i<int(Command::IconCount); i++) {
+        if (i >= commandIconsSlp->getFrameCount()) {
             std::cerr << "icon out of range " << i << std::endl;
-            break;
+            return false;
         }
-        m_icons[Icon(i)].loadFromImage(res::Resource::convertFrameToImage(icons->getFrame(i)));
+        m_commandIcons[Command(i)].loadFromImage(res::Resource::convertFrameToImage(commandIconsSlp->getFrame(i)));
     }
 
     { // hax
-        sf::Image prevImage = res::Resource::convertFrameToImage(icons->getFrame(int(Icon::NextPage)));
+        sf::Image prevImage = res::Resource::convertFrameToImage(commandIconsSlp->getFrame(int(Command::NextPage)));
         prevImage.flipHorizontally();
-        m_icons[Icon::PreviousPage].loadFromImage(prevImage);
+        m_commandIcons[Command::PreviousPage].loadFromImage(prevImage);
     }
 
     return m_entityManager != nullptr;
@@ -134,7 +139,21 @@ void ActionPanel::draw()
         m_renderTarget->draw(bevelRect);
         m_renderTarget->draw(shadowRect);
 
-        m_renderTarget->draw(button.tex, buttonPosition(button.index));
+        switch(button.type) {
+        case InterfaceButton::CreateBuilding:
+            m_renderTarget->draw(m_buildingIcons[button.iconId], buttonPosition(button.index));
+            break;
+        case InterfaceButton::CreateUnit:
+            m_renderTarget->draw(m_unitIcons[button.iconId], buttonPosition(button.index));
+            break;
+        case InterfaceButton::Research:
+            m_renderTarget->draw(m_researchIcons[button.iconId], buttonPosition(button.index));
+            break;
+        case InterfaceButton::Other:
+            m_renderTarget->draw(m_commandIcons[button.action], buttonPosition(button.index));
+            break;
+        }
+//        m_renderTarget->draw(button.tex, buttonPosition(button.index));
     }
 }
 
@@ -187,11 +206,6 @@ void ActionPanel::addCreateButtons(const std::shared_ptr<Unit> &unit)
     bool hasNext = false;
     bool hasPrevious = false;
     for (const genie::Unit *creatable : unit->creatableEntities()) {
-        if (creatable->IconID >= m_unitIconsSlp->getFrameCount()) {
-            std::cerr << "invalid icon id: " << creatable->IconID << std::endl;
-            continue;
-        }
-
         if (creatable->Creatable.ButtonID < m_buttonOffset) {
             hasPrevious = true;
             continue;
@@ -204,12 +218,14 @@ void ActionPanel::addCreateButtons(const std::shared_ptr<Unit> &unit)
 
         InterfaceButton button;
         if (unit->data.InterfaceKind == genie::Unit::CiviliansInterface) {
-            button.tex.loadFromImage(res::Resource::convertFrameToImage(m_buildingIconsSlp->getFrame(creatable->IconID)));
+            button.type = InterfaceButton::CreateBuilding;
         } else {
-            button.tex.loadFromImage(res::Resource::convertFrameToImage(m_unitIconsSlp->getFrame(creatable->IconID)));
+            button.type = InterfaceButton::CreateUnit;
         }
         button.index = std::max(creatable->Creatable.ButtonID - 1, 0);
         button.interfacePage = creatable->InterfaceKind;
+        button.createId = creatable->ID;
+        button.iconId = creatable->IconID;
 
         // hax for testing
         m_currentPage = button.interfacePage;
@@ -219,14 +235,14 @@ void ActionPanel::addCreateButtons(const std::shared_ptr<Unit> &unit)
 
     if (hasNext) {
         InterfaceButton rightButton;
-        rightButton.tex = m_icons[Icon::NextPage];
+        rightButton.action = Command::NextPage;
         rightButton.index = 14;
         currentButtons.push_back(rightButton);
     }
 
     if (hasPrevious) {
         InterfaceButton leftButton;
-        leftButton.tex = m_icons[Icon::PreviousPage];
+        leftButton.action = Command::PreviousPage;
         leftButton.index = 14;
         currentButtons.push_back(leftButton);
     }
