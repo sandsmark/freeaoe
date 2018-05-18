@@ -67,6 +67,10 @@ void ActionPanel::handleEvent(sf::Event event)
     }
 
     for (InterfaceButton &button : currentButtons) {
+        if (button.interfacePage != m_currentPage) {
+            continue;
+        }
+
         if (!buttonRect(button.index).contains(ScreenPos(event.mouseButton.x, event.mouseButton.y))) {
             if (button.pressed) {
                 m_dirty = true;
@@ -75,6 +79,7 @@ void ActionPanel::handleEvent(sf::Event event)
             button.pressed = false;
             continue;
         }
+
         if (event.type == sf::Event::MouseButtonPressed) {
             if (button.pressed) {
                 m_dirty = true;
@@ -108,6 +113,10 @@ bool ActionPanel::update(Time /*time*/)
 void ActionPanel::draw()
 {
     for (const InterfaceButton &button : currentButtons) {
+        if (button.interfacePage != m_currentPage) {
+            continue;
+        }
+
         sf::RectangleShape bevelRect(Size(40, 40));
         sf::RectangleShape shadowRect(Size(38, 38));
 
@@ -168,15 +177,18 @@ void ActionPanel::updateButtons()
         return;
     }
 
+    if (unit->data.InterfaceKind == genie::Unit::CiviliansInterface || unit->data.InterfaceKind == genie::Unit::BuildingsInterface) {
+        addCreateButtons(unit);
+    }
+}
+
+void ActionPanel::addCreateButtons(const std::shared_ptr<Unit> &unit)
+{
     bool hasNext = false;
     bool hasPrevious = false;
     for (const genie::Unit *creatable : unit->creatableEntities()) {
         if (creatable->IconID >= m_unitIconsSlp->getFrameCount()) {
             std::cerr << "invalid icon id: " << creatable->IconID << std::endl;
-            continue;
-        }
-
-        if (creatable->InterfaceKind != m_currentPage) {
             continue;
         }
 
@@ -197,6 +209,10 @@ void ActionPanel::updateButtons()
             button.tex.loadFromImage(res::Resource::convertFrameToImage(m_unitIconsSlp->getFrame(creatable->IconID)));
         }
         button.index = std::max(creatable->Creatable.ButtonID - 1, 0);
+        button.interfacePage = creatable->InterfaceKind;
+
+        // hax for testing
+        m_currentPage = button.interfacePage;
 
         currentButtons.push_back(std::move(button));
     }
@@ -214,6 +230,7 @@ void ActionPanel::updateButtons()
         leftButton.index = 14;
         currentButtons.push_back(leftButton);
     }
+
 }
 
 ScreenPos ActionPanel::buttonPosition(const int index) const

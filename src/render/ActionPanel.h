@@ -9,6 +9,7 @@
 #include <unordered_set>
 
 class Entity;
+class Unit;
 class SfmlRenderTarget;
 class EntityManager;
 typedef std::unordered_set<std::shared_ptr<Entity>> EntitySet;
@@ -114,9 +115,12 @@ private:
         sf::Texture tex;
         int index = 0;
         bool pressed = false;
+        int interfacePage = 0;
     };
 
     void updateButtons();
+    void addCreateButtons(const std::shared_ptr<Unit> &unit);
+
     ScreenPos buttonPosition(const int index) const;
     ScreenRect buttonRect(const int index) const;
 
@@ -128,7 +132,7 @@ private:
     genie::SlpFilePtr m_buildingIconsSlp;
     genie::SlpFilePtr m_actionIconsSlp;
     genie::SlpFilePtr m_researchIconsSlp;
-    int m_currentPage = 10;
+    int m_currentPage = 3;
     int m_buttonOffset = 0;
 
     EntitySet m_selectedEntities;
