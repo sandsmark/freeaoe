@@ -51,6 +51,12 @@ bool ActionPanel::init()
         m_icons[Icon(i)].loadFromImage(res::Resource::convertFrameToImage(icons->getFrame(i)));
     }
 
+    { // hax
+        sf::Image prevImage = res::Resource::convertFrameToImage(icons->getFrame(int(Icon::NextPage)));
+        prevImage.flipHorizontally();
+        m_icons[Icon::PreviousPage].loadFromImage(prevImage);
+    }
+
     return m_entityManager != nullptr;
 }
 
@@ -200,6 +206,13 @@ void ActionPanel::updateButtons()
         rightButton.tex = m_icons[Icon::NextPage];
         rightButton.index = 14;
         currentButtons.push_back(rightButton);
+    }
+
+    if (hasPrevious) {
+        InterfaceButton leftButton;
+        leftButton.tex = m_icons[Icon::PreviousPage];
+        leftButton.index = 14;
+        currentButtons.push_back(leftButton);
     }
 }
 

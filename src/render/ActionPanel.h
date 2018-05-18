@@ -90,7 +90,9 @@ public:
         BoxFormationEnabled,
         FlankFormationEnabled,
         SpreadOutFormationEnabled,
-        IconCount
+        IconCount,
+
+        PreviousPage
     };
 
     ActionPanel(const std::shared_ptr<SfmlRenderTarget> &renderTarget);
