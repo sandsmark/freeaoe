@@ -30,33 +30,6 @@ typedef std::unordered_set<EntityPtr> EntitySet;
 class EntityManager
 {
 public:
-    struct InterfaceButton {
-        sf::Texture tex;
-        int index = 0;
-        int interfacePage = 0;
-        bool pressed = false;
-
-        ScreenPos position(const Size &screenSize) const {
-            ScreenPos position;
-            position.x = index % 5;
-            position.x = (position.x) * 50 + 55;
-            position.y = index / 5;
-            position.y *= 50;
-            position.y += screenSize.height  - 170;
-            return position;
-        }
-
-        ScreenRect rect(const Size &screenSize) const {
-            ScreenRect rect;
-            const ScreenPos screenPos = position(screenSize);
-            rect.x = screenPos.x;
-            rect.y = screenPos.y;
-            rect.width = 40;
-            rect.height = 40;
-            return rect;
-        }
-    };
-
     EntityManager();
     virtual ~EntityManager();
 
@@ -72,25 +45,16 @@ public:
     void selectEntities(const MapRect &selectionRect);
     void setMap(MapPtr map);
 
-    const EntitySet &selected();
+    const EntitySet &selected() const { return m_selectedEntities; }
 
     const EntitySet &entities() const { return m_entities; }
 
-    std::vector<InterfaceButton> currentButtons;
-
 private:
-    void updateButtons();
-
     EntitySet m_entities;
     EntitySet m_selectedEntities;
     MapPtr m_map;
     sf::RenderTexture m_outlineOverlay;
     MoveTargetMarker::Ptr m_moveTargetMarker;
-
-    genie::SlpFilePtr m_unitIconsSlp;
-    genie::SlpFilePtr m_buildingIconsSlp;
-    genie::SlpFilePtr m_actionIconsSlp;
-    genie::SlpFilePtr m_researchIconsSlp;
 };
 
 #endif // ENTITYMANAGER_H

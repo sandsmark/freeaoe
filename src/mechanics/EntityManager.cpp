@@ -45,30 +45,6 @@ void EntityManager::add(EntityPtr entity)
 
 bool EntityManager::init()
 {
-    m_unitIconsSlp = ResourceManager::Inst()->getSlp(ResourceManager::filenameID("btnunit.shp"));
-    if (!m_unitIconsSlp) {
-        std::cerr << "Failed to load unit icons" << std::endl;
-        return false;
-    }
-
-    // ico_bld1-4.shp looks identical, for some reason
-    m_buildingIconsSlp = ResourceManager::Inst()->getSlp(ResourceManager::filenameID("ico_bld2.shp"));
-    if (!m_buildingIconsSlp) {
-        std::cerr << "Failed to load building icons" << std::endl;
-        return false;
-    }
-
-    m_actionIconsSlp = ResourceManager::Inst()->getSlp(ResourceManager::filenameID("btncmd.shp"));
-    if (!m_actionIconsSlp) {
-        std::cerr << "Failed to load action icons" << std::endl;
-        return false;
-    }
-
-    m_researchIconsSlp = ResourceManager::Inst()->getSlp(ResourceManager::filenameID("btntech.shp"));
-    if (!m_researchIconsSlp) {
-        std::cerr << "Failed to load research icons" << std::endl;
-        return false;
-    }
 
     m_moveTargetMarker = std::make_shared<MoveTargetMarker>();
 
@@ -226,51 +202,9 @@ void EntityManager::selectEntities(const MapRect &selectionRect)
     if (m_selectedEntities.empty()) {
         std::cout << "Unable to find anything to select in " << selectionRect << std::endl;
     }
-
-    updateButtons();
 }
 
 void EntityManager::setMap(MapPtr map)
 {
     m_map = map;
-}
-
-const EntitySet &EntityManager::selected()
-{
-    return m_selectedEntities;
-}
-
-void EntityManager::updateButtons()
-{
-    currentButtons.clear();
-    if (m_selectedEntities.empty()) {
-        return;
-    }
-
-    Unit::Ptr unit = Entity::asUnit(*selected().begin());
-    if (!unit) {
-        return;
-    }
-
-    for (const genie::Unit *creatable : unit->creatableEntities()) {
-        if (creatable->IconID >= m_unitIconsSlp->getFrameCount()) {
-            std::cerr << "invalid icon id: " << creatable->IconID << std::endl;
-            continue;
-        }
-
-        InterfaceButton button;
-        if (unit->data.InterfaceKind == genie::Unit::CiviliansInterface) {
-            button.tex.loadFromImage(res::Resource::convertFrameToImage(m_buildingIconsSlp->getFrame(creatable->IconID)));
-        } else {
-            button.tex.loadFromImage(res::Resource::convertFrameToImage(m_unitIconsSlp->getFrame(creatable->IconID)));
-        }
-        button.index = std::max(creatable->Creatable.ButtonID - 1, 0);
-        button.interfacePage = creatable->InterfaceKind;
-//        std::cerr << button.index << " " << LanguageManager::getString(creatable->LanguageDLLName) << " " << LanguageManager::getString(creatable->LanguageDLLCreation) << std::endl;;
-//        std::cerr << int(creatable->InterfaceKind) << std::endl;
-//        std::cerr << int(unit->data.InterfaceKind) << std::endl;
-
-
-        currentButtons.push_back(std::move(button));
-    }
 }

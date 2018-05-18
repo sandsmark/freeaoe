@@ -70,6 +70,10 @@ bool GameState::init()
         return false;
     }
 
+    if (!m_actionPanel->init()) {
+        return false;
+    }
+
     std::shared_ptr<genie::SlpFile> overlayFile = ResourceManager::Inst()->getUiOverlay(ResourceManager::Ui1280x1024, ResourceManager::Viking);
     if (overlayFile) {
         m_uiOverlay.loadFromImage(res::Resource::convertFrameToImage(overlayFile->getFrame()));
@@ -227,6 +231,7 @@ bool GameState::update(Time time)
     updated = mapRenderer_.update(time) || updated;
 
     updated = m_entityManager->update(time) || updated;
+    updated = m_actionPanel->update(time) || updated;
 
     if (m_cameraDeltaX != 0 || m_cameraDeltaY != 0) {
         const int deltaTime = time - m_lastUpdate;
