@@ -202,7 +202,7 @@ void MapRenderer::updateTexture()
             }
 
             outline.setPosition(spos.x, spos.y);
-            m_textureTarget.draw(outline);
+//            m_textureTarget.draw(outline);
         }
     }
 

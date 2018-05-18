@@ -55,18 +55,27 @@ void Map::setUpSample()
 
     MapTile grass;
     grass.elevation_ = 0;
-    grass.terrain_ = ResourceManager::Inst()->getTerrain(2);
+    grass.terrain_ = ResourceManager::Inst()->getTerrain(0);
 
     tiles_.resize(cols_ * rows_, grass);
 
     res::TerrainPtr water_dat = ResourceManager::Inst()->getTerrain(1);
 
-    for (int i=3; i<6; i++) {
-        getTileAt(5, i).elevation_ = 1;
+    for (int i=6; i<10; i++) {
+        getTileAt(0, i).terrain_ = ResourceManager::Inst()->getTerrain(2);
+        getTileAt(1, i).terrain_ = ResourceManager::Inst()->getTerrain(2);
+        getTileAt(2, i).terrain_ = water_dat;
+    }
+    for (int i=4; i<6; i++) {
+        getTileAt(i, 10).terrain_ = water_dat;
     }
 
     for (int i=3; i<6; i++) {
-        getTileAt(6, i).elevation_ = 1;
+        getTileAt(7, i).elevation_ = 1;
+    }
+
+    for (int i=3; i<6; i++) {
+        getTileAt(8, i).elevation_ = 1;
     }
 }
 
