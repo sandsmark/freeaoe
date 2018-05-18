@@ -248,9 +248,7 @@ void ActionPanel::addCreateButtons(const std::shared_ptr<Unit> &unit)
         currentButtons.push_back(backButton);
         backButton.interfacePage = genie::Unit::MilitaryBuildingsInterface;
         currentButtons.push_back(backButton);
-    }
 
-    if (unit->data.InterfaceKind == genie::Unit::CiviliansInterface) {
         InterfaceButton civilianButton;
         civilianButton.action = Command::BuildCivilian;
         civilianButton.index = 0;
