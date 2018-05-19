@@ -125,35 +125,35 @@ float Map::elevationAt(const MapPos &position)
     const int tileX = position.x / Constants::TILE_SIZE;
     const int tileY = position.y / Constants::TILE_SIZE;
     const MapTile &tile = getTileAt(tileX, tileY);
-    const float localX = position.x - tileX * Constants::TILE_SIZE;
-    const float localY = position.y - tileY * Constants::TILE_SIZE;
+    const float localX = position.x / Constants::TILE_SIZE - tileX;
+    const float localY = position.y / Constants::TILE_SIZE - tileY;
 
     float elevation = tile.elevation_;
 
     switch(tile.slopes.self) {
     case res::TileSlopes::NorthWestUp:
-        elevation += 1. - localX / Constants::TILE_SIZE;
+        elevation += 1. - localX;
         break;
     case res::TileSlopes::SouthEastUp:
-        elevation += localX / Constants::TILE_SIZE;
+        elevation += localX;
         break;
     case res::TileSlopes::SouthWestUp:
-        elevation += 1. - localY / Constants::TILE_SIZE;
+        elevation += 1. - localY;
         break;
     case res::TileSlopes::NorthEastUp:
-        elevation += localY / Constants::TILE_SIZE;
+        elevation += localY;
         break;
     case res::TileSlopes::EastUp:
-        elevation += (localX + localY) / (Constants::TILE_SIZE * 2);
+        elevation += localX * localY;
         break;
     case res::TileSlopes::WestUp:
-        elevation += 1. - (localX + localY) / (Constants::TILE_SIZE * 2);
+        elevation += (1. - localX) * (1. - localY);
         break;
     case res::TileSlopes::NorthUp:
-        elevation += ((Constants::TILE_SIZE - localX) + localY) / (Constants::TILE_SIZE * 2);
+        elevation += (1. - localX) * localY;
         break;
     case res::TileSlopes::SouthUp:
-        elevation += (localX + (Constants::TILE_SIZE - localY)) / (Constants::TILE_SIZE * 2);
+        elevation += localX * (1. - localY);
         break;
     case res::TileSlopes::Flat:
     default:
