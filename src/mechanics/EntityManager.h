@@ -23,6 +23,10 @@
 #include "Map.h"
 class SfmlRenderTarget;
 
+class Camera;
+typedef std::shared_ptr<Camera> CameraPtr;
+
+//class CameraPtr;
 // IDEA: Class containing all entities, (adds, removes, updates them).
 // Base class (EntitySpace?)
 typedef std::unordered_set<EntityPtr> EntitySet;
@@ -42,7 +46,7 @@ public:
 
     void onRightClick(const MapPos &mapPos);
 
-    void selectEntities(const MapRect &selectionRect);
+    void selectEntities(const ScreenRect &selectionRect, const CameraPtr &camera);
     void setMap(MapPtr map);
 
     const EntitySet &selected() const { return m_selectedEntities; }

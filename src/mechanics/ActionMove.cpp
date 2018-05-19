@@ -24,6 +24,7 @@
 #include "CompMapObject.h"
 #include "CompUnitData.h"
 #include "resource/DataManager.h"
+#include "global/Constants.h"
 
 namespace { // anonymous namespace, don't export this
 struct PathPoint {
@@ -325,8 +326,8 @@ std::vector<MapPos> MoveOnMap::findPath(const MapPos &start, const MapPos &end, 
 
 bool MoveOnMap::isPassable(const int x, const int y)
 {
-    const int tileX = x / Map::TILE_SIZE;
-    const int tileY = y / Map::TILE_SIZE;
+    const int tileX = x / Constants::TILE_SIZE;
+    const int tileY = y / Constants::TILE_SIZE;
     if (IS_UNLIKELY(tileX < 0 || tileY < 0 || tileX >= m_map->getCols() || tileY >= m_map->getRows())) {
         return false;
     }
@@ -342,11 +343,14 @@ bool MoveOnMap::isPassable(const int x, const int y)
             continue;
         }
         const Unit::Ptr otherUnit = Entity::asUnit(other);
-
-        if (std::abs(other->position.x - mapPos.x) > (otherUnit->data.CollisionSize.first + unit->data.CollisionSize.first) * Map::TILE_SIZE) {
+        if (otherUnit->data.Size[2] == 0) {
             continue;
         }
-        if (std::abs(other->position.y - mapPos.y) < (otherUnit->data.CollisionSize.second  + unit->data.CollisionSize.second) * Map::TILE_SIZE) {
+
+        if (std::abs(other->position.x - mapPos.x) > (otherUnit->data.Size[0] + unit->data.Size[0]) * Constants::TILE_SIZE) {
+            continue;
+        }
+        if (std::abs(other->position.y - mapPos.y) < (otherUnit->data.Size[1]  + unit->data.Size[1]) * Constants::TILE_SIZE) {
             return false;
         }
     }

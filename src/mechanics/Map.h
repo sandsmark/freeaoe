@@ -76,15 +76,8 @@ public:
    * A medium-size map? 120 x 120.
    * A large-size map? 144 x 144.
    * A huge-size map? 200 x 200.
-   * A gigantic-size map? 255 x 255. 
+   * A gigantic-size map? 255 x 255.
    */
-
-    static const unsigned int TILE_SIZE = 48;
-
-    // Isometric sizes:
-    static const unsigned int TILE_SIZE_VERTICAL = 48;
-    static const unsigned int TILE_SIZE_HORIZONTAL = 96;
-    static const unsigned int TILE_SIZE_HEIGHT = 24; //Mountain
 
     Map();
     virtual ~Map();

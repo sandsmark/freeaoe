@@ -16,6 +16,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace cnst {
-const int TILE_SIZE = 96;
-};
+namespace Constants {
+
+static const unsigned int TILE_SIZE = 48;
+
+// Isometric sizes:
+static const unsigned int TILE_SIZE_VERTICAL = 48;
+static const unsigned int TILE_SIZE_HORIZONTAL = 96;
+static const unsigned int TILE_SIZE_HEIGHT = 24; //Mountain
+
+}

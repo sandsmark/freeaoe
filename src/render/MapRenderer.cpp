@@ -18,6 +18,7 @@
 
 #include "MapRenderer.h"
 #include "IRenderTarget.h"
+#include "global/Constants.h"
 #include <resource/ResourceManager.h>
 #include <resource/DataManager.h>
 #include <SFML/Graphics/Sprite.hpp>
@@ -76,26 +77,26 @@ bool MapRenderer::update(Time time)
 //    std::cout << "botRightMp " << botRightMp.x << " " << botRightMp.y << std::endl;
 
     // get column and row boundaries for rendering
-    m_rColBegin = botLeftMp.x / Map::TILE_SIZE;
+    m_rColBegin = botLeftMp.x / Constants::TILE_SIZE;
     if (m_rColBegin > m_map->getCols()) {
         std::cout << "E: Somethings fishy... (rColBegin_ > map_->getCols())" << std::endl;
     }
     m_rColBegin = std::clamp(m_rColBegin, 0, m_map->getCols());
 
-    m_rColEnd = topRightMp.x / Map::TILE_SIZE;
+    m_rColEnd = topRightMp.x / Constants::TILE_SIZE;
     m_rColEnd++; //round up
     if (m_rColEnd < 0) {
         std::cout << "E: Somethings fishy... (rColEnd_ < 0)" << std::endl;
     }
     m_rColEnd = std::clamp(m_rColEnd, 0, m_map->getCols());
 
-    m_rRowBegin = topLeftMp.y / Map::TILE_SIZE;
+    m_rRowBegin = topLeftMp.y / Constants::TILE_SIZE;
     if (m_rRowBegin > m_map->getRows()) {
         std::cout << "E: Somethings fishy... (rRowBegin > map_->getRows())" << std::endl;
     }
     m_rRowBegin = std::clamp(m_rRowBegin, 0, m_map->getRows());
 
-    m_rRowEnd = botRightMp.y / Map::TILE_SIZE;
+    m_rRowEnd = botRightMp.y / Constants::TILE_SIZE;
     m_rRowEnd++; // round up
     if (m_rRowEnd < 0) {
         std::cout << "E: Somethings fishy... (rColEnd_ < 0)" << std::endl;
@@ -103,7 +104,7 @@ bool MapRenderer::update(Time time)
     m_rRowEnd = std::clamp(m_rRowEnd, 0, m_map->getRows());
 
     // Calculating screen offset to MapPos(rColBegin, rColEnd):
-    const MapPos offsetMp(m_rColBegin * Map::TILE_SIZE, m_rRowBegin * Map::TILE_SIZE);
+    const MapPos offsetMp(m_rColBegin * Constants::TILE_SIZE, m_rRowBegin * Constants::TILE_SIZE);
     ScreenPos offsetSp = (offsetMp - topLeftMp).toScreen();
 
     m_xOffset = offsetSp.x;
@@ -149,7 +150,7 @@ void MapRenderer::updateTexture()
         return;
     }
 
-    sf::CircleShape outline(Map::TILE_SIZE, 4);
+    sf::CircleShape outline(Constants::TILE_SIZE, 4);
     outline.setScale(1, 0.5);
     outline.setFillColor(sf::Color::Transparent);
     outline.setOutlineThickness(3);
@@ -162,30 +163,30 @@ void MapRenderer::updateTexture()
 
             //TODO: MapPos to screenpos (Tile 0,0 is drawn at MapPos 0,0
             MapRect rect;
-            rect.x = col * Map::TILE_SIZE;
-            rect.y = row * Map::TILE_SIZE;
+            rect.x = col * Constants::TILE_SIZE;
+            rect.y = row * Constants::TILE_SIZE;
             rect.z = mapTile.z;
-            rect.width = Map::TILE_SIZE;
-            rect.height = Map::TILE_SIZE;
+            rect.width = Constants::TILE_SIZE;
+            rect.height = Constants::TILE_SIZE;
 
             // col and row are in map coordinates, so the top corners when rotated 45° we don't need to draw
             if (!renderTarget_->camera()->isVisible(rect)) {
                 continue;
             }
 
-//            rect.x -= m_rColBegin * Map::TILE_SIZE;
-//            rect.y -= m_rRowBegin * Map::TILE_SIZE;
+//            rect.x -= m_rColBegin * Constants::TILE_SIZE;
+//            rect.y -= m_rRowBegin * Constants::TILE_SIZE;
             ScreenPos spos = renderTarget_->camera()->absoluteScreenPos(rect.topLeft());
 //            ScreenPos spos = rect.topLeft().toScreen();
 //            spos.x += m_xOffset;
 //            spos.y += m_yOffset;
-            spos.y -= Map::TILE_SIZE_VERTICAL / 2;
+            spos.y -= Constants::TILE_SIZE_VERTICAL / 2;
 
             if (!mapTile.terrain_) {
                 sf::RectangleShape rect;
                 rect.setFillColor(sf::Color(255, 0, 0, 32));
                 rect.setPosition(spos);
-                rect.setSize(sf::Vector2f(Map::TILE_SIZE_HORIZONTAL, Map::TILE_SIZE_VERTICAL));
+                rect.setSize(sf::Vector2f(Constants::TILE_SIZE_HORIZONTAL, Constants::TILE_SIZE_VERTICAL));
                 m_textureTarget.draw(rect);
                 continue;
             }

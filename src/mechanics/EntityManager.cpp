@@ -23,6 +23,7 @@
 #include "ActionMove.h"
 #include "render/SfmlRenderTarget.h"
 #include "resource/LanguageManager.h"
+#include "global/Constants.h"
 
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
@@ -78,7 +79,7 @@ void EntityManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
             continue;
         }
 
-        if (unit->data.Type < genie::Unit::BuildingType) {
+        if (!(unit->data.OcclusionMode & genie::Unit::OccludeOthers)) {
             continue;
         }
         const ScreenPos unitPosition = renderTarget->camera()->absoluteScreenPos(entity->position);
@@ -111,41 +112,51 @@ void EntityManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
         }
 
         if (m_selectedEntities.count(entity)) { // draw health indicator
-            ScreenPos pos = renderTarget->camera()->absoluteScreenPos(entity->position);
-            pos.x -= unit->data.CollisionSize.first * Map::TILE_SIZE_HORIZONTAL/2;
-            pos.y -= unit->data.CollisionSize.second * Map::TILE_SIZE_VERTICAL/2;
-
             sf::RectangleShape rect;
             sf::CircleShape circle;
             circle.setFillColor(sf::Color::Transparent);
             circle.setOutlineColor(sf::Color::White);
             circle.setOutlineThickness(1);
 
-            circle.setPosition(pos);
-            circle.setRadius(unit->data.CollisionSize.first * Map::TILE_SIZE);
-            const float ratio = unit->data.CollisionSize.second * Map::TILE_SIZE_VERTICAL / (unit->data.CollisionSize.first * Map::TILE_SIZE_HORIZONTAL);
-            circle.setScale(1, ratio);
+            double width = unit->data.OutlineSize.first * Constants::TILE_SIZE_HORIZONTAL;
+            double height =  unit->data.OutlineSize.second * Constants::TILE_SIZE_VERTICAL;
+
+            if (unit->data.ObstructionType == genie::Unit::UnitObstruction) {
+                width /= 2.;
+                height /= 2.;
+            } else {
+                circle.setPointCount(4);
+            }
+
+            ScreenPos pos = renderTarget->camera()->absoluteScreenPos(entity->position);
+
+            circle.setPosition(pos.x - width, pos.y - height);
+            circle.setRadius(width);
+            circle.setScale(1, height / width);
             renderTarget->draw(circle);
 
-            pos = renderTarget->camera()->absoluteScreenPos(entity->position);
-            pos.x -= Map::TILE_SIZE_HORIZONTAL / 8;
-            pos.y -= Map::TILE_SIZE_VERTICAL;
+            circle.setPosition(pos.x - width, pos.y - height + 1);
+            circle.setOutlineColor(sf::Color::Black);
+            renderTarget->draw(circle);
+
+            pos.x -= Constants::TILE_SIZE_HORIZONTAL / 8;
+            pos.y -= height + Constants::TILE_SIZE_HEIGHT * unit->data.HPBarHeight;
 
             rect.setFillColor(sf::Color::Green);
             rect.setOutlineColor(sf::Color::Transparent);
 
             rect.setPosition(pos);
-            rect.setSize(sf::Vector2f(Map::TILE_SIZE_HORIZONTAL / 4, 2));
+            rect.setSize(sf::Vector2f(Constants::TILE_SIZE_HORIZONTAL / 4, 2));
             m_outlineOverlay.draw(rect);
         }
 
-        if (unit->data.Type >= genie::Unit::BuildingType) {
+        if (!(unit->data.OcclusionMode & genie::Unit::ShowOutline)) {
             continue;
         }
 
         entity->renderer().drawOn(*renderTarget->renderTarget_, renderTarget->camera()->absoluteScreenPos(entity->position));
 
-        ScreenPos pos = renderTarget->camera()->absoluteScreenPos(entity->position);
+        const ScreenPos pos = renderTarget->camera()->absoluteScreenPos(entity->position);
         entity->renderer().drawOutlineOn(m_outlineOverlay, pos);
     }
 
@@ -171,14 +182,14 @@ void EntityManager::onRightClick(const MapPos &mapPos)
     m_moveTargetMarker->moveTo(mapPos);
 }
 
-void EntityManager::selectEntities(const MapRect &selectionRect)
+void EntityManager::selectEntities(const ScreenRect &selectionRect, const CameraPtr &camera)
 {
     m_selectedEntities.clear();
 
     std::vector<Unit::Ptr> containedEntities;
     int8_t requiredInteraction = genie::Unit::ObjectInteraction;
     for (EntityPtr entity : m_entities) {
-        if (!selectionRect.contains(entity->position)) {
+        if (!selectionRect.contains(camera->absoluteScreenPos(entity->position))) {
             continue;
         }
 

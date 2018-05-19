@@ -7,7 +7,6 @@ project(freeaoe)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/)
 
 find_package(SFML COMPONENTS SYSTEM WINDOW GRAPHICS REQUIRED)
-find_package(OpenGL REQUIRED)
 
 include_directories(src/
   ${CMAKE_HOME_DIRECTORY}/extern/genieutils/include

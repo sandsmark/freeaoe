@@ -24,7 +24,8 @@
 #include <genie/resource/SlpFrame.h>
 #include <genie/resource/Color.h>
 
-#include <mechanics/Map.h>
+#include "global/Constants.h"
+#include "core/Utility.h"
 
 #include <cmath>
 
@@ -47,7 +48,7 @@ const sf::Texture &Terrain::texture(int x, int y)
         static sf::Texture nullTex;
         if (nullTex.getSize().x == 0) {
             sf::Image nullImg;
-            nullImg.create(Map::TILE_SIZE_HORIZONTAL, Map::TILE_SIZE_VERTICAL, sf::Color::Red);
+            nullImg.create(Constants::TILE_SIZE_HORIZONTAL, Constants::TILE_SIZE_VERTICAL, sf::Color::Red);
             nullTex.loadFromImage(nullImg);
         }
 
@@ -544,7 +545,7 @@ const sf::Texture &Terrain::slopedImage(const TileSlopes &slopes, int tileX, int
         static sf::Texture nullTex;
         if (nullTex.getSize().x == 0) {
             sf::Image nullImg;
-            nullImg.create(Map::TILE_SIZE_HORIZONTAL, Map::TILE_SIZE_VERTICAL, sf::Color::Red);
+            nullImg.create(Constants::TILE_SIZE_HORIZONTAL, Constants::TILE_SIZE_VERTICAL, sf::Color::Red);
             nullTex.loadFromImage(nullImg);
         }
 

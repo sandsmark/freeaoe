@@ -43,15 +43,6 @@ struct Camera
 
     MapPos absoluteMapPos(ScreenPos pos);
 
-    MapRect absoluteMapRect(const ScreenRect &screenRect) {
-        return MapRect(absoluteMapPos(screenRect.topLeft()), absoluteMapPos(screenRect.bottomRight()));
-    }
-
-    ScreenRect absoluteScreenRect(const MapRect &mapRect)
-    {
-        return ScreenRect(absoluteScreenPos(mapRect.topRight()), absoluteScreenPos(mapRect.bottomRight()));
-    }
-
     ScreenRect m_visibleArea;
 private:
     MapPos m_target;

@@ -37,6 +37,7 @@
 #include "CompUnitData.h"
 #include "resource/DataManager.h"
 #include "render/ActionPanel.h"
+#include "global/Constants.h"
 
 #define MOUSE_MOVE_EDGE_SIZE 10
 #define CAMERA_SPEED 1.
@@ -134,7 +135,7 @@ bool GameState::init()
 
         for (int playerNum = 0; playerNum < scenario_->playerUnits.size(); playerNum++) {
             for (const genie::ScnUnit &scnunit : scenario_->playerUnits[playerNum].units) {
-                MapPos unitPos(scnunit.positionX * Map::TILE_SIZE, scnunit.positionY * Map::TILE_SIZE, scnunit.positionZ);
+                MapPos unitPos(scnunit.positionX * Constants::TILE_SIZE, scnunit.positionY * Constants::TILE_SIZE, scnunit.positionZ);
                 Unit::Ptr unit = EntityFactory::Inst().createUnit(scnunit.objectID, unitPos, playerNum, m_civilizations[0]);
                 if (scnunit.rotation > 0) {
                     unit->setAngle(scnunit.rotation * M_PI * 2. / 16.);
@@ -157,8 +158,8 @@ bool GameState::init()
         unit = EntityFactory::Inst().createUnit(109, MapPos(48*3, 48*3, 0), 0, m_civilizations[0]);
 
         if (unit->data.Building.FoundationTerrainID > 0) {
-            int width = unit->data.CollisionSize.first;
-            int height = unit->data.CollisionSize.second;
+            int width = unit->data.Size[0];
+            int height = unit->data.Size[1];
             for (int x = 0; x < width*2; x++) {
                 for (int y = 0; y < height*2; y++) {
                     map_->setTileAt(3 - width + x, 3 - height + y, unit->data.Building.FoundationTerrainID);
@@ -361,8 +362,7 @@ void GameState::handleEvent(sf::Event event)
 
     if (event.type == sf::Event::MouseButtonReleased) {
         if (event.mouseButton.button == sf::Mouse::Button::Left && m_selecting) {
-            MapRect mapSelectionRect = renderTarget_->camera()->absoluteMapRect(m_selectionRect);
-            m_entityManager->selectEntities(mapSelectionRect);
+            m_entityManager->selectEntities(m_selectionRect, renderTarget_->camera());
             m_selectionRect = ScreenRect();
             m_selecting = false;
         } else if (event.mouseButton.button == sf::Mouse::Button::Right) {

@@ -16,6 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "global/Constants.h"
 #include "Entity.h"
 #include "resource/DataManager.h"
 #include "resource/LanguageManager.h"

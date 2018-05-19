@@ -17,6 +17,7 @@
 */
 
 #include "Map.h"
+#include "global/Constants.h"
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <resource/ResourceManager.h>
@@ -111,48 +112,48 @@ int Map::getRows()
 
 int Map::height()
 {
-    return rows_ * TILE_SIZE;
+    return rows_ * Constants::TILE_SIZE;
 }
 
 int Map::width()
 {
-    return cols_ * TILE_SIZE;
+    return cols_ * Constants::TILE_SIZE;
 }
 
 float Map::elevationAt(const MapPos &position)
 {
-    const int tileX = position.x / Map::TILE_SIZE;
-    const int tileY = position.y / Map::TILE_SIZE;
+    const int tileX = position.x / Constants::TILE_SIZE;
+    const int tileY = position.y / Constants::TILE_SIZE;
     const MapTile &tile = getTileAt(tileX, tileY);
-    const float localX = position.x - tileX * Map::TILE_SIZE;
-    const float localY = position.y - tileY * Map::TILE_SIZE;
+    const float localX = position.x - tileX * Constants::TILE_SIZE;
+    const float localY = position.y - tileY * Constants::TILE_SIZE;
 
     float elevation = tile.elevation_;
 
     switch(tile.slopes.self) {
     case res::TileSlopes::NorthWestUp:
-        elevation += 1. - localX / Map::TILE_SIZE;
+        elevation += 1. - localX / Constants::TILE_SIZE;
         break;
     case res::TileSlopes::SouthEastUp:
-        elevation += localX / Map::TILE_SIZE;
+        elevation += localX / Constants::TILE_SIZE;
         break;
     case res::TileSlopes::SouthWestUp:
-        elevation += 1. - localY / Map::TILE_SIZE;
+        elevation += 1. - localY / Constants::TILE_SIZE;
         break;
     case res::TileSlopes::NorthEastUp:
-        elevation += localY / Map::TILE_SIZE;
+        elevation += localY / Constants::TILE_SIZE;
         break;
     case res::TileSlopes::EastUp:
-        elevation += (localX + localY) / (Map::TILE_SIZE * 2);
+        elevation += (localX + localY) / (Constants::TILE_SIZE * 2);
         break;
     case res::TileSlopes::WestUp:
-        elevation += 1. - (localX + localY) / (Map::TILE_SIZE * 2);
+        elevation += 1. - (localX + localY) / (Constants::TILE_SIZE * 2);
         break;
     case res::TileSlopes::NorthUp:
-        elevation += ((Map::TILE_SIZE - localX) + localY) / (Map::TILE_SIZE * 2);
+        elevation += ((Constants::TILE_SIZE - localX) + localY) / (Constants::TILE_SIZE * 2);
         break;
     case res::TileSlopes::SouthUp:
-        elevation += (localX + (Map::TILE_SIZE - localY)) / (Map::TILE_SIZE * 2);
+        elevation += (localX + (Constants::TILE_SIZE - localY)) / (Constants::TILE_SIZE * 2);
         break;
     case res::TileSlopes::Flat:
     default:
