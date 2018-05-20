@@ -107,7 +107,7 @@ bool GameState::init()
         }
     }
 
-    m_cursors = ResourceManager::Inst()->getSlp(51000);
+    m_cursors = ResourceManager::Inst()->getSlp(ResourceManager::filenameID("mcursors.shp"));
     if (m_cursors) {
         m_cursorTexture.loadFromImage(res::Resource::convertFrameToImage(m_cursors->getFrame(0)));
         m_cursor.setTexture(m_cursorTexture);

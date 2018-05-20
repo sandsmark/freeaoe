@@ -281,69 +281,211 @@ bool ResourceManager::initialize(const std::string &dataPath, const genie::GameV
 int ResourceManager::filenameID(const std::string &filename)
 {
     const std::unordered_map<std::string, int> idMap = {
-        { "btncmd.shp", 50721    },
-        { "btngame2x.shp", 50754 },
-        { "btngame.shp", 50751   },
-        { "btnmain.shp", 52064   },
-        { "btntech.shp", 50729   },
-        { "btnunit.shp", 50730   },
-        { "dlg_plbn.shp", 50746  },
-        { "groupnum.shp", 50403  },
-        { "health.shp", 50745    },
-        { "ico_game.shp", 50752  },
-        { "ico_misc.shp", 53011  },
-        { "ico_unit.shp", 50730  },
-        { "itemicon.shp", 50731  },
-        { "mcursors.shp", 51000  },
-        { "meet.shp", 53010      },
-        { "moveto.shp", 50405    },
-        { "sundial.shp", 50764   },
-        { "tradicon.shp", 50732  },
-        { "unithalo.shp", 53003  },
-        { "waypoint.shp", 50404  },
+        // Various button icons
+        { "btncmd.shp", 50721     },
+        { "btnunit.shp",  50730   },
+        { "btntech.shp", 50729    },
+        { "btngame2x.shp", 50754  },
+        { "tradicon.shp", 50732   },
 
-        { "ico_bld1.shp", 50705  },
-        { "ico_bld2.shp", 50706  },
-        { "ico_bld3.shp", 50707  },
-        { "ico_bld4.shp", 50708  },
-
-        { "btnbrda2.shp", 50715   },
-        { "btnbrdb2.shp", 50719   },
-        { "btnbrdc2.shp", 50749   },
-
-        { "2logos.slp", 53012     },
-        { "AchDecal.slp", 50766   },
-        { "AchTeam.slp", 50769    },
-        { "arrows.slp", 53004     },
         { "btn_hist.slp", 50613   },
         { "btn_mute.slp", 50791   },
-        { "c_logo.slp", 53207     },
-        { "colbar.slp", 50792     },
-        { "defcheck.slp", 52002   },
-        { "eslogo1.slp", 53202    },
-        { "eslogo2.slp", 53203    },
-        { "g_wtr.slp", 15002      },
-        { "hourglas.slp", 53001   },
+
+        // Various icons
+        { "ico_unit.shp", 50730   }, // same as btnunit.shp
+        { "ico_game.shp", 50752   },
+        { "ico_misc.shp", 53011   },
+        { "ico_bld1.shp", 50705   },
+        { "ico_bld2.shp", 50706   },
+        { "ico_bld3.shp", 50707   },
+        { "ico_bld4.shp", 50708   },
+        { "itemicon.shp", 50731   },
+
+        // Minimap
+        { "icomap_a.slp", 50787   },
         { "icomap_b.slp", 50788   },
         { "icomap_c.slp", 50789   },
         { "icomap_d.slp", 50790   },
-        { "mslogo1.slp", 53200    },
-        { "mslogo2.slp", 53201    },
-        { "objtabs.slp", 53005    },
-        { "PNBnr1.slp", 50762     },
-        { "PNBnr2.slp", 50767     },
-        { "rollback.slp", 50150   },
+
+        // Various graphics
+        { "groupnum.shp", 50403   }, // just numbers for unit groups
+        { "health.shp", 50745     }, // Different health bars
+        { "mcursors.shp", 51000   },
+        { "moveto.shp", 50405     },
+        { "sundial.shp", 50764    }, // Age upgrade progress?
+        { "unithalo.shp", 53003   }, // Box around unit icon
+        { "waypoint.shp", 50404   },
+        { "arrows.slp", 53004     },
+        { "hourglas.slp", 53001   },
+        { "dlg_plbn.shp", 50746   }, // Flag thing
+
+        // Generic button background
+        { "btnbrda2.shp", 50715   },
+        { "btnbrdb2.shp", 50719   },
+        { "btnbrdc2.shp", 50749   },
         { "sat_btn.slp", 50768    },
-        { "sat_tabs.slp", 50765   },
-        { "sshot_text.slp", 53204 },
+
+        // Tech tree
         { "techages.slp", 50342   },
         { "techback.slp", 50341   },
         { "technodex.slp", 53206  },
         { "tech_tile.slp", 50343  },
-        { "tml_bck.slp", 50763    },
-        { "ttx.slp", 53211        },
+        { "ttx.slp", 53211        }, // unit not available
+
+        // Various backgrounds
+        { "xmain.slp", 50189      }, // Mainscreen
+        { "objtabs.slp", 53005    },
+        { "rollback.slp", 50150   }, // Checkered gray
+        { "sat_tabs.slp", 50765   }, // Tab pane victory screen
+        { "tml_bck.slp", 50763    }, // Texture victory screen
         { "viccheck.slp", 52001   },
-        { "xmain.slp", 50189      },
+
+
+        // Logos
+        { "c_logo.slp", 53207     },
+        { "2logos.slp", 53012     },
+        { "mslogo1.slp", 53200    },
+        { "mslogo2.slp", 53201    },
+        { "eslogo1.slp", 53202    },
+        { "eslogo2.slp", 53203    },
+
+        // Achievements
+        { "AchDecal.slp", 50766   },
+        { "AchTeam.slp", 50769    },
+
+        // Old unused stuff
+        { "colbar.slp", 50792     }, // Colored bars
+        { "defcheck.slp", 52002   },
+        { "g_wtr.slp", 15002      },
+        { "btngame.shp", 50751    },
+        { "btnmain.shp", 52064    },
+        { "meet.shp", 53010       }, // Meat?
+        { "PNBnr1.slp", 50762     }, // flags
+        { "PNBnr2.slp", 50767     }, // flags2
+        { "sshot_text.slp", 53204 },
+
+        // Sounds
+        { "archupg.wav", 50325    },
+        { "artheld.wav", 50311    },
+        { "artlost.wav", 50312    },
+        { "atakwarn.wav", 50315   },
+        { "athiesm.wav", 50368    },
+        { "button1.wav", 50300    },
+        { "button2.wav", 50301    },
+        { "button3.wav", 50331    },
+        { "button4.wav", 50332    },
+        { "button5.wav", 50333    },
+        { "button6.wav", 50334    },
+        { "button7.wav", 50335    },
+        { "button8.wav", 50336    },
+        { "button9.wav", 50337    },
+        { "buy.wav", 50360        },
+        { "cantdo.wav", 50303     },
+        { "capgaia.wav", 50356    },
+        { "capsheep.wav", 50355   },
+        { "chatrcvd.wav", 50302   },
+        { "convdone.wav", 50314   },
+        { "convwarn.wav", 50313   },
+        { "enemwarn.wav", 50316   },
+        { "farmdied.wav", 50328   },
+        { "flare.wav", 50317      },
+        { "flaresnd.wav", 50327   },
+        { "fortupg.wav", 50326    },
+        { "gatel.wav", 50362      },
+        { "gateu.wav", 50363      },
+        { "gather.wav", 50329     },
+        { "housing.wav", 50322    },
+        { "loosebld.wav", 50323   },
+        { "lost.wav", 50321       },
+        { "mdone.wav", 50309      },
+        { "mkilled.wav", 50310    },
+        { "mstart.wav", 50308     },
+        { "needhous.wav", 50354   },
+        { "needres.wav", 50318    },
+        { "objctive.wav", 50364   },
+        { "pdropped.wav", 50307   },
+        { "pkilled.wav", 50306    },
+        { "pscreen.wav", 50359    },
+        { "puprelic.wav", 50365   },
+        { "resdone.wav", 50305    },
+        { "resdone2.wav", 50330   },
+        { "rollover.wav", 50338   },
+        { "sell.wav", 50361       },
+        { "spies.wav", 50367      },
+        { "takebld.wav", 50324    },
+        { "townbell.wav", 50357   },
+        { "townrcal.wav", 50358   },
+        { "tribute.wav", 50304    },
+        { "wolfwarn.wav", 50366   },
+        { "won.wav", 50320        },
+
+        // UI files
+        { "main.sin", 50081       },
+        { "xmain.sin", 50089      },
+        { "dlg_cha1.sin", 50017   },
+        { "dlg_cha2.sin", 50019   },
+        { "dlg_dip.sin", 50014    },
+        { "dlg_gam.sin", 50018    },
+        { "dlg_men.sin", 50015    },
+        { "dlg_obj.sin", 50016    },
+        { "dlg_objx.sin", 50021   },
+        { "hist_pic.sin", 50162   },
+        { "hist_picx.sin", 53209  },
+
+        // Status screen/dialog
+        { "scr1.sin", 50051       },
+
+        // single player, select scenario, scenario editor,
+        // save game, multiplayer save game, multiplayer wait, load multiplayer saved,
+        // load saved, campaign select, aftermath, status screen
+        { "scr2.sin", 50052       },
+
+        // Options
+        { "scr2p.sin", 50084      },
+
+        // For multiplayer (create lobby, join, replay, scenario?)
+        { "scr3.sin", 50053       },
+
+        // campaign editor
+        { "scr4.sin", 50054       },
+
+        // scenario editor
+        { "scr5.sin", 50055       },
+
+        // game screen
+        { "scr6.sin", 50056       },
+
+        // one button tech tree, duplicate name for the main game screen
+        // { "scr6.sin", 50007       },
+
+        // Mission dialog
+        { "scr9.sin", 50060       },
+
+        // Achievements screen
+        { "scr10.sin", 50061      },
+
+        { "scr_cred.sin", 50059   },
+        { "scr_hist.sin", 50062   },
+        { "scr_stms.sin", 50085   },
+        { "xcredits.sin", 50088   },
+
+        // BMP files
+        { "map1280.bmp", 50409    },
+        { "map1024.bmp", 50408    },
+        { "map800.bmp", 50411     },
+        { "map640.bmp", 50401     },
+
+        // Scenarios
+        { "real_world_spain.scx", 56001     },
+        { "real_world_britain.scx", 56002   },
+        { "real_world_mideast.scx", 56003   },
+        { "real_world_texas.scx", 56004     },
+        { "real_world_italy.scx", 56005     },
+        { "real_world_caribbean.scx", 56006 },
+        { "real_world_france.scx", 56007    },
+        { "real_world_jutland.scx", 56008   },
+        { "real_world_nippon.scx", 56009    },
+        { "real_world_byzantium.scx", 56010 },
     };
 
     if (idMap.find(filename) != idMap.end()) {
