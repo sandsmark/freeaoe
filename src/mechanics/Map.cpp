@@ -155,6 +155,18 @@ float Map::elevationAt(const MapPos &position)
     case res::TileSlopes::SouthUp:
         elevation += localX * (1. - localY);
         break;
+    case res::TileSlopes::NorthWestEastUp:
+        elevation += 1. - localX * (1. - localY);
+        break;
+    case res::TileSlopes::SouthWestEastUp:
+        elevation += 1. - (1. - localX) * localY;
+        break;
+    case res::TileSlopes::NorthSouthEastUp:
+        elevation += 1. - (1. - localX) * (1. - localY);
+        break;
+    case res::TileSlopes::NorthSouthWestUp:
+        elevation += 1. - (1. - localX) * (1. - localY);
+        break;
     case res::TileSlopes::Flat:
     default:
         break;
