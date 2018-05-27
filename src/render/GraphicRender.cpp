@@ -45,6 +45,9 @@ bool GraphicRender::update(Time time)
 {
     bool updated = false;
     for (GraphicDelta &delta : m_deltas) {
+        if (delta.angleToDrawOn >= 0 && delta.graphic->graphic_->angleToOrientation(m_angle) != delta.angleToDrawOn) {
+            continue;
+        }
         updated = delta.graphic->update(time) || updated;
     }
 
@@ -97,17 +100,19 @@ bool GraphicRender::update(Time time)
 
 void GraphicRender::drawOn(sf::RenderTarget &renderTarget, const ScreenPos screenPos)
 {
-    if (!graphic_ || !graphic_->isValid()) {
-        return;
+    for (const GraphicDelta &delta : m_deltas) {
+        if (delta.angleToDrawOn >= 0 && delta.graphic->graphic_->angleToOrientation(m_angle) != delta.angleToDrawOn) {
+            continue;
+        }
+
+        delta.graphic->drawOn(renderTarget, screenPos + delta.offset);
     }
 
-    sf::Sprite sprite;
-    sprite.setTexture(image());
-    sprite.setPosition(screenPos - graphic_->getHotspot(current_frame_, m_angle));
-    renderTarget.draw(sprite);
-
-    for (const GraphicDelta &delta : m_deltas) {
-        delta.graphic->drawOn(renderTarget, screenPos + delta.offset);
+    if (graphic_ && graphic_->isValid()) {
+        sf::Sprite sprite;
+        sprite.setTexture(image());
+        sprite.setPosition(screenPos - graphic_->getHotspot(current_frame_, m_angle));
+        renderTarget.draw(sprite);
     }
 }
 
@@ -148,7 +153,7 @@ void GraphicRender::setGraphic(res::GraphicPtr graphic)
     current_frame_ = 0;
     m_deltas.clear();
 
-    if (!graphic->isValid()) {
+    if (!graphic) {
         return;
     }
 
@@ -165,14 +170,11 @@ void GraphicRender::setGraphic(res::GraphicPtr graphic)
         if (!delta.graphic->graphic_->isValid()) {
             continue;
         }
+        delta.angleToDrawOn = deltaData.DisplayAngle;
 
         delta.offset = ScreenPos(deltaData.OffsetX, deltaData.OffsetY);
 
         m_deltas.push_back(delta);
-    }
-
-    if (!m_deltas.empty()) {
-        std::reverse(m_deltas.begin(), m_deltas.end());
     }
 }
 
@@ -196,6 +198,7 @@ ScreenRect GraphicRender::rect()
 void GraphicRender::setAngle(float angle)
 {
     m_angle = angle;
+
     for (GraphicDelta &delta : m_deltas) {
         delta.graphic->setAngle(angle);
     }

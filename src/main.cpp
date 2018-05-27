@@ -38,7 +38,7 @@ using namespace std::experimental;
 int main(int argc, char **argv)
 {
   Logger::setLogLevel(Logger::L_INFO);
-  genie::Logger::setLogLevel(genie::Logger::L_WARNING);
+  genie::Logger::setLogLevel(genie::Logger::L_DEBUG);
 
   Config config("freeaoe");
   config.setAllowedOptions({

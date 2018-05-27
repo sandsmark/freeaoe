@@ -42,12 +42,19 @@ EntityFactory::~EntityFactory()
 
 Unit::Ptr EntityFactory::createUnit(int ID, const MapPos &position, int playerId, Civilization::Ptr civ)
 {
+    std::cout << "Creating  " << ID << std::endl;
     const genie::Unit &gunit = DataManager::Inst().getUnit(ID);
 
     Unit::Ptr entity = std::make_shared<Unit>(gunit, playerId, civ);
     entity->position = position;
 
     if (gunit.Type >= genie::Unit::BuildingType) {
+        if (gunit.Building.StackUnitID >= 0) {
+            Entity::Annex annex;
+            annex.entity = createUnit(gunit.Building.StackUnitID, position, playerId, civ);
+            entity->annexes.push_back(annex);
+        }
+
         for (const genie::unit::BuildingAnnex &annexData : gunit.Building.Annexes) {
             if (annexData.UnitID < 0) {
                 continue;

@@ -343,14 +343,20 @@ bool MoveOnMap::isPassable(const int x, const int y)
             continue;
         }
         const Unit::Ptr otherUnit = Entity::asUnit(other);
-        if (otherUnit->data.Size[2] == 0) {
+        if (otherUnit->data.Size.z == 0) {
             continue;
         }
 
-        if (std::abs(other->position.x - mapPos.x) > (otherUnit->data.Size[0] + unit->data.Size[0]) * Constants::TILE_SIZE) {
-            continue;
-        }
-        if (std::abs(other->position.y - mapPos.y) < (otherUnit->data.Size[1]  + unit->data.Size[1]) * Constants::TILE_SIZE) {
+        const float xDistance = std::abs(other->position.x - mapPos.x);
+        const float yDistance = std::abs(other->position.y - mapPos.y);
+        const float xSize = (otherUnit->data.Size.x + unit->data.Size.x) * Constants::TILE_SIZE;
+        const float ySize = (otherUnit->data.Size.y + unit->data.Size.y) * Constants::TILE_SIZE;
+
+//        if ( <  && std::abs(other->position.y - mapPos.y) < (otherUnit->data.Size[1]  + unit->data.Size[1]) * Constants::TILE_SIZE) {
+        if (xDistance < xSize && yDistance < ySize) {
+//            std::cout << unit->readableName << " " << other->readableName << std::endl;
+//            std::cout << "x: " << xDistance << " " << xSize << std::endl;
+//            std::cout << "y: " << yDistance << " " << ySize << std::endl;
             return false;
         }
     }

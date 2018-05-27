@@ -69,6 +69,7 @@ private:
     struct GraphicDelta {
         GraphicPtr graphic;
         ScreenPos offset;
+        int angleToDrawOn = -1;
     };
 
     Time time_last_frame_;

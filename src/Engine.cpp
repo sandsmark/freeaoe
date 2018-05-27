@@ -110,7 +110,9 @@ bool Engine::setup(const std::string &scnFile)
 //      gameState->setScenario(ResourceManager::Inst()->getScn(56005));
   }
 
-  state_manager_.addActiveState(gameState);
+  if (!state_manager_.addActiveState(gameState)) {
+      return false;
+  }
   renderWindow_->setSize(gameState->uiSize());
   renderTarget_->setSize(gameState->uiSize());
 

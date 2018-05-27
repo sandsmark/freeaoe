@@ -109,8 +109,9 @@ public:
     bool runOnce() const;
 
     const genie::Graphic &data_;
-private:
     int angleToOrientation(float angle) const;
+
+private:
 
     static Logger &log;
 

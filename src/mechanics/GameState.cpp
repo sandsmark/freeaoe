@@ -125,6 +125,10 @@ bool GameState::init()
     for (int i=0; i<civilizations.size(); i++) {
         m_civilizations.push_back(std::make_shared<Civilization>(i, DataManager::Inst().datFile()));
     }
+    if (m_civilizations.empty()) {
+        log.error("Failed to load any civilizations");
+        return false;
+    }
 
     //Map test
     map_ = MapPtr(new Map());
@@ -146,20 +150,16 @@ bool GameState::init()
     } else {
         map_->setUpSample();
 
-//        // Mangudai
-        Unit::Ptr unit = EntityFactory::Inst().createUnit(11, MapPos(48*6, 48*10, 0), 0, m_civilizations[0]);
-        m_entityManager->add(unit);
+        m_entityManager->add(EntityFactory::Inst().createUnit(487, MapPos(48*6, 48*10, 0), 0, m_civilizations[0]));
 
-        m_entityManager->add(EntityFactory::Inst().createUnit(293, MapPos(48*6, 48*6, 0), 0, m_civilizations[0]));
+        m_entityManager->add(EntityFactory::Inst().createUnit(Unit::FemaleVillager, MapPos(48*6, 48*6, 0), 0, m_civilizations[0]));
+        m_entityManager->add(EntityFactory::Inst().createUnit(280, MapPos(48*10, 48*10, 0), 0, m_civilizations[0])); // mangonel
 
-        m_entityManager->add(EntityFactory::Inst().createUnit(280, MapPos(48*10, 48*10, 0), 0, m_civilizations[0]));
-
-
-        unit = EntityFactory::Inst().createUnit(109, MapPos(48*3, 48*3, 0), 0, m_civilizations[0]);
+        Unit::Ptr unit = EntityFactory::Inst().createUnit(Unit::TownCenter, MapPos(48*3, 48*3, 0), 0, m_civilizations[0]);
 
         if (unit->data.Building.FoundationTerrainID > 0) {
-            int width = unit->data.Size[0];
-            int height = unit->data.Size[1];
+            int width = unit->data.Size.x;
+            int height = unit->data.Size.y;
             for (int x = 0; x < width*2; x++) {
                 for (int y = 0; y < height*2; y++) {
                     map_->setTileAt(3 - width + x, 3 - height + y, unit->data.Building.FoundationTerrainID);

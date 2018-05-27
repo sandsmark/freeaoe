@@ -27,15 +27,18 @@ StateManager::~StateManager()
 {
 }
 
-void StateManager::addActiveState(std::shared_ptr<GameState> state)
+bool StateManager::addActiveState(std::shared_ptr<GameState> state)
 {
     if (active_state_ != 0) {
         active_state_->cleanUp();
     }
 
-    state->init();
+    if (!state->init()) {
+        return false;
+    }
 
     active_state_ = state;
+    return true;
 }
 
 const std::shared_ptr<GameState> &StateManager::getActiveState()

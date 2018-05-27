@@ -5,6 +5,8 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <genie/resource/SlpFile.h>
 #include <genie/dat/Unit.h>
+#include <genie/dat/UnitCommand.h>
+#include "resource/DataManager.h"
 #include "resource/Resource.h"
 
 ActionPanel::ActionPanel(const std::shared_ptr<SfmlRenderTarget> &renderTarget) :
@@ -196,6 +198,9 @@ void ActionPanel::updateButtons()
     if (!unit) {
         return;
     }
+    for (const genie::Task &t : DataManager::Inst().datFile().UnitHeaders[unit->data.ID].TaskList) {
+        std::cout << int(t.ID) << t.actionTypeName() << std::endl;
+    }
 
     if (unit->data.InterfaceKind == genie::Unit::CiviliansInterface || unit->data.InterfaceKind == genie::Unit::BuildingsInterface) {
         addCreateButtons(unit);
@@ -222,11 +227,12 @@ void ActionPanel::addCreateButtons(const std::shared_ptr<Unit> &unit)
         InterfaceButton button;
         if (unit->data.InterfaceKind == genie::Unit::CiviliansInterface) {
             button.type = InterfaceButton::CreateBuilding;
+            button.interfacePage = creatable->InterfaceKind;
         } else {
             button.type = InterfaceButton::CreateUnit;
+            button.interfacePage = 0;
         }
         button.index = std::max(creatable->Creatable.ButtonID - 1, 0);
-        button.interfacePage = creatable->InterfaceKind;
         button.targetId = creatable->ID;
         button.iconId = creatable->IconID;
 
@@ -269,6 +275,7 @@ void ActionPanel::addCreateButtons(const std::shared_ptr<Unit> &unit)
 void ActionPanel::handleButtonClick(const ActionPanel::InterfaceButton &button)
 {
     if (button.type != InterfaceButton::Other) {
+        std::cout  << button.targetId << std::endl;
         return;
     }
 

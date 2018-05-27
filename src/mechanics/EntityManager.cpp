@@ -118,8 +118,8 @@ void EntityManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
             circle.setOutlineColor(sf::Color::White);
             circle.setOutlineThickness(1);
 
-            double width = unit->data.OutlineSize.first * Constants::TILE_SIZE_HORIZONTAL;
-            double height =  unit->data.OutlineSize.second * Constants::TILE_SIZE_VERTICAL;
+            double width = unit->data.OutlineSize.x * Constants::TILE_SIZE_HORIZONTAL;
+            double height =  unit->data.OutlineSize.y * Constants::TILE_SIZE_VERTICAL;
 
             if (unit->data.ObstructionType == genie::Unit::UnitObstruction) {
                 width /= 2.;

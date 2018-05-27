@@ -128,6 +128,7 @@ private:
 
     void updateButtons();
     void addCreateButtons(const std::shared_ptr<Unit> &unit);
+    void addCreateBuildingButtons();
     void handleButtonClick(const InterfaceButton &button);
 
     ScreenPos buttonPosition(const int index) const;
