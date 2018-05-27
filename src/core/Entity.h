@@ -92,6 +92,50 @@ private:
 
 struct Unit : public Entity
 {
+    enum HardcodedTypes {
+        TownCenter = 109,
+
+        FemaleVillager = 293,
+
+        MaleVillager = 83,
+        MaleLumberjack = 123,
+        MaleStoneMiner = 124,
+        MaleHunter = 122,
+        MaleFarmer = 259,
+        MaleForager = 120,
+        MaleFisherman = 56,
+        MaleGoldMiner = 579,
+        MaleShepherd = 592,
+        MaleBuilder = 118,
+        MaleRepairer = 156,
+
+        Docket = 45,
+        Castle = 82,
+        Market = 84,
+
+        ArcheryRange = 87,
+        Barracks = 12,
+        Monastery = 104,
+        SiegeWorkshop = 49,
+        Stable = 101,
+
+        Dock = 45,
+
+        Mill = 68,
+        LumberCamp = 562,
+        MiningCamp = 584,
+
+        PalisadeWall = 72,
+        StoneWall = 117,
+        FortifiedWall = 155,
+        Gate = 487,
+
+        Farm = 50,
+
+        Cobra = 748,
+        VMDL = 206,
+    };
+
     typedef std::shared_ptr<Unit> Ptr;
 
     const genie::Unit &data;
