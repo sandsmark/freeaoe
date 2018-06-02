@@ -72,6 +72,7 @@ public:
         StandGroundEnabled,
         DefensiveEnabled,
         AggressiveEnabled,
+        SwordInStoneEnabled,
         PatrolEnabled,
         GuardEnabled,
         FollowEnabled,

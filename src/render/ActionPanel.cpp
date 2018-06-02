@@ -198,9 +198,37 @@ void ActionPanel::updateButtons()
     if (!unit) {
         return;
     }
-    for (const genie::Task &t : DataManager::Inst().datFile().UnitHeaders[unit->data.ID].TaskList) {
-        std::cout << int(t.ID) << t.actionTypeName() << std::endl;
+
+    std::cout << unit->data.Creatable.GarrisonGraphic << std::endl;
+
+    if (unit->data.Type >= genie::Unit::MovingType && unit->data.Type < genie::Unit::BuildingType) {
+        InterfaceButton killButton;
+        killButton.action = Command::Kill;
+        killButton.index = 3;
+        currentButtons.push_back(killButton);
     }
+
+    bool canGarrison = false;
+
+    for (const genie::Task &task : DataManager::Inst().datFile().UnitHeaders[unit->data.ID].TaskList) {
+        if (task.ActionType == genie::Task::Garrison) {
+            canGarrison = true;
+            break;
+        }
+    }
+
+    if (canGarrison) {
+        InterfaceButton garrisonButton;
+        garrisonButton.action = Command::GarrisonCivilian;
+        garrisonButton.index = 4;
+        currentButtons.push_back(garrisonButton);
+    }
+
+
+    InterfaceButton stopButton;
+    stopButton.action = Command::Stop;
+    stopButton.index = 9;
+    currentButtons.push_back(stopButton);
 
     if (unit->data.InterfaceKind == genie::Unit::CiviliansInterface || unit->data.InterfaceKind == genie::Unit::BuildingsInterface) {
         addCreateButtons(unit);
