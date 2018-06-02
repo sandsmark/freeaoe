@@ -66,10 +66,10 @@ set(UNSORTED_SRC src/render/Camera.cpp
     src/resource/Terrain.cpp
     src/render/ActAnimate.cpp
     src/mechanics/CompUnitData.cpp
-    src/mechanics/EntityManager.cpp
+    src/mechanics/UnitManager.cpp
     src/mechanics/CompMapObject.cpp
     src/core/IAction.cpp
-    src/mechanics/EntityFactory.cpp
+    src/mechanics/UnitFactory.cpp
     src/core/IComponent.cpp
     src/core/Entity.cpp
 )

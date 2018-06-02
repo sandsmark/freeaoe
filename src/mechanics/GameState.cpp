@@ -30,7 +30,7 @@
 
 #include <iostream>
 #include <render/GraphicRender.h>
-#include "EntityFactory.h"
+#include "UnitFactory.h"
 #include <Engine.h>
 #include "render/MapRenderer.h"
 #include "render/SfmlRenderTarget.h"

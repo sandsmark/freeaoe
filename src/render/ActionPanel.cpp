@@ -1,5 +1,5 @@
 #include "ActionPanel.h"
-#include "mechanics/EntityManager.h"
+#include "mechanics/UnitManager.h"
 #include "SfmlRenderTarget.h"
 #include <iostream>
 #include <SFML/Graphics/RectangleShape.hpp>

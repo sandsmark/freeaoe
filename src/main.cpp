@@ -23,7 +23,7 @@
 #include "resource/ResourceManager.h"
 #include "resource/LanguageManager.h"
 
-#include "mechanics/EntityFactory.h"
+#include "mechanics/UnitFactory.h"
 #include "global/Config.h"
 #include "resource/ResourceManager.h"
 #include "render/GraphicRender.h"

@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "EntityFactory.h"
+#include "UnitFactory.h"
 #include <genie/dat/Unit.h>
 #include <resource/DataManager.h>
 #include <global/Constants.h>

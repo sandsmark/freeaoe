@@ -24,7 +24,7 @@
 #include "Map.h"
 #include "render/SfmlRenderTarget.h"
 #include "render/MapRenderer.h"
-#include "EntityManager.h"
+#include "UnitManager.h"
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
