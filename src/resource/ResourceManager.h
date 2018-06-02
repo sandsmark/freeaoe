@@ -22,6 +22,7 @@
 #include <memory>
 #include <unordered_map>
 #include <fstream>
+#include <sstream>
 #include "Graphic.h"
 #include "Terrain.h"
 #include <global/Logger.h>
@@ -138,6 +139,9 @@ public:
     static int filenameID(const std::string &filename);
 
 private:
+    std::string findFile(const std::string &filename) const;
+    bool loadGraphicsFile();
+
     static Logger &log;
 
     typedef std::vector<std::shared_ptr<genie::DrsFile>> DrsFileVector;

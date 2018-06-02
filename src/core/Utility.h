@@ -20,6 +20,8 @@
 #define UTILITY_H
 
 #include <cstring>
+#include <string>
+#include <algorithm>
 
 #if __has_cpp_attribute(likely) && __has_cpp_attribute(likely)
 #define IS_LIKELY(x) [[likely(x)]]
@@ -30,6 +32,12 @@
 #endif
 
 namespace util {
+
+inline std::string toLowercase(std::string input)
+{
+    std::transform(input.begin(), input.end(), input.begin(), ::tolower);
+    return input;
+}
 
 //------------------------------------------------------------------------------
 /// Struct providing a cstring compare function.

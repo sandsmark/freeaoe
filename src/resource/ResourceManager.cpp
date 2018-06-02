@@ -27,6 +27,7 @@
 
 #include <genie/resource/DrsFile.h>
 #include <genie/resource/UIFile.h>
+#include <core/Utility.h>
 
 #include <experimental/filesystem>
 #include <unordered_map>
@@ -234,6 +235,7 @@ bool ResourceManager::initialize(const std::string &dataPath, const genie::GameV
 
         m_graphicsFile = loadDrs("graphics.drs");
         if (!m_graphicsFile) {
+//        if (!loadGraphicsFile()) {
             log.error("Failed to load graphics file");
             return false;
         }
@@ -496,6 +498,62 @@ int ResourceManager::filenameID(const std::string &filename)
     }
 }
 
+std::string ResourceManager::findFile(const std::string &filename) const
+{
+    if (filesystem::exists(m_dataPath + filename)) {
+        return m_dataPath + filename;
+    }
+
+    std::string compareFilename = util::toLowercase(filename);
+    for (const filesystem::directory_entry &entry : filesystem::directory_iterator(m_dataPath)) {
+        std::string candidate = util::toLowercase(entry.path().filename());
+        if (candidate == compareFilename) {
+            return entry.path().filename();
+        }
+    }
+
+    log.debug("Can't find file %", filename);
+    return std::string();
+}
+
+bool ResourceManager::loadGraphicsFile()
+{
+#if 0
+    std::string filePath = findFile("graphics.drs");
+    if (filePath.empty()) {
+        return false;
+    }
+
+    std::ifstream fileIn_;
+    fileIn_.open(filePath, std::ios::binary | std::ios::in | std::ios::ate);
+    if (fileIn_.fail()) {
+        log.error("Failed to open " + filePath);
+        return false;
+    }
+    const size_t fileSize = fileIn_.tellg();
+    std::cout << "file sizE: " << fileSize << std::endl;
+
+    fileIn_.seekg(std::streampos(0));
+    m_graphicsFileData.resize(fileSize, 0);
+
+//    m_graphicsFileData = std::unique_ptr<char>((new char[fileSize]));
+    fileIn_.read(m_graphicsFileData.data(), fileSize);
+
+    fileIn_.close();
+    m_graphicsFileStream.str(m_graphicsFileData);
+
+    m_graphicsFile = std::make_shared<genie::DrsFile>();
+    m_graphicsFile->setGameVersion(m_gameVersion);
+    m_graphicsFile->readObject(m_graphicsFileStream);
+//    file->setIStream(m_graphicsFileStream);
+//    file->load(filePath);
+
+    m_allFiles.push_back(m_graphicsFile);
+#endif
+
+    return true;
+}
+
 //------------------------------------------------------------------------------
 ResourceManager::DrsFileVector ResourceManager::loadDrs(const std::vector<std::string> &filenames)
 {
@@ -512,34 +570,19 @@ ResourceManager::DrsFileVector ResourceManager::loadDrs(const std::vector<std::s
     return files;
 }
 
-inline std::string toLowercase(std::string input)
-{
-    std::transform(input.begin(), input.end(), input.begin(), ::tolower);
-    return input;
-}
-
 std::shared_ptr<genie::DrsFile> ResourceManager::loadDrs(std::string filename)
 {
-    if (!filesystem::exists(m_dataPath + filename)) {
-        std::string compareFilename = toLowercase(filename);
-        filename = "";
-        for (const filesystem::directory_entry &entry : filesystem::directory_iterator(m_dataPath)) {
-            std::string candidate = toLowercase(entry.path().filename());
-            if (candidate == compareFilename) {
-                filename = entry.path().filename();
-                break;
-            }
-        }
-        if (filename.empty()) {
-            //log.debug("Can't find file %", filename);
-            return nullptr;
-        }
+    std::string filePath = findFile(filename);
+
+    if (filePath.empty()) {
+        return nullptr;
     }
 
     std::shared_ptr<genie::DrsFile> file = std::make_shared<genie::DrsFile>();
     file->setGameVersion(m_gameVersion);
-    file->load((m_dataPath + filename).c_str());
+    file->load(filePath);
 
     m_allFiles.push_back(file);
+
     return file;
 }

@@ -19,7 +19,7 @@
 #ifndef RESOURCE_H
 #define RESOURCE_H
 #include <SFML/Config.hpp>
-#include <SFML/Graphics/Image.hpp>
+#include <SFML/Graphics/Texture.hpp>
 #include <genie/resource/PalFile.h>
 #include <genie/resource/SlpFrame.h>
 
@@ -84,8 +84,8 @@ public:
     //
     bool isLoaded() const;
 
-    static sf::Image convertFrameToImage(const genie::SlpFramePtr frame);
-    static sf::Image convertFrameToImage(const genie::SlpFramePtr frame, const genie::PalFile &palette,
+    static sf::Texture convertFrameToImage(const genie::SlpFramePtr frame);
+    static sf::Texture convertFrameToImage(const genie::SlpFramePtr frame, const genie::PalFile &palette,
                                          const int playerId = 0);
 
 protected:

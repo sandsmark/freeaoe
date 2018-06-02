@@ -55,7 +55,7 @@ bool Resource::isLoaded() const
     return loaded_;
 }
 
-sf::Image Resource::convertFrameToImage(const genie::SlpFramePtr frame)
+sf::Texture Resource::convertFrameToImage(const genie::SlpFramePtr frame)
 {
     return convertFrameToImage(frame, ResourceManager::Inst()->getPalette(50500));
 }
@@ -81,51 +81,64 @@ void Resource::setLoaded(bool loaded)
 }
 
 //------------------------------------------------------------------------------
-sf::Image Resource::convertFrameToImage(const genie::SlpFramePtr frame,
+sf::Texture Resource::convertFrameToImage(const genie::SlpFramePtr frame,
                                          const genie::PalFile &palette, const int playerId)
 {
     if (!frame) {
         sf::Image img;
         img.create(10, 10, sf::Color::Red);
-        return img;
+        sf::Texture t;
+        t.loadFromImage(img);
+        return t;
     }
 
     const int width = frame->getWidth();
     const int height = frame->getHeight();
     const genie::SlpFrameData &frameData = frame->img_data;
 
-    sf::Image img;
-    img.create(width, height, sf::Color::Red);
+    const std::vector<genie::Color> colors = palette.colors_;
+    const std::vector<uint8_t> alpha = frameData.alpha_channel;
+
+    Uint8 pixels[width * height * 4];
 
     for (uint32_t row = 0; row < height; row++) {
         for (uint32_t col = 0; col < width; col++) {
             const uint8_t paletteIndex = frameData.pixel_indexes[row * width + col];
-            assert(paletteIndex < palette.size());
-            const genie::Color &g_color = palette[paletteIndex];
-            img.setPixel(col, row, sf::Color(g_color.r,
-                                             g_color.g,
-                                             g_color.b,
-                                             frameData.alpha_channel[row * width + col]
-                                             ));
+
+            assert(paletteIndex < colors.size());
+            const genie::Color &g_color = colors[paletteIndex];
+
+            const size_t pixelPos = (row * width + col) * 4;
+            pixels[pixelPos + 0] = g_color.r;
+            pixels[pixelPos + 1] = g_color.g;
+            pixels[pixelPos + 2] = g_color.b;
+            pixels[pixelPos + 3] = alpha[row * width + col];
         }
     }
-
-    const sf::Color shadow(0, 0, 0, 128);
     for (const genie::XY pos : frameData.shadow_mask) {
-        img.setPixel(pos.x, pos.y, shadow);
+        pixels[pos.y * width + pos.x + 3] = 128;
     }
 
-    genie::PlayerColour pc  = DataManager::Inst().getPlayerColor(playerId);
+//    const sf::Color shadow(0, 0, 0, 128);
+//    for (const genie::XY pos : frameData.shadow_mask) {
+//        img.setPixel(pos.x, pos.y, shadow);
+//    }
+
     if (playerId > 0) {
+        genie::PlayerColour pc  = DataManager::Inst().getPlayerColor(playerId);
         for (const genie::PlayerColorXY mask : frameData.player_color_mask) {
             const genie::Color &color = palette[mask.index + pc.PlayerColorBase];
-            img.setPixel(mask.x, mask.y, sf::Color(color.r, color.g, color.b));
+            const size_t pixelPos = (mask.y * width + mask.x) * 4;
+            pixels[pixelPos + 0] = color.r;
+            pixels[pixelPos + 1] = color.g;
+            pixels[pixelPos + 2] = color.b;
+//            img.setPixel(mask.x, mask.y, sf::Color(color.r, color.g, color.b));
         }
     }
-    const sf::Color shield(255, 0, 0, 255);
-    for (const genie::XY pos : frameData.shield_mask) {
-        img.setPixel(pos.x, pos.y, shield);
-    }
+
+    sf::Texture img;
+    img.create(width, height);
+    img.update(pixels);
 
     return img;
 }

@@ -77,7 +77,8 @@ bool GameState::init()
 
     std::shared_ptr<genie::SlpFile> overlayFile = ResourceManager::Inst()->getUiOverlay(ResourceManager::Ui1280x1024, ResourceManager::Viking);
     if (overlayFile) {
-        m_uiOverlay.loadFromImage(res::Resource::convertFrameToImage(overlayFile->getFrame()));
+//        m_uiOverlay.loadFromImage(res::Resource::convertFrameToImage(overlayFile->getFrame()));
+        m_uiOverlay = res::Resource::convertFrameToImage(overlayFile->getFrame());
         log.info("Loaded UI overlay with size %dx%d", m_uiOverlay.getSize().x, m_uiOverlay.getSize().y);
     } else {
         ResourceManager::UiResolution attemptedResolution = ResourceManager::Ui1280x1024;
@@ -101,7 +102,8 @@ bool GameState::init()
 
         if (overlayFile) {
             log.warn("Loaded fallback ui overlay res % for civ %", attemptedResolution, attemptedCiv);
-            m_uiOverlay.loadFromImage(res::Resource::convertFrameToImage(overlayFile->getFrame()));
+//            m_uiOverlay.loadFromImage(res::Resource::convertFrameToImage(overlayFile->getFrame()));
+            m_uiOverlay = res::Resource::convertFrameToImage(overlayFile->getFrame());
         } else {
             log.error("Failed to load ui overlay");
         }
@@ -109,7 +111,8 @@ bool GameState::init()
 
     m_cursors = ResourceManager::Inst()->getSlp(ResourceManager::filenameID("mcursors.shp"));
     if (m_cursors) {
-        m_cursorTexture.loadFromImage(res::Resource::convertFrameToImage(m_cursors->getFrame(0)));
+        m_cursorTexture = res::Resource::convertFrameToImage(m_cursors->getFrame(0));
+//        m_cursorTexture.loadFromImage(res::Resource::convertFrameToImage(m_cursors->getFrame(0)));
         m_cursor.setTexture(m_cursorTexture);
     } else {
         log.error("Failed to get cursors");

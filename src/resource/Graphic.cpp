@@ -81,7 +81,7 @@ const sf::Texture &Graphic::getImage(uint32_t frame_num, float angle)
     }
 
     const genie::PalFile &palette = ResourceManager::Inst()->getPalette(50500);
-    sf::Image img = Resource::convertFrameToImage(slp_->getFrame(frame_num), palette);
+    sf::Image img = Resource::convertFrameToImage(slp_->getFrame(frame_num), palette).copyToImage();
 
     if (mirrored) {
         img.flipHorizontally();
