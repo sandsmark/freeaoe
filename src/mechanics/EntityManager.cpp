@@ -85,10 +85,6 @@ void EntityManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
         const ScreenPos unitPosition = renderTarget->camera()->absoluteScreenPos(entity->position);
 
         ScreenRect unitRect = unit->renderer().rect() + unitPosition;
-        if (renderTarget->camera()->isVisible(unitRect)) {
-            entity->renderer().drawOn(m_outlineOverlay, unitPosition);
-        }
-
 
         for (const Entity::Annex &annex : unit->annexes) {
             const ScreenPos annexPosition = renderTarget->camera()->absoluteScreenPos(entity->position + annex.offset);
@@ -98,6 +94,9 @@ void EntityManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
             }
 
             annex.entity->renderer().drawOn(m_outlineOverlay, renderTarget->camera()->absoluteScreenPos(entity->position + annex.offset));
+        }
+        if (renderTarget->camera()->isVisible(unitRect)) {
+            entity->renderer().drawOn(m_outlineOverlay, unitPosition);
         }
     }
 

@@ -75,8 +75,7 @@ bool GraphicRender::update(Time time)
         time_last_frame_ = time;
         newFrame = 0;
     } else {
-        float framerate = 10;
-        framerate = graphic_->getFrameRate();
+        float framerate = graphic_->getFrameRate();
 
         if (elapsed > framerate / 0.0015) {
             if (newFrame < graphic_->data_.FrameCount - 1) {
@@ -100,19 +99,19 @@ bool GraphicRender::update(Time time)
 
 void GraphicRender::drawOn(sf::RenderTarget &renderTarget, const ScreenPos screenPos)
 {
+    if (graphic_ && graphic_->isValid()) {
+        sf::Sprite sprite;
+        sprite.setTexture(image());
+        sprite.setPosition(screenPos - graphic_->getHotspot(current_frame_, m_angle));
+        renderTarget.draw(sprite);
+    }
+
     for (const GraphicDelta &delta : m_deltas) {
         if (delta.angleToDrawOn >= 0 && delta.graphic->graphic_->angleToOrientation(m_angle) != delta.angleToDrawOn) {
             continue;
         }
 
         delta.graphic->drawOn(renderTarget, screenPos + delta.offset);
-    }
-
-    if (graphic_ && graphic_->isValid()) {
-        sf::Sprite sprite;
-        sprite.setTexture(image());
-        sprite.setPosition(screenPos - graphic_->getHotspot(current_frame_, m_angle));
-        renderTarget.draw(sprite);
     }
 }
 
@@ -135,6 +134,7 @@ const sf::Texture &GraphicRender::image()
     if (!graphic_) {
         return nullImage;
     }
+
     return graphic_->getImage(current_frame_, m_angle);
 }
 
@@ -176,6 +176,9 @@ void GraphicRender::setGraphic(res::GraphicPtr graphic)
 
         m_deltas.push_back(delta);
     }
+//    if (!m_deltas.empty()) {
+//        std::reverse(m_deltas.begin(), m_deltas.end());
+//    }
 }
 
 ScreenRect GraphicRender::rect()
