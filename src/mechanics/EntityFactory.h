@@ -16,22 +16,22 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENTITYFACTORY_H
-#define ENTITYFACTORY_H
+#ifndef UNITFACTORY_H
+#define UNITFACTORY_H
 
 #include "../core/Entity.h"
 #include "mechanics/Civilization.h"
 
-class EntityFactory
+class UnitFactory
 {
 public:
-    static EntityFactory &Inst();
+    static UnitFactory &Inst();
 
     Unit::Ptr createUnit(int ID, const MapPos &position, int playerId, Civilization::Ptr civ);
 
 private:
-    EntityFactory();
-    virtual ~EntityFactory();
+    UnitFactory();
+    virtual ~UnitFactory();
 };
 
-#endif // ENTITYFACTORY_H
+#endif // UNITFACTORY_H

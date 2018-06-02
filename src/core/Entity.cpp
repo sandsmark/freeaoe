@@ -85,7 +85,7 @@ bool Unit::update(Time time)
     return Entity::update(time) || updated;
 }
 
-const std::vector<const genie::Unit *> Unit::creatableEntities()
+const std::vector<const genie::Unit *> Unit::creatableUnits()
 {
     return m_civilization->creatableUnits(data.ID);
 }

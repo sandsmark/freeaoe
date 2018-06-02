@@ -64,7 +64,7 @@ bool ActionPanel::init()
         m_commandIcons[Command::PreviousPage].loadFromImage(prevImage);
     }
 
-    return m_entityManager != nullptr;
+    return m_unitManager != nullptr;
 }
 
 void ActionPanel::handleEvent(sf::Event event)
@@ -104,8 +104,8 @@ void ActionPanel::handleEvent(sf::Event event)
 
 bool ActionPanel::update(Time /*time*/)
 {
-    if (m_entityManager->selected() != m_selectedEntities) {
-        m_selectedEntities = m_entityManager->selected();
+    if (m_unitManager->selected() != m_selectedUnits) {
+        m_selectedUnits = m_unitManager->selected();
         updateButtons();
         m_dirty = true;
     }
@@ -160,9 +160,9 @@ void ActionPanel::draw()
     }
 }
 
-void ActionPanel::setEntityManager(const std::shared_ptr<EntityManager> &entityManager)
+void ActionPanel::setUnitManager(const std::shared_ptr<UnitManager> &unitManager)
 {
-    m_entityManager = entityManager;
+    m_unitManager = unitManager;
 }
 
 ScreenRect ActionPanel::rect() const
@@ -190,11 +190,11 @@ void ActionPanel::releaseButtons()
 void ActionPanel::updateButtons()
 {
     currentButtons.clear();
-    if (m_selectedEntities.empty()) {
+    if (m_selectedUnits.empty()) {
         return;
     }
 
-    Unit::Ptr unit = *m_selectedEntities.begin();
+    Unit::Ptr unit = *m_selectedUnits.begin();
 
     std::cout << unit->data.Creatable.GarrisonGraphic << std::endl;
 
@@ -238,7 +238,7 @@ void ActionPanel::addCreateButtons(const std::shared_ptr<Unit> &unit)
 
     bool hasNext = false;
     bool hasPrevious = false;
-    for (const genie::Unit *creatable : unit->creatableEntities()) {
+    for (const genie::Unit *creatable : unit->creatableUnits()) {
         if (creatable->Creatable.ButtonID < m_buttonOffset) {
             hasPrevious = true;
             continue;

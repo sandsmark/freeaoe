@@ -60,7 +60,7 @@ public:
 
     Size uiSize() const;
 
-    const std::shared_ptr<EntityManager> &entityManager() { return m_entityManager; }
+    const std::shared_ptr<UnitManager> &unitManager() { return m_unitManager; }
 
 private:
     static Logger &log;
@@ -69,7 +69,7 @@ private:
 
     std::shared_ptr<SfmlRenderTarget> renderTarget_;
 
-    std::shared_ptr<EntityManager> m_entityManager;
+    std::shared_ptr<UnitManager> m_unitManager;
     std::unique_ptr<ActionPanel> m_actionPanel;
     /*
   GameServer *game_server_;

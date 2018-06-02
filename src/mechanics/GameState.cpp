@@ -49,11 +49,11 @@ GameState::GameState(std::shared_ptr<SfmlRenderTarget> renderTarget) :
     m_cameraDeltaY(0),
     m_lastUpdate(0)
 {
-    m_entityManager = std::make_shared<EntityManager>();
+    m_unitManager = std::make_shared<UnitManager>();
     renderTarget_ = renderTarget;
 
     m_actionPanel = std::make_unique<ActionPanel>(renderTarget_);
-    m_actionPanel->setEntityManager(m_entityManager);
+    m_actionPanel->setUnitManager(m_unitManager);
 }
 
 GameState::~GameState()
@@ -67,7 +67,7 @@ void GameState::setScenario(std::shared_ptr<genie::ScnFile> scenario)
 
 bool GameState::init()
 {
-    if (!m_entityManager->init()) {
+    if (!m_unitManager->init()) {
         return false;
     }
 
@@ -140,23 +140,23 @@ bool GameState::init()
         for (int playerNum = 0; playerNum < scenario_->playerUnits.size(); playerNum++) {
             for (const genie::ScnUnit &scnunit : scenario_->playerUnits[playerNum].units) {
                 MapPos unitPos(scnunit.positionX * Constants::TILE_SIZE, scnunit.positionY * Constants::TILE_SIZE, scnunit.positionZ);
-                Unit::Ptr unit = EntityFactory::Inst().createUnit(scnunit.objectID, unitPos, playerNum, m_civilizations[0]);
+                Unit::Ptr unit = UnitFactory::Inst().createUnit(scnunit.objectID, unitPos, playerNum, m_civilizations[0]);
                 if (scnunit.rotation > 0) {
                     unit->setAngle(scnunit.rotation * M_PI * 2. / 16.);
                 }
-                m_entityManager->add(unit);
+                m_unitManager->add(unit);
             }
         }
     } else {
         map_->setUpSample();
 
-        m_entityManager->add(EntityFactory::Inst().createUnit(Unit::FuriousTheMonkeyBoy, MapPos(48*6, 48*10, 0), 0, m_civilizations[0]));
-        m_entityManager->add(EntityFactory::Inst().createUnit(Unit::Cobra, MapPos(48*8, 48*6, 0), 0, m_civilizations[0]));
+        m_unitManager->add(UnitFactory::Inst().createUnit(Unit::FuriousTheMonkeyBoy, MapPos(48*6, 48*10, 0), 0, m_civilizations[0]));
+        m_unitManager->add(UnitFactory::Inst().createUnit(Unit::Cobra, MapPos(48*8, 48*6, 0), 0, m_civilizations[0]));
 
-        m_entityManager->add(EntityFactory::Inst().createUnit(Unit::FemaleVillager, MapPos(48*6, 48*6, 0), 0, m_civilizations[0]));
-        m_entityManager->add(EntityFactory::Inst().createUnit(280, MapPos(48*10, 48*10, 0), 0, m_civilizations[0])); // mangonel
+        m_unitManager->add(UnitFactory::Inst().createUnit(Unit::FemaleVillager, MapPos(48*6, 48*6, 0), 0, m_civilizations[0]));
+        m_unitManager->add(UnitFactory::Inst().createUnit(280, MapPos(48*10, 48*10, 0), 0, m_civilizations[0])); // mangonel
 
-        Unit::Ptr unit = EntityFactory::Inst().createUnit(Unit::TownCenter, MapPos(48*3, 48*3, 0), 0, m_civilizations[0]);
+        Unit::Ptr unit = UnitFactory::Inst().createUnit(Unit::TownCenter, MapPos(48*3, 48*3, 0), 0, m_civilizations[0]);
 
         if (unit->data.Building.FoundationTerrainID > 0) {
             int width = unit->data.Size.x;
@@ -168,7 +168,7 @@ bool GameState::init()
             }
         }
 
-        m_entityManager->add(unit);
+        m_unitManager->add(unit);
         log.debug("Added unit at %", unit->position);
     }
 
@@ -176,7 +176,7 @@ bool GameState::init()
     mapRenderer_.setRenderTarget(renderTarget_);
     mapRenderer_.setMap(map_);
 
-    m_entityManager->setMap(map_);
+    m_unitManager->setMap(map_);
 
     return true;
 
@@ -215,7 +215,7 @@ bool GameState::init()
 void GameState::draw()
 {
     mapRenderer_.display();
-    m_entityManager->render(renderTarget_);
+    m_unitManager->render(renderTarget_);
 
     if (m_selecting) {
         renderTarget_->draw(m_selectionRect, sf::Color::Transparent, sf::Color::White);
@@ -232,7 +232,7 @@ bool GameState::update(Time time)
     bool updated = false;
     updated = mapRenderer_.update(time) || updated;
 
-    updated = m_entityManager->update(time) || updated;
+    updated = m_unitManager->update(time) || updated;
     updated = m_actionPanel->update(time) || updated;
 
     if (m_cameraDeltaX != 0 || m_cameraDeltaY != 0) {
@@ -363,11 +363,11 @@ void GameState::handleEvent(sf::Event event)
 
     if (event.type == sf::Event::MouseButtonReleased) {
         if (event.mouseButton.button == sf::Mouse::Button::Left && m_selecting) {
-            m_entityManager->selectUnits(m_selectionRect, renderTarget_->camera());
+            m_unitManager->selectUnits(m_selectionRect, renderTarget_->camera());
             m_selectionRect = ScreenRect();
             m_selecting = false;
         } else if (event.mouseButton.button == sf::Mouse::Button::Right) {
-            m_entityManager->onRightClick(renderTarget_->camera()->absoluteMapPos(ScreenPos(event.mouseButton.x, event.mouseButton.y)));
+            m_unitManager->onRightClick(renderTarget_->camera()->absoluteMapPos(ScreenPos(event.mouseButton.x, event.mouseButton.y)));
         }
 
     }

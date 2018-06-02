@@ -70,16 +70,15 @@ Logger &MoveOnMap::log = Logger::getLogger("freeaoe.MoveOnMap");
 
 static const float PATHFINDING_HEURISTIC_WEIGHT = 1.;
 
-MoveOnMap::MoveOnMap(MapPos destination, MapPtr map, Unit::Ptr unit, EntityManager *entityManager) :
+MoveOnMap::MoveOnMap(MapPos destination, MapPtr map, Unit::Ptr unit, UnitManager *unitManager) :
     IAction(Type::Move),
     m_map(map),
     target_reached(false),
     m_unit(unit),
-    m_entityManager(entityManager)
+    m_unitManager(unitManager)
 {
     dest_ = destination;
     last_update_ = 0;
-
 }
 
 MoveOnMap::~MoveOnMap()
@@ -165,13 +164,13 @@ bool MoveOnMap::update(Time time)
     return true;
 }
 
-std::shared_ptr<MoveOnMap> MoveOnMap::moveUnitTo(Unit::Ptr unit, MapPos destination, MapPtr map, EntityManager *entityManager)
+std::shared_ptr<MoveOnMap> MoveOnMap::moveUnitTo(Unit::Ptr unit, MapPos destination, MapPtr map, UnitManager *unitManager)
 {
     if (!unit->data.Speed) {
         log.info("Handled unit that can't move %s", unit->readableName);
         return nullptr;
     }
-    std::shared_ptr<MoveOnMap> action (new act::MoveOnMap(destination, map, unit, entityManager));
+    std::shared_ptr<MoveOnMap> action (new act::MoveOnMap(destination, map, unit, unitManager));
 
     action->m_terrainMoveMultiplier = DataManager::Inst().getTerrainRestriction(unit->data.TerrainRestriction).PassableBuildableDmgMultiplier;
     action->speed_ = unit->data.Speed;
@@ -332,7 +331,7 @@ bool MoveOnMap::isPassable(const int x, const int y)
 
     const MapPos mapPos(x, y);
     Unit::Ptr unit = m_unit.lock();
-    for (const Unit::Ptr &otherUnit : m_entityManager->units()) {
+    for (const Unit::Ptr &otherUnit : m_unitManager->units()) {
         if (otherUnit.get() == unit.get()) {
             continue;
         }

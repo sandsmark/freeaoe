@@ -155,7 +155,7 @@ struct Unit : public Entity
 
     bool update(Time time) override;
 
-    const std::vector<const genie::Unit *> creatableEntities();
+    const std::vector<const genie::Unit *> creatableUnits();
 
     int playerId;
 

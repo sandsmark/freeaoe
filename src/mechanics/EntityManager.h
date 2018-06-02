@@ -16,8 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENTITYMANAGER_H
-#define ENTITYMANAGER_H
+#ifndef UNITMANAGER_H
+#define UNITMANAGER_H
 #include <unordered_set>
 #include <core/Entity.h>
 #include "Map.h"
@@ -31,11 +31,11 @@ typedef std::shared_ptr<Camera> CameraPtr;
 // Base class (EntitySpace?)
 typedef std::unordered_set<Unit::Ptr> UnitSet;
 
-class EntityManager
+class UnitManager
 {
 public:
-    EntityManager();
-    virtual ~EntityManager();
+    UnitManager();
+    virtual ~UnitManager();
 
     void add(Unit::Ptr unit);
 
@@ -61,4 +61,4 @@ private:
     MoveTargetMarker::Ptr m_moveTargetMarker;
 };
 
-#endif // ENTITYMANAGER_H
+#endif // UNITMANAGER_H

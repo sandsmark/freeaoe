@@ -24,7 +24,7 @@
 #include "Map.h"
 #include <genie/dat/TerrainRestriction.h>
 
-class EntityManager;
+class UnitManager;
 
 namespace act {
 
@@ -36,10 +36,10 @@ public:
 
     virtual bool update(Time time);
 
-    static std::shared_ptr<MoveOnMap> moveUnitTo(Unit::Ptr unit, MapPos destination, MapPtr map, EntityManager *entityManager);
+    static std::shared_ptr<MoveOnMap> moveUnitTo(Unit::Ptr unit, MapPos destination, MapPtr map, UnitManager *unitManager);
 
 private:
-    MoveOnMap(MapPos destination, MapPtr map, Unit::Ptr unit, EntityManager *entityManager);
+    MoveOnMap(MapPos destination, MapPtr map, Unit::Ptr unit, UnitManager *unitManager);
 
     std::vector<MapPos> findPath(const MapPos &start, const MapPos &end, int coarseness);
     bool isPassable(const int x, const int y);
@@ -49,7 +49,7 @@ private:
     MapPtr m_map;
     MapPos dest_;
     std::vector<MapPos> m_path;
-    EntityManager *m_entityManager;
+    UnitManager *m_unitManager;
     MapPos m_currentTarget;
     std::vector<float> m_terrainMoveMultiplier;
     float speed_;

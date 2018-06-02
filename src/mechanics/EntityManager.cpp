@@ -31,27 +31,27 @@
 
 #include <iostream>
 
-EntityManager::EntityManager()
+UnitManager::UnitManager()
 {
 }
 
-EntityManager::~EntityManager()
+UnitManager::~UnitManager()
 {
 }
 
-void EntityManager::add(Unit::Ptr unit)
+void UnitManager::add(Unit::Ptr unit)
 {
     m_units.insert(unit);
 }
 
-bool EntityManager::init()
+bool UnitManager::init()
 {
     m_moveTargetMarker = std::make_shared<MoveTargetMarker>();
 
     return true;
 }
 
-bool EntityManager::update(Time time)
+bool UnitManager::update(Time time)
 {
     bool updated = false;
 
@@ -64,7 +64,7 @@ bool EntityManager::update(Time time)
     return updated;
 }
 
-void EntityManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
+void UnitManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
 {
     if (m_outlineOverlay.getSize() != renderTarget->getSize()) {
         m_outlineOverlay.create(renderTarget->getSize().x, renderTarget->getSize().y);
@@ -154,7 +154,7 @@ void EntityManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
     m_moveTargetMarker->renderer().drawOn(*renderTarget->renderTarget_, renderTarget->camera()->absoluteScreenPos(m_moveTargetMarker->position));
 }
 
-void EntityManager::onRightClick(const MapPos &mapPos)
+void UnitManager::onRightClick(const MapPos &mapPos)
 {
     if (m_selectedUnits.empty()) {
         return;
@@ -168,7 +168,7 @@ void EntityManager::onRightClick(const MapPos &mapPos)
     m_moveTargetMarker->moveTo(mapPos);
 }
 
-void EntityManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &camera)
+void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &camera)
 {
     m_selectedUnits.clear();
 
@@ -196,7 +196,7 @@ void EntityManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr
     }
 }
 
-void EntityManager::setMap(MapPtr map)
+void UnitManager::setMap(MapPtr map)
 {
     m_map = map;
 }

@@ -26,21 +26,21 @@
 
 using std::shared_ptr;
 
-EntityFactory &EntityFactory::Inst()
+UnitFactory &UnitFactory::Inst()
 {
-    static EntityFactory inst;
+    static UnitFactory inst;
     return inst;
 }
 
-EntityFactory::EntityFactory()
+UnitFactory::UnitFactory()
 {
 }
 
-EntityFactory::~EntityFactory()
+UnitFactory::~UnitFactory()
 {
 }
 
-Unit::Ptr EntityFactory::createUnit(int ID, const MapPos &position, int playerId, Civilization::Ptr civ)
+Unit::Ptr UnitFactory::createUnit(int ID, const MapPos &position, int playerId, Civilization::Ptr civ)
 {
     std::cout << "Creating  " << ID << std::endl;
     const genie::Unit &gunit = DataManager::Inst().getUnit(ID);

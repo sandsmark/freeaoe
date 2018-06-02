@@ -11,7 +11,7 @@
 class Entity;
 class Unit;
 class SfmlRenderTarget;
-class EntityManager;
+class UnitManager;
 typedef std::unordered_set<std::shared_ptr<Unit>> UnitSet;
 
 class ActionPanel : public IState
@@ -100,7 +100,7 @@ public:
     bool update(Time time) override;
     void draw() override;
 
-    void setEntityManager(const std::shared_ptr<EntityManager> &entityManager);
+    void setUnitManager(const std::shared_ptr<UnitManager> &unitManager);
 
     ScreenRect rect() const;
 
@@ -136,7 +136,7 @@ private:
     ScreenRect buttonRect(const int index) const;
 
     std::shared_ptr<SfmlRenderTarget> m_renderTarget;
-    std::shared_ptr<EntityManager> m_entityManager;
+    std::shared_ptr<UnitManager> m_unitManager;
     ScreenRect m_rect;
 
     std::unordered_map<Command, sf::Texture> m_commandIcons;
@@ -147,7 +147,7 @@ private:
     int m_currentPage = 3;
     int m_buttonOffset = 0;
 
-    UnitSet m_selectedEntities;
+    UnitSet m_selectedUnits;
 
     std::vector<InterfaceButton> currentButtons;
     bool m_dirty = true;
