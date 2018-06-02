@@ -24,10 +24,6 @@
 #include "Map.h"
 #include <genie/dat/TerrainRestriction.h>
 
-namespace comp {
-class MapObject;
-}
-
 class EntityManager;
 
 namespace act {

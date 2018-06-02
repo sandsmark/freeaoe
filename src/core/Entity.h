@@ -134,6 +134,7 @@ struct Unit : public Entity
 
         Cobra = 748,
         VMDL = 206,
+        FuriousTheMonkeyBoy = 860,
     };
 
     typedef std::shared_ptr<Unit> Ptr;
@@ -149,6 +150,8 @@ struct Unit : public Entity
     void setAngle(const float angle);
     void setCurrentAction(ActionPtr action);
     void removeAction(IAction *action);
+    const ActionPtr &currentAction() const { return m_currentAction; }
+
 
     bool update(Time time) override;
 
@@ -160,7 +163,7 @@ struct Unit : public Entity
 
 protected:
     res::GraphicPtr movingGraphics;
-    ActionPtr currentAction;
+    ActionPtr m_currentAction;
     std::shared_ptr<Civilization> m_civilization;
 };
 

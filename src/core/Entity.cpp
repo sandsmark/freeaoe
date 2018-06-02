@@ -78,8 +78,8 @@ bool Unit::update(Time time)
         updated = annex.entity->update(time) || updated;
     }
 
-    if (currentAction) {
-        updated = currentAction->update(time) || updated;
+    if (m_currentAction) {
+        updated = m_currentAction->update(time) || updated;
     }
 
     return Entity::update(time) || updated;
@@ -97,7 +97,7 @@ void Unit::setAngle(const float angle)
 
 void Unit::setCurrentAction(ActionPtr action)
 {
-    currentAction = action;
+    m_currentAction = action;
 
     if (!action) {
         return;
@@ -112,8 +112,8 @@ void Unit::setCurrentAction(ActionPtr action)
 
 void Unit::removeAction(IAction *action)
 {
-    if (currentAction.get() == action) {
-        currentAction.reset();
+    if (m_currentAction.get() == action) {
+        m_currentAction.reset();
         m_graphics.setGraphic(defaultGraphics);
     }
 }

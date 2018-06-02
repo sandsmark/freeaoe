@@ -150,7 +150,8 @@ bool GameState::init()
     } else {
         map_->setUpSample();
 
-        m_entityManager->add(EntityFactory::Inst().createUnit(487, MapPos(48*6, 48*10, 0), 0, m_civilizations[0]));
+        m_entityManager->add(EntityFactory::Inst().createUnit(Unit::FuriousTheMonkeyBoy, MapPos(48*6, 48*10, 0), 0, m_civilizations[0]));
+        m_entityManager->add(EntityFactory::Inst().createUnit(Unit::Cobra, MapPos(48*8, 48*6, 0), 0, m_civilizations[0]));
 
         m_entityManager->add(EntityFactory::Inst().createUnit(Unit::FemaleVillager, MapPos(48*6, 48*6, 0), 0, m_civilizations[0]));
         m_entityManager->add(EntityFactory::Inst().createUnit(280, MapPos(48*10, 48*10, 0), 0, m_civilizations[0])); // mangonel
