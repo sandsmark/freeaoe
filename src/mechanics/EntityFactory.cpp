@@ -45,14 +45,14 @@ Unit::Ptr EntityFactory::createUnit(int ID, const MapPos &position, int playerId
     std::cout << "Creating  " << ID << std::endl;
     const genie::Unit &gunit = DataManager::Inst().getUnit(ID);
 
-    Unit::Ptr entity = std::make_shared<Unit>(gunit, playerId, civ);
-    entity->position = position;
+    Unit::Ptr unit = std::make_shared<Unit>(gunit, playerId, civ);
+    unit->position = position;
 
     if (gunit.Type >= genie::Unit::BuildingType) {
         if (gunit.Building.StackUnitID >= 0) {
-            Entity::Annex annex;
-            annex.entity = createUnit(gunit.Building.StackUnitID, position, playerId, civ);
-            entity->annexes.push_back(annex);
+            Unit::Annex annex;
+            annex.unit = createUnit(gunit.Building.StackUnitID, position, playerId, civ);
+            unit->annexes.push_back(annex);
         }
 
         for (const genie::unit::BuildingAnnex &annexData : gunit.Building.Annexes) {
@@ -60,16 +60,16 @@ Unit::Ptr EntityFactory::createUnit(int ID, const MapPos &position, int playerId
                 continue;
             }
 
-            Entity::Annex annex;
+            Unit::Annex annex;
             annex.offset = MapPos(annexData.Misplacement.first * -48, annexData.Misplacement.second * -48);
-            annex.entity = createUnit(annexData.UnitID, position, playerId, civ);
-            entity->annexes.push_back(annex);
+            annex.unit = createUnit(annexData.UnitID, position, playerId, civ);
+            unit->annexes.push_back(annex);
         }
 
-        if (!entity->annexes.empty()) {
-            std::reverse(entity->annexes.begin(), entity->annexes.end());
+        if (!unit->annexes.empty()) {
+            std::reverse(unit->annexes.begin(), unit->annexes.end());
         }
     }
 
-    return entity;
+    return unit;
 }

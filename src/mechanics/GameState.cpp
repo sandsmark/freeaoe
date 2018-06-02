@@ -363,7 +363,7 @@ void GameState::handleEvent(sf::Event event)
 
     if (event.type == sf::Event::MouseButtonReleased) {
         if (event.mouseButton.button == sf::Mouse::Button::Left && m_selecting) {
-            m_entityManager->selectEntities(m_selectionRect, renderTarget_->camera());
+            m_entityManager->selectUnits(m_selectionRect, renderTarget_->camera());
             m_selectionRect = ScreenRect();
             m_selecting = false;
         } else if (event.mouseButton.button == sf::Mouse::Button::Right) {

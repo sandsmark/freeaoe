@@ -165,16 +165,10 @@ bool MoveOnMap::update(Time time)
     return true;
 }
 
-std::shared_ptr<MoveOnMap> MoveOnMap::moveUnitTo(EntityPtr entity, MapPos destination, MapPtr map, EntityManager *entityManager)
+std::shared_ptr<MoveOnMap> MoveOnMap::moveUnitTo(Unit::Ptr unit, MapPos destination, MapPtr map, EntityManager *entityManager)
 {
-    std::shared_ptr<Unit> unit = Entity::asUnit(entity);
-    if (!unit) {
-        log.info("Handed something that can't move %s", entity->readableName);
-        return nullptr;
-    }
-
     if (!unit->data.Speed) {
-        log.info("Handled unit that can't move %s", entity->readableName);
+        log.info("Handled unit that can't move %s", unit->readableName);
         return nullptr;
     }
     std::shared_ptr<MoveOnMap> action (new act::MoveOnMap(destination, map, unit, entityManager));
@@ -338,17 +332,17 @@ bool MoveOnMap::isPassable(const int x, const int y)
 
     const MapPos mapPos(x, y);
     Unit::Ptr unit = m_unit.lock();
-    for (const EntityPtr &other : m_entityManager->entities()) {
-        if (other.get() == unit.get() || other->type != Entity::Type::Unit) {
+    for (const Unit::Ptr &otherUnit : m_entityManager->units()) {
+        if (otherUnit.get() == unit.get()) {
             continue;
         }
-        const Unit::Ptr otherUnit = Entity::asUnit(other);
+
         if (otherUnit->data.Size.z == 0) {
             continue;
         }
 
-        const float xDistance = std::abs(other->position.x - mapPos.x);
-        const float yDistance = std::abs(other->position.y - mapPos.y);
+        const float xDistance = std::abs(otherUnit->position.x - mapPos.x);
+        const float yDistance = std::abs(otherUnit->position.y - mapPos.y);
         const float xSize = (otherUnit->data.Size.x + unit->data.Size.x) * Constants::TILE_SIZE;
         const float ySize = (otherUnit->data.Size.y + unit->data.Size.y) * Constants::TILE_SIZE;
 

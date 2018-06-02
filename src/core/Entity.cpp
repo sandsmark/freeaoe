@@ -75,7 +75,7 @@ bool Unit::update(Time time)
     bool updated = false;
 
     for (Annex &annex : annexes) {
-        updated = annex.entity->update(time) || updated;
+        updated = annex.unit->update(time) || updated;
     }
 
     if (m_currentAction) {

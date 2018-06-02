@@ -12,7 +12,7 @@ class Entity;
 class Unit;
 class SfmlRenderTarget;
 class EntityManager;
-typedef std::unordered_set<std::shared_ptr<Entity>> EntitySet;
+typedef std::unordered_set<std::shared_ptr<Unit>> UnitSet;
 
 class ActionPanel : public IState
 {
@@ -147,7 +147,7 @@ private:
     int m_currentPage = 3;
     int m_buttonOffset = 0;
 
-    EntitySet m_selectedEntities;
+    UnitSet m_selectedEntities;
 
     std::vector<InterfaceButton> currentButtons;
     bool m_dirty = true;

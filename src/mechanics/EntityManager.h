@@ -29,7 +29,7 @@ typedef std::shared_ptr<Camera> CameraPtr;
 //class CameraPtr;
 // IDEA: Class containing all entities, (adds, removes, updates them).
 // Base class (EntitySpace?)
-typedef std::unordered_set<EntityPtr> EntitySet;
+typedef std::unordered_set<Unit::Ptr> UnitSet;
 
 class EntityManager
 {
@@ -37,7 +37,7 @@ public:
     EntityManager();
     virtual ~EntityManager();
 
-    void add(EntityPtr entity);
+    void add(Unit::Ptr unit);
 
     bool init();
 
@@ -46,16 +46,16 @@ public:
 
     void onRightClick(const MapPos &mapPos);
 
-    void selectEntities(const ScreenRect &selectionRect, const CameraPtr &camera);
+    void selectUnits(const ScreenRect &selectionRect, const CameraPtr &camera);
     void setMap(MapPtr map);
 
-    const EntitySet &selected() const { return m_selectedEntities; }
+    const UnitSet &selected() const { return m_selectedUnits; }
 
-    const EntitySet &entities() const { return m_entities; }
+    const UnitSet &units() const { return m_units; }
 
 private:
-    EntitySet m_entities;
-    EntitySet m_selectedEntities;
+    UnitSet m_units;
+    UnitSet m_selectedUnits;
     MapPtr m_map;
     sf::RenderTexture m_outlineOverlay;
     MoveTargetMarker::Ptr m_moveTargetMarker;

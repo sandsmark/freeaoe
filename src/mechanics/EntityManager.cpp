@@ -39,14 +39,13 @@ EntityManager::~EntityManager()
 {
 }
 
-void EntityManager::add(EntityPtr entity)
+void EntityManager::add(Unit::Ptr unit)
 {
-    m_entities.insert(entity);
+    m_units.insert(unit);
 }
 
 bool EntityManager::init()
 {
-
     m_moveTargetMarker = std::make_shared<MoveTargetMarker>();
 
     return true;
@@ -56,8 +55,8 @@ bool EntityManager::update(Time time)
 {
     bool updated = false;
 
-    for (EntityPtr entity : m_entities) {
-        updated = entity->update(time) || updated;
+    for (Unit::Ptr unit : m_units) {
+        updated = unit->update(time) || updated;
     }
 
     updated = m_moveTargetMarker->update(time) || updated;
@@ -73,44 +72,34 @@ void EntityManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
 
     m_outlineOverlay.clear(sf::Color::Transparent);
 
-    for (EntityPtr entity : m_entities) {
-        Unit::Ptr unit = Entity::asUnit(entity);
-        if (!unit) {
-            continue;
-        }
-
+    for (Unit::Ptr unit : m_units) {
         if (!(unit->data.OcclusionMode & genie::Unit::OccludeOthers)) {
             continue;
         }
-        const ScreenPos unitPosition = renderTarget->camera()->absoluteScreenPos(entity->position);
+        const ScreenPos unitPosition = renderTarget->camera()->absoluteScreenPos(unit->position);
 
         ScreenRect unitRect = unit->renderer().rect() + unitPosition;
 
-        for (const Entity::Annex &annex : unit->annexes) {
-            const ScreenPos annexPosition = renderTarget->camera()->absoluteScreenPos(entity->position + annex.offset);
-            ScreenRect annexRect = annex.entity->renderer().rect() + annexPosition;
+        for (const Unit::Annex &annex : unit->annexes) {
+            const ScreenPos annexPosition = renderTarget->camera()->absoluteScreenPos(unit->position + annex.offset);
+            ScreenRect annexRect = annex.unit->renderer().rect() + annexPosition;
             if (!renderTarget->camera()->isVisible(annexRect)) {
                 continue;
             }
 
-            annex.entity->renderer().drawOn(m_outlineOverlay, renderTarget->camera()->absoluteScreenPos(entity->position + annex.offset));
+            annex.unit->renderer().drawOn(m_outlineOverlay, renderTarget->camera()->absoluteScreenPos(unit->position + annex.offset));
         }
         if (renderTarget->camera()->isVisible(unitRect)) {
-            entity->renderer().drawOn(m_outlineOverlay, unitPosition);
+            unit->renderer().drawOn(m_outlineOverlay, unitPosition);
         }
     }
 
-    for (const EntityPtr &entity : m_entities) {
-        Unit::Ptr unit = Entity::asUnit(entity);
-        if (!unit) {
-            continue;
-        }
-
+    for (const Unit::Ptr &unit : m_units) {
         if (!renderTarget->camera()->isVisible(MapRect(unit->position.x, unit->position.y, 10, 10))) {
             continue;
         }
 
-        if (m_selectedEntities.count(entity)) { // draw health indicator
+        if (m_selectedUnits.count(unit)) { // draw health indicator
             sf::RectangleShape rect;
             sf::CircleShape circle;
             circle.setFillColor(sf::Color::Transparent);
@@ -127,7 +116,7 @@ void EntityManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
                 circle.setPointCount(4);
             }
 
-            ScreenPos pos = renderTarget->camera()->absoluteScreenPos(entity->position);
+            ScreenPos pos = renderTarget->camera()->absoluteScreenPos(unit->position);
 
             circle.setPosition(pos.x - width, pos.y - height);
             circle.setRadius(width);
@@ -153,10 +142,10 @@ void EntityManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
             continue;
         }
 
-        entity->renderer().drawOn(*renderTarget->renderTarget_, renderTarget->camera()->absoluteScreenPos(entity->position));
+        unit->renderer().drawOn(*renderTarget->renderTarget_, renderTarget->camera()->absoluteScreenPos(unit->position));
 
-        const ScreenPos pos = renderTarget->camera()->absoluteScreenPos(entity->position);
-        entity->renderer().drawOutlineOn(m_outlineOverlay, pos);
+        const ScreenPos pos = renderTarget->camera()->absoluteScreenPos(unit->position);
+        unit->renderer().drawOutlineOn(m_outlineOverlay, pos);
     }
 
     m_outlineOverlay.display();
@@ -167,49 +156,42 @@ void EntityManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
 
 void EntityManager::onRightClick(const MapPos &mapPos)
 {
-    if (m_selectedEntities.empty()) {
+    if (m_selectedUnits.empty()) {
         return;
     }
 
 
-    for (const EntityPtr &entity : m_selectedEntities) {
-        if (entity->type == Entity::Type::Unit) {
-            Entity::asUnit(entity)->setCurrentAction(act::MoveOnMap::moveUnitTo(entity, mapPos, m_map, this));
-        }
+    for (const Unit::Ptr &unit : m_selectedUnits) {
+        unit->setCurrentAction(act::MoveOnMap::moveUnitTo(unit, mapPos, m_map, this));
     }
 
     m_moveTargetMarker->moveTo(mapPos);
 }
 
-void EntityManager::selectEntities(const ScreenRect &selectionRect, const CameraPtr &camera)
+void EntityManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &camera)
 {
-    m_selectedEntities.clear();
+    m_selectedUnits.clear();
 
-    std::vector<Unit::Ptr> containedEntities;
+    std::vector<Unit::Ptr> containedUnits;
     int8_t requiredInteraction = genie::Unit::ObjectInteraction;
-    for (EntityPtr entity : m_entities) {
-        if (!selectionRect.contains(camera->absoluteScreenPos(entity->position))) {
-            continue;
-        }
-
-        Unit::Ptr unit = Entity::asUnit(entity);
-        if (!unit) {
+    for (Unit::Ptr unit : m_units) {
+        if (!selectionRect.contains(camera->absoluteScreenPos(unit->position))) {
             continue;
         }
 
         requiredInteraction = std::max(unit->data.InteractionMode, requiredInteraction);
-        containedEntities.push_back(unit);
+        containedUnits.push_back(unit);
     }
 
-    for (Unit::Ptr entity : containedEntities) {
-        if (entity->data.InteractionMode < requiredInteraction) {
+    for (Unit::Ptr unit : containedUnits) {
+        if (unit->data.InteractionMode < requiredInteraction) {
             continue;
         }
 
-        std::cout << "Selected " << entity->readableName << " at " << entity->position << std::endl;
-        m_selectedEntities.insert(entity);
+        std::cout << "Selected " << unit->readableName << " at " << unit->position << std::endl;
+        m_selectedUnits.insert(unit);
     }
-    if (m_selectedEntities.empty()) {
+    if (m_selectedUnits.empty()) {
         std::cout << "Unable to find anything to select in " << selectionRect << std::endl;
     }
 }

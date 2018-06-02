@@ -36,7 +36,7 @@ public:
 
     virtual bool update(Time time);
 
-    static std::shared_ptr<MoveOnMap> moveUnitTo(EntityPtr entity, MapPos destination, MapPtr map, EntityManager *entityManager);
+    static std::shared_ptr<MoveOnMap> moveUnitTo(Unit::Ptr unit, MapPos destination, MapPtr map, EntityManager *entityManager);
 
 private:
     MoveOnMap(MapPos destination, MapPtr map, Unit::Ptr unit, EntityManager *entityManager);

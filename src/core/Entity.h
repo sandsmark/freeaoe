@@ -50,11 +50,6 @@ public:
     };
     const Type type = Type::None;
 
-    struct Annex {
-        EntityPtr entity;
-        MapPos offset;
-    };
-
     Entity() = delete;
 
     virtual ~Entity();
@@ -138,6 +133,11 @@ struct Unit : public Entity
     };
 
     typedef std::shared_ptr<Unit> Ptr;
+
+    struct Annex {
+        Unit::Ptr unit;
+        MapPos offset;
+    };
 
     const genie::Unit &data;
 

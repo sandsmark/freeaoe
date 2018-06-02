@@ -194,10 +194,7 @@ void ActionPanel::updateButtons()
         return;
     }
 
-    Unit::Ptr unit = Entity::asUnit(*m_selectedEntities.begin());
-    if (!unit) {
-        return;
-    }
+    Unit::Ptr unit = *m_selectedEntities.begin();
 
     std::cout << unit->data.Creatable.GarrisonGraphic << std::endl;
 
