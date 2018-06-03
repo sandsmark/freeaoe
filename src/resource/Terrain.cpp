@@ -65,10 +65,10 @@ const sf::Texture &Terrain::texture(int x, int y)
 //    std::cerr << "------------------------ " << int(m_data.SLP) << std::endl;
 //    sf::Image img = Resource::convertFrameToImage(ResourceManager::Inst()->getTemplatedSlp(m_data.SLP, genie::SlopeFlat));
 //    sf::Image img = Resource::convertFrameToImage(ResourceManager::Inst()->getTemplatedSlp(m_data.SLP, genie::SlopeWestDown));
-//    sf::Texture img = Resource::convertFrameToImage(m_slp->getFrame(frameNum));
+    sf::Image img = Resource::convertFrameToImage(m_slp->getFrame(frameNum));
 //    sf::Image img = Resource::convertFrameToImage(ResourceManager::Inst()->getSlp(m_data.SLP)->getFrame(0));
 
-    m_images[frameNum] = Resource::convertFrameToImage(m_slp->getFrame(frameNum));
+    m_images[frameNum].loadFromImage(img);
 
     return m_images[frameNum];
 }
@@ -82,7 +82,7 @@ const sf::Image Terrain::image(int x, int y)
     const int tileSquareCount = sqrt(m_slp->getFrameCount());
     const int frameNum = (y % tileSquareCount) + (x % tileSquareCount) * tileSquareCount;
 
-    return Resource::convertFrameToImage(m_slp->getFrame(frameNum)).copyToImage();
+    return Resource::convertFrameToImage(m_slp->getFrame(frameNum));
 }
 
 bool Terrain::load()
@@ -188,9 +188,10 @@ const sf::Texture &Terrain::blendImage(const Blend blends, int tileX, int tileY)
         }
     }
 
-    m_blendImages[blends].create(width, height);
-    m_blendImages[blends].update(pixels);
-//    m_blendImages[blends].loadFromImage(blendImage);
+    sf::Image blendImage;
+    blendImage.create(size.width, size.height, pixels);
+
+    m_blendImages[blends].loadFromImage(blendImage);
 
     return m_blendImages[blends];
 }
@@ -523,10 +524,10 @@ const sf::Texture &Terrain::slopedImage(const TileSlopes &slopes, int tileX, int
         patterns.push_back(genie::FlatPattern);
         patterns.push_back(genie::Pattern29);
 
-        log.debug("% %", slopes.east, slopes.west);
+//        log.debug("% %", slopes.east, slopes.west);
         if ((slopes.southWest == TileSlopes::Flat) + (slopes.south == TileSlopes::Flat) + (slopes.southEast == TileSlopes::Flat) > 1) {
 //            patterns.push_back(genie::HalfDownPattern);
-            log.debug(" ===== % %", slopes.east, slopes.west);
+//            log.debug(" ===== % %", slopes.east, slopes.west);
         }
 
 
@@ -539,7 +540,7 @@ const sf::Texture &Terrain::slopedImage(const TileSlopes &slopes, int tileX, int
     const int frameNum = (tileY % tileSquareCount) + (tileX % tileSquareCount) * tileSquareCount;
 
     genie::SlpFramePtr frame = ResourceManager::Inst()->getSlpTemplateFile()->getFrame(m_slp->getFrame(frameNum), TileSlopes::genieSlope(slopes.self), patterns, ResourceManager::Inst()->getPalette().getColors(), m_slp);
-    const sf::Texture img = res::Resource::convertFrameToImage(frame);
+    const sf::Image img = res::Resource::convertFrameToImage(frame);
     if (!img.getSize().x) {
         static sf::Texture nullTex;
         if (nullTex.getSize().x == 0) {
@@ -550,8 +551,7 @@ const sf::Texture &Terrain::slopedImage(const TileSlopes &slopes, int tileX, int
 
         return nullTex;
     }
-
-    m_slopeImages[slopes] = img;
+    m_slopeImages[slopes].loadFromImage(img);
     return m_slopeImages[slopes];
 }
 

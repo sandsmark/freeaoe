@@ -59,7 +59,7 @@ public:
     /// @param mirrored If set, the image will be returned mirrored
     /// @return Image
     //
-    const sf::Texture &getImage(uint32_t frame_num = 0, float angle = false);
+    const sf::Texture &getImage(uint32_t frame_num = 0, float angle = 0, uint8_t playerId = 0);
     const sf::Texture &overlayImage(uint32_t frame_num, float angle, uint8_t playerId);
 
     const Size size(uint32_t frame_num) const;

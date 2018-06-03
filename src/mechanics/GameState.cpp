@@ -77,8 +77,7 @@ bool GameState::init()
 
     std::shared_ptr<genie::SlpFile> overlayFile = ResourceManager::Inst()->getUiOverlay(ResourceManager::Ui1280x1024, ResourceManager::Viking);
     if (overlayFile) {
-//        m_uiOverlay.loadFromImage(res::Resource::convertFrameToImage(overlayFile->getFrame()));
-        m_uiOverlay = res::Resource::convertFrameToImage(overlayFile->getFrame());
+        m_uiOverlay.loadFromImage(res::Resource::convertFrameToImage(overlayFile->getFrame()));
         log.info("Loaded UI overlay with size %dx%d", m_uiOverlay.getSize().x, m_uiOverlay.getSize().y);
     } else {
         ResourceManager::UiResolution attemptedResolution = ResourceManager::Ui1280x1024;
@@ -102,8 +101,7 @@ bool GameState::init()
 
         if (overlayFile) {
             log.warn("Loaded fallback ui overlay res % for civ %", attemptedResolution, attemptedCiv);
-//            m_uiOverlay.loadFromImage(res::Resource::convertFrameToImage(overlayFile->getFrame()));
-            m_uiOverlay = res::Resource::convertFrameToImage(overlayFile->getFrame());
+            m_uiOverlay.loadFromImage(res::Resource::convertFrameToImage(overlayFile->getFrame()));
         } else {
             log.error("Failed to load ui overlay");
         }
@@ -111,8 +109,7 @@ bool GameState::init()
 
     m_cursors = ResourceManager::Inst()->getSlp(ResourceManager::filenameID("mcursors.shp"));
     if (m_cursors) {
-        m_cursorTexture = res::Resource::convertFrameToImage(m_cursors->getFrame(0));
-//        m_cursorTexture.loadFromImage(res::Resource::convertFrameToImage(m_cursors->getFrame(0)));
+        m_cursorTexture.loadFromImage(res::Resource::convertFrameToImage(m_cursors->getFrame(0)));
         m_cursor.setTexture(m_cursorTexture);
     } else {
         log.error("Failed to get cursors");
@@ -144,9 +141,8 @@ bool GameState::init()
             for (const genie::ScnUnit &scnunit : scenario_->playerUnits[playerNum].units) {
                 MapPos unitPos(scnunit.positionX * Constants::TILE_SIZE, scnunit.positionY * Constants::TILE_SIZE, scnunit.positionZ);
                 Unit::Ptr unit = UnitFactory::Inst().createUnit(scnunit.objectID, unitPos, playerNum, m_civilizations[0]);
-                if (scnunit.rotation > 0) {
-                    unit->setAngle(scnunit.rotation * M_PI * 2. / 16.);
-                }
+                unit->setAngle(scnunit.rotation);
+                unit->renderer().current_frame_ = scnunit.initAnimationFrame % unit->renderer().graphic_->getFrameCount();
                 m_unitManager->add(unit);
             }
         }
@@ -159,7 +155,8 @@ bool GameState::init()
         m_unitManager->add(UnitFactory::Inst().createUnit(Unit::FemaleVillager, MapPos(48*6, 48*6, 0), 0, m_civilizations[0]));
         m_unitManager->add(UnitFactory::Inst().createUnit(280, MapPos(48*10, 48*10, 0), 0, m_civilizations[0])); // mangonel
 
-        Unit::Ptr unit = UnitFactory::Inst().createUnit(Unit::TownCenter, MapPos(48*3, 48*3, 0), 0, m_civilizations[0]);
+
+        Unit::Ptr unit = UnitFactory::Inst().createUnit(Unit::TownCenter, MapPos(48*2, 48*2, 0), 0, m_civilizations[0]);
 
         if (unit->data.Building.FoundationTerrainID > 0) {
             int width = unit->data.Size.x;
@@ -172,7 +169,56 @@ bool GameState::init()
         }
 
         m_unitManager->add(unit);
-        log.debug("Added unit at %", unit->position);
+
+        unit = UnitFactory::Inst().createUnit(117, MapPos(48*6, 48*5, 0), 0, m_civilizations[0]);
+        unit->setAngle(M_PI + M_PI_2);
+        m_unitManager->add(unit);
+
+        unit = UnitFactory::Inst().createUnit(117, MapPos(48*6, 48*4, 0), 0, m_civilizations[0]);
+        unit->setAngle(M_PI + M_PI_2);
+        m_unitManager->add(unit);
+
+        unit = UnitFactory::Inst().createUnit(117, MapPos(48*6, 48*3, 0), 0, m_civilizations[0]);
+        unit->setAngle(M_PI_2);
+        m_unitManager->add(unit);
+
+        unit = UnitFactory::Inst().createUnit(117, MapPos(48*7, 48*3, 0), 0, m_civilizations[0]);
+        unit->setAngle(M_PI);
+        m_unitManager->add(unit);
+
+        unit = UnitFactory::Inst().createUnit(117, MapPos(48*8, 48*3, 0), 0, m_civilizations[0]);
+        unit->setAngle(M_PI);
+        m_unitManager->add(unit);
+
+        unit = UnitFactory::Inst().createUnit(117, MapPos(48*9, 48*3, 0), 0, m_civilizations[0]);
+        unit->setAngle(M_PI_2);
+        m_unitManager->add(unit);
+
+        unit = UnitFactory::Inst().createUnit(117, MapPos(48*10, 48*4, 0), 0, m_civilizations[0]);
+        unit->setAngle(M_PI_2 / 2);
+        m_unitManager->add(unit);
+
+        unit = UnitFactory::Inst().createUnit(117, MapPos(48*11, 48*5, 0), 0, m_civilizations[0]);
+        unit->setAngle(M_PI_2 / 2);
+        m_unitManager->add(unit);
+
+        unit = UnitFactory::Inst().createUnit(117, MapPos(48*12, 48*6, 0), 0, m_civilizations[0]);
+        unit->setAngle(M_PI_2);
+        m_unitManager->add(unit);
+
+        unit = UnitFactory::Inst().createUnit(117, MapPos(48*11, 48*7, 0), 0, m_civilizations[0]);
+        unit->setAngle(M_PI * 2);
+        m_unitManager->add(unit);
+        unit = UnitFactory::Inst().createUnit(117, MapPos(48*10, 48*8, 0), 0, m_civilizations[0]);
+        unit->setAngle(M_PI * 2);
+        m_unitManager->add(unit);
+        unit = UnitFactory::Inst().createUnit(117, MapPos(48*9, 48*9, 0), 0, m_civilizations[0]);
+        unit->setAngle(M_PI * 2);
+        m_unitManager->add(unit);
+
+        unit = UnitFactory::Inst().createUnit(117, MapPos(48*8, 48*10, 0), 0, m_civilizations[0]);
+        unit->setAngle(M_PI_2);
+        m_unitManager->add(unit);
     }
 
     map_->updateMapData();

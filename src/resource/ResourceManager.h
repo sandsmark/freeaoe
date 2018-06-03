@@ -21,6 +21,7 @@
 
 #include <memory>
 #include <unordered_map>
+#include <unordered_set>
 #include <fstream>
 #include <sstream>
 #include "Graphic.h"
@@ -169,6 +170,7 @@ private:
 
     genie::GameVersion m_gameVersion;
     std::string m_dataPath;
+    std::unordered_set<uint32_t> m_nonExistentSlps;
 };
 
 #endif // RESOURCEMANAGER_H

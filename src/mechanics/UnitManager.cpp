@@ -42,6 +42,7 @@ UnitManager::~UnitManager()
 void UnitManager::add(Unit::Ptr unit)
 {
     m_units.insert(unit);
+//    m_units.insert(unit);
 }
 
 bool UnitManager::init()
@@ -188,7 +189,7 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
             continue;
         }
 
-        std::cout << "Selected " << unit->readableName << " at " << unit->position << std::endl;
+        std::cout << "Selected " << unit->readableName << " at " << unit->position << " " << unit->renderer().angle() << " " << unit->renderer().graphic_->data_.SLP << std::endl;
         m_selectedUnits.insert(unit);
     }
     if (m_selectedUnits.empty()) {

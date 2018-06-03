@@ -53,7 +53,8 @@ Graphic::~Graphic()
 }
 
 //------------------------------------------------------------------------------
-const sf::Texture &Graphic::getImage(uint32_t frame_num, float angle)
+/// FIXME: it caches without caring about playerId
+const sf::Texture &Graphic::getImage(uint32_t frame_num, float angle, uint8_t playerId)
 {
     if (!slp_) {
         return nullImage;
@@ -62,7 +63,8 @@ const sf::Texture &Graphic::getImage(uint32_t frame_num, float angle)
     bool mirrored = false;
     if (data_.AngleCount > 1) {
         int lookupAngle = angleToOrientation(angle);
-        if (lookupAngle > data_.AngleCount/2) {
+
+        if (data_.MirroringMode && lookupAngle > data_.AngleCount/2) {
             mirrored = true;
             lookupAngle = data_.AngleCount - lookupAngle;
         }
@@ -81,7 +83,7 @@ const sf::Texture &Graphic::getImage(uint32_t frame_num, float angle)
     }
 
     const genie::PalFile &palette = ResourceManager::Inst()->getPalette(50500);
-    sf::Image img = Resource::convertFrameToImage(slp_->getFrame(frame_num), palette).copyToImage();
+    sf::Image img = Resource::convertFrameToImage(slp_->getFrame(frame_num), palette, playerId);
 
     if (mirrored) {
         img.flipHorizontally();
@@ -104,7 +106,7 @@ const sf::Texture &Graphic::overlayImage(uint32_t frame_num, float angle, uint8_
     bool mirrored = false;
     if (data_.AngleCount > 1) {
         int lookupAngle = angleToOrientation(angle);
-        if (lookupAngle > data_.AngleCount/2) {
+        if (data_.MirroringMode && lookupAngle > data_.AngleCount/2) {
             mirrored = true;
             lookupAngle = data_.AngleCount - lookupAngle;
         }
@@ -172,7 +174,7 @@ ScreenPos Graphic::getHotspot(uint32_t frame_num, float angle) const
     bool mirrored = false;
     if (data_.AngleCount > 1) {
         int lookupAngle = angleToOrientation(angle);
-        if (lookupAngle > data_.AngleCount/2) {
+        if (data_.MirroringMode && lookupAngle > data_.AngleCount/2) {
             mirrored = true;
             lookupAngle = data_.AngleCount - lookupAngle;
         }

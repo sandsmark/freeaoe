@@ -60,6 +60,7 @@ public:
     ScreenRect rect();
 
     void setAngle(float angle);
+    float angle() const { return m_angle; }
 
     res::GraphicPtr graphic_;
 

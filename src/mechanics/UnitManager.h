@@ -26,6 +26,25 @@ class SfmlRenderTarget;
 class Camera;
 typedef std::shared_ptr<Camera> CameraPtr;
 
+struct MapPositionSorter
+{
+    bool operator()(const Unit::Ptr &lhs, const Unit::Ptr &rhs) const {
+        const ScreenPos pos1 = lhs->position.toScreen();
+        const ScreenPos pos2 = rhs->position.toScreen();
+
+        if (pos1.y != pos2.y) {
+            return pos1.y > pos2.y;
+        }
+
+        if (pos1.x != pos2.x) {
+            return pos1.x > pos2.x;
+        }
+
+        // std sucks
+        return lhs > rhs;
+    }
+};
+
 //class CameraPtr;
 // IDEA: Class containing all entities, (adds, removes, updates them).
 // Base class (EntitySpace?)
@@ -51,10 +70,10 @@ public:
 
     const UnitSet &selected() const { return m_selectedUnits; }
 
-    const UnitSet &units() const { return m_units; }
+    const std::set<Unit::Ptr, MapPositionSorter> &units() const { return m_units; }
 
 private:
-    UnitSet m_units;
+    std::set<Unit::Ptr, MapPositionSorter> m_units;
     UnitSet m_selectedUnits;
     MapPtr m_map;
     sf::RenderTexture m_outlineOverlay;

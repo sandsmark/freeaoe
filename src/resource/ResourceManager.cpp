@@ -73,6 +73,9 @@ genie::ScnFilePtr ResourceManager::getScn(unsigned int id)
 genie::SlpFilePtr ResourceManager::getSlp(sf::Uint32 id, const ResourceType type)
 {
     genie::SlpFilePtr slp_ptr;
+    if (m_nonExistentSlps.count(id)) {
+        return slp_ptr;
+    }
 
     switch (type) {
     case ResourceType::Interface:
@@ -106,6 +109,8 @@ genie::SlpFilePtr ResourceManager::getSlp(sf::Uint32 id, const ResourceType type
             return slp_ptr;
         }
     }
+
+    m_nonExistentSlps.insert(id);
 
     log.debug("No slp file with id [%] found!", id);
     return slp_ptr;

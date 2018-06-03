@@ -135,7 +135,7 @@ const sf::Texture &GraphicRender::image()
         return nullImage;
     }
 
-    return graphic_->getImage(current_frame_, m_angle);
+    return graphic_->getImage(current_frame_, m_angle, m_playerId);
 }
 
 const sf::Texture &GraphicRender::outline()
