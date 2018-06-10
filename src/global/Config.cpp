@@ -23,14 +23,23 @@
 #include <iostream>
 #include <iomanip>
 #include <unordered_set>
-#include <experimental/filesystem>
 
+#ifndef __WIN32
+#include <filesystem>
+#else
+namespace std {
+namespace filesystem {
+static bool exists(const std::string&){
+    std::cerr << "stub" << std::endl;
+    return true;
+}
+}
+}
+#endif
 
 #if defined(_WINDOWS)
 #include <Shlobj.h>
 #endif
-
-using namespace std::experimental;
 
 void Config::printUsage(const std::string &programName)
 {
@@ -113,9 +122,9 @@ Config::Config(const std::string &applicationName)
         std::istringstream stream(m_filePath);
         std::string testPath;
         while (std::getline(stream, testPath, ':')) {
-            if (!filesystem::exists(testPath)) {
+            if (!std::filesystem::exists(testPath)) {
                 continue;
-            } if (!filesystem::is_directory(testPath)) {
+            } if (!std::filesystem::is_directory(testPath)) {
                 continue;
             }
 
@@ -167,7 +176,7 @@ bool Config::parseOption(const std::string &option)
 void Config::parseConfigFile(const std::string &path)
 {
     std::cout << "parsing config file  " << path << std::endl;
-    if (!filesystem::exists(path)) {
+    if (!std::filesystem::exists(path)) {
         return;
     }
 

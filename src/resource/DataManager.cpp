@@ -25,9 +25,18 @@
 
 #include "LanguageManager.h"
 
-#include <experimental/filesystem>
-
-using namespace std::experimental;
+#ifndef __WIN32
+#include <filesystem>
+#else
+namespace std {
+namespace filesystem {
+static bool exists(const std::string&){
+    std::cerr << "stub" << std::endl;
+    return true;
+}
+}
+}
+#endif
 
 Logger &DataManager::log = Logger::getLogger("freeaoe.DataManager");
 
@@ -137,17 +146,17 @@ bool DataManager::initialize(const std::string dataPath)
 {
 
     std::vector<std::pair<std::string, genie::GameVersion>> datFilenames({
-        {"Empires.dat",        genie::GV_AoE },
-        {"empires_x1.dat",     genie::GV_RoR },
         {"empires2_x1_p1.dat", genie::GV_TC  }, // the conquerors, patch 1
         {"empires2_x1.dat",    genie::GV_TC  }, // the conquerors
         {"empires2.dat",       genie::GV_AoK }, // age of kings
+        {"empires_x1.dat",     genie::GV_RoR },
+        {"Empires.dat",        genie::GV_AoE },
     });
 
     std::string filePath;
     for (const std::pair<std::string, genie::GameVersion> &datfile : datFilenames) {
         std::string potential = dataPath + datfile.first;
-        if (filesystem::exists(potential)) {
+        if (std::filesystem::exists(potential)) {
             filePath = potential;
             dat_file_.setGameVersion(datfile.second);
             break;

@@ -18,6 +18,19 @@
 
 #include <iostream>
 
+#ifndef __WIN32
+#include <filesystem>
+#else
+namespace std {
+namespace filesystem {
+static bool exists(const std::string&){
+    std::cerr << "stub" << std::endl;
+    return true;
+}
+}
+}
+#endif
+
 #include "Engine.h"
 #include "resource/DataManager.h"
 #include "resource/ResourceManager.h"
@@ -30,9 +43,6 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Shape.hpp>
-
-#include <experimental/filesystem>
-using namespace std::experimental;
 
 // TODO: Bad_alloc
 int main(int argc, char **argv)
@@ -50,7 +60,7 @@ int main(int argc, char **argv)
   }
   const std::string dataPath = config.getValue("game-path") + "/Data/";
 
-  if (!filesystem::exists(dataPath)) {
+  if (!std::filesystem::exists(dataPath)) {
       std::cerr << "Game path " << dataPath << " does not exist" << std::endl;
       config.printUsage(argv[0]);
       return 1;

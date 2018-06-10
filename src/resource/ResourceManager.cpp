@@ -29,11 +29,12 @@
 #include <genie/resource/UIFile.h>
 #include <core/Utility.h>
 
-#include <experimental/filesystem>
+// hack around some broken shit in mingw
+#ifndef __WIN32
+#include <filesystem>
+#endif
+
 #include <unordered_map>
-
-using namespace std::experimental;
-
 
 Logger &ResourceManager::log = Logger::getLogger("freeaoe.ResourceManager");
 
@@ -505,12 +506,13 @@ int ResourceManager::filenameID(const std::string &filename)
 
 std::string ResourceManager::findFile(const std::string &filename) const
 {
-    if (filesystem::exists(m_dataPath + filename)) {
+#ifndef __WIN32
+    if (std::filesystem::exists(m_dataPath + filename)) {
         return m_dataPath + filename;
     }
 
     std::string compareFilename = util::toLowercase(filename);
-    for (const filesystem::directory_entry &entry : filesystem::directory_iterator(m_dataPath)) {
+    for (const std::filesystem::directory_entry &entry : std::filesystem::directory_iterator(m_dataPath)) {
         std::string candidate = util::toLowercase(entry.path().filename());
         if (candidate == compareFilename) {
             return entry.path().filename();
@@ -519,6 +521,9 @@ std::string ResourceManager::findFile(const std::string &filename) const
 
     log.debug("Can't find file %", filename);
     return std::string();
+#else
+    return m_dataPath + filename;
+#endif
 }
 
 bool ResourceManager::loadGraphicsFile()

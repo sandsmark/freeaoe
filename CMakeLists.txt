@@ -2,11 +2,18 @@ cmake_minimum_required(VERSION 2.6)
 
 set (CMAKE_CXX_STANDARD 17)
 
+set(SFML_STATIC_LIBRARIES TRUE)
+
 project(freeaoe)
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/)
 
-find_package(SFML COMPONENTS SYSTEM WINDOW GRAPHICS REQUIRED)
+find_package(SFML COMPONENTS system window graphics REQUIRED)
+
+if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+    set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
+endif()
+
 
 include_directories(src/
   ${CMAKE_HOME_DIRECTORY}/extern/genieutils/include
@@ -83,7 +90,7 @@ add_executable(freeaoe src/Engine.cpp src/main.cpp
 #               ${COMMUNICATION_SRC}
                ${UNSORTED_SRC})
 
-target_link_libraries(freeaoe 
+target_link_libraries(freeaoe
                       ${SFML_WINDOW_LIBRARY}
                       ${SFML_SYSTEM_LIBRARY}
                       ${SFML_GRAPHICS_LIBRARY}
