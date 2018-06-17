@@ -97,22 +97,26 @@ bool GraphicRender::update(Time time)
     return updated;
 }
 
-void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const Renderpass renderpass)
+void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType renderpass)
 {
     if (graphic_ && graphic_->isValid()) {
         sf::Sprite sprite;
         sf::BlendMode blendMode;
 
         switch(renderpass) {
-        case Renderpass::Base:
+        case RenderType::Base:
             sprite.setTexture(graphic_->texture(current_frame_, m_angle, m_playerId, res::ImageType::Base));
             break;
-        case Renderpass::Outline:
+        case RenderType::Outline:
             sprite.setTexture(graphic_->texture(current_frame_, m_angle, m_playerId, res::ImageType::Outline));
             blendMode = sf::BlendAlpha;
             blendMode.alphaSrcFactor = sf::BlendMode::DstAlpha;
             break;
-        case Renderpass::Shadow:
+        case RenderType::ConstructAvailable:
+            sprite.setTexture(graphic_->texture(current_frame_, m_angle, m_playerId, res::ImageType::Construction));
+            break;
+        case RenderType::Shadow:
+        case RenderType::ConstructUnavailable:
             break;
         }
 

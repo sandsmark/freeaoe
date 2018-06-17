@@ -35,7 +35,8 @@ namespace res
 {
 enum class ImageType {
     Base,
-    Outline
+    Outline,
+    Construction
 };
 
 inline std::ostream &operator <<(std::ostream &os, const ImageType &type) {

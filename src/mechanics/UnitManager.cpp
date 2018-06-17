@@ -89,11 +89,11 @@ void UnitManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
             }
             annex.unit->renderer().render(m_outlineOverlay,
                                           renderTarget->camera()->absoluteScreenPos(unit->position + annex.offset),
-                                          comp::Renderpass::Base
+                                          comp::RenderType::Base
                                           );
         }
         if (renderTarget->camera()->isVisible(unitRect)) {
-            unit->renderer().render(m_outlineOverlay, unitPosition, comp::Renderpass::Base);
+            unit->renderer().render(m_outlineOverlay, unitPosition, comp::RenderType::Base);
         }
     }
 
@@ -147,10 +147,10 @@ void UnitManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
 
         unit->renderer().render(*renderTarget->renderTarget_,
                                 renderTarget->camera()->absoluteScreenPos(unit->position),
-                                comp::Renderpass::Base);
+                                comp::RenderType::Base);
 
         const ScreenPos pos = renderTarget->camera()->absoluteScreenPos(unit->position);
-        unit->renderer().render(m_outlineOverlay, pos, comp::Renderpass::Outline);
+        unit->renderer().render(m_outlineOverlay, pos, comp::RenderType::Outline);
     }
 
     m_outlineOverlay.display();
@@ -158,7 +158,7 @@ void UnitManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
 
     m_moveTargetMarker->renderer().render(*renderTarget->renderTarget_,
                                           renderTarget->camera()->absoluteScreenPos(m_moveTargetMarker->position),
-                                          comp::Renderpass::Base);
+                                          comp::RenderType::Base);
 }
 
 void UnitManager::onRightClick(const MapPos &mapPos)

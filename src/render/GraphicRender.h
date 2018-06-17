@@ -33,11 +33,12 @@ const std::string GRAPHIC_RENDER("comp_graphic");
 
 class GraphicRender;
 
-enum class Renderpass {
+enum class RenderType {
     Shadow,
     Base,
     Outline,
-    ConstructIndication
+    ConstructAvailable,
+    ConstructUnavailable
 };
 
 typedef std::shared_ptr<GraphicRender> GraphicPtr;
@@ -53,7 +54,7 @@ public:
 
     bool update(Time time);
 
-    void render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const Renderpass pass);
+    void render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType pass);
 
     void setPlayerId(int playerId);
 

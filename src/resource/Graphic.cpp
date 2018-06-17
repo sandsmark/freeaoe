@@ -101,6 +101,42 @@ const sf::Texture &Graphic::texture(uint32_t frame, float angleRadians, uint8_t 
 
         break;
     }
+    case ImageType::Construction: {
+        const genie::PalFile &palette = ResourceManager::Inst()->getPalette(50500);
+
+        const genie::SlpFramePtr frame = slp_->getFrame(state.frame);
+        const genie::SlpFrameData &frameData = frame->img_data;
+
+        const int width = frame->getWidth();
+        const int height = frame->getHeight();
+
+        Uint8 pixels[width * height * 4];
+
+        for (uint32_t row = 0; row < height; row++) {
+            for (uint32_t col = 0; col < width; col++) {
+                const uint8_t paletteIndex = frameData.pixel_indexes[row * width + col];
+                assert(paletteIndex < palette.colors_.size());
+
+                const genie::Color &g_color = palette.colors_[paletteIndex];
+                const size_t pixelPos = (row * width + col) * 4;
+
+                if ((row + col) % 2 == 1) {
+                    pixels[pixelPos    ] = g_color.r;
+                    pixels[pixelPos + 1] = g_color.g;
+                    pixels[pixelPos + 2] = g_color.b;
+                    pixels[pixelPos + 3] = frameData.alpha_channel[row * width + col];
+                } else {
+                    pixels[pixelPos    ] = g_color.r/2;
+                    pixels[pixelPos + 1] = g_color.g/2;
+                    pixels[pixelPos + 2] = g_color.b/2;
+                    pixels[pixelPos + 3] = frameData.alpha_channel[row * width + col]/2;
+                }
+            }
+        }
+
+        img.create(width, height, pixels);
+        break;
+    }
     default:
         log.error("Trying to get invalid image type %", state.type);
         return nullImage;
