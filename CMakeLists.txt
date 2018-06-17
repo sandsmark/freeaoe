@@ -44,6 +44,7 @@ set(MECHANICS_SRC
     src/mechanics/StateManager.cpp 
     src/mechanics/GameState.cpp 
     src/mechanics/ActionMove.cpp
+    src/mechanics/ActionBuild.cpp
     src/mechanics/Civilization.cpp
     src/mechanics/Player.cpp
     )

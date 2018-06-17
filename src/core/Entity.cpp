@@ -67,6 +67,8 @@ Unit::Unit(const genie::Unit &data_, int playerId_, std::shared_ptr<Civilization
         std::cerr << "Failed to load default graphics" << std::endl;
     }
 
+    m_creationProgress = data.Creatable.TrainTime;
+
     m_graphics.setGraphic(defaultGraphics);
 }
 
@@ -81,6 +83,7 @@ bool Unit::update(Time time)
     if (m_currentAction) {
         updated = m_currentAction->update(time) || updated;
     }
+
 
     return Entity::update(time) || updated;
 }
@@ -99,6 +102,29 @@ ScreenRect Unit::rect() const
     }
 
     return ret;
+}
+
+void Unit::setCreationProgress(float progress)
+{
+    if (data.Type == genie::Unit::BuildingType) {
+        if (m_creationProgress < data.Creatable.TrainTime && progress >= data.Creatable.TrainTime) {
+            m_graphics.setGraphic(defaultGraphics);
+        } else if (m_creationProgress == data.Creatable.TrainTime && progress < data.Creatable.TrainTime) {
+            m_graphics.setGraphic(ResourceManager::Inst()->getGraphic(data.Building.ConstructionGraphicID));
+        }
+    }
+
+    m_creationProgress = std::min(progress, float(data.Creatable.TrainTime));
+}
+
+void Unit::increaseCreationProgress(float progress)
+{
+    setCreationProgress(m_creationProgress + progress);
+}
+
+float Unit::creationProgress() const
+{
+    return m_creationProgress / float(data.Creatable.TrainTime);
 }
 
 void Unit::setAngle(const float angle)

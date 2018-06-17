@@ -29,7 +29,8 @@ public:
     enum class Type {
         None,
         Move,
-        PlaceOnMap
+        PlaceOnMap,
+        Build
     };
     const Type type = Type::None;
 

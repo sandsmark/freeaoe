@@ -159,14 +159,21 @@ struct Unit : public Entity
 
     int playerId;
 
+    int constructors = 0;
+
     std::vector<Annex> annexes;
 
     ScreenRect rect() const;
+
+    void setCreationProgress(float progress);
+    void increaseCreationProgress(float progress);
+    float creationProgress() const;
 
 protected:
     res::GraphicPtr movingGraphics;
     ActionPtr m_currentAction;
     std::shared_ptr<Civilization> m_civilization;
+    float m_creationProgress = 0.f;
 };
 
 

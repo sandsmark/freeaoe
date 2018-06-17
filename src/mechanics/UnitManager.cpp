@@ -21,6 +21,7 @@
 #include "CompMapObject.h"
 #include "CompUnitData.h"
 #include "ActionMove.h"
+#include "ActionBuild.h"
 #include "render/SfmlRenderTarget.h"
 #include "resource/LanguageManager.h"
 #include "global/Constants.h"
@@ -133,11 +134,17 @@ void UnitManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
             pos.x -= Constants::TILE_SIZE_HORIZONTAL / 8;
             pos.y -= height + Constants::TILE_SIZE_HEIGHT * unit->data.HPBarHeight;
 
-            rect.setFillColor(sf::Color::Green);
             rect.setOutlineColor(sf::Color::Transparent);
-
             rect.setPosition(pos);
-            rect.setSize(sf::Vector2f(Constants::TILE_SIZE_HORIZONTAL / 4, 2));
+
+            if (unit->creationProgress() < 1.) {
+                rect.setFillColor(sf::Color::Red);
+                rect.setSize(sf::Vector2f(Constants::TILE_SIZE_HORIZONTAL / 4., 2));
+                m_outlineOverlay.draw(rect);
+            }
+
+            rect.setFillColor(sf::Color::Green);
+            rect.setSize(sf::Vector2f(unit->creationProgress() * Constants::TILE_SIZE_HORIZONTAL / 4., 2));
             m_outlineOverlay.draw(rect);
         }
 
@@ -171,6 +178,12 @@ void UnitManager::onLeftClick(const MapPos &mapPos)
 {
     if (m_buildingToPlace) {
         m_units.insert(m_buildingToPlace);
+        m_buildingToPlace->setCreationProgress(0);
+
+        for (const Unit::Ptr &unit : m_selectedUnits) {
+            unit->setCurrentAction(std::make_shared<act::ActionBuild>(unit, m_buildingToPlace));
+        }
+
         m_buildingToPlace.reset();
     }
 }
