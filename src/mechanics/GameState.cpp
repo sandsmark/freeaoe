@@ -75,6 +75,7 @@ bool GameState::init()
         return false;
     }
 
+
     std::shared_ptr<genie::SlpFile> overlayFile = ResourceManager::Inst()->getUiOverlay(ResourceManager::Ui1280x1024, ResourceManager::Viking);
     if (overlayFile) {
         m_uiOverlay.loadFromImage(res::Resource::convertFrameToImage(overlayFile->getFrame()));
@@ -138,25 +139,29 @@ bool GameState::init()
         map_->create(scenario_->map);
 
         for (int playerNum = 0; playerNum < scenario_->playerUnits.size(); playerNum++) {
+            Player::Ptr player = std::make_shared<Player>(playerNum, m_civilizations[0]);
+            m_players.push_back(player);
             for (const genie::ScnUnit &scnunit : scenario_->playerUnits[playerNum].units) {
                 MapPos unitPos(scnunit.positionX * Constants::TILE_SIZE, scnunit.positionY * Constants::TILE_SIZE, scnunit.positionZ);
-                Unit::Ptr unit = UnitFactory::Inst().createUnit(scnunit.objectID, unitPos, playerNum, m_civilizations[0]);
+                Unit::Ptr unit = UnitFactory::Inst().createUnit(scnunit.objectID, unitPos, player);
                 unit->setAngle(scnunit.rotation);
                 unit->renderer().current_frame_ = scnunit.initAnimationFrame % unit->renderer().graphic_->getFrameCount();
                 m_unitManager->add(unit);
             }
         }
+        m_humanPlayer = m_players[0];
     } else {
+        m_humanPlayer = std::make_shared<Player>(0, m_civilizations.front());
         map_->setUpSample();
 
-        m_unitManager->add(UnitFactory::Inst().createUnit(Unit::FuriousTheMonkeyBoy, MapPos(48*6, 48*10, 0), 0, m_civilizations[0]));
-        m_unitManager->add(UnitFactory::Inst().createUnit(Unit::Cobra, MapPos(48*8, 48*6, 0), 0, m_civilizations[0]));
+        m_unitManager->add(UnitFactory::Inst().createUnit(Unit::FuriousTheMonkeyBoy, MapPos(48*6, 48*10, 0), m_humanPlayer));
+        m_unitManager->add(UnitFactory::Inst().createUnit(Unit::Cobra, MapPos(48*8, 48*6, 0), m_humanPlayer));
 
-        m_unitManager->add(UnitFactory::Inst().createUnit(Unit::FemaleVillager, MapPos(48*6, 48*6, 0), 0, m_civilizations[0]));
-        m_unitManager->add(UnitFactory::Inst().createUnit(280, MapPos(48*10, 48*10, 0), 0, m_civilizations[0])); // mangonel
+        m_unitManager->add(UnitFactory::Inst().createUnit(Unit::FemaleVillager, MapPos(48*6, 48*6, 0), m_humanPlayer));
+        m_unitManager->add(UnitFactory::Inst().createUnit(280, MapPos(48*10, 48*10, 0), m_humanPlayer)); // mangonel
 
 
-        Unit::Ptr unit = UnitFactory::Inst().createUnit(Unit::TownCenter, MapPos(48*2, 48*2, 0), 0, m_civilizations[0]);
+        Unit::Ptr unit = UnitFactory::Inst().createUnit(Unit::TownCenter, MapPos(48*2, 48*2, 0), m_humanPlayer);
 
         if (unit->data.Building.FoundationTerrainID > 0) {
             int width = unit->data.Size.x;
@@ -170,56 +175,57 @@ bool GameState::init()
 
         m_unitManager->add(unit);
 
-        unit = UnitFactory::Inst().createUnit(117, MapPos(48*6, 48*5, 0), 0, m_civilizations[0]);
+        unit = UnitFactory::Inst().createUnit(117, MapPos(48*6, 48*5, 0), m_humanPlayer);
         unit->setAngle(M_PI + M_PI_2);
         m_unitManager->add(unit);
 
-        unit = UnitFactory::Inst().createUnit(117, MapPos(48*6, 48*4, 0), 0, m_civilizations[0]);
+        unit = UnitFactory::Inst().createUnit(117, MapPos(48*6, 48*4, 0), m_humanPlayer);
         unit->setAngle(M_PI + M_PI_2);
         m_unitManager->add(unit);
 
-        unit = UnitFactory::Inst().createUnit(117, MapPos(48*6, 48*3, 0), 0, m_civilizations[0]);
+        unit = UnitFactory::Inst().createUnit(117, MapPos(48*6, 48*3, 0), m_humanPlayer);
         unit->setAngle(M_PI_2);
         m_unitManager->add(unit);
 
-        unit = UnitFactory::Inst().createUnit(117, MapPos(48*7, 48*3, 0), 0, m_civilizations[0]);
+        unit = UnitFactory::Inst().createUnit(117, MapPos(48*7, 48*3, 0), m_humanPlayer);
         unit->setAngle(M_PI);
         m_unitManager->add(unit);
 
-        unit = UnitFactory::Inst().createUnit(117, MapPos(48*8, 48*3, 0), 0, m_civilizations[0]);
+        unit = UnitFactory::Inst().createUnit(117, MapPos(48*8, 48*3, 0), m_humanPlayer);
         unit->setAngle(M_PI);
         m_unitManager->add(unit);
 
-        unit = UnitFactory::Inst().createUnit(117, MapPos(48*9, 48*3, 0), 0, m_civilizations[0]);
+        unit = UnitFactory::Inst().createUnit(117, MapPos(48*9, 48*3, 0), m_humanPlayer);
         unit->setAngle(M_PI_2);
         m_unitManager->add(unit);
 
-        unit = UnitFactory::Inst().createUnit(117, MapPos(48*10, 48*4, 0), 0, m_civilizations[0]);
+        unit = UnitFactory::Inst().createUnit(117, MapPos(48*10, 48*4, 0), m_humanPlayer);
         unit->setAngle(M_PI_2 / 2);
         m_unitManager->add(unit);
 
-        unit = UnitFactory::Inst().createUnit(117, MapPos(48*11, 48*5, 0), 0, m_civilizations[0]);
+        unit = UnitFactory::Inst().createUnit(117, MapPos(48*11, 48*5, 0), m_humanPlayer);
         unit->setAngle(M_PI_2 / 2);
         m_unitManager->add(unit);
 
-        unit = UnitFactory::Inst().createUnit(117, MapPos(48*12, 48*6, 0), 0, m_civilizations[0]);
+        unit = UnitFactory::Inst().createUnit(117, MapPos(48*12, 48*6, 0), m_humanPlayer);
         unit->setAngle(M_PI_2);
         m_unitManager->add(unit);
 
-        unit = UnitFactory::Inst().createUnit(117, MapPos(48*11, 48*7, 0), 0, m_civilizations[0]);
+        unit = UnitFactory::Inst().createUnit(117, MapPos(48*11, 48*7, 0), m_humanPlayer);
         unit->setAngle(M_PI * 2);
         m_unitManager->add(unit);
-        unit = UnitFactory::Inst().createUnit(117, MapPos(48*10, 48*8, 0), 0, m_civilizations[0]);
+        unit = UnitFactory::Inst().createUnit(117, MapPos(48*10, 48*8, 0), m_humanPlayer);
         unit->setAngle(M_PI * 2);
         m_unitManager->add(unit);
-        unit = UnitFactory::Inst().createUnit(117, MapPos(48*9, 48*9, 0), 0, m_civilizations[0]);
+        unit = UnitFactory::Inst().createUnit(117, MapPos(48*9, 48*9, 0), m_humanPlayer);
         unit->setAngle(M_PI * 2);
         m_unitManager->add(unit);
 
-        unit = UnitFactory::Inst().createUnit(117, MapPos(48*8, 48*10, 0), 0, m_civilizations[0]);
+        unit = UnitFactory::Inst().createUnit(117, MapPos(48*8, 48*10, 0), m_humanPlayer);
         unit->setAngle(M_PI_2);
         m_unitManager->add(unit);
     }
+    m_actionPanel->setHumanPlayer(m_humanPlayer);
 
     map_->updateMapData();
     mapRenderer_.setRenderTarget(renderTarget_);
@@ -346,7 +352,10 @@ void GameState::handleEvent(sf::Event event)
 
         if (m_selecting) {
             m_selectionCurr = ScreenPos(event.mouseMove.x, event.mouseMove.y);
+        } else {
+            m_unitManager->onMouseMove(renderTarget_->camera()->absoluteMapPos(ScreenPos(event.mouseMove.x, event.mouseMove.y)));
         }
+
 
         return;
     }

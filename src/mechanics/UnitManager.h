@@ -64,6 +64,7 @@ public:
     void render(std::shared_ptr<SfmlRenderTarget> renderTarget);
 
     void onRightClick(const MapPos &mapPos);
+    void onMouseMove(const MapPos &mapPos);
 
     void selectUnits(const ScreenRect &selectionRect, const CameraPtr &camera);
     void setMap(MapPtr map);
@@ -72,12 +73,16 @@ public:
 
     const std::set<Unit::Ptr, MapPositionSorter> &units() const { return m_units; }
 
+    void placeBuilding(const Unit::Ptr &unit);
+
 private:
     std::set<Unit::Ptr, MapPositionSorter> m_units;
     UnitSet m_selectedUnits;
     MapPtr m_map;
     sf::RenderTexture m_outlineOverlay;
     MoveTargetMarker::Ptr m_moveTargetMarker;
+
+    Unit::Ptr m_buildingToPlace;
 };
 
 #endif // UNITMANAGER_H

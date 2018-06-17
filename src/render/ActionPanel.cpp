@@ -8,6 +8,7 @@
 #include <genie/dat/UnitCommand.h>
 #include "resource/DataManager.h"
 #include "resource/Resource.h"
+#include "mechanics/UnitFactory.h"
 
 ActionPanel::ActionPanel(const std::shared_ptr<SfmlRenderTarget> &renderTarget) :
     m_renderTarget(renderTarget)
@@ -165,6 +166,11 @@ void ActionPanel::setUnitManager(const std::shared_ptr<UnitManager> &unitManager
     m_unitManager = unitManager;
 }
 
+void ActionPanel::setHumanPlayer(const Player::Ptr &player)
+{
+    m_humanPlayer = player;
+}
+
 ScreenRect ActionPanel::rect() const
 {
     ScreenRect r;
@@ -299,23 +305,25 @@ void ActionPanel::addCreateButtons(const std::shared_ptr<Unit> &unit)
 
 void ActionPanel::handleButtonClick(const ActionPanel::InterfaceButton &button)
 {
-    if (button.type != InterfaceButton::Other) {
-        std::cout  << button.targetId << std::endl;
+    if (button.type == InterfaceButton::CreateBuilding) {
+        m_unitManager->placeBuilding(UnitFactory::Inst().createUnit(button.targetId, MapPos(), m_humanPlayer));
         return;
     }
 
-    switch(button.action) {
-    case Command::BuildMilitary:
-        m_currentPage = genie::Unit::MilitaryBuildingsInterface;
-        break;
-    case Command::BuildCivilian:
-        m_currentPage = genie::Unit::BuildingsInterface;
-        break;
-    case Command::PreviousPage:
-        m_currentPage = 0;
-        break;
-    default:
-        break;
+    if (button.type == InterfaceButton::Other) {
+        switch(button.action) {
+        case Command::BuildMilitary:
+            m_currentPage = genie::Unit::MilitaryBuildingsInterface;
+            break;
+        case Command::BuildCivilian:
+            m_currentPage = genie::Unit::BuildingsInterface;
+            break;
+        case Command::PreviousPage:
+            m_currentPage = 0;
+            break;
+        default:
+            break;
+        }
     }
 }
 

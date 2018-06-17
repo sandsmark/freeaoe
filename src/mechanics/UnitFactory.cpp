@@ -40,18 +40,18 @@ UnitFactory::~UnitFactory()
 {
 }
 
-Unit::Ptr UnitFactory::createUnit(int ID, const MapPos &position, int playerId, Civilization::Ptr civ)
+Unit::Ptr UnitFactory::createUnit(int ID, const MapPos &position, Player::Ptr owner)
 {
 //    std::cout << "Creating  " << ID << std::endl;
     const genie::Unit &gunit = DataManager::Inst().getUnit(ID);
 
-    Unit::Ptr unit = std::make_shared<Unit>(gunit, playerId, civ);
+    Unit::Ptr unit = std::make_shared<Unit>(gunit, owner->playerId, owner->civ);
     unit->position = position;
 
     if (gunit.Type >= genie::Unit::BuildingType) {
         if (gunit.Building.StackUnitID >= 0) {
             Unit::Annex annex;
-            annex.unit = createUnit(gunit.Building.StackUnitID, position, playerId, civ);
+            annex.unit = createUnit(gunit.Building.StackUnitID, position, owner);
             unit->annexes.push_back(annex);
         }
 
@@ -62,7 +62,7 @@ Unit::Ptr UnitFactory::createUnit(int ID, const MapPos &position, int playerId, 
 
             Unit::Annex annex;
             annex.offset = MapPos(annexData.Misplacement.first * -48, annexData.Misplacement.second * -48);
-            annex.unit = createUnit(annexData.UnitID, position, playerId, civ);
+            annex.unit = createUnit(annexData.UnitID, position, owner);
             unit->annexes.push_back(annex);
         }
 

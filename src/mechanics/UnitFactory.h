@@ -20,14 +20,14 @@
 #define UNITFACTORY_H
 
 #include "../core/Entity.h"
-#include "mechanics/Civilization.h"
+#include "mechanics/Player.h"
 
 class UnitFactory
 {
 public:
     static UnitFactory &Inst();
 
-    Unit::Ptr createUnit(int ID, const MapPos &position, int playerId, Civilization::Ptr civ);
+    Unit::Ptr createUnit(int ID, const MapPos &position, Player::Ptr owner);
 
 private:
     UnitFactory();

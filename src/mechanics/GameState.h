@@ -20,6 +20,7 @@
 #define GAMESTATE_H
 
 #include "mechanics/IState.h"
+#include "mechanics/Player.h"
 #include "global/Logger.h"
 #include "Map.h"
 #include "render/SfmlRenderTarget.h"
@@ -103,6 +104,9 @@ private:
     int m_interfacePage = 0;
 
     std::vector<Civilization::Ptr> m_civilizations;
+
+    Player::Ptr m_humanPlayer;
+    std::vector<Player::Ptr> m_players;
 };
 
 #endif // GAMESTATE_H

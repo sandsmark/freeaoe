@@ -159,6 +159,12 @@ void UnitManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
     m_moveTargetMarker->renderer().render(*renderTarget->renderTarget_,
                                           renderTarget->camera()->absoluteScreenPos(m_moveTargetMarker->position),
                                           comp::RenderType::Base);
+
+    if (m_buildingToPlace) {
+        m_buildingToPlace->renderer().render(*renderTarget->renderTarget_,
+                                             renderTarget->camera()->absoluteScreenPos(m_buildingToPlace->position),
+                                             comp::RenderType::ConstructAvailable);
+    }
 }
 
 void UnitManager::onRightClick(const MapPos &mapPos)
@@ -173,6 +179,16 @@ void UnitManager::onRightClick(const MapPos &mapPos)
     }
 
     m_moveTargetMarker->moveTo(mapPos);
+}
+
+void UnitManager::onMouseMove(const MapPos &mapPos)
+{
+    if (m_buildingToPlace) {
+        const int x = std::round(mapPos.x / Constants::TILE_SIZE);
+        const int y = std::round(mapPos.y / Constants::TILE_SIZE);
+        m_buildingToPlace->position.x = x * Constants::TILE_SIZE;
+        m_buildingToPlace->position.y = y * Constants::TILE_SIZE;
+    }
 }
 
 void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &camera)
@@ -206,4 +222,9 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
 void UnitManager::setMap(MapPtr map)
 {
     m_map = map;
+}
+
+void UnitManager::placeBuilding(const Unit::Ptr &unit)
+{
+    m_buildingToPlace = unit;
 }
