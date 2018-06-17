@@ -120,7 +120,7 @@ public:
 
     const sf::Texture &texture(uint32_t frame = 0, float angle = 0, uint8_t playerId = 0, const ImageType type = ImageType::Base);
 
-    const Size size(uint32_t frame_num) const;
+    const Size size(uint32_t frame_num, float angle) const;
 
     //----------------------------------------------------------------------------
     /// Get the hotspot of a frame.
@@ -170,6 +170,11 @@ public:
     int angleToOrientation(float angle) const;
 
 private:
+    struct FrameInfo {
+        int frameNum = 0;
+        bool mirrored = false;
+    };
+    FrameInfo calcFrameInfo(uint32_t num, float angle) const;
 
     static Logger &log;
 

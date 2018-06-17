@@ -59,7 +59,7 @@ public:
 
     void setGraphic(res::GraphicPtr graphic);
 
-    ScreenRect rect();
+    ScreenRect rect() const;
 
     void setAngle(float angle);
     float angle() const { return m_angle; }

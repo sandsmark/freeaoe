@@ -161,6 +161,8 @@ struct Unit : public Entity
 
     std::vector<Annex> annexes;
 
+    ScreenRect rect() const;
+
 protected:
     res::GraphicPtr movingGraphics;
     ActionPtr m_currentAction;

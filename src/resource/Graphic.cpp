@@ -63,15 +63,9 @@ const sf::Texture &Graphic::texture(uint32_t frame, float angleRadians, uint8_t 
     state.playerId = player;
     state.type = imageType;
 
-    if (data_.AngleCount > 1) {
-        int lookupAngle = angleToOrientation(angleRadians);
-
-        if (data_.MirroringMode && lookupAngle > data_.AngleCount/2) {
-            state.flipped = true;
-            lookupAngle = data_.AngleCount - lookupAngle;
-        }
-        state.frame += lookupAngle * data_.FrameCount;
-    }
+    const FrameInfo frameInfo = calcFrameInfo(frame, angleRadians);
+    state.frame = frameInfo.frameNum;
+    state.flipped = frameInfo.mirrored;
 
     if (m_cache.count(state)) {
         return m_cache[state];
@@ -122,21 +116,15 @@ const sf::Texture &Graphic::texture(uint32_t frame, float angleRadians, uint8_t 
 
 }
 
-const Size Graphic::size(uint32_t frame_num) const
+const Size Graphic::size(uint32_t frame_num, float angle) const
 {
     if (!slp_) {
         return Size(0, 0);
     }
-    if (frame_num >= slp_->getFrameCount()) {
-        log.error("trying to look up %d, but we only have %", frame_num, slp_->getFrameCount());
-        frame_num = 0;
-    }
 
-    genie::SlpFramePtr frame = slp_->getFrame(frame_num);
+    genie::SlpFramePtr frame = slp_->getFrame(calcFrameInfo(frame_num, angle).frameNum);
 
     return Size(frame->getWidth(), frame->getHeight());
-
-
 }
 
 //------------------------------------------------------------------------------
@@ -145,31 +133,18 @@ ScreenPos Graphic::getHotspot(uint32_t frame_num, float angle) const
     if (!slp_) {
         return ScreenPos();
     }
+
     if (slp_->getFrameCount() == 0) {
         return ScreenPos();
     }
 
-    bool mirrored = false;
-    if (data_.AngleCount > 1) {
-        int lookupAngle = angleToOrientation(angle);
-        if (data_.MirroringMode && lookupAngle > data_.AngleCount/2) {
-            mirrored = true;
-            lookupAngle = data_.AngleCount - lookupAngle;
-        }
-        frame_num += lookupAngle * data_.FrameCount;
-    }
-
-    if (frame_num >= slp_->getFrameCount()) {
-        log.error("trying to look up %d, but we only have %", frame_num, slp_->getFrameCount());
-        frame_num = 0;
-    }
-
-    genie::SlpFramePtr frame = slp_->getFrame(frame_num);
+    FrameInfo frameInfo = calcFrameInfo(frame_num, angle);
+    genie::SlpFramePtr frame = slp_->getFrame(frameInfo.frameNum);
 
     int32_t hot_spot_x = frame->hotspot_x;
-
-    if (mirrored)
+    if (frameInfo.mirrored) {
         hot_spot_x = frame->getWidth() - hot_spot_x;
+    }
 
     return ScreenPos(hot_spot_x, frame->hotspot_y);
 }
@@ -227,6 +202,27 @@ int Graphic::angleToOrientation(float angle) const
     }
 
     return lookupAngle;
+}
+
+Graphic::FrameInfo Graphic::calcFrameInfo(uint32_t num, float angle) const
+{
+    FrameInfo ret;
+    ret.frameNum = num;
+    if (data_.AngleCount > 1) {
+        int lookupAngle = angleToOrientation(angle);
+        if (data_.MirroringMode && lookupAngle > data_.AngleCount/2) {
+            ret.mirrored = true;
+            lookupAngle = data_.AngleCount - lookupAngle;
+        }
+        ret.frameNum += lookupAngle * data_.FrameCount;
+    }
+
+    if (ret.frameNum >= slp_->getFrameCount()) {
+        log.error("trying to look up %d, but we only have %", ret.frameNum, slp_->getFrameCount());
+        ret.frameNum = 0;
+    }
+
+    return ret;
 }
 
 }

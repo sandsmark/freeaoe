@@ -182,7 +182,7 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
     std::vector<Unit::Ptr> containedUnits;
     int8_t requiredInteraction = genie::Unit::ObjectInteraction;
     for (Unit::Ptr unit : m_units) {
-        if (!selectionRect.contains(camera->absoluteScreenPos(unit->position))) {
+        if (!selectionRect.overlaps(unit->rect() + camera->absoluteScreenPos(unit->position))) {
             continue;
         }
 

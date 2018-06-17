@@ -90,6 +90,17 @@ const std::vector<const genie::Unit *> Unit::creatableUnits()
     return m_civilization->creatableUnits(data.ID);
 }
 
+ScreenRect Unit::rect() const
+{
+    ScreenRect ret = m_graphics.rect();
+
+    for (const Annex &annex : annexes) {
+        ret += annex.unit->rect();
+    }
+
+    return ret;
+}
+
 void Unit::setAngle(const float angle)
 {
     m_graphics.setAngle(angle);

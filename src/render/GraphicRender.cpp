@@ -164,18 +164,22 @@ void GraphicRender::setGraphic(res::GraphicPtr graphic)
 //    }
 }
 
-ScreenRect GraphicRender::rect()
+ScreenRect GraphicRender::rect() const
 {
     ScreenRect ret;
     const ScreenPos hotspot = graphic_->getHotspot(current_frame_, m_angle);
     ret.x = -hotspot.x;
     ret.y = -hotspot.y;
-    const sf::Vector2u size = graphic_->size(current_frame_);
+    const sf::Vector2u size = graphic_->size(current_frame_, m_angle);
     ret.width = size.x;
     ret.height = size.y;
 
     for (const GraphicDelta &delta : m_deltas) {
-        ret += delta.graphic->rect();
+        if (delta.angleToDrawOn >= 0 && delta.graphic->graphic_->angleToOrientation(m_angle) != delta.angleToDrawOn) {
+            continue;
+        }
+
+        ret += (delta.graphic->rect() + delta.offset);
     }
 
     return ret;
