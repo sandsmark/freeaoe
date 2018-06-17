@@ -26,6 +26,7 @@
 
 #include "IComponent.h"
 #include "IAction.h"
+#include <genie/dat/UnitCommand.h>
 
 namespace genie {
 class Unit;
@@ -88,6 +89,14 @@ private:
 
 struct Unit : public Entity
 {
+    enum State {
+        Idle,
+        Moving,
+        Working,
+        Carrying,
+        Proceeding
+    };
+
     enum HardcodedTypes {
         TownCenter = 109,
 
@@ -174,12 +183,13 @@ struct Unit : public Entity
     float creationProgress() const;
 
 protected:
+    int taskGraphicId(const genie::Task::ActionTypes taskType, const State state);
+
     res::GraphicPtr movingGraphics;
     ActionPtr m_currentAction;
     std::deque<ActionPtr> m_actionQueue;
     std::shared_ptr<Civilization> m_civilization;
     float m_creationProgress = 0.f;
 };
-
 
 #endif // ENTITY_H

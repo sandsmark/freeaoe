@@ -127,6 +127,39 @@ float Unit::creationProgress() const
     return m_creationProgress / float(data.Creatable.TrainTime);
 }
 
+int Unit::taskGraphicId(const genie::Task::ActionTypes taskType, const Unit::State state)
+{
+    for (const genie::Task &task : DataManager::Inst().datFile().UnitHeaders[data.ID].TaskList) {
+        std::cout << readableName << " " << task.actionTypeName() << " " << task.WorkingGraphicID << std::endl;
+        std::cout << task.MovingGraphicID << std::endl;
+        std::cout << task.ProceedingGraphicID << std::endl;
+        std::cout << task.CarryingGraphicID << std::endl;
+    }
+
+    for (const genie::Task &task : DataManager::Inst().datFile().UnitHeaders[data.ID].TaskList) {
+        if (task.ActionType != taskType) {
+            continue;
+        }
+
+        switch(state) {
+        case Idle:
+        case Proceeding:
+            return task.ProceedingGraphicID;
+        case Moving:
+            return task.MovingGraphicID;
+        case Working:
+            return task.ProceedingGraphicID;
+            return task.WorkingGraphicID;
+        case Carrying:
+            return task.CarryingGraphicID;
+        default:
+            return data.StandingGraphic.first;
+        }
+    }
+
+    return data.StandingGraphic.first;
+}
+
 void Unit::setAngle(const float angle)
 {
     m_graphics.setAngle(angle);
@@ -152,6 +185,9 @@ void Unit::setCurrentAction(ActionPtr action)
 
     if (action->type == IAction::Type::Move) {
         m_graphics.setGraphic(movingGraphics);
+    } else if (action->type == IAction::Type::Build) {
+        m_graphics.setGraphic(ResourceManager::Inst()->getGraphic(taskGraphicId(genie::Task::Build, Working)));
+        std::cout << m_graphics.graphic_->data_.AngleCount << " " << m_graphics.graphic_->data_.FrameCount << std::endl;
     } else {
         m_graphics.setGraphic(defaultGraphics);
     }
