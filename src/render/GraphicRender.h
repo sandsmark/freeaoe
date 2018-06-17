@@ -33,6 +33,11 @@ const std::string GRAPHIC_RENDER("comp_graphic");
 
 class GraphicRender;
 
+enum class Renderpass {
+    Shadow,
+    Base,
+    Outline
+};
 
 typedef std::shared_ptr<GraphicRender> GraphicPtr;
 
@@ -47,11 +52,7 @@ public:
 
     bool update(Time time);
 
-    void drawOn(sf::RenderTarget &renderTarget, const ScreenPos screenPos);
-    void drawOutlineOn(sf::RenderTarget &renderer, ScreenPos screenPos);
-
-    const sf::Texture &image();
-    const sf::Texture &outline();
+    void render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const Renderpass pass);
 
     void setPlayerId(int playerId);
 

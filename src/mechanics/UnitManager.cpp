@@ -87,11 +87,13 @@ void UnitManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
             if (!renderTarget->camera()->isVisible(annexRect)) {
                 continue;
             }
-
-            annex.unit->renderer().drawOn(m_outlineOverlay, renderTarget->camera()->absoluteScreenPos(unit->position + annex.offset));
+            annex.unit->renderer().render(m_outlineOverlay,
+                                          renderTarget->camera()->absoluteScreenPos(unit->position + annex.offset),
+                                          comp::Renderpass::Base
+                                          );
         }
         if (renderTarget->camera()->isVisible(unitRect)) {
-            unit->renderer().drawOn(m_outlineOverlay, unitPosition);
+            unit->renderer().render(m_outlineOverlay, unitPosition, comp::Renderpass::Base);
         }
     }
 
@@ -143,16 +145,20 @@ void UnitManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
             continue;
         }
 
-        unit->renderer().drawOn(*renderTarget->renderTarget_, renderTarget->camera()->absoluteScreenPos(unit->position));
+        unit->renderer().render(*renderTarget->renderTarget_,
+                                renderTarget->camera()->absoluteScreenPos(unit->position),
+                                comp::Renderpass::Base);
 
         const ScreenPos pos = renderTarget->camera()->absoluteScreenPos(unit->position);
-        unit->renderer().drawOutlineOn(m_outlineOverlay, pos);
+        unit->renderer().render(m_outlineOverlay, pos, comp::Renderpass::Outline);
     }
 
     m_outlineOverlay.display();
     renderTarget->draw(m_outlineOverlay.getTexture(), ScreenPos(0, 0));
 
-    m_moveTargetMarker->renderer().drawOn(*renderTarget->renderTarget_, renderTarget->camera()->absoluteScreenPos(m_moveTargetMarker->position));
+    m_moveTargetMarker->renderer().render(*renderTarget->renderTarget_,
+                                          renderTarget->camera()->absoluteScreenPos(m_moveTargetMarker->position),
+                                          comp::Renderpass::Base);
 }
 
 void UnitManager::onRightClick(const MapPos &mapPos)

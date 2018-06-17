@@ -97,13 +97,27 @@ bool GraphicRender::update(Time time)
     return updated;
 }
 
-void GraphicRender::drawOn(sf::RenderTarget &renderTarget, const ScreenPos screenPos)
+void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const Renderpass renderpass)
 {
     if (graphic_ && graphic_->isValid()) {
         sf::Sprite sprite;
-        sprite.setTexture(image());
+        sf::BlendMode blendMode;
+
+        switch(renderpass) {
+        case Renderpass::Base:
+            sprite.setTexture(graphic_->getImage(current_frame_, m_angle, m_playerId));
+            break;
+        case Renderpass::Outline:
+            sprite.setTexture(graphic_->overlayImage(current_frame_, m_angle, m_playerId));
+            blendMode = sf::BlendAlpha;
+            blendMode.alphaSrcFactor = sf::BlendMode::DstAlpha;
+            break;
+        case Renderpass::Shadow:
+            break;
+        }
+
         sprite.setPosition(screenPos - graphic_->getHotspot(current_frame_, m_angle));
-        renderTarget.draw(sprite);
+        renderTarget.draw(sprite, blendMode);
     }
 
     for (const GraphicDelta &delta : m_deltas) {
@@ -111,40 +125,9 @@ void GraphicRender::drawOn(sf::RenderTarget &renderTarget, const ScreenPos scree
             continue;
         }
 
-        delta.graphic->drawOn(renderTarget, screenPos + delta.offset);
-    }
-}
-
-void GraphicRender::drawOutlineOn(sf::RenderTarget &renderTarget, ScreenPos screenPos)
-{
-    if (!graphic_ || !graphic_->isValid()) {
-        return;
+        delta.graphic->render(renderTarget, screenPos + delta.offset, renderpass);
     }
 
-    sf::Sprite sprite;
-    sprite.setTexture(outline());
-    sprite.setPosition(screenPos - graphic_->getHotspot(current_frame_, m_angle));
-    sf::BlendMode blendMode = sf::BlendAlpha;
-    blendMode.alphaSrcFactor = sf::BlendMode::DstAlpha;
-    renderTarget.draw(sprite, blendMode);
-}
-
-const sf::Texture &GraphicRender::image()
-{
-    if (!graphic_) {
-        return nullImage;
-    }
-
-    return graphic_->getImage(current_frame_, m_angle, m_playerId);
-}
-
-const sf::Texture &GraphicRender::outline()
-{
-    if (!graphic_) {
-        return nullImage;
-    }
-
-    return graphic_->overlayImage(current_frame_, m_angle, m_playerId);
 }
 
 void GraphicRender::setGraphic(res::GraphicPtr graphic)
