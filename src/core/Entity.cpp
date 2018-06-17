@@ -132,6 +132,16 @@ void Unit::setAngle(const float angle)
     m_graphics.setAngle(angle);
 }
 
+void Unit::queueAction(ActionPtr action)
+{
+    if (!m_currentAction) {
+        m_currentAction = action;
+    } else {
+        m_actionQueue.push_back(action);
+
+    }
+}
+
 void Unit::setCurrentAction(ActionPtr action)
 {
     m_currentAction = action;
@@ -152,7 +162,29 @@ void Unit::removeAction(IAction *action)
     if (m_currentAction.get() == action) {
         m_currentAction.reset();
         m_graphics.setGraphic(defaultGraphics);
+
+        if (!m_actionQueue.empty()) {
+            std::cout << "changing action to queued one" << std::endl;
+            setCurrentAction(m_actionQueue.front());
+            m_actionQueue.pop_front();
+        } else {
+            std::cout << "no actions queued" << std::endl;
+        }
+    } else {
+        // fuck stl
+        std::deque<ActionPtr>::iterator it = std::find_if(m_actionQueue.begin(), m_actionQueue.end(), [=](const ActionPtr &p) {
+            return p.get() == action;
+        });
+
+        if (it != std::end(m_actionQueue)) {
+            m_actionQueue.erase(it);
+        }
     }
+}
+
+void Unit::clearActionQueue()
+{
+    m_actionQueue.clear();
 }
 
 MoveTargetMarker::MoveTargetMarker() :

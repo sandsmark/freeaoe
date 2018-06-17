@@ -9,30 +9,42 @@ ActionBuild::ActionBuild(Unit::Ptr builder, Unit::Ptr building) : IAction(Type::
     m_targetBuilding(building),
     m_prevTime(0)
 {
-    building->constructors++;
 }
 
 ActionBuild::~ActionBuild()
 {
     Unit::Ptr building = m_targetBuilding.lock();
 
-    if (building) {
+    if (building && m_prevTime) {
         building->constructors--;
     }
 }
 
 bool ActionBuild::update(Time time)
 {
-    if (!m_prevTime) {
-        m_prevTime = time;
-        return false;
+    Unit::Ptr unit = m_unit.lock();
+    if (!unit) {
+        return true;
     }
 
     Unit::Ptr building = m_targetBuilding.lock();
-
-    if (building->creationProgress() >= 1.) {
+    if (!building) {
+        unit->removeAction(this);
         return true;
     }
+
+    if (!m_prevTime) {
+        m_prevTime = time;
+        building->constructors++;
+        return false;
+    }
+
+    if (building->creationProgress() >= 1.) {
+        std::cout << "building already finished" << std::endl;
+        unit->removeAction(this);
+        return true;
+    }
+
     float progress = 3. / (building->constructors + 2.);
     progress *= (time - m_prevTime) * 0.0015;
     m_prevTime = time;
@@ -40,8 +52,11 @@ bool ActionBuild::update(Time time)
     building->increaseCreationProgress(progress);
 
     if (building->creationProgress() >= 1.) {
+        std::cout << "building finished" << std::endl;
+        unit->removeAction(this);
         return true;
     }
+
     return false;
 }
 

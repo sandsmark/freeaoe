@@ -177,12 +177,13 @@ void UnitManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
 void UnitManager::onLeftClick(const MapPos &mapPos)
 {
     if (m_buildingToPlace) {
+        for (const Unit::Ptr &unit : m_selectedUnits) {
+            unit->setCurrentAction(act::MoveOnMap::moveUnitTo(unit, m_buildingToPlace->position, m_map, this));
+            unit->queueAction(std::make_shared<act::ActionBuild>(unit, m_buildingToPlace));
+        }
+
         m_units.insert(m_buildingToPlace);
         m_buildingToPlace->setCreationProgress(0);
-
-        for (const Unit::Ptr &unit : m_selectedUnits) {
-            unit->setCurrentAction(std::make_shared<act::ActionBuild>(unit, m_buildingToPlace));
-        }
 
         m_buildingToPlace.reset();
     }

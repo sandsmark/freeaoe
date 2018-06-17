@@ -20,6 +20,7 @@
 #define ENTITY_H
 
 #include <map>
+#include <deque>
 #include "Utility.h"
 #include "render/GraphicRender.h"
 
@@ -148,8 +149,11 @@ struct Unit : public Entity
     bool selected = false;
 
     void setAngle(const float angle);
+
+    void queueAction(ActionPtr action);
     void setCurrentAction(ActionPtr action);
     void removeAction(IAction *action);
+    void clearActionQueue();
     const ActionPtr &currentAction() const { return m_currentAction; }
 
 
@@ -172,6 +176,7 @@ struct Unit : public Entity
 protected:
     res::GraphicPtr movingGraphics;
     ActionPtr m_currentAction;
+    std::deque<ActionPtr> m_actionQueue;
     std::shared_ptr<Civilization> m_civilization;
     float m_creationProgress = 0.f;
 };
