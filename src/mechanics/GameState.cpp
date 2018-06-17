@@ -411,6 +411,8 @@ void GameState::handleEvent(sf::Event event)
 //            // bottom
 //        } else {
             if (event.mouseButton.button == sf::Mouse::Button::Left) {
+                m_unitManager->onLeftClick(renderTarget_->camera()->absoluteMapPos(ScreenPos(event.mouseButton.x, event.mouseButton.y)));
+
                 m_selectionStart = ScreenPos(event.mouseButton.x, event.mouseButton.y);
                 m_selectionCurr = ScreenPos(event.mouseButton.x+1, event.mouseButton.y+1);
                 m_selectionRect = ScreenRect(m_selectionStart, m_selectionCurr);

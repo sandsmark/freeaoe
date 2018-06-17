@@ -167,6 +167,14 @@ void UnitManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
     }
 }
 
+void UnitManager::onLeftClick(const MapPos &mapPos)
+{
+    if (m_buildingToPlace) {
+        m_units.insert(m_buildingToPlace);
+        m_buildingToPlace.reset();
+    }
+}
+
 void UnitManager::onRightClick(const MapPos &mapPos)
 {
     if (m_selectedUnits.empty()) {
