@@ -115,6 +115,10 @@ void Unit::setCreationProgress(float progress)
     }
 
     m_creationProgress = std::min(progress, float(data.Creatable.TrainTime));
+
+    if (data.Type == genie::Unit::BuildingType && progress < data.Creatable.TrainTime) {
+        m_graphics.setAngle(M_PI_2 + 2. * M_PI * (creationProgress()));
+    }
 }
 
 void Unit::increaseCreationProgress(float progress)
@@ -129,13 +133,6 @@ float Unit::creationProgress() const
 
 int Unit::taskGraphicId(const genie::Task::ActionTypes taskType, const Unit::State state)
 {
-    for (const genie::Task &task : DataManager::Inst().datFile().UnitHeaders[data.ID].TaskList) {
-        std::cout << readableName << " " << task.actionTypeName() << " " << task.WorkingGraphicID << std::endl;
-        std::cout << task.MovingGraphicID << std::endl;
-        std::cout << task.ProceedingGraphicID << std::endl;
-        std::cout << task.CarryingGraphicID << std::endl;
-    }
-
     for (const genie::Task &task : DataManager::Inst().datFile().UnitHeaders[data.ID].TaskList) {
         if (task.ActionType != taskType) {
             continue;
