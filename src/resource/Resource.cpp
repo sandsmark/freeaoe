@@ -107,11 +107,7 @@ sf::Image Resource::convertFrameToImage(const genie::SlpFramePtr frame,
             pixels[pixelPos    ] = g_color.r;
             pixels[pixelPos + 1] = g_color.g;
             pixels[pixelPos + 2] = g_color.b;
-//            if (playerId >= 0) {
-//                pixels[pixelPos + 3] = std::min(uint8_t(192), frameData.alpha_channel[row * width + col]);
-//            } else {
-                pixels[pixelPos + 3] = frameData.alpha_channel[row * width + col];
-//            }
+            pixels[pixelPos + 3] = frameData.alpha_channel[row * width + col];
         }
     }
 

@@ -31,6 +31,61 @@
 #include <unordered_map>
 
 class SlpFile;
+namespace res
+{
+enum class ImageType {
+    Base,
+    Outline
+};
+
+inline std::ostream &operator <<(std::ostream &os, const ImageType &type) {
+    os << "ImageType(";
+    switch (type) {
+    case ImageType::Base:
+        os << "Base";
+        break;
+    case ImageType::Outline:
+        os << "Outline";
+        break;
+    default:
+        os << "Invalid";
+        break;
+    }
+    os << ")";
+    return os;
+}
+
+struct GraphicState {
+    uint32_t frame = 0;
+    int angle = 0;
+    uint8_t playerId = 0;
+    ImageType type = ImageType::Base;
+    bool flipped = false;
+
+    bool operator==(const GraphicState &other) const {
+        return frame == other.frame &&
+               angle == other.angle &&
+               playerId == other.playerId &&
+               type == other.type &&
+               flipped == other.flipped;
+    }
+};
+}
+
+namespace std {
+template<> struct hash<res::GraphicState>
+{
+    size_t operator()(const res::GraphicState b) const {
+        return hash<uint32_t>()(b.frame) ^
+               hash<int>()(b.angle) ^
+               hash<uint8_t>()(b.playerId) ^
+               hash<int>()(int(b.type)) ^
+               hash<bool>()(b.flipped);
+
+    }
+};
+}
+
 
 namespace res {
 
@@ -44,6 +99,7 @@ class Graphic
     static const sf::Texture nullImage;
 
 public:
+
     //----------------------------------------------------------------------------
     /// Constructor
     ///
@@ -59,8 +115,10 @@ public:
     /// @param mirrored If set, the image will be returned mirrored
     /// @return Image
     //
-    const sf::Texture &getImage(uint32_t frame_num = 0, float angle = 0, uint8_t playerId = 0);
-    const sf::Texture &overlayImage(uint32_t frame_num, float angle, uint8_t playerId);
+//    const sf::Texture &getImage(uint32_t frame_num = 0, float angle = 0, uint8_t playerId = 0, const ImageType type = ImageType::Base);
+//    const sf::Texture &overlayImage(uint32_t frame_num, float angle, uint8_t playerId);
+
+    const sf::Texture &texture(uint32_t frame = 0, float angle = 0, uint8_t playerId = 0, const ImageType type = ImageType::Base);
 
     const Size size(uint32_t frame_num) const;
 
@@ -117,16 +175,14 @@ private:
 
     genie::SlpFilePtr slp_;
 
-    std::unordered_map<int, sf::Texture> m_images;
-    std::unordered_map<int, sf::Texture> m_flippedImages;
-
-    std::unordered_map<int, sf::Texture> m_overlays;
+    std::unordered_map<GraphicState, sf::Texture> m_cache;
 
     //TODO: collection with all frames, playercolors and outlines loaded
     //      And rewrite SlpFile/Frame so that it will not store any data.
 };
 
 typedef std::shared_ptr<Graphic> GraphicPtr;
-}
+
+}//namespace res
 
 #endif // FREEAOE_GRAPHIC_H

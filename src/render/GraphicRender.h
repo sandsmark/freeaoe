@@ -36,7 +36,8 @@ class GraphicRender;
 enum class Renderpass {
     Shadow,
     Base,
-    Outline
+    Outline,
+    ConstructIndication
 };
 
 typedef std::shared_ptr<GraphicRender> GraphicPtr;

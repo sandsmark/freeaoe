@@ -105,10 +105,10 @@ void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos scree
 
         switch(renderpass) {
         case Renderpass::Base:
-            sprite.setTexture(graphic_->getImage(current_frame_, m_angle, m_playerId));
+            sprite.setTexture(graphic_->texture(current_frame_, m_angle, m_playerId, res::ImageType::Base));
             break;
         case Renderpass::Outline:
-            sprite.setTexture(graphic_->overlayImage(current_frame_, m_angle, m_playerId));
+            sprite.setTexture(graphic_->texture(current_frame_, m_angle, m_playerId, res::ImageType::Outline));
             blendMode = sf::BlendAlpha;
             blendMode.alphaSrcFactor = sf::BlendMode::DstAlpha;
             break;
