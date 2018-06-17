@@ -180,6 +180,10 @@ std::shared_ptr<MoveOnMap> MoveOnMap::moveUnitTo(Unit::Ptr unit, MapPos destinat
     // Try coarser
     // Uglier, but hopefully faster
     if (action->m_path.empty()) {
+        action->m_path = action->findPath(unit->position, destination, 5);
+    }
+
+    if (action->m_path.empty()) {
         action->m_path = action->findPath(unit->position, destination, 20);
     }
 
@@ -263,8 +267,8 @@ std::vector<MapPos> MoveOnMap::findPath(const MapPos &start, const MapPos &end, 
                     }
                 }
 
-                neighbor.pathLength = pathPoint.pathLength + 1.; // chebychev
-//                neighbor.pathLength = current.pathLength + std::abs(dx) + std::abs(dy); // manhattan
+//                neighbor.pathLength = pathPoint.pathLength + 1.; // chebychev
+                neighbor.pathLength = pathPoint.pathLength + std::abs(dx) + std::abs(dy); // manhattan
 //                neighbor.pathLength = pathPoint.pathLength + std::hypot(dx, dy); // euclidian
 //                neighbor.distance = std::abs(nx - endX) + std::abs(ny - endY); // manhattan
                 neighbor.distance = std::hypot(nx - endX, ny - endY) * PATHFINDING_HEURISTIC_WEIGHT;
