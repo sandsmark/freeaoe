@@ -216,6 +216,7 @@ void UnitManager::onMouseMove(const MapPos &mapPos)
 void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &camera)
 {
     m_selectedUnits.clear();
+    m_currentActions.clear();
 
     std::vector<Unit::Ptr> containedUnits;
     int8_t requiredInteraction = genie::Unit::ObjectInteraction;
@@ -228,6 +229,10 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
         containedUnits.push_back(unit);
     }
 
+    if (containedUnits.empty()) {
+        m_currentActions = containedUnits[0]->availableActions();
+    }
+
     for (Unit::Ptr unit : containedUnits) {
         if (unit->data.InteractionMode < requiredInteraction) {
             continue;
@@ -235,7 +240,15 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
 
         std::cout << "Selected " << unit->readableName << " at " << unit->position << " " << unit->renderer().angle() << " " << unit->renderer().graphic_->data_.SLP << std::endl;
         m_selectedUnits.insert(unit);
+
+        // stl sucks
+        for (const genie::Task *action : m_currentActions) {
+            if (unit->availableActions().count(action) == 0) {
+                m_currentActions.erase(action);
+            }
+        }
     }
+
     if (m_selectedUnits.empty()) {
         std::cout << "Unable to find anything to select in " << selectionRect << std::endl;
     }

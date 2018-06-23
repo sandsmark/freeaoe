@@ -213,8 +213,8 @@ void ActionPanel::updateButtons()
 
     bool canGarrison = false;
 
-    for (const genie::Task &task : DataManager::Inst().datFile().UnitHeaders[unit->data.ID].TaskList) {
-        if (task.ActionType == genie::Task::Garrison) {
+    for (const genie::Task *task : unit->availableActions()) {
+        if (task->ActionType == genie::Task::Garrison) {
             canGarrison = true;
             break;
         }

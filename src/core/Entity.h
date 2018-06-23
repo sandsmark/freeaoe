@@ -182,6 +182,8 @@ struct Unit : public Entity
     void increaseCreationProgress(float progress);
     float creationProgress() const;
 
+    std::unordered_set<const genie::Task*> availableActions();
+
 protected:
     int taskGraphicId(const genie::Task::ActionTypes taskType, const State state);
 

@@ -131,7 +131,7 @@ const std::vector<genie::Civ> &DataManager::civilizations()
 
 const genie::DatFile &DataManager::datFile()
 {
-    return dat_file_;
+    return Inst().dat_file_;
 }
 
 DataManager::DataManager()

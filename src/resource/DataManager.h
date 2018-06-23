@@ -60,7 +60,7 @@ public:
 
     const std::vector<genie::Civ> &civilizations();
 
-    const genie::DatFile &datFile();
+    static const genie::DatFile &datFile();
 
 private:
     DataManager();

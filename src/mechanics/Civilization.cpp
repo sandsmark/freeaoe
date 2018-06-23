@@ -12,14 +12,22 @@ Civilization::Civilization(const int civId, const genie::DatFile &dataFile) :
     m_data(dataFile.Civs.at(civId))
 {
     for (const genie::Unit &unit : m_data.Units) {
-        if (unit.Creatable.TrainLocationID <= 0) {
-            continue;
-        }
         if (unit.HideInEditor) {
             continue;
         }
 
-        m_creatableUnits[unit.Creatable.TrainLocationID].push_back(&unit);
+        if (unit.Creatable.TrainLocationID > 0) {
+            m_creatableUnits[unit.Creatable.TrainLocationID].push_back(&unit);
+        }
+
+        const uint8_t swapGroup = unit.Action.TaskSwapGroup;
+        if (swapGroup > 0) {
+            if (swapGroup >= m_taskSwapUnits.size()) {
+                m_taskSwapUnits.resize(swapGroup + 1);
+            }
+
+            m_taskSwapUnits[swapGroup].push_back(&unit);
+        }
     }
 
     for (int i=0; i<dataFile.Techs.size(); i++) {
@@ -39,7 +47,7 @@ Civilization::Civilization(const int civId, const genie::DatFile &dataFile) :
 
 const std::vector<const genie::Unit *> Civilization::creatableUnits(int16_t creator) const
 {
-    if (creator != 118 && unit(creator).Class == genie::Unit::Civilian) {
+    if (creator != 118 && unit(creator).Action.TaskSwapGroup != 0) {
         creator = 118;
     }
 
@@ -76,4 +84,13 @@ const genie::Tech &Civilization::tech(const uint16_t id) const
     }
 
     return m_techs.at(id);
+}
+
+std::vector<const genie::Unit *> Civilization::swappableUnits(const uint16_t taskSwapGroup) const
+{
+    if (taskSwapGroup >= m_taskSwapUnits.size()) {
+        return {};
+    }
+
+    return m_taskSwapUnits[taskSwapGroup];
 }

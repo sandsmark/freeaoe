@@ -32,11 +32,15 @@ public:
     const genie::Unit &unit(const uint16_t id) const;
     const genie::Tech &tech(const uint16_t id) const;
 
+    std::vector<const genie::Unit *> swappableUnits(const uint16_t taskSwapGroup) const;
+
 private:
     const genie::Unit nullUnit;
 
     std::unordered_map<int16_t, std::vector<const genie::Unit*>> m_creatableUnits;
     std::unordered_map<int16_t, std::vector<const genie::Tech*>> m_researchAvailable;
+
+    std::vector<std::vector<const genie::Unit*>> m_taskSwapUnits;
 
     const int m_civId;
     const genie::Civ m_data;

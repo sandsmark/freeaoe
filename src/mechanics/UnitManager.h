@@ -78,6 +78,8 @@ public:
 
 private:
     std::set<Unit::Ptr, MapPositionSorter> m_units;
+    std::unordered_set<const genie::Task*> m_currentActions;
+
     UnitSet m_selectedUnits;
     MapPtr m_map;
     sf::RenderTexture m_outlineOverlay;

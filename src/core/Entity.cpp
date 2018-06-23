@@ -131,9 +131,29 @@ float Unit::creationProgress() const
     return m_creationProgress / float(data.Creatable.TrainTime);
 }
 
+std::unordered_set<const genie::Task *> Unit::availableActions()
+{
+    std::unordered_set<const genie::Task *> tasks;
+    for (const genie::Task &task : DataManager::datFile().UnitHeaders[data.ID].TaskList) {
+        tasks.insert(&task);
+    }
+
+    if (!data.Action.TaskSwapGroup) {
+        return tasks;
+    }
+
+    for (const genie::Unit *swappable : m_civilization->swappableUnits(data.Action.TaskSwapGroup)) {
+        for (const genie::Task &task : DataManager::datFile().UnitHeaders[swappable->ID].TaskList) {
+            tasks.insert(&task);
+        }
+    }
+
+    return tasks;
+}
+
 int Unit::taskGraphicId(const genie::Task::ActionTypes taskType, const Unit::State state)
 {
-    for (const genie::Task &task : DataManager::Inst().datFile().UnitHeaders[data.ID].TaskList) {
+    for (const genie::Task &task : DataManager::datFile().UnitHeaders[data.ID].TaskList) {
         if (task.ActionType != taskType) {
             continue;
         }
