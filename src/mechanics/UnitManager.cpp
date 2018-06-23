@@ -43,7 +43,6 @@ UnitManager::~UnitManager()
 void UnitManager::add(Unit::Ptr unit)
 {
     m_units.insert(unit);
-//    m_units.insert(unit);
 }
 
 bool UnitManager::init()
@@ -68,6 +67,13 @@ bool UnitManager::update(Time time)
 
 void UnitManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
 {
+    CameraPtr camera = renderTarget->camera();
+
+    if (camera->targetPosition() != m_previousCameraPos || m_outlineOverlay.getSize().x == 0) {
+        updateVisibility(camera);
+        m_previousCameraPos = camera->targetPosition();
+    }
+
     if (m_outlineOverlay.getSize() != renderTarget->getSize()) {
         m_outlineOverlay.create(renderTarget->getSize().x, renderTarget->getSize().y);
     }
@@ -78,14 +84,10 @@ void UnitManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
         if (!(unit->data.OcclusionMode & genie::Unit::OccludeOthers)) {
             continue;
         }
-        const ScreenPos unitPosition = renderTarget->camera()->absoluteScreenPos(unit->position);
-
-        ScreenRect unitRect = unit->renderer().rect() + unitPosition;
+        const ScreenPos unitPosition = camera->absoluteScreenPos(unit->position);
 
         for (const Unit::Annex &annex : unit->annexes) {
-            const ScreenPos annexPosition = renderTarget->camera()->absoluteScreenPos(unit->position + annex.offset);
-            ScreenRect annexRect = annex.unit->renderer().rect() + annexPosition;
-            if (!renderTarget->camera()->isVisible(annexRect)) {
+            if (!annex.unit->isVisible) {
                 continue;
             }
             annex.unit->renderer().render(m_outlineOverlay,
@@ -93,13 +95,13 @@ void UnitManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
                                           comp::RenderType::Base
                                           );
         }
-        if (renderTarget->camera()->isVisible(unitRect)) {
+        if (unit->isVisible) {
             unit->renderer().render(m_outlineOverlay, unitPosition, comp::RenderType::Base);
         }
     }
 
     for (const Unit::Ptr &unit : m_units) {
-        if (!renderTarget->camera()->isVisible(MapRect(unit->position.x, unit->position.y, 10, 10))) {
+        if (!unit->isVisible) {
             continue;
         }
 
@@ -120,7 +122,7 @@ void UnitManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
                 circle.setPointCount(4);
             }
 
-            ScreenPos pos = renderTarget->camera()->absoluteScreenPos(unit->position);
+            ScreenPos pos = camera->absoluteScreenPos(unit->position);
 
             circle.setPosition(pos.x - width, pos.y - height);
             circle.setRadius(width);
@@ -229,7 +231,7 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
         containedUnits.push_back(unit);
     }
 
-    if (containedUnits.empty()) {
+    if (!containedUnits.empty()) {
         m_currentActions = containedUnits[0]->availableActions();
     }
 
@@ -262,4 +264,19 @@ void UnitManager::setMap(MapPtr map)
 void UnitManager::placeBuilding(const Unit::Ptr &unit)
 {
     m_buildingToPlace = unit;
+}
+
+void UnitManager::updateVisibility(const CameraPtr &camera)
+{
+    for (Unit::Ptr unit : m_units) {
+        const ScreenPos unitPosition = camera->absoluteScreenPos(unit->position);
+        const ScreenRect unitRect = unit->renderer().rect() + unitPosition;
+        unit->isVisible = camera->isVisible(unitRect);
+
+        for (Unit::Annex &annex : unit->annexes) {
+            const ScreenPos annexPosition = camera->absoluteScreenPos(unit->position + annex.offset);
+            ScreenRect annexRect = annex.unit->renderer().rect() + annexPosition;
+            annex.unit->isVisible = camera->isVisible(annexRect);
+        }
+    }
 }

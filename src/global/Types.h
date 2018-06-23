@@ -58,6 +58,10 @@ struct Size {
     inline operator sf::FloatRect() const {
         return sf::FloatRect(0, 0, width, height);
     }
+
+    inline Size operator/(float divisor) const {
+        return Size(width / divisor, height / divisor);
+    }
 };
 
 struct ScreenPos;
@@ -80,6 +84,10 @@ struct MapPos {
             other.y == y &&
             other.z == z
         );
+    }
+
+    inline bool operator!=(const MapPos &other) const {
+        return !(*this == other);
     }
 
     inline MapPos &operator+=(const MapPos &other) {
@@ -182,6 +190,14 @@ inline ScreenPos operator +(const ScreenPos& left, const ScreenPos& right)
     );
 }
 
+inline ScreenPos operator -(const ScreenPos& pos, const Size& size)
+{
+    return ScreenPos(
+        pos.x - size.width,
+        pos.y - size.height
+    );
+}
+
 inline ScreenPos MapPos::toScreen() const
 {
     return ScreenPos(
@@ -217,6 +233,13 @@ struct ScreenRect
 
         width  = std::abs(a.x - b.x);
         height = std::abs(a.y - b.y);
+    }
+    ScreenRect(const ScreenPos &a, const Size &s)
+    {
+        x = a.x;
+        y = a.y;
+        width = s.width;
+        height = s.height;
     }
 
     ScreenPos topLeft() const {
@@ -407,6 +430,28 @@ struct MapRect {
             contains(otherRect.x + otherRect.width, otherRect.y + otherRect.height, z)
         );
     }
+
+    inline MapRect &operator +=(const MapRect& other)
+    {
+        float x1 = std::min(x, other.x);
+        float y1 = std::min(y, other.y);
+
+        float x2 = std::max(x + width, other.x + other.width);
+        float y2 = std::max(y + height, other.y + other.height);
+
+
+        x = x1;
+        y = y1;
+
+        width  = x2 - x1;
+        height = y2 - y1;
+
+        return *this;
+    }
+
+    Size size() const {
+        return Size(width, height);
+    }
 };
 
 inline MapRect operator -(const MapRect& rect, const MapPos& pos)
@@ -440,10 +485,11 @@ inline MapRect ScreenRect::toMap() const
 
 inline ScreenRect MapRect::toScreen() const
 {
-    return ScreenRect(
-        MapPos(x, y, z).toScreen(),
-        MapPos(x + width, y + height, z).toScreen()
-    );
+    const float x1 = topLeft().toScreen().x;
+    const float y1 = bottomLeft().toScreen().y;
+    const float x2 = topRight().toScreen().x;
+    const float y2 = bottomRight().toScreen().y;
+    return ScreenRect(ScreenPos(x1, y1), Size(x2-x1, y2-y1));
 }
 
 inline std::ostream &operator <<(std::ostream &os, const MapRect &rect) {

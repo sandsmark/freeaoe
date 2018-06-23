@@ -40,7 +40,7 @@ bool Entity::update(Time time)
 
     updated = m_graphics.update(time) || updated;
 
-    return updated;
+    return updated && isVisible;
 }
 
 std::shared_ptr<Unit> Entity::asUnit(EntityPtr entity)

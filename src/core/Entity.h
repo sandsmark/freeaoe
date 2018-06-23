@@ -66,6 +66,8 @@ public:
 
     const std::string readableName;
 
+    bool isVisible = false;
+
 protected:
     Entity(const Type type_, const std::string &name);
 

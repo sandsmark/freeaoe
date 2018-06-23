@@ -77,6 +77,8 @@ public:
     void placeBuilding(const Unit::Ptr &unit);
 
 private:
+    void updateVisibility(const CameraPtr &camera);
+
     std::set<Unit::Ptr, MapPositionSorter> m_units;
     std::unordered_set<const genie::Task*> m_currentActions;
 
@@ -86,6 +88,7 @@ private:
     MoveTargetMarker::Ptr m_moveTargetMarker;
 
     Unit::Ptr m_buildingToPlace;
+    MapPos m_previousCameraPos;
 };
 
 #endif // UNITMANAGER_H
