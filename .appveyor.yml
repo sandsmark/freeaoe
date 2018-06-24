@@ -16,7 +16,7 @@ install:
 # scripts to run before build
 before_build:
   - git submodule update --init --recursive
-  - cmake -G "Visual Studio 15 2017" -DVCPKG_TARGET_TRIPLET=x86-windows-static -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake
+  - cmake -G "Visual Studio 15 2017" -DVCPKG_TARGET_TRIPLET=x86-windows-static -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake -DSFML_STATIC_LIBRARIES=True
 
 artifacts:
   - path: '**\freeaoe.exe'
