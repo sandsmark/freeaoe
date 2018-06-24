@@ -214,6 +214,8 @@ void ActionPanel::updateButtons()
     bool canGarrison = false;
 
     for (const genie::Task *task : unit->availableActions()) {
+        std::cout << task->actionTypeName() << std::endl;
+
         if (task->ActionType == genie::Task::Garrison) {
             canGarrison = true;
             break;

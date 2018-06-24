@@ -197,7 +197,6 @@ void UnitManager::onRightClick(const MapPos &mapPos)
         return;
     }
 
-
     for (const Unit::Ptr &unit : m_selectedUnits) {
         unit->setCurrentAction(act::MoveOnMap::moveUnitTo(unit, mapPos, m_map, this));
     }
@@ -264,6 +263,44 @@ void UnitManager::setMap(MapPtr map)
 void UnitManager::placeBuilding(const Unit::Ptr &unit)
 {
     m_buildingToPlace = unit;
+}
+
+Unit::Ptr UnitManager::unitAt(const ScreenPos &pos, const CameraPtr &camera) const
+{
+    for (Unit::Ptr unit : m_units) {
+        if (!unit->isVisible) {
+            continue;
+        }
+
+        const ScreenPos unitPosition = camera->absoluteScreenPos(unit->position);
+        const ScreenRect unitRect = unit->renderer().rect() + unitPosition;
+        if (unitRect.contains(pos)) {
+            return unit;
+        }
+    }
+
+    return nullptr;
+}
+
+const genie::Task *UnitManager::defaultActionAt(const ScreenPos &pos, const CameraPtr &camera)
+{
+    Unit::Ptr target = unitAt(pos, camera);
+    if (!target) {
+        return nullptr;
+    }
+
+    // One of the selected themselves
+    if (m_selectedUnits.count(target)) {
+        return nullptr;
+    }
+
+    for (const genie::Task *action : availableActions()) {
+        if (action->ActionType == genie::Task::Combat) {
+            return action;
+        }
+    }
+
+    return nullptr;
 }
 
 void UnitManager::updateVisibility(const CameraPtr &camera)

@@ -108,10 +108,10 @@ bool GameState::init()
         }
     }
 
-    m_cursors = ResourceManager::Inst()->getSlp(ResourceManager::filenameID("mcursors.shp"));
-    if (m_cursors) {
-        m_cursorTexture.loadFromImage(res::Resource::convertFrameToImage(m_cursors->getFrame(0)));
-        m_cursor.setTexture(m_cursorTexture);
+    m_mouseCursor.cursorsFile = ResourceManager::Inst()->getSlp(ResourceManager::filenameID("mcursors.shp"));
+    if (m_mouseCursor.cursorsFile) {
+        m_mouseCursor.texture.loadFromImage(res::Resource::convertFrameToImage(m_mouseCursor.cursorsFile->getFrame(Cursor::Normal)));
+        m_mouseCursor.sprite.setTexture(m_mouseCursor.texture);
     } else {
         log.error("Failed to get cursors");
     }
@@ -234,37 +234,6 @@ bool GameState::init()
     m_unitManager->setMap(map_);
 
     return true;
-
-    /*
-  EntityForm form;
-  
-  comp::GraphicPtr g = comp::Graphic::create(881);
-  
-  form.addComponent(comp::GRAPHIC, g);
- 
-  entity_form_manager_.add(form);
-  
-  */
-    //-------------
-
-    /*    game_server_ = new GameServer();
-    game_client_ = new GameClient();
-    
-    game_client_->setGameRenderer(game_renderer_);
-    
-    // Creating local connection
-    LocalTunnelToServer *tToServ = new LocalTunnelToServer();
-    LocalTunnelToClient *tToClient = new LocalTunnelToClient();
-    
-    tToServ->setServer(tToClient);
-    tToClient->setClient(tToServ);
-    
-    game_server_->addClient(tToClient);
-    game_client_->setServer(tToServ);
-    
-    //Test
-    game_client_->test();
-    */
 }
 
 void GameState::draw()
@@ -279,7 +248,7 @@ void GameState::draw()
     renderTarget_->draw(m_uiOverlay, ScreenPos(0, 0));
     m_actionPanel->draw();
 
-    renderTarget_->renderTarget_->draw(m_cursor);
+    renderTarget_->renderTarget_->draw(m_mouseCursor.sprite);
 }
 
 bool GameState::update(Time time)
@@ -332,7 +301,7 @@ bool GameState::update(Time time)
 void GameState::handleEvent(sf::Event event)
 {
     if (event.type == sf::Event::MouseMoved) {
-        m_cursor.setPosition(event.mouseMove.x, event.mouseMove.y);
+        m_mouseCursor.sprite.setPosition(event.mouseMove.x, event.mouseMove.y);
 
         if (event.mouseMove.x < MOUSE_MOVE_EDGE_SIZE) {
             m_cameraDeltaX = -1;
@@ -350,12 +319,21 @@ void GameState::handleEvent(sf::Event event)
             m_cameraDeltaY = 0;
         }
 
+        ScreenPos mousePos(event.mouseMove.x, event.mouseMove.y);
         if (m_selecting) {
-            m_selectionCurr = ScreenPos(event.mouseMove.x, event.mouseMove.y);
+            m_selectionCurr = mousePos;
         } else {
-            m_unitManager->onMouseMove(renderTarget_->camera()->absoluteMapPos(ScreenPos(event.mouseMove.x, event.mouseMove.y)));
+            m_unitManager->onMouseMove(renderTarget_->camera()->absoluteMapPos(mousePos));
         }
 
+        const genie::Task *targetAction = m_unitManager->defaultActionAt(mousePos, renderTarget_->camera());
+        if (!targetAction) {
+            m_mouseCursor.setCursor(Cursor::Normal);
+        } else if (targetAction->ActionType == genie::Task::Combat) {
+            m_mouseCursor.setCursor(Cursor::Attack);
+        } else {
+            m_mouseCursor.setCursor(Cursor::Action);
+        }
 
         return;
     }

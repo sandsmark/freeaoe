@@ -76,6 +76,12 @@ public:
 
     void placeBuilding(const Unit::Ptr &unit);
 
+    Unit::Ptr unitAt(const ScreenPos &pos, const CameraPtr &camera) const;
+
+    const std::unordered_set<const genie::Task*> availableActions() const { return m_currentActions; }
+
+    const genie::Task *defaultActionAt(const ScreenPos &pos, const CameraPtr &camera);
+
 private:
     void updateVisibility(const CameraPtr &camera);
 

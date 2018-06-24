@@ -41,6 +41,45 @@ namespace sf {
 class RenderTarget;
 }
 
+struct Cursor {
+    enum Type {
+        Normal = 0,
+        Busy,
+        Target,
+        Action,
+        Attack,
+        TargetPos,
+        WhatsThis,
+        Build,
+        Axe,
+        Protect,
+        Horn,
+        MoveTo,
+        Disabled,
+        Garrison,
+        Garrison2,
+        Disembark,
+        Embark,
+        TargetCircle,
+        Flag
+    };
+
+    void setCursor(const Type type) {
+        if (type == currentType) {
+            return;
+        }
+        texture.loadFromImage(res::Resource::convertFrameToImage(cursorsFile->getFrame(type)));
+        sprite.setTexture(texture);
+        currentType = type;
+    }
+
+    sf::Texture texture;
+    sf::Sprite sprite;
+    genie::SlpFilePtr cursorsFile;
+
+    Type currentType = Normal;
+};
+
 //------------------------------------------------------------------------------
 /// State where the game is processed
 //
@@ -95,9 +134,6 @@ private:
     sf::Texture m_uiOverlay;
     sf::Texture m_buttonBackground;
 
-    sf::Texture m_cursorTexture;
-    sf::Sprite m_cursor;
-    genie::SlpFilePtr m_cursors;
 
     genie::SlpFilePtr m_waypointFlag;
 
@@ -107,6 +143,8 @@ private:
 
     Player::Ptr m_humanPlayer;
     std::vector<Player::Ptr> m_players;
+
+    Cursor m_mouseCursor;
 };
 
 #endif // GAMESTATE_H
