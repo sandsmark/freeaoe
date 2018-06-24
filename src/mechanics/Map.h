@@ -110,7 +110,7 @@ public:
 private:
     void updateTileBlend(int tileX, int tileY);
     void updateTileSlopes(int tileX, int tileY);
-    const res::TileSlopes::Slope slopeAt(const int x, const int y);
+    res::TileSlopes::Slope slopeAt(const int x, const int y);
 
     static Logger &log;
 

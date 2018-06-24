@@ -201,6 +201,10 @@ private:
     Logger &m_logger;
 };
 
+#ifdef _MSC_VER
+#define TIME_THIS LifeTimePrinter lifetime_printer(__FUNCTION__, log)
+#else
 #define TIME_THIS LifeTimePrinter lifetime_printer(__PRETTY_FUNCTION__, log)
+#endif
 
 #endif /* LOGGER_H_ */

@@ -114,7 +114,7 @@ const genie::Terrain &Terrain::data()
 
 uint8_t Terrain::blendMode(const uint8_t ownMode, const uint8_t neighborMode)
 {
-    const std::array<std::array<uint8_t, 8>, 8> blendmodeTable ({{
+    const std::array<std::array<uint8_t, 8>, 8> blendmodeTable = {{
         {{ 2, 3, 2, 1, 1, 6, 5, 4 }},
         {{ 3, 3, 3, 1, 1, 6, 5, 4 }},
         {{ 2, 3, 2, 1, 1, 6, 1, 4 }},
@@ -123,7 +123,7 @@ uint8_t Terrain::blendMode(const uint8_t ownMode, const uint8_t neighborMode)
         {{ 6, 6, 6, 6, 6, 6, 5, 4 }},
         {{ 5, 5, 1, 5, 5, 5, 5, 4 }},
         {{ 4, 3, 4, 4, 4, 4, 4, 4 }}
-    }});
+    }};
 
     if (IS_UNLIKELY(ownMode > blendmodeTable.size() || neighborMode > blendmodeTable[ownMode].size())) {
         log.error("invalid mode %d %d", ownMode, neighborMode);
@@ -143,7 +143,10 @@ const sf::Texture &Terrain::blendImage(const Blend blends, int tileX, int tileY)
     const Size size = sourceImage.getSize();
 
     const size_t byteCount = size.width * size.height * 4;
-    Uint8 pixels[byteCount];
+
+    // fuck msvc
+    std::vector<Uint8> pixelsBuf(byteCount);
+    Uint8 *pixels = pixelsBuf.data();
     memcpy(pixels, sourceImage.getPixelsPtr(), byteCount);
 
     const genie::BlendMode &blend = ResourceManager::Inst()->getBlendmode(blends.blendMode);

@@ -23,12 +23,17 @@
 #include <string>
 #include <algorithm>
 
+#ifndef _MSC_VER
 #if __has_cpp_attribute(likely) && __has_cpp_attribute(likely)
 #define IS_LIKELY(x) [[likely(x)]]
 #define IS_UNLIKELY(x) [[unlikely(x)]]
 #else
 #define IS_LIKELY(x)      __builtin_expect(!!(x), 1)
 #define IS_UNLIKELY(x)    __builtin_expect(!!(x), 0)
+#endif
+#else
+#define IS_LIKELY(x)      (x)
+#define IS_UNLIKELY(x)    (x)
 #endif
 
 namespace util {

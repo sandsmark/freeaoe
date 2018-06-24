@@ -24,21 +24,11 @@
 #include <iomanip>
 #include <unordered_set>
 
-#ifndef __WIN32
 #include <filesystem>
-#else
-namespace std {
-namespace filesystem {
-static bool exists(const std::string&){
-    std::cerr << "stub" << std::endl;
-    return true;
-}
-}
-}
-#endif
 
 #if defined(_WINDOWS)
 #include <Shlobj.h>
+#include <codecvt>
 #endif
 
 void Config::printUsage(const std::string &programName)
@@ -135,17 +125,17 @@ Config::Config(const std::string &applicationName)
     m_filePath += "/";
 #elif defined(_WINDOWS)
     //FIXME: don't really windows, and not tested
-    PWSTR rawPath = nullptr;
+    wchar_t *rawPath = nullptr;
     HRESULT hr = SHGetKnownFolderPath(FOLDERID_ProgramData, 0, NULL, &rawPath);
     if (FAILED(hr)) {
         std::cerr << "Failed to get user configuration path!" << std::endl;
-        return std::string();
     }
     if (rawPath) {
-        path = rawPath;
-        path += "\\";
+        m_filePath = std::wstring_convert<
+                std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}.to_bytes(std::wstring(rawPath));
+        m_filePath += std::string("\\");
+        CoTaskMemFree(static_cast<void*>(rawPath));
     }
-    CoTaskMemFree(rawPath);
 #endif
 
     m_filePath += applicationName + ".cfg";

@@ -23,7 +23,7 @@
 #include "Map.h"
 class SfmlRenderTarget;
 
-class Camera;
+struct Camera;
 typedef std::shared_ptr<Camera> CameraPtr;
 
 struct MapPositionSorter

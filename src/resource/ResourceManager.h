@@ -141,7 +141,6 @@ public:
 
 private:
     std::string findFile(const std::string &filename) const;
-    bool loadGraphicsFile();
 
     static Logger &log;
 

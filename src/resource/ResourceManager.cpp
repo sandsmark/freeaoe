@@ -30,9 +30,7 @@
 #include <core/Utility.h>
 
 // hack around some broken shit in mingw
-#ifndef __WIN32
 #include <filesystem>
-#endif
 
 #include <unordered_map>
 
@@ -241,7 +239,6 @@ bool ResourceManager::initialize(const std::string &dataPath, const genie::GameV
 
         m_graphicsFile = loadDrs("graphics.drs");
         if (!m_graphicsFile) {
-//        if (!loadGraphicsFile()) {
             log.error("Failed to load graphics file");
             return false;
         }
@@ -506,62 +503,20 @@ int ResourceManager::filenameID(const std::string &filename)
 
 std::string ResourceManager::findFile(const std::string &filename) const
 {
-#ifndef __WIN32
     if (std::filesystem::exists(m_dataPath + filename)) {
         return m_dataPath + filename;
     }
 
     std::string compareFilename = util::toLowercase(filename);
     for (const std::filesystem::directory_entry &entry : std::filesystem::directory_iterator(m_dataPath)) {
-        std::string candidate = util::toLowercase(entry.path().filename());
+        std::string candidate = util::toLowercase(entry.path().filename().string());
         if (candidate == compareFilename) {
-            return entry.path().filename();
+            return entry.path().filename().string();
         }
     }
 
     log.debug("Can't find file %", filename);
     return std::string();
-#else
-    return m_dataPath + filename;
-#endif
-}
-
-bool ResourceManager::loadGraphicsFile()
-{
-#if 0
-    std::string filePath = findFile("graphics.drs");
-    if (filePath.empty()) {
-        return false;
-    }
-
-    std::ifstream fileIn_;
-    fileIn_.open(filePath, std::ios::binary | std::ios::in | std::ios::ate);
-    if (fileIn_.fail()) {
-        log.error("Failed to open " + filePath);
-        return false;
-    }
-    const size_t fileSize = fileIn_.tellg();
-    std::cout << "file sizE: " << fileSize << std::endl;
-
-    fileIn_.seekg(std::streampos(0));
-    m_graphicsFileData.resize(fileSize, 0);
-
-//    m_graphicsFileData = std::unique_ptr<char>((new char[fileSize]));
-    fileIn_.read(m_graphicsFileData.data(), fileSize);
-
-    fileIn_.close();
-    m_graphicsFileStream.str(m_graphicsFileData);
-
-    m_graphicsFile = std::make_shared<genie::DrsFile>();
-    m_graphicsFile->setGameVersion(m_gameVersion);
-    m_graphicsFile->readObject(m_graphicsFileStream);
-//    file->setIStream(m_graphicsFileStream);
-//    file->load(filePath);
-
-    m_allFiles.push_back(m_graphicsFile);
-#endif
-
-    return true;
 }
 
 //------------------------------------------------------------------------------

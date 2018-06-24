@@ -56,7 +56,7 @@ public:
     const genie::TerrainBlock &terrainBlock();
 
     static std::string gameName(const genie::GameVersion version);
-    const genie::GameVersion gameVersion() const;
+    genie::GameVersion gameVersion() const;
 
     const std::vector<genie::Civ> &civilizations();
 

@@ -9,8 +9,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
-class Entity;
-class Unit;
+struct Entity;
+struct Unit;
 class SfmlRenderTarget;
 class UnitManager;
 typedef std::unordered_set<std::shared_ptr<Unit>> UnitSet;

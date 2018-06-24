@@ -110,7 +110,9 @@ const sf::Texture &Graphic::texture(uint32_t frame, float angleRadians, uint8_t 
         const int width = frame->getWidth();
         const int height = frame->getHeight();
 
-        Uint8 pixels[width * height * 4];
+        // fuck msvc
+        std::vector<Uint8> pixelsBuf(width * height * 4);
+        Uint8 *pixels = pixelsBuf.data();
 
         for (uint32_t row = 0; row < height; row++) {
             for (uint32_t col = 0; col < width; col++) {

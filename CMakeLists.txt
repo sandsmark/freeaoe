@@ -6,12 +6,28 @@ set(SFML_STATIC_LIBRARIES TRUE)
 
 project(freeaoe)
 
-set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/)
-
 find_package(SFML COMPONENTS system window graphics REQUIRED)
 
-if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-    set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
+if(MSVC)
+    add_definitions(/D_USE_MATH_DEFINES /wd4244 /wd4018 /wd4267 /wd4996 /wd4305)
+    include_directories(extern/genieutils/extern/win-iconv/)
+
+    find_package(BZip2)
+    find_package(ZLIB)
+    find_package(PNG)
+    set(EXTRA_LIBS PNG::PNG ZLIB::ZLIB BZip2::BZip2)
+
+    foreach(flag
+            CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+            CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
+        if(${flag} MATCHES "/MD")
+            string(REGEX REPLACE "/MD" "/MT" ${flag} "${${flag}}")
+        endif()
+    endforeach()
+else()
+    add_definitions(-Wall -Wextra -Wno-sign-compare -Wno-unused-parameter)
+    set(EXTRA_LIBS stdc++fs)
+    set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/)
 endif()
 
 
@@ -94,13 +110,12 @@ add_executable(freeaoe src/Engine.cpp src/main.cpp
                ${UNSORTED_SRC})
 
 target_link_libraries(freeaoe
-                      ${SFML_WINDOW_LIBRARY}
-                      ${SFML_SYSTEM_LIBRARY}
-                      ${SFML_GRAPHICS_LIBRARY}
-                      #${Genieutils_LIBRARY}
-                      genieutils
-                      stdc++fs
-                      )
+    sfml-system
+    sfml-window
+    sfml-graphics
+    ${EXTRA_LIBS}
+    genieutils
+)
                       
 
 add_subdirectory(src)

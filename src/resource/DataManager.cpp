@@ -25,18 +25,7 @@
 
 #include "LanguageManager.h"
 
-#ifndef __WIN32
 #include <filesystem>
-#else
-namespace std {
-namespace filesystem {
-static bool exists(const std::string&){
-    std::cerr << "stub" << std::endl;
-    return true;
-}
-}
-}
-#endif
 
 Logger &DataManager::log = Logger::getLogger("freeaoe.DataManager");
 
@@ -119,7 +108,7 @@ std::string DataManager::gameName(const genie::GameVersion version)
         return "Unknown";
     }
 }
-const genie::GameVersion DataManager::gameVersion() const
+genie::GameVersion DataManager::gameVersion() const
 {
     return dat_file_.getGameVersion();
 }

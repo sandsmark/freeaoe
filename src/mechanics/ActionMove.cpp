@@ -74,8 +74,8 @@ MoveOnMap::MoveOnMap(MapPos destination, MapPtr map, Unit::Ptr unit, UnitManager
     IAction(Type::Move),
     m_map(map),
     target_reached(false),
-    m_unit(unit),
-    m_unitManager(unitManager)
+    m_unitManager(unitManager),
+    m_unit(unit)
 {
     dest_ = destination;
     last_update_ = 0;

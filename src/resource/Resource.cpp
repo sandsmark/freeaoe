@@ -95,7 +95,10 @@ sf::Image Resource::convertFrameToImage(const genie::SlpFramePtr frame,
     const int height = frame->getHeight();
     const genie::SlpFrameData &frameData = frame->img_data;
 
-    Uint8 pixels[width * height * 4];
+    // fuck msvc
+    std::vector<Uint8> pixelsBuf(width * height * 4);
+    Uint8 *pixels = pixelsBuf.data();
+
     for (uint32_t row = 0; row < height; row++) {
         for (uint32_t col = 0; col < width; col++) {
             const uint8_t paletteIndex = frameData.pixel_indexes[row * width + col];

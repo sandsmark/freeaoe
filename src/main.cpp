@@ -18,18 +18,7 @@
 
 #include <iostream>
 
-#ifndef __WIN32
 #include <filesystem>
-#else
-namespace std {
-namespace filesystem {
-static bool exists(const std::string&){
-    std::cerr << "stub" << std::endl;
-    return true;
-}
-}
-}
-#endif
 
 #include "Engine.h"
 #include "resource/DataManager.h"

@@ -541,7 +541,7 @@ void Map::updateTileSlopes(int tileX, int tileY)
     tile.terrain_->slopedImage(tile.slopes, tileX, tileY);
 }
 
-const TileSlopes::Slope Map::slopeAt(const int x, const int y)
+TileSlopes::Slope Map::slopeAt(const int x, const int y)
 {
     if (x < 0 || y < 0) {
         return TileSlopes::Flat;
