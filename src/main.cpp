@@ -36,41 +36,41 @@
 // TODO: Bad_alloc
 int main(int argc, char **argv)
 {
-  Logger::setLogLevel(Logger::L_INFO);
-  genie::Logger::setLogLevel(genie::Logger::L_DEBUG);
+    Logger::setLogLevel(Logger::L_INFO);
+    genie::Logger::setLogLevel(genie::Logger::L_DEBUG);
 
-  Config config("freeaoe");
-  config.setAllowedOptions({
-    {"game-path", "Path to AoE installation with data files"},
-    {"scenario-file", "Path to scenario file to load"}
-  });
-  if (!config.parseOptions(argc, argv)) {
-      return 1;
-  }
-  const std::string dataPath = config.getValue("game-path") + "/Data/";
+    Config config("freeaoe");
+    config.setAllowedOptions({
+            {"game-path", "Path to AoE installation with data files"},
+            {"scenario-file", "Path to scenario file to load"}
+            });
+    if (!config.parseOptions(argc, argv)) {
+        return 1;
+    }
+    const std::string dataPath = config.getValue("game-path") + "/Data/";
 
-  if (!std::filesystem::exists(dataPath)) {
-      std::cerr << "Game path " << dataPath << " does not exist" << std::endl;
-      config.printUsage(argv[0]);
-      return 1;
-  }
+    if (!std::filesystem::exists(dataPath)) {
+        std::cerr << "Game path " << dataPath << " does not exist" << std::endl;
+        config.printUsage(argv[0]);
+        return 1;
+    }
 
-  LanguageManager::Inst()->initialize(dataPath);
+    LanguageManager::Inst()->initialize(dataPath);
 
-  if (!DataManager::Inst().initialize(dataPath)) {
-      return 1;
-  }
+    if (!DataManager::Inst().initialize(dataPath)) {
+        return 1;
+    }
 
-  if (!ResourceManager::Inst()->initialize(dataPath, DataManager::Inst().gameVersion())) {
-      return 1;
-  }
+    if (!ResourceManager::Inst()->initialize(dataPath, DataManager::Inst().gameVersion())) {
+        return 1;
+    }
 
-  Engine en;
-  if (!en.setup(config.getValue("scenario-file"))) {
-      return 1;
-  }
+    Engine en;
+    if (!en.setup(config.getValue("scenario-file"))) {
+        return 1;
+    }
 
-  en.start();
-  
-  return 0;
+    en.start();
+
+    return 0;
 }
