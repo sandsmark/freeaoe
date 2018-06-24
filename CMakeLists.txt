@@ -19,6 +19,7 @@ include_directories(src/
   ${CMAKE_HOME_DIRECTORY}/extern/genieutils/include
   ${SFML_INCLUDE_DIR})
 
+set (GENIEUTILS_STATIC_BUILD True)
 add_subdirectory( extern/genieutils )
 
 # additional compiler flags 

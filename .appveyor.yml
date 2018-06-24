@@ -1,0 +1,26 @@
+platform: x86
+configuration: Release
+os: Visual Studio 2017
+
+environment:
+  APPVEYOR_SAVE_CACHE_ON_ERROR: true
+
+build:
+  project: freeaoe.vcxproj
+
+install:
+  - vcpkg install sfml:x86-windows-static
+  - c:\tools\vcpkg\vcpkg integrate install
+
+
+# scripts to run before build
+before_build:
+  - git submodule update --init --recursive
+  - cmake -G "Visual Studio 15 2017" -DVCPKG_TARGET_TRIPLET=x86-windows-static -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake
+
+artifacts:
+  - path: '**\freeaoe.exe'
+
+cache:
+  - c:\tools\vcpkg\installed -> .appveyor.yml
+

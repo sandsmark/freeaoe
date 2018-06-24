@@ -1,9 +1,9 @@
 [submodule "extern/genieutils"]
 	path = extern/genieutils
-	url = git@github.com:sandsmark/genieutils.git
+	url = https://github.com/sandsmark/genieutils.git
 [submodule "extern/geniedoc"]
 	path = extern/geniedoc
-	url = git@github.com:aap/geniedoc.git
+	url = https://github.com/aap/geniedoc.git
 [submodule "extern/pcrio"]
 	path = extern/pcrio
-	url = git@github.com:sandsmark/pcrio.git
+	url = https://github.com/sandsmark/pcrio.git
