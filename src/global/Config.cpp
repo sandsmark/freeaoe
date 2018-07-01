@@ -34,9 +34,9 @@
 #include <knownfolders.h>
 
 
-static const char *s_registryGroupAoK = "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Microsoft Games\\"
+static const char *s_registryGroupAoK = "SOFTWARE\\Microsoft\\Microsoft Games\\"
                                         "Age of Empires\\2.0";
-static const char *s_registryGroupTC = "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Microsoft Games\\"
+static const char *s_registryGroupTC = "SOFTWARE\\Microsoft\\Microsoft Games\\"
                                         "Age of Empires II: The Conquerors Expansion\\1.0";
 
 static std::string getRegistryString(const char *regGroup, const char *key)
