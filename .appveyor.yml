@@ -10,7 +10,6 @@ build:
 
 install:
   - vcpkg install sfml:x86-windows
-  - vcpkg install libjpeg-turbo:x86-windows
   - c:\tools\vcpkg\vcpkg integrate install
 
 
@@ -20,10 +19,9 @@ before_build:
   - cmake -G "Visual Studio 15 2017" -DVCPKG_TARGET_TRIPLET=x86-windows -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake
 
 on_finish:
-    - xcopy 'C:\Tools\vcpkg\installed\x86-windows\bin\*.dll' 'Release\'
     - 7z a freeaoe.zip Release/
     - appveyor PushArtifact freeaoe.zip
 
 cache:
-  - c:\tools\vcpkg\installed
+  - c:\tools\vcpkg\installed -> .appveyor.yml
 
