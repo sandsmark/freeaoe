@@ -29,7 +29,6 @@
 #include <genie/resource/UIFile.h>
 #include <core/Utility.h>
 
-// hack around some broken shit in mingw
 #include <filesystem>
 
 #include <unordered_map>

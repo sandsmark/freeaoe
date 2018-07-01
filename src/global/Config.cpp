@@ -26,9 +26,11 @@
 
 #include <filesystem>
 
-#if defined(_WINDOWS)
-#include <Shlobj.h>
+#if defined(WIN32) || defined(__WIN32) || defined(__WIN32__)
+#define WINAPI_FAMILY_PARTITION
+#include <shlobj.h>
 #include <codecvt>
+#include <knownfolders.h>
 #endif
 
 void Config::printUsage(const std::string &programName)
@@ -123,7 +125,7 @@ Config::Config(const std::string &applicationName)
         }
     }
     m_filePath += "/";
-#elif defined(_WINDOWS)
+#elif defined(WIN32) || defined(__WIN32) || defined(__WIN32__)
     //FIXME: don't really windows, and not tested
     wchar_t *rawPath = nullptr;
     HRESULT hr = SHGetKnownFolderPath(FOLDERID_ProgramData, 0, NULL, &rawPath);
