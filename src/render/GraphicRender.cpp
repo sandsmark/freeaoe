@@ -99,6 +99,14 @@ bool GraphicRender::update(Time time)
 
 void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType renderpass)
 {
+    for (const GraphicDelta &delta : m_deltas) {
+        if (delta.angleToDrawOn >= 0 && delta.graphic->graphic_->angleToOrientation(m_angle) != delta.angleToDrawOn) {
+            continue;
+        }
+
+        delta.graphic->render(renderTarget, screenPos + delta.offset, renderpass);
+    }
+
     if (graphic_ && graphic_->isValid()) {
         sf::Sprite sprite;
         sf::BlendMode blendMode;
@@ -122,14 +130,6 @@ void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos scree
 
         sprite.setPosition(screenPos - graphic_->getHotspot(current_frame_, m_angle));
         renderTarget.draw(sprite, blendMode);
-    }
-
-    for (const GraphicDelta &delta : m_deltas) {
-        if (delta.angleToDrawOn >= 0 && delta.graphic->graphic_->angleToOrientation(m_angle) != delta.angleToDrawOn) {
-            continue;
-        }
-
-        delta.graphic->render(renderTarget, screenPos + delta.offset, renderpass);
     }
 
 }

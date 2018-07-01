@@ -423,7 +423,10 @@ int ResourceManager::filenameID(const std::string &filename)
         { "wolfwarn.wav", 50366   },
         { "won.wav", 50320        },
 
-        // UI files
+
+        /*
+         * UI files
+         */
         { "main.sin", 50081       },
         { "xmain.sin", 50089      },
         { "dlg_cha1.sin", 50017   },

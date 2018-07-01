@@ -160,6 +160,7 @@ bool GameState::init()
         m_unitManager->add(UnitFactory::Inst().createUnit(Unit::MaleBuilder, MapPos(48*6, 48*6, 0), m_humanPlayer));
         m_unitManager->add(UnitFactory::Inst().createUnit(280, MapPos(48*10, 48*10, 0), m_humanPlayer)); // mangonel
 
+        m_unitManager->add(UnitFactory::Inst().createUnit(Unit::Mill, MapPos(48*15, 48*15, 0), m_humanPlayer));
 
         Unit::Ptr unit = UnitFactory::Inst().createUnit(Unit::TownCenter, MapPos(48*2, 48*2, 0), m_humanPlayer);
 
