@@ -28,9 +28,40 @@
 
 #if defined(WIN32) || defined(__WIN32) || defined(__WIN32__)
 #define WINAPI_FAMILY_PARTITION
+#include <atlbase.h>
 #include <shlobj.h>
 #include <codecvt>
 #include <knownfolders.h>
+
+
+static const char *s_registryGroupAoK = "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Microsoft Games\\"
+                                        "Age of Empires\\2.0";
+static const char *s_registryGroupTC = "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Microsoft Games\\"
+                                        "Age of Empires II: The Conquerors Expansion\\1.0";
+
+static std::string getRegistryString(const char *regGroup, const char *key)
+{
+    CRegKey regKey;
+    LONG ret = regKey.Open(HKEY_LOCAL_MACHINE, regGroup);
+
+    if (ret != ERROR_SUCCESS) {
+        std::cerr << "Failed to open registry group " << regGroup << std::endl;
+        return std::string();
+    }
+
+    char outString[1024];
+    ULONG outStringSize = 1024;
+
+    ret = regKey.QueryStringValue(key, outString, &outStringSize);
+    regKey.Close();
+
+    if (ret != ERROR_SUCCESS) {
+        std::cerr << "Failed to get key " << key << " from " << regGroup << std::endl;
+        return std::string();
+    }
+
+    return std::string(outString);
+}
 #endif
 
 void Config::printUsage(const std::string &programName)
@@ -71,10 +102,20 @@ bool Config::parseOptions(int argc, char **argv)
             return false;
         }
     }
+#if defined(WIN32) || defined(__WIN32) || defined(__WIN32__)
+    if (m_options["game-path"].empty()) {
+        m_options["game-path"] = getRegistryString(s_registryGroupTC, "InstallationDirectory");
+    }
+    if (m_options["game-path"].empty()) {
+        m_options["game-path"] = getRegistryString(s_registryGroupAoK, "InstallationDirectory");
+    }
+#endif
 
     if (m_options != configuredOptions) {
         writeConfigFile(m_filePath);
     }
+
+
 
     return true;
 }
