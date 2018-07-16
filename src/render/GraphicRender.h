@@ -67,7 +67,7 @@ public:
 
     res::GraphicPtr graphic_;
 
-    unsigned int current_frame_;
+    int current_frame_;
 
 private:
     struct GraphicDelta {

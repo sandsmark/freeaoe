@@ -64,6 +64,17 @@ struct Size {
     inline Size operator/(float divisor) const {
         return Size(width / divisor, height / divisor);
     }
+
+    inline bool operator==(const Size &other) const {
+        return (
+            other.width == width &&
+            other.height == height
+        );
+    }
+
+    inline bool operator!=(const Size &other) const {
+        return !(*this == other);
+    }
 };
 
 struct ScreenPos;

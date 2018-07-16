@@ -25,6 +25,8 @@ else()
     find_package(SFML COMPONENTS system window graphics REQUIRED)
 endif()
 
+add_definitions(-DFONT_DIR="${CMAKE_CURRENT_SOURCE_DIR}/fonts/")
+
 include_directories(src/
   ${CMAKE_HOME_DIRECTORY}/extern/genieutils/include
   ${SFML_INCLUDE_DIR})
@@ -33,7 +35,7 @@ set (GENIEUTILS_STATIC_BUILD True)
 add_subdirectory( extern/genieutils )
 
 # additional compiler flags 
-#add_definitions(-Wall )
+#add_definitions(-Wall -Wextra)
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=undefined")
 

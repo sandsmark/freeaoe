@@ -74,8 +74,8 @@ void UnitManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
         m_previousCameraPos = camera->targetPosition();
     }
 
-    if (m_outlineOverlay.getSize() != renderTarget->getSize()) {
-        m_outlineOverlay.create(renderTarget->getSize().x, renderTarget->getSize().y);
+    if (Size(m_outlineOverlay.getSize()) != renderTarget->getSize()) {
+        m_outlineOverlay.create(renderTarget->getSize().width, renderTarget->getSize().height);
     }
 
     m_outlineOverlay.clear(sf::Color::Transparent);
@@ -176,7 +176,7 @@ void UnitManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
     }
 }
 
-void UnitManager::onLeftClick(const MapPos &mapPos)
+void UnitManager::onLeftClick(const MapPos &/*mapPos*/)
 {
     if (m_buildingToPlace) {
         for (const Unit::Ptr &unit : m_selectedUnits) {

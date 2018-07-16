@@ -68,7 +68,7 @@ namespace act {
         {
         }
 
-        virtual bool update(Time time)
+        virtual bool update(Time /*time*/)
         {
             target_->position = new_pos_;
             return true;

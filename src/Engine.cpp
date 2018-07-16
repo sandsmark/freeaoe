@@ -52,6 +52,8 @@ void Engine::start()
     while (renderWindow_->isOpen()) {
         std::shared_ptr<GameState> state = state_manager_.getActiveState();
 
+        const int renderStart = GameClock.getElapsedTime().asMilliseconds();
+
         bool updated = false;
 
         // Process events
@@ -72,7 +74,14 @@ void Engine::start()
             // Clear screen
             renderWindow_->clear(sf::Color::Green);
             state->draw();
-            drawFps();
+            const int renderTime = GameClock.getElapsedTime().asMilliseconds() - renderStart;
+
+            if (renderTime > 0) {
+                fps_label_.setString("fps: " + std::to_string(1000/renderTime));
+            }
+
+            renderWindow_->draw(fps_label_);
+
             // Update the window
             renderWindow_->display();
         } else {
@@ -112,31 +121,11 @@ bool Engine::setup(const std::string &scnFile)
   renderWindow_->setSize(gameState->uiSize());
   renderTarget_->setSize(gameState->uiSize());
 
-  fps_label_.setPosition(sf::Vector2f(10,10));
-  fps_label_.setFillColor(sf::Color::Green);
+  fps_label_.setPosition(sf::Vector2f(gameState->uiSize().width - 75, 5));
+  fps_label_.setFillColor(sf::Color::White);
+  font_.loadFromFile(FONT_DIR "Alegreya-Bold.latin");
+  fps_label_.setFont(font_);
+  fps_label_.setCharacterSize(15);
 
   return true;
-}
-
-//------------------------------------------------------------------------------
-void Engine::drawFps()
-{ 
-  /*
-  static sf::Clock clock;
-
-  if (clock.GetElapsedTime() >= 1000)
-  {
-    float fps = 1000 / render_window_->GetFrameTime();
-  
-    std::stringstream ss;
-  
-    ss << fps;
-    sf::String dfps;
-    dfps = "FPS: " + ss.str(); 
-    fps_label_.SetString(dfps);    
-    
-    clock.Reset();
-  }
-  render_window_->Draw(fps_label_);
-  */
 }

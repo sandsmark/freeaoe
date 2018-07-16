@@ -35,7 +35,7 @@ public:
     virtual ~IRenderTarget() {}
 
     //----------------------------------------------------------------------------
-    virtual Vector2u getSize(void) const = 0;
+    virtual Size getSize(void) const = 0;
 
     virtual void setSize(const Size size) const = 0;
 

@@ -71,8 +71,8 @@ static const float PATHFINDING_HEURISTIC_WEIGHT = 1.;
 MoveOnMap::MoveOnMap(MapPos destination, MapPtr map, Unit::Ptr unit, UnitManager *unitManager) :
     IAction(Type::Move),
     m_map(map),
-    target_reached(false),
     m_unitManager(unitManager),
+    target_reached(false),
     m_unit(unit)
 {
     dest_ = destination;

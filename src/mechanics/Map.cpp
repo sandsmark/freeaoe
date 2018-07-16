@@ -89,7 +89,7 @@ void Map::create(genie::ScnMap mapDescription)
 
     tiles_.resize(cols_ * rows_);
 
-    for (int i = 0; i < tiles_.size(); i++) {
+    for (size_t i = 0; i < tiles_.size(); i++) {
         genie::MapTile tile = mapDescription.tiles[i];
 
         tiles_[i].elevation_ = tile.elevation;
@@ -205,14 +205,14 @@ void Map::updateMapData()
         tile.reset();
     }
 
-    for (unsigned int col = 0; col < cols_; col++) {
-        for (unsigned int row = 0; row < rows_; row++) {
+    for (int col = 0; col < cols_; col++) {
+        for (int row = 0; row < rows_; row++) {
             updateTileBlend(col, row);
         }
     }
 
-    for (unsigned int col = 0; col < cols_; col++) {
-        for (unsigned int row = 0; row < rows_; row++) {
+    for (int col = 0; col < cols_; col++) {
+        for (int row = 0; row < rows_; row++) {
             updateTileSlopes(col, row);
         }
     }

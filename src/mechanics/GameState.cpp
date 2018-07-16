@@ -121,7 +121,7 @@ bool GameState::init()
     }
 
     const std::vector<genie::Civ> &civilizations = DataManager::Inst().civilizations();
-    for (int i=0; i<civilizations.size(); i++) {
+    for (size_t i=0; i<civilizations.size(); i++) {
         m_civilizations.push_back(std::make_shared<Civilization>(i, DataManager::Inst().datFile()));
     }
     if (m_civilizations.empty()) {
@@ -136,7 +136,7 @@ bool GameState::init()
         DBG << "Setting up scenario:" << scenario_->scenarioInstructions;
         map_->create(scenario_->map);
 
-        for (int playerNum = 0; playerNum < scenario_->playerUnits.size(); playerNum++) {
+        for (size_t playerNum = 0; playerNum < scenario_->playerUnits.size(); playerNum++) {
             Player::Ptr player = std::make_shared<Player>(playerNum, m_civilizations[0]);
             m_players.push_back(player);
             for (const genie::ScnUnit &scnunit : scenario_->playerUnits[playerNum].units) {
@@ -304,7 +304,7 @@ void GameState::handleEvent(sf::Event event)
 
         if (event.mouseMove.x < MOUSE_MOVE_EDGE_SIZE) {
             m_cameraDeltaX = -1;
-        } else if (event.mouseMove.x > renderTarget_->getSize().x - MOUSE_MOVE_EDGE_SIZE) {
+        } else if (event.mouseMove.x > renderTarget_->getSize().width - MOUSE_MOVE_EDGE_SIZE) {
             m_cameraDeltaX = 1;
         } else {
             m_cameraDeltaX = 0;
@@ -312,7 +312,7 @@ void GameState::handleEvent(sf::Event event)
 
         if (event.mouseMove.y < MOUSE_MOVE_EDGE_SIZE) {
             m_cameraDeltaY = 1;
-        } else if (event.mouseMove.y > renderTarget_->getSize().y - MOUSE_MOVE_EDGE_SIZE) {
+        } else if (event.mouseMove.y > renderTarget_->getSize().height - MOUSE_MOVE_EDGE_SIZE) {
             m_cameraDeltaY = -1;
         } else {
             m_cameraDeltaY = 0;

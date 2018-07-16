@@ -158,7 +158,7 @@ const sf::Texture &Terrain::blendImage(const Blend blends, int tileX, int tileY)
             alphamask.resize(blend.alphaValues[i].size(), 0x7f);
         }
 
-        for (int j=0; j<blend.alphaValues[i].size(); j++) {
+        for (size_t j=0; j<blend.alphaValues[i].size(); j++) {
             alphamask[j] = std::min(alphamask[j], blend.alphaValues[i][j]);
         }
     }
@@ -167,7 +167,7 @@ const sf::Texture &Terrain::blendImage(const Blend blends, int tileX, int tileY)
     const int height = size.height;
     const int width = size.width;
     for (int y = 0; y < height; y++) {
-        int lineWidth = 0;
+        uint32_t lineWidth = 0;
         if (y < height/2) {
             lineWidth = 1 + (4 * y);
         } else {
@@ -181,7 +181,7 @@ const sf::Texture &Terrain::blendImage(const Blend blends, int tileX, int tileY)
             break;
         }
 
-        for (int x = 0; x < lineWidth; x++) {
+        for (uint32_t x = 0; x < lineWidth; x++) {
             const int paletteIndex = y * width + x + offsetLeft;
 
             pixels[paletteIndex * 4 + 3] = 255 - std::min((2 * alphamask[blendOffset]), 255);

@@ -113,7 +113,7 @@ private:
     res::TileSlopes::Slope slopeAt(const int x, const int y);
 
     // cols_ = x, rows_ = y
-    unsigned int rows_, cols_;
+    int rows_, cols_;
 
     typedef std::vector<MapTile> MapTileArray;
     MapTileArray tiles_;

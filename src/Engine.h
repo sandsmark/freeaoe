@@ -48,8 +48,7 @@ private:
     StateManager state_manager_;
 
     sf::Text fps_label_;
-
-    void drawFps();
+    sf::Font font_;
 };
 
 #endif // ENGINE_H

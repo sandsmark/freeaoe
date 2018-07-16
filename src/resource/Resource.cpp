@@ -91,8 +91,8 @@ sf::Image Resource::convertFrameToImage(const genie::SlpFramePtr frame,
         return img;
     }
 
-    const int width = frame->getWidth();
-    const int height = frame->getHeight();
+    const uint32_t width = frame->getWidth();
+    const uint32_t height = frame->getHeight();
     const genie::SlpFrameData &frameData = frame->img_data;
 
     // fuck msvc

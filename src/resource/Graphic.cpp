@@ -105,8 +105,8 @@ const sf::Texture &Graphic::texture(uint32_t frame, float angleRadians, uint8_t 
         const genie::SlpFramePtr frame = slp_->getFrame(state.frame);
         const genie::SlpFrameData &frameData = frame->img_data;
 
-        const int width = frame->getWidth();
-        const int height = frame->getHeight();
+        const uint32_t width = frame->getWidth();
+        const uint32_t height = frame->getHeight();
 
         // fuck msvc
         std::vector<Uint8> pixelsBuf(width * height * 4);

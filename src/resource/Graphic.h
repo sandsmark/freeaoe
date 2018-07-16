@@ -172,7 +172,7 @@ public:
 
 private:
     struct FrameInfo {
-        int frameNum = 0;
+        uint32_t frameNum = 0;
         bool mirrored = false;
     };
     FrameInfo calcFrameInfo(uint32_t num, float angle) const;

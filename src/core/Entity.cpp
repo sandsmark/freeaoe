@@ -61,8 +61,11 @@ Unit::Unit(const genie::Unit &data_, int playerId_, std::shared_ptr<Civilization
     playerId(playerId_),
     m_civilization(civilization)
 {
-    defaultGraphics = ResourceManager::Inst()->getGraphic(data.StandingGraphic.first),
-    movingGraphics = ResourceManager::Inst()->getGraphic(data.Moving.WalkingGraphic);
+    defaultGraphics = ResourceManager::Inst()->getGraphic(data.StandingGraphic.first);
+    if (data.Moving.WalkingGraphic >= 0) {
+        movingGraphics = ResourceManager::Inst()->getGraphic(data.Moving.WalkingGraphic);
+    }
+
     if (!defaultGraphics) {
         WARN << "Failed to load default graphics";
     }

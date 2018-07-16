@@ -35,7 +35,7 @@ SfmlRenderTarget::~SfmlRenderTarget()
 {
 }
 
-Vector2u SfmlRenderTarget::getSize(void) const
+Size SfmlRenderTarget::getSize(void) const
 {
     return sf::Vector2u(renderTarget_->getSize().x / SCALE, renderTarget_->getSize().y / SCALE);
 }

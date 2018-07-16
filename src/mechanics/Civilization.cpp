@@ -30,7 +30,7 @@ Civilization::Civilization(const int civId, const genie::DatFile &dataFile) :
         }
     }
 
-    for (int i=0; i<dataFile.Techs.size(); i++) {
+    for (size_t i=0; i<dataFile.Techs.size(); i++) {
         const genie::Tech &research = dataFile.Techs.at(i);
         if (research.ResearchLocation <= 0) {
             continue;

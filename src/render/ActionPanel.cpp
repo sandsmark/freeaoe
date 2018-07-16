@@ -23,7 +23,7 @@ bool ActionPanel::init()
         WARN << "Failed to load unit icons";
         return false;
     }
-    for (int i=0; i<unitIconsSlp->getFrameCount(); i++) {
+    for (size_t i=0; i<unitIconsSlp->getFrameCount(); i++) {
         m_unitIcons[i].loadFromImage(res::Resource::convertFrameToImage(unitIconsSlp->getFrame(i)));
     }
 
@@ -33,7 +33,7 @@ bool ActionPanel::init()
         WARN << "Failed to load building icons";
         return false;
     }
-    for (int i=0; i<buildingIconsSlp->getFrameCount(); i++) {
+    for (size_t i=0; i<buildingIconsSlp->getFrameCount(); i++) {
         m_buildingIcons[i].loadFromImage(res::Resource::convertFrameToImage(buildingIconsSlp->getFrame(i)));
     }
 
@@ -42,7 +42,7 @@ bool ActionPanel::init()
         WARN << "Failed to load research icons";
         return false;
     }
-    for (int i=0; i<researchIconsSlp->getFrameCount(); i++) {
+    for (size_t i=0; i<researchIconsSlp->getFrameCount(); i++) {
         m_researchIcons[i].loadFromImage(res::Resource::convertFrameToImage(researchIconsSlp->getFrame(i)));
     }
 
@@ -51,7 +51,7 @@ bool ActionPanel::init()
         WARN << "Failed to load action icons";
         return false;
     }
-    for (int i=0; i<int(Command::IconCount); i++) {
+    for (size_t i=0; i<int(Command::IconCount); i++) {
         if (i >= commandIconsSlp->getFrameCount()) {
             WARN << "icon out of range " << i;
             return false;
@@ -178,7 +178,7 @@ ScreenRect ActionPanel::rect() const
     r.width = 5 * 55;
     r.x = 35;
 //    r.y = 845;
-    r.y = m_renderTarget->getSize().y - r.height - 25;
+    r.y = m_renderTarget->getSize().height - r.height - 25;
     return r;
 }
 
@@ -336,7 +336,7 @@ ScreenPos ActionPanel::buttonPosition(const int index) const
     position.x = (position.x) * 50 + 55;
     position.y = index / 5;
     position.y *= 50;
-    position.y += m_renderTarget->getSize().y  - 170;
+    position.y += m_renderTarget->getSize().height  - 170;
     return position;
 }
 

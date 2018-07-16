@@ -28,7 +28,7 @@ MapObject::~MapObject()
 {
 }
 
-bool MapObject::update(Time time)
+bool MapObject::update(Time /*time*/)
 {
     return false;
 }

@@ -41,7 +41,7 @@ MapRenderer::~MapRenderer()
 {
 }
 
-bool MapRenderer::update(Time time)
+bool MapRenderer::update(Time /*time*/)
 {
     if (!m_map) {
         return false;
@@ -50,20 +50,20 @@ bool MapRenderer::update(Time time)
     const MapPos cameraPos = renderTarget_->camera()->targetPosition();
 
     if (!m_camChanged && m_lastCameraPos == cameraPos &&
-        m_mapRenderTexture.getSize() == renderTarget_->getSize()) {
+        Size(m_mapRenderTexture.getSize()) == renderTarget_->getSize()) {
         return false;
     }
 
     //TODO: split up (refactor)
 
 //     Get the absolute map positions of the rendertarget corners
-    const ScreenPos camCenter(renderTarget_->getSize().x / 2.0, renderTarget_->getSize().y / 2.0);
+    const ScreenPos camCenter(renderTarget_->getSize().width / 2.0, renderTarget_->getSize().height / 2.0);
 
     // relative map positions (from center) //only changes if renderTargets resolution does
     const MapPos center = camCenter.toMap();
-    const MapPos bottomLeft = ScreenPos(0, renderTarget_->getSize().y).toMap();
-    const MapPos topRight = ScreenPos(renderTarget_->getSize().x, 0).toMap();
-    const MapPos bottomRight = ScreenPos(renderTarget_->getSize().x, renderTarget_->getSize().y).toMap();
+    const MapPos bottomLeft = ScreenPos(0, renderTarget_->getSize().height).toMap();
+    const MapPos topRight = ScreenPos(renderTarget_->getSize().width, 0).toMap();
+    const MapPos bottomRight = ScreenPos(renderTarget_->getSize().width, renderTarget_->getSize().height).toMap();
 
     // absolute map positions
     MapPos topLeftMp = cameraPos - center;
@@ -120,7 +120,7 @@ bool MapRenderer::update(Time time)
 
 void MapRenderer::display(void)
 {
-    if (m_mapRenderTexture.getSize() != renderTarget_->getSize()) {
+    if (Size(m_mapRenderTexture.getSize()) != renderTarget_->getSize()) {
         updateTexture();
     }
 
@@ -140,8 +140,8 @@ void MapRenderer::setMap(MapPtr map)
 
 void MapRenderer::updateTexture()
 {
-    if (m_mapRenderTexture.getSize().x != renderTarget_->getSize().x || m_mapRenderTexture.getSize().y != renderTarget_->getSize().y) {
-        m_mapRenderTexture.create(renderTarget_->getSize().x, renderTarget_->getSize().y);
+    if (m_mapRenderTexture.getSize().x != renderTarget_->getSize().width || m_mapRenderTexture.getSize().y != renderTarget_->getSize().height) {
+        m_mapRenderTexture.create(renderTarget_->getSize().width, renderTarget_->getSize().height);
     }
 
     m_mapRenderTexture.clear();

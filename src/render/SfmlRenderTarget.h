@@ -36,7 +36,7 @@ public:
     virtual ~SfmlRenderTarget();
 
     //----------------------------------------------------------------------------
-    Vector2u getSize(void) const override;
+    Size getSize(void) const override;
     void setSize(const Size size) const override;
 
     //----------------------------------------------------------------------------
