@@ -46,7 +46,7 @@ public:
     void draw(const sf::Texture &texture, ScreenPos pos) override;
 
     //----------------------------------------------------------------------------
-    void draw(const sf::Shape &shape) override;
+    void draw(const sf::Drawable &shape) override;
 
     void draw(const ScreenRect &rect, const sf::Color &fillColor, const sf::Color &outlineColor = sf::Color::Transparent, const float outlineSize = 1.) override;
 

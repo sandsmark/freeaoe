@@ -72,7 +72,7 @@ void SfmlRenderTarget::draw(const sf::Texture &texture, ScreenPos pos)
     renderTarget_->draw(sprite);
 }
 
-void SfmlRenderTarget::draw(const sf::Shape &shape)
+void SfmlRenderTarget::draw(const sf::Drawable &shape)
 {
     renderTarget_->draw(shape);
 }

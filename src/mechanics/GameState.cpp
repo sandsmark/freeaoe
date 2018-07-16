@@ -45,7 +45,12 @@
 GameState::GameState(std::shared_ptr<SfmlRenderTarget> renderTarget) :
     m_cameraDeltaX(0),
     m_cameraDeltaY(0),
-    m_lastUpdate(0)
+    m_lastUpdate(0),
+    m_woodLabel(75, 5),
+    m_foodLabel(153, 5),
+    m_goldLabel(230, 5),
+    m_stoneLabel(307, 5),
+    m_populationLabel(384, 5)
 {
     m_unitManager = std::make_shared<UnitManager>();
     renderTarget_ = renderTarget;
@@ -232,6 +237,12 @@ bool GameState::init()
 
     m_unitManager->setMap(map_);
 
+    m_woodLabel.setText(std::to_string(12345));
+    m_foodLabel.setText(std::to_string(12345));
+    m_goldLabel.setText(std::to_string(12345));
+    m_stoneLabel.setText(std::to_string(12345));
+    m_populationLabel.setText(std::to_string(125) + '/' + std::to_string(125));
+
     return true;
 }
 
@@ -247,6 +258,12 @@ void GameState::draw()
     renderTarget_->draw(m_uiOverlay, ScreenPos(0, 0));
     m_actionPanel->draw();
 
+    renderTarget_->draw(m_woodLabel.text);
+    renderTarget_->draw(m_foodLabel.text);
+    renderTarget_->draw(m_goldLabel.text);
+    renderTarget_->draw(m_stoneLabel.text);
+    renderTarget_->draw(m_populationLabel.text);
+
     renderTarget_->renderTarget_->draw(m_mouseCursor.sprite);
 }
 
@@ -257,6 +274,15 @@ bool GameState::update(Time time)
 
     updated = m_unitManager->update(time) || updated;
     updated = m_actionPanel->update(time) || updated;
+
+    m_woodLabel.setText(std::to_string(m_humanPlayer->resources[genie::ResourceType::WoodStorage]));
+    m_foodLabel.setText(std::to_string(m_humanPlayer->resources[genie::ResourceType::FoodStorage]));
+    m_goldLabel.setText(std::to_string(m_humanPlayer->resources[genie::ResourceType::GoldStorage]));
+    m_stoneLabel.setText(std::to_string(m_humanPlayer->resources[genie::ResourceType::StoneStorage]));
+    m_populationLabel.setText(
+                std::to_string(m_humanPlayer->resources[genie::ResourceType::CurrentPopulation]) + '/' +
+                std::to_string(m_humanPlayer->resources[genie::ResourceType::PopulationHeadroom])
+            );
 
     if (m_cameraDeltaX != 0 || m_cameraDeltaY != 0) {
         const int deltaTime = time - m_lastUpdate;

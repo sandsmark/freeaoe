@@ -28,6 +28,7 @@
 #include "UnitManager.h"
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/Text.hpp>
 
 #include "Civilization.h"
 
@@ -40,6 +41,41 @@ class ActionPanel;
 namespace sf {
 class RenderTarget;
 }
+
+struct Label {
+    Label(const int right, const int top) :
+        m_right(right),
+        m_top(top)
+    {
+        static sf::Font font;
+        static bool fontLoaded = false;
+        if (!fontLoaded) {
+            fontLoaded = true;
+            font.loadFromFile(FONT_DIR "Alegreya-Bold.latin");
+        }
+
+        text.setFont(font);
+        text.setOutlineColor(sf::Color::Black);
+        text.setOutlineThickness(1);
+        text.setFillColor(sf::Color::White);
+        text.setCharacterSize(16);
+    }
+
+    void setText(const std::string &t) {
+        text.setString(t);
+        updatePosition();
+    }
+
+    sf::Text text;
+
+private:
+    void updatePosition() {
+        text.setPosition(sf::Vector2f(m_right - text.getLocalBounds().width, m_top));
+    }
+
+    const int m_right = 0;
+    const int m_top = 0;
+};
 
 struct Cursor {
     enum Type {
@@ -143,6 +179,12 @@ private:
     std::vector<Player::Ptr> m_players;
 
     Cursor m_mouseCursor;
+
+    Label m_woodLabel;
+    Label m_foodLabel;
+    Label m_goldLabel;
+    Label m_stoneLabel;
+    Label m_populationLabel;
 };
 
 #endif // GAMESTATE_H
