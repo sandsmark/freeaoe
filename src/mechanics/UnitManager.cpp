@@ -243,10 +243,12 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
         std::cout << "Selected " << unit->readableName << " at " << unit->position << " " << unit->renderer().angle() << " " << unit->renderer().graphic_->data_.SLP << std::endl;
         m_selectedUnits.insert(unit);
 
-        // stl sucks
-        for (const genie::Task *action : m_currentActions) {
-            if (unit->availableActions().count(action) == 0) {
-                m_currentActions.erase(action);
+        // stl is shit
+        for (std::unordered_set<const genie::Task*>::iterator it = m_currentActions.begin(); it != m_currentActions.end();) {
+            if (unit->availableActions().count(*it) == 0) {
+                it = m_currentActions.erase(it);
+            } else {
+                it++;
             }
         }
     }
