@@ -66,8 +66,6 @@ private:
     DataManager();
     virtual ~DataManager();
 
-    static Logger &log;
-
     genie::DatFile dat_file_;
 };
 

@@ -33,8 +33,6 @@
 
 #include <unordered_map>
 
-Logger &ResourceManager::log = Logger::getLogger("freeaoe.ResourceManager");
-
 //------------------------------------------------------------------------------
 ResourceManager *ResourceManager::Inst()
 {
@@ -58,7 +56,7 @@ genie::ScnFilePtr ResourceManager::getScn(unsigned int id)
         genie::ScnFilePtr scnfile = drsFile->getScnFile(id);
 
         if (scnfile) {
-            log.info("found scn file v %s", scnfile->version.c_str());
+            DBG << "found scn file version" << scnfile->version;
             std::cout << scnfile->scenarioInstructions << std::endl;
             return scnfile;
         }
@@ -89,7 +87,7 @@ genie::SlpFilePtr ResourceManager::getSlp(sf::Uint32 id, const ResourceType type
                 return slp_ptr;
             }
         }
-        log.debug("failed to find % in gamedata files, falling back to all files", id);
+        DBG << "failed to find" << id << "in gamedata files, falling back to all files";
         break;
     case ResourceType::Undefined:
         [[fallthrough]];
@@ -110,7 +108,7 @@ genie::SlpFilePtr ResourceManager::getSlp(sf::Uint32 id, const ResourceType type
 
     m_nonExistentSlps.insert(id);
 
-    log.debug("No slp file with id [%] found!", id);
+    DBG << "No slp file with id" << id << "found!";
     return slp_ptr;
 }
 
@@ -148,7 +146,7 @@ res::TerrainPtr ResourceManager::getTerrain(unsigned int type)
 const genie::BlendMode &ResourceManager::getBlendmode(unsigned int id)
 {
     if (!blendomatic_file_) {
-        log.warn("No blendomatic file loaded");
+        WARN << "No blendomatic file loaded";
         return genie::BlendMode::null;
     }
 
@@ -171,7 +169,7 @@ const genie::PalFile &ResourceManager::getPalette(sf::Uint32 id)
         }
     }
 
-    log.warn("No pal file with id [%u] found!", id);
+    WARN << "No pal file with id" << id << "found!";
 
     return palette;
 }
@@ -212,7 +210,7 @@ std::string ResourceManager::uiFilename(const ResourceManager::UiResolution reso
 //------------------------------------------------------------------------------
 bool ResourceManager::initialize(const std::string &dataPath, const genie::GameVersion gameVersion)
 {
-    log.debug("Initializing ResourceManager");
+    DBG << "Initializing ResourceManager";
 
     m_dataPath = dataPath;
     m_gameVersion = gameVersion;
@@ -232,19 +230,19 @@ bool ResourceManager::initialize(const std::string &dataPath, const genie::GameV
 
         m_interfaceFile = loadDrs("interfac.drs");
         if (!m_interfaceFile) {
-            log.error("Failed to load interface file");
+            WARN << "Failed to load interface file";
             return false;
         }
 
         m_graphicsFile = loadDrs("graphics.drs");
         if (!m_graphicsFile) {
-            log.error("Failed to load graphics file");
+            WARN << "Failed to load graphics file";
             return false;
         }
 
         m_terrainFile = loadDrs("terrain.drs");
         if (!m_terrainFile) {
-            log.error("Failed to load terrain file");
+            WARN << "Failed to load terrain file";
             return false;
         }
 
@@ -274,7 +272,7 @@ bool ResourceManager::initialize(const std::string &dataPath, const genie::GameV
 //        m_stemplatesFile->getFrame(getSlp(15000), genie::SlopeSouthUp, {});
 //        exit(0);
     } catch (const std::exception &error) {
-        log.error("Failed to load resource: %", error.what());
+        WARN << "Failed to load resource" << error.what();
         return false;
     }
     std::cerr << "Loaded " << m_allFiles.size() << " files" << std::endl;
@@ -498,7 +496,7 @@ int ResourceManager::filenameID(const std::string &filename)
     if (idMap.find(filename) != idMap.end()) {
         return idMap.at(filename);
     } else {
-        log.error("Failed to find known id for filename %", filename);
+        WARN << "Failed to find known id for filename" << filename;
         return -1;
     }
 }
@@ -517,7 +515,7 @@ std::string ResourceManager::findFile(const std::string &filename) const
         }
     }
 
-    log.debug("Can't find file %", filename);
+    DBG << "Can't find file" << filename;
     return std::string();
 }
 

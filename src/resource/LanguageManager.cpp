@@ -4,8 +4,6 @@
 
 #include <genie/lang/LangFile.h>
 
-Logger &LanguageManager::log = Logger::getLogger("freeaoe.LanguageMAnager");
-
 LanguageManager *LanguageManager::Inst()
 {
     static LanguageManager instance;
@@ -20,7 +18,7 @@ bool LanguageManager::initialize(const std::string dataPath)
         loadLangFile(dataPath + "language_x1.dll");
         loadLangFile(dataPath + "language_x1_p1.dll");
     } catch (const std::exception &error) {
-        std::cerr << "Failed to load language file " << filename << ": " << error.what() << std::endl;
+        WARN << "Failed to load language file" << filename << error.what();
         return false;
     }
 
@@ -54,12 +52,11 @@ std::string LanguageManager::getString(unsigned int id)
 
 LanguageManager::LanguageManager()
 {
-
 }
 
 void LanguageManager::loadLangFile(std::string filename)
 {
-    log.info("Loading %s", filename.c_str());
+    DBG << "Loading" << filename;
 
     std::shared_ptr<genie::LangFile> ret (new genie::LangFile);
     ret->load(filename.c_str());

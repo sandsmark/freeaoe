@@ -31,8 +31,6 @@
 
 namespace res {
 
-Logger &Terrain::log = Logger::getLogger("freeaoe.resource.Terrain");
-
 Terrain::Terrain(unsigned int Id) :
     Resource(Id, TYPE_TERRAIN)
 {
@@ -95,7 +93,7 @@ bool Terrain::load()
         }
 
         if (!m_slp) {
-            log.error("Failed to get slp for %d", m_data.SLP);
+            WARN << "Failed to get slp for" << m_data.SLP;
             m_slp = ResourceManager::Inst()->getSlp(15000); // TODO Loading grass if -1
 
             return false;
@@ -126,7 +124,7 @@ uint8_t Terrain::blendMode(const uint8_t ownMode, const uint8_t neighborMode)
     }};
 
     if (IS_UNLIKELY(ownMode > blendmodeTable.size() || neighborMode > blendmodeTable[ownMode].size())) {
-        log.error("invalid mode %d %d", ownMode, neighborMode);
+        WARN << "invalid mode" <<  ownMode << neighborMode;
         return 0;
     }
 
@@ -179,7 +177,7 @@ const sf::Texture &Terrain::blendImage(const Blend blends, int tileX, int tileY)
         int offsetLeft = height - 1 - (lineWidth  / 2);
 
         if (IS_UNLIKELY(blendOffset + lineWidth > alphamask.size())) {
-            log.error("Trying to read out of bounds (blendoffset %d + linewidth %d = %d, > %d", blendOffset, lineWidth, blendOffset + lineWidth, alphamask.size());
+            WARN << "Trying to read out of bounds (blendoffset" << blendOffset << "linewidth" << lineWidth << "=" << (blendOffset + lineWidth) << ">" << alphamask.size();
             break;
         }
 

@@ -42,8 +42,6 @@
 #define MOUSE_MOVE_EDGE_SIZE 10
 #define CAMERA_SPEED 1.
 
-Logger& GameState::log = Logger::getLogger("freeaoe.GameState");
-
 GameState::GameState(std::shared_ptr<SfmlRenderTarget> renderTarget) :
     m_cameraDeltaX(0),
     m_cameraDeltaY(0),
@@ -79,7 +77,7 @@ bool GameState::init()
     std::shared_ptr<genie::SlpFile> overlayFile = ResourceManager::Inst()->getUiOverlay(ResourceManager::Ui1280x1024, ResourceManager::Viking);
     if (overlayFile) {
         m_uiOverlay.loadFromImage(res::Resource::convertFrameToImage(overlayFile->getFrame()));
-        log.info("Loaded UI overlay with size %dx%d", m_uiOverlay.getSize().x, m_uiOverlay.getSize().y);
+        DBG << "Loaded UI overlay with size" << Size(m_uiOverlay.getSize());
     } else {
         ResourceManager::UiResolution attemptedResolution = ResourceManager::Ui1280x1024;
         ResourceManager::UiCiv attemptedCiv = ResourceManager::Briton;
@@ -101,10 +99,10 @@ bool GameState::init()
         } while (!overlayFile);
 
         if (overlayFile) {
-            log.warn("Loaded fallback ui overlay res % for civ %", attemptedResolution, attemptedCiv);
+            WARN << "Loaded fallback ui overlay res" << attemptedResolution << "for civ" << attemptedCiv;
             m_uiOverlay.loadFromImage(res::Resource::convertFrameToImage(overlayFile->getFrame()));
         } else {
-            log.error("Failed to load ui overlay");
+            WARN << "Failed to load ui overlay";
         }
     }
 
@@ -113,13 +111,13 @@ bool GameState::init()
         m_mouseCursor.texture.loadFromImage(res::Resource::convertFrameToImage(m_mouseCursor.cursorsFile->getFrame(Cursor::Normal)));
         m_mouseCursor.sprite.setTexture(m_mouseCursor.texture);
     } else {
-        log.error("Failed to get cursors");
+        WARN << "Failed to get cursors";
     }
 
     // graphic 2962
     m_waypointFlag = ResourceManager::Inst()->getSlp(3404);
     if (!m_waypointFlag) {
-        log.error("Failed to load waypoint animation");
+        WARN << "Failed to load waypoint animation";
     }
 
     const std::vector<genie::Civ> &civilizations = DataManager::Inst().civilizations();
@@ -127,7 +125,7 @@ bool GameState::init()
         m_civilizations.push_back(std::make_shared<Civilization>(i, DataManager::Inst().datFile()));
     }
     if (m_civilizations.empty()) {
-        log.error("Failed to load any civilizations");
+        WARN << "Failed to load any civilizations";
         return false;
     }
 
@@ -415,7 +413,7 @@ void GameState::handleEvent(sf::Event event)
 Size GameState::uiSize() const
 {
     if (m_uiOverlay.getSize().x == 0 || m_uiOverlay.getSize().y == 0) {
-        log.error("We don't have a valid UI overlay");
+        WARN << "We don't have a valid UI overlay";
         return Size(640, 480);
     }
 

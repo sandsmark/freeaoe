@@ -44,8 +44,6 @@ private:
     std::vector<MapPos> findPath(const MapPos &start, const MapPos &end, int coarseness);
     bool isPassable(const int x, const int y);
 
-    static Logger &log;
-
     MapPtr m_map;
     MapPos dest_;
     std::vector<MapPos> m_path;

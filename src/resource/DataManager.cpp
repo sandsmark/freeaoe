@@ -27,8 +27,6 @@
 
 #include <filesystem>
 
-Logger &DataManager::log = Logger::getLogger("freeaoe.DataManager");
-
 const genie::Unit DataManager::nullUnit;
 const genie::Tech DataManager::nullTech;
 
@@ -42,7 +40,7 @@ const genie::Graphic &DataManager::getGraphic(unsigned int id)
 {
     static const genie::Graphic nullGraphic;
     if (id >= dat_file_.Graphics.size()) {
-        log.warn("graphic id %d is out of range", id);
+        WARN << "graphic id" << id << "is out of range";
         return nullGraphic;
     }
     return dat_file_.Graphics[id];
@@ -60,7 +58,7 @@ const genie::Tech &DataManager::getTech(unsigned int id)
 const genie::Unit &DataManager::getUnit(unsigned int id)
 {
     if (id >= dat_file_.Civs[0].Units.size()) {
-        log.error("Invalid unit id %d", id);
+        WARN << "Invalid unit id" << id;
         return nullUnit;
     }
 
@@ -71,7 +69,7 @@ const genie::Terrain &DataManager::getTerrain(unsigned int id)
 {
     if (id >= dat_file_.TerrainBlock.Terrains.size()) {
         static genie::Terrain nullterrain;
-        log.warn("terrain id %d is out of range", id);
+        WARN << "terrain id" << id << "is out of range";
         return nullterrain;
     }
 
@@ -160,7 +158,7 @@ bool DataManager::initialize(const std::string dataPath)
     try {
         dat_file_.load(filePath.c_str());
     } catch (const std::exception &error) {
-        log.error("Failed to load dat file %: %", error.what());
+        WARN << "Failed to load dat file" << filePath << error.what();
         return false;
     }
 

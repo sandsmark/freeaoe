@@ -42,8 +42,6 @@ public:
     void start();
 
 private:
-    static Logger &log;
-
     std::unique_ptr<sf::RenderWindow> renderWindow_;
     std::shared_ptr<SfmlRenderTarget> renderTarget_;
 

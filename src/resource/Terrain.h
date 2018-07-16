@@ -204,8 +204,6 @@ public:
     const sf::Texture &slopedImage(const TileSlopes &slopes, int tileX, int tileY);
 
 private:
-    static Logger &log;
-
     genie::Terrain m_data;
     genie::SlpFilePtr m_slp;
 

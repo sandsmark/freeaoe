@@ -103,8 +103,6 @@ public:
     const std::shared_ptr<UnitManager> &unitManager() { return m_unitManager; }
 
 private:
-    static Logger &log;
-
     GameState(const GameState &other) = delete;
 
     std::shared_ptr<SfmlRenderTarget> renderTarget_;

@@ -26,8 +26,6 @@
 
 namespace res {
 
-Logger &Graphic::log = Logger::getLogger("freeaoe.resource.Graphic");
-
 const sf::Texture Graphic::nullImage;
 
 //------------------------------------------------------------------------------
@@ -35,7 +33,7 @@ Graphic::Graphic(const genie::Graphic &data) :
     data_(data)
 {
     if (data_.SLP < 0) {
-        log.debug("% doesn't have a SLP id", data_.Name);
+        WARN << data_.Name << "doesn't have a SLP id";
         return;
     }
 
@@ -72,7 +70,7 @@ const sf::Texture &Graphic::texture(uint32_t frame, float angleRadians, uint8_t 
     }
 
     if (state.frame >= slp_->getFrameCount()) {
-        log.error("trying to look up %, but we only have %", state.frame, slp_->getFrameCount());
+        WARN << "trying to look up" << state.frame << "but we only have" << slp_->getFrameCount();
         state.frame = 0;
     }
 
@@ -140,7 +138,7 @@ const sf::Texture &Graphic::texture(uint32_t frame, float angleRadians, uint8_t 
         break;
     }
     default:
-        log.error("Trying to get invalid image type %", state.type);
+        WARN << "Trying to get invalid image type" << state.type;
         return nullImage;
     }
 
@@ -256,7 +254,7 @@ Graphic::FrameInfo Graphic::calcFrameInfo(uint32_t num, float angle) const
     }
 
     if (ret.frameNum >= slp_->getFrameCount()) {
-        log.error("trying to look up %d, but we only have %", ret.frameNum, slp_->getFrameCount());
+        WARN << "trying to look up" << ret.frameNum << "but we only have" << slp_->getFrameCount();
         ret.frameNum = 0;
     }
 

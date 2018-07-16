@@ -39,7 +39,7 @@ enum class ImageType {
     Construction
 };
 
-inline std::ostream &operator <<(std::ostream &os, const ImageType &type) {
+inline LogPrinter &operator <<(LogPrinter &os, const ImageType &type) {
     os << "ImageType(";
     switch (type) {
     case ImageType::Base:
@@ -176,8 +176,6 @@ private:
         bool mirrored = false;
     };
     FrameInfo calcFrameInfo(uint32_t num, float angle) const;
-
-    static Logger &log;
 
     genie::SlpFilePtr slp_;
 

@@ -25,8 +25,6 @@ private:
 
     std::vector<std::shared_ptr<genie::LangFile>> m_langFiles;
     std::unordered_map<unsigned int, std::string> m_cache;
-
-    static Logger &log;
 };
 
 #endif // LANGUAGEMANAGER_H

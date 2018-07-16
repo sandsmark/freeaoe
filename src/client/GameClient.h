@@ -46,8 +46,6 @@ public:
     void test();
 
 private:
-    static Logger &log;
-
     GameClient(const GameClient &other);
 
     TunnelToServer *server_;

@@ -26,7 +26,6 @@
 #include <sstream>
 #include "Graphic.h"
 #include "Terrain.h"
-#include <global/Logger.h>
 #include <global/Types.h>
 
 #include <genie/resource/PalFile.h>
@@ -141,8 +140,6 @@ public:
 
 private:
     std::string findFile(const std::string &filename) const;
-
-    static Logger &log;
 
     typedef std::vector<std::shared_ptr<genie::DrsFile>> DrsFileVector;
     DrsFileVector loadDrs(const std::vector<std::string> &filenames);

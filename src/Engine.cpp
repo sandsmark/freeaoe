@@ -28,8 +28,6 @@
 #include "render/GraphicRender.h"
 #include "global/Config.h"
 
-Logger& Engine::log = Logger::getLogger("freeaoe.Engine");
-
 const sf::Clock Engine::GameClock;
 
 
@@ -42,15 +40,13 @@ Engine::Engine()
 //------------------------------------------------------------------------------
 Engine::~Engine()
 {
-  log.info("Closing engine");
+  DBG << "Closing engine";
 }
 
 //------------------------------------------------------------------------------
 void Engine::start()
 {
-    Logger::setLogLevel(Logger::L_INFO);
-
-    log.info("Starting engine.");
+    DBG << "Starting engine.";
 
     // Start the game loop
     while (renderWindow_->isOpen()) {

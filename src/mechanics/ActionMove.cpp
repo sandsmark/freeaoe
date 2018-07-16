@@ -66,8 +66,6 @@ template<> struct std::hash<PathPoint>
 
 namespace act {
 
-Logger &MoveOnMap::log = Logger::getLogger("freeaoe.MoveOnMap");
-
 static const float PATHFINDING_HEURISTIC_WEIGHT = 1.;
 
 MoveOnMap::MoveOnMap(MapPos destination, MapPtr map, Unit::Ptr unit, UnitManager *unitManager) :
@@ -89,7 +87,7 @@ bool MoveOnMap::update(Time time)
 {
     std::shared_ptr<Unit> unit = m_unit.lock();
     if (!unit) {
-        log.warn("My unit got deleted");
+        WARN << "My unit got deleted";
         return false;
     }
 
@@ -167,7 +165,7 @@ bool MoveOnMap::update(Time time)
 std::shared_ptr<MoveOnMap> MoveOnMap::moveUnitTo(Unit::Ptr unit, MapPos destination, MapPtr map, UnitManager *unitManager)
 {
     if (!unit->data.Speed) {
-        log.info("Handled unit that can't move %s", unit->readableName);
+        DBG << "Handed unit that can't move" << unit->readableName;
         return nullptr;
     }
     std::shared_ptr<MoveOnMap> action (new act::MoveOnMap(destination, map, unit, unitManager));
@@ -188,7 +186,7 @@ std::shared_ptr<MoveOnMap> MoveOnMap::moveUnitTo(Unit::Ptr unit, MapPos destinat
     }
 
     if (action->m_path.empty()) {
-        log.info("Failed to find path for %s", unit->readableName.c_str());
+        DBG << "Failed to find path for" << unit->readableName;
         return nullptr;
     }
 
@@ -205,14 +203,14 @@ std::vector<MapPos> MoveOnMap::findPath(const MapPos &start, const MapPos &end, 
     int startX = std::round(start.x / coarseness);
     int startY = std::round(start.y / coarseness);
     if (!isPassable(startX * coarseness, startY * coarseness)) {
-        log.warn("handed unpassable start");
+        WARN << "handed unpassable start";
         return path;
     }
 
     int endX = std::round(end.x / coarseness);
     int endY = std::round(end.y / coarseness);
     if (!isPassable(endX * coarseness, endY * coarseness)) {
-        log.warn("handed unpassable target");
+        WARN << "handed unpassable target";
         return path;
     }
 
@@ -280,14 +278,14 @@ std::vector<MapPos> MoveOnMap::findPath(const MapPos &start, const MapPos &end, 
         }
 
         if (clock.getElapsedTime().asMilliseconds() > 50) {
-            log.error("Timeout while pathing (%d nodes in %d ms)", tried, clock.getElapsedTime().asMilliseconds());
+            WARN << "Timeout while pathing (" << tried << "nodes in" << clock.getElapsedTime().asMilliseconds() << "ms)";
             return path;
         }
     }
-    log.debug("walked %d nodes in %d ms", tried, clock.getElapsedTime().asMilliseconds());
+    DBG << "walked" << tried << "nodes in" << clock.getElapsedTime().asMilliseconds() << "ms";
 
     if (cameFrom.find(pathPoint) == cameFrom.end()) {
-        log.error("Failed to find path from %d,%d to %d,%d", startX, startY, endX, endY);
+        WARN << "Failed to find path from" << startX << "," << startY << "to" << endX << "," << endY;
         return path;
     }
 
@@ -298,7 +296,7 @@ std::vector<MapPos> MoveOnMap::findPath(const MapPos &start, const MapPos &end, 
         path.push_back(MapPos(pathPoint.x * coarseness, pathPoint.y * coarseness));
 
         if (cameFrom.find(pathPoint) == cameFrom.end()) {
-            log.error("invalid path, failed to find previous step");
+            WARN << "invalid path, failed to find previous step";
             return path;
         }
     }

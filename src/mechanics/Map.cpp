@@ -32,8 +32,6 @@
 #include <resource/DataManager.h>
 #include <unordered_set>
 
-Logger &Map::log = Logger::getLogger("freeaoe.Map");
-
 Map::Map() //: map_txt_(0)
 {
 }
@@ -179,7 +177,7 @@ MapTile &Map::getTileAt(unsigned int col, unsigned int row)
     unsigned int index = row * cols_ + col;
 
     if (index >= tiles_.size()) {
-        log.error("Trying to get MapTile (%x%) out of bounds!", col, row);
+        WARN << "Trying to get MapTile (" << col << "x" << row << ") out of bounds!";
         static MapTile nulltile;
         return nulltile;
     }
@@ -192,7 +190,7 @@ void Map::setTileAt(unsigned col, unsigned row, unsigned id)
     unsigned int index = row * cols_ + col;
 
     if (index >= tiles_.size()) {
-        log.error("Trying to get MapTile out of index!");
+        WARN << "Trying to get MapTile out of range!";
         return;
     }
 

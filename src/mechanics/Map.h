@@ -112,8 +112,6 @@ private:
     void updateTileSlopes(int tileX, int tileY);
     res::TileSlopes::Slope slopeAt(const int x, const int y);
 
-    static Logger &log;
-
     // cols_ = x, rows_ = y
     unsigned int rows_, cols_;
 
