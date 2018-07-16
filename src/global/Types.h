@@ -22,6 +22,8 @@
 #include <SFML/Graphics/Rect.hpp>
 #include <cmath>
 
+#include "global/Logger.h"
+
 using sf::Uint32;
 using sf::Uint8;
 
@@ -492,28 +494,28 @@ inline ScreenRect MapRect::toScreen() const
     return ScreenRect(ScreenPos(x1, y1), Size(x2-x1, y2-y1));
 }
 
-inline std::ostream &operator <<(std::ostream &os, const MapRect &rect) {
-    os << "MapRect(x: "  << rect.x << ", y: " << rect.y << ", width: " << rect.width << ", height: " << rect.height << ", z:" << rect.z << ")";
+inline LogPrinter &operator <<(LogPrinter &os, const MapRect &rect) {
+    os << "MapRect(x:"  << rect.x << ", y:" << rect.y << ", width:" << rect.width << ", height:" << rect.height << ", z:" << rect.z << ")";
     return os;
 }
 
-inline std::ostream &operator <<(std::ostream &os, const ScreenRect &rect) {
-    os << "ScreenRect(x: "  << rect.x << ", y: " << rect.y << ", width: " << rect.width << ", height: " << rect.height << ")";
+inline LogPrinter &operator <<(LogPrinter &os, const ScreenRect &rect) {
+    os << "ScreenRect(x:"  << rect.x << ", y:" << rect.y << ", width:" << rect.width << ", height:" << rect.height << ")";
     return os;
 }
 
-inline std::ostream &operator <<(std::ostream &os, const Size &size) {
-    os << "Size(width: " << size.width << ", height: " << size.height << ")";
+inline LogPrinter &operator <<(LogPrinter &os, const Size &size) {
+    os << "Size(width:" << size.width << ", height:" << size.height << ")";
     return os;
 }
 
-inline std::ostream &operator <<(std::ostream &os, const MapPos &pos) {
-    os << "MapPos(x: " << pos.x << ", y: " << pos.y << ")";
+inline LogPrinter &operator <<(LogPrinter &os, const MapPos &pos) {
+    os << "MapPos(x:" << pos.x << ", y:" << pos.y << ")";
     return os;
 }
 
 
-inline std::ostream &operator <<(std::ostream &os, const ScreenPos &pos) {
-    os << "ScreenPos(x: " << pos.x << ", y: " << pos.y << ")";
+inline LogPrinter &operator <<(LogPrinter &os, const ScreenPos &pos) {
+    os << "ScreenPos(x:" << pos.x << ", y:" << pos.y << ")";
     return os;
 }

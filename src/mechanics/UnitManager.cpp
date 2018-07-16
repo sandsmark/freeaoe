@@ -240,7 +240,7 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
             continue;
         }
 
-        std::cout << "Selected " << unit->readableName << " at " << unit->position << " " << unit->renderer().angle() << " " << unit->renderer().graphic_->data_.SLP << std::endl;
+        DBG << "Selected" << unit->readableName << "at" << unit->position << unit->renderer().angle() << unit->renderer().graphic_->data_.SLP;
         m_selectedUnits.insert(unit);
 
         // stl is shit
