@@ -184,6 +184,7 @@ void UnitManager::onLeftClick(const MapPos &mapPos)
             unit->queueAction(std::make_shared<act::ActionBuild>(unit, m_buildingToPlace));
         }
 
+        m_buildingToPlace->isVisible = true;
         m_units.insert(m_buildingToPlace);
         m_buildingToPlace->setCreationProgress(0);
 
