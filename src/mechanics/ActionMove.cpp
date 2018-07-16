@@ -313,7 +313,7 @@ std::vector<MapPos> MoveOnMap::findPath(const MapPos &start, const MapPos &end, 
     }
     cleanedPath.push_back(path.back());
 
-    std::cout << cleanedPath.size() << "/" << path.size() << std::endl;
+    DBG << cleanedPath.size() << "/" << path.size();
 
     return cleanedPath;
 
@@ -349,9 +349,9 @@ bool MoveOnMap::isPassable(const int x, const int y)
 
 //        if ( <  && std::abs(other->position.y - mapPos.y) < (otherUnit->data.Size[1]  + unit->data.Size[1]) * Constants::TILE_SIZE) {
         if (xDistance < xSize && yDistance < ySize) {
-//            std::cout << unit->readableName << " " << other->readableName << std::endl;
-//            std::cout << "x: " << xDistance << " " << xSize << std::endl;
-//            std::cout << "y: " << yDistance << " " << ySize << std::endl;
+//            DBG << unit->readableName << " " << other->readableName;
+//            DBG << "x: " << xDistance << " " << xSize;
+//            DBG << "y: " << yDistance << " " << ySize;
             return false;
         }
     }

@@ -40,7 +40,7 @@ bool ActionBuild::update(Time time)
     }
 
     if (building->creationProgress() >= 1.) {
-        std::cout << "building already finished" << std::endl;
+        DBG << "building already finished";
         unit->removeAction(this);
         return true;
     }
@@ -52,7 +52,7 @@ bool ActionBuild::update(Time time)
     building->increaseCreationProgress(progress);
 
     if (building->creationProgress() >= 1.) {
-        std::cout << "building finished" << std::endl;
+        DBG << "building finished";
         unit->removeAction(this);
         return true;
     }

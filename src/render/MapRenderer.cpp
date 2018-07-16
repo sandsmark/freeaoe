@@ -72,34 +72,34 @@ bool MapRenderer::update(Time time)
     MapPos topRightMp = cameraPos + (topRight - center);
     MapPos botLeftMp = cameraPos + (bottomLeft - center);
 
-//    std::cout << "nulC " << nullCenterMp.x << " " << nullCenterMp.y << std::endl;
-//    std::cout << "topLeftMp " << topLeftMp.x << " " << topLeftMp.y << std::endl;
-//    std::cout << "botRightMp " << botRightMp.x << " " << botRightMp.y << std::endl;
+//    DBG << "nulC " << nullCenterMp.x << " " << nullCenterMp.y;
+//    DBG << "topLeftMp " << topLeftMp.x << " " << topLeftMp.y;
+//    DBG << "botRightMp " << botRightMp.x << " " << botRightMp.y;
 
     // get column and row boundaries for rendering
     m_rColBegin = botLeftMp.x / Constants::TILE_SIZE;
     if (m_rColBegin > m_map->getCols()) {
-        std::cout << "E: Somethings fishy... (rColBegin_ > map_->getCols())" << std::endl;
+        WARN << "E: Somethings fishy... (rColBegin_ > map_->getCols())";
     }
     m_rColBegin = std::clamp(m_rColBegin, 0, m_map->getCols());
 
     m_rColEnd = topRightMp.x / Constants::TILE_SIZE;
     m_rColEnd++; //round up
     if (m_rColEnd < 0) {
-        std::cout << "E: Somethings fishy... (rColEnd_ < 0)" << std::endl;
+        WARN << "E: Somethings fishy... (rColEnd_ < 0)";
     }
     m_rColEnd = std::clamp(m_rColEnd, 0, m_map->getCols());
 
     m_rRowBegin = topLeftMp.y / Constants::TILE_SIZE;
     if (m_rRowBegin > m_map->getRows()) {
-        std::cout << "E: Somethings fishy... (rRowBegin > map_->getRows())" << std::endl;
+        WARN << "E: Somethings fishy... (rRowBegin > map_->getRows())";
     }
     m_rRowBegin = std::clamp(m_rRowBegin, 0, m_map->getRows());
 
     m_rRowEnd = botRightMp.y / Constants::TILE_SIZE;
     m_rRowEnd++; // round up
     if (m_rRowEnd < 0) {
-        std::cout << "E: Somethings fishy... (rColEnd_ < 0)" << std::endl;
+        WARN << "E: Somethings fishy... (rColEnd_ < 0)";
     }
     m_rRowEnd = std::clamp(m_rRowEnd, 0, m_map->getRows());
 

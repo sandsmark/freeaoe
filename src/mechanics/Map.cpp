@@ -80,8 +80,8 @@ void Map::setUpSample()
 
 void Map::create(genie::ScnMap mapDescription)
 {
-    std::cout << "tile count " << mapDescription.tiles.size() << std::endl;
-    std::cout << "size: " << mapDescription.width << "x" << mapDescription.height << std::endl;
+    DBG << "tile count:" << mapDescription.tiles.size();
+    DBG << "size:" << mapDescription.width << "x" << mapDescription.height;
     tiles_.clear();
 
     cols_ = mapDescription.width;

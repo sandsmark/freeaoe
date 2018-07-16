@@ -151,7 +151,7 @@ bool DataManager::initialize(const std::string dataPath)
     }
 
     if (filePath == "") {
-        std::cerr << "Failed to find any dat files in " << dataPath << std::endl;
+        WARN << "Failed to find any dat files in" << dataPath;
         return false;
     }
 

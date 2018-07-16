@@ -42,7 +42,7 @@ UnitFactory::~UnitFactory()
 
 Unit::Ptr UnitFactory::createUnit(int ID, const MapPos &position, Player::Ptr owner)
 {
-//    std::cout << "Creating  " << ID << std::endl;
+//    DBG << "Creating" << ID;
     const genie::Unit &gunit = DataManager::Inst().getUnit(ID);
 
     Unit::Ptr unit = std::make_shared<Unit>(gunit, owner->playerId, owner->civ);

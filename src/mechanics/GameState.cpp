@@ -133,7 +133,7 @@ bool GameState::init()
     map_ = MapPtr(new Map());
 
     if (scenario_) {
-        std::cout << "Setting up scenario: " << scenario_->scenarioInstructions << std::endl;
+        DBG << "Setting up scenario:" << scenario_->scenarioInstructions;
         map_->create(scenario_->map);
 
         for (int playerNum = 0; playerNum < scenario_->playerUnits.size(); playerNum++) {

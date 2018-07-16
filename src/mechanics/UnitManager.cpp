@@ -254,7 +254,7 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
     }
 
     if (m_selectedUnits.empty()) {
-        std::cout << "Unable to find anything to select in " << selectionRect << std::endl;
+        DBG << "Unable to find anything to select in " << selectionRect;
     }
 }
 

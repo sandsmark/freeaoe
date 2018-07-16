@@ -99,7 +99,7 @@ bool Engine::setup(const std::string &scnFile)
           scenario->load(scnFile.c_str());
           gameState->setScenario(scenario);
       } catch (const std::exception &error) {
-          std::cerr << "Failed to load " << scnFile << ": " << error.what() << std::endl;
+          WARN << "Failed to load" << scnFile << ":" << error.what();
           return false;
       }
   } else {

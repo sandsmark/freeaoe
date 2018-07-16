@@ -57,7 +57,7 @@ genie::ScnFilePtr ResourceManager::getScn(unsigned int id)
 
         if (scnfile) {
             DBG << "found scn file version" << scnfile->version;
-            std::cout << scnfile->scenarioInstructions << std::endl;
+            DBG << scnfile->scenarioInstructions;
             return scnfile;
         }
     }
@@ -224,7 +224,7 @@ bool ResourceManager::initialize(const std::string &dataPath, const genie::GameV
 
         m_gamedataFiles = loadDrs(gamedataFiles);
         if (m_gamedataFiles.empty()) {
-            std::cerr << "Failed to find any gamedata files in " << dataPath << std::endl;
+            WARN << "Failed to find any gamedata files in" << dataPath;
             return false;
         }
 
@@ -254,7 +254,7 @@ bool ResourceManager::initialize(const std::string &dataPath, const genie::GameV
         m_soundFiles = loadDrs(soundFiles);
 
         if (m_soundFiles.empty()) {
-            std::cerr << "Failed to find any sound files in " << dataPath << std::endl;
+            WARN << "Failed to find any sound files in" << dataPath;
             return false;
         }
 
@@ -275,7 +275,7 @@ bool ResourceManager::initialize(const std::string &dataPath, const genie::GameV
         WARN << "Failed to load resource" << error.what();
         return false;
     }
-    std::cerr << "Loaded " << m_allFiles.size() << " files" << std::endl;
+    DBG << "Loaded" << m_allFiles.size() << "files";
 
     return true;
 }

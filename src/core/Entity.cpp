@@ -64,7 +64,7 @@ Unit::Unit(const genie::Unit &data_, int playerId_, std::shared_ptr<Civilization
     defaultGraphics = ResourceManager::Inst()->getGraphic(data.StandingGraphic.first),
     movingGraphics = ResourceManager::Inst()->getGraphic(data.Moving.WalkingGraphic);
     if (!defaultGraphics) {
-        std::cerr << "Failed to load default graphics" << std::endl;
+        WARN << "Failed to load default graphics";
     }
 
     m_creationProgress = data.Creatable.TrainTime;
@@ -204,7 +204,6 @@ void Unit::setCurrentAction(ActionPtr action)
         m_graphics.setGraphic(movingGraphics);
     } else if (action->type == IAction::Type::Build) {
         m_graphics.setGraphic(ResourceManager::Inst()->getGraphic(taskGraphicId(genie::Task::Build, Working)));
-        std::cout << m_graphics.graphic_->data_.AngleCount << " " << m_graphics.graphic_->data_.FrameCount << std::endl;
     } else {
         m_graphics.setGraphic(defaultGraphics);
     }
@@ -217,11 +216,11 @@ void Unit::removeAction(IAction *action)
         m_graphics.setGraphic(defaultGraphics);
 
         if (!m_actionQueue.empty()) {
-            std::cout << "changing action to queued one" << std::endl;
+            DBG << "changing action to queued one";
             setCurrentAction(m_actionQueue.front());
             m_actionQueue.pop_front();
         } else {
-            std::cout << "no actions queued" << std::endl;
+            DBG << "no actions queued";
         }
     } else {
         // fuck stl

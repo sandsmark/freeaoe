@@ -60,7 +60,7 @@ const sf::Texture &Terrain::texture(int x, int y)
         return m_images[frameNum];
     }
 
-//    std::cerr << "------------------------ " << int(m_data.SLP) << std::endl;
+//    WARN << "------------------------ " << int(m_data.SLP);
 //    sf::Image img = Resource::convertFrameToImage(ResourceManager::Inst()->getTemplatedSlp(m_data.SLP, genie::SlopeFlat));
 //    sf::Image img = Resource::convertFrameToImage(ResourceManager::Inst()->getTemplatedSlp(m_data.SLP, genie::SlopeWestDown));
     sf::Image img = Resource::convertFrameToImage(m_slp->getFrame(frameNum));

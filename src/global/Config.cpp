@@ -17,6 +17,7 @@
 */
 
 #include "Config.h"
+#include "Logger.h"
 
 #include <assert.h>
 #include <fstream>
@@ -45,7 +46,7 @@ static std::string getRegistryString(const char *regGroup, const char *key)
     LONG ret = regKey.Open(HKEY_LOCAL_MACHINE, regGroup);
 
     if (ret != ERROR_SUCCESS) {
-        std::cerr << "Failed to open registry group " << regGroup << std::endl;
+        WARN << "Failed to open registry group " << regGroup;
         return std::string();
     }
 
@@ -56,7 +57,7 @@ static std::string getRegistryString(const char *regGroup, const char *key)
     regKey.Close();
 
     if (ret != ERROR_SUCCESS) {
-        std::cerr << "Failed to get key " << key << " from " << regGroup << std::endl;
+        WARN << "Failed to get key " << key << " from " << regGroup;
         return std::string();
     }
 
@@ -66,16 +67,16 @@ static std::string getRegistryString(const char *regGroup, const char *key)
 
 void Config::printUsage(const std::string &programName)
 {
-    std::cerr << "Usage: " << programName << " [options]" << std::endl;
-    std::cerr << "Options:" << std::endl;
+    WARN << "Usage:" << programName << "[options]";
+    WARN << "Options:";
 
     for (const auto &[name, description] : m_allowedOptions) {
         static_assert(std::is_same<decltype(name), const std::string>()); // fuck auto
         static_assert(std::is_same<decltype(description), const std::string>()); // fuck auto x2
 
-        std::cerr << std::setw(25) << std::left;
-        std::cerr << ("  --" + name + "=value");
-        std::cerr << description << std::endl;
+        std::cout << std::setw(25) << std::left;
+        std::cout << ("  --" + name + "=value");
+        std::cout << description << std::endl;
 
     }
 
@@ -171,7 +172,7 @@ Config::Config(const std::string &applicationName)
     wchar_t *rawPath = nullptr;
     HRESULT hr = SHGetKnownFolderPath(FOLDERID_ProgramData, 0, NULL, &rawPath);
     if (FAILED(hr)) {
-        std::cerr << "Failed to get user configuration path!" << std::endl;
+        WARN << "Failed to get user configuration path!";
     }
     if (rawPath) {
         m_filePath = std::wstring_convert<
@@ -192,14 +193,14 @@ bool Config::parseOption(const std::string &option)
 
     size_t splitPos = option.find("=");
     if (splitPos == std::string::npos) {
-        std::cerr << "Invalid line in config: " << option << std::endl;
+        WARN << "Invalid line in config:" << option;
         return false;
     }
 
     std::string name = option.substr(0, splitPos);
     std::string value = option.substr(splitPos + 1);
     if (!checkOption(name, value)) {
-        std::cerr << "Invalid option in config: " << option << std::endl;
+        WARN << "Invalid option in config: " << option;
         return false;
     }
 
@@ -208,14 +209,14 @@ bool Config::parseOption(const std::string &option)
 
 void Config::parseConfigFile(const std::string &path)
 {
-    std::cout << "parsing config file  " << path << std::endl;
+    DBG << "parsing config file" << path;
     if (!std::filesystem::exists(path)) {
         return;
     }
 
     std::ifstream file(path);
     if (!file.is_open()) {
-        std::cerr << "Failed to open config file" << std::endl;
+        WARN << "Failed to open config file";
         return;
     }
 
@@ -227,10 +228,10 @@ void Config::parseConfigFile(const std::string &path)
 
 void Config::writeConfigFile(const std::string &path)
 {
-    std::cout << "storing config" << std::endl;
+    DBG << "storing config";
     std::ofstream file(path);
     if (!file.is_open()) {
-        std::cerr << "Failed to open config file " << path << std::endl;
+        WARN << "Failed to open config file" << path;
         return;
     }
 
@@ -244,9 +245,9 @@ void Config::writeConfigFile(const std::string &path)
 
 bool Config::checkOption(const std::string &name, const std::string &value)
 {
-    std::cout << "checking " << name << " " << value << std::endl;
+    DBG << "checking" << name << value;
     if (m_allowedOptions.find(name) == m_allowedOptions.end()) {
-        std::cerr << "Unknown option " << name << std::endl;
+        WARN << "Unknown option" << name;
         return false;
     }
 

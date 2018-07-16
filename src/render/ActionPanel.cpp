@@ -20,7 +20,7 @@ bool ActionPanel::init()
 {
     genie::SlpFilePtr unitIconsSlp = ResourceManager::Inst()->getSlp(ResourceManager::filenameID("btnunit.shp"), ResourceManager::ResourceType::Interface);
     if (!unitIconsSlp) {
-        std::cerr << "Failed to load unit icons" << std::endl;
+        WARN << "Failed to load unit icons";
         return false;
     }
     for (int i=0; i<unitIconsSlp->getFrameCount(); i++) {
@@ -30,7 +30,7 @@ bool ActionPanel::init()
     // ico_bld1-4.shp looks identical, for some reason
     genie::SlpFilePtr buildingIconsSlp = ResourceManager::Inst()->getSlp(ResourceManager::filenameID("ico_bld2.shp"), ResourceManager::ResourceType::Interface);
     if (!buildingIconsSlp) {
-        std::cerr << "Failed to load building icons" << std::endl;
+        WARN << "Failed to load building icons";
         return false;
     }
     for (int i=0; i<buildingIconsSlp->getFrameCount(); i++) {
@@ -39,7 +39,7 @@ bool ActionPanel::init()
 
     genie::SlpFilePtr researchIconsSlp = ResourceManager::Inst()->getSlp(ResourceManager::filenameID("btntech.shp"), ResourceManager::ResourceType::Interface);
     if (!researchIconsSlp) {
-        std::cerr << "Failed to load research icons" << std::endl;
+        WARN << "Failed to load research icons";
         return false;
     }
     for (int i=0; i<researchIconsSlp->getFrameCount(); i++) {
@@ -48,12 +48,12 @@ bool ActionPanel::init()
 
     genie::SlpFilePtr commandIconsSlp = ResourceManager::Inst()->getSlp(ResourceManager::filenameID("btncmd.shp"), ResourceManager::ResourceType::Interface);
     if (!commandIconsSlp) {
-        std::cerr << "Failed to load action icons" << std::endl;
+        WARN << "Failed to load action icons";
         return false;
     }
     for (int i=0; i<int(Command::IconCount); i++) {
         if (i >= commandIconsSlp->getFrameCount()) {
-            std::cerr << "icon out of range " << i << std::endl;
+            WARN << "icon out of range " << i;
             return false;
         }
         m_commandIcons[Command(i)].loadFromImage(res::Resource::convertFrameToImage(commandIconsSlp->getFrame(i)));
@@ -202,7 +202,7 @@ void ActionPanel::updateButtons()
 
     Unit::Ptr unit = *m_selectedUnits.begin();
 
-    std::cout << unit->data.Creatable.GarrisonGraphic << std::endl;
+    DBG << unit->data.Creatable.GarrisonGraphic;
 
     if (unit->data.Type >= genie::Unit::MovingType && unit->data.Type < genie::Unit::BuildingType) {
         InterfaceButton killButton;
@@ -214,7 +214,7 @@ void ActionPanel::updateButtons()
     bool canGarrison = false;
 
     for (const genie::Task *task : unit->availableActions()) {
-        std::cout << task->actionTypeName() << std::endl;
+        DBG << task->actionTypeName();
 
         if (task->ActionType == genie::Task::Garrison) {
             canGarrison = true;

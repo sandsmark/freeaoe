@@ -70,7 +70,7 @@ const std::vector<const genie::Tech *> Civilization::researchAvailableAt(int16_t
 const genie::Unit &Civilization::unit(const uint16_t id) const
 {
     if (id >= m_data.Units.size()) {
-        std::cerr << "Invalid unit id " << id << std::endl;
+        WARN << "Invalid unit id" << id;
         return nullUnit;
     }
 
