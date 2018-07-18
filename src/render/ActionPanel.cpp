@@ -235,7 +235,7 @@ void ActionPanel::updateButtons()
     stopButton.index = 9;
     currentButtons.push_back(stopButton);
 
-    if (unit->data.InterfaceKind == genie::Unit::CiviliansInterface || unit->data.InterfaceKind == genie::Unit::BuildingsInterface) {
+    if (unit->data.Class == genie::Unit::Civilian || unit->data.Class == genie::Unit::BuildingClass) {
         addCreateButtons(unit);
     }
 }

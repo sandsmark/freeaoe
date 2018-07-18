@@ -93,6 +93,10 @@ bool Unit::update(Time time)
 
 const std::vector<const genie::Unit *> Unit::creatableUnits()
 {
+    if (creationProgress() < 1.) {
+        return {};
+    }
+
     return m_civilization->creatableUnits(data.ID);
 }
 
@@ -156,21 +160,21 @@ std::unordered_set<const genie::Task *> Unit::availableActions()
 
 int Unit::taskGraphicId(const genie::Task::ActionTypes taskType, const IAction::UnitState state)
 {
-    for (const genie::Task &task : DataManager::datFile().UnitHeaders[data.ID].TaskList) {
-        if (task.ActionType != taskType) {
+    for (const genie::Task *task : availableActions()) {
+        if (task->ActionType != taskType) {
             continue;
         }
 
         switch(state) {
         case IAction::Idle:
         case IAction::Proceeding:
-            return task.ProceedingGraphicID;
+            return task->ProceedingGraphicID;
         case IAction::Moving:
-            return task.MovingGraphicID;
+            return task->MovingGraphicID;
         case IAction::Working:
-            return task.WorkingGraphicID;
+            return task->WorkingGraphicID;
         case IAction::Carrying:
-            return task.CarryingGraphicID;
+            return task->CarryingGraphicID;
         default:
             return data.StandingGraphic.first;
         }
