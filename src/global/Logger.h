@@ -74,8 +74,13 @@ struct LogPrinter
     const int m_linenum;
 };
 
+#ifdef _MSC_VER
+#define DBG LogPrinter(__FUNCTION__, __FILE__, __LINE__, LogPrinter::LogType::Debug)
+#define WARN LogPrinter(__FUNCTION__, __FILE__, __LINE__, LogPrinter::LogType::Warning)
+#else
 #define DBG LogPrinter(__PRETTY_FUNCTION__, __FILE__, __LINE__, LogPrinter::LogType::Debug)
 #define WARN LogPrinter(__PRETTY_FUNCTION__, __FILE__, __LINE__, LogPrinter::LogType::Warning)
+#endif
 
 class LifeTimePrinter
 {
