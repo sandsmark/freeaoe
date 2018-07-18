@@ -139,7 +139,7 @@ struct Blend  {
         bits |= 1 << blend;
     }
 
-    inline bool operator ==(const Blend other) const { return bits == other.bits; }
+    inline bool operator ==(const Blend other) const { return bits == other.bits && x == other.x && y == other.y; }
 
     uint32_t bits = 0;
     uint8_t blendMode = 0;
