@@ -96,6 +96,7 @@ public:
 
     MapTile &getTileAt(unsigned int col, unsigned int row);
     void setTileAt(unsigned col, unsigned row, unsigned id);
+    void updateTileAt(const int col, const int row, unsigned id);
 
     // old stuff down ------------------------------------------------------------
     /*
@@ -107,6 +108,9 @@ public:
 
     void updateMapData();
 
+    bool tilesUpdated() const { return m_updated; }
+    void flushDirty() { m_updated = false; }
+
 private:
     void updateTileBlend(int tileX, int tileY);
     void updateTileSlopes(int tileX, int tileY);
@@ -117,6 +121,8 @@ private:
 
     typedef std::vector<MapTile> MapTileArray;
     MapTileArray tiles_;
+
+    bool m_updated = false;
 
     // old stuff down ------------------------------------------------------------
     /*

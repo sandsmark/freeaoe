@@ -195,6 +195,27 @@ void Map::setTileAt(unsigned col, unsigned row, unsigned id)
     }
 
     tiles_[index].terrain_ = ResourceManager::Inst()->getTerrain(id);
+    m_updated = true;
+}
+
+void Map::updateTileAt(const int col, const int row, unsigned id)
+{
+    unsigned int index = row * cols_ + col;
+
+    if (index >= tiles_.size()) {
+        WARN << "Trying to get MapTile out of range!";
+        return;
+    }
+
+    tiles_[index].terrain_ = ResourceManager::Inst()->getTerrain(id);
+
+    for (int col_ = std::max(col - 1, 0); col_ < std::min(col + 2, cols_); col_++) {
+        for (int row_ = std::max(row - 1, 0); row_ < std::min(row + 2, rows_); row_++) {
+            updateTileBlend(col_, row_);
+        }
+    }
+
+    m_updated = true;
 }
 
 void Map::updateMapData()
@@ -216,6 +237,7 @@ void Map::updateMapData()
             updateTileSlopes(col, row);
         }
     }
+    m_updated = true;
 }
 
 enum Direction : int {
@@ -506,6 +528,8 @@ void Map::updateTileBlend(int tileX, int tileY)
         res::TerrainPtr neighbor = neighborTerrains[id];
         blends.blendMode = res::Terrain::blendMode(tileData.BlendType, neighbor->data().BlendType);
         blends.terrain = neighbor;
+        blends.x = tileX;
+        blends.y = tileX;
 
         tile.blends.push_back(blends);
     }

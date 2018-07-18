@@ -18,11 +18,11 @@
 
 namespace Constants {
 
-static const unsigned int TILE_SIZE = 48;
+static const int TILE_SIZE = 48;
 
 // Isometric sizes:
-static const unsigned int TILE_SIZE_VERTICAL = 48;
-static const unsigned int TILE_SIZE_HORIZONTAL = 96;
-static const unsigned int TILE_SIZE_HEIGHT = 24; //Mountain
+static const int TILE_SIZE_VERTICAL = 48;
+static const int TILE_SIZE_HORIZONTAL = 96;
+static const int TILE_SIZE_HEIGHT = 24; //Mountain
 
 }

@@ -143,6 +143,8 @@ struct Blend  {
 
     uint32_t bits = 0;
     uint8_t blendMode = 0;
+    int x = 0;
+    int y = 0;
 
     std::shared_ptr<Terrain> terrain;
 };

@@ -41,6 +41,32 @@ enum class RenderType {
     ConstructUnavailable
 };
 
+inline LogPrinter &operator <<(LogPrinter &os, const RenderType &type) {
+    os << "RenderType(";
+    switch (type) {
+    case RenderType::Shadow:
+        os << "Shadow";
+        break;
+    case RenderType::Base:
+        os << "Base";
+        break;
+    case RenderType::Outline:
+        os << "Outline";
+        break;
+    case RenderType::ConstructAvailable:
+        os << "ConstructAvailable";
+        break;
+    case RenderType::ConstructUnavailable:
+        os << "ConstructUnavailable";
+        break;
+    default:
+        os << "Invalid";
+        break;
+    }
+    os << ")";
+    return os;
+}
+
 typedef std::shared_ptr<GraphicRender> GraphicPtr;
 
 /// Draws and manages Graphics for EntityForm objects.
@@ -54,7 +80,7 @@ public:
 
     bool update(Time time);
 
-    void render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType pass);
+    virtual void render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType pass);
 
     void setPlayerId(int playerId);
 
@@ -83,6 +109,7 @@ private:
 
     float m_angle = 0;
 };
+
 }
 
 #endif // GRAPHIC_RENDER_H

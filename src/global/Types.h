@@ -183,6 +183,12 @@ struct ScreenPos {
         return *this;
     }
 
+    inline ScreenPos &operator*(const double d) {
+        x *= d;
+        y *= d;
+        return *this;
+    }
+
     /// screen position to relative map position (map(0,0,0) is on screen(0,0)
     MapPos toMap() const;
 };

@@ -170,6 +170,10 @@ void GraphicRender::setGraphic(res::GraphicPtr graphic)
 
 ScreenRect GraphicRender::rect() const
 {
+    if (!graphic_ || !graphic_->isValid()) {
+        return ScreenRect();
+    }
+
     ScreenRect ret;
     const ScreenPos hotspot = graphic_->getHotspot(current_frame_, m_angle);
     ret.x = -hotspot.x;

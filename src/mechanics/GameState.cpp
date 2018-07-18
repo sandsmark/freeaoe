@@ -78,6 +78,16 @@ bool GameState::init()
         return false;
     }
 
+    for (size_t i=0; i<DataManager::datFile().UnitHeaders.size(); i++) {
+        for (const genie::Task &t : DataManager::datFile().UnitHeaders[i].TaskList) {
+            if (t.ActionType != 21) {
+                continue;
+            }
+            DBG << t.ActionType << t.actionTypeName() << t.UnitID << t.ClassID << t.TerrainID << t.GatherType << t.WorkValue1 << t.WorkFlag2 << i;
+        }
+
+    }
+
 
     std::shared_ptr<genie::SlpFile> overlayFile = ResourceManager::Inst()->getUiOverlay(ResourceManager::Ui1280x1024, ResourceManager::Viking);
     if (overlayFile) {

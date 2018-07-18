@@ -25,6 +25,8 @@
 #include "render/SfmlRenderTarget.h"
 #include "resource/LanguageManager.h"
 #include "global/Constants.h"
+#include "resource/DataManager.h"
+#include "Farm.h"
 
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
@@ -240,7 +242,10 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
             continue;
         }
 
-        DBG << "Selected" << unit->readableName << "at" << unit->position << unit->renderer().angle() << unit->renderer().graphic_->data_.SLP;
+        DBG << "Selected" << unit->readableName << "at" << unit->position << unit->renderer().angle() << unit->data.ResourceCapacity;
+        for (const genie::Resource<float, int8_t> r : unit->data.ResourceStorages) {
+            DBG << "res:" << r.Type << r.Amount << r.Flag;
+        }
         m_selectedUnits.insert(unit);
 
         // stl is shit
@@ -265,7 +270,15 @@ void UnitManager::setMap(MapPtr map)
 
 void UnitManager::placeBuilding(const Unit::Ptr &unit)
 {
-    m_buildingToPlace = unit;
+    if (unit->data.ID == Unit::Farm) {
+        m_buildingToPlace = std::make_shared<Farm>(DataManager::Inst().getUnit(Unit::Farm),
+                                                   unit->playerId,
+                                                   unit->m_civilization,
+                                                   m_map);
+    } else {
+        m_buildingToPlace = unit;
+
+    }
 }
 
 Unit::Ptr UnitManager::unitAt(const ScreenPos &pos, const CameraPtr &camera) const

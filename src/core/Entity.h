@@ -60,7 +60,7 @@ public:
 
     MapPos position;
 
-    comp::GraphicRender &renderer() { return m_graphics; }
+    virtual comp::GraphicRender &renderer() { return m_graphics; }
 
     static std::shared_ptr<Unit> asUnit(EntityPtr entity);
 
@@ -178,13 +178,15 @@ struct Unit : public Entity
 
     std::vector<Annex> annexes;
 
-    ScreenRect rect() const;
+    virtual ScreenRect rect() const;
 
-    void setCreationProgress(float progress);
+    virtual void setCreationProgress(float progress);
     void increaseCreationProgress(float progress);
     float creationProgress() const;
 
     std::unordered_set<const genie::Task*> availableActions();
+
+    std::shared_ptr<Civilization> m_civilization;
 
 protected:
     int taskGraphicId(const genie::Task::ActionTypes taskType, const State state);
@@ -192,7 +194,6 @@ protected:
     res::GraphicPtr movingGraphics;
     ActionPtr m_currentAction;
     std::deque<ActionPtr> m_actionQueue;
-    std::shared_ptr<Civilization> m_civilization;
     float m_creationProgress = 0.f;
 };
 

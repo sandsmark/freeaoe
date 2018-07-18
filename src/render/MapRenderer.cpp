@@ -50,7 +50,8 @@ bool MapRenderer::update(Time /*time*/)
     const MapPos cameraPos = renderTarget_->camera()->targetPosition();
 
     if (!m_camChanged && m_lastCameraPos == cameraPos &&
-        Size(m_mapRenderTexture.getSize()) == renderTarget_->getSize()) {
+        Size(m_mapRenderTexture.getSize()) == renderTarget_->getSize() &&
+        !m_map->tilesUpdated()) {
         return false;
     }
 
@@ -114,6 +115,8 @@ bool MapRenderer::update(Time /*time*/)
     m_camChanged = false;
 
     updateTexture();
+
+    m_map->flushDirty();;
 
     return true;
 }

@@ -60,6 +60,7 @@ set(MECHANICS_SRC
     src/mechanics/ActionBuild.cpp
     src/mechanics/Civilization.cpp
     src/mechanics/Player.cpp
+    src/mechanics/Farm.cpp
     )
 
 set(RENDER_SRC 
