@@ -154,7 +154,7 @@ std::unordered_set<const genie::Task *> Unit::availableActions()
     return tasks;
 }
 
-int Unit::taskGraphicId(const genie::Task::ActionTypes taskType, const Unit::State state)
+int Unit::taskGraphicId(const genie::Task::ActionTypes taskType, const IAction::UnitState state)
 {
     for (const genie::Task &task : DataManager::datFile().UnitHeaders[data.ID].TaskList) {
         if (task.ActionType != taskType) {
@@ -162,15 +162,14 @@ int Unit::taskGraphicId(const genie::Task::ActionTypes taskType, const Unit::Sta
         }
 
         switch(state) {
-        case Idle:
-        case Proceeding:
+        case IAction::Idle:
+        case IAction::Proceeding:
             return task.ProceedingGraphicID;
-        case Moving:
+        case IAction::Moving:
             return task.MovingGraphicID;
-        case Working:
-            return task.ProceedingGraphicID;
+        case IAction::Working:
             return task.WorkingGraphicID;
-        case Carrying:
+        case IAction::Carrying:
             return task.CarryingGraphicID;
         default:
             return data.StandingGraphic.first;
@@ -206,7 +205,7 @@ void Unit::setCurrentAction(ActionPtr action)
     if (action->type == IAction::Type::Move) {
         m_graphics.setGraphic(movingGraphics);
     } else if (action->type == IAction::Type::Build) {
-        m_graphics.setGraphic(ResourceManager::Inst()->getGraphic(taskGraphicId(genie::Task::Build, Working)));
+        m_graphics.setGraphic(ResourceManager::Inst()->getGraphic(taskGraphicId(genie::Task::Build, action->unitState())));
     } else {
         m_graphics.setGraphic(defaultGraphics);
     }

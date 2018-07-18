@@ -91,14 +91,6 @@ private:
 
 struct Unit : public Entity
 {
-    enum State {
-        Idle,
-        Moving,
-        Working,
-        Carrying,
-        Proceeding
-    };
-
     enum HardcodedTypes {
         TownCenter = 109,
 
@@ -189,7 +181,7 @@ struct Unit : public Entity
     std::shared_ptr<Civilization> m_civilization;
 
 protected:
-    int taskGraphicId(const genie::Task::ActionTypes taskType, const State state);
+    int taskGraphicId(const genie::Task::ActionTypes taskType, const IAction::UnitState state);
 
     res::GraphicPtr movingGraphics;
     ActionPtr m_currentAction;

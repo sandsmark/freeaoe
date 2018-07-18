@@ -60,4 +60,19 @@ bool ActionBuild::update(Time time)
     return false;
 }
 
+IAction::UnitState ActionBuild::unitState() const
+{
+    std::shared_ptr<Unit> target = m_targetBuilding.lock();
+    if (!target) {
+        WARN << "target lost";
+        return Idle;
+    }
+
+    if (target->data.ID == Unit::Farm) {
+        return Working;
+    } else {
+        return Proceeding;
+    }
+}
+
 }//namespace act

@@ -32,7 +32,18 @@ public:
         PlaceOnMap,
         Build
     };
+
+    enum UnitState {
+        Idle,
+        Moving,
+        Working,
+        Carrying,
+        Proceeding
+    };
+
     const Type type = Type::None;
+
+    virtual UnitState unitState() const { return UnitState::Idle; }
 
     virtual ~IAction();
 

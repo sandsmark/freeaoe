@@ -15,6 +15,8 @@ public:
 
     bool update(Time time) override;
 
+    UnitState unitState() const override;
+
 private:
     std::weak_ptr<Unit> m_unit;
     std::weak_ptr<Unit> m_targetBuilding;
