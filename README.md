@@ -7,6 +7,12 @@ Freeaoe is a project aimed to write a free engine capable of running Age of Empi
 
 The project is still in early development, but you can load scenarios and move around and stuff.
 
+Windows
+-------
+Automated windows builds can be [downloaded from AppVeyor](https://ci.appveyor.com/project/sandsmark/freeaoe/build/artifacts).
+
+In theory it should be able to automatically find the data files if AoE2 is installed, but I don't have windows so I haven't tested this.
+
 Dependencies
 ------------
  - SFML
