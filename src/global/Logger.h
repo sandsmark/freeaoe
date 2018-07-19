@@ -22,6 +22,7 @@
 #include <string>
 #include <iostream>
 #include <chrono>
+#include <filesystem>
 
 struct LogPrinter
 {
@@ -69,6 +70,8 @@ struct LogPrinter
                   << ")\033[0m" << std::endl;
     }
 
+
+private:
     const char *m_funcName;
     const char *m_filename;
     const int m_linenum;
@@ -85,24 +88,47 @@ struct LogPrinter
 class LifeTimePrinter
 {
 public:
-    LifeTimePrinter(const char *name) : m_name(name) {
+    LifeTimePrinter(const char *funcName, const char *filename, const int linenum) :
+        m_funcName(funcName),
+        m_filename(filename),
+        m_linenum(linenum)
+    {
         m_startTime = std::chrono::steady_clock::now();
     }
 
     ~LifeTimePrinter() {
         std::chrono::steady_clock::duration elapsed = std::chrono::steady_clock::now() - m_startTime;
-        DBG << m_name << std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count() << "ms";
+
+        std::cout
+                << "\033[1;36m"
+                << std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count() << " ms\t"
+                << "\033[0;36m"
+                << std::filesystem::path(m_filename).filename().c_str() << ":" << m_linenum
+                << " \033[0;37m("
+                << m_funcName
+                << ")\033[0m" << std::endl;
+    }
+
+    void tick(int linenum) {
+        std::chrono::steady_clock::duration elapsed = std::chrono::steady_clock::now() - m_startTime;
+        std::cout
+                << "\033[0;36m"
+                << std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count() << " ms\t"
+                << std::filesystem::path(m_filename).filename().c_str() << ":" << linenum
+                << " \033[0;37m("
+                << m_funcName
+                << ")\033[0m" << std::endl;
+
     }
 
 private:
     std::chrono::steady_clock::time_point m_startTime;
-    const char *m_name;
+    const char *m_funcName;
+    const char *m_filename;
+    const int m_linenum;
 };
 
-#ifdef _MSC_VER
-#define TIME_THIS LifeTimePrinter lifetime_printer(__FUNCTION__)
-#else
-#define TIME_THIS LifeTimePrinter lifetime_printer(__PRETTY_FUNCTION__)
-#endif
+#define TIME_THIS LifeTimePrinter lifetime_printer(__FUNCTION__, __FILE__, __LINE__)
+#define TIME_TICK lifetime_printer.tick(__LINE__)
 
 #endif /* LOGGER_H_ */
