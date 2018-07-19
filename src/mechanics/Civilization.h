@@ -43,7 +43,7 @@ private:
     std::vector<std::vector<const genie::Unit*>> m_taskSwapUnits;
 
     const int m_civId;
-    const genie::Civ m_data;
+    const genie::Civ &m_data;
 
     std::unordered_map<uint16_t, genie::Tech> m_techs;
 };
