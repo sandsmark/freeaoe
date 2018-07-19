@@ -20,6 +20,10 @@
 #define UNITMANAGER_H
 #include <unordered_set>
 #include <core/Entity.h>
+
+#include <SFML/Audio/Sound.hpp>
+#include <SFML/Audio/SoundBuffer.hpp>
+
 #include "Map.h"
 class SfmlRenderTarget;
 
@@ -85,6 +89,8 @@ public:
 private:
     void updateVisibility(const CameraPtr &camera);
 
+    void playSound(int id);
+
     std::set<Unit::Ptr, MapPositionSorter> m_units;
     std::unordered_set<const genie::Task*> m_currentActions;
 
@@ -95,6 +101,9 @@ private:
 
     Unit::Ptr m_buildingToPlace;
     MapPos m_previousCameraPos;
+
+    sf::SoundBuffer m_soundBuffer;
+    sf::Sound m_soundPlayer;
 };
 
 #endif // UNITMANAGER_H

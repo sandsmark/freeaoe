@@ -110,6 +110,7 @@ target_link_libraries(freeaoe
     sfml-system
     sfml-window
     sfml-graphics
+    sfml-audio
     ${EXTRA_LIBS}
     genieutils
 )

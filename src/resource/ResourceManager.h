@@ -112,6 +112,8 @@ public:
 
     genie::ScnFilePtr getScn(unsigned int id);
 
+    unsigned char *getWavPtr(unsigned int id);
+
     genie::SlpTemplateFilePtr getSlpTemplateFile() { return m_stemplatesFile; }
 
     //----------------------------------------------------------------------------

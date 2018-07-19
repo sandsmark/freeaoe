@@ -36,7 +36,7 @@
 // TODO: Bad_alloc
 int main(int argc, char **argv)
 {
-    genie::Logger::setLogLevel(genie::Logger::L_DEBUG);
+//    genie::Logger::setLogLevel(genie::Logger::L_DEBUG);
 
     Config config("freeaoe");
     config.setAllowedOptions({

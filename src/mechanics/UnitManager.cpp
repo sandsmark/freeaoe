@@ -33,6 +33,7 @@
 #include <SFML/Graphics/Sprite.hpp>
 
 #include <iostream>
+#include <random>
 
 UnitManager::UnitManager()
 {
@@ -261,6 +262,15 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
     if (m_selectedUnits.empty()) {
         DBG << "Unable to find anything to select in " << selectionRect;
     }
+
+    if (m_selectedUnits.size() == 1) {
+        int soundId = (*m_selectedUnits.begin())->data.SelectionSound;
+        if (soundId >= 0) {
+            playSound(soundId);
+        } else {
+            DBG << (*m_selectedUnits.begin())->readableName << "does not have selection sound";
+        }
+    }
 }
 
 void UnitManager::setMap(MapPtr map)
@@ -332,4 +342,49 @@ void UnitManager::updateVisibility(const CameraPtr &camera)
             annex.unit->isVisible = camera->isVisible(annexRect);
         }
     }
+}
+
+void UnitManager::playSound(int id)
+{
+    const std::vector<genie::Sound> &sounds = DataManager::Inst().datFile().Sounds;
+    if (id < 0 || id >= sounds.size()) {
+        WARN << "invalid sound id" << id;
+        return;
+    }
+
+    const genie::Sound &sound = sounds[id];
+    if (sound.Items.empty()) {
+        WARN << "no sounds";
+        return;
+    }
+
+
+    std::vector<int16_t> probabilities;
+    for (const genie::SoundItem &item : sound.Items) {
+        probabilities.push_back(item.Probability);
+    }
+
+    static std::mt19937 gen((std::random_device())());
+    std::discrete_distribution<> dist(probabilities.begin(), probabilities.end());
+    const size_t selected = dist(gen);
+
+    const int wavId = sound.Items[selected].ResourceID;
+    if (wavId < 0) {
+        WARN << "FIXME: load external sounds";
+        return;
+    }
+
+    DBG << "playing" << sound.Items[selected].FileName;
+
+    unsigned char *wavPtr = ResourceManager::Inst()->getWavPtr(wavId);
+    if (!wavPtr) {
+        WARN << "failed to get wav data for" << wavId;
+        return;
+    }
+
+    const size_t size = *((uint32_t*)wavPtr + 1) + 8;
+    m_soundBuffer.loadFromMemory(wavPtr, size);
+    m_soundPlayer.setBuffer(m_soundBuffer);
+    m_soundPlayer.play();
+
 }

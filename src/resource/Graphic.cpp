@@ -33,7 +33,7 @@ Graphic::Graphic(const genie::Graphic &data) :
     data_(data)
 {
     if (data_.SLP < 0) {
-        WARN << data_.Name << "doesn't have a SLP id";
+        WARN << data_.Name << "doesn't have a SLP id" << data_.ID << data_.Deltas.size();
         return;
     }
 
@@ -254,7 +254,7 @@ Graphic::FrameInfo Graphic::calcFrameInfo(uint32_t num, float angle) const
     }
 
     if (ret.frameNum >= slp_->getFrameCount()) {
-        WARN << "trying to look up" << ret.frameNum << "but we only have" << slp_->getFrameCount();
+//        WARN << "trying to look up" << ret.frameNum << "but we only have" << slp_->getFrameCount();
         ret.frameNum = 0;
     }
 

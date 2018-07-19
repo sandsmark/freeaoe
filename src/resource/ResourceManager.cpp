@@ -65,6 +65,18 @@ genie::ScnFilePtr ResourceManager::getScn(unsigned int id)
     return genie::ScnFilePtr();
 }
 
+unsigned char *ResourceManager::getWavPtr(unsigned int id)
+{
+    for (const std::shared_ptr<genie::DrsFile> &drsFile : m_soundFiles) {
+        unsigned char *wavPtr = drsFile->getWavPtr(id);
+        if (wavPtr) {
+            return wavPtr;
+        }
+    }
+    DBG << "failed to find wav file for" << id;
+    return nullptr;
+}
+
 //------------------------------------------------------------------------------
 genie::SlpFilePtr ResourceManager::getSlp(sf::Uint32 id, const ResourceType type)
 {
