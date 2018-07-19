@@ -25,8 +25,10 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "resource/ResourceManager.h"
+#include "resource/Resource.h"
 #include "render/GraphicRender.h"
 #include "global/Config.h"
+#include <genie/resource/SlpFile.h>
 
 const sf::Clock Engine::GameClock;
 
@@ -99,6 +101,22 @@ bool Engine::setup(const std::string &scnFile)
   renderWindow_->setFramerateLimit(60);
   
   renderTarget_ = std::make_shared<SfmlRenderTarget>(*renderWindow_);
+
+  genie::SlpFilePtr loadingImageFile = ResourceManager::Inst()->getSlp("scrstart.slp");
+  if (loadingImageFile) {
+      sf::Texture loadingScreen;
+      loadingScreen.loadFromImage(res::Resource::convertFrameToImage(
+                                      loadingImageFile->getFrame(0),
+                                      ResourceManager::Inst()->getPalette("scrstart.pal")
+                                      ));
+      sf::Sprite sprite;
+      sprite.setTexture(loadingScreen);
+      sprite.setPosition(0, 0);
+      sprite.setScale(renderWindow_->getSize().x / float(loadingScreen.getSize().x),
+                      renderWindow_->getSize().y / float(loadingScreen.getSize().y));
+      renderTarget_->draw(sprite);
+      renderWindow_->display();
+  }
 
   std::shared_ptr<GameState> gameState = std::make_shared<GameState>(renderTarget_);
 

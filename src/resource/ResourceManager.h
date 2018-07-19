@@ -107,6 +107,7 @@ public:
     /// @return slp file
     //
     genie::SlpFilePtr getSlp(unsigned int id, const ResourceType type = ResourceType::Undefined);
+    genie::SlpFilePtr getSlp(const std::string &name);
 
     genie::SlpFilePtr getUiOverlay(const UiResolution res, const UiCiv civ);
 
@@ -132,6 +133,7 @@ public:
     //
     res::TerrainPtr getTerrain(unsigned int id);
 
+    const genie::PalFile &getPalette(const std::string &name);
     const genie::PalFile &getPalette(unsigned int id = 50500);
 
     const genie::BlendMode &getBlendmode(unsigned int id = 0);

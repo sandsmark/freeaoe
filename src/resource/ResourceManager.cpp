@@ -40,6 +40,11 @@ ResourceManager *ResourceManager::Inst()
     return &rm;
 }
 
+genie::SlpFilePtr ResourceManager::getSlp(const std::string &name)
+{
+    return getSlp(filenameID(name));
+}
+
 genie::SlpFilePtr ResourceManager::getUiOverlay(const ResourceManager::UiResolution res, const ResourceManager::UiCiv civ)
 {
     // wtf
@@ -153,6 +158,11 @@ res::TerrainPtr ResourceManager::getTerrain(unsigned int type)
     terrains_[type] = terrain;
 
     return terrain;
+}
+
+const genie::PalFile &ResourceManager::getPalette(const std::string &name)
+{
+    return getPalette(filenameID(name));
 }
 
 const genie::BlendMode &ResourceManager::getBlendmode(unsigned int id)
@@ -353,6 +363,11 @@ int ResourceManager::filenameID(const std::string &filename)
         { "sat_tabs.slp", 50765   }, // Tab pane victory screen
         { "tml_bck.slp", 50763    }, // Texture victory screen
         { "viccheck.slp", 52001   },
+        { "scr2.slp", 50100       }, // 800x600
+        { "scr2b.slp", 50101      }, // 1024x768
+        { "scr2c.slp", 50102      }, // 1280x1024
+        { "scrstart.slp", 50163   },
+        { "scrstart.pal", 50563   },
 
 
         // Logos
