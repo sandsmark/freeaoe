@@ -89,7 +89,7 @@ public:
 private:
     void updateVisibility(const CameraPtr &camera);
 
-    void playSound(int id);
+    void playSound(const Unit::Ptr &unit);
 
     std::set<Unit::Ptr, MapPositionSorter> m_units;
     std::unordered_set<const genie::Task*> m_currentActions;

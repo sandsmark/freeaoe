@@ -27,6 +27,7 @@
 #include "global/Constants.h"
 #include "resource/DataManager.h"
 #include "Farm.h"
+#include "Civilization.h"
 
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
@@ -264,12 +265,7 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
     }
 
     if (m_selectedUnits.size() == 1) {
-        int soundId = (*m_selectedUnits.begin())->data.SelectionSound;
-        if (soundId >= 0) {
-            playSound(soundId);
-        } else {
-            DBG << (*m_selectedUnits.begin())->readableName << "does not have selection sound";
-        }
+        playSound(*m_selectedUnits.begin());
     }
 }
 
@@ -344,8 +340,13 @@ void UnitManager::updateVisibility(const CameraPtr &camera)
     }
 }
 
-void UnitManager::playSound(int id)
+void UnitManager::playSound(const Unit::Ptr &unit)
 {
+    const int id = unit->data.SelectionSound;
+    if (id < 0) {
+        DBG << "no selection sound for" << unit->readableName;
+        return;
+    }
     const std::vector<genie::Sound> &sounds = DataManager::Inst().datFile().Sounds;
     if (id < 0 || id >= sounds.size()) {
         WARN << "invalid sound id" << id;
@@ -361,7 +362,11 @@ void UnitManager::playSound(int id)
 
     std::vector<int16_t> probabilities;
     for (const genie::SoundItem &item : sound.Items) {
-        probabilities.push_back(item.Probability);
+        if (item.Civilization != unit->m_civilization->id()) {
+            probabilities.push_back(0);
+        } else {
+            probabilities.push_back(item.Probability);
+        }
     }
 
     static std::mt19937 gen((std::random_device())());
@@ -386,5 +391,4 @@ void UnitManager::playSound(int id)
     m_soundBuffer.loadFromMemory(wavPtr, size);
     m_soundPlayer.setBuffer(m_soundBuffer);
     m_soundPlayer.play();
-
 }
