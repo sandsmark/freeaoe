@@ -232,6 +232,7 @@ void Map::updateMapData()
         }
     }
 
+    TIME_TICK;
     for (int col = 0; col < cols_; col++) {
         for (int row = 0; row < rows_; row++) {
             updateTileSlopes(col, row);
@@ -523,7 +524,7 @@ void Map::updateTileBlend(int tileX, int tileY)
             break;
         }
 
-        res::TerrainPtr neighbor = neighborTerrains[id];
+        const res::TerrainPtr &neighbor = neighborTerrains[id];
         blends.blendMode = res::Terrain::blendMode(tileData.BlendType, neighbor->data().BlendType);
         blends.terrain = neighbor;
         blends.x = tileX;
@@ -558,7 +559,7 @@ void Map::updateTileSlopes(int tileX, int tileY)
     tile.slopes.northEast = slopeAt(tileX, tileY + 1);
 
     // Preload
-    tile.terrain_->slopedImage(tile.slopes, tileX, tileY);
+//    tile.terrain_->slopedImage(tile.slopes, tileX, tileY);
 }
 
 TileSlopes::Slope Map::slopeAt(const int x, const int y)
