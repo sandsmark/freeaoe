@@ -94,27 +94,25 @@ sf::Image Resource::convertFrameToImage(const genie::SlpFramePtr frame,
     const uint32_t width = frame->getWidth();
     const uint32_t height = frame->getHeight();
     const genie::SlpFrameData &frameData = frame->img_data;
+    const int area = width * height;
+
 
     // fuck msvc
-    std::vector<Uint8> pixelsBuf(width * height * 4);
+    std::vector<Uint8> pixelsBuf(area * 4);
     Uint8 *pixels = pixelsBuf.data();
 
-    for (uint32_t row = 0; row < height; row++) {
-        for (uint32_t col = 0; col < width; col++) {
-            const uint8_t paletteIndex = frameData.pixel_indexes[row * width + col];
-
-            assert(paletteIndex < palette.colors_.size());
-            const genie::Color &g_color = palette.colors_[paletteIndex];
-
-            const size_t pixelPos = (row * width + col) * 4;
-            pixels[pixelPos    ] = g_color.r;
-            pixels[pixelPos + 1] = g_color.g;
-            pixels[pixelPos + 2] = g_color.b;
-            pixels[pixelPos + 3] = frameData.alpha_channel[row * width + col];
-        }
+    const std::vector<genie::Color> &colors = palette.colors_;
+    const std::vector<uint8_t> &pixelindexes = frameData.pixel_indexes;
+    const std::vector<uint8_t> &alphachannel = frameData.alpha_channel;
+    for (int i=0; i<area; i++) {
+        const genie::Color &col = colors[pixelindexes[i]];
+        *pixels++ = col.r;
+        *pixels++ = col.g;
+        *pixels++ = col.b;
+        *pixels++ = alphachannel[i];
     }
 
-
+    pixels = pixelsBuf.data();
     for (const genie::XY pos : frameData.shadow_mask) {
         const size_t pixelPos = (pos.y * width + pos.x) * 4;
         pixels[pixelPos    ] = 0;
