@@ -70,6 +70,7 @@ void GameState::setScenario(std::shared_ptr<genie::ScnFile> scenario)
 
 bool GameState::init()
 {
+    TIME_THIS;
     if (!m_unitManager->init()) {
         return false;
     }
@@ -77,17 +78,6 @@ bool GameState::init()
     if (!m_actionPanel->init()) {
         return false;
     }
-
-    for (size_t i=0; i<DataManager::datFile().UnitHeaders.size(); i++) {
-        for (const genie::Task &t : DataManager::datFile().UnitHeaders[i].TaskList) {
-            if (t.ActionType != 21) {
-                continue;
-            }
-            DBG << t.ActionType << t.actionTypeName() << t.UnitID << t.ClassID << t.TerrainID << t.GatherType << t.WorkValue1 << t.WorkFlag2 << i;
-        }
-
-    }
-
 
     std::shared_ptr<genie::SlpFile> overlayFile = ResourceManager::Inst()->getUiOverlay(ResourceManager::Ui1280x1024, ResourceManager::Viking);
     if (overlayFile) {
@@ -148,6 +138,7 @@ bool GameState::init()
     map_ = MapPtr(new Map());
 
     if (scenario_) {
+        TIME_THIS;
         DBG << "Setting up scenario:" << scenario_->scenarioInstructions;
         map_->create(scenario_->map);
 
