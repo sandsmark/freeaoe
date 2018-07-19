@@ -413,9 +413,7 @@ void Map::updateTileBlend(int tileX, int tileY)
         return blendPriorities[a] < blendPriorities[b];
     });
 
-    sf::Texture t;
-    t.loadFromImage(tile.terrain_->image(tileX, tileY));
-    tile.textures.push_back(t);
+    tile.textures.push_back(tile.terrain_->texture(tileX, tileY));
 
     for (const uint8_t id : idsToDraw) {
         Blend blends;
