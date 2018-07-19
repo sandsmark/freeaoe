@@ -200,6 +200,10 @@ void Unit::queueAction(ActionPtr action)
 
 void Unit::setCurrentAction(ActionPtr action)
 {
+    if (m_currentAction && !action) {
+        m_graphics.setGraphic(defaultGraphics);
+    }
+
     m_currentAction = action;
 
     if (!action) {
