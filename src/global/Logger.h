@@ -91,13 +91,17 @@ public:
     LifeTimePrinter(const char *funcName, const char *filename, const int linenum) :
         m_funcName(funcName),
         m_filename(filename),
-        m_linenum(linenum)
+        m_linenum(linenum),
+        myindent(++indent)
     {
         m_startTime = std::chrono::steady_clock::now();
     }
 
     ~LifeTimePrinter() {
+        indent--;
         std::chrono::steady_clock::duration elapsed = std::chrono::steady_clock::now() - m_startTime;
+
+        for (int i=0; i<indent * 2; i++) std::cout << ' ';
 
         std::cout
                 << "\033[1;36m"
@@ -111,6 +115,8 @@ public:
 
     void tick(int linenum) {
         std::chrono::steady_clock::duration elapsed = std::chrono::steady_clock::now() - m_startTime;
+
+        for (int i=0; i<myindent * 2 + 1; i++) std::cout << ' ';
         std::cout
                 << "\033[0;36m"
                 << std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count() << " ms\t"
@@ -122,10 +128,12 @@ public:
     }
 
 private:
+    static int indent;
     std::chrono::steady_clock::time_point m_startTime;
     const char *m_funcName;
     const char *m_filename;
     const int m_linenum;
+    int myindent;
 };
 
 #define TIME_THIS LifeTimePrinter lifetime_printer(__FUNCTION__, __FILE__, __LINE__)
