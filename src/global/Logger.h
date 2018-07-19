@@ -91,21 +91,44 @@ public:
     LifeTimePrinter(const char *funcName, const char *filename, const int linenum) :
         m_funcName(funcName),
         m_filename(filename),
-        m_linenum(linenum),
-        myindent(++indent)
+        m_linenum(linenum)
     {
+        indent++;
         m_startTime = std::chrono::steady_clock::now();
+    }
+
+    long elapsed() {
+        std::chrono::steady_clock::duration elapsed = std::chrono::steady_clock::now() - m_startTime;
+        return std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count();
     }
 
     ~LifeTimePrinter() {
         indent--;
+
         std::chrono::steady_clock::duration elapsed = std::chrono::steady_clock::now() - m_startTime;
+        const long elapsedMs = std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count();
+
+        if (elapsedMs < 10) {
+            return;
+        }
+
+        for (size_t i=0; i<m_ticks.size(); i++) {
+            for (int j=0; j<indent * 2 + 1; j++) std::cout << ' ';
+            std::cout
+                    << "\033[0;36m"
+                    << m_ticks[i] << " ms\t"
+                    << std::filesystem::path(m_filename).filename().c_str() << ":" << m_linenums[i]
+                    << " \033[0;37m("
+                    << m_funcName
+                    << ")\033[0m" << std::endl;
+
+        }
 
         for (int i=0; i<indent * 2; i++) std::cout << ' ';
 
         std::cout
                 << "\033[1;36m"
-                << std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count() << " ms\t"
+                << elapsedMs << " ms\t"
                 << "\033[0;36m"
                 << std::filesystem::path(m_filename).filename().c_str() << ":" << m_linenum
                 << " \033[0;37m("
@@ -115,16 +138,8 @@ public:
 
     void tick(int linenum) {
         std::chrono::steady_clock::duration elapsed = std::chrono::steady_clock::now() - m_startTime;
-
-        for (int i=0; i<myindent * 2 + 1; i++) std::cout << ' ';
-        std::cout
-                << "\033[0;36m"
-                << std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count() << " ms\t"
-                << std::filesystem::path(m_filename).filename().c_str() << ":" << linenum
-                << " \033[0;37m("
-                << m_funcName
-                << ")\033[0m" << std::endl;
-
+        m_ticks.push_back(std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count());
+        m_linenums.push_back(linenum);
     }
 
 private:
@@ -133,7 +148,8 @@ private:
     const char *m_funcName;
     const char *m_filename;
     const int m_linenum;
-    int myindent;
+    std::vector<long> m_ticks;
+    std::vector<int> m_linenums;
 };
 
 #define TIME_THIS LifeTimePrinter lifetime_printer(__FUNCTION__, __FILE__, __LINE__)
