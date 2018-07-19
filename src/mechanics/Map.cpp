@@ -176,8 +176,8 @@ MapTile &Map::getTileAt(unsigned int col, unsigned int row)
 {
     unsigned int index = row * cols_ + col;
 
-    if (index >= tiles_.size()) {
-        WARN << "Trying to get MapTile (" << col << "x" << row << ") out of bounds!";
+    if (IS_UNLIKELY(index >= tiles_.size())) {
+        WARN << "Trying to get MapTile (" << col << "x" << row << ") out of bounds (" << cols_ << "x" << rows_ << ")";
         static MapTile nulltile;
         return nulltile;
     }
@@ -564,7 +564,7 @@ void Map::updateTileSlopes(int tileX, int tileY)
 
 TileSlopes::Slope Map::slopeAt(const int x, const int y)
 {
-    if (x < 0 || y < 0) {
+    if (IS_UNLIKELY(x < 0 || y < 0 || x >= cols_ || y >= rows_)) {
         return TileSlopes::Flat;
     }
 
