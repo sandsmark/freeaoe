@@ -4,6 +4,11 @@ set (CMAKE_CXX_STANDARD 17)
 
 project(freeaoe)
 
+if (CMAKE_BUILD_TYPE MATCHES Debug)
+    add_definitions(-DDEBUG)
+endif()
+
+
 if(WIN32)
     include_directories(extern/genieutils/extern/win-iconv/)
     add_definitions(-DNTDDI_VERSION=NTDDI_WINBLUE)

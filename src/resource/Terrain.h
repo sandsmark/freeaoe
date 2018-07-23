@@ -206,6 +206,8 @@ public:
     const sf::Texture &slopedImage(const TileSlopes &slopes, int tileX, int tileY);
 
 private:
+    void addOutline(sf::Image &img);
+
     genie::Terrain m_data;
     genie::SlpFilePtr m_slp;
 

@@ -64,7 +64,10 @@ const sf::Texture &Terrain::texture(int x, int y)
 //    sf::Image img = Resource::convertFrameToImage(ResourceManager::Inst()->getTemplatedSlp(m_data.SLP, genie::SlopeFlat));
 //    sf::Image img = Resource::convertFrameToImage(ResourceManager::Inst()->getTemplatedSlp(m_data.SLP, genie::SlopeWestDown));
     sf::Image img = Resource::convertFrameToImage(m_slp->getFrame(frameNum));
-//    sf::Image img = Resource::convertFrameToImage(ResourceManager::Inst()->getSlp(m_data.SLP)->getFrame(0));
+
+#ifdef DEBUG
+    addOutline(img);
+#endif
 
     m_images[frameNum].loadFromImage(img);
 
@@ -80,7 +83,14 @@ const sf::Image Terrain::image(int x, int y)
     const int tileSquareCount = sqrt(m_slp->getFrameCount());
     const int frameNum = (y % tileSquareCount) + (x % tileSquareCount) * tileSquareCount;
 
+
+#ifdef DEBUG
+    sf::Image img = Resource::convertFrameToImage(m_slp->getFrame(frameNum));
+    addOutline(img);
+    return img;
+#else
     return Resource::convertFrameToImage(m_slp->getFrame(frameNum));
+#endif
 }
 
 bool Terrain::load()
@@ -541,7 +551,7 @@ const sf::Texture &Terrain::slopedImage(const TileSlopes &slopes, int tileX, int
     const int frameNum = (tileY % tileSquareCount) + (tileX % tileSquareCount) * tileSquareCount;
 
     genie::SlpFramePtr frame = ResourceManager::Inst()->getSlpTemplateFile()->getFrame(m_slp->getFrame(frameNum), TileSlopes::genieSlope(slopes.self), patterns, ResourceManager::Inst()->getPalette().getColors(), m_slp);
-    const sf::Image img = res::Resource::convertFrameToImage(frame);
+    sf::Image img = res::Resource::convertFrameToImage(frame);
     if (!img.getSize().x) {
         static sf::Texture nullTex;
         if (nullTex.getSize().x == 0) {
@@ -552,8 +562,25 @@ const sf::Texture &Terrain::slopedImage(const TileSlopes &slopes, int tileX, int
 
         return nullTex;
     }
+
+#ifdef DEBUG
+    addOutline(img);
+#endif
+
     m_slopeImages[slopes].loadFromImage(img);
     return m_slopeImages[slopes];
+}
+
+void Terrain::addOutline(sf::Image &img)
+{
+    for (size_t x=2;x<img.getSize().x; x++) {
+        for (size_t y=0;y<img.getSize().y; y++) {
+            if (img.getPixel(x-1, y).a == 255 && (img.getPixel(x-2, y).a == 0 || (y == 0 && x%2))) {
+                img.setPixel(x, y, sf::Color::White);
+                continue;
+            }
+        }
+    }
 }
 
 }

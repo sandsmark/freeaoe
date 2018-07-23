@@ -122,7 +122,7 @@ sf::Image Resource::convertFrameToImage(const genie::SlpFramePtr frame,
     }
 
     if (playerId >= 0) {
-        genie::PlayerColour pc  = DataManager::Inst().getPlayerColor(playerId);
+        genie::PlayerColour pc = DataManager::Inst().getPlayerColor(playerId);
         for (const genie::PlayerColorXY mask : frameData.player_color_mask) {
             const genie::Color &color = palette[mask.index + pc.PlayerColorBase];
 
