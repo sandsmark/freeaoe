@@ -238,6 +238,9 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
     if (!containedUnits.empty()) {
         m_currentActions = containedUnits[0]->availableActions();
     }
+    for (const genie::Task *t : m_currentActions) {
+        DBG << t->actionTypeName();
+    }
 
     for (Unit::Ptr unit : containedUnits) {
         if (unit->data.InteractionMode < requiredInteraction) {
@@ -306,6 +309,10 @@ Unit::Ptr UnitManager::unitAt(const ScreenPos &pos, const CameraPtr &camera) con
 
 const genie::Task *UnitManager::defaultActionAt(const ScreenPos &pos, const CameraPtr &camera)
 {
+    if (m_selectedUnits.empty()) {
+        return nullptr;
+    }
+
     Unit::Ptr target = unitAt(pos, camera);
     if (!target) {
         return nullptr;
@@ -316,8 +323,57 @@ const genie::Task *UnitManager::defaultActionAt(const ScreenPos &pos, const Came
         return nullptr;
     }
 
+    int ownPlayerId = (*m_selectedUnits.begin())->playerId;
+
     for (const genie::Task *action : availableActions()) {
-        if (action->ActionType == genie::Task::Combat) {
+        switch (action->TargetDiplomacy) {
+        case genie::Task::TargetSelf:
+            if (target->playerId != ownPlayerId) {
+                continue;
+            }
+            break;
+        case genie::Task::TargetNeutralsEnemies: // TODO: neutrals
+            if (target->playerId == ownPlayerId) {
+                continue;
+            }
+            break;
+
+        case genie::Task::TargetGaiaOnly:
+            if (target->playerId != 0) {
+                continue;
+            }
+            break;
+        case genie::Task::TargetSelfAllyGaia: // TODO: Allies
+            if (target->playerId != ownPlayerId && target->playerId != 0) {
+                continue;
+            }
+            break;
+        case genie::Task::TargetGaiaNeutralEnemies:
+        case genie::Task::TargetOthers:
+            if (target->playerId == ownPlayerId) { // TODO: allies
+                continue;
+            }
+            break;
+        case genie::Task::TargetAnyDiplo:
+        case genie::Task::TargetAnyDiplo2:
+        default:
+            break;
+        }
+
+        if (action->ActionType == genie::Task::Garrison) {
+            continue;
+        }
+
+        if (action->ActionType == genie::Task::Combat &&
+                action->TargetDiplomacy == genie::Task::TargetGaiaNeutralEnemies && ownPlayerId != target->playerId) {
+            return action;
+        }
+
+        if (action->UnitID == target->data.ID) {
+            return action;
+        }
+
+        if (action->ClassID == target->data.Class) {
             return action;
         }
     }

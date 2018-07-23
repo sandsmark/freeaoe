@@ -1,6 +1,7 @@
 #include "Civilization.h"
 
 #include "resource/DataManager.h"
+#include "resource/LanguageManager.h"
 
 #include <genie/dat/DatFile.h>
 #include <genie/dat/Civ.h>
@@ -11,11 +12,8 @@ Civilization::Civilization(const int civId, const genie::DatFile &dataFile) :
     m_civId(civId),
     m_data(dataFile.Civs.at(civId))
 {
+    m_taskSwapUnits.resize(10);
     for (const genie::Unit &unit : m_data.Units) {
-        if (unit.HideInEditor) {
-            continue;
-        }
-
         if (unit.Creatable.TrainLocationID > 0) {
             m_creatableUnits[unit.Creatable.TrainLocationID].push_back(&unit);
         }

@@ -358,6 +358,7 @@ void GameState::handleEvent(sf::Event event)
         } else if (targetAction->ActionType == genie::Task::Combat) {
             m_mouseCursor.setCursor(Cursor::Attack);
         } else {
+            DBG << targetAction->actionTypeName();
             m_mouseCursor.setCursor(Cursor::Action);
         }
 
