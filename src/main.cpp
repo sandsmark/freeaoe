@@ -32,6 +32,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Shape.hpp>
+#include "ui/FileDialog.h"
 
 // TODO: Bad_alloc
 int main(int argc, char **argv)
@@ -46,7 +47,19 @@ int main(int argc, char **argv)
     if (!config.parseOptions(argc, argv)) {
         return 1;
     }
-    const std::string dataPath = config.getValue("game-path") + "/Data/";
+    std::string dataPath = config.getValue("game-path") + "/Data/";
+
+    if (!std::filesystem::exists(dataPath)) {
+        FileDialog filediag;
+        if (!filediag.setup(1024, 768)) {
+            WARN << "failed to open file dialog!";
+            return 1;
+        }
+
+        config.setValue("game-path", filediag.getPath());
+    }
+
+    dataPath = config.getValue("game-path") + "/Data/";
 
     if (!std::filesystem::exists(dataPath)) {
         WARN << "Game path " << dataPath << " does not exist";
