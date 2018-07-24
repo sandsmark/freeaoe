@@ -31,6 +31,8 @@ private:
 
 struct ListView
 {
+    bool hasDataFolder = false;
+
     const int numVisible = 20;
 
     ListView(const sf::Font &font, const ScreenRect rect);
@@ -38,7 +40,7 @@ struct ListView
     void handleEvent(const sf::Event &event);
     void render(sf::RenderWindow *window);
 
-    void setCurrentPath(const std::filesystem::path &path);
+    void setCurrentPath(std::filesystem::path path);
 
     void setOffset(int offset);
 

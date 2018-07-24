@@ -39,7 +39,7 @@ bool FileDialog::setup(int width, int height)
     }
 
     m_fileList = std::make_unique<ListView>(*m_font, ScreenRect(ScreenPos(width/2 - width*3/8, 50), Size(width*3/4, 550)));
-    m_fileList->setCurrentPath("/tmp/");
+    m_fileList->setCurrentPath(std::filesystem::current_path());
 
     return true;
 }
@@ -69,10 +69,11 @@ std::string FileDialog::getPath()
 
         if (m_okButton->checkClick(event)) {
             m_renderWindow->close();
-            ret = "foo";
+            ret = m_fileList->currentText();
         }
 
         m_fileList->handleEvent(event);
+        m_okButton->enabled = m_fileList->hasDataFolder;
 
         m_cancelButton->render(m_renderWindow.get());
         m_okButton->render(m_renderWindow.get());
@@ -169,7 +170,7 @@ ListView::ListView(const sf::Font &font, const ScreenRect rect) :
         std::unique_ptr<sf::Text> text = std::make_unique<sf::Text>("-", font);
         text->setCharacterSize(18);
         text->setOutlineColor(sf::Color::Black);
-        text->setOutlineThickness(2);
+        text->setOutlineThickness(1);
         const int textHeight = text->getLocalBounds().height;
         text->setPosition(rect.x + 10, rect.y + i * m_itemHeight + textHeight/3);
 
@@ -242,14 +243,21 @@ void ListView::handleEvent(const sf::Event &event)
         return;
     }
 
-    m_currentItem = index;
+    if (index != m_currentItem) {
+        m_currentItem = index;
+        return;
+    }
+
+    if (std::filesystem::is_directory(m_list[m_currentItem])) {
+        setCurrentPath(std::filesystem::canonical(m_list[m_currentItem]));
+    }
 }
 
 void ListView::render(sf::RenderWindow *window)
 {
     window->draw(*m_background);
 
-    if (m_currentItem - m_offset > 0 && m_currentItem - m_offset < numVisible) {
+    if (m_currentItem - m_offset >= 0 && m_currentItem - m_offset < numVisible) {
         m_selectedOutline->setPosition(ScreenPos(m_rect.x, m_rect.y + (m_currentItem - m_offset) * m_itemHeight));
         window->draw(*m_selectedOutline);
     }
@@ -261,16 +269,34 @@ void ListView::render(sf::RenderWindow *window)
     window->draw(*m_scrollBar);
 }
 
-void ListView::setCurrentPath(const std::filesystem::path &path)
+void ListView::setCurrentPath(std::filesystem::path path)
 {
-    if (path == m_currentPath) {
-        return;
+    m_list.clear();
+
+    hasDataFolder = false;
+    try {
+        for (const std::filesystem::directory_entry &entry : std::filesystem::directory_iterator(path)) {
+            if (entry.path().filename() == "Data" && entry.is_directory()) {
+                hasDataFolder = true;
+            }
+
+            m_list.push_back(entry.path());
+        }
+    } catch (const std::filesystem::filesystem_error &err) {
+        WARN << "Err" << err.what();
+        if (m_currentPath.empty()) {
+            return;
+        }
+
+        path = m_currentPath;
     }
 
-    m_list.clear();
-    for (const std::filesystem::directory_entry &entry : std::filesystem::directory_iterator(path)) {
-        m_list.push_back(entry.path());
+    if (!path.parent_path().empty() && path != path.parent_path()) {
+        std::filesystem::path dotdot = path;
+        dotdot += "/..";
+        m_list.push_back(dotdot);
     }
+
     std::sort(m_list.begin(), m_list.end(), [](const std::filesystem::path &a, const std::filesystem::path &b){
         const bool aIsDir = std::filesystem::is_directory(a);
         const bool bIsDir = std::filesystem::is_directory(b);
@@ -301,6 +327,8 @@ void ListView::setCurrentPath(const std::filesystem::path &path)
     }
 
     updateScrollbar();
+
+    m_currentPath = path;
 }
 
 void ListView::setOffset(int offset)
@@ -341,13 +369,7 @@ void ListView::setOffset(int offset)
 
 std::string ListView::currentText() const
 {
-    int index = m_currentItem + m_offset;
-    if (index < m_list.size()) {
-        return m_list[index];
-    }
-
-    return "";
-
+    return std::filesystem::canonical(m_currentPath).string();
 }
 
 void ListView::updateScrollbar() const
@@ -357,11 +379,13 @@ void ListView::updateScrollbar() const
         return;
     }
 
-    int scrollbarSize =  m_rect.height * (float(numVisible) / m_list.size());
-    m_scrollBar->setSize(Size(18, std::max(scrollbarSize, 20)));
+    float scrollbarSize =  m_rect.height * (float(numVisible) / m_list.size());
+    scrollbarSize = std::min(scrollbarSize, m_rect.height);
+    scrollbarSize = std::max(scrollbarSize, 20.f);
+    m_scrollBar->setSize(Size(10, scrollbarSize));
 
     int scrollbarPos = m_rect.height * float(m_offset) / m_list.size();
-    m_scrollBar->setPosition(m_rect.topRight() + ScreenPos(-19, scrollbarPos));
+    m_scrollBar->setPosition(m_rect.topRight() + ScreenPos(-20, scrollbarPos));
 }
 
 void ListView::moveScrollbar(int mouseY)
