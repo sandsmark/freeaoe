@@ -119,5 +119,3 @@ target_link_libraries(freeaoe
     ${EXTRA_LIBS}
     genieutils
 )
-
-add_subdirectory(src)
