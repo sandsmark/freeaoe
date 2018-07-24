@@ -39,13 +39,10 @@ public:
     static std::shared_ptr<MoveOnMap> moveUnitTo(Unit::Ptr unit, MapPos destination, MapPtr map, UnitManager *unitManager);
 
 private:
-    std::vector<MapRect> getOtherUnits(const Unit::Ptr &unit);
-
     MoveOnMap(MapPos destination, MapPtr map, Unit::Ptr unit, UnitManager *unitManager);
 
     std::vector<MapPos> findPath(const MapPos &start, const MapPos &end, int coarseness);
-    bool isPassable(const int x, const int y, const int width, const int height, const std::vector<MapRect> &others);
-
+    bool isPassable(const int x, const int y);
 
     MapPtr m_map;
     MapPos dest_;
