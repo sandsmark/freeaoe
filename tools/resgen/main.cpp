@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 
     // Get names
     const std::string inFilepath = argv[1];
-    const std::string inFilename = std::filesystem::path(inFilepath).filename();
+    const std::string inFilename = std::filesystem::path(inFilepath).filename().string();
     if (inFilename.empty()) {
         std::cerr << "Passed invalid input file path " << inFilepath << std::endl;
         return 1;
