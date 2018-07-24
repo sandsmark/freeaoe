@@ -8,10 +8,8 @@ endif()
 
 function(add_resource generated_source)
     set(resource_file "${CMAKE_CURRENT_SOURCE_DIR}/${ARGV1}")
-    get_filename_component(infilename ${ARGV1} NAME)
     set(outfile "${PROJECT_BINARY_DIR}/${ARGV1}")
     get_filename_component(filedir ${ARGV1} DIRECTORY)
-    message(${filedir})
     add_custom_command(
         OUTPUT "${outfile}.c" "${outfile}.h"
         COMMAND resgen ${resource_file}
