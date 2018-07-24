@@ -69,13 +69,16 @@ void Map::setUpSample()
         getTileAt(i, 10).terrain_ = water_dat;
     }
 
+
     for (int i=3; i<6; i++) {
-        getTileAt(7, i).elevation_ = 1;
+        getTileAt(15, i).elevation_ = 1;
     }
 
     for (int i=3; i<6; i++) {
-        getTileAt(8, i).elevation_ = 1;
+        getTileAt(16, i).elevation_ = 1;
     }
+
+    getTileAt(14, 6).elevation_ = 1;
 }
 
 void Map::create(genie::ScnMap mapDescription)

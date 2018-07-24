@@ -19,6 +19,7 @@
 #pragma once
 
 #include <SFML/Config.hpp>
+#include <genie/Types.h>
 #include <SFML/Graphics/Rect.hpp>
 #include <cmath>
 
@@ -36,6 +37,8 @@ struct Size {
     float height = 0.f;
 
     Size() = default;
+
+    explicit Size (const genie::XYZF &genieVec) : width(genieVec.x), height(genieVec.y) { }
 
     Size (const float w, const float h) :
         width(w), height(h)

@@ -66,7 +66,8 @@ template<> struct std::hash<PathPoint>
 
 namespace act {
 
-static const float PATHFINDING_HEURISTIC_WEIGHT = 1.;
+
+static const float PATHFINDING_HEURISTIC_WEIGHT = 1.1;
 
 MoveOnMap::MoveOnMap(MapPos destination, MapPtr map, Unit::Ptr unit, UnitManager *unitManager) :
     IAction(Type::Move),
@@ -102,7 +103,6 @@ bool MoveOnMap::update(Time time)
         return true;
     }
 
-
     float elapsed = time - last_update_;
     last_update_ = time;
     float movement = elapsed * speed_ * 0.15;
@@ -123,8 +123,13 @@ bool MoveOnMap::update(Time time)
         return false;
     }
 
+    const int thisWidth = unit->data.Size.x * Constants::TILE_SIZE;
+    const int thisHeight = unit->data.Size.y * Constants::TILE_SIZE;
+    std::vector<MapRect> otherUnits = getOtherUnits(unit);
+
+
     MapPos nextPos = m_path.back();
-    if (!isPassable(nextPos.x, nextPos.y)) {
+    if (!isPassable(nextPos.x, nextPos.y, thisWidth, thisHeight, otherUnits)) {
         m_path = findPath(unit->position, dest_, 1);
         if (m_path.empty()) {
             m_path = findPath(unit->position, dest_, 20);
@@ -137,13 +142,30 @@ bool MoveOnMap::update(Time time)
         return false;
     }
 
-    const float direction = std::atan2(nextPos.y - unit->position.y, nextPos.x - unit->position.x);
+    float direction = std::atan2(nextPos.y - unit->position.y, nextPos.x - unit->position.x);
     MapPos newPos = unit->position;
     newPos.x += cos(direction) * movement;
     newPos.y += sin(direction) * movement;
 
-    if (!isPassable(newPos.x, newPos.y)) {
-        newPos = nextPos;
+    if (!isPassable(newPos.x, newPos.y, thisWidth, thisHeight, otherUnits)) {
+        std::vector<MapPos> newPath = findPath(unit->position, dest_, 1);
+        if (!newPath.empty()) {
+            m_path = newPath;
+            nextPos = m_path.back();
+            direction = std::atan2(nextPos.y - unit->position.y, nextPos.x - unit->position.x);
+            newPos = unit->position;
+            newPos.x += cos(direction) * movement;
+            newPos.y += sin(direction) * movement;
+        }
+
+        if (!isPassable(newPos.x, newPos.y, thisWidth, thisHeight, otherUnits)) {
+            newPos = nextPos;
+        }
+
+        if (!isPassable(newPos.x, newPos.y, thisWidth, thisHeight, otherUnits)) {
+            target_reached = true;
+            unit->removeAction(this);
+        }
     }
 
 
@@ -173,16 +195,16 @@ std::shared_ptr<MoveOnMap> MoveOnMap::moveUnitTo(Unit::Ptr unit, MapPos destinat
     action->m_terrainMoveMultiplier = DataManager::Inst().getTerrainRestriction(unit->data.TerrainRestriction).PassableBuildableDmgMultiplier;
     action->speed_ = unit->data.Speed;
 
-    action->m_path = action->findPath(unit->position, destination, 1);
+    action->m_path = action->findPath(unit->position, destination, 5);
 
     // Try coarser
     // Uglier, but hopefully faster
     if (action->m_path.empty()) {
-        action->m_path = action->findPath(unit->position, destination, 5);
+        action->m_path = action->findPath(unit->position, destination, 10);
     }
 
     if (action->m_path.empty()) {
-        action->m_path = action->findPath(unit->position, destination, 20);
+        action->m_path = action->findPath(unit->position, destination, 50);
     }
 
     if (action->m_path.empty()) {
@@ -193,23 +215,47 @@ std::shared_ptr<MoveOnMap> MoveOnMap::moveUnitTo(Unit::Ptr unit, MapPos destinat
     return action;
 }
 
+std::vector<MapRect> MoveOnMap::getOtherUnits(const Unit::Ptr &unit)
+{
+    std::vector<MapRect> otherUnits;
+    for (const Unit::Ptr &otherUnit : m_unitManager->units()) {
+        if (otherUnit.get() == unit.get()) {
+            continue;
+        }
+
+        if (otherUnit->data.Size.z == 0) {
+            continue;
+        }
+
+        otherUnits.push_back(MapRect(otherUnit->position, Size(otherUnit->data.Size.x * Constants::TILE_SIZE, otherUnit->data.Size.y * Constants::TILE_SIZE)));
+    }
+
+    return otherUnits;
+}
+
 
 std::vector<MapPos> MoveOnMap::findPath(const MapPos &start, const MapPos &end, int coarseness)
 {
     sf::Clock clock;
 
+    Unit::Ptr unit = m_unit.lock();
+
+    const int thisWidth = unit->data.Size.x * Constants::TILE_SIZE;
+    const int thisHeight = unit->data.Size.y * Constants::TILE_SIZE;
+    std::vector<MapRect> otherUnits = getOtherUnits(unit);
+
     std::vector<MapPos> path;
 
     int startX = std::round(start.x / coarseness);
     int startY = std::round(start.y / coarseness);
-    if (!isPassable(startX * coarseness, startY * coarseness)) {
+    if (!isPassable(startX * coarseness, startY * coarseness, thisWidth, thisHeight, otherUnits)) {
         WARN << "handed unpassable start";
         return path;
     }
 
     int endX = std::round(end.x / coarseness);
     int endY = std::round(end.y / coarseness);
-    if (!isPassable(endX * coarseness, endY * coarseness)) {
+    if (!isPassable(endX * coarseness, endY * coarseness, thisWidth, thisHeight, otherUnits)) {
         WARN << "handed unpassable target";
         return path;
     }
@@ -250,7 +296,7 @@ std::vector<MapPos> MoveOnMap::findPath(const MapPos &start, const MapPos &end, 
                 const int ny = pathPoint.y + dy;
                 PathPoint neighbor(nx, ny);
 
-                if (!isPassable(nx * coarseness, ny * coarseness)) {
+                if (!isPassable(nx * coarseness, ny * coarseness, thisWidth, thisHeight, otherUnits)) {
                     visited.insert(neighbor);
                     continue;
                 }
@@ -319,7 +365,7 @@ std::vector<MapPos> MoveOnMap::findPath(const MapPos &start, const MapPos &end, 
 
 }
 
-bool MoveOnMap::isPassable(const int x, const int y)
+bool MoveOnMap::isPassable(const int x, const int y, const int width, const int height, const std::vector<MapRect> &others)
 {
     const int tileX = x / Constants::TILE_SIZE;
     const int tileY = y / Constants::TILE_SIZE;
@@ -331,27 +377,13 @@ bool MoveOnMap::isPassable(const int x, const int y)
         return false;
     }
 
-    const MapPos mapPos(x, y);
-    Unit::Ptr unit = m_unit.lock();
-    for (const Unit::Ptr &otherUnit : m_unitManager->units()) {
-        if (otherUnit.get() == unit.get()) {
-            continue;
-        }
+    for (const MapRect &other : others) {
+        const float xDistance = std::abs(other.x - x);
+        const float yDistance = std::abs(other.y - y);
+        const float xSize = other.width + width;
+        const float ySize = other.height + height;
 
-        if (otherUnit->data.Size.z == 0) {
-            continue;
-        }
-
-        const float xDistance = std::abs(otherUnit->position.x - mapPos.x);
-        const float yDistance = std::abs(otherUnit->position.y - mapPos.y);
-        const float xSize = (otherUnit->data.Size.x + unit->data.Size.x) * Constants::TILE_SIZE;
-        const float ySize = (otherUnit->data.Size.y + unit->data.Size.y) * Constants::TILE_SIZE;
-
-//        if ( <  && std::abs(other->position.y - mapPos.y) < (otherUnit->data.Size[1]  + unit->data.Size[1]) * Constants::TILE_SIZE) {
         if (xDistance < xSize && yDistance < ySize) {
-//            DBG << unit->readableName << " " << other->readableName;
-//            DBG << "x: " << xDistance << " " << xSize;
-//            DBG << "y: " << yDistance << " " << ySize;
             return false;
         }
     }
