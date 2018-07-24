@@ -69,6 +69,15 @@ struct WavHeader {
     uint32_t Subchunk1ID;
     uint32_t Subchunk1Size;
 
+    enum AudioFormats {
+        PCM = 0x1,
+        ADPCM = 0x2,
+        IEEEFloat = 0x3,
+        ALaw = 0x6,
+        MULaw = 0x7,
+        DVIADPCM = 0x11
+    };
+
     uint16_t AudioFormat;
     uint16_t NumChannels;
     uint32_t SampleRate;
@@ -90,7 +99,7 @@ void AudioPlayer::playSample(unsigned char *data, size_t size, const float pan)
     }
 
     WavHeader *header = reinterpret_cast<WavHeader*>(data);
-    if (header->AudioFormat != 1) {
+    if (header->AudioFormat != WavHeader::PCM) {
         WARN << "Can only play PCM";
         return;
     }
