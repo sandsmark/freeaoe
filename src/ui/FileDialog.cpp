@@ -1,5 +1,7 @@
 #include "FileDialog.h"
 
+#include "core/Utility.h"
+
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Font.hpp>
@@ -17,7 +19,6 @@ bool FileDialog::setup(int width, int height)
 {
     m_renderWindow = std::make_unique<sf::RenderWindow>(sf::VideoMode(width, height), "freeaoe");
     m_renderWindow->setSize(sf::Vector2u(width, height));
-    m_renderWindow->setFramerateLimit(60);
     m_renderWindow->setView(sf::View(sf::FloatRect(0, 0, width, height)));
 
     m_font = std::make_unique<sf::Font>();
@@ -49,7 +50,6 @@ std::string FileDialog::getPath()
     std::string ret;
 
     while (m_renderWindow->isOpen()) {
-
         // Process events
         sf::Event event;
         if (!m_renderWindow->waitEvent(event)) {
@@ -207,13 +207,11 @@ void ListView::handleEvent(const sf::Event &event)
     if (event.type == sf::Event::MouseMoved) {
         ScreenPos mousePos(event.mouseMove.x, event.mouseMove.y);
 
-        if (!m_pressed) {
-            return;
-        }
-
-        if (m_pressed && mousePos.x > m_rect.x + m_rect.width - 20) {
+        if (m_pressed) {
             moveScrollbar(mousePos.y);
         }
+
+        return;
     }
 
     if (event.type == sf::Event::MouseButtonReleased) {
@@ -304,8 +302,8 @@ void ListView::setCurrentPath(std::filesystem::path path)
             return !aIsDir < !bIsDir;
         }
 
-        const std::string aName = a.filename().string();
-        const std::string bName = b.filename().string();
+        const std::string aName = util::toLowercase(a.filename().string());
+        const std::string bName = util::toLowercase(b.filename().string());
         const bool aDot = aName[0] == '.' && (aName.size() < 2 || aName[1] != '.');
         const bool bDot = bName[0] == '.' && (bName.size() < 2 || bName[1] != '.');
         if (aDot != bDot) {
@@ -390,11 +388,11 @@ void ListView::updateScrollbar() const
 
     float scrollbarSize =  m_rect.height * (float(numVisible) / m_list.size());
     scrollbarSize = std::min(scrollbarSize, m_rect.height);
-    scrollbarSize = std::max(scrollbarSize, 20.f);
-    m_scrollBar->setSize(Size(10, scrollbarSize));
+    scrollbarSize = std::max(scrollbarSize, 10.f);
+    m_scrollBar->setSize(Size(18, scrollbarSize));
 
     int scrollbarPos = m_rect.height * float(m_offset) / m_list.size();
-    m_scrollBar->setPosition(m_rect.topRight() + ScreenPos(-20, scrollbarPos));
+    m_scrollBar->setPosition(m_rect.topRight() + ScreenPos(-18, scrollbarPos));
 }
 
 void ListView::moveScrollbar(int mouseY)
