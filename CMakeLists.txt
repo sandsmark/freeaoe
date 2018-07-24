@@ -106,6 +106,10 @@ set(UNSORTED_SRC
     src/core/IComponent.cpp
 )
 
+set (UI_SRC
+    src/ui/FileDialog.cpp
+    )
+
 add_resource(FONT_RES
     fonts/Alegreya-Bold.latin
     )
@@ -118,6 +122,7 @@ add_executable(freeaoe src/Engine.cpp src/main.cpp
 #               ${SERVER_SRC}
 #               ${COMMUNICATION_SRC}
                ${UNSORTED_SRC}
+               ${UI_SRC}
                ${FONT_RES}
                )
 

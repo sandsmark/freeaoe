@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include <SFML/System.hpp>
+#include <SFML/Config.hpp>
 #include <SFML/Graphics/Rect.hpp>
 #include <cmath>
 
@@ -253,6 +253,7 @@ struct ScreenRect
         width  = std::abs(a.x - b.x);
         height = std::abs(a.y - b.y);
     }
+
     ScreenRect(const ScreenPos &a, const Size &s)
     {
         x = a.x;
