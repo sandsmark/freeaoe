@@ -7,3 +7,6 @@
 [submodule "extern/pcrio"]
 	path = extern/pcrio
 	url = https://github.com/sandsmark/pcrio.git
+[submodule "extern/mini_al"]
+	path = extern/mini_al
+	url = https://github.com/dr-soft/mini_al.git

@@ -28,6 +28,7 @@
 #include "resource/DataManager.h"
 #include "Farm.h"
 #include "Civilization.h"
+#include "audio/AudioPlayer.h"
 
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
@@ -444,7 +445,5 @@ void UnitManager::playSound(const Unit::Ptr &unit)
     }
 
     const size_t size = *((uint32_t*)wavPtr + 1) + 8;
-    m_soundBuffer.loadFromMemory(wavPtr, size);
-    m_soundPlayer.setBuffer(m_soundBuffer);
-    m_soundPlayer.play();
+    AudioPlayer::instance().playSample(wavPtr, size);
 }

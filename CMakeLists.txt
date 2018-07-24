@@ -25,7 +25,7 @@ if(MSVC)
     set(EXTRA_LIBS PNG::PNG ZLIB::ZLIB BZip2::BZip2)
 else()
     add_definitions(-Wall -Wextra -Wno-sign-compare -Wno-unused-parameter)
-    set(EXTRA_LIBS stdc++fs)
+    set(EXTRA_LIBS stdc++fs pthread dl)
     set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/)
     find_package(SFML COMPONENTS system window graphics REQUIRED)
 endif()
@@ -33,6 +33,7 @@ endif()
 include_directories(
     src/
     ${CMAKE_CURRENT_SOURCE_DIR}/extern/genieutils/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/mini_al/
     ${PROJECT_BINARY_DIR}
   )
 
@@ -104,6 +105,7 @@ set(UNSORTED_SRC
     src/core/Entity.cpp
     src/core/IAction.cpp
     src/core/IComponent.cpp
+    src/audio/AudioPlayer.cpp
 )
 
 set (UI_SRC
@@ -130,7 +132,6 @@ target_link_libraries(freeaoe
     sfml-system
     sfml-window
     sfml-graphics
-    sfml-audio
     ${EXTRA_LIBS}
     genieutils
 )

@@ -33,6 +33,7 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Shape.hpp>
 #include "ui/FileDialog.h"
+#include "audio/AudioPlayer.h"
 
 // TODO: Bad_alloc
 int main(int argc, char **argv)
@@ -76,6 +77,8 @@ int main(int argc, char **argv)
     if (!ResourceManager::Inst()->initialize(dataPath, DataManager::Inst().gameVersion())) {
         return 1;
     }
+
+    AudioPlayer::instance();
 
     Engine en;
     if (!en.setup(config.getValue("scenario-file"))) {
