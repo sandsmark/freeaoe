@@ -30,14 +30,16 @@ else()
     find_package(SFML COMPONENTS system window graphics REQUIRED)
 endif()
 
-add_definitions(-DFONT_DIR="${CMAKE_CURRENT_SOURCE_DIR}/fonts/")
+include_directories(
+    src/
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/genieutils/include
+    ${PROJECT_BINARY_DIR}
+  )
 
-include_directories(src/
-  ${CMAKE_HOME_DIRECTORY}/extern/genieutils/include
-  ${SFML_INCLUDE_DIR})
+set(GENIEUTILS_STATIC_BUILD True)
 
-set (GENIEUTILS_STATIC_BUILD True)
-add_subdirectory( extern/genieutils )
+add_subdirectory(extern/genieutils)
+add_subdirectory(tools/resgen)
 
 # additional compiler flags 
 #add_definitions(-Wall -Wextra)
@@ -104,6 +106,10 @@ set(UNSORTED_SRC
     src/core/IComponent.cpp
 )
 
+add_resource(FONT_RES
+    fonts/Alegreya-Bold.latin
+    )
+
 add_executable(freeaoe src/Engine.cpp src/main.cpp 
                ${RESOURCE_SRC}
                ${GLOBAL_SRC}
@@ -111,7 +117,9 @@ add_executable(freeaoe src/Engine.cpp src/main.cpp
                ${RENDER_SRC}
 #               ${SERVER_SRC}
 #               ${COMMUNICATION_SRC}
-               ${UNSORTED_SRC})
+               ${UNSORTED_SRC}
+               ${FONT_RES}
+               )
 
 target_link_libraries(freeaoe
     sfml-system

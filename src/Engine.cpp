@@ -30,6 +30,8 @@
 #include "global/Config.h"
 #include <genie/resource/SlpFile.h>
 
+#include "fonts/Alegreya-Bold.latin.h"
+
 const sf::Clock Engine::GameClock;
 
 
@@ -141,7 +143,7 @@ bool Engine::setup(const std::string &scnFile)
 
   fps_label_.setPosition(sf::Vector2f(gameState->uiSize().width - 75, 5));
   fps_label_.setFillColor(sf::Color::White);
-  font_.loadFromFile(FONT_DIR "Alegreya-Bold.latin");
+  font_.loadFromMemory(resource_Alegreya_Bold_latin_data, resource_Alegreya_Bold_latin_size);
   fps_label_.setFont(font_);
   fps_label_.setCharacterSize(15);
 

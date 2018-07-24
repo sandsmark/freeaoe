@@ -34,6 +34,8 @@
 
 #include "genie/script/ScnFile.h"
 
+#include "fonts/Alegreya-Bold.latin.h"
+
 class GameClient;
 class GameServer;
 class ActionPanel;
@@ -51,7 +53,7 @@ struct Label {
         static bool fontLoaded = false;
         if (!fontLoaded) {
             fontLoaded = true;
-            font.loadFromFile(FONT_DIR "Alegreya-Bold.latin");
+            font.loadFromMemory(resource_Alegreya_Bold_latin_data, resource_Alegreya_Bold_latin_size);
         }
 
         text.setFont(font);
