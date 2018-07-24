@@ -107,7 +107,7 @@ public:
     /// @return slp file
     //
     genie::SlpFilePtr getSlp(unsigned int id, const ResourceType type = ResourceType::Undefined);
-    genie::SlpFilePtr getSlp(const std::string &name);
+    genie::SlpFilePtr getSlp(const std::string &name, const ResourceType type = ResourceType::Undefined);
 
     genie::SlpFilePtr getUiOverlay(const UiResolution res, const UiCiv civ);
 

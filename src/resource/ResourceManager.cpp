@@ -40,9 +40,9 @@ ResourceManager *ResourceManager::Inst()
     return &rm;
 }
 
-genie::SlpFilePtr ResourceManager::getSlp(const std::string &name)
+genie::SlpFilePtr ResourceManager::getSlp(const std::string &name, const ResourceType type)
 {
-    return getSlp(filenameID(name));
+    return getSlp(filenameID(name), type);
 }
 
 genie::SlpFilePtr ResourceManager::getUiOverlay(const ResourceManager::UiResolution res, const ResourceManager::UiCiv civ)
