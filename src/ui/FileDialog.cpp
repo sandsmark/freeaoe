@@ -49,7 +49,6 @@ std::string FileDialog::getPath()
     std::string ret;
 
     while (m_renderWindow->isOpen()) {
-        m_renderWindow->clear(sf::Color::Black);
 
         // Process events
         sf::Event event;
@@ -75,6 +74,7 @@ std::string FileDialog::getPath()
         m_fileList->handleEvent(event);
         m_okButton->enabled = m_fileList->hasDataFolder;
 
+        m_renderWindow->clear(sf::Color::Black);
         m_cancelButton->render(m_renderWindow.get());
         m_okButton->render(m_renderWindow.get());
         m_fileList->render(m_renderWindow.get());
@@ -303,6 +303,15 @@ void ListView::setCurrentPath(std::filesystem::path path)
         if (aIsDir != bIsDir) {
             return !aIsDir < !bIsDir;
         }
+
+        const std::string aName = a.filename().string();
+        const std::string bName = b.filename().string();
+        const bool aDot = aName[0] == '.' && (aName.size() < 2 || aName[1] != '.');
+        const bool bDot = bName[0] == '.' && (bName.size() < 2 || bName[1] != '.');
+        if (aDot != bDot) {
+            return aDot < bDot;
+        }
+
         return a.filename() < b.filename();
     });
 
