@@ -91,6 +91,14 @@ bool Unit::update(Time time)
     return Entity::update(time) || updated;
 }
 
+void Unit::snapPositionToGrid()
+{
+    position = position / Constants::TILE_SIZE + Size(data.Size);
+    position.round();
+    position -= Size(data.Size);
+    position *= Constants::TILE_SIZE;
+}
+
 const std::vector<const genie::Unit *> Unit::creatableUnits()
 {
     if (creationProgress() < 1.) {

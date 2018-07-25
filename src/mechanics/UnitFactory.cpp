@@ -49,6 +49,8 @@ Unit::Ptr UnitFactory::createUnit(int ID, const MapPos &position, Player::Ptr ow
     unit->position = position;
 
     if (gunit.Type >= genie::Unit::BuildingType) {
+        unit->snapPositionToGrid();
+
         if (gunit.Building.StackUnitID >= 0) {
             Unit::Annex annex;
             annex.unit = createUnit(gunit.Building.StackUnitID, position, owner);

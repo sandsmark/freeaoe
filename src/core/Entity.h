@@ -159,6 +159,7 @@ struct Unit : public Entity
     void clearActionQueue();
     const ActionPtr &currentAction() const { return m_currentAction; }
 
+    void snapPositionToGrid();
 
     bool update(Time time) override;
 

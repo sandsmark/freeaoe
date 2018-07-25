@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include <genie/Types.h>
+
 #include <SFML/Config.hpp>
 #include <SFML/Graphics/Rect.hpp>
 #include <cmath>
@@ -41,6 +43,8 @@ struct Size {
         width(w), height(h)
     {}
 
+    explicit Size (const genie::XYZF &genieVec) : width(genieVec.x), height(genieVec.y) { }
+
     Size(const sf::Vector2f &sfVector) :
         width(sfVector.x), height(sfVector.y)
     {}
@@ -61,8 +65,12 @@ struct Size {
         return sf::FloatRect(0, 0, width, height);
     }
 
-    inline Size operator/(float divisor) const {
+    inline Size operator/(const float divisor) const {
         return Size(width / divisor, height / divisor);
+    }
+
+    inline Size operator*(const float factor) const {
+        return Size(width * factor, height * factor);
     }
 
     inline bool operator==(const Size &other) const {
@@ -110,6 +118,18 @@ struct MapPos {
         return *this;
     }
 
+    inline MapPos &operator+=(const Size &size) {
+        x += size.width;
+        y += size.height;
+        return *this;
+    }
+
+    inline MapPos &operator-=(const Size &size) {
+        x -= size.width;
+        y -= size.height;
+        return *this;
+    }
+
     inline MapPos &operator/=(float divisor) {
         x /= divisor;
         y /= divisor;
@@ -125,8 +145,21 @@ struct MapPos {
         return ret;
     }
 
+    inline MapPos &operator*=(float factor) {
+        x *= factor;
+        y *= factor;
+        z *= factor;
+        return *this;
+    }
+
     float distance(const MapPos &other) const {
         return std::sqrt((other.x - x) * (other.x - x) + (other.y - y) * (other.y - y));
+    }
+
+    inline void round() {
+        x = std::round(x);
+        y = std::round(y);
+        z = std::round(z);
     }
 
     /// relative map position to screen position (map(0,0,0) is on screen(0,0)
@@ -151,9 +184,34 @@ inline MapPos operator +(const MapPos& left, const MapPos& right)
     );
 }
 
+inline MapPos operator +(const MapPos& pos, const Size &size)
+{
+    return MapPos(
+        pos.x + size.width,
+        pos.y + size.height,
+        pos.z
+    );
+}
+
+
+inline MapPos operator -(const MapPos& pos, const Size &size)
+{
+    return MapPos(
+        pos.x - size.width,
+        pos.y - size.height,
+        pos.z
+    );
+}
+
 
 struct ScreenPos {
     ScreenPos() = default;
+
+    explicit ScreenPos (const Size &size) :
+        x(size.width),
+        y(size.height)
+    {}
+
 
     ScreenPos (float x_, float y_) :
         x(x_),

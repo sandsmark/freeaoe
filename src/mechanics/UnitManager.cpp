@@ -159,16 +159,32 @@ void UnitManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
             continue;
         }
 
+        const ScreenPos pos = renderTarget->camera()->absoluteScreenPos(unit->position);
         unit->renderer().render(*renderTarget->renderTarget_,
-                                renderTarget->camera()->absoluteScreenPos(unit->position),
+                                pos,
                                 comp::RenderType::Base);
 
-        const ScreenPos pos = renderTarget->camera()->absoluteScreenPos(unit->position);
         unit->renderer().render(m_outlineOverlay, pos, comp::RenderType::Outline);
     }
 
     m_outlineOverlay.display();
     renderTarget->draw(m_outlineOverlay.getTexture(), ScreenPos(0, 0));
+
+#ifdef DEBUG
+    for (const Unit::Ptr &unit : m_units) {
+        if (!unit->isVisible) {
+            continue;
+        }
+        sf::CircleShape circle;
+        ScreenPos pos = camera->absoluteScreenPos(unit->position);
+        circle.setPosition(pos.x, pos.y);
+        circle.setRadius(5);
+        circle.setScale(1, 0.5);
+        circle.setOutlineColor(sf::Color::White);
+        renderTarget->draw(circle);
+    }
+
+#endif
 
     m_moveTargetMarker->renderer().render(*renderTarget->renderTarget_,
                                           renderTarget->camera()->absoluteScreenPos(m_moveTargetMarker->position),
@@ -213,10 +229,8 @@ void UnitManager::onRightClick(const MapPos &mapPos)
 void UnitManager::onMouseMove(const MapPos &mapPos)
 {
     if (m_buildingToPlace) {
-        const int x = std::round(mapPos.x / Constants::TILE_SIZE);
-        const int y = std::round(mapPos.y / Constants::TILE_SIZE);
-        m_buildingToPlace->position.x = x * Constants::TILE_SIZE;
-        m_buildingToPlace->position.y = y * Constants::TILE_SIZE;
+        m_buildingToPlace->position = mapPos;
+        m_buildingToPlace->snapPositionToGrid();
     }
 }
 
