@@ -38,8 +38,8 @@ struct PathPoint {
 
     PathPoint(int _x, int _y) : x(_x), y(_y) {}
 
-    int x = 0;
-    int y = 0;
+    float x = 0;
+    float y = 0;
     float pathLength = 0;
     float distance = 0;
 
@@ -103,12 +103,11 @@ bool MoveOnMap::update(Time time)
 
 
     float elapsed = time - last_update_;
-    last_update_ = time;
     float movement = elapsed * speed_ * 0.15;
 
 
     float distanceLeft = std::hypot(m_path.back().x - unit->position().x, m_path.back().y - unit->position().y);
-    while (distanceLeft <= movement && !m_path.empty()) {
+    while (distanceLeft < movement && !m_path.empty()) {
         m_path.pop_back();
         if (m_path.empty()) {
             break;
@@ -124,8 +123,10 @@ bool MoveOnMap::update(Time time)
 
     MapPos nextPos = m_path.back();
     if (!isPassable(nextPos.x, nextPos.y)) {
+        WARN << "next waypoint inaccessible, repathing";
         m_path = findPath(unit->position(), dest_, 1);
         if (m_path.empty()) {
+            WARN << "repathing coarser";
             m_path = findPath(unit->position(), dest_, 20);
             if (m_path.empty()) {
                 target_reached = true;
@@ -138,11 +139,21 @@ bool MoveOnMap::update(Time time)
 
     const float direction = std::atan2(nextPos.y - unit->position().y, nextPos.x - unit->position().x);
     MapPos newPos = unit->position();
+    movement = std::min(movement, std::hypot(nextPos.x - newPos.x, nextPos.y - newPos.y));
     newPos.x += cos(direction) * movement;
     newPos.y += sin(direction) * movement;
 
     if (!isPassable(newPos.x, newPos.y)) {
-        newPos = nextPos;
+        WARN << "can't move forward, repathing";
+
+        std::vector<MapPos> partial = findPath(unit->position(), nextPos, std::max(speed_, 1.f));
+        if (partial.empty()) {
+            WARN << "failed to find intermediary path";
+            target_reached = true;
+            unit->removeAction(this);
+        }
+        m_path.insert(m_path.begin(), partial.begin(), partial.end());
+        return false;
     }
 
 
@@ -152,6 +163,8 @@ bool MoveOnMap::update(Time time)
     newPos.z = m_map->elevationAt(newPos);
 
     unit->setPosition(newPos, m_map);
+
+    last_update_ = time;
 
     if (std::hypot(newPos.x - dest_.x, newPos.y - dest_.y) < movement) {
         target_reached = true;
@@ -172,7 +185,7 @@ std::shared_ptr<MoveOnMap> MoveOnMap::moveUnitTo(Unit::Ptr unit, MapPos destinat
     action->m_terrainMoveMultiplier = DataManager::Inst().getTerrainRestriction(unit->data.TerrainRestriction).PassableBuildableDmgMultiplier;
     action->speed_ = unit->data.Speed;
 
-    action->m_path = action->findPath(unit->position(), destination, 1);
+    action->m_path = action->findPath(unit->position(), destination, 2);
 
     // Try coarser
     // Uglier, but hopefully faster
@@ -181,7 +194,7 @@ std::shared_ptr<MoveOnMap> MoveOnMap::moveUnitTo(Unit::Ptr unit, MapPos destinat
     }
 
     if (action->m_path.empty()) {
-        action->m_path = action->findPath(unit->position(), destination, 20);
+        action->m_path = action->findPath(unit->position(), destination, 10);
     }
 
     if (action->m_path.empty()) {
@@ -299,8 +312,10 @@ std::vector<MapPos> MoveOnMap::findPath(const MapPos &start, const MapPos &end, 
             return path;
         }
     }
+    DBG << "final path length" << path.size();
 
     return path;
+
     std::vector<MapPos> cleanedPath;
     cleanedPath.push_back(path[0]);
     for (int i=1; i<path.size() - 1; i++) {
@@ -326,32 +341,48 @@ bool MoveOnMap::isPassable(const int x, const int y)
         return false;
     }
 
-    if (m_terrainMoveMultiplier[m_map->getTileAt(tileX, tileY).terrainId()] == 0) {
+    const MapTile &tile = m_map->getTileAt(tileX, tileY);
+    if (m_terrainMoveMultiplier[tile.terrainId()] == 0) {
         return false;
     }
 
     const MapPos mapPos(x, y);
     Unit::Ptr unit = m_unit.lock();
-    for (const Unit::Ptr &otherUnit : m_unitManager->units()) {
-        if (otherUnit.get() == unit.get()) {
-            continue;
-        }
 
-        if (otherUnit->data.Size.z == 0) {
-            continue;
-        }
+    for (int dx = tileX-1; dx<=tileX+1; dx++) {
+        for (int dy = tileY-1; dy<=tileY+1; dy++) {
+            if (IS_UNLIKELY(dx < 0 || dy < 0 || dx >= m_map->getCols() || dy >= m_map->getRows())) {
+                continue;
+            }
+            const MapTile &tile = m_map->getTileAt(dx, dy);
 
-        const float xDistance = std::abs(otherUnit->position().x - mapPos.x);
-        const float yDistance = std::abs(otherUnit->position().y - mapPos.y);
-        const float xSize = (otherUnit->data.Size.x + unit->data.Size.x) * Constants::TILE_SIZE;
-        const float ySize = (otherUnit->data.Size.y + unit->data.Size.y) * Constants::TILE_SIZE;
+            if (tile.entities.empty()) {
+                continue;
+            }
 
-//        if ( <  && std::abs(other->position.y - mapPos.y) < (otherUnit->data.Size[1]  + unit->data.Size[1]) * Constants::TILE_SIZE) {
-        if (xDistance < xSize && yDistance < ySize) {
-//            DBG << unit->readableName << " " << other->readableName;
-//            DBG << "x: " << xDistance << " " << xSize;
-//            DBG << "y: " << yDistance << " " << ySize;
-            return false;
+            for (const EntityPtr &entity : tile.entities) {
+                Unit::Ptr otherUnit = Entity::asUnit(entity);
+                if (!otherUnit) {
+                    continue;
+                }
+
+                if (otherUnit->id == unit->id) {
+                    continue;
+                }
+
+                if (otherUnit->data.Size.z == 0) {
+                    continue;
+                }
+
+                const float xSize = (otherUnit->data.Size.x + unit->data.Size.x) * Constants::TILE_SIZE;
+                const float ySize = (otherUnit->data.Size.y + unit->data.Size.y) * Constants::TILE_SIZE;
+                const float xDistance = std::abs(otherUnit->position().x - mapPos.x);
+                const float yDistance = std::abs(otherUnit->position().y - mapPos.y);
+
+                if (xDistance < xSize && yDistance < ySize) {
+                    return false;
+                }
+            }
         }
     }
 

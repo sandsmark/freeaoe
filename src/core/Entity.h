@@ -45,6 +45,8 @@ class GraphicRender;
 typedef std::shared_ptr<Entity> EntityPtr;
 class Civilization;
 
+struct MoveTargetMarker;
+
 struct Entity: std::enable_shared_from_this<Entity>
 {
     const size_t id;
@@ -79,6 +81,9 @@ protected:
 
     comp::GraphicRender m_graphics;
     res::GraphicPtr defaultGraphics;
+
+private:
+    friend struct MoveTargetMarker;
     MapPos m_position;
 };
 

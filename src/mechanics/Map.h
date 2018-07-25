@@ -51,7 +51,7 @@ struct MapTile
         overlayId = -1;
         z = 0;
     }
-    uint32_t terrainId() {
+    uint32_t terrainId() const {
         return terrain_->getId();
     }
 

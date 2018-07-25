@@ -63,6 +63,7 @@ void Entity::setPosition(const MapPos &pos, const MapPtr &map)
 {
     if (!map) {
         WARN << "No map passed";
+        return;
     }
 
     int oldTileX = m_position.x / Constants::TILE_SIZE;

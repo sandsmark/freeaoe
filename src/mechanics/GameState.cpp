@@ -161,7 +161,7 @@ bool GameState::init()
         m_unitManager->add(UnitFactory::Inst().createUnit(Unit::FuriousTheMonkeyBoy, MapPos(48*6, 48*10, 0), m_humanPlayer, map_));
         m_unitManager->add(UnitFactory::Inst().createUnit(Unit::Cobra, MapPos(48*8, 48*6, 0), m_humanPlayer, map_));
 
-        m_unitManager->add(UnitFactory::Inst().createUnit(Unit::MaleBuilder, MapPos(48*6, 48*6, 0), m_humanPlayer, map_));
+        m_unitManager->add(UnitFactory::Inst().createUnit(Unit::MaleBuilder, MapPos(48*2, 48*12, 0), m_humanPlayer, map_));
         m_unitManager->add(UnitFactory::Inst().createUnit(280, MapPos(48*10, 48*10, 0), m_humanPlayer, map_)); // mangonel
 
         m_unitManager->add(UnitFactory::Inst().createUnit(Unit::Mill, MapPos(48*15, 48*15, 0), m_humanPlayer, map_));
