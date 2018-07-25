@@ -78,6 +78,98 @@ MoveOnMap::MoveOnMap(MapPos destination, MapPtr map, Unit::Ptr unit, UnitManager
     last_update_ = 0;
 }
 
+MapPos MoveOnMap::findClosestWalkableBorder(const MapPos &target, int coarseness)
+{
+    std::shared_ptr<Unit> unit = m_unit.lock();
+    if (!unit) {
+        WARN << "Lost our unit";
+        return target;
+    }
+
+    // follow a straight line from the target to our location, to find the closest position we can get to
+    // standard bresenham, not the prettiest implementation
+    const int x0 = target.x;
+    const int y0 = target.y;
+    const int x1 = unit->position().y;
+    const int y1 = unit->position().y;
+
+    int dx = x1 - x0;
+    int dy = y1 - y0;
+
+    int u, v;
+    int distanceU, distanceV;
+    int uincrX, uincrY, vincrX, vincrY;
+
+    if (std::abs(dx) > std::abs(dy)) {
+        distanceU = std::abs(dx);
+        distanceV = std::abs(dy);
+        u = x1;
+        v = y1;
+        uincrX = 1;
+        uincrY = 0;
+        vincrX = 0;
+        vincrY = 1;
+        if (dx < 0) uincrX = -uincrX;
+        if (dy < 0) vincrY = -vincrY;
+    } else {
+        distanceU = std::abs(dy);
+        distanceV = std::abs(dx);
+        u = y1;
+        v = x1;
+        uincrX = 0;
+        uincrY = 1;
+        vincrX = 1;
+        vincrY = 0;
+        if (dy < 0) uincrY = -uincrY;
+        if (dx < 0) vincrX = -vincrX;
+    }
+
+    const int uend = u + distanceU;
+    int d = (2 * distanceV) - distanceU;	    /* Initial value as in Bresenham's */
+    const int incrS = 2 * distanceV;	/* Δd for straight increments */
+    const int incrD = 2 *(distanceV - distanceU);	/* Δd for diagonal increments */
+    int twovdu = 0;	/* Numerator of distance; starts at 0 */
+
+    int x = x0, y = y0;
+    int requiredLengthX = unit->data.Size.x * Constants::TILE_SIZE + coarseness;
+    int requiredLengthY = unit->data.Size.y * Constants::TILE_SIZE + coarseness;
+    do {
+        if (d < 0) {
+            /* choose straight (u direction) */
+            twovdu = d + distanceU;
+            d = d + incrS;
+        } else {
+            /* choose diagonal (u+v direction) */
+            twovdu = d - distanceU;
+            d = d + incrD;
+            v = v+1;
+            x += vincrX;
+            y += vincrY;
+
+            if (isPassable(x, y)) {
+                requiredLengthX -= std::abs(vincrX);
+                requiredLengthY -= std::abs(vincrY);
+            }
+        }
+
+        u = u+1;
+        x += uincrX;
+        y += uincrY;
+
+        if (isPassable(x, y)) {
+            requiredLengthX -= std::abs(uincrX);
+            requiredLengthY -= std::abs(uincrY);
+        }
+    } while ((requiredLengthX > 0 || requiredLengthY > 0) && u <= uend);
+
+    if (requiredLengthX > 0 || requiredLengthY > 0) {
+        return target;
+    }
+
+
+    return MapPos(x, y);
+}
+
 MoveOnMap::~MoveOnMap()
 {
 }
@@ -147,12 +239,13 @@ bool MoveOnMap::update(Time time)
         WARN << "can't move forward, repathing";
 
         std::vector<MapPos> partial = findPath(unit->position(), nextPos, std::max(speed_, 1.f));
-        if (partial.empty()) {
+        if (partial.size() < 2) {
             WARN << "failed to find intermediary path";
             target_reached = true;
             unit->removeAction(this);
+        } else {
+            m_path.insert(m_path.begin(), ++partial.begin(), partial.end());
         }
-        m_path.insert(m_path.begin(), partial.begin(), partial.end());
         return false;
     }
 
@@ -182,19 +275,34 @@ std::shared_ptr<MoveOnMap> MoveOnMap::moveUnitTo(Unit::Ptr unit, MapPos destinat
     }
     std::shared_ptr<MoveOnMap> action (new act::MoveOnMap(destination, map, unit, unitManager));
 
+
     action->m_terrainMoveMultiplier = DataManager::Inst().getTerrainRestriction(unit->data.TerrainRestriction).PassableBuildableDmgMultiplier;
     action->speed_ = unit->data.Speed;
 
-    action->m_path = action->findPath(unit->position(), destination, 2);
+    MapPos newDest = destination;
+    if (!action->isPassable(destination.x, destination.y)) {
+        newDest = action->findClosestWalkableBorder(destination, 2);
+        action->dest_ = newDest;
+    }
+
+    action->m_path = action->findPath(unit->position(), newDest, 2);
 
     // Try coarser
     // Uglier, but hopefully faster
     if (action->m_path.empty()) {
-        action->m_path = action->findPath(unit->position(), destination, 5);
+        if (newDest != destination) {
+            newDest = action->findClosestWalkableBorder(destination, 5);
+            action->dest_ = newDest;
+        }
+        action->m_path = action->findPath(unit->position(), newDest, 5);
     }
 
     if (action->m_path.empty()) {
-        action->m_path = action->findPath(unit->position(), destination, 10);
+        if (newDest != destination) {
+            newDest = action->findClosestWalkableBorder(destination, 10);
+            action->dest_ = newDest;
+        }
+        action->m_path = action->findPath(unit->position(), newDest, 10);
     }
 
     if (action->m_path.empty()) {
@@ -205,8 +313,7 @@ std::shared_ptr<MoveOnMap> MoveOnMap::moveUnitTo(Unit::Ptr unit, MapPos destinat
     return action;
 }
 
-
-std::vector<MapPos> MoveOnMap::findPath(const MapPos &start, const MapPos &end, int coarseness)
+std::vector<MapPos> MoveOnMap::findPath(MapPos start, MapPos end, int coarseness)
 {
     sf::Clock clock;
 
