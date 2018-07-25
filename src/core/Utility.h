@@ -44,16 +44,6 @@ inline std::string toLowercase(std::string input)
     return input;
 }
 
-//------------------------------------------------------------------------------
-/// Struct providing a cstring compare function.
-//
-struct cstr_comp
-{
-    bool operator()(char const *a, char const *b)
-    {
-        return std::strcmp(a, b) < 0;
-    }
-};
 }
 
 #endif //UTILITY_H
