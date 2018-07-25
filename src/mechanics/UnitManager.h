@@ -27,11 +27,13 @@ class SfmlRenderTarget;
 struct Camera;
 typedef std::shared_ptr<Camera> CameraPtr;
 
+struct Player;
+
 struct MapPositionSorter
 {
     bool operator()(const Unit::Ptr &lhs, const Unit::Ptr &rhs) const {
-        const ScreenPos pos1 = lhs->position.toScreen();
-        const ScreenPos pos2 = rhs->position.toScreen();
+        const ScreenPos pos1 = lhs->position().toScreen();
+        const ScreenPos pos2 = rhs->position().toScreen();
 
         if (pos1.y != pos2.y) {
             return pos1.y > pos2.y;
@@ -75,7 +77,7 @@ public:
 
     const std::set<Unit::Ptr, MapPositionSorter> &units() const { return m_units; }
 
-    void placeBuilding(const Unit::Ptr &unit);
+    void placeBuilding(const int unitId, const std::shared_ptr<Player> &player);
 
     Unit::Ptr unitAt(const ScreenPos &pos, const CameraPtr &camera) const;
 

@@ -218,6 +218,28 @@ void Map::updateTileAt(const int col, const int row, unsigned id)
     m_updated = true;
 }
 
+void Map::removeEntityAt(unsigned int col, unsigned int row, const EntityPtr &entity)
+{
+    MapTile &tile = getTileAt(col, row);
+
+    std::vector<EntityPtr>::iterator it=tile.entities.begin();
+    for (;it!=tile.entities.end(); it++) {
+        if ((*it)->id == entity->id) {
+            tile.entities.erase(it);
+            break;
+        }
+    }
+}
+
+void Map::addEntityAt(unsigned int col, unsigned int row, const EntityPtr &entity)
+{
+    // just to be sure
+    removeEntityAt(col, row, entity);
+
+    getTileAt(col, row).entities.push_back(entity);
+
+}
+
 void Map::updateMapData()
 {
     TIME_THIS;

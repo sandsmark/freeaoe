@@ -20,7 +20,6 @@
 #include <genie/dat/Unit.h>
 #include <resource/DataManager.h>
 #include <global/Constants.h>
-#include "CompMapObject.h"
 #include "CompUnitData.h"
 #include "ActionMove.h"
 
@@ -40,20 +39,20 @@ UnitFactory::~UnitFactory()
 {
 }
 
-Unit::Ptr UnitFactory::createUnit(int ID, const MapPos &position, Player::Ptr owner)
+Unit::Ptr UnitFactory::createUnit(int ID, const MapPos &position, const Player::Ptr &owner, const MapPtr &map)
 {
 //    DBG << "Creating" << ID;
     const genie::Unit &gunit = DataManager::Inst().getUnit(ID);
 
     Unit::Ptr unit = std::make_shared<Unit>(gunit, owner->playerId, owner->civ);
-    unit->position = position;
+    unit->setPosition(position, map);
 
     if (gunit.Type >= genie::Unit::BuildingType) {
-        unit->snapPositionToGrid();
+        unit->snapPositionToGrid(map);
 
         if (gunit.Building.StackUnitID >= 0) {
             Unit::Annex annex;
-            annex.unit = createUnit(gunit.Building.StackUnitID, position, owner);
+            annex.unit = createUnit(gunit.Building.StackUnitID, position, owner, map);
             unit->annexes.push_back(annex);
         }
 
@@ -64,7 +63,7 @@ Unit::Ptr UnitFactory::createUnit(int ID, const MapPos &position, Player::Ptr ow
 
             Unit::Annex annex;
             annex.offset = MapPos(annexData.Misplacement.first * -48, annexData.Misplacement.second * -48);
-            annex.unit = createUnit(annexData.UnitID, position, owner);
+            annex.unit = createUnit(annexData.UnitID, position, owner, map);
             unit->annexes.push_back(annex);
         }
 

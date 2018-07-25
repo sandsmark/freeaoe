@@ -22,9 +22,13 @@
 #include "resource/LanguageManager.h"
 #include "render/GraphicRender.h"
 #include "mechanics/Civilization.h"
+#include "mechanics/Map.h"
 #include <genie/dat/Unit.h>
 
+static size_t s_entityCount = 0;
+
 Entity::Entity(const Entity::Type type_, const std::string &name) :
+    id(s_entityCount++),
     type(type_),
     readableName(name)
 {
@@ -53,6 +57,26 @@ std::shared_ptr<Unit> Entity::asUnit(EntityPtr entity)
         return nullptr;
     }
     return std::static_pointer_cast<Unit>(entity);
+}
+
+void Entity::setPosition(const MapPos &pos, const MapPtr &map)
+{
+    if (!map) {
+        WARN << "No map passed";
+    }
+
+    int oldTileX = m_position.x / Constants::TILE_SIZE;
+    int oldTileY = m_position.y / Constants::TILE_SIZE;
+    int newTileX = pos.x / Constants::TILE_SIZE;
+    int newTileY = pos.y / Constants::TILE_SIZE;
+
+    m_position = pos;
+    if (newTileX == oldTileX && newTileY == oldTileY) {
+        return;
+    }
+
+    map->removeEntityAt(oldTileX, oldTileY, shared_from_this());
+    map->addEntityAt(newTileX, newTileY, shared_from_this());
 }
 
 Unit::Unit(const genie::Unit &data_, int playerId_, std::shared_ptr<Civilization> civilization) :
@@ -91,12 +115,16 @@ bool Unit::update(Time time)
     return Entity::update(time) || updated;
 }
 
-void Unit::snapPositionToGrid()
+void Unit::snapPositionToGrid(const MapPtr &map)
 {
-    position = position / Constants::TILE_SIZE + Size(data.Size);
-    position.round();
-    position -= Size(data.Size);
-    position *= Constants::TILE_SIZE;
+    MapPos newPos = position();
+    newPos /= Constants::TILE_SIZE;
+    newPos += Size(data.Size);
+    newPos.round();
+    newPos -= Size(data.Size);
+    newPos *= Constants::TILE_SIZE;
+
+    setPosition(newPos, map);
 }
 
 const std::vector<const genie::Unit *> Unit::creatableUnits()
@@ -267,7 +295,7 @@ MoveTargetMarker::MoveTargetMarker() :
 
 void MoveTargetMarker::moveTo(const MapPos &pos)
 {
-    position = pos;
+    m_position = pos;
     m_graphics.current_frame_ = 0;
     m_isRunning = true;
 }

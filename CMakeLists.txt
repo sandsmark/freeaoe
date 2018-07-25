@@ -65,7 +65,6 @@ set(MECHANICS_SRC
     src/mechanics/ActionBuild.cpp
     src/mechanics/ActionMove.cpp
     src/mechanics/Civilization.cpp
-    src/mechanics/CompMapObject.cpp
     src/mechanics/CompUnitData.cpp
     src/mechanics/Farm.cpp
     src/mechanics/GameState.cpp

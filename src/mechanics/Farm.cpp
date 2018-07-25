@@ -42,8 +42,8 @@ void Farm::setCreationProgress(float progress)
         return;
     }
 
-    const int tileX = position.x / Constants::TILE_SIZE;
-    const int tileY = position.y / Constants::TILE_SIZE;
+    const int tileX = position().x / Constants::TILE_SIZE;
+    const int tileY = position().y / Constants::TILE_SIZE;
     int width = data.Size.x;
     int height = data.Size.y;
     for (int x = 0; x < width*2; x++) {

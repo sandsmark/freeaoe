@@ -32,6 +32,9 @@ namespace genie {
 class Unit;
 }
 
+class Map;
+typedef std::shared_ptr<Map> MapPtr;
+
 struct Unit;
 struct Entity;
 
@@ -42,9 +45,10 @@ class GraphicRender;
 typedef std::shared_ptr<Entity> EntityPtr;
 class Civilization;
 
-struct Entity
+struct Entity: std::enable_shared_from_this<Entity>
 {
-public:
+    const size_t id;
+
     enum class Type {
         None,
         Unit,
@@ -58,7 +62,6 @@ public:
 
     virtual bool update(Time time);
 
-    MapPos position;
 
     virtual comp::GraphicRender &renderer() { return m_graphics; }
 
@@ -68,11 +71,15 @@ public:
 
     bool isVisible = false;
 
+    const MapPos &position() const { return m_position; }
+    void setPosition(const MapPos &pos, const MapPtr &map);
+
 protected:
     Entity(const Type type_, const std::string &name);
 
     comp::GraphicRender m_graphics;
     res::GraphicPtr defaultGraphics;
+    MapPos m_position;
 };
 
 struct MoveTargetMarker : public Entity
@@ -146,6 +153,7 @@ struct Unit : public Entity
     const genie::Unit &data;
 
     Unit() = delete;
+    Unit(const Unit &unit) = delete;
 
     Unit(const genie::Unit &data_, int playerId, std::shared_ptr<Civilization> civilization);
 
@@ -159,7 +167,7 @@ struct Unit : public Entity
     void clearActionQueue();
     const ActionPtr &currentAction() const { return m_currentAction; }
 
-    void snapPositionToGrid();
+    void snapPositionToGrid(const MapPtr &map);
 
     bool update(Time time) override;
 

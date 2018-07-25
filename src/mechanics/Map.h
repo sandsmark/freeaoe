@@ -63,6 +63,7 @@ struct MapTile
 
     std::vector<sf::Texture> textures;
     std::vector<res::Blend> blends;
+    std::vector<EntityPtr> entities;
 
     res::TileSlopes slopes;
 };
@@ -97,6 +98,9 @@ public:
     MapTile &getTileAt(unsigned int col, unsigned int row);
     void setTileAt(unsigned col, unsigned row, unsigned id);
     void updateTileAt(const int col, const int row, unsigned id);
+
+    void removeEntityAt(unsigned int col, unsigned int row, const EntityPtr &entity);
+    void addEntityAt(unsigned int col, unsigned int row, const EntityPtr &entity);
 
     // old stuff down ------------------------------------------------------------
     /*

@@ -20,7 +20,6 @@
 
 #include <resource/ResourceManager.h>
 #include <resource/DataManager.h>
-#include <mechanics/CompMapObject.h>
 #include <SFML/Graphics/Sprite.hpp>
 #include "IRenderTarget.h"
 

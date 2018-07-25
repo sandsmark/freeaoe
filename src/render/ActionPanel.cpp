@@ -308,7 +308,7 @@ void ActionPanel::addCreateButtons(const std::shared_ptr<Unit> &unit)
 void ActionPanel::handleButtonClick(const ActionPanel::InterfaceButton &button)
 {
     if (button.type == InterfaceButton::CreateBuilding) {
-        m_unitManager->placeBuilding(UnitFactory::Inst().createUnit(button.targetId, MapPos(), m_humanPlayer));
+        m_unitManager->placeBuilding(button.targetId, m_humanPlayer);
         return;
     }
 

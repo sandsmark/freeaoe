@@ -18,7 +18,6 @@
 
 #include "UnitManager.h"
 
-#include "CompMapObject.h"
 #include "CompUnitData.h"
 #include "ActionMove.h"
 #include "ActionBuild.h"
@@ -28,6 +27,7 @@
 #include "resource/DataManager.h"
 #include "Farm.h"
 #include "Civilization.h"
+#include "UnitFactory.h"
 #include "audio/AudioPlayer.h"
 
 #include <SFML/Graphics/RectangleShape.hpp>
@@ -89,14 +89,14 @@ void UnitManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
         if (!(unit->data.OcclusionMode & genie::Unit::OccludeOthers)) {
             continue;
         }
-        const ScreenPos unitPosition = camera->absoluteScreenPos(unit->position);
+        const ScreenPos unitPosition = camera->absoluteScreenPos(unit->position());
 
         for (const Unit::Annex &annex : unit->annexes) {
             if (!annex.unit->isVisible) {
                 continue;
             }
             annex.unit->renderer().render(m_outlineOverlay,
-                                          renderTarget->camera()->absoluteScreenPos(unit->position + annex.offset),
+                                          renderTarget->camera()->absoluteScreenPos(unit->position() + annex.offset),
                                           comp::RenderType::Base
                                           );
         }
@@ -127,7 +127,7 @@ void UnitManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
                 circle.setPointCount(4);
             }
 
-            ScreenPos pos = camera->absoluteScreenPos(unit->position);
+            ScreenPos pos = camera->absoluteScreenPos(unit->position());
 
             circle.setPosition(pos.x - width, pos.y - height);
             circle.setRadius(width);
@@ -159,7 +159,7 @@ void UnitManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
             continue;
         }
 
-        const ScreenPos pos = renderTarget->camera()->absoluteScreenPos(unit->position);
+        const ScreenPos pos = renderTarget->camera()->absoluteScreenPos(unit->position());
         unit->renderer().render(*renderTarget->renderTarget_,
                                 pos,
                                 comp::RenderType::Base);
@@ -176,7 +176,7 @@ void UnitManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
             continue;
         }
         sf::CircleShape circle;
-        ScreenPos pos = camera->absoluteScreenPos(unit->position);
+        ScreenPos pos = camera->absoluteScreenPos(unit->position());
         circle.setPosition(pos.x, pos.y);
         circle.setRadius(5);
         circle.setScale(1, 0.5);
@@ -187,12 +187,12 @@ void UnitManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
 #endif
 
     m_moveTargetMarker->renderer().render(*renderTarget->renderTarget_,
-                                          renderTarget->camera()->absoluteScreenPos(m_moveTargetMarker->position),
+                                          renderTarget->camera()->absoluteScreenPos(m_moveTargetMarker->position()),
                                           comp::RenderType::Base);
 
     if (m_buildingToPlace) {
         m_buildingToPlace->renderer().render(*renderTarget->renderTarget_,
-                                             renderTarget->camera()->absoluteScreenPos(m_buildingToPlace->position),
+                                             renderTarget->camera()->absoluteScreenPos(m_buildingToPlace->position()),
                                              comp::RenderType::ConstructAvailable);
     }
 }
@@ -201,15 +201,13 @@ void UnitManager::onLeftClick(const MapPos &/*mapPos*/)
 {
     if (m_buildingToPlace) {
         for (const Unit::Ptr &unit : m_selectedUnits) {
-            unit->setCurrentAction(act::MoveOnMap::moveUnitTo(unit, m_buildingToPlace->position, m_map, this));
+            unit->setCurrentAction(act::MoveOnMap::moveUnitTo(unit, m_buildingToPlace->position(), m_map, this));
             unit->queueAction(std::make_shared<act::ActionBuild>(unit, m_buildingToPlace));
         }
 
         m_buildingToPlace->isVisible = true;
-        m_units.insert(m_buildingToPlace);
         m_buildingToPlace->setCreationProgress(0);
-
-        m_buildingToPlace.reset();
+        m_units.insert(std::move(m_buildingToPlace));
     }
 }
 
@@ -229,8 +227,8 @@ void UnitManager::onRightClick(const MapPos &mapPos)
 void UnitManager::onMouseMove(const MapPos &mapPos)
 {
     if (m_buildingToPlace) {
-        m_buildingToPlace->position = mapPos;
-        m_buildingToPlace->snapPositionToGrid();
+        m_buildingToPlace->setPosition(mapPos, m_map);
+        m_buildingToPlace->snapPositionToGrid(m_map);
     }
 }
 
@@ -242,7 +240,7 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
     std::vector<Unit::Ptr> containedUnits;
     int8_t requiredInteraction = genie::Unit::ObjectInteraction;
     for (Unit::Ptr unit : m_units) {
-        if (!selectionRect.overlaps(unit->rect() + camera->absoluteScreenPos(unit->position))) {
+        if (!selectionRect.overlaps(unit->rect() + camera->absoluteScreenPos(unit->position()))) {
             continue;
         }
 
@@ -262,7 +260,7 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
             continue;
         }
 
-        DBG << "Selected" << unit->readableName << "at" << unit->position << unit->renderer().angle() << unit->data.ResourceCapacity;
+        DBG << "Selected" << unit->readableName << "at" << unit->position() << unit->renderer().angle() << unit->data.ResourceCapacity;
         for (const genie::Resource<float, int8_t> r : unit->data.ResourceStorages) {
             DBG << "res:" << r.Type << r.Amount << r.Flag;
         }
@@ -292,16 +290,15 @@ void UnitManager::setMap(MapPtr map)
     m_map = map;
 }
 
-void UnitManager::placeBuilding(const Unit::Ptr &unit)
+void UnitManager::placeBuilding(const int unitId, const std::shared_ptr<Player> &player)
 {
-    if (unit->data.ID == Unit::Farm) {
+    if (unitId == Unit::Farm) {
         m_buildingToPlace = std::make_shared<Farm>(DataManager::Inst().getUnit(Unit::Farm),
-                                                   unit->playerId,
-                                                   unit->m_civilization,
+                                                   player->playerId,
+                                                   player->civ,
                                                    m_map);
     } else {
-        m_buildingToPlace = unit;
-
+        m_buildingToPlace = UnitFactory::Inst().createUnit(unitId, MapPos(), player, m_map);
     }
 }
 
@@ -312,7 +309,7 @@ Unit::Ptr UnitManager::unitAt(const ScreenPos &pos, const CameraPtr &camera) con
             continue;
         }
 
-        const ScreenPos unitPosition = camera->absoluteScreenPos(unit->position);
+        const ScreenPos unitPosition = camera->absoluteScreenPos(unit->position());
         const ScreenRect unitRect = unit->renderer().rect() + unitPosition;
         if (unitRect.contains(pos)) {
             return unit;
@@ -399,12 +396,12 @@ const genie::Task *UnitManager::defaultActionAt(const ScreenPos &pos, const Came
 void UnitManager::updateVisibility(const CameraPtr &camera)
 {
     for (Unit::Ptr unit : m_units) {
-        const ScreenPos unitPosition = camera->absoluteScreenPos(unit->position);
+        const ScreenPos unitPosition = camera->absoluteScreenPos(unit->position());
         const ScreenRect unitRect = unit->renderer().rect() + unitPosition;
         unit->isVisible = camera->isVisible(unitRect);
 
         for (Unit::Annex &annex : unit->annexes) {
-            const ScreenPos annexPosition = camera->absoluteScreenPos(unit->position + annex.offset);
+            const ScreenPos annexPosition = camera->absoluteScreenPos(unit->position() + annex.offset);
             ScreenRect annexRect = annex.unit->renderer().rect() + annexPosition;
             annex.unit->isVisible = camera->isVisible(annexRect);
         }

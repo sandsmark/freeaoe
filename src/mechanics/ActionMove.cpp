@@ -21,7 +21,6 @@
 
 #include <unordered_set>
 #include <queue>
-#include "CompMapObject.h"
 #include "CompUnitData.h"
 #include "resource/DataManager.h"
 #include "global/Constants.h"
@@ -108,13 +107,13 @@ bool MoveOnMap::update(Time time)
     float movement = elapsed * speed_ * 0.15;
 
 
-    float distanceLeft = std::hypot(m_path.back().x - unit->position.x, m_path.back().y - unit->position.y);
+    float distanceLeft = std::hypot(m_path.back().x - unit->position().x, m_path.back().y - unit->position().y);
     while (distanceLeft <= movement && !m_path.empty()) {
         m_path.pop_back();
         if (m_path.empty()) {
             break;
         }
-        distanceLeft = std::hypot(m_path.back().x - unit->position.x, m_path.back().y - unit->position.y);
+        distanceLeft = std::hypot(m_path.back().x - unit->position().x, m_path.back().y - unit->position().y);
     }
 
     if (m_path.empty()) {
@@ -125,9 +124,9 @@ bool MoveOnMap::update(Time time)
 
     MapPos nextPos = m_path.back();
     if (!isPassable(nextPos.x, nextPos.y)) {
-        m_path = findPath(unit->position, dest_, 1);
+        m_path = findPath(unit->position(), dest_, 1);
         if (m_path.empty()) {
-            m_path = findPath(unit->position, dest_, 20);
+            m_path = findPath(unit->position(), dest_, 20);
             if (m_path.empty()) {
                 target_reached = true;
                 unit->removeAction(this);
@@ -137,8 +136,8 @@ bool MoveOnMap::update(Time time)
         return false;
     }
 
-    const float direction = std::atan2(nextPos.y - unit->position.y, nextPos.x - unit->position.x);
-    MapPos newPos = unit->position;
+    const float direction = std::atan2(nextPos.y - unit->position().y, nextPos.x - unit->position().x);
+    MapPos newPos = unit->position();
     newPos.x += cos(direction) * movement;
     newPos.y += sin(direction) * movement;
 
@@ -147,12 +146,12 @@ bool MoveOnMap::update(Time time)
     }
 
 
-    ScreenPos sourceScreen = unit->position.toScreen();
+    ScreenPos sourceScreen = unit->position().toScreen();
     ScreenPos targetScreen = newPos.toScreen();
     unit->setAngle(std::atan2((targetScreen.y - sourceScreen.y), (targetScreen.x - sourceScreen.x)));
     newPos.z = m_map->elevationAt(newPos);
 
-    unit->position = newPos;
+    unit->setPosition(newPos, m_map);
 
     if (std::hypot(newPos.x - dest_.x, newPos.y - dest_.y) < movement) {
         target_reached = true;
@@ -173,16 +172,16 @@ std::shared_ptr<MoveOnMap> MoveOnMap::moveUnitTo(Unit::Ptr unit, MapPos destinat
     action->m_terrainMoveMultiplier = DataManager::Inst().getTerrainRestriction(unit->data.TerrainRestriction).PassableBuildableDmgMultiplier;
     action->speed_ = unit->data.Speed;
 
-    action->m_path = action->findPath(unit->position, destination, 1);
+    action->m_path = action->findPath(unit->position(), destination, 1);
 
     // Try coarser
     // Uglier, but hopefully faster
     if (action->m_path.empty()) {
-        action->m_path = action->findPath(unit->position, destination, 5);
+        action->m_path = action->findPath(unit->position(), destination, 5);
     }
 
     if (action->m_path.empty()) {
-        action->m_path = action->findPath(unit->position, destination, 20);
+        action->m_path = action->findPath(unit->position(), destination, 20);
     }
 
     if (action->m_path.empty()) {
@@ -342,8 +341,8 @@ bool MoveOnMap::isPassable(const int x, const int y)
             continue;
         }
 
-        const float xDistance = std::abs(otherUnit->position.x - mapPos.x);
-        const float yDistance = std::abs(otherUnit->position.y - mapPos.y);
+        const float xDistance = std::abs(otherUnit->position().x - mapPos.x);
+        const float yDistance = std::abs(otherUnit->position().y - mapPos.y);
         const float xSize = (otherUnit->data.Size.x + unit->data.Size.x) * Constants::TILE_SIZE;
         const float ySize = (otherUnit->data.Size.y + unit->data.Size.y) * Constants::TILE_SIZE;
 
