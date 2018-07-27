@@ -106,7 +106,7 @@ struct Task {
     Task() = default;
 
     const genie::Task *data = nullptr;
-    const uint16_t unitId = 0; // for task group swapping
+    uint16_t unitId = 0; // for task group swapping
 
     bool operator==(const Task &other) const {
         return unitId == other.unitId && (

@@ -35,7 +35,6 @@
 #include <SFML/Graphics/Sprite.hpp>
 
 #include <iostream>
-#include <random>
 
 UnitManager::UnitManager()
 {
@@ -200,14 +199,27 @@ void UnitManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
 void UnitManager::onLeftClick(const MapPos &/*mapPos*/)
 {
     if (m_buildingToPlace) {
-        for (const Unit::Ptr &unit : m_selectedUnits) {
-            unit->setCurrentAction(act::MoveOnMap::moveUnitTo(unit, m_buildingToPlace->position(), m_map, this));
-            unit->queueAction(std::make_shared<act::ActionBuild>(unit, m_buildingToPlace));
-        }
-
         m_buildingToPlace->isVisible = true;
         m_buildingToPlace->setCreationProgress(0);
-        m_units.insert(std::move(m_buildingToPlace));
+        m_units.insert(m_buildingToPlace);
+
+        for (const Unit::Ptr &unit : m_selectedUnits) {
+            Task task;
+            for (const Task &potential : unit->availableActions()) {
+                if (potential.data->ActionType == genie::Task::Build) {
+                    task = potential;
+                    break;
+                }
+            }
+            if (!task.data) {
+                continue;
+            }
+
+            unit->clearActionQueue();
+            assignTask(task, unit, m_buildingToPlace);
+        }
+
+        m_buildingToPlace.reset();
     }
 }
 
@@ -220,7 +232,8 @@ void UnitManager::onRightClick(const ScreenPos &screenPos, const CameraPtr &came
     const Task task = defaultActionAt(screenPos, camera);
     if (task.data) {
         for (const Unit::Ptr &unit : m_selectedUnits) {
-            IAction::assignTask(task, unit, unitAt(screenPos, camera));
+            unit->clearActionQueue();
+            assignTask(task, unit, unitAt(screenPos, camera));
         }
 
         return;
@@ -307,7 +320,7 @@ void UnitManager::placeBuilding(const int unitId, const std::shared_ptr<Player> 
 
 Unit::Ptr UnitManager::unitAt(const ScreenPos &pos, const CameraPtr &camera) const
 {
-    for (Unit::Ptr unit : m_units) {
+    for (const Unit::Ptr &unit : m_units) {
         if (!unit->isVisible) {
             continue;
         }
@@ -385,6 +398,13 @@ const Task UnitManager::defaultActionAt(const ScreenPos &pos, const CameraPtr &c
                 action->TargetDiplomacy == genie::Task::TargetGaiaNeutralEnemies && ownPlayerId != target->playerId) {
             return task;
         }
+        if (target->creationProgress() < 1) {
+            if (action->ActionType == genie::Task::Build) {
+                return task;
+            }
+
+            continue;
+        }
 
         if (action->UnitID == target->data()->ID) {
             return task;
@@ -413,6 +433,31 @@ void UnitManager::updateVisibility(const CameraPtr &camera)
     }
 }
 
+void UnitManager::assignTask(const Task &task, const Unit::Ptr &unit, const Unit::Ptr &target)
+{
+    if (!task.data) {
+        WARN << "no task data";
+        return;
+    }
+
+    if (task.unitId != unit->data()->ID) {
+        unit->setUnitData(DataManager::Inst().getUnit(task.unitId));
+    }
+
+    unit->queueAction(act::MoveOnMap::moveUnitTo(unit, target->position(), m_map, this));
+    switch(task.data->ActionType) {
+    case genie::Task::Build:
+        unit->queueAction(std::make_shared<act::ActionBuild>(unit, target));
+        break;
+    case genie::Task::GatherRebuild:
+        DBG << "supposed to gather from" << target->debugName;
+        break;
+    default:
+        return;
+    }
+
+}
+
 void UnitManager::playSound(const Unit::Ptr &unit)
 {
     const int id = unit->data()->SelectionSound;
@@ -420,46 +465,6 @@ void UnitManager::playSound(const Unit::Ptr &unit)
         DBG << "no selection sound for" << unit->debugName;
         return;
     }
-    const std::vector<genie::Sound> &sounds = DataManager::Inst().datFile().Sounds;
-    if (id < 0 || id >= sounds.size()) {
-        WARN << "invalid sound id" << id;
-        return;
-    }
 
-    const genie::Sound &sound = sounds[id];
-    if (sound.Items.empty()) {
-        WARN << "no sounds";
-        return;
-    }
-
-
-    std::vector<int16_t> probabilities;
-    for (const genie::SoundItem &item : sound.Items) {
-        if (item.Civilization != unit->m_civilization->id()) {
-            probabilities.push_back(0);
-        } else {
-            probabilities.push_back(item.Probability);
-        }
-    }
-
-    static std::mt19937 gen((std::random_device())());
-    std::discrete_distribution<> dist(probabilities.begin(), probabilities.end());
-    const size_t selected = dist(gen);
-
-    const int wavId = sound.Items[selected].ResourceID;
-    if (wavId < 0) {
-        WARN << "FIXME: load external sounds";
-        return;
-    }
-
-    DBG << "playing" << sound.Items[selected].FileName;
-
-    unsigned char *wavPtr = ResourceManager::Inst()->getWavPtr(wavId);
-    if (!wavPtr) {
-        WARN << "failed to get wav data for" << wavId;
-        return;
-    }
-
-    const size_t size = *((uint32_t*)wavPtr + 1) + 8;
-    AudioPlayer::instance().playSample(wavPtr, size);
+    AudioPlayer::instance().playSound(id, unit->m_civilization->id());
 }

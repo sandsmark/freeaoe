@@ -29,6 +29,7 @@ class Task;
 
 struct Unit;
 struct Task;
+class Map;
 
 class IAction
 {
@@ -56,8 +57,6 @@ public:
 
     /// @return true if action is done
     virtual bool update(Time time) = 0;
-
-    static void assignTask(const Task &task, const std::shared_ptr<Unit> &unit, const std::shared_ptr<Unit> &target);
 
 protected:
     IAction(const Type type_);

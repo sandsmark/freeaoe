@@ -19,6 +19,8 @@
 #include "IAction.h"
 #include "Entity.h"
 #include "resource/DataManager.h"
+#include "mechanics/ActionBuild.h"
+#include "mechanics/ActionMove.h"
 
 IAction::IAction(const Type type_) :
     type(type_)
@@ -27,24 +29,4 @@ IAction::IAction(const Type type_) :
 
 IAction::~IAction()
 {
-}
-
-void IAction::assignTask(const Task &task, const std::shared_ptr<Unit> &unit, const std::shared_ptr<Unit> &target)
-{
-    if (!task.data) {
-        WARN << "no task data";
-        return;
-    }
-
-    if (task.unitId != unit->data()->ID) {
-        unit->setUnitData(DataManager::Inst().getUnit(task.unitId));
-    }
-
-    switch(task.data->ActionType) {
-    case genie::Task::GatherRebuild:
-        DBG << "supposed to gather from" << target->debugName;
-        break;
-    default:
-        return;
-    }
 }

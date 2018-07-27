@@ -1,6 +1,9 @@
 #include "AudioPlayer.h"
 
-#include "global/Logger.h"
+#include "resource/DataManager.h"
+#include "resource/ResourceManager.h"
+
+#include <random>
 
 #define STS_MIXER_IMPLEMENTATION
 #include "sts_mixer.h"
@@ -129,6 +132,52 @@ void AudioPlayer::playSample(unsigned char *data, size_t size, const float pan)
     sample->data = data + sizeof(WavHeader);
 
     sts_mixer_play_sample(m_mixer.get(), sample, 1., 1., pan);
+}
+
+void AudioPlayer::playSound(const int id, const int civilization)
+{
+    const std::vector<genie::Sound> &sounds = DataManager::Inst().datFile().Sounds;
+    if (id < 0 || id >= sounds.size()) {
+        WARN << "invalid sound id" << id;
+        return;
+    }
+
+    const genie::Sound &sound = sounds[id];
+    if (sound.Items.empty()) {
+        WARN << "no sounds";
+        return;
+    }
+
+
+    std::vector<int16_t> probabilities;
+    for (const genie::SoundItem &item : sound.Items) {
+        if (item.Civilization != civilization) {
+            probabilities.push_back(0);
+        } else {
+            probabilities.push_back(item.Probability);
+        }
+    }
+
+    static std::mt19937 gen((std::random_device())());
+    std::discrete_distribution<> dist(probabilities.begin(), probabilities.end());
+    const size_t selected = dist(gen);
+
+    const int wavId = sound.Items[selected].ResourceID;
+    if (wavId < 0) {
+        WARN << "FIXME: load external sounds";
+        return;
+    }
+
+    DBG << "playing" << sound.Items[selected].FileName;
+
+    unsigned char *wavPtr = ResourceManager::Inst()->getWavPtr(wavId);
+    if (!wavPtr) {
+        WARN << "failed to get wav data for" << wavId;
+        return;
+    }
+
+    const size_t size = *((uint32_t*)wavPtr + 1) + 8;
+    playSample(wavPtr, size);
 }
 
 AudioPlayer &AudioPlayer::instance()

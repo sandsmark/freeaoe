@@ -13,11 +13,13 @@ public:
     AudioPlayer();
     ~AudioPlayer();
 
-    void playSample(unsigned char *data, size_t size, const float pan = 0.f);
+    void playSound(const int id, const int civilization);
 
     static AudioPlayer &instance();
 
 private:
+    void playSample(unsigned char *data, size_t size, const float pan = 0.f);
+
     static uint32_t malCallback(mal_device *device, uint32_t frameCount, void *buffer);
 
     std::unique_ptr<sts_mixer_t> m_mixer;

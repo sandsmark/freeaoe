@@ -235,7 +235,7 @@ void Unit::setAngle(const float angle)
 void Unit::queueAction(ActionPtr action)
 {
     if (!m_currentAction) {
-        m_currentAction = action;
+        setCurrentAction(action);
     } else {
         m_actionQueue.push_back(action);
 
@@ -291,6 +291,7 @@ void Unit::removeAction(IAction *action)
 void Unit::clearActionQueue()
 {
     m_actionQueue.clear();
+    m_currentAction.reset();
 }
 
 MoveTargetMarker::MoveTargetMarker() :

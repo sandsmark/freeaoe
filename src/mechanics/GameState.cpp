@@ -198,7 +198,7 @@ bool GameState::init()
         }
         m_humanPlayer = m_players[0];
     } else {
-        m_humanPlayer = std::make_shared<Player>(0, m_civilizations.front());
+        m_humanPlayer = std::make_shared<Player>(0, m_civilizations[1]);
         map_->setUpSample();
 
         m_unitManager->add(UnitFactory::Inst().createUnit(Unit::FuriousTheMonkeyBoy, MapPos(48*6, 48*10, 0), m_humanPlayer, map_));
