@@ -47,19 +47,19 @@ public:
 struct MapTile
 {
     void reset() {
-        blendIndex = -1;
-        overlayId = -1;
-        z = 0;
+        yOffset = 0;
+        slopes = res::TileSlopes();
+        textures.clear();
+        blends.clear();
     }
+
     uint32_t terrainId() const {
         return terrain_->getId();
     }
 
     unsigned int elevation_;
-    unsigned int z;
+    int yOffset;
     res::TerrainPtr terrain_;
-    int blendIndex = -1;
-    int overlayId = -1;
 
     std::vector<sf::Texture> textures;
     std::vector<res::Blend> blends;

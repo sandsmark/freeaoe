@@ -33,7 +33,8 @@ MapRenderer::MapRenderer() :
     m_rRowEnd(0),
     m_rColBegin(0),
     m_rColEnd(0),
-    m_textureTarget(m_mapRenderTexture)
+    m_textureTarget(m_mapRenderTexture),
+    m_elevationHeight(DataManager::Inst().terrainBlock().ElevHeight)
 {
 }
 
@@ -168,7 +169,7 @@ void MapRenderer::updateTexture()
             MapRect rect;
             rect.x = col * Constants::TILE_SIZE;
             rect.y = row * Constants::TILE_SIZE;
-            rect.z = mapTile.z;
+            rect.z = mapTile.elevation_ * m_elevationHeight;
             rect.width = Constants::TILE_SIZE;
             rect.height = Constants::TILE_SIZE;
 
@@ -177,13 +178,14 @@ void MapRenderer::updateTexture()
                 continue;
             }
 
-//            rect.x -= m_rColBegin * Constants::TILE_SIZE;
-//            rect.y -= m_rRowBegin * Constants::TILE_SIZE;
             ScreenPos spos = renderTarget_->camera()->absoluteScreenPos(rect.topLeft());
-//            ScreenPos spos = rect.topLeft().toScreen();
-//            spos.x += m_xOffset;
-//            spos.y += m_yOffset;
+
+            // If we wanted to do this 100% correctly, we would need to use the hotspot from the
+            // filtered SLP and then always offset with yOffset, but this is good enough for now.
             spos.y -= Constants::TILE_SIZE_VERTICAL / 2;
+            if (mapTile.yOffset > 0) {
+                spos.y -= mapTile.yOffset * 2;
+            }
 
             if (!mapTile.terrain_) {
                 sf::RectangleShape rect;

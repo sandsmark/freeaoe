@@ -68,7 +68,7 @@ IAction::UnitState ActionBuild::unitState() const
         return Idle;
     }
 
-    if (target->data.ID == Unit::Farm) {
+    if (target->data()->ID == Unit::Farm) {
         return Working;
     } else {
         return Proceeding;

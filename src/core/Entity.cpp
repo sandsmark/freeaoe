@@ -30,7 +30,7 @@ static size_t s_entityCount = 0;
 Entity::Entity(const Entity::Type type_, const std::string &name) :
     id(s_entityCount++),
     type(type_),
-    readableName(name)
+    debugName(name)
 {
 }
 
@@ -82,22 +82,10 @@ void Entity::setPosition(const MapPos &pos, const MapPtr &map)
 
 Unit::Unit(const genie::Unit &data_, int playerId_, std::shared_ptr<Civilization> civilization) :
     Entity(Type::Unit, LanguageManager::getString(data_.LanguageDLLName) + " (" + std::to_string(data_.ID) + ")"),
-    data(data_),
     playerId(playerId_),
     m_civilization(civilization)
 {
-    defaultGraphics = ResourceManager::Inst()->getGraphic(data.StandingGraphic.first);
-    if (data.Moving.WalkingGraphic >= 0) {
-        movingGraphics = ResourceManager::Inst()->getGraphic(data.Moving.WalkingGraphic);
-    }
-
-    if (!defaultGraphics) {
-        WARN << "Failed to load default graphics";
-    }
-
-    m_creationProgress = data.Creatable.TrainTime;
-
-    m_graphics.setGraphic(defaultGraphics);
+    setUnitData(data_);
 }
 
 bool Unit::update(Time time)
@@ -120,9 +108,9 @@ void Unit::snapPositionToGrid(const MapPtr &map)
 {
     MapPos newPos = position();
     newPos /= Constants::TILE_SIZE;
-    newPos += Size(data.Size);
+    newPos += Size(m_data->Size);
     newPos.round();
-    newPos -= Size(data.Size);
+    newPos -= Size(m_data->Size);
     newPos *= Constants::TILE_SIZE;
 
     setPosition(newPos, map);
@@ -134,7 +122,7 @@ const std::vector<const genie::Unit *> Unit::creatableUnits()
         return {};
     }
 
-    return m_civilization->creatableUnits(data.ID);
+    return m_civilization->creatableUnits(m_data->ID);
 }
 
 ScreenRect Unit::rect() const
@@ -150,17 +138,17 @@ ScreenRect Unit::rect() const
 
 void Unit::setCreationProgress(float progress)
 {
-    if (data.Type == genie::Unit::BuildingType) {
-        if (m_creationProgress < data.Creatable.TrainTime && progress >= data.Creatable.TrainTime) {
+    if (m_data->Type == genie::Unit::BuildingType) {
+        if (m_creationProgress < m_data->Creatable.TrainTime && progress >= m_data->Creatable.TrainTime) {
             m_graphics.setGraphic(defaultGraphics);
-        } else if (m_creationProgress == data.Creatable.TrainTime && progress < data.Creatable.TrainTime) {
-            m_graphics.setGraphic(ResourceManager::Inst()->getGraphic(data.Building.ConstructionGraphicID));
+        } else if (m_creationProgress == m_data->Creatable.TrainTime && progress < m_data->Creatable.TrainTime) {
+            m_graphics.setGraphic(ResourceManager::Inst()->getGraphic(m_data->Building.ConstructionGraphicID));
         }
     }
 
-    m_creationProgress = std::min(progress, float(data.Creatable.TrainTime));
+    m_creationProgress = std::min(progress, float(m_data->Creatable.TrainTime));
 
-    if (data.Type == genie::Unit::BuildingType && progress < data.Creatable.TrainTime) {
+    if (m_data->Type == genie::Unit::BuildingType && progress < m_data->Creatable.TrainTime) {
         m_graphics.setAngle(M_PI_2 + 2. * M_PI * (creationProgress()));
     }
 }
@@ -172,52 +160,71 @@ void Unit::increaseCreationProgress(float progress)
 
 float Unit::creationProgress() const
 {
-    return m_creationProgress / float(data.Creatable.TrainTime);
+    return m_creationProgress / float(m_data->Creatable.TrainTime);
 }
 
-std::unordered_set<const genie::Task *> Unit::availableActions()
+std::unordered_set<Task> Unit::availableActions()
 {
-    std::unordered_set<const genie::Task *> tasks;
-    for (const genie::Task &task : DataManager::datFile().UnitHeaders[data.ID].TaskList) {
-        tasks.insert(&task);
+    std::unordered_set<Task> tasks;
+    for (const genie::Task &task : DataManager::datFile().UnitHeaders[m_data->ID].TaskList) {
+        tasks.insert(Task(task, m_data->ID));
     }
 
-    if (!data.Action.TaskSwapGroup) {
+    if (!m_data->Action.TaskSwapGroup) {
         return tasks;
     }
 
-    for (const genie::Unit *swappable : m_civilization->swappableUnits(data.Action.TaskSwapGroup)) {
+    for (const genie::Unit *swappable : m_civilization->swappableUnits(m_data->Action.TaskSwapGroup)) {
         for (const genie::Task &task : DataManager::datFile().UnitHeaders[swappable->ID].TaskList) {
-            tasks.insert(&task);
+            tasks.insert(Task(task, swappable->ID));
         }
     }
 
     return tasks;
 }
 
+void Unit::setUnitData(const genie::Unit &data_)
+{
+    m_data = &data_;
+
+    defaultGraphics = ResourceManager::Inst()->getGraphic(m_data->StandingGraphic.first);
+    if (m_data->Moving.WalkingGraphic >= 0) {
+        movingGraphics = ResourceManager::Inst()->getGraphic(m_data->Moving.WalkingGraphic);
+    }
+
+    if (!defaultGraphics) {
+        WARN << "Failed to load default graphics";
+    }
+
+    m_creationProgress = m_data->Creatable.TrainTime;
+
+    m_graphics.setGraphic(defaultGraphics);
+
+}
+
 int Unit::taskGraphicId(const genie::Task::ActionTypes taskType, const IAction::UnitState state)
 {
-    for (const genie::Task *task : availableActions()) {
-        if (task->ActionType != taskType) {
+    for (const Task &task : availableActions()) {
+        if (task.data->ActionType != taskType) {
             continue;
         }
 
         switch(state) {
         case IAction::Idle:
         case IAction::Proceeding:
-            return task->ProceedingGraphicID;
+            return task.data->ProceedingGraphicID;
         case IAction::Moving:
-            return task->MovingGraphicID;
+            return task.data->MovingGraphicID;
         case IAction::Working:
-            return task->WorkingGraphicID;
+            return task.data->WorkingGraphicID;
         case IAction::Carrying:
-            return task->CarryingGraphicID;
+            return task.data->CarryingGraphicID;
         default:
-            return data.StandingGraphic.first;
+            return m_data->StandingGraphic.first;
         }
     }
 
-    return data.StandingGraphic.first;
+    return m_data->StandingGraphic.first;
 }
 
 void Unit::setAngle(const float angle)

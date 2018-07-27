@@ -472,6 +472,10 @@ struct MapRect {
         return MapPos(x + width, y + height, z);
     }
 
+    MapPos center() const {
+        return MapPos(x + width/2, y + height/2, z/2);
+    }
+
     bool isEmpty() const {
         return !(width > 0 && height > 0);
     }

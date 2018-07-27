@@ -23,6 +23,13 @@
 
 #include <memory>
 
+namespace genie {
+class Task;
+}
+
+struct Unit;
+struct Task;
+
 class IAction
 {
 public:
@@ -49,6 +56,8 @@ public:
 
     /// @return true if action is done
     virtual bool update(Time time) = 0;
+
+    static void assignTask(const Task *task, std::shared_ptr<Unit> unit);
 
 protected:
     IAction(const Type type_);

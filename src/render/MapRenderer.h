@@ -52,6 +52,8 @@ private:
     SfmlRenderTarget m_textureTarget;
 
     sf::Image m_mapImage;
+
+    const int m_elevationHeight;
 };
 
 typedef std::shared_ptr<MapRenderer> MapRendererPtr;

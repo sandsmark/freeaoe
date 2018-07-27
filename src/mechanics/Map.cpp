@@ -34,6 +34,7 @@
 
 Map::Map() //: map_txt_(0)
 {
+//    DBG << DataManager::Inst().datFile().TerrainBlock.TileSizes.size();
 }
 
 Map::~Map()
@@ -70,11 +71,11 @@ void Map::setUpSample()
     }
 
     for (int i=3; i<6; i++) {
-        getTileAt(7, i).elevation_ = 1;
+        getTileAt(14, i).elevation_ = 1;
     }
 
     for (int i=3; i<6; i++) {
-        getTileAt(8, i).elevation_ = 1;
+        getTileAt(15, i).elevation_ = 1;
     }
 }
 
@@ -390,38 +391,33 @@ void Map::updateTileBlend(int tileX, int tileY)
 //            direction &= ~SouthEast;
 //        }
 
-    tile.z = tile.elevation_ * DataManager::Inst().terrainBlock().ElevHeight;
     if (neighborsAbove & West && neighborsAbove & South) {
         tile.slopes.self = TileSlopes::NorthWestEastUp;
-        tile.z += DataManager::Inst().terrainBlock().ElevHeight;
     } else if (neighborsAbove & East && neighborsAbove & North) {
         tile.slopes.self = TileSlopes::SouthWestEastUp;
     } else if (neighborsAbove & West && neighborsAbove & North) {
         tile.slopes.self = TileSlopes::NorthSouthWestUp;
-        tile.z += DataManager::Inst().terrainBlock().ElevHeight;
     } else if (neighborsAbove & East && neighborsAbove & South) {
         tile.slopes.self = TileSlopes::NorthSouthEastUp;
-        tile.z += DataManager::Inst().terrainBlock().ElevHeight;
     } else if (neighborsAbove == NorthWest) {
         tile.slopes.self = TileSlopes::WestUp;
     } else if (neighborsAbove == NorthEast) {
         tile.slopes.self = TileSlopes::SouthUp;
     } else if (neighborsAbove == SouthWest) {
         tile.slopes.self = TileSlopes::NorthUp;
-        tile.z += DataManager::Inst().terrainBlock().ElevHeight;
     } else if (neighborsAbove == SouthEast) {
         tile.slopes.self = TileSlopes::EastUp;
     } else if (neighborsAbove & North) {
         tile.slopes.self = TileSlopes::SouthWestUp;
     } else if (neighborsAbove & South) {
         tile.slopes.self = TileSlopes::NorthEastUp ;
-        tile.z += DataManager::Inst().terrainBlock().ElevHeight;
     } else if (neighborsAbove & East) {
         tile.slopes.self = TileSlopes::SouthEastUp;
     } else if (neighborsAbove & West) {
         tile.slopes.self = TileSlopes::NorthWestUp;
-        tile.z += DataManager::Inst().terrainBlock().ElevHeight;
     }
+
+    tile.yOffset = DataManager::datFile().TerrainBlock.TileSizes[res::TileSlopes::genieSlope(tile.slopes.self)].DeltaY;
 
     if (tile.slopes.self) {
         return;

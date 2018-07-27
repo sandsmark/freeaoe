@@ -131,8 +131,8 @@ MapPos MoveOnMap::findClosestWalkableBorder(const MapPos &target, int coarseness
     int twovdu = 0;	/* Numerator of distance; starts at 0 */
 
     int x = x0, y = y0;
-    int requiredLengthX = unit->data.Size.x * Constants::TILE_SIZE + coarseness;
-    int requiredLengthY = unit->data.Size.y * Constants::TILE_SIZE + coarseness;
+    int requiredLengthX = unit->data()->Size.x * Constants::TILE_SIZE + coarseness;
+    int requiredLengthY = unit->data()->Size.y * Constants::TILE_SIZE + coarseness;
     do {
         if (d < 0) {
             /* choose straight (u direction) */
@@ -269,15 +269,15 @@ bool MoveOnMap::update(Time time)
 
 std::shared_ptr<MoveOnMap> MoveOnMap::moveUnitTo(Unit::Ptr unit, MapPos destination, MapPtr map, UnitManager *unitManager)
 {
-    if (!unit->data.Speed) {
-        DBG << "Handed unit that can't move" << unit->readableName;
+    if (!unit->data()->Speed) {
+        DBG << "Handed unit that can't move" << unit->debugName;
         return nullptr;
     }
     std::shared_ptr<MoveOnMap> action (new act::MoveOnMap(destination, map, unit, unitManager));
 
 
-    action->m_terrainMoveMultiplier = DataManager::Inst().getTerrainRestriction(unit->data.TerrainRestriction).PassableBuildableDmgMultiplier;
-    action->speed_ = unit->data.Speed;
+    action->m_terrainMoveMultiplier = DataManager::Inst().getTerrainRestriction(unit->data()->TerrainRestriction).PassableBuildableDmgMultiplier;
+    action->speed_ = unit->data()->Speed;
 
     MapPos newDest = destination;
     if (!action->isPassable(destination.x, destination.y)) {
@@ -306,7 +306,7 @@ std::shared_ptr<MoveOnMap> MoveOnMap::moveUnitTo(Unit::Ptr unit, MapPos destinat
     }
 
     if (action->m_path.empty()) {
-        DBG << "Failed to find path for" << unit->readableName;
+        DBG << "Failed to find path for" << unit->debugName;
         return nullptr;
     }
 
@@ -477,12 +477,12 @@ bool MoveOnMap::isPassable(const int x, const int y)
                     continue;
                 }
 
-                if (otherUnit->data.Size.z == 0) {
+                if (otherUnit->data()->Size.z == 0) {
                     continue;
                 }
 
-                const float xSize = (otherUnit->data.Size.x + unit->data.Size.x) * Constants::TILE_SIZE;
-                const float ySize = (otherUnit->data.Size.y + unit->data.Size.y) * Constants::TILE_SIZE;
+                const float xSize = (otherUnit->data()->Size.x + unit->data()->Size.x) * Constants::TILE_SIZE;
+                const float ySize = (otherUnit->data()->Size.y + unit->data()->Size.y) * Constants::TILE_SIZE;
                 const float xDistance = std::abs(otherUnit->position().x - mapPos.x);
                 const float yDistance = std::abs(otherUnit->position().y - mapPos.y);
 

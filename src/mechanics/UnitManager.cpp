@@ -86,7 +86,7 @@ void UnitManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
     m_outlineOverlay.clear(sf::Color::Transparent);
 
     for (Unit::Ptr unit : m_units) {
-        if (!(unit->data.OcclusionMode & genie::Unit::OccludeOthers)) {
+        if (!(unit->data()->OcclusionMode & genie::Unit::OccludeOthers)) {
             continue;
         }
         const ScreenPos unitPosition = camera->absoluteScreenPos(unit->position());
@@ -117,10 +117,10 @@ void UnitManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
             circle.setOutlineColor(sf::Color::White);
             circle.setOutlineThickness(1);
 
-            double width = unit->data.OutlineSize.x * Constants::TILE_SIZE_HORIZONTAL;
-            double height =  unit->data.OutlineSize.y * Constants::TILE_SIZE_VERTICAL;
+            double width = unit->data()->OutlineSize.x * Constants::TILE_SIZE_HORIZONTAL;
+            double height =  unit->data()->OutlineSize.y * Constants::TILE_SIZE_VERTICAL;
 
-            if (unit->data.ObstructionType == genie::Unit::UnitObstruction) {
+            if (unit->data()->ObstructionType == genie::Unit::UnitObstruction) {
                 width /= 2.;
                 height /= 2.;
             } else {
@@ -139,7 +139,7 @@ void UnitManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
             renderTarget->draw(circle);
 
             pos.x -= Constants::TILE_SIZE_HORIZONTAL / 8;
-            pos.y -= height + Constants::TILE_SIZE_HEIGHT * unit->data.HPBarHeight;
+            pos.y -= height + Constants::TILE_SIZE_HEIGHT * unit->data()->HPBarHeight;
 
             rect.setOutlineColor(sf::Color::Transparent);
             rect.setPosition(pos);
@@ -155,7 +155,7 @@ void UnitManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
             m_outlineOverlay.draw(rect);
         }
 
-        if (!(unit->data.OcclusionMode & genie::Unit::ShowOutline)) {
+        if (!(unit->data()->OcclusionMode & genie::Unit::ShowOutline)) {
             continue;
         }
 
@@ -244,30 +244,30 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
             continue;
         }
 
-        requiredInteraction = std::max(unit->data.InteractionMode, requiredInteraction);
+        requiredInteraction = std::max(unit->data()->InteractionMode, requiredInteraction);
         containedUnits.push_back(unit);
     }
 
     if (!containedUnits.empty()) {
         m_currentActions = containedUnits[0]->availableActions();
     }
-    for (const genie::Task *t : m_currentActions) {
-        DBG << t->actionTypeName();
+    for (const Task &t : m_currentActions) {
+        DBG << t.data->actionTypeName();
     }
 
     for (Unit::Ptr unit : containedUnits) {
-        if (unit->data.InteractionMode < requiredInteraction) {
+        if (unit->data()->InteractionMode < requiredInteraction) {
             continue;
         }
 
-        DBG << "Selected" << unit->readableName << "at" << unit->position() << unit->renderer().angle() << unit->data.ResourceCapacity;
-        for (const genie::Resource<float, int8_t> r : unit->data.ResourceStorages) {
+        DBG << "Selected" << unit->debugName << "at" << unit->position() << unit->renderer().angle() << unit->data()->ResourceCapacity;
+        for (const genie::Resource<float, int8_t> r : unit->data()->ResourceStorages) {
             DBG << "res:" << r.Type << r.Amount << r.Flag;
         }
         m_selectedUnits.insert(unit);
 
         // stl is shit
-        for (std::unordered_set<const genie::Task*>::iterator it = m_currentActions.begin(); it != m_currentActions.end();) {
+        for (std::unordered_set<Task>::iterator it = m_currentActions.begin(); it != m_currentActions.end();) {
             if (unit->availableActions().count(*it) == 0) {
                 it = m_currentActions.erase(it);
             } else {
@@ -319,25 +319,26 @@ Unit::Ptr UnitManager::unitAt(const ScreenPos &pos, const CameraPtr &camera) con
     return nullptr;
 }
 
-const genie::Task *UnitManager::defaultActionAt(const ScreenPos &pos, const CameraPtr &camera)
+const Task UnitManager::defaultActionAt(const ScreenPos &pos, const CameraPtr &camera)
 {
     if (m_selectedUnits.empty()) {
-        return nullptr;
+        return Task();
     }
 
     Unit::Ptr target = unitAt(pos, camera);
     if (!target) {
-        return nullptr;
+        return Task();
     }
 
     // One of the selected themselves
     if (m_selectedUnits.count(target)) {
-        return nullptr;
+        return Task();
     }
 
     int ownPlayerId = (*m_selectedUnits.begin())->playerId;
 
-    for (const genie::Task *action : availableActions()) {
+    for (const Task &task : availableActions()) {
+        const genie::Task *action = task.data;
         switch (action->TargetDiplomacy) {
         case genie::Task::TargetSelf:
             if (target->playerId != ownPlayerId) {
@@ -378,19 +379,19 @@ const genie::Task *UnitManager::defaultActionAt(const ScreenPos &pos, const Came
 
         if (action->ActionType == genie::Task::Combat &&
                 action->TargetDiplomacy == genie::Task::TargetGaiaNeutralEnemies && ownPlayerId != target->playerId) {
-            return action;
+            return task;
         }
 
-        if (action->UnitID == target->data.ID) {
-            return action;
+        if (action->UnitID == target->data()->ID) {
+            return task;
         }
 
-        if (action->ClassID == target->data.Class) {
-            return action;
+        if (action->ClassID == target->data()->Class) {
+            return task;
         }
     }
 
-    return nullptr;
+    return Task();
 }
 
 void UnitManager::updateVisibility(const CameraPtr &camera)
@@ -410,9 +411,9 @@ void UnitManager::updateVisibility(const CameraPtr &camera)
 
 void UnitManager::playSound(const Unit::Ptr &unit)
 {
-    const int id = unit->data.SelectionSound;
+    const int id = unit->data()->SelectionSound;
     if (id < 0) {
-        DBG << "no selection sound for" << unit->readableName;
+        DBG << "no selection sound for" << unit->debugName;
         return;
     }
     const std::vector<genie::Sound> &sounds = DataManager::Inst().datFile().Sounds;

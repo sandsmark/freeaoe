@@ -8,14 +8,14 @@ class Map;
 class FarmRender : public comp::GraphicRender
 {
 public:
-    FarmRender();
+    FarmRender(const Size &size);
 
     void render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const comp::RenderType pass) override;
 
 private:
     sf::Texture m_texture;
     ScreenPos m_hotspot;
-
+    Size m_size;
 };
 
 

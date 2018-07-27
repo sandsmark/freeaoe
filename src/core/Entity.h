@@ -69,7 +69,7 @@ struct Entity: std::enable_shared_from_this<Entity>
 
     static std::shared_ptr<Unit> asUnit(EntityPtr entity);
 
-    const std::string readableName;
+    const std::string debugName;
 
     bool isVisible = false;
 
@@ -99,6 +99,20 @@ struct MoveTargetMarker : public Entity
 
 private:
     bool m_isRunning = false;
+};
+
+struct Task {
+//    typedef Task value_type;
+
+    Task(const genie::Task &t, uint16_t id) : data(&t), unitId(id) {}
+    Task() = default;
+
+    const genie::Task *data = nullptr;
+    const uint16_t unitId = 0; // for task group swapping
+
+    bool operator==(const Task &other) const {
+        return unitId == other.unitId && data == other.data;
+    }
 };
 
 struct Unit : public Entity
@@ -155,8 +169,6 @@ struct Unit : public Entity
         MapPos offset;
     };
 
-    const genie::Unit &data;
-
     Unit() = delete;
     Unit(const Unit &unit) = delete;
 
@@ -190,17 +202,32 @@ struct Unit : public Entity
     void increaseCreationProgress(float progress);
     float creationProgress() const;
 
-    std::unordered_set<const genie::Task*> availableActions();
+    std::unordered_set<Task> availableActions();
 
     std::shared_ptr<Civilization> m_civilization;
+
+    void setUnitData(const genie::Unit &data_);
+
+    const genie::Unit *data() const {return m_data; }
 
 protected:
     int taskGraphicId(const genie::Task::ActionTypes taskType, const IAction::UnitState state);
 
+    const genie::Unit *m_data = nullptr;
     res::GraphicPtr movingGraphics;
     ActionPtr m_currentAction;
     std::deque<ActionPtr> m_actionQueue;
     float m_creationProgress = 0.f;
 };
+
+namespace std {
+
+template<> struct hash<Task>
+{
+    size_t operator()(const Task &b) const {
+        return hash<int16_t>()(b.data->ID) ^ hash<uint16_t>()(b.unitId);
+    }
+};
+}
 
 #endif // ENTITY_H

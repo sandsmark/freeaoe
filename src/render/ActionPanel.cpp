@@ -202,9 +202,9 @@ void ActionPanel::updateButtons()
 
     Unit::Ptr unit = *m_selectedUnits.begin();
 
-    DBG << unit->data.Creatable.GarrisonGraphic;
+    DBG << unit->data()->Creatable.GarrisonGraphic;
 
-    if (unit->data.Type >= genie::Unit::MovingType && unit->data.Type < genie::Unit::BuildingType) {
+    if (unit->data()->Type >= genie::Unit::MovingType && unit->data()->Type < genie::Unit::BuildingType) {
         InterfaceButton killButton;
         killButton.action = Command::Kill;
         killButton.index = 3;
@@ -213,10 +213,10 @@ void ActionPanel::updateButtons()
 
     bool canGarrison = false;
 
-    for (const genie::Task *task : unit->availableActions()) {
-        DBG << task->actionTypeName();
+    for (const Task &task : unit->availableActions()) {
+        DBG << task.data->actionTypeName();
 
-        if (task->ActionType == genie::Task::Garrison) {
+        if (task.data->ActionType == genie::Task::Garrison) {
             canGarrison = true;
             break;
         }
@@ -235,7 +235,7 @@ void ActionPanel::updateButtons()
     stopButton.index = 9;
     currentButtons.push_back(stopButton);
 
-    if (unit->data.Class == genie::Unit::Civilian || unit->data.Class == genie::Unit::BuildingClass) {
+    if (unit->data()->Class == genie::Unit::Civilian || unit->data()->Class == genie::Unit::BuildingClass) {
         addCreateButtons(unit);
     }
 }
@@ -258,7 +258,7 @@ void ActionPanel::addCreateButtons(const std::shared_ptr<Unit> &unit)
         }
 
         InterfaceButton button;
-        if (unit->data.InterfaceKind == genie::Unit::CiviliansInterface) {
+        if (unit->data()->InterfaceKind == genie::Unit::CiviliansInterface) {
             button.type = InterfaceButton::CreateBuilding;
             button.interfacePage = creatable->InterfaceKind;
         } else {
@@ -279,7 +279,7 @@ void ActionPanel::addCreateButtons(const std::shared_ptr<Unit> &unit)
         currentButtons.push_back(rightButton);
     }
 
-    if (unit->data.InterfaceKind == genie::Unit::CiviliansInterface) {
+    if (unit->data()->InterfaceKind == genie::Unit::CiviliansInterface) {
         InterfaceButton backButton;
         backButton.action = Command::PreviousPage;
         backButton.index = 14;

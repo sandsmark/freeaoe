@@ -39,6 +39,8 @@
 #include "render/ActionPanel.h"
 #include "global/Constants.h"
 
+#include "resource/LanguageManager.h"
+
 #define MOUSE_MOVE_EDGE_SIZE 10
 #define CAMERA_SPEED 1.
 
@@ -78,6 +80,47 @@ bool GameState::init()
     if (!m_actionPanel->init()) {
         return false;
     }
+
+    std::unordered_set<int16_t> usedActionTypes;
+    std::unordered_set<int> interestingActions({
+        genie::Task::SetInitialResources,
+
+    });
+//    std::unordered_set<int16_t> knownCreatableTypes({
+//        0, 1, 2, 3, 4, 5, 6, 21, 101, 104
+//    });
+
+
+    DBG << "=============";
+    for (size_t i=0; i<DataManager::Inst().datFile().UnitHeaders.size(); i++) {
+        const genie::Unit &gunit = DataManager::Inst().getUnit(i);
+//        if (gunit.ID != -1 && knownCreatableTypes.count(gunit.Creatable.CreatableType) == 0) {
+//            WARN << LanguageManager::getString(gunit.LanguageDLLName) << gunit.Creatable.CreatableType;
+//        }
+        const genie::UnitHeader &h = DataManager::Inst().datFile().UnitHeaders[i];
+        for (const genie::Task &t : h.TaskList) {
+            usedActionTypes.insert(t.ActionType);
+            if (interestingActions.count(t.ActionType) == 0 && t.CarryCheck == 0) {
+                continue;
+            }
+
+            DBG << t.ActionType << t.actionTypeName() << LanguageManager::getString(gunit.LanguageDLLName) << gunit.Name << gunit.ID << t.CarryCheck;
+        }
+    }
+    DBG << "=============";
+//    for (int16_t type=0;type<genie::Task::Wheel+1;type++) {
+//        if (usedActionTypes.count(type)) {
+//            continue;
+//        }
+//        if (interestingActions.count(type)) {
+//            continue;
+//        }
+//        const std::string typeName = genie::Task::actionTypeName(type);
+//        if (typeName != "Unknown class") {
+//            std::cout << type << ", ";
+//        }
+//    }
+//    std::cout << std::endl;
 
     std::shared_ptr<genie::SlpFile> overlayFile = ResourceManager::Inst()->getUiOverlay(ResourceManager::Ui1280x1024, ResourceManager::Viking);
     if (overlayFile) {
@@ -168,12 +211,12 @@ bool GameState::init()
 
         Unit::Ptr unit = UnitFactory::Inst().createUnit(Unit::TownCenter, MapPos(48*2, 48*2, 0), m_humanPlayer, map_);
 
-        if (unit->data.Building.FoundationTerrainID > 0) {
-            int width = unit->data.Size.x;
-            int height = unit->data.Size.y;
+        if (unit->data()->Building.FoundationTerrainID > 0) {
+            int width = unit->data()->Size.x;
+            int height = unit->data()->Size.y;
             for (int x = 0; x < width*2; x++) {
                 for (int y = 0; y < height*2; y++) {
-                    map_->setTileAt(3 - width + x, 3 - height + y, unit->data.Building.FoundationTerrainID);
+                    map_->setTileAt(3 - width + x, 3 - height + y, unit->data()->Building.FoundationTerrainID);
                 }
             }
         }
@@ -352,13 +395,13 @@ void GameState::handleEvent(sf::Event event)
             m_unitManager->onMouseMove(renderTarget_->camera()->absoluteMapPos(mousePos));
         }
 
-        const genie::Task *targetAction = m_unitManager->defaultActionAt(mousePos, renderTarget_->camera());
-        if (!targetAction) {
+        const Task targetAction = m_unitManager->defaultActionAt(mousePos, renderTarget_->camera());
+        if (!targetAction.data) {
             m_mouseCursor.setCursor(Cursor::Normal);
-        } else if (targetAction->ActionType == genie::Task::Combat) {
+        } else if (targetAction.data->ActionType == genie::Task::Combat) {
             m_mouseCursor.setCursor(Cursor::Attack);
         } else {
-            DBG << targetAction->actionTypeName();
+            DBG << targetAction.data->actionTypeName();
             m_mouseCursor.setCursor(Cursor::Action);
         }
 

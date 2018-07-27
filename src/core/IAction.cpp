@@ -17,6 +17,8 @@
 */
 
 #include "IAction.h"
+#include "Entity.h"
+#include "resource/DataManager.h"
 
 IAction::IAction(const Type type_) :
     type(type_)
@@ -25,4 +27,12 @@ IAction::IAction(const Type type_) :
 
 IAction::~IAction()
 {
+}
+
+void IAction::assignTask(const Task *task, std::shared_ptr<Unit> unit)
+{
+    if (task->unitId != unit->data()->ID) {
+        unit->setUnitData(DataManager::Inst().getUnit(task->unitId));
+    }
+
 }

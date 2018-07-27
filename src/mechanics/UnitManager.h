@@ -81,9 +81,9 @@ public:
 
     Unit::Ptr unitAt(const ScreenPos &pos, const CameraPtr &camera) const;
 
-    const std::unordered_set<const genie::Task*> availableActions() const { return m_currentActions; }
+    const std::unordered_set<Task> availableActions() const { return m_currentActions; }
 
-    const genie::Task *defaultActionAt(const ScreenPos &pos, const CameraPtr &camera);
+    const Task defaultActionAt(const ScreenPos &pos, const CameraPtr &camera);
 
 private:
     void updateVisibility(const CameraPtr &camera);
@@ -91,7 +91,7 @@ private:
     void playSound(const Unit::Ptr &unit);
 
     std::set<Unit::Ptr, MapPositionSorter> m_units;
-    std::unordered_set<const genie::Task*> m_currentActions;
+    std::unordered_set<Task> m_currentActions;
 
     UnitSet m_selectedUnits;
     MapPtr m_map;
