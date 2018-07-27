@@ -26,13 +26,14 @@ public:
     int id() { return m_civId; }
 
     const std::vector<const genie::Unit *> creatableUnits(int16_t creator) const;
-
     const std::vector<const genie::Tech *> researchAvailableAt(int16_t creator) const;
 
     const genie::Unit &unit(const uint16_t id) const;
     const genie::Tech &tech(const uint16_t id) const;
 
     std::vector<const genie::Unit *> swappableUnits(const uint16_t taskSwapGroup) const;
+
+    const std::unordered_map<genie::ResourceType, int> startingResources() const;
 
 private:
     const genie::Unit nullUnit;

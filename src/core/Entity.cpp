@@ -23,6 +23,7 @@
 #include "render/GraphicRender.h"
 #include "mechanics/Civilization.h"
 #include "mechanics/Map.h"
+#include "mechanics/Player.h"
 #include <genie/dat/Unit.h>
 
 static size_t s_entityCount = 0;
@@ -80,10 +81,11 @@ void Entity::setPosition(const MapPos &pos, const MapPtr &map)
     map->addEntityAt(newTileX, newTileY, shared_from_this());
 }
 
-Unit::Unit(const genie::Unit &data_, int playerId_, std::shared_ptr<Civilization> civilization) :
+Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, std::shared_ptr<Civilization> civilization_) :
     Entity(Type::Unit, LanguageManager::getString(data_.LanguageDLLName) + " (" + std::to_string(data_.ID) + ")"),
-    playerId(playerId_),
-    m_civilization(civilization)
+    playerId(player_->playerId),
+    player(player_),
+    civilization(civilization_)
 {
     setUnitData(data_);
 }
@@ -122,7 +124,7 @@ const std::vector<const genie::Unit *> Unit::creatableUnits()
         return {};
     }
 
-    return m_civilization->creatableUnits(m_data->ID);
+    return civilization->creatableUnits(m_data->ID);
 }
 
 ScreenRect Unit::rect() const
@@ -174,7 +176,7 @@ std::unordered_set<Task> Unit::availableActions()
         return tasks;
     }
 
-    for (const genie::Unit *swappable : m_civilization->swappableUnits(m_data->Action.TaskSwapGroup)) {
+    for (const genie::Unit *swappable : civilization->swappableUnits(m_data->Action.TaskSwapGroup)) {
         for (const genie::Task &task : DataManager::datFile().UnitHeaders[swappable->ID].TaskList) {
             tasks.insert(Task(task, swappable->ID));
         }
@@ -186,6 +188,7 @@ std::unordered_set<Task> Unit::availableActions()
 void Unit::setUnitData(const genie::Unit &data_)
 {
     m_data = &data_;
+    DBG <<     (LanguageManager::getString(data_.LanguageDLLName) + " (" + std::to_string(data_.ID) + ")");
 
     defaultGraphics = ResourceManager::Inst()->getGraphic(m_data->StandingGraphic.first);
     if (m_data->Moving.WalkingGraphic >= 0) {
@@ -254,11 +257,15 @@ void Unit::setCurrentAction(ActionPtr action)
         return;
     }
 
-    if (action->type == IAction::Type::Move) {
+    switch (action->type) {
+    case IAction::Type::Move:
         m_graphics.setGraphic(movingGraphics);
-    } else if (action->type == IAction::Type::Build) {
+        break;
+    case IAction::Type::Build:
+    case IAction::Type::Gather:
         m_graphics.setGraphic(ResourceManager::Inst()->getGraphic(taskGraphicId(genie::Task::Build, action->unitState())));
-    } else {
+        break;
+    default:
         m_graphics.setGraphic(defaultGraphics);
     }
 }

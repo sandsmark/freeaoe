@@ -22,6 +22,7 @@
 #include <global/Constants.h>
 #include "CompUnitData.h"
 #include "ActionMove.h"
+#include "Farm.h"
 
 using std::shared_ptr;
 
@@ -41,11 +42,25 @@ UnitFactory::~UnitFactory()
 
 Unit::Ptr UnitFactory::createUnit(int ID, const MapPos &position, const Player::Ptr &owner, const MapPtr &map)
 {
-//    DBG << "Creating" << ID;
     const genie::Unit &gunit = DataManager::Inst().getUnit(ID);
 
-    Unit::Ptr unit = std::make_shared<Unit>(gunit, owner->playerId, owner->civ);
+    Unit::Ptr unit;
+    if (ID == Unit::Farm) {
+        unit = std::make_shared<Farm>(gunit, owner, owner->civ, map);
+    } else {
+        unit = std::make_shared<Unit>(gunit, owner, owner->civ);
+    }
+
     unit->setPosition(position, map);
+
+    for (const genie::Unit::ResourceStorage &res : gunit.ResourceStorages) {
+        if (res.Type == -1) {
+            continue;
+        }
+        WARN << unit->debugName << res.Type << res.Amount;
+        unit->resources[genie::ResourceType(res.Type)] = res.Amount;
+
+    }
 
     if (gunit.Type >= genie::Unit::BuildingType) {
         unit->snapPositionToGrid(map);

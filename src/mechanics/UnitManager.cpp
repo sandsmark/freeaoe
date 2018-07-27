@@ -20,12 +20,12 @@
 
 #include "CompUnitData.h"
 #include "ActionMove.h"
+#include "ActionGather.h"
 #include "ActionBuild.h"
 #include "render/SfmlRenderTarget.h"
 #include "resource/LanguageManager.h"
 #include "global/Constants.h"
 #include "resource/DataManager.h"
-#include "Farm.h"
 #include "Civilization.h"
 #include "UnitFactory.h"
 #include "audio/AudioPlayer.h"
@@ -308,14 +308,7 @@ void UnitManager::setMap(MapPtr map)
 
 void UnitManager::placeBuilding(const int unitId, const std::shared_ptr<Player> &player)
 {
-    if (unitId == Unit::Farm) {
-        m_buildingToPlace = std::make_shared<Farm>(DataManager::Inst().getUnit(Unit::Farm),
-                                                   player->playerId,
-                                                   player->civ,
-                                                   m_map);
-    } else {
-        m_buildingToPlace = UnitFactory::Inst().createUnit(unitId, MapPos(), player, m_map);
-    }
+    m_buildingToPlace = UnitFactory::Inst().createUnit(unitId, MapPos(), player, m_map);
 }
 
 Unit::Ptr UnitManager::unitAt(const ScreenPos &pos, const CameraPtr &camera) const
@@ -450,7 +443,8 @@ void UnitManager::assignTask(const Task &task, const Unit::Ptr &unit, const Unit
         unit->queueAction(std::make_shared<act::ActionBuild>(unit, target));
         break;
     case genie::Task::GatherRebuild:
-        DBG << "supposed to gather from" << target->debugName;
+//        DBG << "supposed to gather from" << target->debugName;
+        unit->queueAction(std::make_shared<act::ActionGather>(unit, target, task.data));
         break;
     default:
         return;
@@ -466,5 +460,5 @@ void UnitManager::playSound(const Unit::Ptr &unit)
         return;
     }
 
-    AudioPlayer::instance().playSound(id, unit->m_civilization->id());
+    AudioPlayer::instance().playSound(id, unit->civilization->id());
 }

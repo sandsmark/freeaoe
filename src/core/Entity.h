@@ -27,6 +27,7 @@
 #include "IComponent.h"
 #include "IAction.h"
 #include <genie/dat/UnitCommand.h>
+#include <genie/dat/ResourceUsage.h>
 
 namespace genie {
 class Unit;
@@ -44,6 +45,7 @@ class GraphicRender;
 
 typedef std::shared_ptr<Entity> EntityPtr;
 class Civilization;
+struct Player;
 
 struct MoveTargetMarker;
 
@@ -173,9 +175,7 @@ struct Unit : public Entity
     Unit() = delete;
     Unit(const Unit &unit) = delete;
 
-    Unit(const genie::Unit &data_, int playerId, std::shared_ptr<Civilization> civilization);
-
-    bool selected = false;
+    Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player, std::shared_ptr<Civilization> civilization);
 
     void setAngle(const float angle);
 
@@ -191,11 +191,14 @@ struct Unit : public Entity
 
     const std::vector<const genie::Unit *> creatableUnits();
 
+    bool selected = false;
     int playerId;
-
+    std::weak_ptr<Player> player;
     int constructors = 0;
-
     std::vector<Annex> annexes;
+    std::shared_ptr<Civilization> civilization;
+
+    std::unordered_map<genie::ResourceType, float> resources;
 
     virtual ScreenRect rect() const;
 
@@ -205,10 +208,7 @@ struct Unit : public Entity
 
     std::unordered_set<Task> availableActions();
 
-    std::shared_ptr<Civilization> m_civilization;
-
     void setUnitData(const genie::Unit &data_);
-
     const genie::Unit *data() const {return m_data; }
 
 protected:

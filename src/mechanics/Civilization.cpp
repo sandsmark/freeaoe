@@ -92,3 +92,18 @@ std::vector<const genie::Unit *> Civilization::swappableUnits(const uint16_t tas
 
     return m_taskSwapUnits[taskSwapGroup];
 }
+
+const std::unordered_map<genie::ResourceType, int> Civilization::startingResources() const
+{
+    std::unordered_map<genie::ResourceType, int> ret;
+    for (size_t i=0; i<m_data.Resources.size(); i++) {
+        if (i >= int(genie::ResourceType::NumberOfTypes)) {
+            WARN << "Too many resources" << i;
+            break;
+        }
+
+        ret[genie::ResourceType(i)] = m_data.Resources[i];
+    }
+
+    return ret;
+}

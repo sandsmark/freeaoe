@@ -22,8 +22,9 @@
 #include "mechanics/ActionBuild.h"
 #include "mechanics/ActionMove.h"
 
-IAction::IAction(const Type type_) :
-    type(type_)
+IAction::IAction(const Type type_, const std::shared_ptr<Unit> &unit) :
+    type(type_),
+    m_unit(unit)
 {
 }
 

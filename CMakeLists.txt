@@ -73,6 +73,7 @@ set(MECHANICS_SRC
     src/mechanics/StateManager.cpp
     src/mechanics/UnitFactory.cpp
     src/mechanics/UnitManager.cpp
+    src/mechanics/ActionGather.cpp
     )
 
 set(RENDER_SRC

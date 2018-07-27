@@ -68,14 +68,12 @@ namespace act {
 static const float PATHFINDING_HEURISTIC_WEIGHT = 1.;
 
 MoveOnMap::MoveOnMap(MapPos destination, MapPtr map, Unit::Ptr unit, UnitManager *unitManager) :
-    IAction(Type::Move),
+    IAction(Type::Move, unit),
     m_map(map),
     m_unitManager(unitManager),
-    target_reached(false),
-    m_unit(unit)
+    target_reached(false)
 {
     dest_ = destination;
-    last_update_ = 0;
 }
 
 MapPos MoveOnMap::findClosestWalkableBorder(const MapPos &target, int coarseness)
@@ -188,13 +186,13 @@ bool MoveOnMap::update(Time time)
         return false;
     }
 
-    if (!last_update_) {
-        last_update_ = time;
+    if (!m_prevTime) {
+        m_prevTime = time;
         return true;
     }
 
 
-    float elapsed = time - last_update_;
+    float elapsed = time - m_prevTime;
     float movement = elapsed * speed_ * 0.15;
 
 
@@ -257,7 +255,7 @@ bool MoveOnMap::update(Time time)
 
     unit->setPosition(newPos, m_map);
 
-    last_update_ = time;
+    m_prevTime = time;
 
     if (std::hypot(newPos.x - dest_.x, newPos.y - dest_.y) < movement) {
         target_reached = true;

@@ -38,7 +38,8 @@ public:
         None,
         Move,
         PlaceOnMap,
-        Build
+        Build,
+        Gather
     };
 
     enum UnitState {
@@ -59,8 +60,9 @@ public:
     virtual bool update(Time time) = 0;
 
 protected:
-    IAction(const Type type_);
-    //isDone?
+    IAction(const Type type_, const std::shared_ptr<Unit> &unit);
+    std::weak_ptr<Unit> m_unit;
+    Time m_prevTime = 0;
 };
 
 typedef std::shared_ptr<IAction> ActionPtr;

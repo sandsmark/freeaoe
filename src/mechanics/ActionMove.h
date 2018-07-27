@@ -55,10 +55,7 @@ private:
     std::vector<float> m_terrainMoveMultiplier;
     float speed_;
 
-    Time last_update_;
-
     bool target_reached;
-    std::weak_ptr<Unit> m_unit;
 };
 }
 

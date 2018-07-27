@@ -4,10 +4,8 @@
 
 namespace act {
 
-ActionBuild::ActionBuild(Unit::Ptr builder, Unit::Ptr building) : IAction(Type::Build),
-    m_unit(builder),
-    m_targetBuilding(building),
-    m_prevTime(0)
+ActionBuild::ActionBuild(Unit::Ptr builder, Unit::Ptr building) : IAction(Type::Build, builder),
+    m_targetBuilding(building)
 {
 }
 
@@ -24,6 +22,7 @@ bool ActionBuild::update(Time time)
 {
     Unit::Ptr unit = m_unit.lock();
     if (!unit) {
+        WARN << "Unit gone";
         return true;
     }
 

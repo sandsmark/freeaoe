@@ -6,8 +6,8 @@
 #include "mechanics/Player.h"
 #include "Map.h"
 
-Farm::Farm(const genie::Unit &data_, int playerId, std::shared_ptr<Civilization> civilization, const std::shared_ptr<Map> &map) :
-    Unit(data_, playerId, civilization),
+Farm::Farm(const genie::Unit &data_, const std::shared_ptr<Player> &player, std::shared_ptr<Civilization> civilization, const std::shared_ptr<Map> &map) :
+    Unit(data_, player, civilization),
     m_map(map),
     m_farmRenderer(Size(data_.Size))
 {
