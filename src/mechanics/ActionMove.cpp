@@ -90,7 +90,7 @@ MapPos MoveOnMap::findClosestWalkableBorder(const MapPos &target, int coarseness
     // standard bresenham, not the prettiest implementation
     const int x0 = target.x;
     const int y0 = target.y;
-    const int x1 = unit->position().y;
+    const int x1 = unit->position().x;
     const int y1 = unit->position().y;
 
     int dx = x1 - x0;
@@ -120,8 +120,8 @@ MapPos MoveOnMap::findClosestWalkableBorder(const MapPos &target, int coarseness
         uincrY = 1;
         vincrX = 1;
         vincrY = 0;
-        if (dy < 0) uincrY = -uincrY;
         if (dx < 0) vincrX = -vincrX;
+        if (dy < 0) uincrY = -uincrY;
     }
 
     const int uend = u + distanceU;
