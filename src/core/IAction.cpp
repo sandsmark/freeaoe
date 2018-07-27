@@ -29,10 +29,22 @@ IAction::~IAction()
 {
 }
 
-void IAction::assignTask(const Task *task, std::shared_ptr<Unit> unit)
+void IAction::assignTask(const Task &task, const std::shared_ptr<Unit> &unit, const std::shared_ptr<Unit> &target)
 {
-    if (task->unitId != unit->data()->ID) {
-        unit->setUnitData(DataManager::Inst().getUnit(task->unitId));
+    if (!task.data) {
+        WARN << "no task data";
+        return;
     }
 
+    if (task.unitId != unit->data()->ID) {
+        unit->setUnitData(DataManager::Inst().getUnit(task.unitId));
+    }
+
+    switch(task.data->ActionType) {
+    case genie::Task::GatherRebuild:
+        DBG << "supposed to gather from" << target->debugName;
+        break;
+    default:
+        return;
+    }
 }

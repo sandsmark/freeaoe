@@ -401,7 +401,6 @@ void GameState::handleEvent(sf::Event event)
         } else if (targetAction.data->ActionType == genie::Task::Combat) {
             m_mouseCursor.setCursor(Cursor::Attack);
         } else {
-            DBG << targetAction.data->actionTypeName();
             m_mouseCursor.setCursor(Cursor::Action);
         }
 
@@ -475,7 +474,7 @@ void GameState::handleEvent(sf::Event event)
             m_selectionRect = ScreenRect();
             m_selecting = false;
         } else if (event.mouseButton.button == sf::Mouse::Button::Right) {
-            m_unitManager->onRightClick(renderTarget_->camera()->absoluteMapPos(ScreenPos(event.mouseButton.x, event.mouseButton.y)));
+            m_unitManager->onRightClick(ScreenPos(event.mouseButton.x, event.mouseButton.y), renderTarget_->camera());
         }
 
     }

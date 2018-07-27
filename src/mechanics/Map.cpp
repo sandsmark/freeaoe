@@ -178,7 +178,7 @@ MapTile &Map::getTileAt(unsigned int col, unsigned int row)
     unsigned int index = row * cols_ + col;
 
     if (IS_UNLIKELY(index >= tiles_.size())) {
-        WARN << "Trying to get MapTile (" << col << "x" << row << ") out of bounds (" << cols_ << "x" << rows_ << ")";
+//        WARN << "Trying to get MapTile (" << col << "x" << row << ") out of bounds (" << cols_ << "x" << rows_ << ")";
         static MapTile nulltile;
         return nulltile;
     }

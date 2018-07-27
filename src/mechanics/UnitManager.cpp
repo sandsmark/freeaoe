@@ -211,12 +211,23 @@ void UnitManager::onLeftClick(const MapPos &/*mapPos*/)
     }
 }
 
-void UnitManager::onRightClick(const MapPos &mapPos)
+void UnitManager::onRightClick(const ScreenPos &screenPos, const CameraPtr &camera)
 {
     if (m_selectedUnits.empty()) {
         return;
     }
 
+    const Task task = defaultActionAt(screenPos, camera);
+    if (task.data) {
+        for (const Unit::Ptr &unit : m_selectedUnits) {
+            IAction::assignTask(task, unit, unitAt(screenPos, camera));
+        }
+
+        return;
+    }
+
+
+    const MapPos mapPos = camera->absoluteMapPos(screenPos);
     for (const Unit::Ptr &unit : m_selectedUnits) {
         unit->setCurrentAction(act::MoveOnMap::moveUnitTo(unit, mapPos, m_map, this));
     }
@@ -248,24 +259,16 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
         containedUnits.push_back(unit);
     }
 
-    if (!containedUnits.empty()) {
-        m_currentActions = containedUnits[0]->availableActions();
-    }
-    for (const Task &t : m_currentActions) {
-        DBG << t.data->actionTypeName();
-    }
-
     for (Unit::Ptr unit : containedUnits) {
         if (unit->data()->InteractionMode < requiredInteraction) {
             continue;
         }
 
-        DBG << "Selected" << unit->debugName << "at" << unit->position() << unit->renderer().angle() << unit->data()->ResourceCapacity;
-        for (const genie::Resource<float, int8_t> r : unit->data()->ResourceStorages) {
-            DBG << "res:" << r.Type << r.Amount << r.Flag;
-        }
         m_selectedUnits.insert(unit);
+        m_currentActions.merge(unit->availableActions());
 
+    }
+    for (const Unit::Ptr &unit : m_selectedUnits) {
         // stl is shit
         for (std::unordered_set<Task>::iterator it = m_currentActions.begin(); it != m_currentActions.end();) {
             if (unit->availableActions().count(*it) == 0) {
@@ -310,7 +313,7 @@ Unit::Ptr UnitManager::unitAt(const ScreenPos &pos, const CameraPtr &camera) con
         }
 
         const ScreenPos unitPosition = camera->absoluteScreenPos(unit->position());
-        const ScreenRect unitRect = unit->renderer().rect() + unitPosition;
+        const ScreenRect unitRect = unit->rect() + unitPosition;
         if (unitRect.contains(pos)) {
             return unit;
         }
@@ -337,8 +340,9 @@ const Task UnitManager::defaultActionAt(const ScreenPos &pos, const CameraPtr &c
 
     int ownPlayerId = (*m_selectedUnits.begin())->playerId;
 
-    for (const Task &task : availableActions()) {
+    for (const Task &task : m_currentActions) {
         const genie::Task *action = task.data;
+
         switch (action->TargetDiplomacy) {
         case genie::Task::TargetSelf:
             if (target->playerId != ownPlayerId) {

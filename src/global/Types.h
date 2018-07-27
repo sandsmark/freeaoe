@@ -595,7 +595,7 @@ inline LogPrinter &operator <<(LogPrinter &os, const MapPos &pos) {
 }
 
 
-inline LogPrinter &operator <<(LogPrinter &os, const ScreenPos &pos) {
+inline LogPrinter operator <<(LogPrinter &os, const ScreenPos &pos) {
     os << "ScreenPos(x:" << pos.x << ", y:" << pos.y << ")";
     return os;
 }
