@@ -88,6 +88,8 @@ Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, std
     civilization(civilization_)
 {
     setUnitData(data_);
+
+    m_creationProgress = m_data->Creatable.TrainTime;
 }
 
 bool Unit::update(Time time)
@@ -199,8 +201,6 @@ void Unit::setUnitData(const genie::Unit &data_)
         WARN << "Failed to load default graphics";
     }
 
-    m_creationProgress = m_data->Creatable.TrainTime;
-
     m_graphics.setGraphic(defaultGraphics);
 
 }
@@ -262,8 +262,10 @@ void Unit::setCurrentAction(ActionPtr action)
         m_graphics.setGraphic(movingGraphics);
         break;
     case IAction::Type::Build:
-    case IAction::Type::Gather:
         m_graphics.setGraphic(ResourceManager::Inst()->getGraphic(taskGraphicId(genie::Task::Build, action->unitState())));
+        break;
+    case IAction::Type::Gather:
+        m_graphics.setGraphic(ResourceManager::Inst()->getGraphic(taskGraphicId(genie::Task::GatherRebuild, action->unitState())));
         break;
     default:
         m_graphics.setGraphic(defaultGraphics);
