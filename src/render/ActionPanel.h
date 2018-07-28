@@ -1,5 +1,4 @@
-#ifndef ACTIONPANEL_H
-#define ACTIONPANEL_H
+#pragma once
 
 #include <mechanics/IState.h>
 #include <mechanics/Player.h>
@@ -311,4 +310,3 @@ inline std::ostream &operator <<(std::ostream &os, const ActionPanel::Command &c
     return os;
 }
 
-#endif // ACTIONPANEL_H

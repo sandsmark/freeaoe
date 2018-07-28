@@ -1,5 +1,4 @@
-#ifndef FARM_H
-#define FARM_H
+#pragma once
 
 #include "core/Entity.h"
 
@@ -44,4 +43,3 @@ private:
     FarmRender m_farmRenderer;
 };
 
-#endif // FARM_H

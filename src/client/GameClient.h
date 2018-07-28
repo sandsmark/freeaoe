@@ -16,8 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMECLIENT_H
-#define GAMECLIENT_H
+#pragma once
 
 #include <map>
 #include <SFML/Config.hpp>
@@ -58,4 +57,3 @@ private:
     Unit *selected_unit_;
 };
 
-#endif // GAMECLIENT_H

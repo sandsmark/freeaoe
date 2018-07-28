@@ -16,8 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TUNNELTOCLIENT_H
-#define TUNNELTOCLIENT_H
+#pragma once
 
 #include <deque>
 #include "ICommand.h"
@@ -49,4 +48,3 @@ private:
     std::deque<ICommand *> commands_;
 };
 
-#endif // ITUNNELTOCLIENT_H

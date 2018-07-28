@@ -16,8 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef UNITMANAGER_H
-#define UNITMANAGER_H
+#pragma once
 #include <unordered_set>
 #include <core/Entity.h>
 
@@ -102,4 +101,3 @@ private:
     MapPos m_previousCameraPos;
 };
 
-#endif // UNITMANAGER_H

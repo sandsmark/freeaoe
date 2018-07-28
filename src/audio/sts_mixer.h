@@ -20,8 +20,7 @@
 //  VERSION HISTORY
 //    0.01 (2016-05-01) initial version
 //
-#ifndef __INCLUDED__STS_MIXER_H__
-#define __INCLUDED__STS_MIXER_H__
+#pragma once
 
 
 // The number of concurrent voices (channels) which are used to mix the audio.
@@ -142,9 +141,6 @@ void sts_mixer_stop_stream(sts_mixer_t* mixer, sts_mixer_stream_t* stream);
 // Typically this function is called in a separate thread or something like that.
 // It will write audio data in the specified format and frequency of the mixer state.
 void sts_mixer_mix_audio(sts_mixer_t* mixer, void* output, unsigned int samples);
-
-
-#endif // __INCLUDED__STS_MIXER_H__
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////

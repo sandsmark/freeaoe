@@ -17,8 +17,7 @@
 */
 
 
-#ifndef COMMANDMOVE_H
-#define COMMANDMOVE_H
+#pragma once
 #include <communication/ICommand.h>
 #include <SFML/Config.hpp>
 #include <global/Types.h>
@@ -38,4 +37,3 @@ private:
   MapPos target_;
 };
 
-#endif // COMMANDMOVE_H

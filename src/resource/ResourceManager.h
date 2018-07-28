@@ -16,8 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef RESOURCEMANAGER_H
-#define RESOURCEMANAGER_H
+#pragma once
 
 #include <memory>
 #include <unordered_map>
@@ -173,4 +172,3 @@ private:
     std::unordered_set<uint32_t> m_nonExistentSlps;
 };
 
-#endif // RESOURCEMANAGER_H

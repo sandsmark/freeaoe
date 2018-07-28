@@ -16,8 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENTITY_H
-#define ENTITY_H
+#pragma once
 
 #include <map>
 #include <deque>
@@ -229,4 +228,3 @@ template<> struct hash<Task>
 };
 }
 
-#endif // ENTITY_H

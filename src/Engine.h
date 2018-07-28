@@ -16,8 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENGINE_H
-#define ENGINE_H
+#pragma once
 
 #include <SFML/System/Clock.hpp>
 #include <SFML/Graphics/Text.hpp>
@@ -51,4 +50,3 @@ private:
     sf::Font font_;
 };
 
-#endif // ENGINE_H

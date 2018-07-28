@@ -16,8 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef IRENDERABLE_COMPONENT
-#define IRENDERABLE_COMPONENT
+#pragma once
 
 #include <core/IComponent.h>
 
@@ -29,4 +28,3 @@ public:
     virtual void drawOn(IRenderTarget &renderTarget) = 0;
 };
 
-#endif // IRENDERABLE_COMPONENT

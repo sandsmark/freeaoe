@@ -16,8 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TUNNELTOSERVER_H
-#define TUNNELTOSERVER_H
+#pragma once
 #include <deque>
 #include "UnitStatus.h"
 
@@ -47,4 +46,3 @@ private:
     std::deque<UnitStatus> data_;
 };
 
-#endif // ITUNNELTOSERVER_H

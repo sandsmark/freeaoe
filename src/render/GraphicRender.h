@@ -16,8 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GRAPHIC_RENDER_H
-#define GRAPHIC_RENDER_H
+#pragma once
 
 #include <core/IComponent.h>
 #include <resource/Graphic.h>
@@ -106,4 +105,3 @@ private:
     float m_angle = 0;
 };
 
-#endif // GRAPHIC_RENDER_H

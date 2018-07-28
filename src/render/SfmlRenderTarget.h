@@ -16,8 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMERENDERER_H
-#define GAMERENDERER_H
+#pragma once
 
 #include <core/Entity.h>
 #include <resource/Graphic.h>
@@ -59,4 +58,3 @@ public:
 private:
 };
 
-#endif // GAMERENDERER_H

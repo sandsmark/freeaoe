@@ -1,5 +1,4 @@
-#ifndef UNIT_H
-#define UNIT_H
+#pragma once
 
 #include <memory>
 namespace genie {
@@ -15,4 +14,3 @@ private:
     std::shared_ptr<genie::Unit> m_properties;
 };
 
-#endif // UNIT_H

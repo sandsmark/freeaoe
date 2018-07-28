@@ -1,5 +1,4 @@
-#ifndef AUDIOPLAYER_H
-#define AUDIOPLAYER_H
+#pragma once
 
 #include <memory>
 #include <mutex>
@@ -27,4 +26,3 @@ private:
     std::mutex m_mutex;
 };
 
-#endif // AUDIOPLAYER_H

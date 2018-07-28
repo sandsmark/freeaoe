@@ -16,8 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MAP_RENDERER_H
-#define MAP_RENDERER_H
+#pragma once
 
 #include "IRenderer.h"
 #include "mechanics/Map.h"
@@ -58,4 +57,3 @@ private:
 
 typedef std::shared_ptr<MapRenderer> MapRendererPtr;
 
-#endif // MAP_RENDERER_H

@@ -16,8 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef FREEAOE_GRAPHIC_H
-#define FREEAOE_GRAPHIC_H
+#pragma once
 
 #include "Resource.h"
 
@@ -182,4 +181,3 @@ private:
 
 typedef std::shared_ptr<Graphic> GraphicPtr;
 
-#endif // FREEAOE_GRAPHIC_H

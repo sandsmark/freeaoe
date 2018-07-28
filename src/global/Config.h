@@ -16,8 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CONFIG_H
-#define CONFIG_H
+#pragma once
 
 #include <string>
 #include <unordered_map>
@@ -66,4 +65,3 @@ private:
     std::unordered_map<std::string, std::string> m_allowedOptions;
 };
 
-#endif // CONFIG_H

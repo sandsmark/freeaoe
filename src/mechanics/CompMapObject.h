@@ -16,8 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef COMPMAPOBJECT_H
-#define COMPMAPOBJECT_H
+#pragma once
 
 #include <memory>
 
@@ -75,4 +74,3 @@ typedef std::shared_ptr<MapObject> MapObjectPtr;
         MapPos new_pos_;
     };
 
-#endif // COMPMAPOBJECT_H

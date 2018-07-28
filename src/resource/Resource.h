@@ -16,8 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef RESOURCE_H
-#define RESOURCE_H
+#pragma once
 #include <SFML/Config.hpp>
 #include <SFML/Graphics/Image.hpp>
 #include <genie/resource/PalFile.h>
@@ -104,4 +103,3 @@ private:
     bool loaded_;
 };
 
-#endif // RESOURCE_H

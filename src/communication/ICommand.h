@@ -16,8 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ICOMMAND_H
-#define ICOMMAND_H
+#pragma once
 
 class GameServer;
 
@@ -28,4 +27,3 @@ public:
     virtual void execute(GameServer *gs) = 0;
 };
 
-#endif // ICOMMAND_H

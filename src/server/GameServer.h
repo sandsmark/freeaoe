@@ -16,8 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMESERVER_H
-#define GAMESERVER_H
+#pragma once
 
 #include <SFML/Config.hpp>
 #include <map>
@@ -68,4 +67,3 @@ private:
     TunnelToClient *client_;
 };
 
-#endif // GAMESERVER_H

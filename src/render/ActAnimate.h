@@ -16,8 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ACTANIMATE_H
-#define ACTANIMATE_H
+#pragma once
 
 #include "core/IAction.h"
 #include "core/Entity.h"
@@ -33,4 +32,3 @@ public:
     virtual bool update(Time time) = 0;
 };
 
-#endif // ACTANIMATE_H

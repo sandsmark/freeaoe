@@ -16,8 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef DATAMANAGER_H
-#define DATAMANAGER_H
+#pragma once
 
 #include <global/Logger.h>
 #include <genie/dat/DatFile.h>
@@ -69,4 +68,3 @@ private:
     genie::DatFile dat_file_;
 };
 
-#endif // DATAMANAGER_H

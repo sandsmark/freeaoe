@@ -1,5 +1,4 @@
-#ifndef CIVILIZATION_H
-#define CIVILIZATION_H
+#pragma once
 
 //#include <genie/dat/Research.h>
 //#include <genie/dat/Unit.h>
@@ -49,4 +48,3 @@ private:
     std::unordered_map<uint16_t, genie::Tech> m_techs;
 };
 
-#endif // CIVILIZATION_H

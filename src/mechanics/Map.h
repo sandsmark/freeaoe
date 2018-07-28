@@ -16,8 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MAP_H
-#define MAP_H
+#pragma once
 
 #include <global/Logger.h>
 #include <genie/dat/Terrain.h>
@@ -162,4 +161,3 @@ private:
 
 typedef std::shared_ptr<Map> MapPtr;
 
-#endif // MAP_H

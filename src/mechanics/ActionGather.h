@@ -1,5 +1,4 @@
-#ifndef ACTIONGATHER_H
-#define ACTIONGATHER_H
+#pragma once
 
 #include "core/IAction.h"
 #include "core/Entity.h"
@@ -19,4 +18,3 @@ private:
     const genie::Task *m_task;
 };
 
-#endif // ACTIONGATHER_H

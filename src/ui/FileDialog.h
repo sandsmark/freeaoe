@@ -1,5 +1,4 @@
-#ifndef FILEDIALOG_H
-#define FILEDIALOG_H
+#pragma once
 
 #include <memory>
 #include <filesystem>
@@ -86,4 +85,3 @@ private:
     std::unique_ptr<sf::Text> m_description;
 };
 
-#endif // FILEDIALOG_H

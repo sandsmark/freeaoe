@@ -1,5 +1,4 @@
-#ifndef ACTIONBUILD_H
-#define ACTIONBUILD_H
+#pragma once
 
 #include "core/IAction.h"
 #include "core/Entity.h"
@@ -19,4 +18,3 @@ private:
     std::weak_ptr<Unit> m_targetBuilding;
 };
 
-#endif // ACTIONBUILD_H

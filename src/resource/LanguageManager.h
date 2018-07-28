@@ -1,5 +1,4 @@
-#ifndef LANGUAGEMANAGER_H
-#define LANGUAGEMANAGER_H
+#pragma once
 
 #include <global/Logger.h>
 
@@ -27,4 +26,3 @@ private:
     std::unordered_map<unsigned int, std::string> m_cache;
 };
 
-#endif // LANGUAGEMANAGER_H

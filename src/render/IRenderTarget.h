@@ -16,8 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef I_RENDER_TARGET_H
-#define I_RENDER_TARGET_H
+#pragma once
 
 #include <core/Entity.h>
 #include <resource/Graphic.h>
@@ -67,4 +66,3 @@ protected:
 
 typedef std::shared_ptr<IRenderTarget> IRenderTargetPtr;
 
-#endif // I_RENDER_TARGET_H

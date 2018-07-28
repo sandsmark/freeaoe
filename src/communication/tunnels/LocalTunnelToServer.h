@@ -17,8 +17,7 @@
 */
 
 
-#ifndef LOCALTUNNELTOSERVER_H
-#define LOCALTUNNELTOSERVER_H
+#pragma once
 
 #include <communication/TunnelToServer.h>
 #include <communication/UnitStatus.h>
@@ -43,4 +42,3 @@ private:
   LocalTunnelToClient *server_;
 };
 
-#endif // LocalTunnelToServer_H

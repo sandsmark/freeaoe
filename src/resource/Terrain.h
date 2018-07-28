@@ -16,8 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef FREEAOE_TERRAIN_H
-#define FREEAOE_TERRAIN_H
+#pragma once
 
 #include "Resource.h"
 #include <SFML/Graphics/Texture.hpp>
@@ -212,4 +211,3 @@ private:
     std::unordered_map<TileSlopes, sf::Texture> m_slopeImages;
 };
 
-#endif // FREEAOE_TERRAIN_H

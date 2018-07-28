@@ -16,8 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ICOMPONENT_H
-#define ICOMPONENT_H
+#pragma once
 
 #include <map>
 
@@ -45,4 +44,3 @@ private:
 
 typedef std::shared_ptr<IComponent> ComponentPtr;
 
-#endif // ICOMPONENT_H

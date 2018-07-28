@@ -16,8 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CAMERA_H
-#define CAMERA_H
+#pragma once
 #include <global/Types.h>
 
 #include <memory>
@@ -51,4 +50,3 @@ private:
 
 typedef std::shared_ptr<Camera> CameraPtr;
 
-#endif // CAMERA_H

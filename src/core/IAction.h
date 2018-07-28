@@ -16,8 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef IACTION_H
-#define IACTION_H
+#pragma once
 
 #include "global/Types.h"
 
@@ -67,4 +66,3 @@ protected:
 
 typedef std::shared_ptr<IAction> ActionPtr;
 
-#endif // IACTION_H

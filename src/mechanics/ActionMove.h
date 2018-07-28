@@ -16,8 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ACTIONMOVE_H
-#define ACTIONMOVE_H
+#pragma once
 
 #include "core/IAction.h"
 #include "core/Entity.h"
@@ -56,4 +55,3 @@ private:
     bool target_reached;
 };
 
-#endif // ACTIONMOVE_H

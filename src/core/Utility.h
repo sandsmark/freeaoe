@@ -16,8 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef UTILITY_H
-#define UTILITY_H
+#pragma once
 
 #include <cstring>
 #include <string>
@@ -46,4 +45,3 @@ inline std::string toLowercase(std::string input)
 
 }
 
-#endif //UTILITY_H

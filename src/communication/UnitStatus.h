@@ -16,8 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef UNITSTATUS_H
-#define UNITSTATUS_H
+#pragma once
 #include <SFML/Config.hpp>
 #include <global/Types.h>
 
@@ -48,4 +47,3 @@ private:
     MapPos pos_;
 };
 
-#endif // UNITSTATUS_H

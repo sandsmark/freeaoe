@@ -16,8 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef STATEMANAGER_H
-#define STATEMANAGER_H
+#pragma once
 
 #include "GameState.h"
 
@@ -38,4 +37,3 @@ private:
     StateManager(const StateManager &other);
 };
 
-#endif // STATEMANAGER_H

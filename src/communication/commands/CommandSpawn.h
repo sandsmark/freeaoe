@@ -17,8 +17,7 @@
 */
 
 
-#ifndef COMMANDSPAWN_H
-#define COMMANDSPAWN_H
+#pragma once
 
 #include <communication/ICommand.h>
 #include <SFML/Config.hpp>
@@ -40,4 +39,3 @@ private:
   MapPos pos_;
 };
 
-#endif // COMMANDSPAWN_H

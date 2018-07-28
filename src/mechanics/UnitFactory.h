@@ -16,8 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef UNITFACTORY_H
-#define UNITFACTORY_H
+#pragma once
 
 #include "../core/Entity.h"
 #include "mechanics/Player.h"
@@ -34,4 +33,3 @@ private:
     virtual ~UnitFactory();
 };
 
-#endif // UNITFACTORY_H

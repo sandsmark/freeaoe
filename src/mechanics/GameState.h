@@ -16,8 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMESTATE_H
-#define GAMESTATE_H
+#pragma once
 
 #include "mechanics/IState.h"
 #include "mechanics/Player.h"
@@ -189,4 +188,3 @@ private:
     Label m_populationLabel;
 };
 
-#endif // GAMESTATE_H

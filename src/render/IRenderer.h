@@ -16,8 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef I_RENDERER_H
-#define I_RENDERER_H
+#pragma once
 
 #include <global/Types.h>
 #include <memory>
@@ -46,4 +45,3 @@ protected:
     std::shared_ptr<IRenderTarget> renderTarget_;
 };
 
-#endif // I_RENDERER_H

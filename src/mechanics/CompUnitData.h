@@ -16,8 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef COMPUNITDATA_H
-#define COMPUNITDATA_H
+#pragma once
 #include <core/IComponent.h>
 #include <genie/dat/Unit.h>
 
@@ -45,4 +44,3 @@ private:
 
 typedef std::shared_ptr<UnitData> UnitDataPtr;
 
-#endif // COMPUNITDATA_H

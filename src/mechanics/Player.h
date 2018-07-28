@@ -1,5 +1,4 @@
-#ifndef PLAYER_H
-#define PLAYER_H
+#pragma once
 
 #include <memory>
 #include <unordered_map>
@@ -18,4 +17,3 @@ struct Player
     typedef std::shared_ptr<Player> Ptr;
 };
 
-#endif // PLAYER_H

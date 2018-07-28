@@ -16,8 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LOGGER_H_
-#define LOGGER_H_
+#pragma once
 
 #include <string>
 #include <iostream>
@@ -155,4 +154,3 @@ private:
 #define TIME_THIS LifeTimePrinter lifetime_printer(__FUNCTION__, __FILE__, __LINE__)
 #define TIME_TICK lifetime_printer.tick(__LINE__)
 
-#endif /* LOGGER_H_ */
