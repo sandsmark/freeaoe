@@ -143,7 +143,7 @@ struct Blend  {
     int x = 0;
     int y = 0;
 
-    std::shared_ptr<Terrain> terrain;
+    uint32_t terrainId;
 };
 
 namespace std {
