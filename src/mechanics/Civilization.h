@@ -32,7 +32,7 @@ public:
 
     std::vector<const genie::Unit *> swappableUnits(const uint16_t taskSwapGroup) const;
 
-    const std::unordered_map<genie::ResourceType, int> startingResources() const;
+    const std::unordered_map<genie::ResourceType, float> startingResources() const;
 
 private:
     const genie::Unit nullUnit;

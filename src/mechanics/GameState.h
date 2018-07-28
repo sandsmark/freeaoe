@@ -39,6 +39,17 @@ class GameClient;
 class GameServer;
 class ActionPanel;
 
+enum class GameType {
+    Default,
+    HighResource,
+    MediumResource,
+    KingOfTheHill,
+    Deathmatch,
+    SuddenDeath,
+    Regicide,
+    WonderRace
+};
+
 namespace sf {
 class RenderTarget;
 }
@@ -123,10 +134,13 @@ struct Cursor {
 class GameState : public IState
 {
 public:
+    static std::unordered_map<GameType, std::unordered_map<genie::ResourceType, float>> defaultStartingResources;
+
     GameState(std::shared_ptr<SfmlRenderTarget> renderTarget);
     virtual ~GameState();
 
     void setScenario(std::shared_ptr<genie::ScnFile> scenario);
+    void setGameType(const GameType &type) { m_gameType = type; }
 
     bool init() override;
 
@@ -146,10 +160,6 @@ private:
 
     std::shared_ptr<UnitManager> m_unitManager;
     std::unique_ptr<ActionPanel> m_actionPanel;
-    /*
-  GameServer *game_server_;
-  GameClient *game_client_;
-  */
 
     MapPtr map_;
     MapRenderer mapRenderer_;
@@ -159,7 +169,6 @@ private:
     float m_cameraDeltaX;
     float m_cameraDeltaY;
     Time m_lastUpdate;
-
 
     ScreenPos m_selectionStart;
     ScreenPos m_selectionCurr;
@@ -186,5 +195,6 @@ private:
     Label m_goldLabel;
     Label m_stoneLabel;
     Label m_populationLabel;
+    GameType m_gameType = GameType::Default;
 };
 

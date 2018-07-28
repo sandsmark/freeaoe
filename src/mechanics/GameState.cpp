@@ -44,6 +44,57 @@
 #define MOUSE_MOVE_EDGE_SIZE 10
 #define CAMERA_SPEED 1.
 
+std::unordered_map<GameType, std::unordered_map<genie::ResourceType, float>> GameState::defaultStartingResources = {
+    {
+        GameType::Default, {
+            { genie::ResourceType::FoodStorage, 200 },
+            { genie::ResourceType::WoodStorage, 200 },
+            { genie::ResourceType::StoneStorage, 200 },
+            { genie::ResourceType::GoldStorage, 100 },
+        }
+    },
+    {
+        GameType::HighResource, {
+            { genie::ResourceType::FoodStorage, 1000 },
+            { genie::ResourceType::WoodStorage, 1000 },
+            { genie::ResourceType::StoneStorage, 800 },
+            { genie::ResourceType::GoldStorage, 700 },
+        }
+    },
+    {
+        GameType::MediumResource, {
+            { genie::ResourceType::FoodStorage, 500 },
+            { genie::ResourceType::WoodStorage, 500 },
+            { genie::ResourceType::StoneStorage, 400 },
+            { genie::ResourceType::GoldStorage, 300 },
+        }
+    },
+    {
+        GameType::KingOfTheHill, {
+            { genie::ResourceType::FoodStorage, 200 },
+            { genie::ResourceType::WoodStorage, 200 },
+            { genie::ResourceType::StoneStorage, 200 },
+            { genie::ResourceType::GoldStorage, 100 },
+        }
+    },
+    {
+        GameType::Deathmatch, {
+            { genie::ResourceType::FoodStorage, 20000 },
+            { genie::ResourceType::WoodStorage, 20000 },
+            { genie::ResourceType::StoneStorage, 5000 },
+            { genie::ResourceType::GoldStorage, 10000 },
+        }
+    },
+    {
+        GameType::Regicide, {
+            { genie::ResourceType::FoodStorage, 500 },
+            { genie::ResourceType::WoodStorage, 500 },
+            { genie::ResourceType::StoneStorage, 150 },
+            { genie::ResourceType::GoldStorage, 0 },
+        }
+    },
+};
+
 GameState::GameState(std::shared_ptr<SfmlRenderTarget> renderTarget) :
     m_cameraDeltaX(0),
     m_cameraDeltaY(0),
@@ -184,7 +235,7 @@ bool GameState::init()
         }
         m_humanPlayer = m_players[0];
     } else {
-        m_humanPlayer = std::make_shared<Player>(0, m_civilizations[1]);
+        m_humanPlayer = std::make_shared<Player>(0, m_civilizations[1], defaultStartingResources[m_gameType]);
         map_->setUpSample();
 
         m_unitManager->add(UnitFactory::Inst().createUnit(Unit::FuriousTheMonkeyBoy, MapPos(48*6, 48*10, 0), m_humanPlayer, map_));
@@ -305,13 +356,13 @@ bool GameState::update(Time time)
     updated = m_unitManager->update(time) || updated;
     updated = m_actionPanel->update(time) || updated;
 
-    m_woodLabel.setText(std::to_string(m_humanPlayer->resources[genie::ResourceType::WoodStorage]));
-    m_foodLabel.setText(std::to_string(m_humanPlayer->resources[genie::ResourceType::FoodStorage]));
-    m_goldLabel.setText(std::to_string(m_humanPlayer->resources[genie::ResourceType::GoldStorage]));
-    m_stoneLabel.setText(std::to_string(m_humanPlayer->resources[genie::ResourceType::StoneStorage]));
+    m_woodLabel.setText(std::to_string(int(m_humanPlayer->resources[genie::ResourceType::WoodStorage])));
+    m_foodLabel.setText(std::to_string(int(m_humanPlayer->resources[genie::ResourceType::FoodStorage])));
+    m_goldLabel.setText(std::to_string(int(m_humanPlayer->resources[genie::ResourceType::GoldStorage])));
+    m_stoneLabel.setText(std::to_string(int(m_humanPlayer->resources[genie::ResourceType::StoneStorage])));
     m_populationLabel.setText(
-                std::to_string(m_humanPlayer->resources[genie::ResourceType::CurrentPopulation]) + '/' +
-                std::to_string(m_humanPlayer->resources[genie::ResourceType::PopulationHeadroom])
+                std::to_string(int(m_humanPlayer->resources[genie::ResourceType::CurrentPopulation])) + '/' +
+                std::to_string(int(m_humanPlayer->resources[genie::ResourceType::PopulationHeadroom]))
             );
 
     if (m_cameraDeltaX != 0 || m_cameraDeltaY != 0) {

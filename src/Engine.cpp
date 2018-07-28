@@ -98,52 +98,52 @@ void Engine::start()
 //------------------------------------------------------------------------------
 bool Engine::setup(const std::string &scnFile)
 {
-  renderWindow_ = std::make_unique<sf::RenderWindow>(sf::VideoMode(1280, 1024), "freeaoe");
-  renderWindow_->setMouseCursorVisible(false);
-  renderWindow_->setFramerateLimit(60);
-  
-  renderTarget_ = std::make_shared<SfmlRenderTarget>(*renderWindow_);
+    renderWindow_ = std::make_unique<sf::RenderWindow>(sf::VideoMode(1280, 1024), "freeaoe");
+    renderWindow_->setMouseCursorVisible(false);
+    renderWindow_->setFramerateLimit(60);
 
-  genie::SlpFilePtr loadingImageFile = ResourceManager::Inst()->getSlp("scrstart.slp");
-  if (loadingImageFile) {
-      sf::Texture loadingScreen;
-      loadingScreen.loadFromImage(Resource::convertFrameToImage(
-                                      loadingImageFile->getFrame(0),
-                                      ResourceManager::Inst()->getPalette("scrstart.pal")
-                                      ));
-      sf::Sprite sprite;
-      sprite.setTexture(loadingScreen);
-      sprite.setPosition(0, 0);
-      sprite.setScale(renderWindow_->getSize().x / float(loadingScreen.getSize().x),
-                      renderWindow_->getSize().y / float(loadingScreen.getSize().y));
-      renderTarget_->draw(sprite);
-      renderWindow_->display();
-  }
+    renderTarget_ = std::make_shared<SfmlRenderTarget>(*renderWindow_);
 
-  std::shared_ptr<GameState> gameState = std::make_shared<GameState>(renderTarget_);
+    genie::SlpFilePtr loadingImageFile = ResourceManager::Inst()->getSlp("scrstart.slp");
+    if (loadingImageFile) {
+        sf::Texture loadingScreen;
+        loadingScreen.loadFromImage(Resource::convertFrameToImage(
+                                        loadingImageFile->getFrame(0),
+                                        ResourceManager::Inst()->getPalette("scrstart.pal")
+                                        ));
+        sf::Sprite sprite;
+        sprite.setTexture(loadingScreen);
+        sprite.setPosition(0, 0);
+        sprite.setScale(renderWindow_->getSize().x / float(loadingScreen.getSize().x),
+                        renderWindow_->getSize().y / float(loadingScreen.getSize().y));
+        renderTarget_->draw(sprite);
+        renderWindow_->display();
+    }
 
-  if (!scnFile.empty()) {
-      try {
-          std::shared_ptr<genie::ScnFile> scenario(new genie::ScnFile());
-          scenario->load(scnFile.c_str());
-          gameState->setScenario(scenario);
-      } catch (const std::exception &error) {
-          WARN << "Failed to load" << scnFile << ":" << error.what();
-          return false;
-      }
-  }
+    std::shared_ptr<GameState> gameState = std::make_shared<GameState>(renderTarget_);
 
-  if (!state_manager_.addActiveState(gameState)) {
-      return false;
-  }
-  renderWindow_->setSize(gameState->uiSize());
-  renderTarget_->setSize(gameState->uiSize());
+    if (!scnFile.empty()) {
+        try {
+            std::shared_ptr<genie::ScnFile> scenario(new genie::ScnFile());
+            scenario->load(scnFile.c_str());
+            gameState->setScenario(scenario);
+        } catch (const std::exception &error) {
+            WARN << "Failed to load" << scnFile << ":" << error.what();
+            return false;
+        }
+    }
 
-  fps_label_.setPosition(sf::Vector2f(gameState->uiSize().width - 75, 5));
-  fps_label_.setFillColor(sf::Color::White);
-  font_.loadFromMemory(resource_Alegreya_Bold_latin_data, resource_Alegreya_Bold_latin_size);
-  fps_label_.setFont(font_);
-  fps_label_.setCharacterSize(15);
+    if (!state_manager_.addActiveState(gameState)) {
+        return false;
+    }
+    renderWindow_->setSize(gameState->uiSize());
+    renderTarget_->setSize(gameState->uiSize());
 
-  return true;
+    fps_label_.setPosition(sf::Vector2f(gameState->uiSize().width - 75, 5));
+    fps_label_.setFillColor(sf::Color::White);
+    font_.loadFromMemory(resource_Alegreya_Bold_latin_data, resource_Alegreya_Bold_latin_size);
+    fps_label_.setFont(font_);
+    fps_label_.setCharacterSize(15);
+
+    return true;
 }
