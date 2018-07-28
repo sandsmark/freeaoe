@@ -65,6 +65,16 @@ bool ActionPanel::init()
         m_commandIcons[Command::PreviousPage].loadFromImage(prevImage);
     }
 
+    { // can't find this icon anywhere else
+        genie::SlpFilePtr cursorsSlp = ResourceManager::Inst()->getSlp("mcursors.shp", ResourceManager::ResourceType::Interface);
+        if (!cursorsSlp) {
+            WARN << "Failed to load cursors";
+            return false;
+        }
+        sf::Image garrisonIcon = Resource::convertFrameToImage(cursorsSlp->getFrame(13));
+        m_commandIcons[Command::Garrison].loadFromImage(garrisonIcon);
+    }
+
     return m_unitManager != nullptr;
 }
 
@@ -129,8 +139,13 @@ void ActionPanel::draw()
         sf::RectangleShape bevelRect(Size(40, 40));
         sf::RectangleShape shadowRect(Size(38, 38));
 
+        // need this because the garrison icon is actually a cursor
+        sf::RectangleShape backgroundRect(Size(36, 36));
+        backgroundRect.setFillColor(sf::Color::Black);
+
         bevelRect.setPosition(buttonPosition(button.index) - ScreenPos(2, 2));
         shadowRect.setPosition(buttonPosition(button.index));
+        backgroundRect.setPosition(buttonPosition(button.index));
 
         if (button.pressed) {
             bevelRect.setFillColor(sf::Color(64, 64, 64));
@@ -142,6 +157,7 @@ void ActionPanel::draw()
 
         m_renderTarget->draw(bevelRect);
         m_renderTarget->draw(shadowRect);
+        m_renderTarget->draw(backgroundRect);
 
         switch(button.type) {
         case InterfaceButton::CreateBuilding:
@@ -202,51 +218,88 @@ void ActionPanel::updateButtons()
 
     Unit::Ptr unit = *m_selectedUnits.begin();
 
-    DBG << unit->data()->Creatable.GarrisonGraphic;
-
-    if (unit->data()->Type >= genie::Unit::MovingType && unit->data()->Type < genie::Unit::BuildingType) {
+    if (unit->data()->Type >= genie::Unit::MovingType && unit->data()->Type < genie::Unit::BuildingType && unit->player.lock() == m_humanPlayer) {
         InterfaceButton killButton;
         killButton.action = Command::Kill;
         killButton.index = 3;
         currentButtons.push_back(killButton);
     }
 
-    bool canGarrison = false;
+    const std::unordered_set<Task> actions = unit->availableActions();
+    std::unordered_set<int16_t> addedTypes;
+    for (const Task &task : actions) {
+        if (addedTypes.count(task.data->ActionType)) {
+            continue;
+        }
+        addedTypes.insert(task.data->ActionType);
 
-    for (const Task &task : unit->availableActions()) {
-        DBG << task.data->actionTypeName();
+        switch(task.data->ActionType) {
+        case genie::Task::Garrison: {
+            InterfaceButton garrisonButton;
+            garrisonButton.action = Command::Garrison;
+            garrisonButton.index = 4;
+            currentButtons.push_back(garrisonButton);
+            break;
+        }
+        case genie::Task::Build: {
+            InterfaceButton backButton;
+            backButton.action = Command::PreviousPage;
+            backButton.index = 14;
+            backButton.interfacePage = genie::Unit::BuildingsInterface;
+            currentButtons.push_back(backButton);
+            backButton.interfacePage = genie::Unit::MilitaryBuildingsInterface;
+            currentButtons.push_back(backButton);
 
-        if (task.data->ActionType == genie::Task::Garrison) {
-            canGarrison = true;
+            InterfaceButton civilianButton;
+            civilianButton.action = Command::BuildCivilian;
+            civilianButton.index = 0;
+            currentButtons.push_back(civilianButton);
+
+            InterfaceButton militaryButton;
+            militaryButton.action = Command::BuildMilitary;
+            militaryButton.index = 1;
+            currentButtons.push_back(militaryButton);
+
+            InterfaceButton repairButton;
+            repairButton.action = Command::Repair;
+            repairButton.index = 2;
+            currentButtons.push_back(repairButton);
+            break;
+        }
+        default:
             break;
         }
     }
 
-    if (canGarrison) {
-        InterfaceButton garrisonButton;
-        garrisonButton.action = Command::GarrisonCivilian;
-        garrisonButton.index = 4;
-        currentButtons.push_back(garrisonButton);
+    if (!actions.empty()) {
+        InterfaceButton stopButton;
+        stopButton.action = Command::Stop;
+        stopButton.index = 9;
+        currentButtons.push_back(stopButton);
     }
 
-
-    InterfaceButton stopButton;
-    stopButton.action = Command::Stop;
-    stopButton.index = 9;
-    currentButtons.push_back(stopButton);
-
-    if (unit->data()->Class == genie::Unit::Civilian || unit->data()->Class == genie::Unit::BuildingClass) {
-        addCreateButtons(unit);
-    }
+    addCreateButtons(unit);
 }
 
 void ActionPanel::addCreateButtons(const std::shared_ptr<Unit> &unit)
 {
     m_currentPage = 0;
+    const std::vector<const genie::Unit *> creatableUnits = unit->creatableUnits();
+
+    if (creatableUnits.empty()) {
+        return;
+    }
+
+    if (unit->data()->Type >= genie::Unit::BuildingType) {
+        InterfaceButton rallypointButton;
+        rallypointButton.action = Command::SetRallyPoint;
+        rallypointButton.index = 4;
+        currentButtons.push_back(rallypointButton);
+    }
 
     bool hasNext = false;
     bool hasPrevious = false;
-    for (const genie::Unit *creatable : unit->creatableUnits()) {
+    for (const genie::Unit *creatable : creatableUnits) {
         if (creatable->Creatable.ButtonID < m_buttonOffset) {
             hasPrevious = true;
             continue;
@@ -277,31 +330,6 @@ void ActionPanel::addCreateButtons(const std::shared_ptr<Unit> &unit)
         rightButton.action = Command::NextPage;
         rightButton.index = 14;
         currentButtons.push_back(rightButton);
-    }
-
-    if (unit->data()->InterfaceKind == genie::Unit::CiviliansInterface) {
-        InterfaceButton backButton;
-        backButton.action = Command::PreviousPage;
-        backButton.index = 14;
-        backButton.interfacePage = genie::Unit::BuildingsInterface;
-        currentButtons.push_back(backButton);
-        backButton.interfacePage = genie::Unit::MilitaryBuildingsInterface;
-        currentButtons.push_back(backButton);
-
-        InterfaceButton civilianButton;
-        civilianButton.action = Command::BuildCivilian;
-        civilianButton.index = 0;
-        currentButtons.push_back(civilianButton);
-
-        InterfaceButton militaryButton;
-        militaryButton.action = Command::BuildMilitary;
-        militaryButton.index = 1;
-        currentButtons.push_back(militaryButton);
-
-        InterfaceButton repairButton;
-        repairButton.action = Command::Repair;
-        repairButton.index = 2;
-        currentButtons.push_back(repairButton);
     }
 }
 

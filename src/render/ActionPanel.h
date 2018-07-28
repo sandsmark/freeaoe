@@ -82,14 +82,16 @@ public:
         AbortTownBell,
         FlankFormation,
         SpreadOutFormation,
-        GarrisonCivilian,
+        UngarrisonCivilian,
         NormalFormationEnabled,
         BoxFormationEnabled,
         FlankFormationEnabled,
         SpreadOutFormationEnabled,
         IconCount,
 
+        // Special ones not actually in the SLP
         PreviousPage,
+        Garrison,
 
         Undefined
     };
