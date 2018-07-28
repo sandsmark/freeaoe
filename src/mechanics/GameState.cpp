@@ -163,6 +163,16 @@ bool GameState::init()
 
         for (size_t playerNum = 0; playerNum < scenario_->playerUnits.size(); playerNum++) {
             Player::Ptr player = std::make_shared<Player>(playerNum, m_civilizations[0]);
+
+            const genie::ScnPlayerResources &resources = scenario_->playerResources[playerNum];
+            player->resources[genie::ResourceType::GoldStorage] = resources.gold;
+            player->resources[genie::ResourceType::FoodStorage] = resources.food;
+            player->resources[genie::ResourceType::WoodStorage] = resources.wood;
+            player->resources[genie::ResourceType::StoneStorage] = resources.stone;
+            player->resources[genie::ResourceType::OreStorage] = resources.ore;
+            player->resources[genie::ResourceType::TradeGoods] = resources.goods;
+            player->resources[genie::ResourceType::PopulationHeadroom] = scenario_->playerResources[playerNum].popLimit;
+
             m_players.push_back(player);
             for (const genie::ScnUnit &scnunit : scenario_->playerUnits[playerNum].units) {
                 MapPos unitPos(scnunit.positionX * Constants::TILE_SIZE, scnunit.positionY * Constants::TILE_SIZE, scnunit.positionZ);
