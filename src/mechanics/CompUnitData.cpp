@@ -20,8 +20,6 @@
 #include <resource/DataManager.h>
 #include "resource/LanguageManager.h"
 
-namespace comp {
-
 UnitData::UnitData()
 {
 }
@@ -55,6 +53,4 @@ const genie::Unit &UnitData::getData(void) const
 std::string UnitData::readableName()
 {
     return m_readableName;
-}
-
 }

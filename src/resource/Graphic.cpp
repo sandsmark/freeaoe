@@ -24,8 +24,6 @@
 #include <genie/resource/SlpFrame.h>
 #include <genie/resource/Color.h>
 
-namespace res {
-
 const sf::Texture Graphic::nullImage;
 
 //------------------------------------------------------------------------------
@@ -259,6 +257,4 @@ Graphic::FrameInfo Graphic::calcFrameInfo(uint32_t num, float angle) const
     }
 
     return ret;
-}
-
 }

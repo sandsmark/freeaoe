@@ -30,8 +30,6 @@
 
 class SlpFile;
 
-namespace res {
-
 class Terrain;
 typedef std::shared_ptr<Terrain> TerrainPtr;
 
@@ -148,13 +146,12 @@ struct Blend  {
 
     std::shared_ptr<Terrain> terrain;
 };
-}
 
 namespace std {
 
-template<> struct hash<res::TileSlopes>
+template<> struct hash<TileSlopes>
 {
-    size_t operator()(const res::TileSlopes s) const {
+    size_t operator()(const TileSlopes s) const {
         return hash<int8_t>()(s.self) ^
                hash<int8_t>()(s.north) ^
                hash<int8_t>()(s.south) ^
@@ -167,15 +164,14 @@ template<> struct hash<res::TileSlopes>
     }
 };
 
-template<> struct hash<res::Blend>
+template<> struct hash<Blend>
 {
-    size_t operator()(const res::Blend b) const {
+    size_t operator()(const Blend b) const {
         return hash<uint32_t>()(b.bits) ^ hash<uint8_t>()(b.blendMode);
     }
 };
 }
 
-namespace res {
 class Terrain : public Resource
 {
 public:
@@ -215,7 +211,5 @@ private:
     std::unordered_map<Blend, sf::Texture> m_blendImages;
     std::unordered_map<TileSlopes, sf::Texture> m_slopeImages;
 };
-
-}
 
 #endif // FREEAOE_TERRAIN_H

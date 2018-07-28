@@ -107,7 +107,7 @@ bool Engine::setup(const std::string &scnFile)
   genie::SlpFilePtr loadingImageFile = ResourceManager::Inst()->getSlp("scrstart.slp");
   if (loadingImageFile) {
       sf::Texture loadingScreen;
-      loadingScreen.loadFromImage(res::Resource::convertFrameToImage(
+      loadingScreen.loadFromImage(Resource::convertFrameToImage(
                                       loadingImageFile->getFrame(0),
                                       ResourceManager::Inst()->getPalette("scrstart.pal")
                                       ));

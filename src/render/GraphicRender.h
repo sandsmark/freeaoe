@@ -27,10 +27,6 @@
 
 struct Entity;
 
-namespace comp {
-
-const std::string GRAPHIC_RENDER("comp_graphic");
-
 class GraphicRender;
 
 enum class RenderType {
@@ -67,7 +63,7 @@ inline LogPrinter &operator <<(LogPrinter &os, const RenderType &type) {
     return os;
 }
 
-typedef std::shared_ptr<GraphicRender> GraphicPtr;
+typedef std::shared_ptr<GraphicRender> GraphicRenderPtr;
 
 /// Draws and manages Graphics for EntityForm objects.
 class GraphicRender
@@ -84,20 +80,20 @@ public:
 
     void setPlayerId(int playerId);
 
-    void setGraphic(res::GraphicPtr graphic);
+    void setGraphic(GraphicPtr graphic);
 
     ScreenRect rect() const;
 
     void setAngle(float angle);
     float angle() const { return m_angle; }
 
-    res::GraphicPtr graphic_;
+    GraphicPtr graphic_;
 
     int current_frame_;
 
 private:
     struct GraphicDelta {
-        GraphicPtr graphic;
+        GraphicRenderPtr graphic;
         ScreenPos offset;
         int angleToDrawOn = -1;
     };
@@ -109,7 +105,5 @@ private:
 
     float m_angle = 0;
 };
-
-}
 
 #endif // GRAPHIC_RENDER_H

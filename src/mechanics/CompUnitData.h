@@ -21,8 +21,6 @@
 #include <core/IComponent.h>
 #include <genie/dat/Unit.h>
 
-namespace comp {
-
 const std::string UNIT_DATA("unit_data");
 
 class UnitData : public IComponent
@@ -46,6 +44,5 @@ private:
 };
 
 typedef std::shared_ptr<UnitData> UnitDataPtr;
-}
 
 #endif // COMPUNITDATA_H

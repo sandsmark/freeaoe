@@ -12,7 +12,6 @@ Farm::Farm(const genie::Unit &data_, const std::shared_ptr<Player> &player, std:
     m_farmRenderer(Size(data_.Size))
 {
     m_farmRenderer.setGraphic(defaultGraphics);
-//    m_foodCount = Player::resources[genie::ResourceType::FarmFoodAmount];
 }
 
 void Farm::setCreationProgress(float progress)
@@ -136,9 +135,9 @@ FarmRender::FarmRender(const Size &size) :
     m_texture.loadFromImage(img);
 }
 
-void FarmRender::render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const comp::RenderType pass)
+void FarmRender::render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType pass)
 {
-    if (pass != comp::RenderType::ConstructAvailable) {
+    if (pass != RenderType::ConstructAvailable) {
         return;
     }
 

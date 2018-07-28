@@ -23,8 +23,6 @@
 #include <genie/resource/PalFile.h>
 #include <genie/resource/SlpFrame.h>
 
-namespace res {
-
 //------------------------------------------------------------------------------
 /// Resource is the basic class of resources managed by the ResourceManager.
 //
@@ -105,6 +103,5 @@ private:
 
     bool loaded_;
 };
-}
 
 #endif // RESOURCE_H

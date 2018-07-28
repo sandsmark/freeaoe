@@ -121,9 +121,9 @@ public:
     /// Get a Graphic resource object.
     ///
     /// @param id id of the resource
-    /// @return GraphicPtr pointing to the object
+    /// @return ImagePtr pointing to the object
     //
-    res::GraphicPtr getGraphic(unsigned int id);
+    GraphicPtr getGraphic(unsigned int id);
 
     //----------------------------------------------------------------------------
     /// Get a Terrain resource object.
@@ -131,7 +131,7 @@ public:
     /// @param id id of the resource
     /// @return resource pointer to the object
     //
-    res::TerrainPtr getTerrain(unsigned int id);
+    TerrainPtr getTerrain(unsigned int id);
 
     const genie::PalFile &getPalette(const std::string &name);
     const genie::PalFile &getPalette(unsigned int id = 50500);
@@ -162,10 +162,10 @@ private:
     genie::SlpTemplateFilePtr m_stemplatesFile;
 
     //TODO: All resources into one map?
-    typedef std::unordered_map<unsigned int, res::GraphicPtr> GraphicMap;
+    typedef std::unordered_map<unsigned int, GraphicPtr> GraphicMap;
     GraphicMap graphics_;
 
-    typedef std::unordered_map<unsigned int, res::TerrainPtr> TerrainMap;
+    typedef std::unordered_map<unsigned int, TerrainPtr> TerrainMap;
     TerrainMap terrains_;
 
     genie::GameVersion m_gameVersion;

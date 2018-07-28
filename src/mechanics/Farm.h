@@ -5,12 +5,12 @@
 
 class Map;
 
-class FarmRender : public comp::GraphicRender
+class FarmRender : public GraphicRender
 {
 public:
     FarmRender(const Size &size);
 
-    void render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const comp::RenderType pass) override;
+    void render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType pass) override;
 
 private:
     sf::Texture m_texture;
@@ -34,7 +34,7 @@ public:
     void setCreationProgress(float progress) override;
     bool update(Time time) override;
 
-    comp::GraphicRender &renderer() override { return m_farmRenderer; }
+    GraphicRender &renderer() override { return m_farmRenderer; }
     ScreenRect rect() const override;
 
 private:

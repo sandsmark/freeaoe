@@ -26,8 +26,6 @@
 #include "MapRenderer.h"
 #include "core/Entity.h"
 
-namespace comp {
-
 const sf::Texture GraphicRender::nullImage;
 
 GraphicRender::GraphicRender()
@@ -112,15 +110,15 @@ void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos scree
 
         switch(renderpass) {
         case RenderType::Base:
-            sprite.setTexture(graphic_->texture(current_frame_, m_angle, m_playerId, res::ImageType::Base));
+            sprite.setTexture(graphic_->texture(current_frame_, m_angle, m_playerId, ImageType::Base));
             break;
         case RenderType::Outline:
-            sprite.setTexture(graphic_->texture(current_frame_, m_angle, m_playerId, res::ImageType::Outline));
+            sprite.setTexture(graphic_->texture(current_frame_, m_angle, m_playerId, ImageType::Outline));
             blendMode = sf::BlendAlpha;
             blendMode.alphaSrcFactor = sf::BlendMode::DstAlpha;
             break;
         case RenderType::ConstructAvailable:
-            sprite.setTexture(graphic_->texture(current_frame_, m_angle, m_playerId, res::ImageType::Construction));
+            sprite.setTexture(graphic_->texture(current_frame_, m_angle, m_playerId, ImageType::Construction));
             break;
         case RenderType::Shadow:
         case RenderType::ConstructUnavailable:
@@ -133,7 +131,7 @@ void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos scree
 
 }
 
-void GraphicRender::setGraphic(res::GraphicPtr graphic)
+void GraphicRender::setGraphic(GraphicPtr graphic)
 {
     graphic_ = graphic;
     current_frame_ = 0;
@@ -199,6 +197,4 @@ void GraphicRender::setAngle(float angle)
     for (GraphicDelta &delta : m_deltas) {
         delta.graphic->setAngle(angle);
     }
-}
-
 }

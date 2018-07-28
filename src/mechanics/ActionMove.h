@@ -26,8 +26,6 @@
 
 class UnitManager;
 
-namespace act {
-
 class MoveOnMap : public IAction
 {
 
@@ -57,6 +55,5 @@ private:
 
     bool target_reached;
 };
-}
 
 #endif // ACTIONMOVE_H

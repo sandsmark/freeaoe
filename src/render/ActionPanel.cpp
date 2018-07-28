@@ -24,7 +24,7 @@ bool ActionPanel::init()
         return false;
     }
     for (size_t i=0; i<unitIconsSlp->getFrameCount(); i++) {
-        m_unitIcons[i].loadFromImage(res::Resource::convertFrameToImage(unitIconsSlp->getFrame(i)));
+        m_unitIcons[i].loadFromImage(Resource::convertFrameToImage(unitIconsSlp->getFrame(i)));
     }
 
     // ico_bld1-4.shp looks identical, for some reason
@@ -34,7 +34,7 @@ bool ActionPanel::init()
         return false;
     }
     for (size_t i=0; i<buildingIconsSlp->getFrameCount(); i++) {
-        m_buildingIcons[i].loadFromImage(res::Resource::convertFrameToImage(buildingIconsSlp->getFrame(i)));
+        m_buildingIcons[i].loadFromImage(Resource::convertFrameToImage(buildingIconsSlp->getFrame(i)));
     }
 
     genie::SlpFilePtr researchIconsSlp = ResourceManager::Inst()->getSlp("btntech.shp", ResourceManager::ResourceType::Interface);
@@ -43,7 +43,7 @@ bool ActionPanel::init()
         return false;
     }
     for (size_t i=0; i<researchIconsSlp->getFrameCount(); i++) {
-        m_researchIcons[i].loadFromImage(res::Resource::convertFrameToImage(researchIconsSlp->getFrame(i)));
+        m_researchIcons[i].loadFromImage(Resource::convertFrameToImage(researchIconsSlp->getFrame(i)));
     }
 
     genie::SlpFilePtr commandIconsSlp = ResourceManager::Inst()->getSlp("btncmd.shp", ResourceManager::ResourceType::Interface);
@@ -56,11 +56,11 @@ bool ActionPanel::init()
             WARN << "icon out of range " << i;
             return false;
         }
-        m_commandIcons[Command(i)].loadFromImage(res::Resource::convertFrameToImage(commandIconsSlp->getFrame(i)));
+        m_commandIcons[Command(i)].loadFromImage(Resource::convertFrameToImage(commandIconsSlp->getFrame(i)));
     }
 
     { // hax
-        sf::Image prevImage = res::Resource::convertFrameToImage(commandIconsSlp->getFrame(int(Command::NextPage)));
+        sf::Image prevImage = Resource::convertFrameToImage(commandIconsSlp->getFrame(int(Command::NextPage)));
         prevImage.flipHorizontally();
         m_commandIcons[Command::PreviousPage].loadFromImage(prevImage);
     }

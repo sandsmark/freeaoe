@@ -130,14 +130,14 @@ genie::SlpFilePtr ResourceManager::getSlp(sf::Uint32 id, const ResourceType type
 }
 
 //------------------------------------------------------------------------------
-res::GraphicPtr ResourceManager::getGraphic(Uint32 id)
+GraphicPtr ResourceManager::getGraphic(Uint32 id)
 {
-    res::GraphicPtr graph;
+    GraphicPtr graph;
 
     if (graphics_.find(id) != graphics_.end()) {
         graph = graphics_[id];
     } else {
-        graph = std::make_shared<res::Graphic>(DataManager::Inst().getGraphic(id));
+        graph = std::make_shared<Graphic>(DataManager::Inst().getGraphic(id));
 
         graphics_[id] = graph;
     }
@@ -146,13 +146,13 @@ res::GraphicPtr ResourceManager::getGraphic(Uint32 id)
 }
 
 //------------------------------------------------------------------------------
-res::TerrainPtr ResourceManager::getTerrain(unsigned int type)
+TerrainPtr ResourceManager::getTerrain(unsigned int type)
 {
     if (terrains_.find(type) != terrains_.end()) {
         return terrains_[type];
     }
 
-    res::TerrainPtr terrain = res::TerrainPtr(new res::Terrain(type));
+    TerrainPtr terrain = TerrainPtr(new Terrain(type));
     terrain->load();
 
     terrains_[type] = terrain;

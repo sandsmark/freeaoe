@@ -18,14 +18,10 @@
 
 #include "ActAnimate.h"
 
-namespace act {
-
 //Animate::Animate(EntityFormPtr form)
 //{
 //}
 
 Animate::~Animate()
 {
-}
-
 }

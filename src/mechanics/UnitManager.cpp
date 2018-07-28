@@ -96,11 +96,11 @@ void UnitManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
             }
             annex.unit->renderer().render(m_outlineOverlay,
                                           renderTarget->camera()->absoluteScreenPos(unit->position() + annex.offset),
-                                          comp::RenderType::Base
+                                          RenderType::Base
                                           );
         }
         if (unit->isVisible) {
-            unit->renderer().render(m_outlineOverlay, unitPosition, comp::RenderType::Base);
+            unit->renderer().render(m_outlineOverlay, unitPosition, RenderType::Base);
         }
     }
 
@@ -161,9 +161,9 @@ void UnitManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
         const ScreenPos pos = renderTarget->camera()->absoluteScreenPos(unit->position());
         unit->renderer().render(*renderTarget->renderTarget_,
                                 pos,
-                                comp::RenderType::Base);
+                                RenderType::Base);
 
-        unit->renderer().render(m_outlineOverlay, pos, comp::RenderType::Outline);
+        unit->renderer().render(m_outlineOverlay, pos, RenderType::Outline);
     }
 
     m_outlineOverlay.display();
@@ -187,12 +187,12 @@ void UnitManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
 
     m_moveTargetMarker->renderer().render(*renderTarget->renderTarget_,
                                           renderTarget->camera()->absoluteScreenPos(m_moveTargetMarker->position()),
-                                          comp::RenderType::Base);
+                                          RenderType::Base);
 
     if (m_buildingToPlace) {
         m_buildingToPlace->renderer().render(*renderTarget->renderTarget_,
                                              renderTarget->camera()->absoluteScreenPos(m_buildingToPlace->position()),
-                                             comp::RenderType::ConstructAvailable);
+                                             RenderType::ConstructAvailable);
     }
 }
 
@@ -242,7 +242,7 @@ void UnitManager::onRightClick(const ScreenPos &screenPos, const CameraPtr &came
 
     const MapPos mapPos = camera->absoluteMapPos(screenPos);
     for (const Unit::Ptr &unit : m_selectedUnits) {
-        unit->setCurrentAction(act::MoveOnMap::moveUnitTo(unit, mapPos, m_map, this));
+        unit->setCurrentAction(MoveOnMap::moveUnitTo(unit, mapPos, m_map, this));
     }
 
     m_moveTargetMarker->moveTo(mapPos);
@@ -437,14 +437,14 @@ void UnitManager::assignTask(const Task &task, const Unit::Ptr &unit, const Unit
         unit->setUnitData(DataManager::Inst().getUnit(task.unitId));
     }
 
-    unit->queueAction(act::MoveOnMap::moveUnitTo(unit, target->position(), m_map, this));
+    unit->queueAction(MoveOnMap::moveUnitTo(unit, target->position(), m_map, this));
     switch(task.data->ActionType) {
     case genie::Task::Build:
-        unit->queueAction(std::make_shared<act::ActionBuild>(unit, target));
+        unit->queueAction(std::make_shared<ActionBuild>(unit, target));
         break;
     case genie::Task::GatherRebuild:
 //        DBG << "supposed to gather from" << target->debugName;
-        unit->queueAction(std::make_shared<act::ActionGather>(unit, target, task.data));
+        unit->queueAction(std::make_shared<ActionGather>(unit, target, task.data));
         break;
     default:
         return;

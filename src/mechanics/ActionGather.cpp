@@ -3,8 +3,6 @@
 #include "mechanics/Player.h"
 #include <genie/dat/Unit.h>
 
-namespace act {
-
 ActionGather::ActionGather(const Unit::Ptr &unit, const Unit::Ptr &target, const genie::Task *task) : IAction(Type::Gather, unit),
     m_target(target),
     m_task(task)
@@ -65,6 +63,4 @@ bool ActionGather::update(Time time)
 
     return false;
 }
-
-}//namespace act
 

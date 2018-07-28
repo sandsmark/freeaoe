@@ -29,8 +29,6 @@
 
 #include <cmath>
 
-namespace res {
-
 Terrain::Terrain(unsigned int Id) :
     Resource(Id, TYPE_TERRAIN)
 {
@@ -551,7 +549,7 @@ const sf::Texture &Terrain::slopedImage(const TileSlopes &slopes, int tileX, int
     const int frameNum = (tileY % tileSquareCount) + (tileX % tileSquareCount) * tileSquareCount;
 
     genie::SlpFramePtr frame = ResourceManager::Inst()->getSlpTemplateFile()->getFrame(m_slp->getFrame(frameNum), TileSlopes::genieSlope(slopes.self), patterns, ResourceManager::Inst()->getPalette().getColors(), m_slp);
-    sf::Image img = res::Resource::convertFrameToImage(frame);
+    sf::Image img = Resource::convertFrameToImage(frame);
     if (!img.getSize().x) {
         static sf::Texture nullTex;
         if (nullTex.getSize().x == 0) {
@@ -581,6 +579,4 @@ void Terrain::addOutline(sf::Image &img)
             }
         }
     }
-}
-
 }

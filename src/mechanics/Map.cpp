@@ -59,7 +59,7 @@ void Map::setUpSample()
 
     tiles_.resize(cols_ * rows_, grass);
 
-    res::TerrainPtr water_dat = ResourceManager::Inst()->getTerrain(1);
+    TerrainPtr water_dat = ResourceManager::Inst()->getTerrain(1);
 
     for (int i=6; i<10; i++) {
         getTileAt(0, i).terrain_ = ResourceManager::Inst()->getTerrain(2);
@@ -130,43 +130,43 @@ float Map::elevationAt(const MapPos &position)
     float elevation = tile.elevation_;
 
     switch(tile.slopes.self) {
-    case res::TileSlopes::NorthWestUp:
+    case TileSlopes::NorthWestUp:
         elevation += 1. - localX;
         break;
-    case res::TileSlopes::SouthEastUp:
+    case TileSlopes::SouthEastUp:
         elevation += localX;
         break;
-    case res::TileSlopes::SouthWestUp:
+    case TileSlopes::SouthWestUp:
         elevation += 1. - localY;
         break;
-    case res::TileSlopes::NorthEastUp:
+    case TileSlopes::NorthEastUp:
         elevation += localY;
         break;
-    case res::TileSlopes::EastUp:
+    case TileSlopes::EastUp:
         elevation += localX * localY;
         break;
-    case res::TileSlopes::WestUp:
+    case TileSlopes::WestUp:
         elevation += (1. - localX) * (1. - localY);
         break;
-    case res::TileSlopes::NorthUp:
+    case TileSlopes::NorthUp:
         elevation += (1. - localX) * localY;
         break;
-    case res::TileSlopes::SouthUp:
+    case TileSlopes::SouthUp:
         elevation += localX * (1. - localY);
         break;
-    case res::TileSlopes::NorthWestEastUp:
+    case TileSlopes::NorthWestEastUp:
         elevation += 1. - localX * (1. - localY);
         break;
-    case res::TileSlopes::SouthWestEastUp:
+    case TileSlopes::SouthWestEastUp:
         elevation += 1. - (1. - localX) * localY;
         break;
-    case res::TileSlopes::NorthSouthEastUp:
+    case TileSlopes::NorthSouthEastUp:
         elevation += 1. - (1. - localX) * (1. - localY);
         break;
-    case res::TileSlopes::NorthSouthWestUp:
+    case TileSlopes::NorthSouthWestUp:
         elevation += 1. - (1. - localX) * (1. - localY);
         break;
-    case res::TileSlopes::Flat:
+    case TileSlopes::Flat:
     default:
         break;
     }
@@ -276,9 +276,6 @@ enum Direction : int {
     SouthEast = 1 << 7,
 };
 
-using res::Blend;
-using res::TileSlopes;
-
 void Map::updateTileBlend(int tileX, int tileY)
 {
     MapTile &tile = getTileAt(tileX, tileY);
@@ -296,7 +293,7 @@ void Map::updateTileBlend(int tileX, int tileY)
 
     std::unordered_map<uint8_t, int32_t> blendPriorities;
 
-    std::unordered_map<uint8_t, res::TerrainPtr> neighborTerrains;
+    std::unordered_map<uint8_t, TerrainPtr> neighborTerrains;
 
     uint8_t neighborsAbove = 0;
     uint8_t neighborsBelow = 0;
@@ -417,7 +414,7 @@ void Map::updateTileBlend(int tileX, int tileY)
         tile.slopes.self = TileSlopes::NorthWestUp;
     }
 
-    tile.yOffset = DataManager::datFile().TerrainBlock.TileSizes[res::TileSlopes::genieSlope(tile.slopes.self)].DeltaY;
+    tile.yOffset = DataManager::datFile().TerrainBlock.TileSizes[TileSlopes::genieSlope(tile.slopes.self)].DeltaY;
 
     if (tile.slopes.self) {
         return;
@@ -542,8 +539,8 @@ void Map::updateTileBlend(int tileX, int tileY)
             break;
         }
 
-        const res::TerrainPtr &neighbor = neighborTerrains[id];
-        blends.blendMode = res::Terrain::blendMode(tileData.BlendType, neighbor->data().BlendType);
+        const TerrainPtr &neighbor = neighborTerrains[id];
+        blends.blendMode = Terrain::blendMode(tileData.BlendType, neighbor->data().BlendType);
         blends.terrain = neighbor;
         blends.x = tileX;
         blends.y = tileX;

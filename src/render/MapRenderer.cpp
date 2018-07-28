@@ -197,10 +197,10 @@ void MapRenderer::updateTexture()
             }
 
 
-            if (mapTile.slopes.self == res::TileSlopes::Flat) {
+            if (mapTile.slopes.self == TileSlopes::Flat) {
                 m_textureTarget.draw(mapTile.terrain_->texture(col, row), spos);
 
-                for (const res::Blend &b : mapTile.blends) {
+                for (const Blend &b : mapTile.blends) {
                     m_textureTarget.draw(b.terrain->blendImage(b, col, row), spos);
                 }
             } else {

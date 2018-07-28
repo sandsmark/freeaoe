@@ -39,9 +39,7 @@ typedef std::shared_ptr<Map> MapPtr;
 struct Unit;
 struct Entity;
 
-namespace comp {
 class GraphicRender;
-}
 
 typedef std::shared_ptr<Entity> EntityPtr;
 class Civilization;
@@ -67,7 +65,7 @@ struct Entity: std::enable_shared_from_this<Entity>
     virtual bool update(Time time);
 
 
-    virtual comp::GraphicRender &renderer() { return m_graphics; }
+    virtual GraphicRender &renderer() { return m_graphics; }
 
     static std::shared_ptr<Unit> asUnit(EntityPtr entity);
 
@@ -81,8 +79,8 @@ struct Entity: std::enable_shared_from_this<Entity>
 protected:
     Entity(const Type type_, const std::string &name);
 
-    comp::GraphicRender m_graphics;
-    res::GraphicPtr defaultGraphics;
+    GraphicRender m_graphics;
+    GraphicPtr defaultGraphics;
 
 private:
     friend struct MoveTargetMarker;
@@ -215,7 +213,7 @@ protected:
     int taskGraphicId(const genie::Task::ActionTypes taskType, const IAction::UnitState state);
 
     const genie::Unit *m_data = nullptr;
-    res::GraphicPtr movingGraphics;
+    GraphicPtr movingGraphics;
     ActionPtr m_currentAction;
     std::deque<ActionPtr> m_actionQueue;
     float m_creationProgress = 0.f;

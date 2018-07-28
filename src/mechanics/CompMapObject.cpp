@@ -18,8 +18,6 @@
 
 #include "CompMapObject.h"
 
-namespace comp {
-
 MapObject::MapObject()
 {
 }
@@ -52,6 +50,4 @@ void MapObject::setPos(const MapPos pos)
 {
     rect_.x = pos.x;
     rect_.y = pos.y;
-}
-
 }

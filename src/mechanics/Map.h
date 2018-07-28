@@ -48,7 +48,7 @@ struct MapTile
 {
     void reset() {
         yOffset = 0;
-        slopes = res::TileSlopes();
+        slopes = TileSlopes();
         textures.clear();
         blends.clear();
     }
@@ -59,13 +59,13 @@ struct MapTile
 
     unsigned int elevation_;
     int yOffset;
-    res::TerrainPtr terrain_;
+    TerrainPtr terrain_;
 
     std::vector<sf::Texture> textures;
-    std::vector<res::Blend> blends;
+    std::vector<Blend> blends;
     std::vector<EntityPtr> entities;
 
-    res::TileSlopes slopes;
+    TileSlopes slopes;
 };
 
 class Map
@@ -118,7 +118,7 @@ public:
 private:
     void updateTileBlend(int tileX, int tileY);
     void updateTileSlopes(int tileX, int tileY);
-    res::TileSlopes::Slope slopeAt(const int x, const int y);
+    TileSlopes::Slope slopeAt(const int x, const int y);
 
     // cols_ = x, rows_ = y
     int rows_, cols_;

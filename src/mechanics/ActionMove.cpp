@@ -63,8 +63,6 @@ template<> struct std::hash<PathPoint>
     }
 };
 
-namespace act {
-
 static const float PATHFINDING_HEURISTIC_WEIGHT = 1.;
 
 MoveOnMap::MoveOnMap(MapPos destination, MapPtr map, Unit::Ptr unit, UnitManager *unitManager) :
@@ -271,7 +269,7 @@ std::shared_ptr<MoveOnMap> MoveOnMap::moveUnitTo(Unit::Ptr unit, MapPos destinat
         DBG << "Handed unit that can't move" << unit->debugName;
         return nullptr;
     }
-    std::shared_ptr<MoveOnMap> action (new act::MoveOnMap(destination, map, unit, unitManager));
+    std::shared_ptr<MoveOnMap> action (new MoveOnMap(destination, map, unit, unitManager));
 
 
     action->m_terrainMoveMultiplier = DataManager::Inst().getTerrainRestriction(unit->data()->TerrainRestriction).PassableBuildableDmgMultiplier;
@@ -492,6 +490,4 @@ bool MoveOnMap::isPassable(const int x, const int y)
     }
 
     return true;
-}
-
 }

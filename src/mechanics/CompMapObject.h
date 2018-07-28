@@ -28,8 +28,6 @@
 #include "core/Entity.h"
 #include "core/IAction.h"
 
-namespace comp {
-
 const std::string MAP_OBJECT("map_object");
 
 // TODO: Rename to MapUnit?
@@ -57,8 +55,6 @@ private:
 
 typedef std::shared_ptr<MapObject> MapObjectPtr;
 
-namespace act {
-
     class PlaceMapObject : public IAction
     {
     public:
@@ -78,7 +74,5 @@ namespace act {
         EntityPtr target_;
         MapPos new_pos_;
     };
-}
-}
 
 #endif // COMPMAPOBJECT_H

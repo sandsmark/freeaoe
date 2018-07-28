@@ -6,8 +6,6 @@
 
 struct Player;
 
-namespace act {
-
 class ActionGather : public IAction
 {
 public:
@@ -20,7 +18,5 @@ private:
     std::weak_ptr<Unit> m_target;
     const genie::Task *m_task;
 };
-
-}//namespace act
 
 #endif // ACTIONGATHER_H

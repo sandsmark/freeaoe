@@ -106,7 +106,7 @@ struct Cursor {
         if (type == currentType) {
             return;
         }
-        texture.loadFromImage(res::Resource::convertFrameToImage(cursorsFile->getFrame(type)));
+        texture.loadFromImage(Resource::convertFrameToImage(cursorsFile->getFrame(type)));
         sprite.setTexture(texture);
         currentType = type;
     }

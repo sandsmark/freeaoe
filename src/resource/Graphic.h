@@ -31,8 +31,6 @@
 #include <unordered_map>
 
 class SlpFile;
-namespace res
-{
 enum class ImageType {
     Base,
     Outline,
@@ -71,12 +69,11 @@ struct GraphicState {
                flipped == other.flipped;
     }
 };
-}
 
 namespace std {
-template<> struct hash<res::GraphicState>
+template<> struct hash<GraphicState>
 {
-    size_t operator()(const res::GraphicState b) const {
+    size_t operator()(const GraphicState b) const {
         return hash<uint32_t>()(b.frame) ^
                hash<int>()(b.angle) ^
                hash<uint8_t>()(b.playerId) ^
@@ -87,8 +84,6 @@ template<> struct hash<res::GraphicState>
 };
 }
 
-
-namespace res {
 
 //------------------------------------------------------------------------------
 /// A graphic resource contains one or more frames and data stored to
@@ -186,7 +181,5 @@ private:
 };
 
 typedef std::shared_ptr<Graphic> GraphicPtr;
-
-}//namespace res
 
 #endif // FREEAOE_GRAPHIC_H

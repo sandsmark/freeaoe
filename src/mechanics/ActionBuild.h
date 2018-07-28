@@ -4,8 +4,6 @@
 #include "core/IAction.h"
 #include "core/Entity.h"
 
-namespace act {
-
 class ActionBuild : public IAction
 {
 
@@ -20,7 +18,5 @@ public:
 private:
     std::weak_ptr<Unit> m_targetBuilding;
 };
-
-}//namespace act
 
 #endif // ACTIONBUILD_H

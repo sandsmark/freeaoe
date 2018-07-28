@@ -24,8 +24,6 @@
 #include "ResourceManager.h"
 #include "DataManager.h"
 
-namespace res {
-
 //------------------------------------------------------------------------------
 Resource::Resource(Uint32 id, Type type) :
     id_(id), type_(type), loaded_(false)
@@ -137,5 +135,4 @@ sf::Image Resource::convertFrameToImage(const genie::SlpFramePtr frame,
     img.create(width, height, pixels);
 
     return img;
-}
 }

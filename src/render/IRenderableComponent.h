@@ -23,13 +23,10 @@
 
 class IRenderTarget;
 
-namespace comp {
-
 class IRenderableComponent : public IComponent
 {
 public:
     virtual void drawOn(IRenderTarget &renderTarget) = 0;
 };
-}
 
 #endif // IRENDERABLE_COMPONENT

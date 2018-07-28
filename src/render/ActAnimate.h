@@ -22,9 +22,7 @@
 #include "core/IAction.h"
 #include "core/Entity.h"
 
-namespace act {
-
-//TODO Actions instead of comp::update?
+//TODO Actions instead of update?
 class Animate : public IAction
 {
 
@@ -34,6 +32,5 @@ public:
 
     virtual bool update(Time time) = 0;
 };
-}
 
 #endif // ACTANIMATE_H

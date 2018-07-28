@@ -2,8 +2,6 @@
 
 #include <genie/dat/Unit.h>
 
-namespace act {
-
 ActionBuild::ActionBuild(Unit::Ptr builder, Unit::Ptr building) : IAction(Type::Build, builder),
     m_targetBuilding(building)
 {
@@ -73,5 +71,3 @@ IAction::UnitState ActionBuild::unitState() const
         return Proceeding;
     }
 }
-
-}//namespace act
