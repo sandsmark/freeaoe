@@ -106,6 +106,7 @@ set(UNSORTED_SRC
     src/core/IAction.cpp
     src/core/IComponent.cpp
     src/audio/AudioPlayer.cpp
+    src/audio/sts_mixer.cpp
 )
 
 set (UI_SRC

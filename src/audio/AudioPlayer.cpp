@@ -5,7 +5,6 @@
 
 #include <random>
 
-#define STS_MIXER_IMPLEMENTATION
 #include "sts_mixer.h"
 
 #define DR_MP3_IMPLEMENTATION
@@ -93,7 +92,7 @@ struct WavHeader {
     uint32_t Subchunk2Size;
 };
 
-void AudioPlayer::playSample(unsigned char *data, size_t size, const float pan)
+void AudioPlayer::playSample(const std::shared_ptr<uint8_t> &data, const float pan)
 {
     std::lock_guard<std::mutex> guard(m_mutex);
 
@@ -101,7 +100,7 @@ void AudioPlayer::playSample(unsigned char *data, size_t size, const float pan)
         return;
     }
 
-    WavHeader *header = reinterpret_cast<WavHeader*>(data);
+    WavHeader *header = reinterpret_cast<WavHeader*>(data.get());
     if (header->AudioFormat != WavHeader::PCM) {
         WARN << "Can only play PCM";
         return;
@@ -129,7 +128,8 @@ void AudioPlayer::playSample(unsigned char *data, size_t size, const float pan)
     sample->audio_format = audioFormat;
     sample->frequency = header->SampleRate;
     sample->length = (header->Subchunk2Size / (header->BitsPerSample/8));
-    sample->data = data + sizeof(WavHeader);
+    sample->data = data;
+    sample->audiodata = data.get() + sizeof(WavHeader);
 
     sts_mixer_play_sample(m_mixer.get(), sample, 1., 1., pan);
 }
@@ -170,14 +170,13 @@ void AudioPlayer::playSound(const int id, const int civilization)
 
     DBG << "playing" << sound.Items[selected].FileName;
 
-    unsigned char *wavPtr = ResourceManager::Inst()->getWavPtr(wavId);
+    std::shared_ptr<uint8_t> wavPtr = ResourceManager::Inst()->getWavPtr(wavId);
     if (!wavPtr) {
         WARN << "failed to get wav data for" << wavId;
         return;
     }
 
-    const size_t size = *((uint32_t*)wavPtr + 1) + 8;
-    playSample(wavPtr, size);
+    playSample(wavPtr);
 }
 
 AudioPlayer &AudioPlayer::instance()

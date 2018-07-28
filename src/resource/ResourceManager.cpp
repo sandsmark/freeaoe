@@ -70,11 +70,20 @@ genie::ScnFilePtr ResourceManager::getScn(unsigned int id)
     return genie::ScnFilePtr();
 }
 
-unsigned char *ResourceManager::getWavPtr(unsigned int id)
+std::shared_ptr<uint8_t> ResourceManager::getWavPtr(unsigned int id)
 {
+    std::weak_ptr<uint8_t> weakPtr = m_wavCache[id];
+    std::shared_ptr<uint8_t> wavPtr = weakPtr.lock();
+    if (wavPtr) {
+        return wavPtr;
+    } else {
+        m_wavCache.erase(id);
+    }
+
     for (const std::shared_ptr<genie::DrsFile> &drsFile : m_soundFiles) {
-        unsigned char *wavPtr = drsFile->getWavPtr(id);
+        wavPtr = drsFile->getWavPtr(id);
         if (wavPtr) {
+            m_wavCache[id] = wavPtr;
             return wavPtr;
         }
     }
