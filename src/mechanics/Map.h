@@ -101,14 +101,6 @@ public:
     void removeEntityAt(unsigned int col, unsigned int row, const EntityPtr &entity);
     void addEntityAt(unsigned int col, unsigned int row, const EntityPtr &entity);
 
-    // old stuff down ------------------------------------------------------------
-    /*
-  gdat::Terrain getTerrain(unsigned int col, unsigned int row) { return terrain_[col][row]; }
-  
-  //TODO: Outsource to RenderMap!
-  void draw(sf::RenderTarget *render_target);
-  */
-
     void updateMapData();
 
     bool tilesUpdated() const { return m_updated; }
@@ -126,37 +118,6 @@ private:
     MapTileArray tiles_;
 
     bool m_updated = false;
-
-    // old stuff down ------------------------------------------------------------
-    /*
-  gdat::Terrain terrain_[4][4];
-  sf::RenderTexture *map_txt_;
-  sf::Texture *s_map_txt_;
-  
-  sf::Int32 x_offset_;
-  sf::Int32 y_offset_;
-  
-  //std::vector<MapNode *> nodes_;
-  typedef std::pair<unsigned int, unsigned int> ColRowPair;
-  typedef std::map< ColRowPair , MapNode * > NodeMap;
-  NodeMap nodes_;
-  
-  
-  unsigned int node_rows_;
-  unsigned int node_cols_;
-  
-  /// Creates the node grid
-  void makeGrid(bool topDown = false);
-  
-  void makeTiles(void);
-  
-  void updateElevation(MapNode *node, sf::Int32 elevation);
-  void updateElevations(void);
-  
-  void addNodeToShape(sf::Shape *shape, MapNode *node, sf::Color *point_col);
-  
-  MapNode *getNodeByCoords(unsigned int col, unsigned int row);
-  */
 };
 
 typedef std::shared_ptr<Map> MapPtr;

@@ -56,9 +56,7 @@ bool MapRenderer::update(Time /*time*/)
         return false;
     }
 
-    //TODO: split up (refactor)
-
-//     Get the absolute map positions of the rendertarget corners
+    // Get the absolute map positions of the rendertarget corners
     const ScreenPos camCenter(renderTarget_->getSize().width / 2.0, renderTarget_->getSize().height / 2.0);
 
     // relative map positions (from center) //only changes if renderTargets resolution does
@@ -73,10 +71,6 @@ bool MapRenderer::update(Time /*time*/)
 
     MapPos topRightMp = cameraPos + (topRight - center);
     MapPos botLeftMp = cameraPos + (bottomLeft - center);
-
-//    DBG << "nulC " << nullCenterMp.x << " " << nullCenterMp.y;
-//    DBG << "topLeftMp " << topLeftMp.x << " " << topLeftMp.y;
-//    DBG << "botRightMp " << botRightMp.x << " " << botRightMp.y;
 
     // get column and row boundaries for rendering
     m_rColBegin = botLeftMp.x / Constants::TILE_SIZE;
@@ -160,12 +154,10 @@ void MapRenderer::updateTexture()
     outline.setOutlineThickness(3);
     outline.setOutlineColor(sf::Color(255, 255, 255, 64));
 
-//    for (int col = m_rColEnd-1; col >= 0; col--) {
     for (int col = 0; col < m_rColEnd; col++) {
         for (int row = m_rRowEnd-1; row >= 0; row--) {
             MapTile &mapTile = m_map->getTileAt(col, row);
 
-            //TODO: MapPos to screenpos (Tile 0,0 is drawn at MapPos 0,0
             MapRect rect;
             rect.x = col * Constants::TILE_SIZE;
             rect.y = row * Constants::TILE_SIZE;

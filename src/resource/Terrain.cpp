@@ -58,9 +58,6 @@ const sf::Texture &Terrain::texture(int x, int y)
         return m_images[frameNum];
     }
 
-//    WARN << "------------------------ " << int(m_data.SLP);
-//    sf::Image img = Resource::convertFrameToImage(ResourceManager::Inst()->getTemplatedSlp(m_data.SLP, genie::SlopeFlat));
-//    sf::Image img = Resource::convertFrameToImage(ResourceManager::Inst()->getTemplatedSlp(m_data.SLP, genie::SlopeWestDown));
     sf::Image img = Resource::convertFrameToImage(m_slp->getFrame(frameNum));
 
 #ifdef DEBUG
@@ -210,9 +207,6 @@ const sf::Texture &Terrain::slopedImage(const TileSlopes &slopes, int tileX, int
     if (m_slopeImages.find(slopes) != m_slopeImages.end()) {
         return m_slopeImages[slopes];
     }
-
-//    log.debug("north: % south: % east: % west: % southwest: % southeast: % northwest: % northeast: %",
-//              slopes.north, slopes.south, slopes.east, slopes.west, slopes.southWest, slopes.southEast, slopes.northWest, slopes.northEast);
 
     std::vector<genie::Pattern> patterns;
     switch (slopes.self) {
@@ -532,13 +526,6 @@ const sf::Texture &Terrain::slopedImage(const TileSlopes &slopes, int tileX, int
     case TileSlopes::NorthSouthWestUp:
         patterns.push_back(genie::FlatPattern);
         patterns.push_back(genie::Pattern29);
-
-//        log.debug("% %", slopes.east, slopes.west);
-        if ((slopes.southWest == TileSlopes::Flat) + (slopes.south == TileSlopes::Flat) + (slopes.southEast == TileSlopes::Flat) > 1) {
-//            patterns.push_back(genie::HalfDownPattern);
-//            log.debug(" ===== % %", slopes.east, slopes.west);
-        }
-
 
         break;
     default:

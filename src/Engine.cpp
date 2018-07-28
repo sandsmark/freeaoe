@@ -131,8 +131,6 @@ bool Engine::setup(const std::string &scnFile)
           WARN << "Failed to load" << scnFile << ":" << error.what();
           return false;
       }
-  } else {
-//      gameState->setScenario(ResourceManager::Inst()->getScn(56005));
   }
 
   if (!state_manager_.addActiveState(gameState)) {

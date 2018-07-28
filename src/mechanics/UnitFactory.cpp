@@ -57,7 +57,6 @@ Unit::Ptr UnitFactory::createUnit(int ID, const MapPos &position, const Player::
         if (res.Type == -1) {
             continue;
         }
-        WARN << unit->debugName << res.Type << res.Amount;
         unit->resources[genie::ResourceType(res.Type)] = res.Amount;
 
     }

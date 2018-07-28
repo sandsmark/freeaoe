@@ -190,7 +190,6 @@ std::unordered_set<Task> Unit::availableActions()
 void Unit::setUnitData(const genie::Unit &data_)
 {
     m_data = &data_;
-    DBG <<     (LanguageManager::getString(data_.LanguageDLLName) + " (" + std::to_string(data_.ID) + ")");
 
     defaultGraphics = ResourceManager::Inst()->getGraphic(m_data->StandingGraphic.first);
     if (m_data->Moving.WalkingGraphic >= 0) {

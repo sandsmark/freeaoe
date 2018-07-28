@@ -86,17 +86,8 @@ bool GameState::init()
         genie::Task::SetInitialResources,
 
     });
-//    std::unordered_set<int16_t> knownCreatableTypes({
-//        0, 1, 2, 3, 4, 5, 6, 21, 101, 104
-//    });
 
-
-    DBG << "=============";
     for (size_t i=0; i<DataManager::Inst().datFile().UnitHeaders.size(); i++) {
-        const genie::Unit &gunit = DataManager::Inst().getUnit(i);
-//        if (gunit.ID != -1 && knownCreatableTypes.count(gunit.Creatable.CreatableType) == 0) {
-//            WARN << LanguageManager::getString(gunit.LanguageDLLName) << gunit.Creatable.CreatableType;
-//        }
         const genie::UnitHeader &h = DataManager::Inst().datFile().UnitHeaders[i];
         for (const genie::Task &t : h.TaskList) {
             usedActionTypes.insert(t.ActionType);
@@ -104,23 +95,8 @@ bool GameState::init()
                 continue;
             }
 
-            DBG << t.ActionType << t.actionTypeName() << LanguageManager::getString(gunit.LanguageDLLName) << gunit.Name << gunit.ID << t.CarryCheck;
         }
     }
-    DBG << "=============";
-//    for (int16_t type=0;type<genie::Task::Wheel+1;type++) {
-//        if (usedActionTypes.count(type)) {
-//            continue;
-//        }
-//        if (interestingActions.count(type)) {
-//            continue;
-//        }
-//        const std::string typeName = genie::Task::actionTypeName(type);
-//        if (typeName != "Unknown class") {
-//            std::cout << type << ", ";
-//        }
-//    }
-//    std::cout << std::endl;
 
     std::shared_ptr<genie::SlpFile> overlayFile = ResourceManager::Inst()->getUiOverlay(ResourceManager::Ui1280x1024, ResourceManager::Viking);
     if (overlayFile) {
@@ -452,20 +428,14 @@ void GameState::handleEvent(sf::Event event)
     }
 
     if (event.type == sf::Event::MouseButtonPressed) {
-//        if (event.mouseButton.y < 25) {
-//            // top bar
-//        } else if (event.mouseButton.y > uiSize().height - 210) {
-//            // bottom
-//        } else {
-            if (event.mouseButton.button == sf::Mouse::Button::Left) {
-                m_unitManager->onLeftClick(renderTarget_->camera()->absoluteMapPos(ScreenPos(event.mouseButton.x, event.mouseButton.y)));
+        if (event.mouseButton.button == sf::Mouse::Button::Left) {
+            m_unitManager->onLeftClick(renderTarget_->camera()->absoluteMapPos(ScreenPos(event.mouseButton.x, event.mouseButton.y)));
 
-                m_selectionStart = ScreenPos(event.mouseButton.x, event.mouseButton.y);
-                m_selectionCurr = ScreenPos(event.mouseButton.x+1, event.mouseButton.y+1);
-                m_selectionRect = ScreenRect(m_selectionStart, m_selectionCurr);
-                m_selecting = true;
-            }
-//        }
+            m_selectionStart = ScreenPos(event.mouseButton.x, event.mouseButton.y);
+            m_selectionCurr = ScreenPos(event.mouseButton.x+1, event.mouseButton.y+1);
+            m_selectionRect = ScreenRect(m_selectionStart, m_selectionCurr);
+            m_selecting = true;
+        }
     }
 
     if (event.type == sf::Event::MouseButtonReleased) {
