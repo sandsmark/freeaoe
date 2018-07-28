@@ -44,7 +44,7 @@
 #define MOUSE_MOVE_EDGE_SIZE 10
 #define CAMERA_SPEED 1.
 
-std::unordered_map<GameType, std::unordered_map<genie::ResourceType, float>> GameState::defaultStartingResources = {
+std::unordered_map<GameType, ResourceMap> GameState::defaultStartingResources = {
     {
         GameType::Default, {
             { genie::ResourceType::FoodStorage, 200 },

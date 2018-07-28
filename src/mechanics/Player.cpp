@@ -2,7 +2,7 @@
 #include "mechanics/Civilization.h"
 #include "global/Logger.h"
 
-Player::Player(const int id, const std::shared_ptr<Civilization> &c, const std::unordered_map<genie::ResourceType, float> &startingResources) :
+Player::Player(const int id, const std::shared_ptr<Civilization> &c, const ResourceMap &startingResources) :
     playerId(id),
     civ(c),
     resources(civ->startingResources())

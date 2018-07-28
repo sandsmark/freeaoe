@@ -134,7 +134,7 @@ struct Cursor {
 class GameState : public IState
 {
 public:
-    static std::unordered_map<GameType, std::unordered_map<genie::ResourceType, float>> defaultStartingResources;
+    static std::unordered_map<GameType, ResourceMap> defaultStartingResources;
 
     GameState(std::shared_ptr<SfmlRenderTarget> renderTarget);
     virtual ~GameState();

@@ -1,9 +1,8 @@
 #pragma once
 
-//#include <genie/dat/Research.h>
-//#include <genie/dat/Unit.h>
 #include <genie/dat/Civ.h>
 #include <genie/dat/Research.h>
+#include "core/ResourceMap.h"
 
 #include <unordered_map>
 #include <vector>
@@ -32,7 +31,7 @@ public:
 
     std::vector<const genie::Unit *> swappableUnits(const uint16_t taskSwapGroup) const;
 
-    const std::unordered_map<genie::ResourceType, float> startingResources() const;
+    const ResourceMap startingResources() const;
 
 private:
     const genie::Unit nullUnit;

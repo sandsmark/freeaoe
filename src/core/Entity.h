@@ -26,25 +26,23 @@
 #include "IComponent.h"
 #include "IAction.h"
 #include <genie/dat/UnitCommand.h>
-#include <genie/dat/ResourceUsage.h>
+#include "ResourceMap.h"
 
 namespace genie {
 class Unit;
 }
 
 class Map;
-typedef std::shared_ptr<Map> MapPtr;
-
-struct Unit;
-struct Entity;
-
 class GraphicRender;
-
-typedef std::shared_ptr<Entity> EntityPtr;
 class Civilization;
 struct Player;
 
+struct Unit;
+struct Entity;
 struct MoveTargetMarker;
+
+typedef std::shared_ptr<Map> MapPtr;
+typedef std::shared_ptr<Entity> EntityPtr;
 
 struct Entity: std::enable_shared_from_this<Entity>
 {
@@ -195,7 +193,7 @@ struct Unit : public Entity
     std::vector<Annex> annexes;
     std::shared_ptr<Civilization> civilization;
 
-    std::unordered_map<genie::ResourceType, float> resources;
+    ResourceMap resources;
 
     virtual ScreenRect rect() const;
 
