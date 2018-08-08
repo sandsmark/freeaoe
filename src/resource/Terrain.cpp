@@ -208,9 +208,11 @@ const sf::Texture &Terrain::slopedImage(const TileSlopes &slopes, int tileX, int
         return m_slopeImages[slopes];
     }
 
+    // The correct patterns for the different slopes is from aoetwols by aap
+    // (I just chose a much more horrible way of looking up and storing them, FIXME I guess)
     std::vector<genie::Pattern> patterns;
     switch (slopes.self) {
-    case TileSlopes::SouthUp:
+    case TileSlopes::SouthUp: {
         patterns.push_back(genie::DiagDownPattern);
 
         if (slopes.south == TileSlopes::Flat) {
@@ -243,8 +245,8 @@ const sf::Texture &Terrain::slopedImage(const TileSlopes &slopes, int tileX, int
         }
 
         break;
-
-    case TileSlopes::NorthUp:
+    }
+    case TileSlopes::NorthUp: {
         patterns.push_back(genie::DiagDownPattern);
         if (slopes.north == TileSlopes::Flat) {
             patterns.push_back(genie::Pattern16);
@@ -275,7 +277,8 @@ const sf::Texture &Terrain::slopedImage(const TileSlopes &slopes, int tileX, int
         }
 
         break;
-    case TileSlopes::WestUp:
+    }
+    case TileSlopes::WestUp: {
         patterns.push_back(genie::FlatPattern);
         if (slopes.west == TileSlopes::Flat) {
             patterns.push_back(genie::Pattern12);
@@ -299,9 +302,9 @@ const sf::Texture &Terrain::slopedImage(const TileSlopes &slopes, int tileX, int
             patterns.push_back(genie::HalfUpPattern);
         }
 
-
         break;
-    case TileSlopes::EastUp:
+    }
+    case TileSlopes::EastUp: {
         patterns.push_back(genie::BlackPattern);
 
         if (slopes.east == TileSlopes::Flat) {
@@ -327,7 +330,8 @@ const sf::Texture &Terrain::slopedImage(const TileSlopes &slopes, int tileX, int
         }
 
         break;
-    case TileSlopes::SouthWestUp:
+    }
+    case TileSlopes::SouthWestUp: {
         patterns.push_back(genie::FlatPattern);
         if (slopes.southWest == TileSlopes::Flat || slopes.southWest == TileSlopes::NorthUp || slopes.southWest == TileSlopes::EastUp || slopes.southWest == TileSlopes::NorthEastUp) {
             patterns.push_back(genie::HalfLeftPattern);
@@ -373,7 +377,8 @@ const sf::Texture &Terrain::slopedImage(const TileSlopes &slopes, int tileX, int
         }
 
         break;
-    case TileSlopes::NorthWestUp:
+    }
+    case TileSlopes::NorthWestUp: {
         patterns.push_back(genie::FlatPattern);
         if (slopes.northWest == TileSlopes::Flat || slopes.northWest == TileSlopes::SouthUp || slopes.northWest == TileSlopes::EastUp || slopes.northWest == TileSlopes::SouthEastUp) {
             patterns.push_back(genie::HalfDownPattern);
@@ -427,7 +432,8 @@ const sf::Texture &Terrain::slopedImage(const TileSlopes &slopes, int tileX, int
         }
 
         break;
-    case TileSlopes::SouthEastUp:
+    }
+    case TileSlopes::SouthEastUp: {
         patterns.push_back(genie::BlackPattern);
 
         if (slopes.northWest == TileSlopes::Flat || slopes.northWest == TileSlopes::NorthUp || slopes.northWest == TileSlopes::WestUp || slopes.northWest == TileSlopes::NorthWestUp) {
@@ -472,7 +478,8 @@ const sf::Texture &Terrain::slopedImage(const TileSlopes &slopes, int tileX, int
         }
 
         break;
-    case TileSlopes::NorthEastUp:
+    }
+    case TileSlopes::NorthEastUp: {
         patterns.push_back(genie::BlackPattern);
 
         if (slopes.southWest == TileSlopes::Flat || slopes.southWest == TileSlopes::SouthWestUp || slopes.southWest == TileSlopes::WestUp || slopes.southWest == TileSlopes::SouthUp) {
@@ -517,18 +524,188 @@ const sf::Texture &Terrain::slopedImage(const TileSlopes &slopes, int tileX, int
         }
 
         break;
-    case TileSlopes::NorthSouthEastUp:
-        patterns.push_back(genie::DiagDownPattern);
-        patterns.push_back(genie::Pattern13);
+    }
+    case TileSlopes::SouthWestEastUp: {
+        patterns.push_back(genie::DiagUpPattern);
+
+        if (slopes.north == TileSlopes::Flat) {
+            patterns.push_back(genie::Pattern30);
+        }
+
+        if ((slopes.southEast == TileSlopes::Flat) + (slopes.southWest == TileSlopes::Flat) + (slopes.south == TileSlopes::Flat) > 1) {
+            patterns.push_back(genie::Pattern31);
+        }
+
+        if (slopes.southEast == TileSlopes::Flat || slopes.southEast == TileSlopes::NorthWestUp || slopes.southEast == TileSlopes::NorthUp || slopes.southEast == TileSlopes::EastUp) {
+            patterns.push_back(genie::UpPattern);
+        }
+
+        if (slopes.southWest == TileSlopes::Flat || slopes.southWest == TileSlopes::SouthWestUp || slopes.southWest == TileSlopes::SouthUp || slopes.southWest == TileSlopes::WestUp) {
+            patterns.push_back(genie::HalfLeftPattern);
+        }
+
+        if (slopes.south == TileSlopes::SouthUp) {
+            patterns.push_back(genie::Pattern22);
+        }
+
+        if (slopes.southWest == TileSlopes::SouthUp) {
+            patterns.push_back(genie::Pattern23);
+        }
+
+        if (slopes.northWest == TileSlopes::SouthUp) {
+            patterns.push_back(genie::Pattern23);
+        }
+
+        if (slopes.northEast == TileSlopes::SouthUp) {
+            patterns.push_back(genie::Pattern20);
+        }
+
+        if (slopes.southEast == TileSlopes::SouthUp) {
+            patterns.push_back(genie::Pattern20);
+        }
 
         break;
-
-    case TileSlopes::NorthSouthWestUp:
+    }
+    case TileSlopes::NorthSouthWestUp: {
         patterns.push_back(genie::FlatPattern);
-        patterns.push_back(genie::Pattern29);
+
+        if (slopes.east == TileSlopes::Flat) {
+            patterns.push_back(genie::Pattern28);
+        }
+
+        if ((slopes.northWest == TileSlopes::Flat) + (slopes.southWest == TileSlopes::Flat) + (slopes.west == TileSlopes::Flat) > 1) {
+            patterns.push_back(genie::Pattern29);
+        }
+
+        if (slopes.east == TileSlopes::EastUp || slopes.east == TileSlopes::NorthEastUp || slopes.east == TileSlopes::NorthEastUp) {
+            patterns.push_back(genie::Pattern28);
+        }
+
+        if (slopes.northWest == TileSlopes::Flat || slopes.northWest == TileSlopes::SouthEastUp || slopes.northWest == TileSlopes::SouthUp || slopes.northWest == TileSlopes::EastUp) {
+            patterns.push_back(genie::HalfDownPattern);
+        } else {
+            if (slopes.north == TileSlopes::Flat || slopes.north == TileSlopes::NorthUp) {
+                patterns.push_back(genie::Pattern34);
+            }
+
+            if (slopes.northWest == TileSlopes::NorthUp) {
+                patterns.push_back(genie::Pattern12);
+            }
+        }
+
+        if (slopes.southWest == TileSlopes::Flat || slopes.southWest == TileSlopes::NorthEastUp || slopes.southWest == TileSlopes::NorthUp || slopes.southWest == TileSlopes::EastUp) {
+            patterns.push_back(genie::HalfLeftPattern);
+        } else {
+            if (slopes.south == TileSlopes::Flat) {
+                patterns.push_back(genie::Pattern35);
+            }
+
+            if (slopes.southWest == TileSlopes::SouthUp) {
+                patterns.push_back(genie::Pattern12);
+            }
+        }
+
+        if (slopes.northEast == TileSlopes::NorthWestEastUp) {
+            patterns.push_back(genie::Pattern22);
+        }
+
+        if (slopes.southEast == TileSlopes::SouthWestEastUp) {
+            patterns.push_back(genie::Pattern28);
+        }
 
         break;
+    }
+    case TileSlopes::NorthSouthEastUp: {
+        patterns.push_back(genie::BlackPattern);
+
+        if (slopes.west == TileSlopes::Flat) {
+            patterns.push_back(genie::Pattern26);
+        }
+
+        if ((slopes.northEast == TileSlopes::Flat) + (slopes.southEast == TileSlopes::Flat) + (slopes.east == TileSlopes::Flat) > 1) {
+            patterns.push_back(genie::Pattern27);
+        }
+
+        if (slopes.west == TileSlopes::WestUp || slopes.west == TileSlopes::NorthWestUp || slopes.west == TileSlopes::SouthWestUp) {
+            patterns.push_back(genie::Pattern26);
+        }
+
+        if (slopes.northEast == TileSlopes::Flat || slopes.northEast == TileSlopes::SouthWestUp || slopes.northEast == TileSlopes::SouthUp || slopes.northEast == TileSlopes::WestUp) {
+            patterns.push_back(genie::RightPattern);
+        } else {
+            if (slopes.north == TileSlopes::Flat) {
+                patterns.push_back(genie::Pattern36);
+            }
+            if (slopes.northEast == TileSlopes::NorthUp) {
+                patterns.push_back(genie::Pattern14);
+            }
+        }
+
+        if (slopes.southEast == TileSlopes::Flat || slopes.southEast == TileSlopes::NorthWestUp || slopes.southEast == TileSlopes::NorthUp || slopes.southEast == TileSlopes::WestUp) {
+            patterns.push_back(genie::UpPattern);
+        } else {
+            if (slopes.south == TileSlopes::Flat) {
+                patterns.push_back(genie::Pattern37);
+            }
+            if (slopes.southEast == TileSlopes::SouthUp) {
+                patterns.push_back(genie::Pattern14);
+            }
+        }
+
+        if (slopes.northWest == TileSlopes::NorthWestEastUp) {
+            patterns.push_back(genie::Pattern21);
+        }
+        if (slopes.southWest == TileSlopes::SouthWestEastUp) {
+            patterns.push_back(genie::Pattern26);
+        }
+
+        break;
+    }
+    case TileSlopes::NorthWestEastUp: {
+        patterns.push_back(genie::DiagUpPattern);
+
+        if ((slopes.northEast == TileSlopes::Flat) + (slopes.northWest == TileSlopes::Flat) + (slopes.north == TileSlopes::Flat) > 1) {
+            patterns.push_back(genie::Pattern33);
+        }
+
+        if (slopes.south == TileSlopes::Flat) {
+            patterns.push_back(genie::Pattern32);
+        }
+
+        if (slopes.northWest == TileSlopes::Flat || slopes.northWest == TileSlopes::SouthEastUp || slopes.northWest == TileSlopes::SouthUp || slopes.northWest == TileSlopes::EastUp) {
+            patterns.push_back(genie::HalfDownPattern);
+        }
+        if (slopes.northEast == TileSlopes::Flat || slopes.northEast == TileSlopes::SouthWestUp || slopes.northEast == TileSlopes::SouthUp || slopes.northEast == TileSlopes::WestUp) {
+            patterns.push_back(genie::RightPattern);
+        }
+
+        if (slopes.east == TileSlopes::Flat) {
+            patterns.push_back(genie::Pattern20);
+        }
+
+        if (slopes.west == TileSlopes::Flat) {
+            patterns.push_back(genie::Pattern23);
+        }
+
+        if (slopes.southWest == TileSlopes::NorthUp) {
+            patterns.push_back(genie::Pattern23);
+        }
+        if (slopes.northWest == TileSlopes::NorthUp) {
+            patterns.push_back(genie::Pattern23);
+        }
+        if (slopes.southEast == TileSlopes::NorthUp) {
+            patterns.push_back(genie::Pattern20);
+        }
+        if (slopes.northEast == TileSlopes::NorthUp) {
+            patterns.push_back(genie::Pattern20);
+        }
+
+        break;
+    }
+
     default:
+        patterns.push_back(genie::BlackPattern);
+        WARN << "unhandled slope" << slopes.self;
         break;
     }
 

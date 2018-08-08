@@ -77,6 +77,11 @@ void Map::setUpSample()
     for (int i=3; i<6; i++) {
         getTileAt(15, i).elevation_ = 1;
     }
+
+    getTileAt(13, 4).elevation_ = 1;
+    getTileAt(16, 4).elevation_ = 1;
+    getTileAt(17, 4).elevation_ = 1;
+    getTileAt(18, 5).elevation_ = 1;
 }
 
 void Map::create(genie::ScnMap mapDescription)
