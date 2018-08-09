@@ -9,6 +9,10 @@ build:
   project: freeaoe.vcxproj
 
 install:
+  - cd C:\Tools\vcpkg
+  - git pull
+  - cd C:\projects\freeaoe
+  - vcpkg update
   - vcpkg install sfml:x86-windows
   - c:\tools\vcpkg\vcpkg integrate install
 
