@@ -189,7 +189,7 @@ void MapRenderer::updateTexture()
             }
 
 
-            if (mapTile.slopes.self == TileSlopes::Flat) {
+            if (mapTile.slopes.self == Slope::Flat) {
                 m_textureTarget.draw(mapTile.terrain_->texture(col, row), spos);
 
                 for (const Blend &b : mapTile.blends) {

@@ -109,7 +109,7 @@ public:
 private:
     void updateTileBlend(int tileX, int tileY);
     void updateTileSlopes(int tileX, int tileY);
-    TileSlopes::Slope slopeAt(const int x, const int y);
+    Slope slopeAt(const int x, const int y);
 
     // cols_ = x, rows_ = y
     int rows_, cols_;

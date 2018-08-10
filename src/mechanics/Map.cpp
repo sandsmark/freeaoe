@@ -135,44 +135,46 @@ float Map::elevationAt(const MapPos &position)
     float elevation = tile.elevation_;
 
     switch(tile.slopes.self) {
-    case TileSlopes::NorthWestUp:
+    case Slope::NorthWestUp:
         elevation += 1. - localX;
         break;
-    case TileSlopes::SouthEastUp:
+    case Slope::SouthEastUp:
         elevation += localX;
         break;
-    case TileSlopes::SouthWestUp:
+    case Slope::SouthWestUp:
         elevation += 1. - localY;
         break;
-    case TileSlopes::NorthEastUp:
+    case Slope::NorthEastUp:
         elevation += localY;
         break;
-    case TileSlopes::EastUp:
+    case Slope::EastUp:
         elevation += localX * localY;
         break;
-    case TileSlopes::WestUp:
+    case Slope::WestUp:
         elevation += (1. - localX) * (1. - localY);
         break;
-    case TileSlopes::NorthUp:
+    case Slope::NorthUp:
         elevation += (1. - localX) * localY;
         break;
-    case TileSlopes::SouthUp:
+    case Slope::SouthUp:
         elevation += localX * (1. - localY);
         break;
-    case TileSlopes::NorthWestEastUp:
+    case Slope::NorthWestEastUp:
         elevation += 1. - localX * (1. - localY);
         break;
-    case TileSlopes::SouthWestEastUp:
+    case Slope::SouthWestEastUp:
         elevation += 1. - (1. - localX) * localY;
         break;
-    case TileSlopes::NorthSouthEastUp:
+    case Slope::NorthSouthEastUp:
         elevation += 1. - (1. - localX) * (1. - localY);
         break;
-    case TileSlopes::NorthSouthWestUp:
-        elevation += 1. - (1. - localX) * (1. - localY);
+    case Slope::NorthSouthWestUp:
+        elevation += 1. - localX * localY;
         break;
-    case TileSlopes::Flat:
+    case Slope::Flat:
+        break;
     default:
+        WARN << "Unhanhdled slope" << tile.slopes.self;
         break;
     }
     return elevation * DataManager::Inst().terrainBlock().ElevHeight;
@@ -394,34 +396,34 @@ void Map::updateTileBlend(int tileX, int tileY)
 //        }
 
     if (neighborsAbove & West && neighborsAbove & South) {
-        tile.slopes.self = TileSlopes::NorthWestEastUp;
+        tile.slopes.self = Slope::NorthWestEastUp;
     } else if (neighborsAbove & East && neighborsAbove & North) {
-        tile.slopes.self = TileSlopes::SouthWestEastUp;
+        tile.slopes.self = Slope::SouthWestEastUp;
     } else if (neighborsAbove & West && neighborsAbove & North) {
-        tile.slopes.self = TileSlopes::NorthSouthWestUp;
+        tile.slopes.self = Slope::NorthSouthWestUp;
     } else if (neighborsAbove & East && neighborsAbove & South) {
-        tile.slopes.self = TileSlopes::NorthSouthEastUp;
+        tile.slopes.self = Slope::NorthSouthEastUp;
     } else if (neighborsAbove == NorthWest) {
-        tile.slopes.self = TileSlopes::WestUp;
+        tile.slopes.self = Slope::WestUp;
     } else if (neighborsAbove == NorthEast) {
-        tile.slopes.self = TileSlopes::SouthUp;
+        tile.slopes.self = Slope::SouthUp;
     } else if (neighborsAbove == SouthWest) {
-        tile.slopes.self = TileSlopes::NorthUp;
+        tile.slopes.self = Slope::NorthUp;
     } else if (neighborsAbove == SouthEast) {
-        tile.slopes.self = TileSlopes::EastUp;
+        tile.slopes.self = Slope::EastUp;
     } else if (neighborsAbove & North) {
-        tile.slopes.self = TileSlopes::SouthWestUp;
+        tile.slopes.self = Slope::SouthWestUp;
     } else if (neighborsAbove & South) {
-        tile.slopes.self = TileSlopes::NorthEastUp ;
+        tile.slopes.self = Slope::NorthEastUp ;
     } else if (neighborsAbove & East) {
-        tile.slopes.self = TileSlopes::SouthEastUp;
+        tile.slopes.self = Slope::SouthEastUp;
     } else if (neighborsAbove & West) {
-        tile.slopes.self = TileSlopes::NorthWestUp;
+        tile.slopes.self = Slope::NorthWestUp;
     }
 
-    tile.yOffset = DataManager::datFile().TerrainBlock.TileSizes[TileSlopes::genieSlope(tile.slopes.self)].DeltaY;
+    tile.yOffset = DataManager::datFile().TerrainBlock.TileSizes[tile.slopes.self.toGenie()].DeltaY;
 
-    if (tile.slopes.self) {
+    if (tile.slopes.self != Slope::Flat) {
         return;
     }
 
@@ -557,12 +559,12 @@ void Map::updateTileBlend(int tileX, int tileY)
 void Map::updateTileSlopes(int tileX, int tileY)
 {
     MapTile &tile = getTileAt(tileX, tileY);
-    if (!tile.slopes.self) {
+    if (tile.slopes.self == Slope::Flat) {
         return;
     }
     const genie::Terrain &tileData = tile.terrain_->data();
     if (tileData.SLP == -1) {
-        tile.slopes.self = TileSlopes::Flat;
+        tile.slopes.self = Slope::Flat;
         return;
     }
 
@@ -582,10 +584,10 @@ void Map::updateTileSlopes(int tileX, int tileY)
 //    tile.terrain_->slopedImage(tile.slopes, tileX, tileY);
 }
 
-TileSlopes::Slope Map::slopeAt(const int x, const int y)
+Slope Map::slopeAt(const int x, const int y)
 {
     if (IS_UNLIKELY(x < 0 || y < 0 || x >= cols_ || y >= rows_)) {
-        return TileSlopes::Flat;
+        return Slope::Flat;
     }
 
     return getTileAt(x, y).slopes.self;

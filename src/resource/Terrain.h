@@ -32,9 +32,8 @@ class SlpFile;
 class Terrain;
 typedef std::shared_ptr<Terrain> TerrainPtr;
 
-struct TileSlopes
-{
-    enum Slope {
+struct Slope {
+    enum Direction {
         Flat = 0,
         SouthUp = 1,
         NorthUp     = 2,
@@ -56,38 +55,57 @@ struct TileSlopes
         NorthSouthEastUp = 19,
         NorthSouthWestUp = 20,
     };
-    Slope self = Flat;
 
-    Slope north = Flat;
-    Slope south = Flat;
+    Slope (const Direction s) : direction(s) {}
+    Slope &operator =(const Direction s) { direction = s; return *this; }
+    Slope &operator =(const uint8_t s) { direction = Direction(s); return *this; }
 
-    Slope west = Flat;
-    Slope east = Flat;
+    inline bool operator <(const Direction other) const { return direction < other; }
+    inline bool operator==(const Direction other) const { return other == direction; }
+    inline bool operator <(const Slope other) const { return direction < other.direction; }
+    inline bool operator==(const Slope other) const { return other.direction == direction; }
 
-    Slope southWest = Flat;
-    Slope southEast = Flat;
+    inline operator uint8_t() const { return uint8_t(direction); }
 
-    Slope northWest = Flat;
-    Slope northEast = Flat;
-
-    static genie::Slope genieSlope(const Slope s) {
+    inline genie::Slope toGenie() const {
+        const uint8_t s(direction);
         if (s < SouthWestEastUp) {
             return genie::Slope(s);
         }
 
         switch (s) {
-        case SouthWestEastUp:
+        case Slope::SouthWestEastUp:
             return genie::SlopeSouthWestEastUp;
-        case NorthWestEastUp:
+        case Slope::NorthWestEastUp:
             return genie::SlopeNorthWestEastUp;
-        case NorthSouthEastUp:
+        case Slope::NorthSouthEastUp:
             return genie::SlopeWestDown;
-        case NorthSouthWestUp:
+        case Slope::NorthSouthWestUp:
             return genie::SlopeEastDown;
         default:
             return genie::SlopeInvalid;
         }
     }
+
+    Direction direction = Flat;
+};
+
+struct TileSlopes
+{
+    Slope self = Slope::Flat;
+
+    Slope north = Slope::Flat;
+    Slope south = Slope::Flat;
+
+    Slope west = Slope::Flat;
+    Slope east = Slope::Flat;
+
+    Slope southWest = Slope::Flat;
+    Slope southEast = Slope::Flat;
+
+    Slope northWest = Slope::Flat;
+    Slope northEast = Slope::Flat;
+
     bool operator==(const TileSlopes &other) const {
         return self == other.self &&
                north == other.north &&
@@ -151,15 +169,15 @@ namespace std {
 template<> struct hash<TileSlopes>
 {
     size_t operator()(const TileSlopes s) const {
-        return hash<int8_t>()(s.self) ^
-               hash<int8_t>()(s.north) ^
-               hash<int8_t>()(s.south) ^
-               hash<int8_t>()(s.west) ^
-               hash<int8_t>()(s.east) ^
-               hash<int8_t>()(s.southWest) ^
-               hash<int8_t>()(s.southEast) ^
-               hash<int8_t>()(s.northWest) ^
-               hash<int8_t>()(s.northEast);
+        return hash<int8_t>()(s.self.direction) ^
+               hash<int8_t>()(s.north.direction) ^
+               hash<int8_t>()(s.south.direction) ^
+               hash<int8_t>()(s.west.direction) ^
+               hash<int8_t>()(s.east.direction) ^
+               hash<int8_t>()(s.southWest.direction) ^
+               hash<int8_t>()(s.southEast.direction) ^
+               hash<int8_t>()(s.northWest.direction) ^
+               hash<int8_t>()(s.northEast.direction);
     }
 };
 
@@ -174,14 +192,6 @@ template<> struct hash<Blend>
 class Terrain : public Resource
 {
 public:
-    enum Slope {
-        Flat = 0x0,
-        North = 0x1,
-        East = 0x2,
-        West = 0x4,
-        South = 0x8
-    };
-
     //----------------------------------------------------------------------------
     /// @param Id resource id
     //
