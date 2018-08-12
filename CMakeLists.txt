@@ -89,8 +89,6 @@ set(MECHANICS_SRC
     )
 
 set(RENDER_SRC
-    src/render/ActAnimate.cpp
-    src/render/ActionPanel.cpp
     src/render/Camera.cpp
     src/render/GraphicRender.cpp
     src/render/IRenderer.cpp
@@ -122,6 +120,7 @@ set(UNSORTED_SRC
 )
 
 set (UI_SRC
+    src/ui/ActionPanel.cpp
     src/ui/FileDialog.cpp
     )
 

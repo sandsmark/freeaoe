@@ -36,7 +36,7 @@
 #include "render/SfmlRenderTarget.h"
 #include "CompUnitData.h"
 #include "resource/DataManager.h"
-#include "render/ActionPanel.h"
+#include "ui/ActionPanel.h"
 #include "global/Constants.h"
 
 #include "resource/LanguageManager.h"

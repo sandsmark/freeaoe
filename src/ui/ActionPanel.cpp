@@ -1,6 +1,6 @@
 #include "ActionPanel.h"
 #include "mechanics/UnitManager.h"
-#include "SfmlRenderTarget.h"
+#include "render/SfmlRenderTarget.h"
 #include <iostream>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <genie/resource/SlpFile.h>
