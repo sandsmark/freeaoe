@@ -122,6 +122,7 @@ set(UNSORTED_SRC
 set (UI_SRC
     src/ui/ActionPanel.cpp
     src/ui/FileDialog.cpp
+    src/ui/UnitInfoPanel.cpp
     )
 
 add_resource(FONT_RES

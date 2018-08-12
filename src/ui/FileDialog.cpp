@@ -1,6 +1,7 @@
 #include "FileDialog.h"
 
 #include "core/Utility.h"
+#include "render/SfmlRenderTarget.h"
 
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
@@ -8,8 +9,6 @@
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
-
-#include "fonts/Alegreya-Bold.latin.h"
 
 FileDialog::FileDialog()
 {
@@ -21,25 +20,22 @@ bool FileDialog::setup(int width, int height)
     m_renderWindow->setSize(sf::Vector2u(width, height));
     m_renderWindow->setView(sf::View(sf::FloatRect(0, 0, width, height)));
 
-    m_font = std::make_unique<sf::Font>();
-    m_font->loadFromMemory(resource_Alegreya_Bold_latin_data, resource_Alegreya_Bold_latin_size);
-
     const Size buttonSize(200, 50);
 
-    m_okButton = std::make_unique<Button>("OK", *m_font, ScreenRect(ScreenPos(200, 700), buttonSize));
+    m_okButton = std::make_unique<Button>("OK", SfmlRenderTarget::defaultFont(), ScreenRect(ScreenPos(200, 700), buttonSize));
 
-    m_cancelButton = std::make_unique<Button>("Cancel", *m_font, ScreenRect(ScreenPos(624, 700), buttonSize));
+    m_cancelButton = std::make_unique<Button>("Cancel", SfmlRenderTarget::defaultFont(), ScreenRect(ScreenPos(624, 700), buttonSize));
     m_cancelButton->enabled = true;
 
     {
-        m_description = std::make_unique<sf::Text>("Please select the directory containing your Age of Empires 2 installation.", *m_font);
+        m_description = std::make_unique<sf::Text>("Please select the directory containing your Age of Empires 2 installation.", SfmlRenderTarget::defaultFont());
         m_description->setCharacterSize(24);
         const int descWidth = m_description->getLocalBounds().width;
         m_description->setPosition(width/2 - descWidth/2, 10);
         m_description->setFillColor(sf::Color::White);
     }
 
-    m_fileList = std::make_unique<ListView>(*m_font, ScreenRect(ScreenPos(width/2 - width*3/8, 50), Size(width*3/4, 550)));
+    m_fileList = std::make_unique<ListView>(SfmlRenderTarget::defaultFont(), ScreenRect(ScreenPos(width/2 - width*3/8, 50), Size(width*3/4, 550)));
     m_fileList->setCurrentPath(std::filesystem::current_path());
 
     return true;

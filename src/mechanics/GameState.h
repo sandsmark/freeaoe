@@ -33,8 +33,6 @@
 
 #include "genie/script/ScnFile.h"
 
-#include "fonts/Alegreya-Bold.latin.h"
-
 class GameClient;
 class GameServer;
 class ActionPanel;
@@ -59,14 +57,7 @@ struct Label {
         m_right(right),
         m_top(top)
     {
-        static sf::Font font;
-        static bool fontLoaded = false;
-        if (!fontLoaded) {
-            fontLoaded = true;
-            font.loadFromMemory(resource_Alegreya_Bold_latin_data, resource_Alegreya_Bold_latin_size);
-        }
-
-        text.setFont(font);
+        text.setFont(SfmlRenderTarget::defaultFont());
         text.setOutlineColor(sf::Color::Black);
         text.setOutlineThickness(1);
         text.setFillColor(sf::Color::White);
@@ -154,6 +145,9 @@ public:
     const std::shared_ptr<UnitManager> &unitManager() { return m_unitManager; }
 
 private:
+    void setupScenario();
+    void setupGame(const GameType gameType);
+
     GameState(const GameState &other) = delete;
 
     std::shared_ptr<SfmlRenderTarget> renderTarget_;

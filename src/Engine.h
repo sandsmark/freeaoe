@@ -47,6 +47,5 @@ private:
     StateManager state_manager_;
 
     sf::Text fps_label_;
-    sf::Font font_;
 };
 

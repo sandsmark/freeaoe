@@ -25,12 +25,15 @@
 
 namespace sf {
 class RenderTarget;
+class Font;
 }
 
 class SfmlRenderTarget : public IRenderTarget
 {
 
 public:
+    static const sf::Font &defaultFont();
+
     SfmlRenderTarget(sf::RenderTarget &render_target);
     virtual ~SfmlRenderTarget();
 

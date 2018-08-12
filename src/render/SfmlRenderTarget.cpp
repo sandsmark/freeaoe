@@ -21,10 +21,27 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include "GraphicRender.h"
 #include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
+
+#include "fonts/Alegreya-Bold.latin.h"
 #include "mechanics/Map.h"
 
 #define SCALE 1.
+
+const sf::Font &SfmlRenderTarget::defaultFont()
+{
+    // Ensure atomic creation
+    static struct Font {
+        Font() {
+            font.loadFromMemory(resource_Alegreya_Bold_latin_data, resource_Alegreya_Bold_latin_size);
+        }
+
+        sf::Font font;
+    } fontLoader;
+
+    return fontLoader.font;
+}
 
 SfmlRenderTarget::SfmlRenderTarget(sf::RenderTarget &render_target)
 {
