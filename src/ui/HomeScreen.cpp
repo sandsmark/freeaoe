@@ -55,6 +55,12 @@ bool HomeScreen::init()
 
     m_background.loadFromImage(Resource::convertFrameToImage(backgroundFrame, palette));
 
+    m_descriptionRect = ScreenRect(390, 506, 393, 94);
+    m_description.setPosition(m_descriptionRect.topLeft());
+    m_description.setCharacterSize(10);
+    m_description.setFillColor(sf::Color::White);
+    m_description.setFont(SfmlRenderTarget::defaultFont());
+
     // These are fun to figure out
     m_buttons[Button::Singleplayer].rect = ScreenRect(309, 12, 120, 189);
     m_buttons[Button::Multiplayer].rect = ScreenRect(263, 217, 97, 131);
@@ -84,6 +90,16 @@ bool HomeScreen::init()
     m_buttons[Button::Tutorial].text.setString(LanguageManager::getString(9503));
     m_buttons[Button::Options].text.setString(LanguageManager::getString(9506));
     m_buttons[Button::Zone].text.setString(LanguageManager::getString(9502));
+
+    m_buttons[Button::Singleplayer].description = LanguageManager::getString(31000);
+    m_buttons[Button::Multiplayer].description = LanguageManager::getString(31001);
+    m_buttons[Button::History].description = LanguageManager::getString(31005);
+    m_buttons[Button::MapEditor].description = LanguageManager::getString(31004);
+    m_buttons[Button::Banner].description = LanguageManager::getString(31008);
+    m_buttons[Button::Exit].description = LanguageManager::getString(31009);
+    m_buttons[Button::Tutorial].description = LanguageManager::getString(31003);
+    m_buttons[Button::Options].description = LanguageManager::getString(31006);
+    m_buttons[Button::Zone].description = LanguageManager::getString(31002);
 
     // Less fun
     m_buttons[Button::Singleplayer].frame = 10;
@@ -145,8 +161,7 @@ HomeScreen::Button::Type HomeScreen::getSelection()
         }
 
         if (event.type == sf::Event::Closed) {
-            m_renderWindow->close();
-            continue;
+            return Button::Exit;
         }
 
         if (handleMouseEvent(event)) {
@@ -159,11 +174,12 @@ HomeScreen::Button::Type HomeScreen::getSelection()
         m_renderWindow->display();
     }
 
-    if (m_currentButton == -1) {
-        return Button::Exit;
+    if (m_currentButton != -1) {
+        return Button::Type(m_currentButton);
+
     }
 
-    return Button::Type(m_currentButton);
+    return Button::Exit;
 }
 
 void HomeScreen::render()
@@ -197,6 +213,8 @@ void HomeScreen::render()
         m_buttons[i].text.setPosition(pos);
         m_renderWindow->draw(m_buttons[i].text);
     }
+
+    m_renderWindow->draw(m_description);
 }
 
 bool HomeScreen::handleMouseEvent(const sf::Event &event)
@@ -207,6 +225,7 @@ bool HomeScreen::handleMouseEvent(const sf::Event &event)
         for (int i=0; i<Button::TypeCount; i++) {
             if (m_buttons[i].rect.contains(mousePos)) {
                 m_currentButton = i;
+                m_description.setString(m_buttons[i].description);
                 break;
             }
         }

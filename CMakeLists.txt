@@ -124,6 +124,7 @@ set (UI_SRC
     src/ui/FileDialog.cpp
     src/ui/UnitInfoPanel.cpp
     src/ui/HomeScreen.cpp
+    src/ui/HistoryScreen.cpp
     )
 
 add_resource(FONT_RES

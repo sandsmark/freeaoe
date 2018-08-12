@@ -394,6 +394,10 @@ int ResourceManager::filenameID(const std::string &filename)
         { "AchDecal.slp", 50766   },
         { "AchTeam.slp", 50769    },
 
+        // History view stuff
+        { "hist_pic.sin", 50162   },
+        { "hist_picx.sin", 53209  },
+
         // Old unused stuff
         { "colbar.slp", 50792     }, // Colored bars
         { "defcheck.slp", 52002   },
@@ -473,8 +477,6 @@ int ResourceManager::filenameID(const std::string &filename)
         { "dlg_men.sin", 50015    },
         { "dlg_obj.sin", 50016    },
         { "dlg_objx.sin", 50021   },
-        { "hist_pic.sin", 50162   },
-        { "hist_picx.sin", 53209  },
 
         // Status screen/dialog
         { "scr1.sin", 50051       },

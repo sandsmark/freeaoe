@@ -57,6 +57,8 @@ public:
         int frame = 0;
         int hoverFrame = 0;
 
+        std::string description;
+
         sf::Texture texture;
         sf::Texture hoverTexture;
 
@@ -82,6 +84,9 @@ private:
     std::unique_ptr<sf::RenderWindow> m_renderWindow;
     std::shared_ptr<genie::SlpFile> m_slpFile;
     sf::Texture m_background;
+
+    ScreenRect m_descriptionRect;
+    sf::Text m_description;
 
     int m_currentButton = -1;
 };
