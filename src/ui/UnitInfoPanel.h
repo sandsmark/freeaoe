@@ -47,10 +47,8 @@ public:
     ScreenRect rect() const;
 
 private:
-    void updateInfo();
     void drawSingleUnit();
     void drawMultipleUnits();
-    void drawUnitPortrait(const std::shared_ptr<Unit> &unit, ScreenPos pos);
 
     struct StatItem {
         enum Type {
@@ -97,6 +95,8 @@ private:
 
     std::vector<sf::Texture> m_unitIcons;
     std::vector<sf::Texture> m_buildingIcons;
+
+    sf::Texture m_unitHalo;
 };
 
 #endif // UNITINFOPANEL_H

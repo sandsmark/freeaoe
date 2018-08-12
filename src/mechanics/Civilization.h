@@ -33,6 +33,8 @@ public:
 
     const ResourceMap startingResources() const;
 
+    const std::string &name() const { return m_data.Name; }
+
 private:
     const genie::Unit nullUnit;
 

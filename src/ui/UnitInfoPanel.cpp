@@ -20,6 +20,8 @@
 #include "core/Entity.h"
 #include "render/SfmlRenderTarget.h"
 #include "resource/LanguageManager.h"
+#include "mechanics/Player.h"
+#include "mechanics/Civilization.h"
 
 #include <genie/dat/Unit.h>
 #include <genie/resource/SlpFile.h>
@@ -79,6 +81,13 @@ bool UnitInfoPanel::init()
         m_buildingIcons[i].loadFromImage(Resource::convertFrameToImage(buildingIconsSlp->getFrame(i)));
     }
 
+    genie::SlpFilePtr haloSlp = ResourceManager::Inst()->getSlp("unithalo.shp", ResourceManager::ResourceType::Interface);
+    if (!haloSlp) {
+        WARN << "couldn't load halo";
+        return false;
+    }
+    m_unitHalo.loadFromImage(Resource::convertFrameToImage(haloSlp->getFrame(0)));
+
     // Labels
     m_name.setFont(SfmlRenderTarget::defaultFont());
     m_civilizationName.setFont(SfmlRenderTarget::defaultFont());
@@ -91,9 +100,12 @@ bool UnitInfoPanel::init()
     m_hpText.setFillColor(sf::Color::Black);
 
     m_name.setCharacterSize(17);
+    m_civilizationName.setCharacterSize(15);
+    m_playerName.setCharacterSize(15);
+    m_hpText.setCharacterSize(12);
+
     m_name.setPosition(rect().topLeft());
 
-    m_hpText.setCharacterSize(12);
 
     // HP bar
     m_hpRedRect.setFillColor(sf::Color::Red);
@@ -117,7 +129,6 @@ bool UnitInfoPanel::update(Time /*time*/)
 
     if (unitManager->selected() != m_selectedUnits) {
         m_selectedUnits = unitManager->selected();
-        updateInfo();
 
         m_dirty = true;
     }
@@ -144,17 +155,32 @@ void UnitInfoPanel::draw()
 
 void UnitInfoPanel::drawSingleUnit()
 {
+    Unit::Ptr unit = *m_selectedUnits.begin();
+
+    std::shared_ptr<Player> player = unit->player.lock();
+    m_civilizationName.setString(player->civ->name());
+    m_playerName.setString(player->name);
+
+    m_civilizationName.setPosition(rect().center() - ScreenPos(0, m_civilizationName.getLocalBounds().height + m_playerName.getLocalBounds().height + 10));
+    m_playerName.setPosition(rect().center() - ScreenPos(0, m_playerName.getLocalBounds().height));
+
+    m_renderTarget->draw(m_civilizationName);
+    m_renderTarget->draw(m_playerName);
+
     ScreenPos pos = rect().topLeft();
+    m_name.setString(LanguageManager::getString(unit->data()->LanguageDLLName));
     m_name.setPosition(pos);
     m_renderTarget->draw(m_name);
     pos.y += m_name.getLocalBounds().height +  m_name.getLocalBounds().top + 5;
-
-    Unit::Ptr unit = *m_selectedUnits.begin();
 
     const int16_t iconId = unit->data()->IconID;
     if (iconId < 0) {
         return;
     }
+
+    m_renderTarget->draw(m_unitHalo, pos);
+    pos.x += 2;
+    pos.y += 2;
 
     Size size;
     if (unit->data()->Type == genie::Unit::BuildingType) {
@@ -175,7 +201,7 @@ void UnitInfoPanel::drawSingleUnit()
         size = Size(m_unitIcons[iconId].getSize());
     }
 
-    pos.y += size.height;
+    pos.y += size.height + 2;
 
     int rightX = pos.x + size.width + 2;
 
@@ -261,11 +287,61 @@ void UnitInfoPanel::drawSingleUnit()
 
 void UnitInfoPanel::drawMultipleUnits()
 {
+    const int maxVertical = 3;
+    Size iconSize;
+    iconSize.height = rect().height / maxVertical;
+    const int maxHorizontal = rect().width / iconSize.height;
 
-}
+    int unitCount = m_selectedUnits.size();
+    if (unitCount >= maxVertical * maxHorizontal) {
+        iconSize.width = iconSize.height - (unitCount - maxVertical * maxHorizontal) / 3;
+    } else {
+        iconSize.width = iconSize.height;
+    }
+    iconSize.width = std::min(iconSize.width, 38.f);
 
-void UnitInfoPanel::drawUnitPortrait(const std::shared_ptr<Unit> &unit, ScreenPos pos)
-{
+    sf::RectangleShape bevelRect;
+
+    ScreenPos pos = rect().topLeft() + ScreenPos(2, 2);
+    for (const Unit::Ptr &unit : m_selectedUnits) {
+        bevelRect.setFillColor(sf::Color(192, 192, 192));
+        bevelRect.setPosition(pos.x - 2, pos.y - 2);
+        bevelRect.setSize(Size(iconSize.width + 2, iconSize.width + 2));
+        m_renderTarget->draw(bevelRect);
+
+        bevelRect.setFillColor(sf::Color(64, 64, 64));
+        bevelRect.setPosition(pos.x + 0, pos.y + 0);
+        bevelRect.setSize(Size(iconSize.width, iconSize.width));
+        m_renderTarget->draw(bevelRect);
+
+        const int16_t iconId = unit->data()->IconID;
+        if (iconId < 0) {
+            WARN << "invalid unit id";
+            continue;
+        }
+        if (unit->data()->Type == genie::Unit::BuildingType) {
+            if (iconId > m_buildingIcons.size()) {
+                WARN << "out of bounds building icon" << iconId;
+                continue;
+            }
+
+            m_renderTarget->draw(m_buildingIcons[iconId], pos);
+        } else {
+            if (iconId > m_unitIcons.size()) {
+                WARN << "out of bounds unit icon" << iconId;
+                continue;
+            }
+
+            m_renderTarget->draw(m_unitIcons[iconId], pos);
+        }
+
+        pos.x += iconSize.width + 2;
+
+        if (pos.x + iconSize.width > rect().bottomRight().x) {
+            pos.x = rect().topLeft().x + 2;
+            pos.y += iconSize.height + 2;
+        }
+    }
 }
 
 ScreenRect UnitInfoPanel::rect() const
@@ -276,15 +352,4 @@ ScreenRect UnitInfoPanel::rect() const
     r.x = 8 * 45;
     r.y = m_renderTarget->getSize().height - r.height - 10;
     return r;
-}
-
-void UnitInfoPanel::updateInfo()
-{
-    if (m_selectedUnits.size() == 1) {
-        Unit::Ptr unit = *m_selectedUnits.begin();
-        m_name.setString(LanguageManager::getString(unit->data()->LanguageDLLName));
-//        m_statItems[StatItem::GarrisonCapacity]);
-
-
-    }
 }

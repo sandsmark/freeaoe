@@ -335,6 +335,9 @@ struct ScreenRect
     ScreenPos bottomRight() const {
         return ScreenPos(x + width, y + height);
     }
+    ScreenPos center() const {
+        return ScreenPos(x + width/2, y+height/2);
+    }
 
     bool isEmpty() const {
         return !(width > 0 && height > 0);
