@@ -35,25 +35,20 @@ typedef std::shared_ptr<Terrain> TerrainPtr;
 struct Slope {
     enum Direction {
         Flat = 0,
-        SouthUp = 1,
-        NorthUp     = 2,
-        WestUp      = 3,
-        EastUp      = 4,
-        SouthWestUp = 5,
-        NorthWestUp = 6,
-        SouthEastUp = 7,
-        NorthEastUp = 8,
+        SouthUp     = 1 << 0,
+        NorthUp     = 1 << 1,
+        WestUp      = 1 << 2,
+        EastUp      = 1 << 3,
+        SouthWestUp = SouthUp | WestUp,
+        NorthWestUp = NorthUp | WestUp,
+        SouthEastUp = SouthUp | EastUp,
+        NorthEastUp = NorthUp | EastUp,
 
-        NorthDown   = 13,
-        SouthDown   = 14,
-        WestDown    = 15,
-        EastDown    = 16,
+        SouthWestEastUp = SouthUp | WestUp | EastUp,
+        NorthWestEastUp = NorthUp | WestUp | EastUp,
 
-        SouthWestEastUp = 17,
-        NorthWestEastUp = 18,
-
-        NorthSouthEastUp = 19,
-        NorthSouthWestUp = 20,
+        NorthSouthEastUp = NorthUp | SouthUp | EastUp,
+        NorthSouthWestUp = NorthUp | SouthUp | WestUp,
     };
 
     Slope (const Direction s) : direction(s) {}
@@ -62,28 +57,33 @@ struct Slope {
 
     inline bool operator <(const Direction other) const { return direction < other; }
     inline bool operator==(const Direction other) const { return other == direction; }
+    inline bool operator!=(const Direction other) const { return other != direction; }
     inline bool operator <(const Slope other) const { return direction < other.direction; }
     inline bool operator==(const Slope other) const { return other.direction == direction; }
 
-    inline operator uint8_t() const { return uint8_t(direction); }
+    inline operator Direction() const { return direction; }
 
     inline genie::Slope toGenie() const {
-        const uint8_t s(direction);
-        if (s < SouthWestEastUp) {
-            return genie::Slope(s);
-        }
+        switch (direction){
+        case Flat: return genie::SlopeFlat;
+        case SouthUp: return genie::SlopeSouthUp;
+        case NorthUp: return genie::SlopeNorthUp;
+        case WestUp: return genie::SlopeWestUp;
+        case EastUp: return genie::SlopeEastUp;
 
-        switch (s) {
-        case Slope::SouthWestEastUp:
-            return genie::SlopeSouthWestEastUp;
-        case Slope::NorthWestEastUp:
-            return genie::SlopeNorthWestEastUp;
-        case Slope::NorthSouthEastUp:
-            return genie::SlopeWestDown;
-        case Slope::NorthSouthWestUp:
-            return genie::SlopeEastDown;
+        case SouthWestUp: return genie::SlopeSouthWestUp;
+        case NorthWestUp: return genie::SlopeNorthWestUp;
+        case SouthEastUp: return genie::SlopeSouthEastUp;
+        case NorthEastUp: return genie::SlopeNorthEastUp;
+
+        case SouthWestEastUp: return genie::SlopeSouthWestEastUp;
+        case NorthWestEastUp: return genie::SlopeNorthWestEastUp;
+        case NorthSouthEastUp: return genie::SlopeNorthSouthEastUp;
+        case NorthSouthWestUp: return genie::SlopeNorthSouthWestUp;
+
         default:
-            return genie::SlopeInvalid;
+            WARN << "unhandled direction" << direction;
+            return genie::SlopeFlat;
         }
     }
 
@@ -189,13 +189,14 @@ template<> struct hash<Blend>
 };
 }
 
-class Terrain : public Resource
+class Terrain
 {
 public:
+    const int32_t id;
     //----------------------------------------------------------------------------
     /// @param Id resource id
     //
-    Terrain(unsigned int Id);
+    Terrain(unsigned int id_);
     virtual ~Terrain();
 
     const sf::Texture &texture(int x, int y);
@@ -219,5 +220,6 @@ private:
     std::unordered_map<int, sf::Texture> m_images; // TODO Frames?
     std::unordered_map<Blend, sf::Texture> m_blendImages;
     std::unordered_map<TileSlopes, sf::Texture> m_slopeImages;
+    bool m_isLoaded = false;
 };
 

@@ -24,8 +24,6 @@
 #include "ActionMove.h"
 #include "Farm.h"
 
-using std::shared_ptr;
-
 UnitFactory &UnitFactory::Inst()
 {
     static UnitFactory inst;

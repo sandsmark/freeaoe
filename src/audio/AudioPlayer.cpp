@@ -42,7 +42,7 @@ AudioPlayer::AudioPlayer()
                 );
 
     m_device = std::make_unique<mal_device>();
-    mal_result ret = mal_device_init(NULL, mal_device_type_playback, NULL, &config, this, m_device.get());
+    mal_result ret = mal_device_init(nullptr, mal_device_type_playback, nullptr, &config, this, m_device.get());
     if (ret != MAL_SUCCESS) {
         WARN << "Failed to open playback device" << ret;
         return;
@@ -136,7 +136,7 @@ void AudioPlayer::playSample(const std::shared_ptr<uint8_t> &data, const float p
 
 void AudioPlayer::playSound(const int id, const int civilization)
 {
-    const std::vector<genie::Sound> &sounds = DataManager::Inst().datFile().Sounds;
+    const std::vector<genie::Sound> &sounds = DataManager::datFile().Sounds;
     if (id < 0 || id >= sounds.size()) {
         WARN << "invalid sound id" << id;
         return;

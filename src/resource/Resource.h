@@ -29,77 +29,8 @@ class Resource
 {
 
 public:
-    Resource(const Resource &) = delete;
-
-    //----------------------------------------------------------------------------
-    /// Resource types
-    enum Type { TYPE_UNDEFINED,
-                TYPE_GRAPHIC,
-                TYPE_TERRAIN };
-
-    //----------------------------------------------------------------------------
-    /// Constructor
-    ///
-    /// @param id resources' id
-    /// @param type type of the resource
-    //
-    Resource(sf::Uint32 id, Type type = TYPE_UNDEFINED);
-
-    //----------------------------------------------------------------------------
-    /// Destructor
-    //
-    virtual ~Resource();
-
-    //----------------------------------------------------------------------------
-    /// Gets resources' id
-    ///
-    /// @return id of resource
-    //
-    sf::Uint32 getId() const;
-
-    //----------------------------------------------------------------------------
-    /// Load the resource from disk
-    //
-    virtual bool load();
-
-    //----------------------------------------------------------------------------
-    /// Free memory reserved for the resource
-    //
-    virtual void unload();
-
-    //----------------------------------------------------------------------------
-    /// Returns type of the resource
-    ///
-    /// @return type
-    //
-    Type getType() const;
-
-    //----------------------------------------------------------------------------
-    /// Check wheter the resource is loaded or not.
-    ///
-    /// @return resource load status
-    //
-    bool isLoaded() const;
-
-    static sf::Image convertFrameToImage(const genie::SlpFramePtr frame);
-    static sf::Image convertFrameToImage(const genie::SlpFramePtr frame, const genie::PalFile &palette,
+    static sf::Image convertFrameToImage(const genie::SlpFramePtr &frame);
+    static sf::Image convertFrameToImage(const genie::SlpFramePtr &frame, const genie::PalFile &palette,
                                          const int playerId = -1);
-
-protected:
-    //----------------------------------------------------------------------------
-    /// Sets resources' id
-    ///
-    /// @param id new id
-    //
-    void setId(sf::Uint32 id);
-
-    //----------------------------------------------------------------------------
-    void setLoaded(bool loaded);
-
-private:
-    sf::Uint32 id_;
-    Type type_;
-
-    bool loaded_;
 };
 

@@ -7,7 +7,7 @@ class ActionBuild : public IAction
 {
 
 public:
-    ActionBuild(Unit::Ptr builder, Unit::Ptr building);
+    ActionBuild(const Unit::Ptr &builder, const Unit::Ptr &building);
     ~ActionBuild();
 
     bool update(Time time) override;

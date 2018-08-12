@@ -116,7 +116,7 @@ bool MapRenderer::update(Time /*time*/)
     return true;
 }
 
-void MapRenderer::display(void)
+void MapRenderer::display()
 {
     if (Size(m_mapRenderTexture.getSize()) != renderTarget_->getSize()) {
         updateTexture();
@@ -125,7 +125,7 @@ void MapRenderer::display(void)
     renderTarget_->draw(m_mapRenderTexture.getTexture(), ScreenPos(0, 0));
 }
 
-void MapRenderer::setMap(MapPtr map)
+void MapRenderer::setMap(const MapPtr &map)
 {
     m_map = map;
 

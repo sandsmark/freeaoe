@@ -41,7 +41,7 @@ public:
     ///
     //
     bool parseOptions(int argc, char **argv);
-    void setAllowedOptions(const std::unordered_map<std::string, std::string> options);
+    void setAllowedOptions(const std::unordered_map<std::string, std::string> &options);
 
 
     const std::string getValue(const std::string &name);

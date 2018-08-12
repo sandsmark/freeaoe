@@ -33,7 +33,7 @@ public:
     virtual ~IRenderer();
 
     //----------------------------------------------------------------------------
-    void setRenderTarget(std::shared_ptr<IRenderTarget> renderTarget);
+    void setRenderTarget(const std::shared_ptr<IRenderTarget> &renderTarget);
 
     //----------------------------------------------------------------------------
     virtual bool update(Time time) = 0;

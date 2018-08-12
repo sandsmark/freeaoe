@@ -6,7 +6,7 @@
 #include "mechanics/Player.h"
 #include "Map.h"
 
-Farm::Farm(const genie::Unit &data_, const std::shared_ptr<Player> &player, std::shared_ptr<Civilization> civilization, const std::shared_ptr<Map> &map) :
+Farm::Farm(const genie::Unit &data_, const std::shared_ptr<Player> &player, const std::shared_ptr<Civilization> &civilization, const std::shared_ptr<Map> &map) :
     Unit(data_, player, civilization),
     m_map(map),
     m_farmRenderer(Size(data_.Size))
@@ -144,7 +144,7 @@ void FarmRender::render(sf::RenderTarget &renderTarget, const ScreenPos screenPo
     sf::Sprite sprite;
     sprite.setTexture(m_texture);
 
-    const ScreenPos pos = screenPos - ScreenPos(Constants::TILE_SIZE_HORIZONTAL / 2, Constants::TILE_SIZE_VERTICAL / 2);
+    const ScreenPos pos = screenPos - ScreenPos(Constants::TILE_SIZE_HORIZONTAL / 2., Constants::TILE_SIZE_VERTICAL / 2.);
 
     const int height = Constants::TILE_SIZE;
     const int width = Constants::TILE_SIZE;

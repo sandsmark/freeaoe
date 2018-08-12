@@ -124,9 +124,9 @@ bool ActionPanel::update(Time /*time*/)
     if (m_dirty) {
         m_dirty = false;
         return true;
-    } else {
-        return false;
     }
+
+    return false;
 }
 
 void ActionPanel::draw()
@@ -298,13 +298,7 @@ void ActionPanel::addCreateButtons(const std::shared_ptr<Unit> &unit)
     }
 
     bool hasNext = false;
-    bool hasPrevious = false;
     for (const genie::Unit *creatable : creatableUnits) {
-        if (creatable->Creatable.ButtonID < m_buttonOffset) {
-            hasPrevious = true;
-            continue;
-        }
-
         if (creatable->Creatable.ButtonID > m_buttonOffset + 15) {
             hasNext = true;
             continue;
@@ -322,7 +316,7 @@ void ActionPanel::addCreateButtons(const std::shared_ptr<Unit> &unit)
         button.targetId = creatable->ID;
         button.iconId = creatable->IconID;
 
-        currentButtons.push_back(std::move(button));
+        currentButtons.push_back(button);
     }
 
     if (hasNext) {

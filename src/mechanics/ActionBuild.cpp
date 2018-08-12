@@ -2,7 +2,7 @@
 
 #include <genie/dat/Unit.h>
 
-ActionBuild::ActionBuild(Unit::Ptr builder, Unit::Ptr building) : IAction(Type::Build, builder),
+ActionBuild::ActionBuild(const Unit::Ptr &builder, const Unit::Ptr &building) : IAction(Type::Build, builder),
     m_targetBuilding(building)
 {
 }
@@ -67,7 +67,7 @@ IAction::UnitState ActionBuild::unitState() const
 
     if (target->data()->ID == Unit::Farm) {
         return Working;
-    } else {
-        return Proceeding;
     }
+
+    return Proceeding;
 }

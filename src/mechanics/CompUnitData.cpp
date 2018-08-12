@@ -45,7 +45,7 @@ void UnitData::setUnit(unsigned int unit_id)
     }
 }
 
-const genie::Unit &UnitData::getData(void) const
+const genie::Unit &UnitData::getData() const
 {
     return data_;
 }

@@ -58,19 +58,19 @@ public:
     UnitManager();
     virtual ~UnitManager();
 
-    void add(Unit::Ptr unit);
+    void add(const Unit::Ptr &unit);
 
     bool init();
 
     bool update(Time time);
-    void render(std::shared_ptr<SfmlRenderTarget> renderTarget);
+    void render(const std::shared_ptr<SfmlRenderTarget> &renderTarget);
 
     void onLeftClick(const MapPos &mapPos);
     void onRightClick(const ScreenPos &screenPos, const CameraPtr &camera);
     void onMouseMove(const MapPos &mapPos);
 
     void selectUnits(const ScreenRect &selectionRect, const CameraPtr &camera);
-    void setMap(MapPtr map);
+    void setMap(const MapPtr &map);
 
     const UnitSet &selected() const { return m_selectedUnits; }
 

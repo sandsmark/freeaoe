@@ -131,7 +131,7 @@ void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos scree
 
 }
 
-void GraphicRender::setGraphic(GraphicPtr graphic)
+void GraphicRender::setGraphic(const GraphicPtr &graphic)
 {
     graphic_ = graphic;
     current_frame_ = 0;

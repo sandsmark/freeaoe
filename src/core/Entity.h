@@ -64,7 +64,7 @@ struct Entity: std::enable_shared_from_this<Entity>
 
     virtual GraphicRender &renderer() { return m_graphics; }
 
-    static std::shared_ptr<Unit> asUnit(EntityPtr entity);
+    static std::shared_ptr<Unit> asUnit(const EntityPtr &entity);
 
     const std::string debugName;
 
@@ -170,12 +170,12 @@ struct Unit : public Entity
     Unit() = delete;
     Unit(const Unit &unit) = delete;
 
-    Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player, std::shared_ptr<Civilization> civilization);
+    Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, const std::shared_ptr<Civilization> &civilization_);
 
     void setAngle(const float angle);
 
-    void queueAction(ActionPtr action);
-    void setCurrentAction(ActionPtr action);
+    void queueAction(const ActionPtr &action);
+    void setCurrentAction(const ActionPtr &action);
     void removeAction(IAction *action);
     void clearActionQueue();
     const ActionPtr &currentAction() const { return m_currentAction; }

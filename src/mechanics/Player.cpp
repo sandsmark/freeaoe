@@ -7,7 +7,7 @@ Player::Player(const int id, const std::shared_ptr<Civilization> &c, const Resou
     civ(c),
     resources(civ->startingResources())
 {
-    for (const std::pair<genie::ResourceType, float> &r : startingResources) {
+    for (const std::pair<const genie::ResourceType, float> &r : startingResources) {
         resources[r.first] = r.second;
     }
 

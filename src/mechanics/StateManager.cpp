@@ -19,7 +19,7 @@
 #include "StateManager.h"
 
 StateManager::StateManager() :
-    active_state_(0)
+    active_state_(nullptr)
 {
 }
 
@@ -27,9 +27,9 @@ StateManager::~StateManager()
 {
 }
 
-bool StateManager::addActiveState(std::shared_ptr<GameState> state)
+bool StateManager::addActiveState(const std::shared_ptr<GameState> &state)
 {
-    if (active_state_ != 0) {
+    if (active_state_ != nullptr) {
         active_state_->cleanUp();
     }
 

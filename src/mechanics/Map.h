@@ -53,7 +53,7 @@ struct MapTile
     }
 
     uint32_t terrainId() const {
-        return terrain_->getId();
+        return terrain_->id;
     }
 
     unsigned int elevation_;

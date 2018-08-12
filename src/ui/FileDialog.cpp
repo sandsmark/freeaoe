@@ -135,11 +135,7 @@ bool Button::checkClick(const sf::Event &event)
         return false;
     }
 
-    if (m_pressed) {
-        return true;
-    } else {
-        return false;
-    }
+    return m_pressed;
 }
 
 void Button::render(sf::RenderWindow *window)

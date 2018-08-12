@@ -35,7 +35,7 @@ public:
     virtual ~SfmlRenderTarget();
 
     //----------------------------------------------------------------------------
-    Size getSize(void) const override;
+    Size getSize() const override;
     void setSize(const Size size) const override;
 
     //----------------------------------------------------------------------------
@@ -52,7 +52,7 @@ public:
     //----------------------------------------------------------------------------
     /// Displays frame.
     //
-    void display(void) override;
+    void display() override;
 
     sf::RenderTarget *renderTarget_;
 private:

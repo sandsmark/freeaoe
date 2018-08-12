@@ -38,7 +38,7 @@ public:
     static const genie::Unit nullUnit;
     static const genie::Tech nullTech;
 
-    bool initialize(const std::string dataPath);
+    bool initialize(const std::string &dataPath);
 
     DataManager(const DataManager &) = delete;
     DataManager &operator=(const DataManager &) = delete;

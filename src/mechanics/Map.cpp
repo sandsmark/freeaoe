@@ -59,15 +59,13 @@ void Map::setUpSample()
 
     tiles_.resize(cols_ * rows_, grass);
 
-    TerrainPtr water_dat = ResourceManager::Inst()->getTerrain(1);
-
     for (int i=6; i<10; i++) {
         getTileAt(0, i).terrain_ = ResourceManager::Inst()->getTerrain(2);
         getTileAt(1, i).terrain_ = ResourceManager::Inst()->getTerrain(2);
-        getTileAt(2, i).terrain_ = water_dat;
+        getTileAt(2, i).terrain_ = ResourceManager::Inst()->getTerrain(1);
     }
     for (int i=4; i<6; i++) {
-        getTileAt(i, 10).terrain_ = water_dat;
+        getTileAt(i, 10).terrain_ = ResourceManager::Inst()->getTerrain(1);
     }
 
     for (int i=3; i<6; i++) {
@@ -271,7 +269,7 @@ void Map::updateMapData()
     m_updated = true;
 }
 
-enum Direction : int {
+enum Direction : uint8_t {
     None = 0,
     West = 1 << 0,
     North = 1 << 1,
@@ -293,7 +291,7 @@ void Map::updateTileBlend(int tileX, int tileY)
 //        return;
 //    }
 
-    uint32_t tileId = tile.terrain_->getId();
+    int32_t tileId = tile.terrain_->id;
 
     std::unordered_map<uint8_t, int> blendDirections;
     std::unordered_set<uint8_t> neighborIds;
@@ -351,7 +349,7 @@ void Map::updateTileBlend(int tileX, int tileY)
                 neighborsBelow |= direction;
             }
 
-            const uint8_t neighborId = neighbor.terrain_->getId();
+            const int32_t neighborId = neighbor.terrain_->id;
             if (tileId == neighborId) {
                 continue;
             }
@@ -441,7 +439,7 @@ void Map::updateTileBlend(int tileX, int tileY)
     for (const uint8_t id : idsToDraw) {
         Blend blends;
 
-        int direction = blendDirections[id];
+        uint8_t direction = blendDirections[id];
         if (direction & South) {
             direction &= ~SouthWest;
             direction &= ~SouthEast;
@@ -548,7 +546,7 @@ void Map::updateTileBlend(int tileX, int tileY)
 
         const TerrainPtr &neighbor = neighborTerrains[id];
         blends.blendMode = Terrain::blendMode(tileData.BlendType, neighbor->data().BlendType);
-        blends.terrainId = neighbor->getId();
+        blends.terrainId = neighbor->id;
         blends.x = tileX;
         blends.y = tileX;
 

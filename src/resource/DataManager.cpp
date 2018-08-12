@@ -129,7 +129,7 @@ DataManager::~DataManager()
 {
 }
 
-bool DataManager::initialize(const std::string dataPath)
+bool DataManager::initialize(const std::string &dataPath)
 {
 
     std::vector<std::pair<std::string, genie::GameVersion>> datFilenames({
@@ -150,13 +150,13 @@ bool DataManager::initialize(const std::string dataPath)
         }
     }
 
-    if (filePath == "") {
+    if (filePath.empty()) {
         WARN << "Failed to find any dat files in" << dataPath;
         return false;
     }
 
     try {
-        dat_file_.load(filePath.c_str());
+        dat_file_.load(filePath);
     } catch (const std::exception &error) {
         WARN << "Failed to load dat file" << filePath << error.what();
         return false;

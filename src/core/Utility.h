@@ -21,6 +21,7 @@
 #include <cstring>
 #include <string>
 #include <algorithm>
+#include <cmath>
 
 #ifndef _MSC_VER
 #if __has_cpp_attribute(likely) && __has_cpp_attribute(likely)
@@ -41,6 +42,16 @@ inline std::string toLowercase(std::string input)
 {
     std::transform(input.begin(), input.end(), input.begin(), ::tolower);
     return input;
+}
+
+inline bool floatsEquals(const float a, const float b)
+{
+    return (std::abs(a - b) * 100000.f <= std::min(std::abs(a), std::abs(b)));
+}
+
+inline bool floatsEquals(const double a, const double b)
+{
+    return (std::abs(a - b) * 1000000000000. <= std::min(std::abs(a), std::abs(b)));
 }
 
 }

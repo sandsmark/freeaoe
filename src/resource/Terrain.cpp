@@ -29,8 +29,7 @@
 
 #include <cmath>
 
-Terrain::Terrain(unsigned int Id) :
-    Resource(Id, TYPE_TERRAIN)
+Terrain::Terrain(unsigned int id_) : id(id_)
 {
 }
 
@@ -90,8 +89,10 @@ const sf::Image Terrain::image(int x, int y)
 
 bool Terrain::load()
 {
-    if (!isLoaded()) {
-        m_data = DataManager::Inst().getTerrain(getId());
+    if (!m_isLoaded) {
+        m_isLoaded = true;
+
+        m_data = DataManager::Inst().getTerrain(id);
 
         if (!m_slp) {
             m_slp = ResourceManager::Inst()->getSlp(m_data.SLP);
@@ -103,8 +104,6 @@ bool Terrain::load()
 
             return false;
         }
-
-        return Resource::load();
     }
 
     return true;
@@ -154,8 +153,8 @@ const sf::Texture &Terrain::blendImage(const Blend blends, int tileX, int tileY)
 
     const genie::BlendMode &blend = ResourceManager::Inst()->getBlendmode(blends.blendMode);
     std::vector<uint8_t> alphamask;
-    for (int i=0; i < Blend::BlendTileCount; i++) {
-        if ((blends.bits & (1 << i)) == 0) {
+    for (unsigned i=0; i < Blend::BlendTileCount; i++) {
+        if ((blends.bits & (1u << i)) == 0) {
             continue;
         }
 
@@ -294,7 +293,7 @@ const sf::Texture &Terrain::slopedImage(const TileSlopes &slopes, int tileX, int
             patterns.push_back(genie::Pattern34);
         }
 
-        if (slopes.southEast != Slope::Flat && slopes.southEast != Slope::SouthUp && slopes.northEast != Slope::EastUp && slopes.northEast != Slope::SouthEastUp) {
+        if (!(slopes.southEast == Slope::Flat || slopes.southEast == Slope::SouthUp || slopes.northEast == Slope::EastUp || slopes.northEast == Slope::SouthEastUp)) {
             if (slopes.south != Slope::Flat) {
                 patterns.push_back(genie::Pattern35);
             }

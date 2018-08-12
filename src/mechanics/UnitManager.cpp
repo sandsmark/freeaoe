@@ -44,7 +44,7 @@ UnitManager::~UnitManager()
 {
 }
 
-void UnitManager::add(Unit::Ptr unit)
+void UnitManager::add(const Unit::Ptr &unit)
 {
     m_units.insert(unit);
 }
@@ -60,7 +60,7 @@ bool UnitManager::update(Time time)
 {
     bool updated = false;
 
-    for (Unit::Ptr unit : m_units) {
+    for (const Unit::Ptr &unit : m_units) {
         updated = unit->update(time) || updated;
     }
 
@@ -69,7 +69,7 @@ bool UnitManager::update(Time time)
     return updated;
 }
 
-void UnitManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
+void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget)
 {
     CameraPtr camera = renderTarget->camera();
 
@@ -84,7 +84,7 @@ void UnitManager::render(std::shared_ptr<SfmlRenderTarget> renderTarget)
 
     m_outlineOverlay.clear(sf::Color::Transparent);
 
-    for (Unit::Ptr unit : m_units) {
+    for (const Unit::Ptr &unit : m_units) {
         if (!(unit->data()->OcclusionMode & genie::Unit::OccludeOthers)) {
             continue;
         }
@@ -263,7 +263,7 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
 
     std::vector<Unit::Ptr> containedUnits;
     int8_t requiredInteraction = genie::Unit::ObjectInteraction;
-    for (Unit::Ptr unit : m_units) {
+    for (const Unit::Ptr &unit : m_units) {
         if (!selectionRect.overlaps(unit->rect() + camera->absoluteScreenPos(unit->position()))) {
             continue;
         }
@@ -272,7 +272,7 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
         containedUnits.push_back(unit);
     }
 
-    for (Unit::Ptr unit : containedUnits) {
+    for (const Unit::Ptr &unit : containedUnits) {
         if (unit->data()->InteractionMode < requiredInteraction) {
             continue;
         }
@@ -301,7 +301,7 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
     }
 }
 
-void UnitManager::setMap(MapPtr map)
+void UnitManager::setMap(const MapPtr &map)
 {
     m_map = map;
 }
@@ -413,7 +413,7 @@ const Task UnitManager::defaultActionAt(const ScreenPos &pos, const CameraPtr &c
 
 void UnitManager::updateVisibility(const CameraPtr &camera)
 {
-    for (Unit::Ptr unit : m_units) {
+    for (const Unit::Ptr &unit : m_units) {
         const ScreenPos unitPosition = camera->absoluteScreenPos(unit->position());
         const ScreenRect unitRect = unit->renderer().rect() + unitPosition;
         unit->isVisible = camera->isVisible(unitRect);

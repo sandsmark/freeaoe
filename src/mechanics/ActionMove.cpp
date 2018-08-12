@@ -47,13 +47,13 @@ struct PathPoint {
         return x == other.x && y == other.y;
     }
     bool operator!=(const PathPoint &other) const {
-        return (x != other.x) && (y != other.y);
+        return x != other.x || y != other.y;
     }
     bool operator<(const PathPoint &other) const {
         return (other.distance + other.pathLength) < (distance + pathLength);
     }
 };
-}
+} //namespace
 
 template<> struct std::hash<PathPoint>
 {
@@ -65,7 +65,7 @@ template<> struct std::hash<PathPoint>
 
 static const float PATHFINDING_HEURISTIC_WEIGHT = 1.;
 
-MoveOnMap::MoveOnMap(MapPos destination, MapPtr map, Unit::Ptr unit, UnitManager *unitManager) :
+MoveOnMap::MoveOnMap(MapPos destination, const MapPtr &map, const Unit::Ptr &unit, UnitManager *unitManager) :
     IAction(Type::Move, unit),
     m_map(map),
     m_unitManager(unitManager),
@@ -105,8 +105,8 @@ MapPos MoveOnMap::findClosestWalkableBorder(const MapPos &target, int coarseness
         uincrY = 0;
         vincrX = 0;
         vincrY = 1;
-        if (dx < 0) uincrX = -uincrX;
-        if (dy < 0) vincrY = -vincrY;
+        if (dx < 0) { uincrX = -uincrX; }
+        if (dy < 0) { vincrY = -vincrY; }
     } else {
         distanceU = std::abs(dy);
         distanceV = std::abs(dx);
@@ -116,15 +116,14 @@ MapPos MoveOnMap::findClosestWalkableBorder(const MapPos &target, int coarseness
         uincrY = 1;
         vincrX = 1;
         vincrY = 0;
-        if (dx < 0) vincrX = -vincrX;
-        if (dy < 0) uincrY = -uincrY;
+        if (dx < 0) { vincrX = -vincrX; }
+        if (dy < 0) { uincrY = -uincrY; }
     }
 
     const int uend = u + distanceU;
     int d = (2 * distanceV) - distanceU;	    /* Initial value as in Bresenham's */
     const int incrS = 2 * distanceV;	/* Δd for straight increments */
     const int incrD = 2 *(distanceV - distanceU);	/* Δd for diagonal increments */
-    int twovdu = 0;	/* Numerator of distance; starts at 0 */
 
     int x = x0, y = y0;
     int requiredLengthX = unit->data()->Size.x * Constants::TILE_SIZE + coarseness;
@@ -132,11 +131,9 @@ MapPos MoveOnMap::findClosestWalkableBorder(const MapPos &target, int coarseness
     do {
         if (d < 0) {
             /* choose straight (u direction) */
-            twovdu = d + distanceU;
             d = d + incrS;
         } else {
             /* choose diagonal (u+v direction) */
-            twovdu = d - distanceU;
             d = d + incrD;
             v = v+1;
             x += vincrX;
@@ -228,8 +225,8 @@ bool MoveOnMap::update(Time time)
     const float direction = std::atan2(nextPos.y - unit->position().y, nextPos.x - unit->position().x);
     MapPos newPos = unit->position();
     movement = std::min(movement, std::hypot(nextPos.x - newPos.x, nextPos.y - newPos.y));
-    newPos.x += cos(direction) * movement;
-    newPos.y += sin(direction) * movement;
+    newPos.x += std::cos(direction) * movement;
+    newPos.y += std::sin(direction) * movement;
 
     if (!isPassable(newPos.x, newPos.y)) {
         WARN << "can't move forward, repathing";
@@ -263,7 +260,7 @@ bool MoveOnMap::update(Time time)
     return true;
 }
 
-std::shared_ptr<MoveOnMap> MoveOnMap::moveUnitTo(Unit::Ptr unit, MapPos destination, MapPtr map, UnitManager *unitManager)
+std::shared_ptr<MoveOnMap> MoveOnMap::moveUnitTo(const Unit::Ptr &unit, MapPos destination, const MapPtr &map, UnitManager *unitManager)
 {
     if (!unit->data()->Speed) {
         DBG << "Handed unit that can't move" << unit->debugName;
@@ -406,9 +403,9 @@ std::vector<MapPos> MoveOnMap::findPath(MapPos start, MapPos end, int coarseness
 
     path.push_back(end);
 
-    while (cameFrom[pathPoint].x != startX || cameFrom[pathPoint].y != startY) {
+    while (cameFrom[pathPoint] != currentPosition) {
         pathPoint = cameFrom[pathPoint];
-        path.push_back(MapPos(pathPoint.x * coarseness, pathPoint.y * coarseness));
+        path.emplace_back(pathPoint.x * coarseness, pathPoint.y * coarseness);
 
         if (cameFrom.find(pathPoint) == cameFrom.end()) {
             WARN << "invalid path, failed to find previous step";

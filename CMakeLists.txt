@@ -6,6 +6,18 @@ project(freeaoe)
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
     add_definitions(-DDEBUG)
+
+    find_program(
+        CLANG_TIDY_EXE
+        NAMES "clang-tidy"
+        DOC "Path to clang-tidy executable"
+        )
+    if(NOT CLANG_TIDY_EXE)
+        message(STATUS "clang-tidy not found.")
+    else()
+        message(STATUS "clang-tidy found: ${CLANG_TIDY_EXE}")
+        set(DO_CLANG_TIDY "${CLANG_TIDY_EXE}")
+    endif()
 endif()
 
 
@@ -136,3 +148,20 @@ target_link_libraries(freeaoe
     ${EXTRA_LIBS}
     genieutils
 )
+
+#set_target_properties(
+#  freeaoe PROPERTIES
+#  CXX_STANDARD 14
+#  CXX_STANDARD_REQUIRED ON
+#  COMPILE_FLAGS "${WARNING_FLAGS}"
+#)
+
+if (CMAKE_BUILD_TYPE MATCHES Debug)
+    if(CLANG_TIDY_EXE)
+        set_target_properties(
+            freeaoe PROPERTIES
+            CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
+            )
+    endif()
+endif()
+

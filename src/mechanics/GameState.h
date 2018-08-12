@@ -136,10 +136,10 @@ class GameState : public IState
 public:
     static std::unordered_map<GameType, ResourceMap> defaultStartingResources;
 
-    GameState(std::shared_ptr<SfmlRenderTarget> renderTarget);
+    GameState(const std::shared_ptr<SfmlRenderTarget> &renderTarget);
     virtual ~GameState();
 
-    void setScenario(std::shared_ptr<genie::ScnFile> scenario);
+    void setScenario(const std::shared_ptr<genie::ScnFile> &scenario);
     void setGameType(const GameType &type) { m_gameType = type; }
 
     bool init() override;

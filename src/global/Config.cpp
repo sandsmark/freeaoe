@@ -19,7 +19,7 @@
 #include "Config.h"
 #include "Logger.h"
 
-#include <assert.h>
+#include <cassert>
 #include <fstream>
 #include <iostream>
 #include <iomanip>
@@ -79,8 +79,6 @@ void Config::printUsage(const std::string &programName)
         std::cout << description << std::endl;
 
     }
-
-    return;
 }
 
 //------------------------------------------------------------------------------
@@ -121,7 +119,7 @@ bool Config::parseOptions(int argc, char **argv)
     return true;
 }
 
-void Config::setAllowedOptions(const std::unordered_map<std::string, std::string> options)
+void Config::setAllowedOptions(const std::unordered_map<std::string, std::string> &options)
 {
     m_allowedOptions = options;
 }
@@ -191,7 +189,7 @@ bool Config::parseOption(const std::string &option)
         return true;
     }
 
-    size_t splitPos = option.find("=");
+    size_t splitPos = option.find('=');
     if (splitPos == std::string::npos) {
         WARN << "Invalid line in config:" << option;
         return false;

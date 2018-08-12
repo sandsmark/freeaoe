@@ -27,7 +27,7 @@ public:
     StateManager();
     virtual ~StateManager();
 
-    bool addActiveState(std::shared_ptr<GameState> state);
+    bool addActiveState(const std::shared_ptr<GameState> &state);
 
     const std::shared_ptr<GameState> &getActiveState();
 

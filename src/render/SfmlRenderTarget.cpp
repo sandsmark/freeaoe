@@ -35,7 +35,7 @@ SfmlRenderTarget::~SfmlRenderTarget()
 {
 }
 
-Size SfmlRenderTarget::getSize(void) const
+Size SfmlRenderTarget::getSize() const
 {
     return sf::Vector2u(renderTarget_->getSize().x / SCALE, renderTarget_->getSize().y / SCALE);
 }
@@ -90,7 +90,7 @@ void SfmlRenderTarget::draw(const ScreenRect &rect, const sf::Color &fillColor, 
     renderTarget_->draw(shape);
 }
 
-void SfmlRenderTarget::display(void)
+void SfmlRenderTarget::display()
 {
     //  render_window_->Display();
 }

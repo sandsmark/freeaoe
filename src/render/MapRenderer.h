@@ -31,9 +31,9 @@ public:
 
     bool update(Time time) override;
 
-    void display(void) override;
+    void display() override;
 
-    void setMap(MapPtr map);
+    void setMap(const MapPtr &map);
 
 private:
     void updateTexture();

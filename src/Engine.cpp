@@ -64,8 +64,9 @@ void Engine::start()
         sf::Event event;
         while (renderWindow_->pollEvent(event)) {
             // Close window : exit
-            if (event.type == sf::Event::Closed)
+            if (event.type == sf::Event::Closed) {
                 renderWindow_->close();
+            }
 
             state->handleEvent(event);
 
@@ -125,7 +126,7 @@ bool Engine::setup(const std::string &scnFile)
     if (!scnFile.empty()) {
         try {
             std::shared_ptr<genie::ScnFile> scenario(new genie::ScnFile());
-            scenario->load(scnFile.c_str());
+            scenario->load(scnFile);
             gameState->setScenario(scenario);
         } catch (const std::exception &error) {
             WARN << "Failed to load" << scnFile << ":" << error.what();

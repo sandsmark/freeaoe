@@ -48,7 +48,7 @@ Graphic::~Graphic()
 {
 }
 
-const sf::Texture &Graphic::texture(uint32_t frame, float angleRadians, uint8_t player, const ImageType imageType)
+const sf::Texture &Graphic::texture(uint32_t frame, float angleRadians, uint8_t playerId, const ImageType imageType)
 {
     if (!slp_) {
         return nullImage;
@@ -56,7 +56,7 @@ const sf::Texture &Graphic::texture(uint32_t frame, float angleRadians, uint8_t 
 
     GraphicState state;
     state.frame = frame;
-    state.playerId = player;
+    state.playerId = playerId;
     state.type = imageType;
 
     const FrameInfo frameInfo = calcFrameInfo(frame, angleRadians);

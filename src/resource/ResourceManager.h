@@ -65,7 +65,7 @@ public:
         Terrain,
     };
 
-    enum UiCiv {
+    enum UiCiv : int {
         Briton = 1,
         Frank = 2,
         Goth = 3,
@@ -146,7 +146,7 @@ private:
 
     typedef std::vector<std::shared_ptr<genie::DrsFile>> DrsFileVector;
     DrsFileVector loadDrs(const std::vector<std::string> &filenames);
-    std::shared_ptr<genie::DrsFile> loadDrs(std::string filename);
+    std::shared_ptr<genie::DrsFile> loadDrs(const std::string &filename);
 
     DrsFileVector m_gamedataFiles;
     DrsFileVector m_soundFiles;

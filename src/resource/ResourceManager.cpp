@@ -57,7 +57,7 @@ genie::SlpFilePtr ResourceManager::getUiOverlay(const ResourceManager::UiResolut
 
 genie::ScnFilePtr ResourceManager::getScn(unsigned int id)
 {
-    for (std::shared_ptr<genie::DrsFile> drsFile : m_gamedataFiles) {
+    for (const std::shared_ptr<genie::DrsFile> &drsFile : m_gamedataFiles) {
         genie::ScnFilePtr scnfile = drsFile->getScnFile(id);
 
         if (scnfile) {
@@ -76,9 +76,9 @@ std::shared_ptr<uint8_t> ResourceManager::getWavPtr(unsigned int id)
     std::shared_ptr<uint8_t> wavPtr = weakPtr.lock();
     if (wavPtr) {
         return wavPtr;
-    } else {
-        m_wavCache.erase(id);
     }
+
+    m_wavCache.erase(id);
 
     for (const std::shared_ptr<genie::DrsFile> &drsFile : m_soundFiles) {
         wavPtr = drsFile->getWavPtr(id);
@@ -155,16 +155,16 @@ GraphicPtr ResourceManager::getGraphic(Uint32 id)
 }
 
 //------------------------------------------------------------------------------
-TerrainPtr ResourceManager::getTerrain(unsigned int type)
+TerrainPtr ResourceManager::getTerrain(unsigned int id)
 {
-    if (terrains_.find(type) != terrains_.end()) {
-        return terrains_[type];
+    if (terrains_.find(id) != terrains_.end()) {
+        return terrains_[id];
     }
 
-    TerrainPtr terrain = TerrainPtr(new Terrain(type));
+    TerrainPtr terrain = std::make_shared<Terrain>(id);
     terrain->load();
 
-    terrains_[type] = terrain;
+    terrains_[id] = terrain;
 
     return terrain;
 }
@@ -192,7 +192,7 @@ const genie::PalFile &ResourceManager::getPalette(sf::Uint32 id)
         return palette;
     }
 
-    for (std::shared_ptr<genie::DrsFile> drsFile : m_allFiles) {
+    for (const std::shared_ptr<genie::DrsFile> &drsFile : m_allFiles) {
         const genie::PalFile &palette = drsFile->getPalFile(id);
 
         if (palette.isValid()) {
@@ -291,7 +291,7 @@ bool ResourceManager::initialize(const std::string &dataPath, const genie::GameV
 
         blendomatic_file_ = std::make_unique<genie::BlendomaticFile>();
         std::string blendomaticPath = dataPath + "blendomatic.dat";
-        blendomatic_file_->load(blendomaticPath.c_str());
+        blendomatic_file_->load(blendomaticPath);
 
 
         m_stemplatesFile = std::make_unique<genie::SlpTemplateFile>();
@@ -529,12 +529,12 @@ int ResourceManager::filenameID(const std::string &filename)
         { "real_world_byzantium.scx", 56010 },
     };
 
-    if (idMap.find(filename) != idMap.end()) {
-        return idMap.at(filename);
-    } else {
+    if (idMap.find(filename) == idMap.end()) {
         WARN << "Failed to find known id for filename" << filename;
         return -1;
     }
+
+    return idMap.at(filename);
 }
 
 std::string ResourceManager::findFile(const std::string &filename) const
@@ -571,7 +571,7 @@ ResourceManager::DrsFileVector ResourceManager::loadDrs(const std::vector<std::s
     return files;
 }
 
-std::shared_ptr<genie::DrsFile> ResourceManager::loadDrs(std::string filename)
+std::shared_ptr<genie::DrsFile> ResourceManager::loadDrs(const std::string &filename)
 {
     std::string filePath = findFile(filename);
 

@@ -48,7 +48,7 @@ bool Entity::update(Time time)
     return updated && isVisible;
 }
 
-std::shared_ptr<Unit> Entity::asUnit(EntityPtr entity)
+std::shared_ptr<Unit> Entity::asUnit(const EntityPtr &entity)
 {
     if (!entity) {
         return nullptr;
@@ -81,7 +81,7 @@ void Entity::setPosition(const MapPos &pos, const MapPtr &map)
     map->addEntityAt(newTileX, newTileY, shared_from_this());
 }
 
-Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, std::shared_ptr<Civilization> civilization_) :
+Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, const std::shared_ptr<Civilization> &civilization_) :
     Entity(Type::Unit, LanguageManager::getString(data_.LanguageDLLName) + " (" + std::to_string(data_.ID) + ")"),
     playerId(player_->playerId),
     player(player_),
@@ -234,7 +234,7 @@ void Unit::setAngle(const float angle)
     m_graphics.setAngle(angle);
 }
 
-void Unit::queueAction(ActionPtr action)
+void Unit::queueAction(const ActionPtr &action)
 {
     if (!m_currentAction) {
         setCurrentAction(action);
@@ -244,7 +244,7 @@ void Unit::queueAction(ActionPtr action)
     }
 }
 
-void Unit::setCurrentAction(ActionPtr action)
+void Unit::setCurrentAction(const ActionPtr &action)
 {
     if (m_currentAction && !action) {
         m_graphics.setGraphic(defaultGraphics);

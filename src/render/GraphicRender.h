@@ -75,11 +75,11 @@ public:
 
     bool update(Time time);
 
-    virtual void render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType pass);
+    virtual void render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType renderpass);
 
     void setPlayerId(int playerId);
 
-    void setGraphic(GraphicPtr graphic);
+    void setGraphic(const GraphicPtr &graphic);
 
     ScreenRect rect() const;
 

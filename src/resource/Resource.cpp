@@ -24,63 +24,13 @@
 #include "ResourceManager.h"
 #include "DataManager.h"
 
-//------------------------------------------------------------------------------
-Resource::Resource(Uint32 id, Type type) :
-    id_(id), type_(type), loaded_(false)
-{
-}
-
-//------------------------------------------------------------------------------
-Resource::~Resource()
-{
-    unload();
-}
-
-//------------------------------------------------------------------------------
-Uint32 Resource::getId() const
-{
-    return id_;
-}
-
-//------------------------------------------------------------------------------
-Resource::Type Resource::getType() const
-{
-    return type_;
-}
-
-//------------------------------------------------------------------------------
-bool Resource::isLoaded() const
-{
-    return loaded_;
-}
-
-sf::Image Resource::convertFrameToImage(const genie::SlpFramePtr frame)
+sf::Image Resource::convertFrameToImage(const genie::SlpFramePtr &frame)
 {
     return convertFrameToImage(frame, ResourceManager::Inst()->getPalette(50500));
 }
 
 //------------------------------------------------------------------------------
-bool Resource::load()
-{
-    setLoaded(true);
-
-    return true;
-}
-
-//------------------------------------------------------------------------------
-void Resource::unload()
-{
-    setLoaded(false);
-}
-
-//------------------------------------------------------------------------------
-void Resource::setLoaded(bool loaded)
-{
-    loaded_ = loaded;
-}
-
-//------------------------------------------------------------------------------
-sf::Image Resource::convertFrameToImage(const genie::SlpFramePtr frame,
+sf::Image Resource::convertFrameToImage(const genie::SlpFramePtr &frame,
                                          const genie::PalFile &palette, const int playerId)
 {
     if (!frame) {

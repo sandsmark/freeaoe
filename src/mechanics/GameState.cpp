@@ -95,7 +95,7 @@ std::unordered_map<GameType, ResourceMap> GameState::defaultStartingResources = 
     },
 };
 
-GameState::GameState(std::shared_ptr<SfmlRenderTarget> renderTarget) :
+GameState::GameState(const std::shared_ptr<SfmlRenderTarget> &renderTarget) :
     m_cameraDeltaX(0),
     m_cameraDeltaY(0),
     m_lastUpdate(0),
@@ -116,7 +116,7 @@ GameState::~GameState()
 {
 }
 
-void GameState::setScenario(std::shared_ptr<genie::ScnFile> scenario)
+void GameState::setScenario(const std::shared_ptr<genie::ScnFile> &scenario)
 {
     scenario_ = scenario;
 }
@@ -138,8 +138,8 @@ bool GameState::init()
 
     });
 
-    for (size_t i=0; i<DataManager::Inst().datFile().UnitHeaders.size(); i++) {
-        const genie::UnitHeader &h = DataManager::Inst().datFile().UnitHeaders[i];
+    for (size_t i=0; i<DataManager::datFile().UnitHeaders.size(); i++) {
+        const genie::UnitHeader &h = DataManager::datFile().UnitHeaders[i];
         for (const genie::Task &t : h.TaskList) {
             usedActionTypes.insert(t.ActionType);
             if (interestingActions.count(t.ActionType) == 0 && t.CarryCheck == 0) {
@@ -197,7 +197,7 @@ bool GameState::init()
 
     const std::vector<genie::Civ> &civilizations = DataManager::Inst().civilizations();
     for (size_t i=0; i<civilizations.size(); i++) {
-        m_civilizations.push_back(std::make_shared<Civilization>(i, DataManager::Inst().datFile()));
+        m_civilizations.push_back(std::make_shared<Civilization>(i, DataManager::datFile()));
     }
     if (m_civilizations.empty()) {
         WARN << "Failed to load any civilizations";
@@ -205,7 +205,7 @@ bool GameState::init()
     }
 
     //Map test
-    map_ = MapPtr(new Map());
+    map_ = std::make_shared<Map>();
 
     if (scenario_) {
         TIME_THIS;
@@ -373,10 +373,10 @@ bool GameState::update(Time time)
         cameraScreenPos.y += m_cameraDeltaY * deltaTime * CAMERA_SPEED;
 
         MapPos cameraMapPos = cameraScreenPos.toMap();
-        if (cameraMapPos.x < 0) cameraMapPos.x = 0;
-        if (cameraMapPos.y < 0) cameraMapPos.y = 0;
-        if (cameraMapPos.x > map_->width()) cameraMapPos.x = map_->width();
-        if (cameraMapPos.y > map_->height()) cameraMapPos.y = map_->height();
+        if (cameraMapPos.x < 0) { cameraMapPos.x = 0; }
+        if (cameraMapPos.y < 0) { cameraMapPos.y = 0; }
+        if (cameraMapPos.x > map_->width()) { cameraMapPos.x = map_->width(); }
+        if (cameraMapPos.y > map_->height()) { cameraMapPos.y = map_->height(); }
         renderTarget_->camera()->setTargetPosition(cameraMapPos);
 
 
@@ -469,10 +469,10 @@ void GameState::handleEvent(sf::Event event)
         }
 
         MapPos cameraMapPos = cameraScreenPos.toMap();
-        if (cameraMapPos.x < 0) cameraMapPos.x = 0;
-        if (cameraMapPos.y < 0) cameraMapPos.y = 0;
-        if (cameraMapPos.x > map_->width()) cameraMapPos.x = map_->width();
-        if (cameraMapPos.y > map_->height()) cameraMapPos.y = map_->height();
+        if (cameraMapPos.x < 0) { cameraMapPos.x = 0; }
+        if (cameraMapPos.y < 0) { cameraMapPos.y = 0; }
+        if (cameraMapPos.x > map_->width()) { cameraMapPos.x = map_->width(); }
+        if (cameraMapPos.y > map_->height()) { cameraMapPos.y = map_->height(); }
         renderTarget_->camera()->setTargetPosition(cameraMapPos);
     }
 
@@ -484,9 +484,9 @@ void GameState::handleEvent(sf::Event event)
     if (m_actionPanel->rect().contains(mousePos)) {
         m_actionPanel->handleEvent(event);
         return;
-    } else {
-        m_actionPanel->releaseButtons();
     }
+
+    m_actionPanel->releaseButtons();
 
     if (event.type == sf::Event::MouseButtonPressed) {
         if (event.mouseButton.button == sf::Mouse::Button::Left) {

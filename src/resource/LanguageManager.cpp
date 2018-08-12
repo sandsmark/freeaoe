@@ -10,7 +10,7 @@ LanguageManager *LanguageManager::Inst()
     return &instance;
 }
 
-bool LanguageManager::initialize(const std::string dataPath)
+bool LanguageManager::initialize(const std::string &dataPath)
 {
     std::string filename;
     try {
@@ -34,7 +34,7 @@ std::string LanguageManager::getString(unsigned int id)
     }
 
     std::string ret;
-    for (const std::shared_ptr<genie::LangFile> langfile : Inst()->m_langFiles) {
+    for (const std::shared_ptr<genie::LangFile> &langfile : Inst()->m_langFiles) {
         ret = langfile->getString(id);
         if (!ret.empty()) {
             break;
@@ -54,12 +54,12 @@ LanguageManager::LanguageManager()
 {
 }
 
-void LanguageManager::loadLangFile(std::string filename)
+void LanguageManager::loadLangFile(const std::string &filename)
 {
     DBG << "Loading" << filename;
 
-    std::shared_ptr<genie::LangFile> ret (new genie::LangFile);
-    ret->load(filename.c_str());
+    std::shared_ptr<genie::LangFile> ret = std::make_shared<genie::LangFile>();
+    ret->load(filename);
 
     m_langFiles.push_back(ret);
 }

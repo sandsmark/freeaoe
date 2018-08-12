@@ -33,11 +33,11 @@ public:
 
     virtual bool update(Time time);
 
-    static std::shared_ptr<MoveOnMap> moveUnitTo(Unit::Ptr unit, MapPos destination, MapPtr map, UnitManager *unitManager);
+    static std::shared_ptr<MoveOnMap> moveUnitTo(const Unit::Ptr &unit, MapPos destination, const MapPtr &map, UnitManager *unitManager);
     static std::shared_ptr<MoveOnMap> moveUnitTo(Unit::Ptr unit, const EntityPtr &targetEntity, MapPtr map, UnitManager *unitManager);
 
 private:
-    MoveOnMap(MapPos destination, MapPtr map, Unit::Ptr unit, UnitManager *unitManager);
+    MoveOnMap(MapPos destination, const MapPtr &map, const Unit::Ptr &unit, UnitManager *unitManager);
 
     MapPos findClosestWalkableBorder(const MapPos &target, int coarseness);
 
