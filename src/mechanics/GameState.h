@@ -36,6 +36,7 @@
 class GameClient;
 class GameServer;
 class ActionPanel;
+class UnitInfoPanel;
 
 enum class GameType {
     Default,
@@ -154,6 +155,7 @@ private:
 
     std::shared_ptr<UnitManager> m_unitManager;
     std::unique_ptr<ActionPanel> m_actionPanel;
+    std::unique_ptr<UnitInfoPanel> m_unitInfoPanel;
 
     MapPtr map_;
     MapRenderer mapRenderer_;

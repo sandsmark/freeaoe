@@ -90,6 +90,7 @@ Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, con
     setUnitData(data_);
 
     m_creationProgress = m_data->Creatable.TrainTime;
+    hitPoints = m_data->HitPoints;
 }
 
 bool Unit::update(Time time)
@@ -201,7 +202,6 @@ void Unit::setUnitData(const genie::Unit &data_)
     }
 
     m_graphics.setGraphic(defaultGraphics);
-
 }
 
 int Unit::taskGraphicId(const genie::Task::ActionTypes taskType, const IAction::UnitState state)

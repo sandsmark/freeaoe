@@ -16,5 +16,6 @@ struct Player
     ResourceMap resources;
 
     typedef std::shared_ptr<Player> Ptr;
+    std::string name = "Player";
 };
 

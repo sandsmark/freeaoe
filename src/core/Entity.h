@@ -201,6 +201,10 @@ struct Unit : public Entity
     void increaseCreationProgress(float progress);
     float creationProgress() const;
 
+    float hitPoints = 0;
+
+    int garrisonedUnits = 0;
+
     std::unordered_set<Task> availableActions();
 
     void setUnitData(const genie::Unit &data_);
