@@ -38,6 +38,7 @@ class BinaFile;
 
 namespace genie {
 class DrsFile;
+class UIFile;
 }
 
 //------------------------------------------------------------------------------
@@ -111,6 +112,8 @@ public:
     genie::SlpFilePtr getUiOverlay(const UiResolution res, const UiCiv civ);
 
     genie::ScnFilePtr getScn(unsigned int id);
+
+    std::shared_ptr<genie::UIFile> getUIFile(const std::string &name);
 
     std::shared_ptr<uint8_t> getWavPtr(unsigned int id);
 

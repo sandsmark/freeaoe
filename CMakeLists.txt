@@ -123,6 +123,7 @@ set (UI_SRC
     src/ui/ActionPanel.cpp
     src/ui/FileDialog.cpp
     src/ui/UnitInfoPanel.cpp
+    src/ui/HomeScreen.cpp
     )
 
 add_resource(FONT_RES
@@ -148,13 +149,6 @@ target_link_libraries(freeaoe
     ${EXTRA_LIBS}
     genieutils
 )
-
-#set_target_properties(
-#  freeaoe PROPERTIES
-#  CXX_STANDARD 14
-#  CXX_STANDARD_REQUIRED ON
-#  COMPILE_FLAGS "${WARNING_FLAGS}"
-#)
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
     if(CLANG_TIDY_EXE)

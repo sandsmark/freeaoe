@@ -59,8 +59,6 @@ bool ActionGather::update(Time time)
 
     unit->resources[resourceType] += amount;
 
-//    DBG << m_task->ResourceIn << m_task->ResourceOut << target->resources[inputResource] << unit->resources[resourceType];
-
     return false;
 }
 

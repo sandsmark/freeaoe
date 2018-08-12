@@ -70,6 +70,11 @@ genie::ScnFilePtr ResourceManager::getScn(unsigned int id)
     return genie::ScnFilePtr();
 }
 
+std::shared_ptr<genie::UIFile> ResourceManager::getUIFile(const std::string &name)
+{
+    return m_interfaceFile->getUIFile(filenameID(name));
+}
+
 std::shared_ptr<uint8_t> ResourceManager::getWavPtr(unsigned int id)
 {
     std::weak_ptr<uint8_t> weakPtr = m_wavCache[id];
@@ -300,8 +305,6 @@ bool ResourceManager::initialize(const std::string &dataPath, const genie::GameV
         m_stemplatesFile->filtermapFile.patternmasksFile.load(dataPath + "PatternMasks.dat");
         m_stemplatesFile->filtermapFile.patternmasksFile.icmFile.load(dataPath + "view_icm.dat");
         m_stemplatesFile->filtermapFile.patternmasksFile.lightmapFile.load(dataPath + "lightMaps.dat");
-//        m_stemplatesFile->getFrame(getSlp(15000), genie::SlopeSouthUp, {});
-//        exit(0);
     } catch (const std::exception &error) {
         WARN << "Failed to load resource" << error.what();
         return false;

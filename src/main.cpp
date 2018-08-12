@@ -34,6 +34,7 @@
 #include <SFML/Graphics/Shape.hpp>
 #include "ui/FileDialog.h"
 #include "audio/AudioPlayer.h"
+#include "ui/HomeScreen.h"
 
 // TODO: Bad_alloc
 int main(int argc, char **argv)
@@ -79,6 +80,15 @@ int main(int argc, char **argv)
     }
 
     AudioPlayer::instance();
+
+    HomeScreen home;
+    if (!home.init()) {
+        return 1;
+    }
+
+    if (home.getSelection() == HomeScreen::Button::Exit) {
+        return 0;
+    }
 
     Engine en;
     if (!en.setup(config.getValue("scenario-file"))) {

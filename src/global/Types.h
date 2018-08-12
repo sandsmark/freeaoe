@@ -303,6 +303,10 @@ struct ScreenRect
 
     ScreenRect() = default;
 
+    ScreenRect(const float x_, const float y_, const float w_, const float h_) :
+        x(x_), y(y_), width(w_), height(h_)
+    {}
+
     ScreenRect(const ScreenPos &a, const ScreenPos &b)
     {
         x = std::min(a.x, b.x);
