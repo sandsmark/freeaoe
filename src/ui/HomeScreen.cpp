@@ -55,10 +55,16 @@ bool HomeScreen::init()
 
     m_background.loadFromImage(Resource::convertFrameToImage(backgroundFrame, palette));
 
+    DBG << uiFile->stateColor1.r << uiFile->stateColor1.g << uiFile->stateColor1.b;
+    sf::Color textFillColor(uiFile->textColor1.r, uiFile->textColor1.g, uiFile->textColor1.b);
+    sf::Color textOutlineColor(uiFile->textColor2.r, uiFile->textColor2.g, uiFile->textColor2.b);
+
     m_descriptionRect = ScreenRect(390, 506, 393, 94);
     m_description.setPosition(m_descriptionRect.topLeft());
     m_description.setCharacterSize(10);
-    m_description.setFillColor(sf::Color::White);
+    m_description.setFillColor(textFillColor);
+    m_description.setOutlineColor(textOutlineColor);
+    m_description.setOutlineThickness(1);
     m_description.setFont(SfmlRenderTarget::defaultFont());
 
     // These are fun to figure out
@@ -112,16 +118,25 @@ bool HomeScreen::init()
     m_buttons[Button::Options].frame = 34;
     m_buttons[Button::Zone].frame = 18;
 
-    m_buttons[Button::Singleplayer].hoverFrame = 11;
-    m_buttons[Button::Multiplayer].hoverFrame = 15;
-    m_buttons[Button::History].hoverFrame = 31;
-    m_buttons[Button::MapEditor].hoverFrame = 27;
-    m_buttons[Button::Banner].hoverFrame = 50;
-    m_buttons[Button::Exit].hoverFrame = 47;
-//    m_buttons[Button::Exit].hoverFrame = 7;
-    m_buttons[Button::Tutorial].hoverFrame = 23;
-    m_buttons[Button::Options].hoverFrame = 35;
-    m_buttons[Button::Zone].hoverFrame = 19;
+    m_buttons[Button::Singleplayer].hoverFrame = 12;
+    m_buttons[Button::Multiplayer].hoverFrame = 16;
+    m_buttons[Button::History].hoverFrame = 32;
+    m_buttons[Button::MapEditor].hoverFrame = 28;
+    m_buttons[Button::Banner].hoverFrame = 51;
+    m_buttons[Button::Exit].hoverFrame = 48;
+    m_buttons[Button::Tutorial].hoverFrame = 24;
+    m_buttons[Button::Options].hoverFrame = 36;
+    m_buttons[Button::Zone].hoverFrame = 20;
+
+    m_buttons[Button::Singleplayer].selectedFrame = 11;
+    m_buttons[Button::Multiplayer].selectedFrame = 15;
+    m_buttons[Button::History].selectedFrame = 31;
+    m_buttons[Button::MapEditor].selectedFrame = 27;
+    m_buttons[Button::Banner].selectedFrame = 50;
+    m_buttons[Button::Exit].selectedFrame = 47;
+    m_buttons[Button::Tutorial].selectedFrame = 23;
+    m_buttons[Button::Options].selectedFrame = 35;
+    m_buttons[Button::Zone].selectedFrame = 19;
 
     // meh ok
     m_buttons[Button::Singleplayer].frame = 10;
@@ -138,13 +153,21 @@ bool HomeScreen::init()
         Button &b = m_buttons[i];
         const genie::SlpFramePtr &frame = m_slpFile->getFrame(b.frame);
         const genie::SlpFramePtr &hoverFrame = m_slpFile->getFrame(b.hoverFrame);
+        const genie::SlpFramePtr &selectedFrame = m_slpFile->getFrame(b.selectedFrame);
+
         b.texture.loadFromImage(Resource::convertFrameToImage(frame, palette));
         b.hoverTexture.loadFromImage(Resource::convertFrameToImage(hoverFrame, palette));
+        b.selectedTexture.loadFromImage(Resource::convertFrameToImage(selectedFrame, palette));
+
         b.offset = ScreenPos(frame->hotspot_x, frame->hotspot_y);
         b.hoverOffset = ScreenPos(hoverFrame->hotspot_x, hoverFrame->hotspot_y);
+        b.selectedOffset = ScreenPos(selectedFrame->hotspot_x, selectedFrame->hotspot_y);
 
         b.text.setCharacterSize(15);
         b.text.setFont(SfmlRenderTarget::defaultFont());
+        b.text.setFillColor(textFillColor);
+        b.text.setOutlineColor(textOutlineColor);
+        b.text.setOutlineThickness(1);
     }
 
     return true;
@@ -174,8 +197,8 @@ HomeScreen::Button::Type HomeScreen::getSelection()
         m_renderWindow->display();
     }
 
-    if (m_currentButton != -1) {
-        return Button::Type(m_currentButton);
+    if (m_hoveredButton != -1) {
+        return Button::Type(m_hoveredButton);
 
     }
 
@@ -192,7 +215,7 @@ void HomeScreen::render()
         sf::Sprite sprite;
         ScreenPos pos = m_buttons[i].rect.topLeft();
 
-        if (i == m_currentButton) {
+        if (i == m_hoveredButton) {
             sprite.setTexture(m_buttons[i].hoverTexture);
             pos -= m_buttons[i].hoverOffset;
         } else {
@@ -221,10 +244,10 @@ bool HomeScreen::handleMouseEvent(const sf::Event &event)
 {
     if (event.type == sf::Event::MouseMoved) {
         ScreenPos mousePos(event.mouseMove.x, event.mouseMove.y);
-        m_currentButton = -1;
+        m_hoveredButton = -1;
         for (int i=0; i<Button::TypeCount; i++) {
             if (m_buttons[i].rect.contains(mousePos)) {
-                m_currentButton = i;
+                m_hoveredButton = i;
                 m_description.setString(m_buttons[i].description);
                 break;
             }
@@ -234,7 +257,7 @@ bool HomeScreen::handleMouseEvent(const sf::Event &event)
     }
 
     if (event.type == sf::Event::MouseButtonPressed) {
-        return m_currentButton != -1;
+        return m_hoveredButton != -1;
     }
 
     return false;

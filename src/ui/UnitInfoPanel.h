@@ -25,6 +25,7 @@
 
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/Sprite.hpp>
 
 class UnitManager;
 
@@ -50,6 +51,7 @@ public:
 private:
     void drawSingleUnit();
     void drawMultipleUnits();
+    void updateUnitButtons();
 
     struct StatItem {
         enum Type {
@@ -76,6 +78,15 @@ private:
         sf::Text text;
         sf::Texture icon;
     };
+
+    struct Button {
+        ScreenRect rect;
+        sf::Sprite sprite;
+        std::shared_ptr<Unit> unit;
+    };
+
+    std::vector<Button> m_unitButtons;
+
     std::array<StatItem, StatItem::TypeCount> m_statItems;
 
     std::shared_ptr<SfmlRenderTarget> m_renderTarget;

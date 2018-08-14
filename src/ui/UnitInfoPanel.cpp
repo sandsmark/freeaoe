@@ -116,7 +116,25 @@ bool UnitInfoPanel::init()
 
 void UnitInfoPanel::handleEvent(sf::Event event)
 {
+    if (event.type != sf::Event::MouseButtonPressed) {
+        return;
+    }
+
+    Unit::Ptr clickedUnit;
+    ScreenPos mousePos(event.mouseButton.x, event.mouseButton.y);
+    for (const Button &button : m_unitButtons) {
+        if (button.rect.contains(mousePos)) {
+            clickedUnit = button.unit;
+            break;
+        }
+    }
+
+    if (!clickedUnit) {
+        return;
+    }
+
     std::shared_ptr<UnitManager> unitManager = m_unitManager.lock();
+    unitManager->setSelectedUnits({clickedUnit});
 }
 
 bool UnitInfoPanel::update(Time /*time*/)
@@ -146,9 +164,13 @@ void UnitInfoPanel::draw()
     if (m_selectedUnits.empty()) {
         return;
     }
+
+    m_unitButtons.clear();
+
     if (m_selectedUnits.size() == 1) {
         drawSingleUnit();
     } else {
+        updateUnitButtons();
         drawMultipleUnits();
     }
 }
@@ -281,16 +303,76 @@ void UnitInfoPanel::drawSingleUnit()
         m_renderTarget->draw(item.text);
 
         pos.y += item.icon.getSize().y + 5;
+    }
 
+    if (unit->resources[genie::ResourceType::WoodStorage] > 0) {
+        StatItem &item = m_statItems[StatItem::CarryingWoodAmount];
+        m_renderTarget->draw(item.icon, ScreenPos(pos));
+        item.text.setPosition(ScreenPos(rightX, pos.y));
+        item.text.setString(std::to_string(int(unit->resources[genie::ResourceType::WoodStorage] )));
+        m_renderTarget->draw(item.text);
+
+        pos.y += item.icon.getSize().y + 5;
+    }
+
+    if (unit->resources[genie::ResourceType::StoneStorage] > 0) {
+        StatItem &item = m_statItems[StatItem::CarryingStoneAmount];
+        m_renderTarget->draw(item.icon, ScreenPos(pos));
+        item.text.setPosition(ScreenPos(rightX, pos.y));
+        item.text.setString(std::to_string(int(unit->resources[genie::ResourceType::StoneStorage])));
+        m_renderTarget->draw(item.text);
+
+        pos.y += item.icon.getSize().y + 5;
+    }
+
+    if (unit->resources[genie::ResourceType::FoodStorage] > 0) {
+        StatItem &item = m_statItems[StatItem::CarryingFoodAmount];
+        m_renderTarget->draw(item.icon, ScreenPos(pos));
+        item.text.setPosition(ScreenPos(rightX, pos.y));
+        item.text.setString(std::to_string(int(unit->resources[genie::ResourceType::FoodStorage])));
+        m_renderTarget->draw(item.text);
+
+        pos.y += item.icon.getSize().y + 5;
+    }
+
+    if (unit->resources[genie::ResourceType::GoldStorage] > 0) {
+        StatItem &item = m_statItems[StatItem::CarryingGoldAmount];
+        m_renderTarget->draw(item.icon, ScreenPos(pos));
+        item.text.setPosition(ScreenPos(rightX, pos.y));
+        item.text.setString(std::to_string(int(unit->resources[genie::ResourceType::GoldStorage])));
+        m_renderTarget->draw(item.text);
+
+        pos.y += item.icon.getSize().y + 5;
     }
 }
 
 void UnitInfoPanel::drawMultipleUnits()
 {
+    sf::RectangleShape bevelRect;
+
+    for (const Button &button : m_unitButtons) {
+        bevelRect.setFillColor(sf::Color(192, 192, 192));
+        bevelRect.setPosition(button.rect.x - 2, button.rect.y - 2);
+        bevelRect.setSize(Size(button.rect.width + 2, button.rect.width + 2));
+        m_renderTarget->draw(bevelRect);
+
+        bevelRect.setFillColor(sf::Color(64, 64, 64));
+        bevelRect.setPosition(button.rect.x + 0, button.rect.y + 0);
+        bevelRect.setSize(Size(button.rect.width, button.rect.width));
+        m_renderTarget->draw(bevelRect);
+
+        m_renderTarget->draw(button.sprite);
+    }
+
+}
+
+void UnitInfoPanel::updateUnitButtons()
+{
     const int maxVertical = 3;
     Size iconSize;
     iconSize.height = rect().height / maxVertical;
     const int maxHorizontal = rect().width / iconSize.height;
+
 
     int unitCount = m_selectedUnits.size();
     if (unitCount >= maxVertical * maxHorizontal) {
@@ -300,43 +382,38 @@ void UnitInfoPanel::drawMultipleUnits()
     }
     iconSize.width = std::min(iconSize.width, 38.f);
 
-    sf::RectangleShape bevelRect;
 
     ScreenPos pos = rect().topLeft() + ScreenPos(2, 2);
     for (const Unit::Ptr &unit : m_selectedUnits) {
-        bevelRect.setFillColor(sf::Color(192, 192, 192));
-        bevelRect.setPosition(pos.x - 2, pos.y - 2);
-        bevelRect.setSize(Size(iconSize.width + 2, iconSize.width + 2));
-        m_renderTarget->draw(bevelRect);
-
-        bevelRect.setFillColor(sf::Color(64, 64, 64));
-        bevelRect.setPosition(pos.x + 0, pos.y + 0);
-        bevelRect.setSize(Size(iconSize.width, iconSize.width));
-        m_renderTarget->draw(bevelRect);
-
         const int16_t iconId = unit->data()->IconID;
         if (iconId < 0) {
             WARN << "invalid unit id";
             continue;
         }
+        Button button;
         if (unit->data()->Type == genie::Unit::BuildingType) {
             if (iconId > m_buildingIcons.size()) {
                 WARN << "out of bounds building icon" << iconId;
                 continue;
             }
 
-            m_renderTarget->draw(m_buildingIcons[iconId], pos);
+            button.sprite.setTexture(m_buildingIcons[iconId]);
         } else {
             if (iconId > m_unitIcons.size()) {
                 WARN << "out of bounds unit icon" << iconId;
                 continue;
             }
 
-            m_renderTarget->draw(m_unitIcons[iconId], pos);
+            button.sprite.setTexture(m_unitIcons[iconId]);
         }
 
-        pos.x += iconSize.width + 2;
+        button.sprite.setPosition(pos);
+        button.rect = ScreenRect(pos, iconSize);
+        button.unit = unit;
 
+        m_unitButtons.push_back(std::move(button));
+
+        pos.x += iconSize.width + 2;
         if (pos.x + iconSize.width > rect().bottomRight().x) {
             pos.x = rect().topLeft().x + 2;
             pos.y += iconSize.height + 2;

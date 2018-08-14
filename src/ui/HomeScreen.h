@@ -56,14 +56,17 @@ public:
 
         int frame = 0;
         int hoverFrame = 0;
+        int selectedFrame = 0;
 
         std::string description;
 
         sf::Texture texture;
         sf::Texture hoverTexture;
+        sf::Texture selectedTexture;
 
         ScreenPos offset;
         ScreenPos hoverOffset;
+        ScreenPos selectedOffset;
 
         sf::Text text;
         ScreenRect textRect;
@@ -88,7 +91,8 @@ private:
     ScreenRect m_descriptionRect;
     sf::Text m_description;
 
-    int m_currentButton = -1;
+    int m_hoveredButton = -1;
+    int m_selectedButton = -1;
 };
 
 #endif // HOMESCREEN_H

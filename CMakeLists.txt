@@ -151,12 +151,12 @@ target_link_libraries(freeaoe
     genieutils
 )
 
-if (CMAKE_BUILD_TYPE MATCHES Debug)
-    if(CLANG_TIDY_EXE)
-        set_target_properties(
-            freeaoe PROPERTIES
-            CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
-            )
-    endif()
-endif()
+#if (CMAKE_BUILD_TYPE MATCHES Debug)
+#    if(CLANG_TIDY_EXE)
+#        set_target_properties(
+#            freeaoe PROPERTIES
+#            CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
+#            )
+#    endif()
+#endif()
 

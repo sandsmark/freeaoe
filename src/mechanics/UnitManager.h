@@ -72,6 +72,7 @@ public:
     void selectUnits(const ScreenRect &selectionRect, const CameraPtr &camera);
     void setMap(const MapPtr &map);
 
+    void setSelectedUnits(const UnitSet &units);
     const UnitSet &selected() const { return m_selectedUnits; }
 
     const std::set<Unit::Ptr, MapPositionSorter> &units() const { return m_units; }

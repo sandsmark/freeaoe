@@ -69,7 +69,9 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    LanguageManager::Inst()->initialize(dataPath);
+    if (!LanguageManager::Inst()->initialize(dataPath)) {
+        return 1;
+    }
 
     if (!DataManager::Inst().initialize(dataPath)) {
         return 1;

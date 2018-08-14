@@ -306,6 +306,12 @@ void UnitManager::setMap(const MapPtr &map)
     m_map = map;
 }
 
+void UnitManager::setSelectedUnits(const UnitSet &units)
+{
+    m_selectedUnits = units;
+    m_buildingToPlace.reset();
+}
+
 void UnitManager::placeBuilding(const int unitId, const std::shared_ptr<Player> &player)
 {
     m_buildingToPlace = UnitFactory::Inst().createUnit(unitId, MapPos(), player, m_map);
