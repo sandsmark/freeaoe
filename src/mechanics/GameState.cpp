@@ -477,7 +477,9 @@ void GameState::setupGame(const GameType gameType)
     m_unitManager->add(UnitFactory::Inst().createUnit(Unit::Cobra, MapPos(48*8, 48*6, 0), m_humanPlayer, map_));
 
     m_unitManager->add(UnitFactory::Inst().createUnit(Unit::MaleBuilder, MapPos(48*2, 48*12, 0), m_humanPlayer, map_));
-    m_unitManager->add(UnitFactory::Inst().createUnit(280, MapPos(48*10, 48*10, 0), m_humanPlayer, map_)); // mangonel
+
+
+    m_unitManager->add(UnitFactory::Inst().createUnit(280, MapPos(48*11, 48*10, 0), m_humanPlayer, map_)); // mangonel
 
     m_unitManager->add(UnitFactory::Inst().createUnit(Unit::Mill, MapPos(48*15, 48*15, 0), m_humanPlayer, map_));
 
@@ -495,6 +497,7 @@ void GameState::setupGame(const GameType gameType)
 
     m_unitManager->add(unit);
 
+    // some walls for testing wall rotation
     unit = UnitFactory::Inst().createUnit(117, MapPos(48*6, 48*5, 0), m_humanPlayer, map_);
     unit->setAngle(M_PI + M_PI_2);
     m_unitManager->add(unit);
