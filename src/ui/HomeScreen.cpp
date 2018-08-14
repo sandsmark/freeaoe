@@ -187,6 +187,18 @@ HomeScreen::Button::Type HomeScreen::getSelection()
             return Button::Exit;
         }
 
+        if (event.type == sf::Event::MouseButtonPressed || event.type == sf::Event::MouseButtonReleased) {
+            sf::Vector2f mappedPos = m_renderWindow->mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
+            event.mouseButton.x = mappedPos.x;
+            event.mouseButton.y = mappedPos.y;
+        }
+
+        if (event.type == sf::Event::MouseMoved) {
+            sf::Vector2f mappedPos = m_renderWindow->mapPixelToCoords(sf::Vector2i(event.mouseMove.x, event.mouseMove.y));
+            event.mouseMove.x = mappedPos.x;
+            event.mouseMove.y = mappedPos.y;
+        }
+
         if (handleMouseEvent(event)) {
             m_renderWindow->close();
             continue;

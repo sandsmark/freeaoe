@@ -66,6 +66,18 @@ void Engine::start()
                 renderWindow_->close();
             }
 
+            if (event.type == sf::Event::MouseButtonPressed || event.type == sf::Event::MouseButtonReleased) {
+                sf::Vector2f mappedPos = renderWindow_->mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
+                event.mouseButton.x = mappedPos.x;
+                event.mouseButton.y = mappedPos.y;
+            }
+
+            if (event.type == sf::Event::MouseMoved) {
+                sf::Vector2f mappedPos = renderWindow_->mapPixelToCoords(sf::Vector2i(event.mouseMove.x, event.mouseMove.y));
+                event.mouseMove.x = mappedPos.x;
+                event.mouseMove.y = mappedPos.y;
+            }
+
             state->handleEvent(event);
 
             updated = true;
