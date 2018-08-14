@@ -22,6 +22,7 @@
 #include <iostream>
 #include <chrono>
 #include <filesystem>
+#include <cassert>
 
 struct LogPrinter
 {
@@ -34,8 +35,11 @@ struct LogPrinter
     LogPrinter(const char *funcName, const char *filename, const int linenum, const LogType type) :
         m_funcName(funcName),
         m_filename(filename),
-        m_linenum(linenum)
+        m_linenum(linenum),
+        m_refs(new int)
     {
+        *m_refs = 1;
+
         switch(type) {
         case LogType::Debug:
             std::cout << "\033[02;32m";
@@ -47,6 +51,21 @@ struct LogPrinter
             std::cout << "\033[01;31m";
             break;
         }
+    }
+
+    LogPrinter() :
+        m_refs(new int)
+    {
+        *m_refs = 1;
+    }
+
+    LogPrinter(const LogPrinter &other) :
+        m_funcName(other.m_funcName),
+        m_filename(other.m_filename),
+        m_linenum(other.m_linenum),
+        m_refs(other.m_refs)
+    {
+        (*m_refs)++;
     }
 
     inline LogPrinter &operator<<(const char *text) { std::cout << text << ' '; return *this; }
@@ -63,17 +82,25 @@ struct LogPrinter
 
     ~LogPrinter()
     {
-        std::cout << "\033[0;37m("
-                  << m_funcName << " "
-                  << m_filename << ":" << m_linenum
-                  << ")\033[0m" << std::endl;
+        (*m_refs)--;
+        assert(*m_refs >= 0);
+
+        if (*m_refs == 0) {
+            std::cout << "\033[0;37m("
+                      << m_funcName << " "
+                      << m_filename << ":" << m_linenum
+                      << ")\033[0m" << std::endl;
+
+            delete m_refs;
+        }
     }
 
 
 private:
-    const char *m_funcName;
-    const char *m_filename;
-    const int m_linenum;
+    const char *m_funcName = nullptr;
+    const char *m_filename = nullptr;
+    const int m_linenum = 0;
+    int *m_refs = nullptr;
 };
 
 #ifdef _MSC_VER
