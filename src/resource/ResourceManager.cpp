@@ -512,6 +512,7 @@ int ResourceManager::filenameID(const std::string &filename)
 
         { "scr_cred.sin", 50059   },
         { "scr_hist.sin", 50062   },
+        { "scrstart.sin", 50063   },
         { "scr_stms.sin", 50085   },
         { "xcredits.sin", 50088   },
 

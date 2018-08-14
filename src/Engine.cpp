@@ -29,6 +29,7 @@
 #include "render/GraphicRender.h"
 #include "global/Config.h"
 #include <genie/resource/SlpFile.h>
+#include <genie/resource/UIFile.h>
 
 const sf::Clock Engine::GameClock;
 
@@ -106,6 +107,35 @@ void Engine::start()
     }
 }
 
+void Engine::showStartScreen()
+{
+    genie::UIFilePtr uiFile = ResourceManager::Inst()->getUIFile("scrstart.sin");
+    if (!uiFile) {
+        WARN << "failed to load ui file for start screen";
+        return;
+    }
+
+    genie::SlpFilePtr loadingImageFile = ResourceManager::Inst()->getSlp(uiFile->backgroundSmall.fileId);
+    if (!loadingImageFile) {
+        WARN << "Failed to load background for start screen" << uiFile->backgroundSmall.filename << uiFile->backgroundSmall.alternateFilename;
+        return;
+    }
+
+    sf::Texture loadingScreen;
+    loadingScreen.loadFromImage(Resource::convertFrameToImage(
+                                    loadingImageFile->getFrame(0),
+                                    ResourceManager::Inst()->getPalette(uiFile->paletteFile.id)
+                                    ));
+
+    sf::Sprite sprite;
+    sprite.setTexture(loadingScreen);
+    sprite.setPosition(0, 0);
+    sprite.setScale(renderWindow_->getSize().x / float(loadingScreen.getSize().x),
+                    renderWindow_->getSize().y / float(loadingScreen.getSize().y));
+    renderTarget_->draw(sprite);
+    renderWindow_->display();
+}
+
 //------------------------------------------------------------------------------
 bool Engine::setup(const std::string &scnFile)
 {
@@ -115,21 +145,7 @@ bool Engine::setup(const std::string &scnFile)
 
     renderTarget_ = std::make_shared<SfmlRenderTarget>(*renderWindow_);
 
-    genie::SlpFilePtr loadingImageFile = ResourceManager::Inst()->getSlp("scrstart.slp");
-    if (loadingImageFile) {
-        sf::Texture loadingScreen;
-        loadingScreen.loadFromImage(Resource::convertFrameToImage(
-                                        loadingImageFile->getFrame(0),
-                                        ResourceManager::Inst()->getPalette("scrstart.pal")
-                                        ));
-        sf::Sprite sprite;
-        sprite.setTexture(loadingScreen);
-        sprite.setPosition(0, 0);
-        sprite.setScale(renderWindow_->getSize().x / float(loadingScreen.getSize().x),
-                        renderWindow_->getSize().y / float(loadingScreen.getSize().y));
-        renderTarget_->draw(sprite);
-        renderWindow_->display();
-    }
+    showStartScreen();
 
     std::shared_ptr<GameState> gameState = std::make_shared<GameState>(renderTarget_);
 

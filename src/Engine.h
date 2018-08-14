@@ -41,6 +41,8 @@ public:
     void start();
 
 private:
+    void showStartScreen();
+
     std::unique_ptr<sf::RenderWindow> renderWindow_;
     std::shared_ptr<SfmlRenderTarget> renderTarget_;
 
