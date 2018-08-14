@@ -20,7 +20,6 @@
 #include <genie/dat/Unit.h>
 #include <resource/DataManager.h>
 #include <global/Constants.h>
-#include "CompUnitData.h"
 #include "ActionMove.h"
 #include "Farm.h"
 

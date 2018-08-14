@@ -34,7 +34,6 @@
 #include <Engine.h>
 #include "render/MapRenderer.h"
 #include "render/SfmlRenderTarget.h"
-#include "CompUnitData.h"
 #include "resource/DataManager.h"
 #include "ui/ActionPanel.h"
 #include "ui/UnitInfoPanel.h"

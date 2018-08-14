@@ -18,7 +18,6 @@
 
 #include "UnitManager.h"
 
-#include "CompUnitData.h"
 #include "ActionMove.h"
 #include "ActionGather.h"
 #include "ActionBuild.h"

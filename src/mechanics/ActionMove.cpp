@@ -21,7 +21,6 @@
 
 #include <unordered_set>
 #include <queue>
-#include "CompUnitData.h"
 #include "resource/DataManager.h"
 #include "global/Constants.h"
 

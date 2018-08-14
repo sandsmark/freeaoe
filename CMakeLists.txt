@@ -77,7 +77,6 @@ set(MECHANICS_SRC
     src/mechanics/ActionBuild.cpp
     src/mechanics/ActionMove.cpp
     src/mechanics/Civilization.cpp
-    src/mechanics/CompUnitData.cpp
     src/mechanics/Farm.cpp
     src/mechanics/GameState.cpp
     src/mechanics/Map.cpp
@@ -114,7 +113,6 @@ set(COMMUNICATION_SRC
 set(UNSORTED_SRC
     src/core/Entity.cpp
     src/core/IAction.cpp
-    src/core/IComponent.cpp
     src/audio/AudioPlayer.cpp
     src/audio/sts_mixer.cpp
 )

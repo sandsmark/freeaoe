@@ -23,7 +23,6 @@
 #include "Utility.h"
 #include "render/GraphicRender.h"
 
-#include "IComponent.h"
 #include "IAction.h"
 #include <genie/dat/UnitCommand.h>
 #include "ResourceMap.h"
