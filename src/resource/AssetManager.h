@@ -44,11 +44,11 @@ class UIFile;
 //------------------------------------------------------------------------------
 /// The resource manager is the primary interface for getting recourses. At
 //
-class ResourceManager
+class AssetManager
 {
 private:
-    ResourceManager();
-    virtual ~ResourceManager();
+    AssetManager();
+    virtual ~AssetManager();
 
 public:
     enum UiResolution {
@@ -89,15 +89,15 @@ public:
 
     static std::string uiFilename(const UiResolution resolution, const UiCiv civ);
 
-    ResourceManager(const ResourceManager &) = delete;
-    ResourceManager &operator=(const ResourceManager &) = delete;
+    AssetManager(const AssetManager &) = delete;
+    AssetManager &operator=(const AssetManager &) = delete;
 
     //----------------------------------------------------------------------------
     /// Initializes the resource manager once and returns its reference. On
     /// calling inst the first time the manager will load header information from
     /// drs and other files.
     //
-    static ResourceManager *Inst();
+    static AssetManager *Inst();
 
     //----------------------------------------------------------------------------
     /// Returns the slp file with given id or 0 if not found. The slp file

@@ -21,12 +21,12 @@
 #include <global/Types.h>
 #include <core/Utility.h>
 #include <genie/resource/Color.h>
-#include "ResourceManager.h"
+#include "AssetManager.h"
 #include "DataManager.h"
 
 sf::Image Resource::convertFrameToImage(const genie::SlpFramePtr &frame)
 {
-    return convertFrameToImage(frame, ResourceManager::Inst()->getPalette(50500));
+    return convertFrameToImage(frame, AssetManager::Inst()->getPalette(50500));
 }
 
 //------------------------------------------------------------------------------

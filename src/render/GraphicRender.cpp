@@ -18,7 +18,7 @@
 
 #include "GraphicRender.h"
 
-#include <resource/ResourceManager.h>
+#include <resource/AssetManager.h>
 #include <resource/DataManager.h>
 #include <SFML/Graphics/Sprite.hpp>
 #include "IRenderTarget.h"
@@ -150,7 +150,7 @@ void GraphicRender::setGraphic(const GraphicPtr &graphic)
         delta.graphic = std::make_shared<GraphicRender>();
 
         // Don't use setGraphic, to avoid recursive adding of deltas
-        delta.graphic->graphic_ =  ResourceManager::Inst()->getGraphic(deltaData.GraphicID);
+        delta.graphic->graphic_ =  AssetManager::Inst()->getGraphic(deltaData.GraphicID);
         if (!delta.graphic->graphic_->isValid()) {
             continue;
         }

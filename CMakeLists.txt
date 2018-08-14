@@ -69,7 +69,7 @@ set(RESOURCE_SRC
     src/resource/Graphic.cpp
     src/resource/LanguageManager.cpp
     src/resource/Resource.cpp
-    src/resource/ResourceManager.cpp
+    src/resource/AssetManager.cpp
     src/resource/Terrain.cpp
     )
 

@@ -83,9 +83,9 @@ ScreenRect Farm::rect() const
 FarmRender::FarmRender(const Size &size) :
     m_size(size)
 {
-    const genie::PalFile &palette = ResourceManager::Inst()->getPalette(50500);
+    const genie::PalFile &palette = AssetManager::Inst()->getPalette(50500);
 
-    genie::SlpFilePtr slpFile = ResourceManager::Inst()->getSlp(15023);
+    genie::SlpFilePtr slpFile = AssetManager::Inst()->getSlp(15023);
     if (!slpFile) {
         WARN << "failed to get slp for farm";
         return;

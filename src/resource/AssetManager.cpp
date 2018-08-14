@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "ResourceManager.h"
+#include "AssetManager.h"
 #include "DataManager.h"
 
 #include <fstream>
@@ -34,18 +34,18 @@
 #include <unordered_map>
 
 //------------------------------------------------------------------------------
-ResourceManager *ResourceManager::Inst()
+AssetManager *AssetManager::Inst()
 {
-    static ResourceManager rm;
+    static AssetManager rm;
     return &rm;
 }
 
-genie::SlpFilePtr ResourceManager::getSlp(const std::string &name, const ResourceType type)
+genie::SlpFilePtr AssetManager::getSlp(const std::string &name, const ResourceType type)
 {
     return getSlp(filenameID(name), type);
 }
 
-genie::SlpFilePtr ResourceManager::getUiOverlay(const ResourceManager::UiResolution res, const ResourceManager::UiCiv civ)
+genie::SlpFilePtr AssetManager::getUiOverlay(const AssetManager::UiResolution res, const AssetManager::UiCiv civ)
 {
     // wtf
     if (res == UiResolution::Ui1280x1024 && civ > UiCiv::Spanish) {
@@ -55,7 +55,7 @@ genie::SlpFilePtr ResourceManager::getUiOverlay(const ResourceManager::UiResolut
     return getSlp(uint32_t(res) + uint32_t(civ), ResourceType::Interface);
 }
 
-genie::ScnFilePtr ResourceManager::getScn(unsigned int id)
+genie::ScnFilePtr AssetManager::getScn(unsigned int id)
 {
     for (const std::shared_ptr<genie::DrsFile> &drsFile : m_gamedataFiles) {
         genie::ScnFilePtr scnfile = drsFile->getScnFile(id);
@@ -70,12 +70,12 @@ genie::ScnFilePtr ResourceManager::getScn(unsigned int id)
     return genie::ScnFilePtr();
 }
 
-std::shared_ptr<genie::UIFile> ResourceManager::getUIFile(const std::string &name)
+std::shared_ptr<genie::UIFile> AssetManager::getUIFile(const std::string &name)
 {
     return m_interfaceFile->getUIFile(filenameID(name));
 }
 
-std::shared_ptr<uint8_t> ResourceManager::getWavPtr(unsigned int id)
+std::shared_ptr<uint8_t> AssetManager::getWavPtr(unsigned int id)
 {
     std::weak_ptr<uint8_t> weakPtr = m_wavCache[id];
     std::shared_ptr<uint8_t> wavPtr = weakPtr.lock();
@@ -97,7 +97,7 @@ std::shared_ptr<uint8_t> ResourceManager::getWavPtr(unsigned int id)
 }
 
 //------------------------------------------------------------------------------
-genie::SlpFilePtr ResourceManager::getSlp(sf::Uint32 id, const ResourceType type)
+genie::SlpFilePtr AssetManager::getSlp(sf::Uint32 id, const ResourceType type)
 {
     genie::SlpFilePtr slp_ptr;
     if (m_nonExistentSlps.count(id)) {
@@ -144,7 +144,7 @@ genie::SlpFilePtr ResourceManager::getSlp(sf::Uint32 id, const ResourceType type
 }
 
 //------------------------------------------------------------------------------
-GraphicPtr ResourceManager::getGraphic(Uint32 id)
+GraphicPtr AssetManager::getGraphic(Uint32 id)
 {
     GraphicPtr graph;
 
@@ -160,7 +160,7 @@ GraphicPtr ResourceManager::getGraphic(Uint32 id)
 }
 
 //------------------------------------------------------------------------------
-TerrainPtr ResourceManager::getTerrain(unsigned int id)
+TerrainPtr AssetManager::getTerrain(unsigned int id)
 {
     if (terrains_.find(id) != terrains_.end()) {
         return terrains_[id];
@@ -174,12 +174,12 @@ TerrainPtr ResourceManager::getTerrain(unsigned int id)
     return terrain;
 }
 
-const genie::PalFile &ResourceManager::getPalette(const std::string &name)
+const genie::PalFile &AssetManager::getPalette(const std::string &name)
 {
     return getPalette(filenameID(name));
 }
 
-const genie::BlendMode &ResourceManager::getBlendmode(unsigned int id)
+const genie::BlendMode &AssetManager::getBlendmode(unsigned int id)
 {
     if (!blendomatic_file_) {
         WARN << "No blendomatic file loaded";
@@ -190,7 +190,7 @@ const genie::BlendMode &ResourceManager::getBlendmode(unsigned int id)
 }
 
 //------------------------------------------------------------------------------
-const genie::PalFile &ResourceManager::getPalette(sf::Uint32 id)
+const genie::PalFile &AssetManager::getPalette(sf::Uint32 id)
 {
     const genie::PalFile &palette = m_interfaceFile->getPalFile(id);
     if (palette.isValid()) {
@@ -211,16 +211,16 @@ const genie::PalFile &ResourceManager::getPalette(sf::Uint32 id)
 }
 
 //------------------------------------------------------------------------------
-ResourceManager::ResourceManager()
+AssetManager::AssetManager()
 {
 }
 
 //------------------------------------------------------------------------------
-ResourceManager::~ResourceManager()
+AssetManager::~AssetManager()
 {
 }
 
-std::string ResourceManager::uiFilename(const ResourceManager::UiResolution resolution, const ResourceManager::UiCiv civ)
+std::string AssetManager::uiFilename(const AssetManager::UiResolution resolution, const AssetManager::UiCiv civ)
 {
     std::string ret = "game_";
     switch (resolution) {
@@ -244,9 +244,9 @@ std::string ResourceManager::uiFilename(const ResourceManager::UiResolution reso
 }
 
 //------------------------------------------------------------------------------
-bool ResourceManager::initialize(const std::string &dataPath, const genie::GameVersion gameVersion)
+bool AssetManager::initialize(const std::string &dataPath, const genie::GameVersion gameVersion)
 {
-    DBG << "Initializing ResourceManager";
+    DBG << "Initializing AssetManager";
 
     m_dataPath = dataPath;
     m_gameVersion = gameVersion;
@@ -314,7 +314,7 @@ bool ResourceManager::initialize(const std::string &dataPath, const genie::GameV
     return true;
 }
 
-int ResourceManager::filenameID(const std::string &filename)
+int AssetManager::filenameID(const std::string &filename)
 {
     const std::unordered_map<std::string, int> idMap = {
         // Various button icons
@@ -543,7 +543,7 @@ int ResourceManager::filenameID(const std::string &filename)
     return idMap.at(filename);
 }
 
-std::string ResourceManager::findFile(const std::string &filename) const
+std::string AssetManager::findFile(const std::string &filename) const
 {
     if (std::filesystem::exists(m_dataPath + filename)) {
         return m_dataPath + filename;
@@ -562,7 +562,7 @@ std::string ResourceManager::findFile(const std::string &filename) const
 }
 
 //------------------------------------------------------------------------------
-ResourceManager::DrsFileVector ResourceManager::loadDrs(const std::vector<std::string> &filenames)
+AssetManager::DrsFileVector AssetManager::loadDrs(const std::vector<std::string> &filenames)
 {
     DrsFileVector files;
 
@@ -577,7 +577,7 @@ ResourceManager::DrsFileVector ResourceManager::loadDrs(const std::vector<std::s
     return files;
 }
 
-std::shared_ptr<genie::DrsFile> ResourceManager::loadDrs(const std::string &filename)
+std::shared_ptr<genie::DrsFile> AssetManager::loadDrs(const std::string &filename)
 {
     std::string filePath = findFile(filename);
 

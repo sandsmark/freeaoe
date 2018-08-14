@@ -18,7 +18,7 @@
 
 #include "Graphic.h"
 #include <resource/DataManager.h>
-#include "ResourceManager.h"
+#include "AssetManager.h"
 
 #include <genie/resource/SlpFile.h>
 #include <genie/resource/SlpFrame.h>
@@ -35,7 +35,7 @@ Graphic::Graphic(const genie::Graphic &data) :
         return;
     }
 
-    slp_ = ResourceManager::Inst()->getSlp(data_.SLP, ResourceManager::ResourceType::Graphics);
+    slp_ = AssetManager::Inst()->getSlp(data_.SLP, AssetManager::ResourceType::Graphics);
 
     if (!slp_) {
 //        log.debug("Failed to get slp % for ", data_.SLP, data_.Name);
@@ -72,7 +72,7 @@ const sf::Texture &Graphic::texture(uint32_t frame, float angleRadians, uint8_t 
         state.frame = 0;
     }
 
-    const genie::PalFile &palette = ResourceManager::Inst()->getPalette(50500);
+    const genie::PalFile &palette = AssetManager::Inst()->getPalette(50500);
     sf::Image img;
     switch(state.type) {
     case ImageType::Base:
@@ -87,7 +87,7 @@ const sf::Texture &Graphic::texture(uint32_t frame, float angleRadians, uint8_t 
         img.create(width, height, sf::Color::Transparent);
 
         const genie::PlayerColour pc = DataManager::Inst().getPlayerColor(state.playerId);
-        const genie::PalFile &palette = ResourceManager::Inst()->getPalette(50500);
+        const genie::PalFile &palette = AssetManager::Inst()->getPalette(50500);
         genie::Color outlineColor = palette[pc.UnitOutlineColor];
         const sf::Color outline(outlineColor.r, outlineColor.g, outlineColor.b);
 
@@ -98,7 +98,7 @@ const sf::Texture &Graphic::texture(uint32_t frame, float angleRadians, uint8_t 
         break;
     }
     case ImageType::Construction: {
-        const genie::PalFile &palette = ResourceManager::Inst()->getPalette(50500);
+        const genie::PalFile &palette = AssetManager::Inst()->getPalette(50500);
 
         const genie::SlpFramePtr frame = slp_->getFrame(state.frame);
         const genie::SlpFrameData &frameData = frame->img_data;

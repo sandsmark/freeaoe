@@ -20,7 +20,7 @@
 #include "global/Constants.h"
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
-#include <resource/ResourceManager.h>
+#include <resource/AssetManager.h>
 #include <resource/Resource.h>
 
 #include <genie/resource/SlpFrame.h>
@@ -55,17 +55,17 @@ void Map::setUpSample()
 
     MapTile grass;
     grass.elevation_ = 0;
-    grass.terrain_ = ResourceManager::Inst()->getTerrain(0);
+    grass.terrain_ = AssetManager::Inst()->getTerrain(0);
 
     tiles_.resize(cols_ * rows_, grass);
 
     for (int i=6; i<10; i++) {
-        getTileAt(0, i).terrain_ = ResourceManager::Inst()->getTerrain(2);
-        getTileAt(1, i).terrain_ = ResourceManager::Inst()->getTerrain(2);
-        getTileAt(2, i).terrain_ = ResourceManager::Inst()->getTerrain(1);
+        getTileAt(0, i).terrain_ = AssetManager::Inst()->getTerrain(2);
+        getTileAt(1, i).terrain_ = AssetManager::Inst()->getTerrain(2);
+        getTileAt(2, i).terrain_ = AssetManager::Inst()->getTerrain(1);
     }
     for (int i=4; i<6; i++) {
-        getTileAt(i, 10).terrain_ = ResourceManager::Inst()->getTerrain(1);
+        getTileAt(i, 10).terrain_ = AssetManager::Inst()->getTerrain(1);
     }
 
     for (int i=3; i<6; i++) {
@@ -98,7 +98,7 @@ void Map::create(genie::ScnMap mapDescription)
 
         tiles_[i].elevation_ = tile.elevation;
 
-        tiles_[i].terrain_ = ResourceManager::Inst()->getTerrain(tile.terrainID);
+        tiles_[i].terrain_ = AssetManager::Inst()->getTerrain(tile.terrainID);
     }
 }
 
@@ -200,7 +200,7 @@ void Map::setTileAt(unsigned col, unsigned row, unsigned id)
         return;
     }
 
-    tiles_[index].terrain_ = ResourceManager::Inst()->getTerrain(id);
+    tiles_[index].terrain_ = AssetManager::Inst()->getTerrain(id);
     m_updated = true;
 }
 
@@ -213,7 +213,7 @@ void Map::updateTileAt(const int col, const int row, unsigned id)
         return;
     }
 
-    tiles_[index].terrain_ = ResourceManager::Inst()->getTerrain(id);
+    tiles_[index].terrain_ = AssetManager::Inst()->getTerrain(id);
 
     for (int col_ = std::max(col - 1, 0); col_ < std::min(col + 2, cols_); col_++) {
         for (int row_ = std::max(row - 1, 0); row_ < std::min(row + 2, rows_); row_++) {

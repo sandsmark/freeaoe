@@ -24,7 +24,7 @@
 #include <SFML/Graphics.hpp>
 
 #include <SFML/Graphics/RenderWindow.hpp>
-#include "resource/ResourceManager.h"
+#include "resource/AssetManager.h"
 #include "resource/Resource.h"
 #include "render/GraphicRender.h"
 #include "global/Config.h"
@@ -109,13 +109,13 @@ void Engine::start()
 
 void Engine::showStartScreen()
 {
-    genie::UIFilePtr uiFile = ResourceManager::Inst()->getUIFile("scrstart.sin");
+    genie::UIFilePtr uiFile = AssetManager::Inst()->getUIFile("scrstart.sin");
     if (!uiFile) {
         WARN << "failed to load ui file for start screen";
         return;
     }
 
-    genie::SlpFilePtr loadingImageFile = ResourceManager::Inst()->getSlp(uiFile->backgroundSmall.fileId);
+    genie::SlpFilePtr loadingImageFile = AssetManager::Inst()->getSlp(uiFile->backgroundSmall.fileId);
     if (!loadingImageFile) {
         WARN << "Failed to load background for start screen" << uiFile->backgroundSmall.filename << uiFile->backgroundSmall.alternateFilename;
         return;
@@ -124,7 +124,7 @@ void Engine::showStartScreen()
     sf::Texture loadingScreen;
     loadingScreen.loadFromImage(Resource::convertFrameToImage(
                                     loadingImageFile->getFrame(0),
-                                    ResourceManager::Inst()->getPalette(uiFile->paletteFile.id)
+                                    AssetManager::Inst()->getPalette(uiFile->paletteFile.id)
                                     ));
 
     sf::Sprite sprite;

@@ -23,7 +23,7 @@
 #include <genie/resource/SlpFrame.h>
 
 //------------------------------------------------------------------------------
-/// Resource is the basic class of resources managed by the ResourceManager.
+/// Resource is the basic class of resources managed by the AssetManager.
 //
 class Resource
 {

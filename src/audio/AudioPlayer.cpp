@@ -1,7 +1,7 @@
 #include "AudioPlayer.h"
 
 #include "resource/DataManager.h"
-#include "resource/ResourceManager.h"
+#include "resource/AssetManager.h"
 
 #include <random>
 
@@ -170,7 +170,7 @@ void AudioPlayer::playSound(const int id, const int civilization)
 
     DBG << "playing" << sound.Items[selected].FileName;
 
-    std::shared_ptr<uint8_t> wavPtr = ResourceManager::Inst()->getWavPtr(wavId);
+    std::shared_ptr<uint8_t> wavPtr = AssetManager::Inst()->getWavPtr(wavId);
     if (!wavPtr) {
         WARN << "failed to get wav data for" << wavId;
         return;

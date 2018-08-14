@@ -20,7 +20,7 @@
 
 #include <core/IComponent.h>
 #include <resource/Graphic.h>
-#include <resource/ResourceManager.h>
+#include <resource/AssetManager.h>
 #include <SFML/Graphics/Texture.hpp>
 #include "IRenderableComponent.h"
 

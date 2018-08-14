@@ -147,7 +147,7 @@ void Unit::setCreationProgress(float progress)
         if (m_creationProgress < m_data->Creatable.TrainTime && progress >= m_data->Creatable.TrainTime) {
             m_graphics.setGraphic(defaultGraphics);
         } else if (m_creationProgress == m_data->Creatable.TrainTime && progress < m_data->Creatable.TrainTime) {
-            m_graphics.setGraphic(ResourceManager::Inst()->getGraphic(m_data->Building.ConstructionGraphicID));
+            m_graphics.setGraphic(AssetManager::Inst()->getGraphic(m_data->Building.ConstructionGraphicID));
         }
     }
 
@@ -192,9 +192,9 @@ void Unit::setUnitData(const genie::Unit &data_)
 {
     m_data = &data_;
 
-    defaultGraphics = ResourceManager::Inst()->getGraphic(m_data->StandingGraphic.first);
+    defaultGraphics = AssetManager::Inst()->getGraphic(m_data->StandingGraphic.first);
     if (m_data->Moving.WalkingGraphic >= 0) {
-        movingGraphics = ResourceManager::Inst()->getGraphic(m_data->Moving.WalkingGraphic);
+        movingGraphics = AssetManager::Inst()->getGraphic(m_data->Moving.WalkingGraphic);
     }
 
     if (!defaultGraphics) {
@@ -261,10 +261,10 @@ void Unit::setCurrentAction(const ActionPtr &action)
         m_graphics.setGraphic(movingGraphics);
         break;
     case IAction::Type::Build:
-        m_graphics.setGraphic(ResourceManager::Inst()->getGraphic(taskGraphicId(genie::Task::Build, action->unitState())));
+        m_graphics.setGraphic(AssetManager::Inst()->getGraphic(taskGraphicId(genie::Task::Build, action->unitState())));
         break;
     case IAction::Type::Gather:
-        m_graphics.setGraphic(ResourceManager::Inst()->getGraphic(taskGraphicId(genie::Task::GatherRebuild, action->unitState())));
+        m_graphics.setGraphic(AssetManager::Inst()->getGraphic(taskGraphicId(genie::Task::GatherRebuild, action->unitState())));
         break;
     default:
         m_graphics.setGraphic(defaultGraphics);
@@ -305,7 +305,7 @@ void Unit::clearActionQueue()
 MoveTargetMarker::MoveTargetMarker() :
     Entity(Type::MoveTargetMarker, "Move target marker")
 {
-    m_graphics.setGraphic(ResourceManager::Inst()->getGraphic(2961));
+    m_graphics.setGraphic(AssetManager::Inst()->getGraphic(2961));
 
     m_graphics.current_frame_ = m_graphics.graphic_->data_.FrameCount - 1; // don't play immediately
 }

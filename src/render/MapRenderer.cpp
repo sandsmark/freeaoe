@@ -19,7 +19,7 @@
 #include "MapRenderer.h"
 #include "IRenderTarget.h"
 #include "global/Constants.h"
-#include <resource/ResourceManager.h>
+#include <resource/AssetManager.h>
 #include <resource/DataManager.h>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
@@ -193,7 +193,7 @@ void MapRenderer::updateTexture()
                 m_textureTarget.draw(mapTile.terrain_->texture(col, row), spos);
 
                 for (const Blend &b : mapTile.blends) {
-                    m_textureTarget.draw(ResourceManager::Inst()->getTerrain(b.terrainId)->blendImage(b, col, row), spos);
+                    m_textureTarget.draw(AssetManager::Inst()->getTerrain(b.terrainId)->blendImage(b, col, row), spos);
                 }
             } else {
                 m_textureTarget.draw(mapTile.terrain_->slopedImage(mapTile.slopes, col, row), spos);

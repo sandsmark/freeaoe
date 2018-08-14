@@ -18,7 +18,7 @@ ActionPanel::ActionPanel(const std::shared_ptr<SfmlRenderTarget> &renderTarget) 
 
 bool ActionPanel::init()
 {
-    genie::SlpFilePtr unitIconsSlp = ResourceManager::Inst()->getSlp("btnunit.shp", ResourceManager::ResourceType::Interface);
+    genie::SlpFilePtr unitIconsSlp = AssetManager::Inst()->getSlp("btnunit.shp", AssetManager::ResourceType::Interface);
     if (!unitIconsSlp) {
         WARN << "Failed to load unit icons";
         return false;
@@ -28,7 +28,7 @@ bool ActionPanel::init()
     }
 
     // ico_bld1-4.shp looks identical, for some reason
-    genie::SlpFilePtr buildingIconsSlp = ResourceManager::Inst()->getSlp("ico_bld2.shp", ResourceManager::ResourceType::Interface);
+    genie::SlpFilePtr buildingIconsSlp = AssetManager::Inst()->getSlp("ico_bld2.shp", AssetManager::ResourceType::Interface);
     if (!buildingIconsSlp) {
         WARN << "Failed to load building icons";
         return false;
@@ -37,7 +37,7 @@ bool ActionPanel::init()
         m_buildingIcons[i].loadFromImage(Resource::convertFrameToImage(buildingIconsSlp->getFrame(i)));
     }
 
-    genie::SlpFilePtr researchIconsSlp = ResourceManager::Inst()->getSlp("btntech.shp", ResourceManager::ResourceType::Interface);
+    genie::SlpFilePtr researchIconsSlp = AssetManager::Inst()->getSlp("btntech.shp", AssetManager::ResourceType::Interface);
     if (!researchIconsSlp) {
         WARN << "Failed to load research icons";
         return false;
@@ -46,7 +46,7 @@ bool ActionPanel::init()
         m_researchIcons[i].loadFromImage(Resource::convertFrameToImage(researchIconsSlp->getFrame(i)));
     }
 
-    genie::SlpFilePtr commandIconsSlp = ResourceManager::Inst()->getSlp("btncmd.shp", ResourceManager::ResourceType::Interface);
+    genie::SlpFilePtr commandIconsSlp = AssetManager::Inst()->getSlp("btncmd.shp", AssetManager::ResourceType::Interface);
     if (!commandIconsSlp) {
         WARN << "Failed to load action icons";
         return false;
@@ -66,7 +66,7 @@ bool ActionPanel::init()
     }
 
     { // can't find this icon anywhere else
-        genie::SlpFilePtr cursorsSlp = ResourceManager::Inst()->getSlp("mcursors.shp", ResourceManager::ResourceType::Interface);
+        genie::SlpFilePtr cursorsSlp = AssetManager::Inst()->getSlp("mcursors.shp", AssetManager::ResourceType::Interface);
         if (!cursorsSlp) {
             WARN << "Failed to load cursors";
             return false;

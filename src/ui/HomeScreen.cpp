@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "HomeScreen.h"
-#include "resource/ResourceManager.h"
+#include "resource/AssetManager.h"
 #include "resource/LanguageManager.h"
 #include "render/SfmlRenderTarget.h"
 #include <genie/resource/UIFile.h>
@@ -31,14 +31,14 @@ HomeScreen::HomeScreen()
 
 bool HomeScreen::init()
 {
-    genie::UIFilePtr uiFile = ResourceManager::Inst()->getUIFile("xmain.sin");
-    m_slpFile = ResourceManager::Inst()->getSlp(uiFile->backgroundLarge.fileId, ResourceManager::ResourceType::Interface);
+    genie::UIFilePtr uiFile = AssetManager::Inst()->getUIFile("xmain.sin");
+    m_slpFile = AssetManager::Inst()->getSlp(uiFile->backgroundLarge.fileId, AssetManager::ResourceType::Interface);
     if (!m_slpFile) {
         WARN << "failed to load slp file for home screen";
         return false;
     }
 
-    const genie::PalFile &palette = ResourceManager::Inst()->getPalette(uiFile->paletteFile.id);
+    const genie::PalFile &palette = AssetManager::Inst()->getPalette(uiFile->paletteFile.id);
 
     genie::SlpFramePtr backgroundFrame = m_slpFile->getFrame(0);
     if (!backgroundFrame) {

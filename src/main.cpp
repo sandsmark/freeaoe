@@ -22,12 +22,11 @@
 
 #include "Engine.h"
 #include "resource/DataManager.h"
-#include "resource/ResourceManager.h"
+#include "resource/AssetManager.h"
 #include "resource/LanguageManager.h"
 
 #include "mechanics/UnitFactory.h"
 #include "global/Config.h"
-#include "resource/ResourceManager.h"
 #include "render/GraphicRender.h"
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Sprite.hpp>
@@ -77,7 +76,7 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    if (!ResourceManager::Inst()->initialize(dataPath, DataManager::Inst().gameVersion())) {
+    if (!AssetManager::Inst()->initialize(dataPath, DataManager::Inst().gameVersion())) {
         return 1;
     }
 

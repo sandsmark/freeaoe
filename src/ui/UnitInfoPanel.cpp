@@ -46,7 +46,7 @@ bool UnitInfoPanel::init()
     }
 
     // Stat icons
-    genie::SlpFilePtr iconsSlp = ResourceManager::Inst()->getSlp("itemicon.shp", ResourceManager::ResourceType::Interface);
+    genie::SlpFilePtr iconsSlp = AssetManager::Inst()->getSlp("itemicon.shp", AssetManager::ResourceType::Interface);
     if (iconsSlp->getFrameCount() < StatItem::TypeCount) {
         WARN << "not enough icons in SLP:" << iconsSlp->getFrameCount();
         return false;
@@ -60,7 +60,7 @@ bool UnitInfoPanel::init()
     }
 
     // Unit icons
-    genie::SlpFilePtr unitIconsSlp = ResourceManager::Inst()->getSlp("btnunit.shp", ResourceManager::ResourceType::Interface);
+    genie::SlpFilePtr unitIconsSlp = AssetManager::Inst()->getSlp("btnunit.shp", AssetManager::ResourceType::Interface);
     if (!unitIconsSlp) {
         WARN << "Failed to load unit icons";
         return false;
@@ -71,7 +71,7 @@ bool UnitInfoPanel::init()
     }
 
     // Building icons
-    genie::SlpFilePtr buildingIconsSlp = ResourceManager::Inst()->getSlp("ico_bld2.shp", ResourceManager::ResourceType::Interface);
+    genie::SlpFilePtr buildingIconsSlp = AssetManager::Inst()->getSlp("ico_bld2.shp", AssetManager::ResourceType::Interface);
     if (!buildingIconsSlp) {
         WARN << "Failed to load building icons";
         return false;
@@ -81,7 +81,7 @@ bool UnitInfoPanel::init()
         m_buildingIcons[i].loadFromImage(Resource::convertFrameToImage(buildingIconsSlp->getFrame(i)));
     }
 
-    genie::SlpFilePtr haloSlp = ResourceManager::Inst()->getSlp("unithalo.shp", ResourceManager::ResourceType::Interface);
+    genie::SlpFilePtr haloSlp = AssetManager::Inst()->getSlp("unithalo.shp", AssetManager::ResourceType::Interface);
     if (!haloSlp) {
         WARN << "couldn't load halo";
         return false;

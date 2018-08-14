@@ -19,7 +19,7 @@
 #include "Terrain.h"
 
 #include "DataManager.h"
-#include "ResourceManager.h"
+#include "AssetManager.h"
 
 #include <genie/resource/SlpFrame.h>
 #include <genie/resource/Color.h>
@@ -95,12 +95,12 @@ bool Terrain::load()
         m_data = DataManager::Inst().getTerrain(id);
 
         if (!m_slp) {
-            m_slp = ResourceManager::Inst()->getSlp(m_data.SLP);
+            m_slp = AssetManager::Inst()->getSlp(m_data.SLP);
         }
 
         if (!m_slp) {
             WARN << "Failed to get slp for" << m_data.SLP;
-            m_slp = ResourceManager::Inst()->getSlp(15000); // TODO Loading grass if -1
+            m_slp = AssetManager::Inst()->getSlp(15000); // TODO Loading grass if -1
 
             return false;
         }
@@ -151,7 +151,7 @@ const sf::Texture &Terrain::blendImage(const Blend blends, int tileX, int tileY)
     Uint8 *pixels = pixelsBuf.data();
     memcpy(pixels, sourceImage.getPixelsPtr(), byteCount);
 
-    const genie::BlendMode &blend = ResourceManager::Inst()->getBlendmode(blends.blendMode);
+    const genie::BlendMode &blend = AssetManager::Inst()->getBlendmode(blends.blendMode);
     std::vector<uint8_t> alphamask;
     for (unsigned i=0; i < Blend::BlendTileCount; i++) {
         if ((blends.bits & (1u << i)) == 0) {
@@ -711,7 +711,7 @@ const sf::Texture &Terrain::slopedImage(const TileSlopes &slopes, int tileX, int
     const int tileSquareCount = sqrt(m_slp->getFrameCount());
     const int frameNum = (tileY % tileSquareCount) + (tileX % tileSquareCount) * tileSquareCount;
 
-    genie::SlpFramePtr frame = ResourceManager::Inst()->getSlpTemplateFile()->getFrame(m_slp->getFrame(frameNum), slopes.self.toGenie(), patterns, ResourceManager::Inst()->getPalette().getColors(), m_slp);
+    genie::SlpFramePtr frame = AssetManager::Inst()->getSlpTemplateFile()->getFrame(m_slp->getFrame(frameNum), slopes.self.toGenie(), patterns, AssetManager::Inst()->getPalette().getColors(), m_slp);
     sf::Image img = Resource::convertFrameToImage(frame);
     if (!img.getSize().x) {
         static sf::Texture nullTex;

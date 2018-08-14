@@ -156,28 +156,28 @@ bool GameState::init()
         }
     }
 
-    std::shared_ptr<genie::SlpFile> overlayFile = ResourceManager::Inst()->getUiOverlay(ResourceManager::Ui1280x1024, ResourceManager::Viking);
+    std::shared_ptr<genie::SlpFile> overlayFile = AssetManager::Inst()->getUiOverlay(AssetManager::Ui1280x1024, AssetManager::Viking);
     if (overlayFile) {
         m_uiOverlay.loadFromImage(Resource::convertFrameToImage(overlayFile->getFrame()));
         DBG << "Loaded UI overlay with size" << Size(m_uiOverlay.getSize());
     } else {
-        ResourceManager::UiResolution attemptedResolution = ResourceManager::Ui1280x1024;
-        ResourceManager::UiCiv attemptedCiv = ResourceManager::Briton;
+        AssetManager::UiResolution attemptedResolution = AssetManager::Ui1280x1024;
+        AssetManager::UiCiv attemptedCiv = AssetManager::Briton;
         do {
-            attemptedCiv = ResourceManager::UiCiv(attemptedCiv + 1);
-            if (attemptedCiv > ResourceManager::Korean) {
-                if (attemptedResolution == ResourceManager::Ui1280x1024) {
-                    attemptedResolution = ResourceManager::Ui1024x768;
-                } else if (attemptedResolution == ResourceManager::Ui1024x768) {
-                    attemptedResolution = ResourceManager::Ui800x600;
+            attemptedCiv = AssetManager::UiCiv(attemptedCiv + 1);
+            if (attemptedCiv > AssetManager::Korean) {
+                if (attemptedResolution == AssetManager::Ui1280x1024) {
+                    attemptedResolution = AssetManager::Ui1024x768;
+                } else if (attemptedResolution == AssetManager::Ui1024x768) {
+                    attemptedResolution = AssetManager::Ui800x600;
                 } else {
                     m_uiOverlay = sf::Texture();
                     break;
                 }
 
-                attemptedCiv = ResourceManager::Briton;
+                attemptedCiv = AssetManager::Briton;
             }
-            overlayFile = ResourceManager::Inst()->getUiOverlay(attemptedResolution, attemptedCiv);
+            overlayFile = AssetManager::Inst()->getUiOverlay(attemptedResolution, attemptedCiv);
         } while (!overlayFile);
 
         if (overlayFile) {
@@ -188,7 +188,7 @@ bool GameState::init()
         }
     }
 
-    m_mouseCursor.cursorsFile = ResourceManager::Inst()->getSlp(ResourceManager::filenameID("mcursors.shp"));
+    m_mouseCursor.cursorsFile = AssetManager::Inst()->getSlp(AssetManager::filenameID("mcursors.shp"));
     if (m_mouseCursor.cursorsFile) {
         m_mouseCursor.texture.loadFromImage(Resource::convertFrameToImage(m_mouseCursor.cursorsFile->getFrame(Cursor::Normal)));
         m_mouseCursor.sprite.setTexture(m_mouseCursor.texture);
@@ -197,7 +197,7 @@ bool GameState::init()
     }
 
     // graphic 2962
-    m_waypointFlag = ResourceManager::Inst()->getSlp(3404);
+    m_waypointFlag = AssetManager::Inst()->getSlp(3404);
     if (!m_waypointFlag) {
         WARN << "Failed to load waypoint animation";
     }
