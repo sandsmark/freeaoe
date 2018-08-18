@@ -8,7 +8,7 @@
 #include "sts_mixer.h"
 
 #define DR_MP3_IMPLEMENTATION
-#include <extras/dr_mp3.h>
+#include <mini_al/extras/dr_mp3.h>
 
 #define MINI_AL_IMPLEMENTATION
 #define MAL_NO_DECODING
@@ -17,7 +17,7 @@
 #define MAL_NO_OPENAL
 #define MAL_NO_ALSA
 #define MAL_DEBUG_OUTPUT
-#include <mini_al.h>
+#include <mini_al/mini_al.h>
 
 uint32_t AudioPlayer::malCallback(mal_device *device, uint32_t frameCount, void *buffer)
 {

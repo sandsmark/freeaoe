@@ -42,16 +42,28 @@ else()
     find_package(SFML COMPONENTS system window graphics REQUIRED)
 endif()
 
+# TODO: proper find_packages
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/extern/mini_al/mini_al.h)
+    message(STATUS "Using bundled mini_al")
+    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/extern/)
+endif()
+
+# TODO: proper find_packages
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/extern/genieutils/include/genie/Types.h)
+    message(STATUS "Using bundled genieutils")
+    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/extern/genieutils/include/)
+
+    set(GENIEUTILS_STATIC_BUILD True)
+    add_subdirectory(extern/genieutils)
+endif()
+
+
 include_directories(
     src/
-    ${CMAKE_CURRENT_SOURCE_DIR}/extern/genieutils/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/extern/mini_al/
     ${PROJECT_BINARY_DIR}
   )
 
-set(GENIEUTILS_STATIC_BUILD True)
 
-add_subdirectory(extern/genieutils)
 add_subdirectory(tools/resgen)
 
 # additional compiler flags 
