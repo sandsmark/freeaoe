@@ -553,7 +553,7 @@ std::string AssetManager::findFile(const std::string &filename) const
     for (const std::filesystem::directory_entry &entry : std::filesystem::directory_iterator(m_dataPath)) {
         std::string candidate = util::toLowercase(entry.path().filename().string());
         if (candidate == compareFilename) {
-            return entry.path().filename().string();
+            return entry.path().string();
         }
     }
 
