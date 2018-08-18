@@ -161,6 +161,8 @@ target_link_libraries(freeaoe
     genieutils
 )
 
+install(TARGETS freeaoe DESTINATION bin)
+
 #if (CMAKE_BUILD_TYPE MATCHES Debug)
 #    if(CLANG_TIDY_EXE)
 #        set_target_properties(
