@@ -25,7 +25,6 @@
 #include <iostream>
 #include <iomanip>
 #include <unordered_set>
-#include <wordexp.h>
 
 #include <filesystem>
 
@@ -67,6 +66,8 @@ static std::string getRegistryString(const char *regGroup, const char *key)
     return std::string(outString);
 }
 #else
+
+#include <wordexp.h>
 
 // Resolves ~ etc.
 static std::string resolvePath(const char *path)
