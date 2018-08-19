@@ -106,9 +106,9 @@ void ActionPanel::handleEvent(sf::Event event)
         } else {
             if (button.pressed) {
                 m_dirty = true;
+                handleButtonClick(button);
             }
             button.pressed = false;
-            handleButtonClick(button);
         }
     }
 }

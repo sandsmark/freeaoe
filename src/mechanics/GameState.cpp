@@ -404,7 +404,9 @@ void GameState::handleEvent(sf::Event event)
 
     if (event.type == sf::Event::MouseButtonPressed) {
         if (event.mouseButton.button == sf::Mouse::Button::Left) {
-            m_unitManager->onLeftClick(renderTarget_->camera()->absoluteMapPos(ScreenPos(event.mouseButton.x, event.mouseButton.y)));
+            if (m_unitManager->onLeftClick(renderTarget_->camera()->absoluteMapPos(ScreenPos(event.mouseButton.x, event.mouseButton.y)))) {
+                return;
+            }
 
             m_selectionStart = ScreenPos(event.mouseButton.x, event.mouseButton.y);
             m_selectionCurr = ScreenPos(event.mouseButton.x+1, event.mouseButton.y+1);

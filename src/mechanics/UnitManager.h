@@ -65,7 +65,7 @@ public:
     bool update(Time time);
     void render(const std::shared_ptr<SfmlRenderTarget> &renderTarget);
 
-    void onLeftClick(const MapPos &mapPos);
+    bool onLeftClick(const MapPos &mapPos);
     void onRightClick(const ScreenPos &screenPos, const CameraPtr &camera);
     void onMouseMove(const MapPos &mapPos);
 

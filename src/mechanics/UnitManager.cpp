@@ -195,7 +195,7 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget)
     }
 }
 
-void UnitManager::onLeftClick(const MapPos &/*mapPos*/)
+bool UnitManager::onLeftClick(const MapPos &/*mapPos*/)
 {
     if (m_buildingToPlace) {
         m_buildingToPlace->isVisible = true;
@@ -219,7 +219,10 @@ void UnitManager::onLeftClick(const MapPos &/*mapPos*/)
         }
 
         m_buildingToPlace.reset();
+        return true;
     }
+
+    return false;
 }
 
 void UnitManager::onRightClick(const ScreenPos &screenPos, const CameraPtr &camera)
@@ -257,6 +260,10 @@ void UnitManager::onMouseMove(const MapPos &mapPos)
 
 void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &camera)
 {
+    if (m_buildingToPlace) {
+        return;
+    }
+
     m_selectedUnits.clear();
     m_currentActions.clear();
 
