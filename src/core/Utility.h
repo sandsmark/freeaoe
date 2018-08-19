@@ -22,6 +22,8 @@
 #include <string>
 #include <algorithm>
 #include <cmath>
+#include <vector>
+#include <sstream>
 
 #ifndef _MSC_VER
 #if __has_cpp_attribute(likely) && __has_cpp_attribute(likely)
@@ -42,6 +44,56 @@ inline std::string toLowercase(std::string input)
 {
     std::transform(input.begin(), input.end(), input.begin(), ::tolower);
     return input;
+}
+
+inline std::string stringReplace(std::string string, const std::string &oldValue, const std::string &newValue)
+{
+    for (size_t index = 0;; index += newValue.length()) {
+        index = string.find(oldValue, index);
+
+        if (index == std::string::npos) {
+            break;
+        }
+
+        string.erase(index, oldValue.length());
+        string.insert(index, newValue);
+    }
+
+    return string;
+}
+
+inline std::string trimString(std::string string)
+{
+    string.erase(string.begin(), std::find_if(string.begin(), string.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
+    string.erase(std::find_if(string.rbegin(), string.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), string.end());
+    return string;
+}
+
+inline bool stringStartsWith(const std::string &string, const std::string &prefix)
+{
+    return string.compare(0, prefix.size(), prefix) == 0;
+}
+
+inline std::vector<std::string> stringSplit(const std::string &string, const char delimiter)
+{
+    if (string.find(delimiter) == std::string::npos) {
+        return {string};
+    }
+
+    std::vector<std::string> ret;
+    std::istringstream stream(string);
+    std::string part;
+    while (std::getline(stream, part, delimiter)) {
+        if (part.empty()) {
+            continue;
+        }
+
+        ret.push_back(part);
+    }
+    if (ret.empty()) {
+        return {string};
+    }
+    return ret;
 }
 
 inline bool floatsEquals(const float a, const float b)

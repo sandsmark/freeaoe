@@ -18,15 +18,23 @@
 
 #include "Config.h"
 #include "Logger.h"
+#include "core/Utility.h"
 
 #include <cassert>
 #include <fstream>
 #include <iostream>
 #include <iomanip>
 #include <unordered_set>
+#include <wordexp.h>
 
 #include <filesystem>
 
+static const char *s_registryGroupAoK = "SOFTWARE\\Microsoft\\Microsoft Games\\"
+                                        "Age of Empires\\2.0";
+static const char *s_registryGroupTC = "SOFTWARE\\Microsoft\\Microsoft Games\\"
+                                        "Age of Empires II: The Conquerors Expansion\\1.0";
+
+static const char *s_registryKey = "InstallationDirectory";
 #if defined(WIN32) || defined(__WIN32) || defined(__WIN32__)
 #define WINAPI_FAMILY_PARTITION
 #include <atlbase.h>
@@ -34,11 +42,6 @@
 #include <codecvt>
 #include <knownfolders.h>
 
-
-static const char *s_registryGroupAoK = "SOFTWARE\\Microsoft\\Microsoft Games\\"
-                                        "Age of Empires\\2.0";
-static const char *s_registryGroupTC = "SOFTWARE\\Microsoft\\Microsoft Games\\"
-                                        "Age of Empires II: The Conquerors Expansion\\1.0";
 
 static std::string getRegistryString(const char *regGroup, const char *key)
 {
@@ -63,6 +66,155 @@ static std::string getRegistryString(const char *regGroup, const char *key)
 
     return std::string(outString);
 }
+#else
+
+// Resolves ~ etc.
+static std::string resolvePath(const char *path)
+{
+    if (!path) {
+        return {};
+    }
+
+    wordexp_t expanded;
+    wordexp(path, &expanded, 0);
+    std::string resolved(expanded.we_wordv[0]);
+    wordfree(&expanded);
+
+    return resolved;
+}
+
+static std::string winePath()
+{
+    const std::string prefixPath = resolvePath(getenv("WINEPREFIX"));
+    const std::string defaultPath = resolvePath("~/.wine");
+
+    if (std::filesystem::exists(prefixPath)) {
+        return prefixPath;
+    } else if (std::filesystem::exists(defaultPath)) {
+        return defaultPath;
+    } else {
+        return {};
+    }
+}
+
+// Probably not the most efficient
+static std::string resolvePathCaseInsensitive(const std::string &inputPath, const std::string &basePath = "/")
+{
+    if (!std::filesystem::exists(basePath)) {
+        return {};
+    }
+
+    if (std::filesystem::exists(basePath + '/' + inputPath)) {
+        return basePath + '/' + inputPath;
+    }
+
+    const std::vector<std::string> pathParts = util::stringSplit(inputPath, '/');
+    std::string compareFilename = util::toLowercase(pathParts[0]);
+
+    std::string correct;
+    for (const std::filesystem::directory_entry &entry : std::filesystem::directory_iterator(basePath)) {
+        std::string candidate = entry.path().filename().string();
+        if (util::toLowercase(candidate) == compareFilename) {
+            correct = candidate;
+            break;
+        }
+    }
+
+    if (correct.empty()) {
+        WARN << "Failed to resolve" << basePath << inputPath;
+        return {};
+    }
+
+    if (pathParts.size() > 1) {
+        return resolvePathCaseInsensitive(inputPath.substr(correct.size() + 1), basePath + '/' + correct);
+    }
+
+    return basePath + '/' + correct;
+}
+
+// Dumb parsing of the wine registry file
+static std::string getRegistryString(const std::string &regGroup, const std::string &key)
+{
+    std::string regPath = winePath() + "/system.reg";
+    if (regPath.empty()) {
+        DBG << "failed to find wine folder";
+        return {};
+    }
+
+    std::ifstream file(regPath);
+
+    if (!file.is_open()) {
+        DBG << "Failed to open" << regPath;
+        return {};
+    }
+
+    std::string groupString = '[' + util::stringReplace(regGroup, "\\", "\\\\") + ']';
+    groupString = util::toLowercase(groupString);
+
+    std::string keyString = '"' + util::toLowercase(key) + '"';
+
+    std::string line;
+    bool isInCorrectGroup = false;
+
+    std::string path;
+    while (std::getline(file, line)) {
+        line = util::trimString(line);
+
+        if (line.empty()) {
+            continue;
+        }
+
+        if (line[0] == '[') {
+            if (util::stringStartsWith(util::toLowercase(line), groupString)) {
+                isInCorrectGroup = true;
+            } else {
+                isInCorrectGroup = false;
+            }
+
+            continue;
+        }
+
+        if (!isInCorrectGroup) {
+            continue;
+        }
+
+        if (!util::stringStartsWith(util::toLowercase(line), keyString)) {
+            continue;
+        }
+
+        size_t splitPos = line.find('=');
+        if (splitPos == std::string::npos) {
+            WARN << "Invalid line" << line;
+            continue;
+        }
+
+        path = util::trimString(line.substr(splitPos + 1));
+        path = util::stringReplace(path, "\"", "");
+
+        break;
+    }
+
+    if (path.empty()) {
+        return {};
+    }
+
+    path = util::stringReplace(path, "\\", "/");
+    path = util::stringReplace(path, "//", "/");
+    if (path.empty()) {
+        WARN << "invalid path";
+        return {};
+    }
+
+    if (util::stringStartsWith(path, "C:") || util::stringStartsWith(path, "c:")) {
+        path = path.substr(2);
+    }
+
+    path = winePath() + "/drive_c" + path;
+
+    DBG << "Found game path" << path;
+
+    return resolvePathCaseInsensitive(util::toLowercase(path));
+}
 #endif
 
 void Config::printUsage(const std::string &programName)
@@ -80,6 +232,7 @@ void Config::printUsage(const std::string &programName)
 
     }
 }
+
 
 //------------------------------------------------------------------------------
 bool Config::parseOptions(int argc, char **argv)
@@ -101,14 +254,13 @@ bool Config::parseOptions(int argc, char **argv)
             return false;
         }
     }
-#if defined(WIN32) || defined(__WIN32) || defined(__WIN32__)
+
     if (m_options["game-path"].empty()) {
-        m_options["game-path"] = getRegistryString(s_registryGroupTC, "InstallationDirectory");
+        m_options["game-path"] = getRegistryString(s_registryGroupTC, s_registryKey);
     }
     if (m_options["game-path"].empty()) {
-        m_options["game-path"] = getRegistryString(s_registryGroupAoK, "InstallationDirectory");
+        m_options["game-path"] = getRegistryString(s_registryGroupAoK, s_registryKey);
     }
-#endif
 
     if (m_options != configuredOptions) {
         writeConfigFile(m_filePath);
