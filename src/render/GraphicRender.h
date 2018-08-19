@@ -84,18 +84,20 @@ public:
     void setAngle(float angle);
     float angle() const { return m_angle; }
 
-    GraphicPtr graphic_;
+    int currentFrame;
 
-    int current_frame_;
+    int frameCount() const { return m_graphic ? m_graphic->data_.FrameCount : 0; }
 
 private:
+    GraphicPtr m_graphic;
+
     struct GraphicDelta {
         GraphicRenderPtr graphic;
         ScreenPos offset;
         int angleToDrawOn = -1;
     };
 
-    Time time_last_frame_;
+    Time m_lastFrameTime;
     std::vector<GraphicDelta> m_deltas;
 
     int m_playerId = 2;

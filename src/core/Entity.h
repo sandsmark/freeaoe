@@ -61,7 +61,7 @@ struct Entity: std::enable_shared_from_this<Entity>
     virtual bool update(Time time);
 
 
-    virtual GraphicRender &renderer() { return m_graphics; }
+    virtual GraphicRender &renderer() { return m_renderer; }
 
     static std::shared_ptr<Unit> asUnit(const EntityPtr &entity);
 
@@ -75,7 +75,7 @@ struct Entity: std::enable_shared_from_this<Entity>
 protected:
     Entity(const Type type_, const std::string &name);
 
-    GraphicRender m_graphics;
+    GraphicRender m_renderer;
     GraphicPtr defaultGraphics;
 
 private:

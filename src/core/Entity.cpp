@@ -43,7 +43,7 @@ bool Entity::update(Time time)
 {
     bool updated = false;
 
-    updated = m_graphics.update(time) || updated;
+    updated = m_renderer.update(time) || updated;
 
     return updated && isVisible;
 }
@@ -132,7 +132,7 @@ const std::vector<const genie::Unit *> Unit::creatableUnits()
 
 ScreenRect Unit::rect() const
 {
-    ScreenRect ret = m_graphics.rect();
+    ScreenRect ret = m_renderer.rect();
 
     for (const Annex &annex : annexes) {
         ret += annex.unit->rect();
@@ -145,16 +145,16 @@ void Unit::setCreationProgress(float progress)
 {
     if (m_data->Type == genie::Unit::BuildingType) {
         if (m_creationProgress < m_data->Creatable.TrainTime && progress >= m_data->Creatable.TrainTime) {
-            m_graphics.setGraphic(defaultGraphics);
+            m_renderer.setGraphic(defaultGraphics);
         } else if (m_creationProgress == m_data->Creatable.TrainTime && progress < m_data->Creatable.TrainTime) {
-            m_graphics.setGraphic(AssetManager::Inst()->getGraphic(m_data->Building.ConstructionGraphicID));
+            m_renderer.setGraphic(AssetManager::Inst()->getGraphic(m_data->Building.ConstructionGraphicID));
         }
     }
 
     m_creationProgress = std::min(progress, float(m_data->Creatable.TrainTime));
 
     if (m_data->Type == genie::Unit::BuildingType && progress < m_data->Creatable.TrainTime) {
-        m_graphics.setAngle(M_PI_2 + 2. * M_PI * (creationProgress()));
+        m_renderer.setAngle(M_PI_2 + 2. * M_PI * (creationProgress()));
     }
 }
 
@@ -201,7 +201,7 @@ void Unit::setUnitData(const genie::Unit &data_)
         WARN << "Failed to load default graphics";
     }
 
-    m_graphics.setGraphic(defaultGraphics);
+    m_renderer.setGraphic(defaultGraphics);
 }
 
 int Unit::taskGraphicId(const genie::Task::ActionTypes taskType, const IAction::UnitState state)
@@ -231,7 +231,7 @@ int Unit::taskGraphicId(const genie::Task::ActionTypes taskType, const IAction::
 
 void Unit::setAngle(const float angle)
 {
-    m_graphics.setAngle(angle);
+    m_renderer.setAngle(angle);
 }
 
 void Unit::queueAction(const ActionPtr &action)
@@ -247,7 +247,7 @@ void Unit::queueAction(const ActionPtr &action)
 void Unit::setCurrentAction(const ActionPtr &action)
 {
     if (m_currentAction && !action) {
-        m_graphics.setGraphic(defaultGraphics);
+        m_renderer.setGraphic(defaultGraphics);
     }
 
     m_currentAction = action;
@@ -258,16 +258,16 @@ void Unit::setCurrentAction(const ActionPtr &action)
 
     switch (action->type) {
     case IAction::Type::Move:
-        m_graphics.setGraphic(movingGraphics);
+        m_renderer.setGraphic(movingGraphics);
         break;
     case IAction::Type::Build:
-        m_graphics.setGraphic(AssetManager::Inst()->getGraphic(taskGraphicId(genie::Task::Build, action->unitState())));
+        m_renderer.setGraphic(AssetManager::Inst()->getGraphic(taskGraphicId(genie::Task::Build, action->unitState())));
         break;
     case IAction::Type::Gather:
-        m_graphics.setGraphic(AssetManager::Inst()->getGraphic(taskGraphicId(genie::Task::GatherRebuild, action->unitState())));
+        m_renderer.setGraphic(AssetManager::Inst()->getGraphic(taskGraphicId(genie::Task::GatherRebuild, action->unitState())));
         break;
     default:
-        m_graphics.setGraphic(defaultGraphics);
+        m_renderer.setGraphic(defaultGraphics);
     }
 }
 
@@ -275,7 +275,7 @@ void Unit::removeAction(IAction *action)
 {
     if (m_currentAction.get() == action) {
         m_currentAction.reset();
-        m_graphics.setGraphic(defaultGraphics);
+        m_renderer.setGraphic(defaultGraphics);
 
         if (!m_actionQueue.empty()) {
             DBG << "changing action to queued one";
@@ -305,15 +305,15 @@ void Unit::clearActionQueue()
 MoveTargetMarker::MoveTargetMarker() :
     Entity(Type::MoveTargetMarker, "Move target marker")
 {
-    m_graphics.setGraphic(AssetManager::Inst()->getGraphic(2961));
+    m_renderer.setGraphic(AssetManager::Inst()->getGraphic(2961));
 
-    m_graphics.current_frame_ = m_graphics.graphic_->data_.FrameCount - 1; // don't play immediately
+    m_renderer.currentFrame = m_renderer.frameCount() - 1; // don't play immediately
 }
 
 void MoveTargetMarker::moveTo(const MapPos &pos)
 {
     m_position = pos;
-    m_graphics.current_frame_ = 0;
+    m_renderer.currentFrame = 0;
     m_isRunning = true;
 }
 
@@ -325,7 +325,7 @@ bool MoveTargetMarker::update(Time time)
 
     bool updated = Entity::update(time);
 
-    if (m_graphics.current_frame_ >= m_graphics.graphic_->data_.FrameCount - 1) {
+    if (m_renderer.currentFrame >= m_renderer.frameCount() - 1) {
         m_isRunning = false;
     }
 

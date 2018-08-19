@@ -30,8 +30,8 @@ const sf::Texture GraphicRender::nullImage;
 
 GraphicRender::GraphicRender()
 {
-    current_frame_ = 0;
-    time_last_frame_ = 0;
+    currentFrame = 0;
+    m_lastFrameTime = 0;
 }
 
 GraphicRender::~GraphicRender()
@@ -42,54 +42,54 @@ bool GraphicRender::update(Time time)
 {
     bool updated = false;
     for (GraphicDelta &delta : m_deltas) {
-        if (delta.angleToDrawOn >= 0 && delta.graphic->graphic_->angleToOrientation(m_angle) != delta.angleToDrawOn) {
+        if (delta.angleToDrawOn >= 0 && delta.graphic->m_graphic->angleToOrientation(m_angle) != delta.angleToDrawOn) {
             continue;
         }
         updated = delta.graphic->update(time) || updated;
     }
 
-    if (!graphic_) {
+    if (!m_graphic) {
         return updated;
     }
-    if (!graphic_->getFrameRate()) {
-        return updated;
-    }
-
-    if (graphic_->runOnce() && current_frame_ >= graphic_->data_.FrameCount - 1) {
+    if (!m_graphic->getFrameRate()) {
         return updated;
     }
 
-    int newFrame = current_frame_;
-
-    Time elapsed = time - time_last_frame_;
-
-
-    if (newFrame >= graphic_->data_.FrameCount - 1 && elapsed < graphic_->data_.ReplayDelay / 0.0015) {
+    if (m_graphic->runOnce() && currentFrame >= m_graphic->data_.FrameCount - 1) {
         return updated;
     }
 
-    if (time_last_frame_ == 0) {
-        time_last_frame_ = time;
+    int newFrame = currentFrame;
+
+    Time elapsed = time - m_lastFrameTime;
+
+
+    if (newFrame >= m_graphic->data_.FrameCount - 1 && elapsed < m_graphic->data_.ReplayDelay / 0.0015) {
+        return updated;
+    }
+
+    if (m_lastFrameTime == 0) {
+        m_lastFrameTime = time;
         newFrame = 0;
     } else {
-        float framerate = graphic_->getFrameRate();
+        float framerate = m_graphic->getFrameRate();
 
         if (elapsed > framerate / 0.0015) {
-            if (newFrame < graphic_->data_.FrameCount - 1) {
+            if (newFrame < m_graphic->data_.FrameCount - 1) {
                 newFrame++;
             } else {
                 newFrame = 0;
             }
 
-            time_last_frame_ = time;
+            m_lastFrameTime = time;
         }
     }
 
-    if (newFrame != current_frame_) {
+    if (newFrame != currentFrame) {
         updated = true;
     }
 
-    current_frame_ = newFrame;
+    currentFrame = newFrame;
 
     return updated;
 }
@@ -97,35 +97,35 @@ bool GraphicRender::update(Time time)
 void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType renderpass)
 {
     for (const GraphicDelta &delta : m_deltas) {
-        if (delta.angleToDrawOn >= 0 && delta.graphic->graphic_->angleToOrientation(m_angle) != delta.angleToDrawOn) {
+        if (delta.angleToDrawOn >= 0 && delta.graphic->m_graphic->angleToOrientation(m_angle) != delta.angleToDrawOn) {
             continue;
         }
 
         delta.graphic->render(renderTarget, screenPos + delta.offset, renderpass);
     }
 
-    if (graphic_ && graphic_->isValid()) {
+    if (m_graphic && m_graphic->isValid()) {
         sf::Sprite sprite;
         sf::BlendMode blendMode;
 
         switch(renderpass) {
         case RenderType::Base:
-            sprite.setTexture(graphic_->texture(current_frame_, m_angle, m_playerId, ImageType::Base));
+            sprite.setTexture(m_graphic->texture(currentFrame, m_angle, m_playerId, ImageType::Base));
             break;
         case RenderType::Outline:
-            sprite.setTexture(graphic_->texture(current_frame_, m_angle, m_playerId, ImageType::Outline));
+            sprite.setTexture(m_graphic->texture(currentFrame, m_angle, m_playerId, ImageType::Outline));
             blendMode = sf::BlendAlpha;
             blendMode.alphaSrcFactor = sf::BlendMode::DstAlpha;
             break;
         case RenderType::ConstructAvailable:
-            sprite.setTexture(graphic_->texture(current_frame_, m_angle, m_playerId, ImageType::Construction));
+            sprite.setTexture(m_graphic->texture(currentFrame, m_angle, m_playerId, ImageType::Construction));
             break;
         case RenderType::Shadow:
         case RenderType::ConstructUnavailable:
             break;
         }
 
-        sprite.setPosition(screenPos - graphic_->getHotspot(current_frame_, m_angle));
+        sprite.setPosition(screenPos - m_graphic->getHotspot(currentFrame, m_angle));
         renderTarget.draw(sprite, blendMode);
     }
 
@@ -133,8 +133,8 @@ void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos scree
 
 void GraphicRender::setGraphic(const GraphicPtr &graphic)
 {
-    graphic_ = graphic;
-    current_frame_ = 0;
+    m_graphic = graphic;
+    currentFrame = 0;
     m_deltas.clear();
 
     if (!graphic) {
@@ -150,8 +150,8 @@ void GraphicRender::setGraphic(const GraphicPtr &graphic)
         delta.graphic = std::make_shared<GraphicRender>();
 
         // Don't use setGraphic, to avoid recursive adding of deltas
-        delta.graphic->graphic_ =  AssetManager::Inst()->getGraphic(deltaData.GraphicID);
-        if (!delta.graphic->graphic_->isValid()) {
+        delta.graphic->m_graphic =  AssetManager::Inst()->getGraphic(deltaData.GraphicID);
+        if (!delta.graphic->m_graphic->isValid()) {
             continue;
         }
         delta.angleToDrawOn = deltaData.DisplayAngle;
@@ -167,20 +167,20 @@ void GraphicRender::setGraphic(const GraphicPtr &graphic)
 
 ScreenRect GraphicRender::rect() const
 {
-    if (!graphic_ || !graphic_->isValid()) {
+    if (!m_graphic || !m_graphic->isValid()) {
         return ScreenRect();
     }
 
     ScreenRect ret;
-    const ScreenPos hotspot = graphic_->getHotspot(current_frame_, m_angle);
+    const ScreenPos hotspot = m_graphic->getHotspot(currentFrame, m_angle);
     ret.x = -hotspot.x;
     ret.y = -hotspot.y;
-    const sf::Vector2u size = graphic_->size(current_frame_, m_angle);
+    const sf::Vector2u size = m_graphic->size(currentFrame, m_angle);
     ret.width = size.x;
     ret.height = size.y;
 
     for (const GraphicDelta &delta : m_deltas) {
-        if (delta.angleToDrawOn >= 0 && delta.graphic->graphic_->angleToOrientation(m_angle) != delta.angleToDrawOn) {
+        if (delta.angleToDrawOn >= 0 && delta.graphic->m_graphic->angleToOrientation(m_angle) != delta.angleToDrawOn) {
             continue;
         }
 
