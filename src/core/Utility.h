@@ -24,6 +24,7 @@
 #include <cmath>
 #include <vector>
 #include <sstream>
+#include <cctype>
 
 #ifndef _MSC_VER
 #if __has_cpp_attribute(likely) && __has_cpp_attribute(likely)
