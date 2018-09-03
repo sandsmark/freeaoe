@@ -268,6 +268,8 @@ std::shared_ptr<MoveOnMap> MoveOnMap::moveUnitTo(const Unit::Ptr &unit, MapPos d
     std::shared_ptr<MoveOnMap> action (new MoveOnMap(destination, map, unit, unitManager));
 
 
+    DBG << "moving to" << destination;
+
     action->m_terrainMoveMultiplier = DataManager::Inst().getTerrainRestriction(unit->data()->TerrainRestriction).PassableBuildableDmgMultiplier;
     action->speed_ = unit->data()->Speed;
 

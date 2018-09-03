@@ -68,17 +68,17 @@ struct LogPrinter
         (*m_refs)++;
     }
 
-    inline LogPrinter &operator<<(const char *text) { std::cout << text << ' '; return *this; }
-    inline LogPrinter &operator<<(const char c) { std::cout << c << ' '; return *this; }
-    inline LogPrinter &operator<<(const uint8_t num) { std::cout << int(num) << ' '; return *this; }
-    inline LogPrinter &operator<<(const int8_t num) { std::cout << int(num) << ' '; return *this; }
-    inline LogPrinter &operator<<(const uint64_t num) { std::cout << num << ' '; return *this; }
-    inline LogPrinter &operator<<(const int64_t num) { std::cout << num << ' '; return *this; }
-    inline LogPrinter &operator<<(const uint32_t num) { std::cout << num << ' '; return *this; }
-    inline LogPrinter &operator<<(const int32_t num) { std::cout << num << ' '; return *this; }
-    inline LogPrinter &operator<<(const double num) { std::cout << num << ' '; return *this; }
-    inline LogPrinter &operator<<(const bool b) { std::cout << (b ? "true " : "false "); return *this; }
-    inline LogPrinter &operator<<(const std::string &str) { std::cout << '\'' << str << "' "; return *this; }
+    inline LogPrinter &operator<<(const char *text) { std::cout << text << separator; return *this; }
+    inline LogPrinter &operator<<(const char c) { std::cout << c << separator; return *this; }
+    inline LogPrinter &operator<<(const uint8_t num) { std::cout << int(num) << separator; return *this; }
+    inline LogPrinter &operator<<(const int8_t num) { std::cout << int(num) << separator; return *this; }
+    inline LogPrinter &operator<<(const uint64_t num) { std::cout << num << separator; return *this; }
+    inline LogPrinter &operator<<(const int64_t num) { std::cout << num << separator; return *this; }
+    inline LogPrinter &operator<<(const uint32_t num) { std::cout << num << separator; return *this; }
+    inline LogPrinter &operator<<(const int32_t num) { std::cout << num << separator; return *this; }
+    inline LogPrinter &operator<<(const double num) { std::cout << num << separator; return *this; }
+    inline LogPrinter &operator<<(const bool b) { std::cout << (b ? "true " : "false ") << separator; return *this; }
+    inline LogPrinter &operator<<(const std::string &str) { std::cout << '\'' << str << "'" << separator; return *this; }
 
     ~LogPrinter()
     {
@@ -95,6 +95,7 @@ struct LogPrinter
         }
     }
 
+    const char *separator = " ";
 
 private:
     const char *m_funcName = nullptr;
