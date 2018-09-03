@@ -14,11 +14,18 @@ bool LanguageManager::initialize(const std::string &dataPath)
 {
     std::string filename;
     try {
-        loadLangFile(dataPath + "language.dll");
-        loadLangFile(dataPath + "language_x1.dll");
-        loadLangFile(dataPath + "language_x1_p1.dll");
+        filename = dataPath + "language.dll";
+        loadLangFile(filename);
+        filename = dataPath + "language_x1.dll";
+        loadLangFile(filename);
+        filename = dataPath + "language_x1_p1.dll";
+        loadLangFile(filename);
     } catch (const std::exception &error) {
         WARN << "Failed to load language file" << filename << error.what();
+        if (!m_langFiles.empty()) {
+            WARN << "got at least one file, continoung";
+            return true;
+        }
         return false;
     }
 
