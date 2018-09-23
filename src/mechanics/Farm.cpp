@@ -4,6 +4,7 @@
 #include "global/Constants.h"
 #include <SFML/Graphics/Sprite.hpp>
 #include "mechanics/Player.h"
+#include "core/Utility.h"
 #include "Map.h"
 
 Farm::Farm(const genie::Unit &data_, const std::shared_ptr<Player> &player, const std::shared_ptr<Civilization> &civilization, const std::shared_ptr<Map> &map) :
@@ -21,18 +22,45 @@ void Farm::setCreationProgress(float progress)
 
     m_creationProgress = std::min(progress, float(data()->Creatable.TrainTime));
 
-    int terrainToSet = -1;
-
     if (progress >= data()->Creatable.TrainTime) {
-        terrainToSet = FarmFinished;
+        setTerrain(FarmFinished);
     } else if (progress >= 2 * data()->Creatable.TrainTime / 3) {
-        terrainToSet = FarmConstruct2;
+        setTerrain(FarmConstruct2);
     } else if (progress > data()->Creatable.TrainTime / 3) {
-        terrainToSet = FarmConstruct1;
+        setTerrain(FarmConstruct1);
     } else {
-        terrainToSet = FarmConstruct0;
+        setTerrain(FarmConstruct0);
+    }
+}
+
+bool Farm::update(Time time)
+{
+    bool updated = Unit::update(time);
+
+    if (util::floatsEquals(resources[genie::ResourceType::FoodStorage], 0)) {
+        setTerrain(FarmDead);
     }
 
+    if (m_updated) {
+        m_updated = false;
+        return true;
+    }
+
+    return updated;
+}
+
+ScreenRect Farm::rect() const
+{
+    ScreenRect rect;
+    rect.x = -Constants::TILE_SIZE_HORIZONTAL;
+    rect.y = -Constants::TILE_SIZE_VERTICAL;
+    rect.width = Constants::TILE_SIZE_HORIZONTAL * 2;
+    rect.height = Constants::TILE_SIZE_VERTICAL * 2;
+    return rect;
+}
+
+void Farm::setTerrain(const Farm::TerrainTypes terrainToSet)
+{
     if (terrainToSet == m_currentTerrain) {
         return;
     }
@@ -55,28 +83,6 @@ void Farm::setCreationProgress(float progress)
 
     m_currentTerrain = terrainToSet;
     m_updated = true;
-}
-
-bool Farm::update(Time time)
-{
-    bool updated = Unit::update(time);
-
-    if (m_updated) {
-        m_updated = false;
-        return true;
-    }
-
-    return updated;
-}
-
-ScreenRect Farm::rect() const
-{
-    ScreenRect rect;
-    rect.x = -Constants::TILE_SIZE_HORIZONTAL;
-    rect.y = -Constants::TILE_SIZE_VERTICAL;
-    rect.width = Constants::TILE_SIZE_HORIZONTAL * 2;
-    rect.height = Constants::TILE_SIZE_VERTICAL * 2;
-    return rect;
 }
 
 FarmRender::FarmRender(const Size &size) :

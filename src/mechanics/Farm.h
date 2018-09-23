@@ -26,8 +26,8 @@ class Farm : public Unit
         FarmConstruct0 = 29,
         FarmConstruct1 = 30,
         FarmConstruct2 = 31,
-
     };
+
 public:
     Farm(const genie::Unit &data_, const std::shared_ptr<Player> &player, const std::shared_ptr<Civilization> &civilization, const std::shared_ptr<Map> &map);
     void setCreationProgress(float progress) override;
@@ -37,6 +37,8 @@ public:
     ScreenRect rect() const override;
 
 private:
+    void setTerrain(const TerrainTypes terrainToSet);
+
     int m_currentTerrain = -1;
     bool m_updated = true;
     FarmRender m_farmRenderer;

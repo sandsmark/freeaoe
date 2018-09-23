@@ -128,8 +128,7 @@ MapPos ActionMove::findClosestWalkableBorder(const MapPos &target, int coarsenes
     const int incrD = 2 *(distanceV - distanceU);	/* Δd for diagonal increments */
 
     int x = x0, y = y0;
-    int requiredLengthX = unit->data()->Size.x * Constants::TILE_SIZE + coarseness;
-    int requiredLengthY = unit->data()->Size.y * Constants::TILE_SIZE + coarseness;
+
     do {
         if (d < 0) {
             /* choose straight (u direction) */
@@ -140,26 +139,16 @@ MapPos ActionMove::findClosestWalkableBorder(const MapPos &target, int coarsenes
             v = v+1;
             x += vincrX;
             y += vincrY;
-
-            if (isPassable(x, y)) {
-                requiredLengthX -= std::abs(vincrX);
-                requiredLengthY -= std::abs(vincrY);
-            }
         }
 
         u = u+1;
         x += uincrX;
         y += uincrY;
 
-        if (isPassable(x, y)) {
-            requiredLengthX -= std::abs(uincrX);
-            requiredLengthY -= std::abs(uincrY);
+        if (isPassable(x, y, coarseness)) {
+            break;
         }
-    } while ((requiredLengthX > 0 || requiredLengthY > 0) && u <= uend);
-
-    if (requiredLengthX > 0 || requiredLengthY > 0) {
-        return target;
-    }
+    } while (u <= uend);
 
 
     return MapPos(x, y);

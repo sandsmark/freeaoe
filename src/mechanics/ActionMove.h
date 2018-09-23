@@ -36,7 +36,6 @@ public:
     UpdateResult update(Time time) override;
 
     static std::shared_ptr<ActionMove> moveUnitTo(const Unit::Ptr &unit, MapPos destination, const MapPtr &map, UnitManager *unitManager);
-    static std::shared_ptr<ActionMove> moveUnitTo(Unit::Ptr unit, const EntityPtr &targetEntity, MapPtr map, UnitManager *unitManager);
 
 private:
     ActionMove(MapPos destination, const MapPtr &map, const Unit::Ptr &unit, UnitManager *unitManager);
