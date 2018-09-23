@@ -62,7 +62,7 @@ struct MapTile
 
     std::vector<sf::Texture> textures;
     std::vector<Blend> blends;
-    std::vector<EntityPtr> entities;
+    std::vector<std::weak_ptr<Entity>> entities;
 
     TileSlopes slopes;
 };

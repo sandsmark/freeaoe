@@ -97,6 +97,7 @@ set(MECHANICS_SRC
     src/mechanics/UnitFactory.cpp
     src/mechanics/UnitManager.cpp
     src/mechanics/ActionGather.cpp
+    src/mechanics/Unit.cpp
     )
 
 set(RENDER_SRC

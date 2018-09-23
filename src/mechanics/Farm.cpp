@@ -7,8 +7,7 @@
 #include "Map.h"
 
 Farm::Farm(const genie::Unit &data_, const std::shared_ptr<Player> &player, const std::shared_ptr<Civilization> &civilization, const std::shared_ptr<Map> &map) :
-    Unit(data_, player, civilization),
-    m_map(map),
+    Unit(data_, player, civilization, map),
     m_farmRenderer(Size(data_.Size))
 {
     m_farmRenderer.setGraphic(defaultGraphics);

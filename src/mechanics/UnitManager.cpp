@@ -50,7 +50,7 @@ void UnitManager::add(const Unit::Ptr &unit)
 
 bool UnitManager::init()
 {
-    m_moveTargetMarker = std::make_shared<MoveTargetMarker>();
+    m_moveTargetMarker = std::make_shared<MoveTargetMarker>(m_map);
 
     return true;
 }
@@ -253,8 +253,8 @@ void UnitManager::onRightClick(const ScreenPos &screenPos, const CameraPtr &came
 void UnitManager::onMouseMove(const MapPos &mapPos)
 {
     if (m_buildingToPlace) {
-        m_buildingToPlace->setPosition(mapPos, m_map);
-        m_buildingToPlace->snapPositionToGrid(m_map);
+        m_buildingToPlace->setPosition(mapPos);
+        m_buildingToPlace->snapPositionToGrid();
     }
 }
 

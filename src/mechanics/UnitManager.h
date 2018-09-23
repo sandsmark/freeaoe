@@ -18,7 +18,7 @@
 
 #pragma once
 #include <unordered_set>
-#include <core/Entity.h>
+#include "Unit.h"
 
 #include "Map.h"
 class SfmlRenderTarget;

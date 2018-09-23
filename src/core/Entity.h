@@ -18,14 +18,7 @@
 
 #pragma once
 
-#include <map>
-#include <deque>
-#include "Utility.h"
 #include "render/GraphicRender.h"
-
-#include "IAction.h"
-#include <genie/dat/UnitCommand.h>
-#include "ResourceMap.h"
 
 namespace genie {
 class Unit;
@@ -33,8 +26,6 @@ class Unit;
 
 class Map;
 class GraphicRender;
-class Civilization;
-struct Player;
 
 struct Unit;
 struct Entity;
@@ -64,19 +55,21 @@ struct Entity: std::enable_shared_from_this<Entity>
     virtual GraphicRender &renderer() { return m_renderer; }
 
     static std::shared_ptr<Unit> asUnit(const EntityPtr &entity);
+    static std::shared_ptr<Unit> asUnit(const std::weak_ptr<Entity> &entity);
 
     const std::string debugName;
 
     bool isVisible = false;
 
     const MapPos &position() const { return m_position; }
-    void setPosition(const MapPos &pos, const MapPtr &map);
+    void setPosition(const MapPos &pos);
 
 protected:
-    Entity(const Type type_, const std::string &name);
+    Entity(const Type type_, const std::string &name, const MapPtr &map_);
 
     GraphicRender m_renderer;
     GraphicPtr defaultGraphics;
+    std::weak_ptr<Map> m_map;
 
 private:
     friend struct MoveTargetMarker;
@@ -87,7 +80,7 @@ struct MoveTargetMarker : public Entity
 {
     typedef std::shared_ptr<MoveTargetMarker> Ptr;
 
-    MoveTargetMarker();
+    MoveTargetMarker(const MapPtr &map);
 
     void moveTo(const MapPos &pos);
 
@@ -96,136 +89,3 @@ struct MoveTargetMarker : public Entity
 private:
     bool m_isRunning = false;
 };
-
-struct Task {
-    Task(const genie::Task &t, uint16_t id) : data(&t), unitId(id) {}
-    Task() = default;
-
-    const genie::Task *data = nullptr;
-    uint16_t unitId = 0; // for task group swapping
-
-    bool operator==(const Task &other) const {
-        return unitId == other.unitId && (
-                (data && other.data && data->ID == other.data->ID) ||
-                (data == other.data)
-        );
-    }
-};
-
-struct Unit : public Entity
-{
-    enum HardcodedTypes {
-        TownCenter = 109,
-
-        FemaleVillager = 293,
-
-        MaleVillager = 83,
-        MaleLumberjack = 123,
-        MaleStoneMiner = 124,
-        MaleHunter = 122,
-        MaleFarmer = 259,
-        MaleForager = 120,
-        MaleFisherman = 56,
-        MaleGoldMiner = 579,
-        MaleShepherd = 592,
-        MaleBuilder = 118,
-        MaleRepairer = 156,
-
-        Docket = 45,
-        Castle = 82,
-        Market = 84,
-
-        ArcheryRange = 87,
-        Barracks = 12,
-        Monastery = 104,
-        SiegeWorkshop = 49,
-        Stable = 101,
-
-        Dock = 45,
-
-        Mill = 68,
-        LumberCamp = 562,
-        MiningCamp = 584,
-
-        PalisadeWall = 72,
-        StoneWall = 117,
-        FortifiedWall = 155,
-        Gate = 487,
-
-        Farm = 50,
-
-        Cobra = 748,
-        VMDL = 206,
-        FuriousTheMonkeyBoy = 860,
-    };
-
-    typedef std::shared_ptr<Unit> Ptr;
-
-    struct Annex {
-        Unit::Ptr unit;
-        MapPos offset;
-    };
-
-    Unit() = delete;
-    Unit(const Unit &unit) = delete;
-
-    Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, const std::shared_ptr<Civilization> &civilization_);
-
-    void setAngle(const float angle);
-
-    void queueAction(const ActionPtr &action);
-    void setCurrentAction(const ActionPtr &action);
-    void clearActionQueue();
-    const ActionPtr &currentAction() const { return m_currentAction; }
-
-    void snapPositionToGrid(const MapPtr &map);
-
-    bool update(Time time) override;
-
-    const std::vector<const genie::Unit *> creatableUnits();
-
-    bool selected = false;
-    int playerId;
-    std::weak_ptr<Player> player;
-    int constructors = 0;
-    std::vector<Annex> annexes;
-    std::shared_ptr<Civilization> civilization;
-
-    ResourceMap resources;
-
-    virtual ScreenRect rect() const;
-
-    virtual void setCreationProgress(float progress);
-    void increaseCreationProgress(float progress);
-    float creationProgress() const;
-
-    float hitPoints = 0;
-
-    int garrisonedUnits = 0;
-
-    std::unordered_set<Task> availableActions();
-
-    void setUnitData(const genie::Unit &data_);
-    const genie::Unit *data() const {return m_data; }
-
-protected:
-    void removeAction(const ActionPtr &action);
-    int taskGraphicId(const genie::Task::ActionTypes taskType, const IAction::UnitState state);
-
-    const genie::Unit *m_data = nullptr;
-    GraphicPtr movingGraphics;
-    ActionPtr m_currentAction;
-    std::deque<ActionPtr> m_actionQueue;
-    float m_creationProgress = 0.f;
-};
-
-namespace std {
-
-template<> struct hash<Task>
-{
-    size_t operator()(const Task &b) const {
-        return hash<int16_t>()(b.data->ID) ^ hash<uint16_t>()(b.unitId);
-    }
-};
-}
-

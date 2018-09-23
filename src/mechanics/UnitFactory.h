@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "../core/Entity.h"
-#include "mechanics/Player.h"
+#include "Unit.h"
+#include "Player.h"
 
 class UnitFactory
 {

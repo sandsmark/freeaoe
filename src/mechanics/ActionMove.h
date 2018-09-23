@@ -19,7 +19,7 @@
 #pragma once
 
 #include "core/IAction.h"
-#include "core/Entity.h"
+#include "Unit.h"
 #include "Map.h"
 #include <genie/dat/TerrainRestriction.h>
 

@@ -23,6 +23,7 @@
 #include <queue>
 #include "resource/DataManager.h"
 #include "global/Constants.h"
+#include "core/Utility.h"
 
 namespace { // anonymous namespace, don't export this
 struct PathPoint {
@@ -247,7 +248,7 @@ IAction::UpdateResult MoveOnMap::update(Time time)
     unit->setAngle(std::atan2((targetScreen.y - sourceScreen.y), (targetScreen.x - sourceScreen.x)));
     newPos.z = m_map->elevationAt(newPos);
 
-    unit->setPosition(newPos, m_map);
+    unit->setPosition(newPos);
 
     m_prevTime = time;
 
@@ -425,7 +426,7 @@ bool MoveOnMap::isPassable(const int x, const int y)
                 continue;
             }
 
-            for (const EntityPtr &entity : tile.entities) {
+            for (const std::weak_ptr<Entity> &entity : tile.entities) {
                 Unit::Ptr otherUnit = Entity::asUnit(entity);
                 if (!otherUnit) {
                     continue;

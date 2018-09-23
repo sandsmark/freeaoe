@@ -18,6 +18,7 @@
 
 #include "Map.h"
 #include "global/Constants.h"
+#include "core/Utility.h"
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <resource/AssetManager.h>
@@ -228,9 +229,9 @@ void Map::removeEntityAt(unsigned int col, unsigned int row, const EntityPtr &en
 {
     MapTile &tile = getTileAt(col, row);
 
-    std::vector<EntityPtr>::iterator it=tile.entities.begin();
+    std::vector<std::weak_ptr<Entity>>::iterator it=tile.entities.begin();
     for (;it!=tile.entities.end(); it++) {
-        if ((*it)->id == entity->id) {
+        if ((*it).lock()->id == entity->id) {
             tile.entities.erase(it);
             break;
         }

@@ -47,10 +47,10 @@ Unit::Ptr UnitFactory::createUnit(int ID, const MapPos &position, const Player::
     if (ID == Unit::Farm) {
         unit = std::make_shared<Farm>(gunit, owner, owner->civ, map);
     } else {
-        unit = std::make_shared<Unit>(gunit, owner, owner->civ);
+        unit = std::make_shared<Unit>(gunit, owner, owner->civ, map);
     }
 
-    unit->setPosition(position, map);
+    unit->setPosition(position);
 
     for (const genie::Unit::ResourceStorage &res : gunit.ResourceStorages) {
         if (res.Type == -1) {
@@ -67,7 +67,7 @@ Unit::Ptr UnitFactory::createUnit(int ID, const MapPos &position, const Player::
     }
 
     if (gunit.Type >= genie::Unit::BuildingType) {
-        unit->snapPositionToGrid(map);
+        unit->snapPositionToGrid();
 
         if (gunit.Building.StackUnitID >= 0) {
             Unit::Annex annex;

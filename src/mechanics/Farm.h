@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/Entity.h"
+#include "Unit.h"
 
 class Map;
 
@@ -37,7 +37,6 @@ public:
     ScreenRect rect() const override;
 
 private:
-    std::weak_ptr<Map> m_map;
     int m_currentTerrain = -1;
     bool m_updated = true;
     FarmRender m_farmRenderer;
