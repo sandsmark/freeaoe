@@ -44,7 +44,7 @@ private:
     MapPos findClosestWalkableBorder(const MapPos &target, int coarseness);
 
     std::vector<MapPos> findPath(MapPos start, MapPos end, int coarseness);
-    bool isPassable(const int x, const int y);
+    bool isPassable(const int x, const int y, int coarseness = 0);
 
     void updatePath();
 

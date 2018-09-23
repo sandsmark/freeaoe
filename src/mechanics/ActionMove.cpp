@@ -220,10 +220,11 @@ IAction::UpdateResult MoveOnMap::update(Time time)
             m_path = findPath(unit->position(), dest_, 20);
             if (m_path.empty()) {
                 target_reached = true;
+                return UpdateResult::Completed;
             }
         }
 
-        return UpdateResult::Completed;
+        return UpdateResult::NotUpdated;
     }
 
     const float direction = std::atan2(nextPos.y - unit->position().y, nextPos.x - unit->position().x);
@@ -232,17 +233,32 @@ IAction::UpdateResult MoveOnMap::update(Time time)
     newPos.x += std::cos(direction) * movement;
     newPos.y += std::sin(direction) * movement;
 
+    // Try to wiggle past
+    if (!isPassable(newPos.x, newPos.y)) {
+        newPos = unit->position();
+        movement = std::min(movement, std::hypot(nextPos.x - newPos.x, nextPos.y - newPos.y));
+        newPos.x += std::cos(direction + M_PI_2/2) * movement;
+        newPos.y += std::sin(direction + M_PI_2/2) * movement;
+    }
+    // Try to wiggle past, other direction
+    if (!isPassable(newPos.x, newPos.y)) {
+        newPos = unit->position();
+        movement = std::min(movement, std::hypot(nextPos.x - newPos.x, nextPos.y - newPos.y));
+        newPos.x += std::cos(direction - M_PI_2/2) * movement;
+        newPos.y += std::sin(direction - M_PI_2/2) * movement;
+    }
+
     if (!isPassable(newPos.x, newPos.y)) {
         WARN << "can't move forward, repathing";
 
-        std::vector<MapPos> partial = findPath(unit->position(), nextPos, std::max(speed_, 1.f));
+        std::vector<MapPos> partial = findPath(unit->position(), nextPos, 1);
         if (partial.size() < 2) {
             WARN << "failed to find intermediary path";
             target_reached = true;
             return UpdateResult::Completed;
         } else {
             m_path.insert(m_path.begin(), ++partial.begin(), partial.end());
-            return UpdateResult::NotUpdated;
+            return UpdateResult::Updated;
         }
     }
 
@@ -332,7 +348,7 @@ std::vector<MapPos> MoveOnMap::findPath(MapPos start, MapPos end, int coarseness
                 const int ny = pathPoint.y + dy;
                 PathPoint neighbor(nx, ny);
 
-                if (!isPassable(nx * coarseness, ny * coarseness)) {
+                if (!isPassable(nx * coarseness, ny * coarseness, coarseness)) {
                     visited.insert(neighbor);
                     continue;
                 }
@@ -403,7 +419,7 @@ std::vector<MapPos> MoveOnMap::findPath(MapPos start, MapPos end, int coarseness
 
 }
 
-bool MoveOnMap::isPassable(const int x, const int y)
+bool MoveOnMap::isPassable(const int x, const int y, int coarseness)
 {
     if (IS_UNLIKELY(x < 0 || y < 0)) {
         return false;
@@ -456,8 +472,8 @@ bool MoveOnMap::isPassable(const int x, const int y)
                     continue;
                 }
 
-                const float xSize = (otherUnit->data()->Size.x + unit->data()->Size.x) * Constants::TILE_SIZE;
-                const float ySize = (otherUnit->data()->Size.y + unit->data()->Size.y) * Constants::TILE_SIZE;
+                const float xSize = (otherUnit->data()->Size.x + unit->data()->Size.x) * Constants::TILE_SIZE + coarseness;
+                const float ySize = (otherUnit->data()->Size.y + unit->data()->Size.y) * Constants::TILE_SIZE + coarseness;
                 const float xDistance = std::abs(otherUnit->position().x - mapPos.x);
                 const float yDistance = std::abs(otherUnit->position().y - mapPos.y);
 
