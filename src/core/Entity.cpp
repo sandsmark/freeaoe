@@ -102,7 +102,16 @@ bool Unit::update(Time time)
     }
 
     if (m_currentAction) {
-        updated = m_currentAction->update(time) || updated;
+        switch(m_currentAction->update(time)) {
+        case IAction::UpdateResult::Completed:
+            removeAction(m_currentAction);
+            break;
+        case IAction::UpdateResult::Updated:
+            updated = true;
+            break;
+        case IAction::UpdateResult::NotUpdated:
+            break;
+        }
     }
 
 
@@ -271,9 +280,9 @@ void Unit::setCurrentAction(const ActionPtr &action)
     }
 }
 
-void Unit::removeAction(IAction *action)
+void Unit::removeAction(const ActionPtr &action)
 {
-    if (m_currentAction.get() == action) {
+    if (action == m_currentAction) {
         m_currentAction.reset();
         m_renderer.setGraphic(defaultGraphics);
 
@@ -286,9 +295,7 @@ void Unit::removeAction(IAction *action)
         }
     } else {
         // fuck stl
-        std::deque<ActionPtr>::iterator it = std::find_if(m_actionQueue.begin(), m_actionQueue.end(), [=](const ActionPtr &p) {
-            return p.get() == action;
-        });
+        std::deque<ActionPtr>::iterator it = std::find(m_actionQueue.begin(), m_actionQueue.end(), action);
 
         if (it != std::end(m_actionQueue)) {
             m_actionQueue.erase(it);

@@ -11,7 +11,7 @@ class ActionDropOff : public IAction
 public:
     ActionDropOff(const Unit::Ptr &unit, const Unit::Ptr &target, const genie::Task *task);
 
-    bool update(Time time) override;
+    UpdateResult update(Time time) override;
     UnitState unitState() const override { return UnitState::Proceeding; }
 
 private:
@@ -24,7 +24,7 @@ class ActionGather : public IAction
 public:
     ActionGather(const Unit::Ptr &unit, const Unit::Ptr &target, const genie::Task *task, UnitManager *unitManager);
 
-    bool update(Time time) override;
+    UpdateResult update(Time time) override;
     UnitState unitState() const override { return UnitState::Proceeding; }
 
 private:

@@ -14,24 +14,22 @@ ActionGather::ActionGather(const Unit::Ptr &unit, const Unit::Ptr &target, const
 
 }
 
-bool ActionGather::update(Time time)
+IAction::UpdateResult ActionGather::update(Time time)
 {
     Unit::Ptr unit = m_unit.lock();
     if (!unit) {
-        WARN << "Unit gone";
-        return true;
+        return UpdateResult::Completed;
     }
 
     Unit::Ptr target = m_target.lock();
     if (!target) {
         WARN << "target gone";
-        unit->removeAction(this);
-        return true;
+        return UpdateResult::Completed;
     }
 
     if (!m_prevTime) {
         m_prevTime = time;
-        return false;
+        return UpdateResult::NotUpdated;
     }
 
     genie::ResourceType inputResource = genie::ResourceType(m_task->ResourceIn);
@@ -59,9 +57,7 @@ bool ActionGather::update(Time time)
             WARN << "failed to find a drop site";
         }
 
-        unit->removeAction(this);
-
-        return true;
+        return UpdateResult::Completed;
     }
 
 
@@ -70,7 +66,7 @@ bool ActionGather::update(Time time)
         Player::Ptr player = unit->player.lock();
         if (!player) {
             WARN << "player gone";
-            return true;
+            return UpdateResult::Completed;
         }
 
         amount *= player->resources[genie::ResourceType(m_task->ResourceMultiplier)];
@@ -84,7 +80,7 @@ bool ActionGather::update(Time time)
     target->resources[resourceType] -= amount;
     unit->resources[resourceType] += amount;
 
-    return false;
+    return UpdateResult::Updated;
 }
 
 Unit::Ptr ActionGather::findDropSite(const Unit::Ptr &unit)
@@ -121,28 +117,26 @@ ActionDropOff::ActionDropOff(const Unit::Ptr &unit, const Unit::Ptr &target, con
 {
 }
 
-bool ActionDropOff::update(Time /*time*/)
+IAction::UpdateResult ActionDropOff::update(Time /*time*/)
 {
     // TODO check if we need to move closer
 
     Unit::Ptr unit = m_unit.lock();
     if (!unit) {
         WARN << "Unit gone";
-        return true;
+        return UpdateResult::Completed;
     }
 
     Unit::Ptr target = m_target.lock();
     if (!target) {
         WARN << "target gone";
-        unit->removeAction(this);
-        return true;
+        return UpdateResult::Completed;
     }
 
     Player::Ptr targetPlayer = target->player.lock();
     if (!targetPlayer) {
         WARN << "player gone";
-        unit->removeAction(this);
-        return true;
+        return UpdateResult::Completed;
     }
 
     genie::ResourceType inputResource = genie::ResourceType(m_task->ResourceIn);
@@ -155,7 +149,5 @@ bool ActionDropOff::update(Time /*time*/)
     targetPlayer->resources[resourceType] += unit->resources[resourceType] ;
     unit->resources[resourceType] = 0;
 
-    unit->removeAction(this);
-
-    return false;
+    return UpdateResult::Completed;
 }

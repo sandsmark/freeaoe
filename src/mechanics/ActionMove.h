@@ -31,7 +31,7 @@ class MoveOnMap : public IAction
 public:
     virtual ~MoveOnMap();
 
-    virtual bool update(Time time);
+    UpdateResult update(Time time) override;
 
     static std::shared_ptr<MoveOnMap> moveUnitTo(const Unit::Ptr &unit, MapPos destination, const MapPtr &map, UnitManager *unitManager);
     static std::shared_ptr<MoveOnMap> moveUnitTo(Unit::Ptr unit, const EntityPtr &targetEntity, MapPtr map, UnitManager *unitManager);

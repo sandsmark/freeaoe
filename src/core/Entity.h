@@ -175,7 +175,6 @@ struct Unit : public Entity
 
     void queueAction(const ActionPtr &action);
     void setCurrentAction(const ActionPtr &action);
-    void removeAction(IAction *action);
     void clearActionQueue();
     const ActionPtr &currentAction() const { return m_currentAction; }
 
@@ -210,6 +209,7 @@ struct Unit : public Entity
     const genie::Unit *data() const {return m_data; }
 
 protected:
+    void removeAction(const ActionPtr &action);
     int taskGraphicId(const genie::Task::ActionTypes taskType, const IAction::UnitState state);
 
     const genie::Unit *m_data = nullptr;

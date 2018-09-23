@@ -50,6 +50,12 @@ public:
         Proceeding
     };
 
+    enum class UpdateResult {
+        Updated,
+        NotUpdated,
+        Completed
+    };
+
     const Type type = Type::None;
 
     virtual UnitState unitState() const { return UnitState::Idle; }
@@ -57,7 +63,7 @@ public:
     virtual ~IAction();
 
     /// @return true if action is done
-    virtual bool update(Time time) = 0;
+    virtual UpdateResult update(Time time) = 0;
 
 protected:
     IAction(const Type type_, const std::shared_ptr<Unit> &unit);

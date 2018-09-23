@@ -10,7 +10,7 @@ public:
     ActionBuild(const Unit::Ptr &builder, const Unit::Ptr &building);
     ~ActionBuild();
 
-    bool update(Time time) override;
+    UpdateResult update(Time time) override;
 
     UnitState unitState() const override;
 

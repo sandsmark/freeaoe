@@ -16,30 +16,27 @@ ActionBuild::~ActionBuild()
     }
 }
 
-bool ActionBuild::update(Time time)
+IAction::UpdateResult ActionBuild::update(Time time)
 {
     Unit::Ptr unit = m_unit.lock();
     if (!unit) {
         WARN << "Unit gone";
-        return true;
+        return UpdateResult::Completed;
     }
 
     Unit::Ptr building = m_targetBuilding.lock();
     if (!building) {
-        unit->removeAction(this);
-        return true;
+        return UpdateResult::Completed;
     }
 
     if (!m_prevTime) {
         m_prevTime = time;
         building->constructors++;
-        return false;
+        return UpdateResult::NotUpdated;
     }
 
     if (building->creationProgress() >= 1.) {
-        DBG << "building already finished";
-        unit->removeAction(this);
-        return true;
+        return UpdateResult::Completed;
     }
 
     float progress = 3. / (building->constructors + 2.);
@@ -50,11 +47,10 @@ bool ActionBuild::update(Time time)
 
     if (building->creationProgress() >= 1.) {
         DBG << "building finished";
-        unit->removeAction(this);
-        return true;
+        return UpdateResult::Completed;
     }
 
-    return false;
+    return UpdateResult::Updated;
 }
 
 IAction::UnitState ActionBuild::unitState() const

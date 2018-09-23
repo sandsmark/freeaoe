@@ -169,24 +169,23 @@ MoveOnMap::~MoveOnMap()
 {
 }
 
-bool MoveOnMap::update(Time time)
+IAction::UpdateResult MoveOnMap::update(Time time)
 {
     std::shared_ptr<Unit> unit = m_unit.lock();
     if (!unit) {
         WARN << "My unit got deleted";
-        return false;
+        return UpdateResult::Completed;
     }
 
     if (!m_prevTime) {
         m_prevTime = time;
         updatePath();
-        return true;
+        return UpdateResult::NotUpdated;
     }
 
     if (target_reached || m_path.empty()) {
         target_reached = true;
-        unit->removeAction(this);
-        return false;
+        return UpdateResult::Completed;
     }
 
     float elapsed = time - m_prevTime;
@@ -204,8 +203,7 @@ bool MoveOnMap::update(Time time)
 
     if (m_path.empty()) {
         target_reached = true;
-        unit->removeAction(this);
-        return false;
+        return UpdateResult::Completed;
     }
 
     MapPos nextPos = m_path.back();
@@ -217,11 +215,10 @@ bool MoveOnMap::update(Time time)
             m_path = findPath(unit->position(), dest_, 20);
             if (m_path.empty()) {
                 target_reached = true;
-                unit->removeAction(this);
             }
         }
 
-        return false;
+        return UpdateResult::Completed;
     }
 
     const float direction = std::atan2(nextPos.y - unit->position().y, nextPos.x - unit->position().x);
@@ -237,11 +234,11 @@ bool MoveOnMap::update(Time time)
         if (partial.size() < 2) {
             WARN << "failed to find intermediary path";
             target_reached = true;
-            unit->removeAction(this);
+            return UpdateResult::Completed;
         } else {
             m_path.insert(m_path.begin(), ++partial.begin(), partial.end());
+            return UpdateResult::NotUpdated;
         }
-        return false;
     }
 
 
@@ -256,10 +253,10 @@ bool MoveOnMap::update(Time time)
 
     if (std::hypot(newPos.x - dest_.x, newPos.y - dest_.y) < movement) {
         target_reached = true;
-        unit->removeAction(this);
+        return UpdateResult::Completed;
     }
 
-    return true;
+    return UpdateResult::Updated;
 }
 
 std::shared_ptr<MoveOnMap> MoveOnMap::moveUnitTo(const Unit::Ptr &unit, MapPos destination, const MapPtr &map, UnitManager *unitManager)
