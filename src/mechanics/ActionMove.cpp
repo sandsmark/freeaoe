@@ -22,7 +22,6 @@
 #include <unordered_set>
 #include <queue>
 #include "resource/DataManager.h"
-#include "global/Constants.h"
 #include "core/Utility.h"
 
 namespace { // anonymous namespace, don't export this
@@ -176,6 +175,11 @@ IAction::UpdateResult MoveOnMap::update(Time time)
     if (!unit) {
         WARN << "My unit got deleted";
         return UpdateResult::Completed;
+    }
+
+    if (m_passableDirty) {
+        m_passable.reset();
+        m_passableCached.reset();
     }
 
     if (!m_prevTime) {
@@ -401,14 +405,26 @@ std::vector<MapPos> MoveOnMap::findPath(MapPos start, MapPos end, int coarseness
 
 bool MoveOnMap::isPassable(const int x, const int y)
 {
+    if (IS_UNLIKELY(x < 0 || y < 0)) {
+        return false;
+    }
     const int tileX = x / Constants::TILE_SIZE;
     const int tileY = y / Constants::TILE_SIZE;
-    if (IS_UNLIKELY(tileX < 0 || tileY < 0 || tileX >= m_map->getCols() || tileY >= m_map->getRows())) {
+    if (IS_UNLIKELY(tileX >= m_map->getCols() || tileY >= m_map->getRows())) {
         return false;
     }
 
+    const unsigned cacheIndex = x  + y * 255u;
+    if (m_passableCached[cacheIndex]) {
+        return m_passable[cacheIndex];
+    }
+
+    m_passableDirty = true;
+    m_passableCached[cacheIndex] = true;
+
     const MapTile &tile = m_map->getTileAt(tileX, tileY);
     if (m_terrainMoveMultiplier[tile.terrainId()] == 0) {
+        m_passable[cacheIndex] = false;
         return false;
     }
 
@@ -446,12 +462,14 @@ bool MoveOnMap::isPassable(const int x, const int y)
                 const float yDistance = std::abs(otherUnit->position().y - mapPos.y);
 
                 if (xDistance < xSize && yDistance < ySize) {
+                    m_passable[cacheIndex] = false;
                     return false;
                 }
             }
         }
     }
 
+    m_passable[cacheIndex] = true;
     return true;
 }
 

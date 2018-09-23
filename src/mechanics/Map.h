@@ -70,6 +70,14 @@ struct MapTile
 class Map
 {
 public:
+    enum MapSize {
+        Tiny = 72,
+        Small = 96,
+        Medium = 120,
+        Large = 144,
+        Huge = 200,
+        Gigantic = 255,
+    };
     /*
    * A tiny-size map? 72 x 72.
    * A small-size map? 96 x 96.
@@ -98,7 +106,7 @@ public:
     void setTileAt(unsigned col, unsigned row, unsigned id);
     void updateTileAt(const int col, const int row, unsigned id);
 
-    void removeEntityAt(unsigned int col, unsigned int row, const EntityPtr &entity);
+    void removeEntityAt(unsigned int col, unsigned int row, const int entityId);
     void addEntityAt(unsigned int col, unsigned int row, const EntityPtr &entity);
 
     void updateMapData();

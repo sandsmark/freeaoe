@@ -39,7 +39,7 @@ Entity::~Entity()
     if (map) {
         int tileX = m_position.x / Constants::TILE_SIZE;
         int tileY = m_position.y / Constants::TILE_SIZE;
-        map->removeEntityAt(tileX, tileY, shared_from_this());
+        map->removeEntityAt(tileX, tileY, id);
     }
 }
 
@@ -88,7 +88,7 @@ void Entity::setPosition(const MapPos &pos)
         return;
     }
 
-    map->removeEntityAt(oldTileX, oldTileY, shared_from_this());
+    map->removeEntityAt(oldTileX, oldTileY, id);
     map->addEntityAt(newTileX, newTileY, shared_from_this());
 }
 

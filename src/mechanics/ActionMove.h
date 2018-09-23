@@ -22,6 +22,8 @@
 #include "Unit.h"
 #include "Map.h"
 #include <genie/dat/TerrainRestriction.h>
+#include <bitset>
+#include "global/Constants.h"
 
 class UnitManager;
 
@@ -55,5 +57,8 @@ private:
     float speed_;
 
     bool target_reached;
+    std::bitset<Constants::TILE_SIZE * Map::Gigantic * Map::Gigantic> m_passable;
+    std::bitset<Constants::TILE_SIZE * Map::Gigantic * Map::Gigantic> m_passableCached;
+    bool m_passableDirty = false;
 };
 

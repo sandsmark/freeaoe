@@ -225,13 +225,13 @@ void Map::updateTileAt(const int col, const int row, unsigned id)
     m_updated = true;
 }
 
-void Map::removeEntityAt(unsigned int col, unsigned int row, const EntityPtr &entity)
+void Map::removeEntityAt(unsigned int col, unsigned int row, const int entityId)
 {
     MapTile &tile = getTileAt(col, row);
 
     std::vector<std::weak_ptr<Entity>>::iterator it=tile.entities.begin();
     for (;it!=tile.entities.end(); it++) {
-        if ((*it).lock()->id == entity->id) {
+        if (!it->expired() && it->lock()->id == entityId) {
             tile.entities.erase(it);
             break;
         }
@@ -241,10 +241,9 @@ void Map::removeEntityAt(unsigned int col, unsigned int row, const EntityPtr &en
 void Map::addEntityAt(unsigned int col, unsigned int row, const EntityPtr &entity)
 {
     // just to be sure
-    removeEntityAt(col, row, entity);
+    removeEntityAt(col, row, entity->id);
 
     getTileAt(col, row).entities.push_back(entity);
-
 }
 
 void Map::updateMapData()
