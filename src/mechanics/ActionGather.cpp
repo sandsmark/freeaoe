@@ -138,14 +138,21 @@ bool ActionDropOff::update(Time /*time*/)
         return true;
     }
 
+    Player::Ptr targetPlayer = target->player.lock();
+    if (!targetPlayer) {
+        WARN << "player gone";
+        unit->removeAction(this);
+        return true;
+    }
+
     genie::ResourceType inputResource = genie::ResourceType(m_task->ResourceIn);
     genie::ResourceType resourceType = inputResource;
     if (m_task->ResourceOut >= 0) {
         resourceType = genie::ResourceType(m_task->ResourceOut);
     }
-    DBG << "dropping off" << unit->resources[resourceType] << "resources";
+    DBG << "dropping off" << unit->resources[resourceType] << "resource of type" << int(resourceType);
 
-    target->resources[resourceType] += unit->resources[resourceType] ;
+    targetPlayer->resources[resourceType] += unit->resources[resourceType] ;
     unit->resources[resourceType] = 0;
 
     unit->removeAction(this);
