@@ -38,7 +38,8 @@ public:
         Move,
         PlaceOnMap,
         Build,
-        Gather
+        Gather,
+        DropOff
     };
 
     enum UnitState {

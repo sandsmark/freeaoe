@@ -92,7 +92,6 @@ private:
     sf::Text m_description;
 
     int m_hoveredButton = -1;
-    int m_selectedButton = -1;
 };
 
 #endif // HOMESCREEN_H

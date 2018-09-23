@@ -244,7 +244,7 @@ void UnitManager::onRightClick(const ScreenPos &screenPos, const CameraPtr &came
 
     const MapPos mapPos = camera->absoluteMapPos(screenPos);
     for (const Unit::Ptr &unit : m_selectedUnits) {
-        unit->setCurrentAction(MoveOnMap::moveUnitTo(unit, mapPos, m_map, this));
+        moveUnitTo(unit, mapPos);
     }
 
     m_moveTargetMarker->moveTo(mapPos);
@@ -272,6 +272,10 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
     for (const Unit::Ptr &unit : m_units) {
         if (!selectionRect.overlaps(unit->rect() + camera->absoluteScreenPos(unit->position()))) {
             continue;
+        }
+
+        for (const genie::Resource<float, int8_t> &p : unit->data()->ResourceStorages) {
+            DBG << p.Amount << p.Type << p.Flag;
         }
 
         requiredInteraction = std::max(unit->data()->InteractionMode, requiredInteraction);
@@ -423,6 +427,11 @@ const Task UnitManager::defaultActionAt(const ScreenPos &pos, const CameraPtr &c
     return Task();
 }
 
+void UnitManager::moveUnitTo(const Unit::Ptr &unit, const MapPos &targetPos)
+{
+    unit->setCurrentAction(MoveOnMap::moveUnitTo(unit, targetPos, m_map, this));
+}
+
 void UnitManager::updateVisibility(const CameraPtr &camera)
 {
     for (const Unit::Ptr &unit : m_units) {
@@ -456,7 +465,7 @@ void UnitManager::assignTask(const Task &task, const Unit::Ptr &unit, const Unit
         break;
     case genie::Task::GatherRebuild:
 //        DBG << "supposed to gather from" << target->debugName;
-        unit->queueAction(std::make_shared<ActionGather>(unit, target, task.data));
+        unit->queueAction(std::make_shared<ActionGather>(unit, target, task.data, this));
         break;
     default:
         return;

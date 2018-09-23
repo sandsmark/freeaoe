@@ -101,8 +101,12 @@ void AudioPlayer::playSample(const std::shared_ptr<uint8_t> &data, const float p
     }
 
     WavHeader *header = reinterpret_cast<WavHeader*>(data.get());
+
     if (header->AudioFormat != WavHeader::PCM) {
-        WARN << "Can only play PCM";
+        WARN << "Can only play PCM, got audio format" << header->AudioFormat;
+        WARN << header->Format;
+        WARN << header->NumChannels;
+        WARN << header->ChunkID;
         return;
     }
 

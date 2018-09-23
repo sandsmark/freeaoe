@@ -71,6 +71,9 @@ MoveOnMap::MoveOnMap(MapPos destination, const MapPtr &map, const Unit::Ptr &uni
     target_reached(false)
 {
     dest_ = destination;
+
+    m_terrainMoveMultiplier = DataManager::Inst().getTerrainRestriction(unit->data()->TerrainRestriction).PassableBuildableDmgMultiplier;
+    speed_ = unit->data()->Speed;
 }
 
 MapPos MoveOnMap::findClosestWalkableBorder(const MapPos &target, int coarseness)
@@ -174,17 +177,17 @@ bool MoveOnMap::update(Time time)
         return false;
     }
 
+    if (!m_prevTime) {
+        m_prevTime = time;
+        updatePath();
+        return true;
+    }
+
     if (target_reached || m_path.empty()) {
         target_reached = true;
         unit->removeAction(this);
         return false;
     }
-
-    if (!m_prevTime) {
-        m_prevTime = time;
-        return true;
-    }
-
 
     float elapsed = time - m_prevTime;
     float movement = elapsed * speed_ * 0.15;
@@ -265,44 +268,8 @@ std::shared_ptr<MoveOnMap> MoveOnMap::moveUnitTo(const Unit::Ptr &unit, MapPos d
         DBG << "Handed unit that can't move" << unit->debugName;
         return nullptr;
     }
+
     std::shared_ptr<MoveOnMap> action (new MoveOnMap(destination, map, unit, unitManager));
-
-
-    DBG << "moving to" << destination;
-
-    action->m_terrainMoveMultiplier = DataManager::Inst().getTerrainRestriction(unit->data()->TerrainRestriction).PassableBuildableDmgMultiplier;
-    action->speed_ = unit->data()->Speed;
-
-    MapPos newDest = destination;
-    if (!action->isPassable(destination.x, destination.y)) {
-        newDest = action->findClosestWalkableBorder(destination, 2);
-        action->dest_ = newDest;
-    }
-
-    action->m_path = action->findPath(unit->position(), newDest, 2);
-
-    // Try coarser
-    // Uglier, but hopefully faster
-    if (action->m_path.empty()) {
-        if (newDest != destination) {
-            newDest = action->findClosestWalkableBorder(destination, 5);
-            action->dest_ = newDest;
-        }
-        action->m_path = action->findPath(unit->position(), newDest, 5);
-    }
-
-    if (action->m_path.empty()) {
-        if (newDest != destination) {
-            newDest = action->findClosestWalkableBorder(destination, 10);
-            action->dest_ = newDest;
-        }
-        action->m_path = action->findPath(unit->position(), newDest, 10);
-    }
-
-    if (action->m_path.empty()) {
-        DBG << "Failed to find path for" << unit->debugName;
-        return nullptr;
-    }
 
     return action;
 }
@@ -488,4 +455,45 @@ bool MoveOnMap::isPassable(const int x, const int y)
     }
 
     return true;
+}
+
+void MoveOnMap::updatePath()
+{
+    std::shared_ptr<Unit> unit = m_unit.lock();
+    if (!unit) {
+        WARN << "Lost our unit";
+        return;
+    }
+
+    DBG << "moving to" << dest_;
+
+    MapPos newDest = dest_;
+    if (!isPassable(dest_.x, dest_.y)) {
+        newDest = findClosestWalkableBorder(dest_, 2);
+        dest_ = newDest;
+    }
+
+    m_path = findPath(unit->position(), newDest, 2);
+
+    // Try coarser
+    // Uglier, but hopefully faster
+    if (m_path.empty()) {
+        if (newDest != dest_) {
+            newDest = findClosestWalkableBorder(dest_, 5);
+            dest_ = newDest;
+        }
+        m_path = findPath(unit->position(), newDest, 5);
+    }
+
+    if (m_path.empty()) {
+        if (newDest != dest_) {
+            newDest = findClosestWalkableBorder(dest_, 10);
+            dest_ = newDest;
+        }
+        m_path = findPath(unit->position(), newDest, 10);
+    }
+
+    if (m_path.empty()) {
+        DBG << "Failed to find path for" << unit->debugName;
+    }
 }

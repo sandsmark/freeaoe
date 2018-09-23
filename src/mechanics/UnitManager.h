@@ -71,6 +71,7 @@ public:
 
     void selectUnits(const ScreenRect &selectionRect, const CameraPtr &camera);
     void setMap(const MapPtr &map);
+    const MapPtr &map() { return m_map; }
 
     void setSelectedUnits(const UnitSet &units);
     const UnitSet &selected() const { return m_selectedUnits; }
@@ -84,6 +85,7 @@ public:
     const std::unordered_set<Task> availableActions() const { return m_currentActions; }
 
     const Task defaultActionAt(const ScreenPos &pos, const CameraPtr &camera);
+    void moveUnitTo(const Unit::Ptr &unit, const MapPos &targetPos);
 
 private:
     void updateVisibility(const CameraPtr &camera);

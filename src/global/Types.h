@@ -582,32 +582,37 @@ inline ScreenRect MapRect::toScreen() const
 }
 
 inline LogPrinter operator <<(LogPrinter os, const MapRect &rect) {
+    const char *separator = os.separator;
     os.separator = "";
-    os << "MapRect(x: "  << rect.x << ", y: " << rect.y << ", width: " << rect.width << ", height: " << rect.height << ", z:" << rect.z << ")";
+    os << "MapRect(x: "  << rect.x << ", y: " << rect.y << ", width: " << rect.width << ", height: " << rect.height << ", z:" << rect.z << ")" << separator;
     return os;
 }
 
 inline LogPrinter operator <<(LogPrinter os, const ScreenRect &rect) {
+    const char *separator = os.separator;
     os.separator = "";
-    os << "ScreenRect(x: "  << rect.x << ", y: " << rect.y << ", width: " << rect.width << ", height: " << rect.height << ")";
+    os << "ScreenRect(x: "  << rect.x << ", y: " << rect.y << ", width: " << rect.width << ", height: " << rect.height << ")" << separator;
     return os;
 }
 
 inline LogPrinter operator <<(LogPrinter os, const Size &size) {
+    const char *separator = os.separator;
     os.separator = "";
-    os << "Size(width: " << size.width << ", height: " << size.height << ")";
+    os << "Size(width: " << size.width << ", height: " << size.height << ")" << separator;
     return os;
 }
 
 inline LogPrinter operator <<(LogPrinter os, const MapPos &pos) {
+    const char *separator = os.separator;
     os.separator = "";
-    os << "MapPos(x: " << pos.x << ", y: " << pos.y << ")";
+    os << "MapPos(x: " << pos.x << ", y: " << pos.y << ")" << separator;
     return os;
 }
 
 
 inline LogPrinter operator <<(LogPrinter os, const ScreenPos &pos) {
+    const char *separator = os.separator;
     os.separator = "";
-    os << "ScreenPos(x: " << pos.x << ", y: " << pos.y << ")";
+    os << "ScreenPos(x: " << pos.x << ", y: " << pos.y << ")" << separator;
     return os;
 }
