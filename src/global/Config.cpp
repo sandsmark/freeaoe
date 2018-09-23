@@ -28,10 +28,8 @@
 
 #include <filesystem>
 
-static const char *s_registryGroupAoK = "SOFTWARE\\Microsoft\\Microsoft Games\\"
-                                        "Age of Empires\\2.0";
-static const char *s_registryGroupTC = "SOFTWARE\\Microsoft\\Microsoft Games\\"
-                                        "Age of Empires II: The Conquerors Expansion\\1.0";
+static const char *s_registryGroupAoK = R"(SOFTWARE\Microsoft\Microsoft Games\Age of Empires\2.0)";
+static const char *s_registryGroupTC = R"(SOFTWARE\Microsoft\Microsoft Games\Age of Empires II: The Conquerors Expansion\1.0)";
 
 static const char *s_registryKey = "InstallationDirectory";
 #if defined(WIN32) || defined(__WIN32) || defined(__WIN32__)
