@@ -22,6 +22,8 @@
 #include <global/Constants.h>
 #include "ActionMove.h"
 #include "Farm.h"
+#include "Civilization.h"
+
 
 UnitFactory &UnitFactory::Inst()
 {
@@ -54,7 +56,13 @@ Unit::Ptr UnitFactory::createUnit(int ID, const MapPos &position, const Player::
         if (res.Type == -1) {
             continue;
         }
+
         unit->resources[genie::ResourceType(res.Type)] = res.Amount;
+
+    }
+
+    if (gunit.Class == genie::Unit::Farm) {
+        unit->resources[genie::ResourceType::FoodStorage] = owner->civ->startingResource(genie::ResourceType::FarmFoodAmount);
 
     }
 

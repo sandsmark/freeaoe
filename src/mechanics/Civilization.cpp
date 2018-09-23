@@ -107,3 +107,8 @@ const ResourceMap Civilization::startingResources() const
 
     return ret;
 }
+
+float Civilization::startingResource(const genie::ResourceType type) const
+{
+    return m_data.Resources[int(type)];
+}

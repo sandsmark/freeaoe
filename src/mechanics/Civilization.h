@@ -35,6 +35,8 @@ public:
 
     const std::string &name() const { return m_data.Name; }
 
+    float startingResource(const genie::ResourceType type) const;
+
 private:
     const genie::Unit nullUnit;
 
