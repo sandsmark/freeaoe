@@ -345,6 +345,11 @@ void ActionPanel::handleButtonClick(const ActionPanel::InterfaceButton &button)
         case Command::PreviousPage:
             m_currentPage = 0;
             break;
+        case Command::Stop:
+            for (Unit::Ptr unit : m_unitManager->selected()) {
+                unit->setCurrentAction(nullptr);
+            }
+            break;
         default:
             break;
         }
