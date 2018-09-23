@@ -64,10 +64,9 @@ template<> struct std::hash<PathPoint>
 
 static const float PATHFINDING_HEURISTIC_WEIGHT = 1.;
 
-ActionMove::ActionMove(MapPos destination, const MapPtr &map, const Unit::Ptr &unit, UnitManager *unitManager) :
+ActionMove::ActionMove(MapPos destination, const MapPtr &map, const Unit::Ptr &unit) :
     IAction(Type::Move, unit),
     m_map(map),
-    m_unitManager(unitManager),
     target_reached(false)
 {
     dest_ = destination;
@@ -266,14 +265,14 @@ IAction::UpdateResult ActionMove::update(Time time)
     return UpdateResult::Updated;
 }
 
-std::shared_ptr<ActionMove> ActionMove::moveUnitTo(const Unit::Ptr &unit, MapPos destination, const MapPtr &map, UnitManager *unitManager)
+std::shared_ptr<ActionMove> ActionMove::moveUnitTo(const Unit::Ptr &unit, MapPos destination, const MapPtr &map)
 {
     if (!unit->data()->Speed) {
         DBG << "Handed unit that can't move" << unit->debugName;
         return nullptr;
     }
 
-    std::shared_ptr<ActionMove> action (new ActionMove(destination, map, unit, unitManager));
+    std::shared_ptr<ActionMove> action (new ActionMove(destination, map, unit));
 
     return action;
 }
@@ -446,11 +445,11 @@ bool ActionMove::isPassable(const int x, const int y, int coarseness)
 
             for (const std::weak_ptr<Entity> &entity : tile.entities) {
                 Unit::Ptr otherUnit = Entity::asUnit(entity);
-                if (!otherUnit) {
+                if (IS_UNLIKELY(!otherUnit)) {
                     continue;
                 }
 
-                if (otherUnit->id == unit->id) {
+                if (IS_UNLIKELY(otherUnit->id == unit->id)) {
                     continue;
                 }
 
@@ -463,7 +462,7 @@ bool ActionMove::isPassable(const int x, const int y, int coarseness)
                 const float xDistance = std::abs(otherUnit->position().x - mapPos.x);
                 const float yDistance = std::abs(otherUnit->position().y - mapPos.y);
 
-                if (xDistance < xSize && yDistance < ySize) {
+                if (IS_UNLIKELY(xDistance < xSize && yDistance < ySize)) {
                     m_passable[cacheIndex] = false;
                     return false;
                 }

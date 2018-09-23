@@ -25,8 +25,6 @@
 #include <bitset>
 #include "global/Constants.h"
 
-class UnitManager;
-
 class ActionMove : public IAction
 {
 
@@ -35,10 +33,10 @@ public:
 
     UpdateResult update(Time time) override;
 
-    static std::shared_ptr<ActionMove> moveUnitTo(const Unit::Ptr &unit, MapPos destination, const MapPtr &map, UnitManager *unitManager);
+    static std::shared_ptr<ActionMove> moveUnitTo(const Unit::Ptr &unit, MapPos destination, const MapPtr &map);
 
 private:
-    ActionMove(MapPos destination, const MapPtr &map, const Unit::Ptr &unit, UnitManager *unitManager);
+    ActionMove(MapPos destination, const MapPtr &map, const Unit::Ptr &unit);
 
     MapPos findClosestWalkableBorder(const MapPos &target, int coarseness);
 
@@ -50,7 +48,6 @@ private:
     MapPtr m_map;
     MapPos dest_;
     std::vector<MapPos> m_path;
-    UnitManager *m_unitManager;
     MapPos m_currentTarget;
     std::vector<float> m_terrainMoveMultiplier;
     float speed_;

@@ -47,6 +47,9 @@ IAction::UpdateResult ActionBuild::update(Time time)
 
     if (building->creationProgress() >= 1.) {
         DBG << "building finished";
+        if (building->data()->Class == genie::Unit::Farm) {
+//            unit->queueAction(std::make_shared<ActionGather>(unit, building, m_task, m_unitManager));
+        }
         return UpdateResult::Completed;
     }
 
