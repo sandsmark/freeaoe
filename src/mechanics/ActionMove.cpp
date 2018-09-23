@@ -64,7 +64,7 @@ template<> struct std::hash<PathPoint>
 
 static const float PATHFINDING_HEURISTIC_WEIGHT = 1.;
 
-MoveOnMap::MoveOnMap(MapPos destination, const MapPtr &map, const Unit::Ptr &unit, UnitManager *unitManager) :
+ActionMove::ActionMove(MapPos destination, const MapPtr &map, const Unit::Ptr &unit, UnitManager *unitManager) :
     IAction(Type::Move, unit),
     m_map(map),
     m_unitManager(unitManager),
@@ -76,7 +76,7 @@ MoveOnMap::MoveOnMap(MapPos destination, const MapPtr &map, const Unit::Ptr &uni
     speed_ = unit->data()->Speed;
 }
 
-MapPos MoveOnMap::findClosestWalkableBorder(const MapPos &target, int coarseness)
+MapPos ActionMove::findClosestWalkableBorder(const MapPos &target, int coarseness)
 {
     std::shared_ptr<Unit> unit = m_unit.lock();
     if (!unit) {
@@ -165,11 +165,11 @@ MapPos MoveOnMap::findClosestWalkableBorder(const MapPos &target, int coarseness
     return MapPos(x, y);
 }
 
-MoveOnMap::~MoveOnMap()
+ActionMove::~ActionMove()
 {
 }
 
-IAction::UpdateResult MoveOnMap::update(Time time)
+IAction::UpdateResult ActionMove::update(Time time)
 {
     std::shared_ptr<Unit> unit = m_unit.lock();
     if (!unit) {
@@ -214,14 +214,11 @@ IAction::UpdateResult MoveOnMap::update(Time time)
     MapPos nextPos = m_path.back();
     if (!isPassable(nextPos.x, nextPos.y)) {
         WARN << "next waypoint inaccessible, repathing";
-        m_path = findPath(unit->position(), dest_, 1);
+        updatePath();
+
         if (m_path.empty()) {
-            WARN << "repathing coarser";
-            m_path = findPath(unit->position(), dest_, 20);
-            if (m_path.empty()) {
-                target_reached = true;
-                return UpdateResult::Completed;
-            }
+            target_reached = true;
+            return UpdateResult::Completed;
         }
 
         return UpdateResult::NotUpdated;
@@ -280,19 +277,19 @@ IAction::UpdateResult MoveOnMap::update(Time time)
     return UpdateResult::Updated;
 }
 
-std::shared_ptr<MoveOnMap> MoveOnMap::moveUnitTo(const Unit::Ptr &unit, MapPos destination, const MapPtr &map, UnitManager *unitManager)
+std::shared_ptr<ActionMove> ActionMove::moveUnitTo(const Unit::Ptr &unit, MapPos destination, const MapPtr &map, UnitManager *unitManager)
 {
     if (!unit->data()->Speed) {
         DBG << "Handed unit that can't move" << unit->debugName;
         return nullptr;
     }
 
-    std::shared_ptr<MoveOnMap> action (new MoveOnMap(destination, map, unit, unitManager));
+    std::shared_ptr<ActionMove> action (new ActionMove(destination, map, unit, unitManager));
 
     return action;
 }
 
-std::vector<MapPos> MoveOnMap::findPath(MapPos start, MapPos end, int coarseness)
+std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarseness)
 {
     sf::Clock clock;
 
@@ -419,7 +416,7 @@ std::vector<MapPos> MoveOnMap::findPath(MapPos start, MapPos end, int coarseness
 
 }
 
-bool MoveOnMap::isPassable(const int x, const int y, int coarseness)
+bool ActionMove::isPassable(const int x, const int y, int coarseness)
 {
     if (IS_UNLIKELY(x < 0 || y < 0)) {
         return false;
@@ -489,7 +486,7 @@ bool MoveOnMap::isPassable(const int x, const int y, int coarseness)
     return true;
 }
 
-void MoveOnMap::updatePath()
+void ActionMove::updatePath()
 {
     std::shared_ptr<Unit> unit = m_unit.lock();
     if (!unit) {

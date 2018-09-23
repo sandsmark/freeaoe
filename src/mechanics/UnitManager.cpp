@@ -429,7 +429,7 @@ const Task UnitManager::defaultActionAt(const ScreenPos &pos, const CameraPtr &c
 
 void UnitManager::moveUnitTo(const Unit::Ptr &unit, const MapPos &targetPos)
 {
-    unit->setCurrentAction(MoveOnMap::moveUnitTo(unit, targetPos, m_map, this));
+    unit->setCurrentAction(ActionMove::moveUnitTo(unit, targetPos, m_map, this));
 }
 
 void UnitManager::updateVisibility(const CameraPtr &camera)
@@ -458,7 +458,7 @@ void UnitManager::assignTask(const Task &task, const Unit::Ptr &unit, const Unit
         unit->setUnitData(DataManager::Inst().getUnit(task.unitId));
     }
 
-    unit->queueAction(MoveOnMap::moveUnitTo(unit, target->position(), m_map, this));
+    unit->queueAction(ActionMove::moveUnitTo(unit, target->position(), m_map, this));
     switch(task.data->ActionType) {
     case genie::Task::Build:
         unit->queueAction(std::make_shared<ActionBuild>(unit, target));
