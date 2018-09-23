@@ -28,7 +28,7 @@ public:
     UnitState unitState() const override { return UnitState::Proceeding; }
 
 private:
-    MapPos findDropSite(const Unit::Ptr &unit);
+    Unit::Ptr findDropSite(const Unit::Ptr &unit);
 
     std::weak_ptr<Unit> m_target;
     const genie::Task *m_task;

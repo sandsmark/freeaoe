@@ -40,16 +40,24 @@ bool ActionGather::update(Time time)
         resourceType = genie::ResourceType(m_task->ResourceOut);
     }
 
-    if (unit->resources[resourceType] >= unit->data()->ResourceCapacity) {
+    if (unit->resources[resourceType] >= unit->data()->ResourceCapacity || target->resources[resourceType] == 0) {
         const MapPos &currentPos = unit->position();
-        const MapPos &targetPos = findDropSite(unit);
 
-        DBG << "moving to" << targetPos << "to drop off, then returning to" << currentPos << "to continue gathering";
+        const Unit::Ptr dropSite = findDropSite(unit);
 
-        unit->queueAction(MoveOnMap::moveUnitTo(unit, targetPos, m_unitManager->map(), m_unitManager));
-        unit->queueAction(std::make_shared<ActionDropOff>(unit, target, m_task));
-        unit->queueAction(MoveOnMap::moveUnitTo(unit, currentPos, m_unitManager->map(), m_unitManager));
-        unit->queueAction(std::make_shared<ActionGather>(unit, target, m_task, m_unitManager));
+        if (dropSite) {
+            DBG << "moving to" << dropSite->position() << "to drop off, then returning to" << currentPos << "to continue gathering";
+
+            unit->queueAction(MoveOnMap::moveUnitTo(unit, dropSite->position(), m_unitManager->map(), m_unitManager));
+            unit->queueAction(std::make_shared<ActionDropOff>(unit, dropSite, m_task));
+            unit->queueAction(MoveOnMap::moveUnitTo(unit, currentPos, m_unitManager->map(), m_unitManager));
+
+            if (target->resources[resourceType] > 0) {
+                unit->queueAction(std::make_shared<ActionGather>(unit, target, m_task, m_unitManager));
+            }
+        } else {
+            WARN << "failed to find a drop site";
+        }
 
         unit->removeAction(this);
 
@@ -79,10 +87,11 @@ bool ActionGather::update(Time time)
     return false;
 }
 
-MapPos ActionGather::findDropSite(const Unit::Ptr &unit)
+Unit::Ptr ActionGather::findDropSite(const Unit::Ptr &unit)
 {
     float closestDistance = std::numeric_limits<float>::max();
     MapPos closestPos = unit->position(); // fallback
+    Unit::Ptr closestUnit;
 
     const int dropUnitId1 = unit->data()->Action.DropSite.first;
     const int dropUnitId2 = unit->data()->Action.DropSite.second;
@@ -99,9 +108,10 @@ MapPos ActionGather::findDropSite(const Unit::Ptr &unit)
 
         closestDistance = distance;
         closestPos = other->position();
+        closestUnit = other;
     }
 
-    return closestPos;
+    return closestUnit;
 }
 
 
