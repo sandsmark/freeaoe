@@ -87,8 +87,11 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    if (home.getSelection() == HomeScreen::Button::Exit) {
+    switch (home.getSelection()) {
+    case HomeScreen::Button::Exit:
         return 0;
+    default:
+        break;
     }
 
     Engine en;

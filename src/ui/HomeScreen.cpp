@@ -24,46 +24,30 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Window/Event.hpp>
 
-HomeScreen::HomeScreen()
+HomeScreen::HomeScreen() :
+    UiScreen("xmain.sin")
 {
 
 }
 
 bool HomeScreen::init()
 {
-    genie::UIFilePtr uiFile = AssetManager::Inst()->getUIFile("xmain.sin");
-    m_slpFile = AssetManager::Inst()->getSlp(uiFile->backgroundLarge.fileId, AssetManager::ResourceType::Interface);
+    if (!UiScreen::init()) {
+        return false;
+    }
+
+    m_slpFile = AssetManager::Inst()->getSlp("xmain.slp", AssetManager::ResourceType::Interface);
     if (!m_slpFile) {
         WARN << "failed to load slp file for home screen";
         return false;
     }
 
-    const genie::PalFile &palette = AssetManager::Inst()->getPalette(uiFile->paletteFile.id);
-
-    genie::SlpFramePtr backgroundFrame = m_slpFile->getFrame(0);
-    if (!backgroundFrame) {
-        WARN << "Failed to get frame";
-        return false;
-    }
-
-    const int width = backgroundFrame->getWidth();
-    const int height = backgroundFrame->getHeight();
-
-    m_renderWindow = std::make_unique<sf::RenderWindow>(sf::VideoMode(width, height), "freeaoe");
-    m_renderWindow->setSize(sf::Vector2u(width, height));
-    m_renderWindow->setView(sf::View(sf::FloatRect(0, 0, width, height)));
-
-    m_background.loadFromImage(Resource::convertFrameToImage(backgroundFrame, palette));
-
-    DBG << uiFile->stateColor1.r << uiFile->stateColor1.g << uiFile->stateColor1.b;
-    sf::Color textFillColor(uiFile->textColor1.r, uiFile->textColor1.g, uiFile->textColor1.b);
-    sf::Color textOutlineColor(uiFile->textColor2.r, uiFile->textColor2.g, uiFile->textColor2.b);
-
+    const genie::PalFile &palette = AssetManager::Inst()->getPalette(m_paletteId);
     m_descriptionRect = ScreenRect(390, 506, 393, 94);
     m_description.setPosition(m_descriptionRect.topLeft());
     m_description.setCharacterSize(10);
-    m_description.setFillColor(textFillColor);
-    m_description.setOutlineColor(textOutlineColor);
+    m_description.setFillColor(m_textFillColor);
+    m_description.setOutlineColor(m_textOutlineColor);
     m_description.setOutlineThickness(1);
     m_description.setFont(SfmlRenderTarget::defaultFont());
 
@@ -119,8 +103,8 @@ bool HomeScreen::init()
 
         b.text.setCharacterSize(15);
         b.text.setFont(SfmlRenderTarget::defaultFont());
-        b.text.setFillColor(textFillColor);
-        b.text.setOutlineColor(textOutlineColor);
+        b.text.setFillColor(m_textFillColor);
+        b.text.setOutlineColor(m_textOutlineColor);
         b.text.setOutlineThickness(1);
     }
 
@@ -129,43 +113,12 @@ bool HomeScreen::init()
 
 HomeScreen::Button::Type HomeScreen::getSelection()
 {
-    while (m_renderWindow->isOpen()) {
-        // Process events
-        sf::Event event;
-        if (!m_renderWindow->waitEvent(event)) {
-            WARN << "failed to get event";
-            break;
-        }
-
-        if (event.type == sf::Event::Closed) {
-            return Button::Exit;
-        }
-
-        if (event.type == sf::Event::MouseButtonPressed || event.type == sf::Event::MouseButtonReleased) {
-            sf::Vector2f mappedPos = m_renderWindow->mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
-            event.mouseButton.x = mappedPos.x;
-            event.mouseButton.y = mappedPos.y;
-        }
-
-        if (event.type == sf::Event::MouseMoved) {
-            sf::Vector2f mappedPos = m_renderWindow->mapPixelToCoords(sf::Vector2i(event.mouseMove.x, event.mouseMove.y));
-            event.mouseMove.x = mappedPos.x;
-            event.mouseMove.y = mappedPos.y;
-        }
-
-        if (handleMouseEvent(event)) {
-            m_renderWindow->close();
-            continue;
-        }
-
-        m_renderWindow->clear(sf::Color::Black);
-        render();
-        m_renderWindow->display();
+    if (!run()) {
+        return Button::Exit;
     }
 
     if (m_hoveredButton != -1) {
         return Button::Type(m_hoveredButton);
-
     }
 
     return Button::Exit;
@@ -173,10 +126,6 @@ HomeScreen::Button::Type HomeScreen::getSelection()
 
 void HomeScreen::render()
 {
-    sf::Sprite sprite;
-    sprite.setTexture(m_background);
-    m_renderWindow->draw(sprite);
-
     for (int i=0; i<Button::TypeCount; i++) {
         sf::Sprite sprite;
         ScreenPos pos = m_buttons[i].rect.topLeft();

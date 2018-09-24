@@ -14,8 +14,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef HOMESCREEN_H
-#define HOMESCREEN_H
+#pragma once
 
 #include <memory>
 #include <array>
@@ -24,6 +23,8 @@
 #include <SFML/Graphics/Text.hpp>
 
 #include "global/Types.h"
+
+#include "UiScreen.h"
 
 namespace sf {
 class RenderWindow;
@@ -34,7 +35,7 @@ namespace genie {
 class SlpFile;
 }
 
-class HomeScreen
+class HomeScreen : public UiScreen
 {
 public:
     struct Button {
@@ -83,14 +84,10 @@ private:
 
     std::array<Button, Button::TypeCount> m_buttons;
 
-    std::unique_ptr<sf::RenderWindow> m_renderWindow;
     std::shared_ptr<genie::SlpFile> m_slpFile;
-    sf::Texture m_background;
 
     ScreenRect m_descriptionRect;
     sf::Text m_description;
 
     int m_hoveredButton = -1;
 };
-
-#endif // HOMESCREEN_H

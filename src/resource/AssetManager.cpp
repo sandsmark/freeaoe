@@ -380,7 +380,8 @@ int AssetManager::filenameID(const std::string &filename)
         { "scr2c.slp", 50102      }, // 1280x1024
         { "scrstart.slp", 50163   },
         { "scrstart.pal", 50563   },
-
+        { "scr_hist.slp", 50161   },
+        { "scr_hist.pal", 50530   },
 
         // Logos
         { "c_logo.slp", 53207     },
