@@ -68,92 +68,46 @@ bool HomeScreen::init()
     m_description.setFont(SfmlRenderTarget::defaultFont());
 
     // These are fun to figure out
-    m_buttons[Button::Singleplayer].rect = ScreenRect(309, 12, 120, 189);
-    m_buttons[Button::Multiplayer].rect = ScreenRect(263, 217, 97, 131);
-    m_buttons[Button::History].rect = ScreenRect(103, 164, 102, 97);
-    m_buttons[Button::MapEditor].rect = ScreenRect(197, 273, 70, 67);
-    m_buttons[Button::Banner].rect = ScreenRect(0, 0, 427, 170);
-    m_buttons[Button::Exit].rect = ScreenRect(5, 535, 153, 65);
-    m_buttons[Button::Tutorial].rect = ScreenRect(0, 6, 125, 187);
-    m_buttons[Button::Options].rect = ScreenRect(101, 347, 95, 100);
-    m_buttons[Button::Zone].rect = ScreenRect(271, 367, 67, 64);
+    m_buttons[Button::Singleplayer].rect = { 309,  12, 120, 189 };
+    m_buttons[Button::Multiplayer].rect =  { 263, 217,  97, 131 };
+    m_buttons[Button::Zone].rect =         { 271, 367,  67,  64 };
+    m_buttons[Button::Tutorial].rect =     {   0,   6, 125, 187 };
+    m_buttons[Button::MapEditor].rect =    { 197, 273,  70,  67 };
+    m_buttons[Button::History].rect =      { 103, 164, 102,  97 };
+    m_buttons[Button::Options].rect =      { 101, 347,  95, 100 };
+    m_buttons[Button::Banner].rect =       {   0,   0, 427, 170 };
+    m_buttons[Button::Exit].rect =         {   5, 535, 153,  65 };
 
-    // These are fun to figure out
-    m_buttons[Button::Singleplayer].textRect = ScreenRect(277, 21, 180, 18);
-    m_buttons[Button::Multiplayer].textRect = ScreenRect(222, 222, 180, 18);
-    m_buttons[Button::History].textRect = ScreenRect(64, 169, 180, 18);
-    m_buttons[Button::MapEditor].textRect = ScreenRect(142, 276, 180, 18);
-    m_buttons[Button::Exit].textRect = ScreenRect(0, 562, 160, 18);
-    m_buttons[Button::Tutorial].textRect = ScreenRect(0, 16, 120, 18);
-    m_buttons[Button::Options].textRect = ScreenRect(56, 351, 180, 18);
-    m_buttons[Button::Zone].textRect = ScreenRect(213, 369, 180, 18);
-
-    m_buttons[Button::Singleplayer].text.setString(LanguageManager::getString(9500));
-    m_buttons[Button::Multiplayer].text.setString(LanguageManager::getString(9501));
-    m_buttons[Button::History].text.setString(LanguageManager::getString(9505));
-    m_buttons[Button::MapEditor].text.setString(LanguageManager::getString(9504));
-    m_buttons[Button::Exit].text.setString(LanguageManager::getString(9509));
-    m_buttons[Button::Tutorial].text.setString(LanguageManager::getString(9503));
-    m_buttons[Button::Options].text.setString(LanguageManager::getString(9506));
-    m_buttons[Button::Zone].text.setString(LanguageManager::getString(9502));
-
-    m_buttons[Button::Singleplayer].description = LanguageManager::getString(31000);
-    m_buttons[Button::Multiplayer].description = LanguageManager::getString(31001);
-    m_buttons[Button::History].description = LanguageManager::getString(31005);
-    m_buttons[Button::MapEditor].description = LanguageManager::getString(31004);
-    m_buttons[Button::Banner].description = LanguageManager::getString(31008);
-    m_buttons[Button::Exit].description = LanguageManager::getString(31009);
-    m_buttons[Button::Tutorial].description = LanguageManager::getString(31003);
-    m_buttons[Button::Options].description = LanguageManager::getString(31006);
-    m_buttons[Button::Zone].description = LanguageManager::getString(31002);
-
-    // Less fun
-    m_buttons[Button::Singleplayer].frame = 10;
-    m_buttons[Button::Multiplayer].frame = 14;
-    m_buttons[Button::History].frame = 30;
-    m_buttons[Button::MapEditor].frame = 26;
-    m_buttons[Button::Banner].frame = 49;
-    m_buttons[Button::Exit].frame = 46;
-    m_buttons[Button::Tutorial].frame = 22;
-    m_buttons[Button::Options].frame = 34;
-    m_buttons[Button::Zone].frame = 18;
-
-    m_buttons[Button::Singleplayer].hoverFrame = 12;
-    m_buttons[Button::Multiplayer].hoverFrame = 16;
-    m_buttons[Button::History].hoverFrame = 32;
-    m_buttons[Button::MapEditor].hoverFrame = 28;
-    m_buttons[Button::Banner].hoverFrame = 51;
-    m_buttons[Button::Exit].hoverFrame = 48;
-    m_buttons[Button::Tutorial].hoverFrame = 24;
-    m_buttons[Button::Options].hoverFrame = 36;
-    m_buttons[Button::Zone].hoverFrame = 20;
-
-    m_buttons[Button::Singleplayer].selectedFrame = 11;
-    m_buttons[Button::Multiplayer].selectedFrame = 15;
-    m_buttons[Button::History].selectedFrame = 31;
-    m_buttons[Button::MapEditor].selectedFrame = 27;
-    m_buttons[Button::Banner].selectedFrame = 50;
-    m_buttons[Button::Exit].selectedFrame = 47;
-    m_buttons[Button::Tutorial].selectedFrame = 23;
-    m_buttons[Button::Options].selectedFrame = 35;
-    m_buttons[Button::Zone].selectedFrame = 19;
-
-    // meh ok
-    m_buttons[Button::Singleplayer].frame = 10;
-    m_buttons[Button::Multiplayer].frame = 14;
-    m_buttons[Button::History].frame = 30;
-    m_buttons[Button::MapEditor].frame = 26;
-    m_buttons[Button::Banner].frame = 49;
-    m_buttons[Button::Exit].frame = 46;
-    m_buttons[Button::Tutorial].frame = 22;
-    m_buttons[Button::Options].frame = 34;
-    m_buttons[Button::Zone].frame = 18;
+    // These are fun to figure out x2
+    m_buttons[Button::Singleplayer].textRect = { 277,  21, 180,  18 };
+    m_buttons[Button::Multiplayer].textRect =  { 222, 222, 180,  18 };
+    m_buttons[Button::Zone].textRect =         { 213, 369, 180,  18 };
+    m_buttons[Button::Tutorial].textRect =     {   0,  16, 120,  18 };
+    m_buttons[Button::MapEditor].textRect =    { 142, 276, 180,  18 };
+    m_buttons[Button::History].textRect =      {  64, 169, 180,  18 };
+    m_buttons[Button::Options].textRect =      {  56, 351, 180,  18 };
+    m_buttons[Button::Exit].textRect =         {   0, 562, 160,  18 };
 
     for (int i=0; i<Button::TypeCount; i++) {
+        if (i == Button::About) {
+            continue; // TODO: need to find where the fuck it's supposed to go
+        }
+
         Button &b = m_buttons[i];
-        const genie::SlpFramePtr &frame = m_slpFile->getFrame(b.frame);
-        const genie::SlpFramePtr &hoverFrame = m_slpFile->getFrame(b.hoverFrame);
-        const genie::SlpFramePtr &selectedFrame = m_slpFile->getFrame(b.selectedFrame);
+
+        int frameNum = 10 + i * 4;
+        if (i == Button::Banner) {
+            frameNum = 49;
+        }
+
+        const genie::SlpFramePtr &frame = m_slpFile->getFrame(frameNum);
+        const genie::SlpFramePtr &selectedFrame = m_slpFile->getFrame(frameNum + 1);
+        const genie::SlpFramePtr &hoverFrame = m_slpFile->getFrame(frameNum + 2);
+
+        if (i != Button::Banner) {
+            b.text.setString(LanguageManager::getString(9500 + i));
+        }
+        b.description = LanguageManager::getString(31000 + i);
 
         b.texture.loadFromImage(Resource::convertFrameToImage(frame, palette));
         b.hoverTexture.loadFromImage(Resource::convertFrameToImage(hoverFrame, palette));
@@ -263,6 +217,10 @@ bool HomeScreen::handleMouseEvent(const sf::Event &event)
                 m_description.setString(m_buttons[i].description);
                 break;
             }
+        }
+
+        if (m_hoveredButton == -1) {
+            m_description.setString("");
         }
 
         return false;

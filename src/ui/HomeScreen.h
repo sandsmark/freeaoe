@@ -39,15 +39,16 @@ class HomeScreen
 public:
     struct Button {
         enum Type {
-            Tutorial,
             Singleplayer,
-            History,
             Multiplayer,
-            MapEditor,
-            Options,
             Zone,
-            Exit,
+            Tutorial,
+            MapEditor,
+            History,
+            Options,
+            About,
             Banner,
+            Exit,
             TypeCount
         };
 
@@ -55,8 +56,6 @@ public:
 
 
         int frame = 0;
-        int hoverFrame = 0;
-        int selectedFrame = 0;
 
         std::string description;
 
