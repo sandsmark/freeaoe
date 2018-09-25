@@ -84,8 +84,6 @@ private:
 
     std::array<Button, Button::TypeCount> m_buttons;
 
-    std::shared_ptr<genie::SlpFile> m_slpFile;
-
     ScreenRect m_descriptionRect;
     sf::Text m_description;
 

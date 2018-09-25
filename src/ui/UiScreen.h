@@ -21,6 +21,7 @@
 
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Text.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
 
 #include "global/Types.h"
 
@@ -38,7 +39,7 @@ class UiScreen
 public:
     UiScreen() = delete;
 
-    bool init();
+    virtual bool init();
 
 protected:
     bool run();

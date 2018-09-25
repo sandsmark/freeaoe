@@ -15,6 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "HomeScreen.h"
+
 #include "resource/AssetManager.h"
 #include "resource/LanguageManager.h"
 #include "render/SfmlRenderTarget.h"
@@ -36,8 +37,8 @@ bool HomeScreen::init()
         return false;
     }
 
-    m_slpFile = AssetManager::Inst()->getSlp("xmain.slp", AssetManager::ResourceType::Interface);
-    if (!m_slpFile) {
+    std::shared_ptr<genie::SlpFile> slpFile = AssetManager::Inst()->getSlp("xmain.slp", AssetManager::ResourceType::Interface);
+    if (!slpFile) {
         WARN << "failed to load slp file for home screen";
         return false;
     }
@@ -84,9 +85,9 @@ bool HomeScreen::init()
             frameNum = 49;
         }
 
-        const genie::SlpFramePtr &frame = m_slpFile->getFrame(frameNum);
-        const genie::SlpFramePtr &selectedFrame = m_slpFile->getFrame(frameNum + 1);
-        const genie::SlpFramePtr &hoverFrame = m_slpFile->getFrame(frameNum + 2);
+        const genie::SlpFramePtr &frame = slpFile->getFrame(frameNum);
+        const genie::SlpFramePtr &selectedFrame = slpFile->getFrame(frameNum + 1);
+        const genie::SlpFramePtr &hoverFrame = slpFile->getFrame(frameNum + 2);
 
         if (i != Button::Banner) {
             b.text.setString(LanguageManager::getString(9500 + i));

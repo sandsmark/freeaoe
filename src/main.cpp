@@ -34,6 +34,7 @@
 #include "ui/FileDialog.h"
 #include "audio/AudioPlayer.h"
 #include "ui/HomeScreen.h"
+#include "ui/HistoryScreen.h"
 
 // TODO: Bad_alloc
 int main(int argc, char **argv)
@@ -90,6 +91,14 @@ int main(int argc, char **argv)
     switch (home.getSelection()) {
     case HomeScreen::Button::Exit:
         return 0;
+    case HomeScreen::Button::History: {
+        HistoryScreen history;
+        if (!history.init(config.getValue("game-path") + "/History/")) {
+            return 1;
+        }
+        history.display();
+        return 0;
+    }
     default:
         break;
     }

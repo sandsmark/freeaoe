@@ -33,6 +33,10 @@ UiScreen::UiScreen(const char *uiFile) :
 bool UiScreen::init()
 {
     genie::UIFilePtr uiFile = AssetManager::Inst()->getUIFile(m_uiFile);
+    if (!uiFile) {
+        WARN << "Unable to load ui file";
+        return false;
+    }
     std::shared_ptr<genie::SlpFile> slpFile = AssetManager::Inst()->getSlp(uiFile->backgroundLarge.fileId, AssetManager::ResourceType::Interface);
     if (!slpFile) {
         WARN << "failed to load slp file for home screen";
