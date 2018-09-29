@@ -460,7 +460,11 @@ void GameState::setupScenario()
             MapPos unitPos(scnunit.positionX * Constants::TILE_SIZE, scnunit.positionY * Constants::TILE_SIZE, scnunit.positionZ);
             Unit::Ptr unit = UnitFactory::Inst().createUnit(scnunit.objectID, unitPos, player, map_);
             unit->setAngle(scnunit.rotation);
-            unit->renderer().currentFrame = scnunit.initAnimationFrame % unit->renderer().frameCount();
+            if (unit->renderer().frameCount()) {
+                unit->renderer().currentFrame = scnunit.initAnimationFrame % unit->renderer().frameCount();
+            } else {
+                WARN << "invalid graphics";
+            }
             m_unitManager->add(unit);
         }
     }

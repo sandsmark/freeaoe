@@ -137,7 +137,7 @@ void Engine::showStartScreen()
 }
 
 //------------------------------------------------------------------------------
-bool Engine::setup(const std::string &scnFile)
+bool Engine::setup(const std::shared_ptr<genie::ScnFile> &scenario)
 {
     renderWindow_ = std::make_unique<sf::RenderWindow>(sf::VideoMode(1280, 1024), "freeaoe");
     renderWindow_->setMouseCursorVisible(false);
@@ -148,21 +148,14 @@ bool Engine::setup(const std::string &scnFile)
     showStartScreen();
 
     std::shared_ptr<GameState> gameState = std::make_shared<GameState>(renderTarget_);
-
-    if (!scnFile.empty()) {
-        try {
-            std::shared_ptr<genie::ScnFile> scenario(new genie::ScnFile());
-            scenario->load(scnFile);
-            gameState->setScenario(scenario);
-        } catch (const std::exception &error) {
-            WARN << "Failed to load" << scnFile << ":" << error.what();
-            return false;
-        }
+    if (scenario) {
+        gameState->setScenario(scenario);
     }
 
     if (!state_manager_.addActiveState(gameState)) {
         return false;
     }
+
     renderWindow_->setSize(gameState->uiSize());
     renderTarget_->setSize(gameState->uiSize());
 

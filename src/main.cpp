@@ -88,6 +88,7 @@ int main(int argc, char **argv)
         return 1;
     }
 
+    genie::ScnFilePtr scenarioFile;
     switch (home.getSelection()) {
     case HomeScreen::Button::Exit:
         return 0;
@@ -99,12 +100,33 @@ int main(int argc, char **argv)
         history.display();
         return 0;
     }
+    case HomeScreen::Button::Tutorial: {
+        try {
+            genie::CpxFile cpxFile;
+            cpxFile.setFileName(config.getValue("game-path") + "/Campaign/xcam1.cpx");
+            cpxFile.load();
+
+            scenarioFile = cpxFile.getScnFile(0);
+        } catch (const std::exception &error) {
+            WARN << "Failed to load" << ":" << error.what();
+        }
+
+        break;
+    }
     default:
+        if (!config.getValue("scenario-file").empty()) {
+            try {
+                scenarioFile = std::make_shared<genie::ScnFile>();
+                scenarioFile->load(config.getValue("scenario-file"));
+            } catch (const std::exception &error) {
+                WARN << "Failed to load" << config.getValue("scenario-file") << ":" << error.what();
+            }
+        }
         break;
     }
 
     Engine en;
-    if (!en.setup(config.getValue("scenario-file"))) {
+    if (!en.setup(scenarioFile)) {
         return 1;
     }
 

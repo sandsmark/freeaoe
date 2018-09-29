@@ -37,7 +37,7 @@ public:
     Engine();
     virtual ~Engine();
 
-    bool setup(const std::string &scnFile);
+    bool setup(const std::shared_ptr<genie::ScnFile> &scenario = nullptr);
     void start();
 
 private:
