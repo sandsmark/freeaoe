@@ -89,17 +89,18 @@ void Map::create(genie::ScnMap mapDescription)
     DBG << "size:" << mapDescription.width << "x" << mapDescription.height;
     tiles_.clear();
 
-    cols_ = mapDescription.width;
-    rows_ = mapDescription.height;
+    rows_ = mapDescription.width;
+    cols_ = mapDescription.height;
 
     tiles_.resize(cols_ * rows_);
 
     for (size_t i = 0; i < tiles_.size(); i++) {
+        const int col = i % cols_;
+        const int row = i / rows_;
         genie::MapTile tile = mapDescription.tiles[i];
 
-        tiles_[i].elevation_ = tile.elevation;
-
-        tiles_[i].terrain_ = AssetManager::Inst()->getTerrain(tile.terrainID);
+        getTileAt(row, col).elevation_ = tile.elevation;
+        getTileAt(row, col).terrain_ = AssetManager::Inst()->getTerrain(tile.terrainID);
     }
 }
 

@@ -88,9 +88,9 @@ public:
 
     int frameCount() const { return m_graphic ? m_graphic->data_.FrameCount : 0; }
 
-private:
     GraphicPtr m_graphic;
 
+private:
     struct GraphicDelta {
         GraphicRenderPtr graphic;
         ScreenPos offset;

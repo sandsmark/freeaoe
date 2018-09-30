@@ -19,6 +19,7 @@
 #include "Graphic.h"
 #include <resource/DataManager.h>
 #include "AssetManager.h"
+#include <core/Utility.h>
 
 #include <genie/resource/SlpFile.h>
 #include <genie/resource/SlpFrame.h>
@@ -225,17 +226,18 @@ bool Graphic::runOnce() const
 int Graphic::angleToOrientation(float angle) const
 {
     // The graphics start pointing south, and goes clock-wise
-    angle = - angle - M_PI_2;
+    angle = fmod(- angle - M_PI_2, 2*M_PI);
+    if (angle < 0) angle += 2*M_PI;
 
-    int lookupAngle = std::round(data_.AngleCount * angle / (M_PI * 2.));
+    return int(std::round(data_.AngleCount * angle / (2*M_PI))) % data_.AngleCount;
+}
 
-    // The angle we get in isn't normalized
-    lookupAngle %= data_.AngleCount;
-    while (lookupAngle < 0) {
-        lookupAngle += data_.AngleCount;
-    }
-
-    return lookupAngle;
+float Graphic::orientationToAngle(float orientation) const
+{
+    float angle = 2. * M_PI * orientation / data_.AngleCount;
+    angle = fmod(- angle - M_PI_2, 2*M_PI);
+    if (angle < 0) angle += 2*M_PI;
+    return angle;
 }
 
 Graphic::FrameInfo Graphic::calcFrameInfo(uint32_t num, float angle) const
@@ -244,6 +246,7 @@ Graphic::FrameInfo Graphic::calcFrameInfo(uint32_t num, float angle) const
     ret.frameNum = num;
     if (data_.AngleCount > 1) {
         int lookupAngle = angleToOrientation(angle);
+
         if (data_.MirroringMode && lookupAngle > data_.AngleCount/2) {
             ret.mirrored = true;
             lookupAngle = data_.AngleCount - lookupAngle;

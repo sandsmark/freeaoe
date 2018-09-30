@@ -444,7 +444,14 @@ void GameState::setupScenario()
     map_->create(scenario_->map);
 
     for (size_t playerNum = 0; playerNum < scenario_->playerUnits.size(); playerNum++) {
-        Player::Ptr player = std::make_shared<Player>(playerNum, m_civilizations[0]);
+        Player::Ptr player;
+
+        // player 0 is gaia
+        if (playerNum > 0) {
+            player = std::make_shared<Player>(playerNum, m_civilizations[scenario_->players[playerNum-1].playerColor]);
+        } else {
+            player = std::make_shared<Player>(playerNum, m_civilizations[0]); // gaia
+        }
 
         const genie::ScnPlayerResources &resources = scenario_->playerResources[playerNum];
         player->resources[genie::ResourceType::GoldStorage] = resources.gold;
@@ -457,14 +464,17 @@ void GameState::setupScenario()
 
         m_players.push_back(player);
         for (const genie::ScnUnit &scnunit : scenario_->playerUnits[playerNum].units) {
-            MapPos unitPos(scnunit.positionX * Constants::TILE_SIZE, scnunit.positionY * Constants::TILE_SIZE, scnunit.positionZ);
+            MapPos unitPos(scnunit.positionY * Constants::TILE_SIZE, scnunit.positionX * Constants::TILE_SIZE, scnunit.positionZ);
             Unit::Ptr unit = UnitFactory::Inst().createUnit(scnunit.objectID, unitPos, player, map_);
-            unit->setAngle(scnunit.rotation);
+
+            unit->setAngle(scnunit.rotation - M_PI_2/2.);
+
             if (unit->renderer().frameCount()) {
                 unit->renderer().currentFrame = scnunit.initAnimationFrame % unit->renderer().frameCount();
             } else {
                 WARN << "invalid graphics";
             }
+
             m_unitManager->add(unit);
         }
     }
@@ -502,54 +512,18 @@ void GameState::setupGame(const GameType gameType)
 
     m_unitManager->add(unit);
 
+    auto addWall = [&](int x, int y, float angle) {
+        unit = UnitFactory::Inst().createUnit(117, MapPos(48*x, 48*y, 0), m_humanPlayer, map_);
+        unit->setAngle(angle);
+        m_unitManager->add(unit);
+    };
+
     // some walls for testing wall rotation
-    unit = UnitFactory::Inst().createUnit(117, MapPos(48*6, 48*5, 0), m_humanPlayer, map_);
-    unit->setAngle(M_PI + M_PI_2);
-    m_unitManager->add(unit);
-
-    unit = UnitFactory::Inst().createUnit(117, MapPos(48*6, 48*4, 0), m_humanPlayer, map_);
-    unit->setAngle(M_PI + M_PI_2);
-    m_unitManager->add(unit);
-
-    unit = UnitFactory::Inst().createUnit(117, MapPos(48*6, 48*3, 0), m_humanPlayer, map_);
-    unit->setAngle(M_PI_2);
-    m_unitManager->add(unit);
-
-    unit = UnitFactory::Inst().createUnit(117, MapPos(48*7, 48*3, 0), m_humanPlayer, map_);
-    unit->setAngle(M_PI);
-    m_unitManager->add(unit);
-
-    unit = UnitFactory::Inst().createUnit(117, MapPos(48*8, 48*3, 0), m_humanPlayer, map_);
-    unit->setAngle(M_PI);
-    m_unitManager->add(unit);
-
-    unit = UnitFactory::Inst().createUnit(117, MapPos(48*9, 48*3, 0), m_humanPlayer, map_);
-    unit->setAngle(M_PI_2);
-    m_unitManager->add(unit);
-
-    unit = UnitFactory::Inst().createUnit(117, MapPos(48*10, 48*4, 0), m_humanPlayer, map_);
-    unit->setAngle(M_PI_2 / 2);
-    m_unitManager->add(unit);
-
-    unit = UnitFactory::Inst().createUnit(117, MapPos(48*11, 48*5, 0), m_humanPlayer, map_);
-    unit->setAngle(M_PI_2 / 2);
-    m_unitManager->add(unit);
-
-    unit = UnitFactory::Inst().createUnit(117, MapPos(48*12, 48*6, 0), m_humanPlayer, map_);
-    unit->setAngle(M_PI_2);
-    m_unitManager->add(unit);
-
-    unit = UnitFactory::Inst().createUnit(117, MapPos(48*11, 48*7, 0), m_humanPlayer, map_);
-    unit->setAngle(M_PI * 2);
-    m_unitManager->add(unit);
-    unit = UnitFactory::Inst().createUnit(117, MapPos(48*10, 48*8, 0), m_humanPlayer, map_);
-    unit->setAngle(M_PI * 2);
-    m_unitManager->add(unit);
-    unit = UnitFactory::Inst().createUnit(117, MapPos(48*9, 48*9, 0), m_humanPlayer, map_);
-    unit->setAngle(M_PI * 2);
-    m_unitManager->add(unit);
-
-    unit = UnitFactory::Inst().createUnit(117, MapPos(48*8, 48*10, 0), m_humanPlayer, map_);
-    unit->setAngle(M_PI_2);
-    m_unitManager->add(unit);
+    addWall(4, 4, 0);
+    unit->setAngle(unit->renderer().m_graphic->orientationToAngle(0));
+    addWall(5, 4, unit->renderer().m_graphic->orientationToAngle(1));
+    addWall(6, 4, unit->renderer().m_graphic->orientationToAngle(2));
+    addWall(7, 4, unit->renderer().m_graphic->orientationToAngle(3));
+    addWall(8, 4, unit->renderer().m_graphic->orientationToAngle(4));
+    addWall(9, 4, unit->renderer().m_graphic->orientationToAngle(5)); // wraps here
 }

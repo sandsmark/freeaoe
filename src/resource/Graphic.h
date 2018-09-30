@@ -163,6 +163,7 @@ public:
 
     const genie::Graphic &data_;
     int angleToOrientation(float angle) const;
+    float orientationToAngle(float orientation) const;
 
 private:
     struct FrameInfo {
