@@ -464,7 +464,7 @@ void GameState::setupScenario()
 
         m_players.push_back(player);
         for (const genie::ScnUnit &scnunit : scenario_->playerUnits[playerNum].units) {
-            MapPos unitPos(scnunit.positionY * Constants::TILE_SIZE, scnunit.positionX * Constants::TILE_SIZE, scnunit.positionZ);
+            MapPos unitPos((scnunit.positionY - 0.5) * Constants::TILE_SIZE, (scnunit.positionX + 0.5) * Constants::TILE_SIZE, scnunit.positionZ);
             Unit::Ptr unit = UnitFactory::Inst().createUnit(scnunit.objectID, unitPos, player, map_);
 
             unit->setAngle(scnunit.rotation - M_PI_2/2.);
