@@ -9,6 +9,10 @@ struct SignalHolder;
 template<typename T>
 struct SignalEmitter
 {
+    enum class Signals {
+
+    };
+
     template<typename Signal>
     void connect(const Signal sig, const std::function<void()> &func) {
         static_assert(std::is_enum<Signal>());

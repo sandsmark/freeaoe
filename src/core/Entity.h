@@ -19,6 +19,7 @@
 #pragma once
 
 #include "render/GraphicRender.h"
+#include "core/SignalEmitter.h"
 
 namespace genie {
 class Unit;
@@ -34,7 +35,7 @@ struct MoveTargetMarker;
 typedef std::shared_ptr<Map> MapPtr;
 typedef std::shared_ptr<Entity> EntityPtr;
 
-struct Entity: std::enable_shared_from_this<Entity>
+struct Entity: std::enable_shared_from_this<Entity>, SignalEmitter<Entity>
 {
     const size_t id;
 
