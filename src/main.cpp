@@ -103,7 +103,7 @@ int main(int argc, char **argv)
     case HomeScreen::Button::Tutorial: {
         try {
             genie::CpxFile cpxFile;
-            cpxFile.setFileName(config.getValue("game-path") + "/Campaign/xcam1.cpx");
+            cpxFile.setFileName(config.getValue("game-path") + "/Campaign/xcam3.cpx");
             cpxFile.load();
 
             scenarioFile = cpxFile.getScnFile(0);

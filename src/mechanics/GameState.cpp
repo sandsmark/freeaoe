@@ -443,7 +443,7 @@ void GameState::setupScenario()
     DBG << "Setting up scenario:" << scenario_->scenarioInstructions;
     map_->create(scenario_->map);
 
-    for (size_t playerNum = 0; playerNum < scenario_->playerUnits.size(); playerNum++) {
+    for (size_t playerNum = 0; playerNum < scenario_->enabledPlayerCount; playerNum++) {
         Player::Ptr player;
 
         // player 0 is gaia
@@ -472,7 +472,7 @@ void GameState::setupScenario()
             if (unit->renderer().frameCount()) {
                 unit->renderer().currentFrame = scnunit.initAnimationFrame % unit->renderer().frameCount();
             } else {
-                WARN << "invalid graphics";
+//                WARN << "invalid graphics";
             }
 
             m_unitManager->add(unit);
