@@ -24,6 +24,7 @@
 #include "global/Constants.h"
 #include "resource/DataManager.h"
 #include <genie/dat/Unit.h>
+#include "core/Utility.h"
 
 Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, const std::shared_ptr<Civilization> &civilization_, const MapPtr &map) :
     Entity(Type::Unit, LanguageManager::getString(data_.LanguageDLLName) + " (" + std::to_string(data_.ID) + ")", map),
@@ -122,6 +123,10 @@ void Unit::increaseCreationProgress(float progress)
 
 float Unit::creationProgress() const
 {
+    if (IS_UNLIKELY(m_data->Creatable.TrainTime == 0)) {
+        return 0;
+    }
+
     return m_creationProgress / float(m_data->Creatable.TrainTime);
 }
 
