@@ -63,6 +63,68 @@ struct Slope {
 
     inline operator Direction() const { return direction; }
 
+    inline std::string toAbbreviation() const {
+        switch (direction) {
+        case Flat:
+            return "Flat";
+        case SouthUp:
+            return "S";
+        case NorthUp:
+            return "N";
+        case WestUp:
+            return "W";
+        case EastUp:
+            return "E";
+        case SouthWestUp:
+            return "SW";
+        case NorthWestUp:
+            return "NW";
+        case SouthEastUp:
+            return "SE";
+        case NorthEastUp:
+            return "NE";
+        case SouthWestEastUp:
+            return "SWE";
+        case NorthWestEastUp:
+            return "NWE";
+        case NorthSouthWestUp:
+            return "NSW";
+        case NorthSouthEastUp:
+            return "NSE";
+        }
+    }
+
+    inline std::string toString() const {
+        switch (direction) {
+        case Flat:
+            return "Flat";
+        case SouthUp:
+            return "SouthUp";
+        case NorthUp:
+            return "NorthUp";
+        case WestUp:
+            return "WestUp";
+        case EastUp:
+            return "EastUp";
+        case SouthWestUp:
+            return "SouthWestUp";
+        case NorthWestUp:
+            return "NorthWestUp";
+        case SouthEastUp:
+            return "SouthEastUp";
+        case NorthEastUp:
+            return "NorthEastUp";
+        case SouthWestEastUp:
+            return "SouthWestEastUp";
+        case NorthWestEastUp:
+            return "NorthWestEastUp";
+        case NorthSouthWestUp:
+            return "NorthWestEastUp";
+        case NorthSouthEastUp:
+            return "NorthWestEastUp";
+        }
+    }
+
     inline genie::Slope toGenie() const {
         switch (direction){
         case Flat: return genie::SlopeFlat;
