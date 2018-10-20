@@ -55,7 +55,7 @@ public:
 
     const sf::Texture &slopedImage(const TileSlopes &slopes, const std::vector<genie::Pattern> &patterns, int tileX, int tileY);
 
-    const sf::Texture &texture(const MapTile &tile);
+//    const sf::Texture &texture(const MapTile &tile);
 
 private:
     void addOutline(sf::Image &img);

@@ -160,7 +160,7 @@ void MapRenderer::updateTexture()
             MapRect rect;
             rect.x = col * Constants::TILE_SIZE;
             rect.y = row * Constants::TILE_SIZE;
-            rect.z = mapTile.elevation_ * m_elevationHeight;
+            rect.z = mapTile.elevation * m_elevationHeight;
             rect.width = Constants::TILE_SIZE;
             rect.height = Constants::TILE_SIZE;
 
@@ -178,20 +178,22 @@ void MapRenderer::updateTexture()
                 spos.y -= mapTile.yOffset * 2;
             }
 
-            if (!mapTile.terrain_) {
+            TerrainPtr terrain = AssetManager::Inst()->getTerrain(mapTile.terrainId);
+
+            if (!terrain) {
                 invalidIndicator.setPosition(spos);
                 m_textureTarget.draw(invalidIndicator);
                 continue;
             }
 
             if (mapTile.slopes.self == Slope::Flat) {
-                m_textureTarget.draw(mapTile.terrain_->texture(col, row), spos);
+                m_textureTarget.draw(terrain->texture(col, row), spos);
 
                 for (const Blend &blend : mapTile.blends) {
                     m_textureTarget.draw(AssetManager::Inst()->getTerrain(blend.terrainId)->blendImage(blend, col, row), spos);
                 }
             } else {
-                m_textureTarget.draw(mapTile.terrain_->slopedImage(mapTile.slopes, mapTile.slopePatterns(), col, row), spos);
+                m_textureTarget.draw(terrain->slopedImage(mapTile.slopes, mapTile.slopePatterns(), col, row), spos);
             }
         }
     }

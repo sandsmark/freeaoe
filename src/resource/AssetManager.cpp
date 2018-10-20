@@ -160,7 +160,7 @@ GraphicPtr AssetManager::getGraphic(Uint32 id)
 }
 
 //------------------------------------------------------------------------------
-TerrainPtr AssetManager::getTerrain(unsigned int id)
+const TerrainPtr &AssetManager::getTerrain(unsigned int id)
 {
     if (terrains_.find(id) != terrains_.end()) {
         return terrains_[id];
@@ -171,7 +171,7 @@ TerrainPtr AssetManager::getTerrain(unsigned int id)
 
     terrains_[id] = terrain;
 
-    return terrain;
+    return terrains_[id];
 }
 
 const genie::PalFile &AssetManager::getPalette(const std::string &name)

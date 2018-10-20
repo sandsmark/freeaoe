@@ -133,7 +133,7 @@ public:
     /// @param id id of the resource
     /// @return resource pointer to the object
     //
-    TerrainPtr getTerrain(unsigned int id);
+    const TerrainPtr &getTerrain(unsigned int id);
 
     const genie::PalFile &getPalette(const std::string &name);
     const genie::PalFile &getPalette(unsigned int id = 50500);

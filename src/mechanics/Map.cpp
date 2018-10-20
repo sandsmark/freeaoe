@@ -55,32 +55,33 @@ void Map::setUpSample()
     tiles_.clear();
 
     MapTile grass;
-    grass.elevation_ = 0;
-    grass.terrain_ = AssetManager::Inst()->getTerrain(0);
+    grass.elevation = 0;
+    grass.terrainId = 0;
 
     tiles_.resize(cols_ * rows_, grass);
+    m_tileUnits.resize(cols_ * rows_);
 
     for (int i=6; i<10; i++) {
-        getTileAt(0, i).terrain_ = AssetManager::Inst()->getTerrain(2);
-        getTileAt(1, i).terrain_ = AssetManager::Inst()->getTerrain(2);
-        getTileAt(2, i).terrain_ = AssetManager::Inst()->getTerrain(1);
+        getTileAt(0, i).terrainId = 2;
+        getTileAt(1, i).terrainId = 2;
+        getTileAt(2, i).terrainId = 2;
     }
     for (int i=4; i<6; i++) {
-        getTileAt(i, 10).terrain_ = AssetManager::Inst()->getTerrain(1);
+        getTileAt(i, 10).terrainId = 1;
     }
 
     for (int i=3; i<6; i++) {
-        getTileAt(14, i).elevation_ = 1;
+        getTileAt(14, i).elevation = 1;
     }
 
     for (int i=3; i<6; i++) {
-        getTileAt(15, i).elevation_ = 1;
+        getTileAt(15, i).elevation = 1;
     }
 
-    getTileAt(13, 4).elevation_ = 1;
-    getTileAt(16, 4).elevation_ = 1;
-    getTileAt(17, 4).elevation_ = 1;
-    getTileAt(18, 5).elevation_ = 1;
+    getTileAt(13, 4).elevation = 1;
+    getTileAt(16, 4).elevation = 1;
+    getTileAt(17, 4).elevation = 1;
+    getTileAt(18, 5).elevation = 1;
 }
 
 void Map::create(genie::ScnMap mapDescription)
@@ -93,14 +94,15 @@ void Map::create(genie::ScnMap mapDescription)
     cols_ = mapDescription.height;
 
     tiles_.resize(cols_ * rows_);
+    m_tileUnits.resize(cols_ * rows_);
 
     for (size_t i = 0; i < tiles_.size(); i++) {
         const int col = i % cols_;
         const int row = i / rows_;
         genie::MapTile tile = mapDescription.tiles[i];
 
-        getTileAt(row, col).elevation_ = tile.elevation;
-        getTileAt(row, col).terrain_ = AssetManager::Inst()->getTerrain(tile.terrainID);
+        getTileAt(row, col).elevation = tile.elevation;
+        getTileAt(row, col).terrainId = tile.terrainID;
     }
 }
 
@@ -132,7 +134,7 @@ float Map::elevationAt(const MapPos &position)
     const float localX = position.x / Constants::TILE_SIZE - tileX;
     const float localY = position.y / Constants::TILE_SIZE - tileY;
 
-    float elevation = tile.elevation_;
+    float elevation = tile.elevation;
 
     switch(tile.slopes.self) {
     case Slope::NorthWestUp:
@@ -202,7 +204,7 @@ void Map::setTileAt(unsigned col, unsigned row, unsigned id)
         return;
     }
 
-    tiles_[index].terrain_ = AssetManager::Inst()->getTerrain(id);
+    tiles_[index].terrainId = id;
     m_updated = true;
 }
 
@@ -215,7 +217,7 @@ void Map::updateTileAt(const int col, const int row, unsigned id)
         return;
     }
 
-    tiles_[index].terrain_ = AssetManager::Inst()->getTerrain(id);
+    tiles_[index].terrainId = id;
 
     for (int col_ = std::max(col - 1, 0); col_ < std::min(col + 2, cols_); col_++) {
         for (int row_ = std::max(row - 1, 0); row_ < std::min(row + 2, rows_); row_++) {
@@ -228,12 +230,17 @@ void Map::updateTileAt(const int col, const int row, unsigned id)
 
 void Map::removeEntityAt(unsigned int col, unsigned int row, const int entityId)
 {
-    MapTile &tile = getTileAt(col, row);
+    unsigned int index = row * cols_ + col;
 
-    std::vector<std::weak_ptr<Entity>>::iterator it=tile.entities.begin();
-    for (;it!=tile.entities.end(); it++) {
+    if (IS_UNLIKELY(index >= m_tileUnits.size())) {
+        WARN << "Trying to add unit out of range";
+        return;
+    }
+
+    std::vector<std::weak_ptr<Entity>>::iterator it=m_tileUnits[index].begin();
+    for (;it!=m_tileUnits[index].end(); it++) {
         if (!it->expired() && it->lock()->id == entityId) {
-            tile.entities.erase(it);
+            m_tileUnits[index].erase(it);
             break;
         }
     }
@@ -241,18 +248,43 @@ void Map::removeEntityAt(unsigned int col, unsigned int row, const int entityId)
 
 void Map::addEntityAt(unsigned int col, unsigned int row, const EntityPtr &entity)
 {
+    unsigned int index = row * cols_ + col;
+
+    if (IS_UNLIKELY(index >= m_tileUnits.size())) {
+        WARN << "Trying to add unit out of range";
+        return;
+    }
+
     // just to be sure
     removeEntityAt(col, row, entity->id);
 
-    getTileAt(col, row).entities.push_back(entity);
+    m_tileUnits[index].push_back(entity);
+}
+
+const std::vector<std::weak_ptr<Entity>> &Map::entitiesAt(unsigned int col, unsigned int row)
+{
+    unsigned int index = row * cols_ + col;
+
+    if (IS_UNLIKELY(index >= m_tileUnits.size())) {
+        WARN << "Trying to get MapTile out of range!";
+        static const std::vector<std::weak_ptr<Entity>> nullVector;
+        return nullVector;
+    }
+
+    return m_tileUnits[index];
 }
 
 void Map::updateMapData()
 {
     TIME_THIS;
 
-    for (MapTile &tile : tiles_) {
-        tile.reset();
+    for (int col = 0; col < cols_; col++) {
+        for (int row = 0; row < rows_; row++) {
+            MapTile &tile = tiles_[row * cols_ + col];
+            tile.reset();
+            tile.col = col;
+            tile.row = row;
+        }
     }
 
     for (int col = 0; col < cols_; col++) {
@@ -285,16 +317,16 @@ enum Direction : uint8_t {
 void Map::updateTileBlend(int tileX, int tileY)
 {
     MapTile &tile = getTileAt(tileX, tileY);
-    const genie::Terrain &tileData = tile.terrain_->data();
+    const genie::Terrain &tileData = DataManager::Inst().getTerrain(tile.terrainId);
 
-    int32_t tileId = tile.terrain_->id;
+    int32_t tileId = tile.terrainId;
 
     std::unordered_map<uint8_t, int> blendDirections;
     std::unordered_set<uint8_t> neighborIds;
 
     std::unordered_map<uint8_t, int32_t> blendPriorities;
 
-    std::unordered_map<uint8_t, TerrainPtr> neighborTerrains;
+//    std::unordered_map<uint8_t, genie::Terrain*> neighborTerrains;
 
     uint8_t neighborsAbove = 0;
     uint8_t neighborsBelow = 0;
@@ -338,27 +370,28 @@ void Map::updateTileBlend(int tileX, int tileY)
             }
 
             MapTile &neighbor = getTileAt(tileX + dx, tileY + dy);
-            if (neighbor.elevation_ == -1) {
+            if (neighbor.elevation == -1) {
                 continue;
             }
 
-            if (neighbor.elevation_ > tile.elevation_) {
+            if (neighbor.elevation > tile.elevation) {
                 neighborsAbove |= direction;
-            } else if (neighbor.elevation_ < tile.elevation_) {
+            } else if (neighbor.elevation < tile.elevation) {
                 neighborsBelow |= direction;
             }
 
-            const int32_t neighborId = neighbor.terrain_->id;
+            const int32_t neighborId = neighbor.terrainId;
             if (tileId == neighborId) {
                 continue;
             }
-            const genie::Terrain &neighborData = neighbor.terrain_->data();
+
+            const genie::Terrain &neighborData = DataManager::Inst().getTerrain(neighbor.terrainId);
 
             if (tileData.BlendPriority >= neighborData.BlendPriority) {
                 continue;
             }
             blendPriorities[neighborId] = neighborData.BlendPriority;
-            neighborTerrains[neighborId] = neighbor.terrain_;
+//            neighborTerrains[neighborId] = &neighborData;
 
             neighborIds.insert(neighborId);
 
@@ -432,8 +465,6 @@ void Map::updateTileBlend(int tileX, int tileY)
     std::sort(idsToDraw.begin(), idsToDraw.end(), [&](const uint8_t a, const uint8_t b){
         return blendPriorities[a] < blendPriorities[b];
     });
-
-    tile.textures.push_back(tile.terrain_->texture(tileX, tileY));
 
     for (const uint8_t id : idsToDraw) {
         Blend blends;
@@ -541,9 +572,9 @@ void Map::updateTileBlend(int tileX, int tileY)
             break;
         }
 
-        const TerrainPtr &neighbor = neighborTerrains[id];
-        blends.blendMode = Terrain::blendMode(tileData.BlendType, neighbor->data().BlendType);
-        blends.terrainId = neighbor->id;
+        const genie::Terrain &neighbor = DataManager::Inst().getTerrain(id); //neighborTerrains[id];
+        blends.blendMode = Terrain::blendMode(tileData.BlendType, neighbor.BlendType);
+        blends.terrainId = id;
         blends.x = tileX;
         blends.y = tileX;
 

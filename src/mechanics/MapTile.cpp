@@ -1,11 +1,7 @@
 #include "MapTile.h"
 #include "resource/Terrain.h"
 
-uint32_t MapTile::terrainId() const {
-    return terrain_->id;
-}
-
-std::vector<genie::Pattern> MapTile::slopePatterns()
+std::vector<genie::Pattern> MapTile::slopePatterns() const
 {
     // The correct patterns for the different slopes is from aoetwols by aap
     // (I just chose a much more horrible way of looking up and storing them, FIXME I guess)

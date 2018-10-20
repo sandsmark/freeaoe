@@ -424,7 +424,7 @@ bool ActionMove::isPassable(const int x, const int y, int coarseness)
     m_passableCached[cacheIndex] = true;
 
     const MapTile &tile = m_map->getTileAt(tileX, tileY);
-    if (m_terrainMoveMultiplier[tile.terrainId()] == 0) {
+    if (m_terrainMoveMultiplier[tile.terrainId] == 0) {
         m_passable[cacheIndex] = false;
         return false;
     }
@@ -437,13 +437,13 @@ bool ActionMove::isPassable(const int x, const int y, int coarseness)
             if (IS_UNLIKELY(dx < 0 || dy < 0 || dx >= m_map->getCols() || dy >= m_map->getRows())) {
                 continue;
             }
-            const MapTile &tile = m_map->getTileAt(dx, dy);
+            const std::vector<std::weak_ptr<Entity>> &entities = m_map->entitiesAt(dx, dy);
 
-            if (tile.entities.empty()) {
+            if (entities.empty()) {
                 continue;
             }
 
-            for (const std::weak_ptr<Entity> &entity : tile.entities) {
+            for (const std::weak_ptr<Entity> &entity : entities) {
                 Unit::Ptr otherUnit = Entity::asUnit(entity);
                 if (IS_UNLIKELY(!otherUnit)) {
                     continue;

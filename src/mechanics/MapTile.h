@@ -226,24 +226,22 @@ struct Blend  {
 struct MapTile
 {
     void reset() {
-        yOffset = 0;
+        col = row = yOffset = 0;
         slopes = TileSlopes();
-        textures.clear();
         blends.clear();
     }
 
-    uint32_t terrainId() const;
-    std::vector<genie::Pattern> slopePatterns();
+    std::vector<genie::Pattern> slopePatterns() const;
 
-    int elevation_ = -1;
+    int elevation = -1;
+    int col = 0, row = 0;
+
     int yOffset = 0;
-    TerrainPtr terrain_;
 
-    std::vector<sf::Texture> textures;
+    uint32_t terrainId;
     std::vector<Blend> blends;
-    std::vector<std::weak_ptr<Entity>> entities;
-
     TileSlopes slopes;
+
 };
 
 namespace std {

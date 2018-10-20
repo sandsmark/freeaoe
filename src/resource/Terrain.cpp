@@ -236,6 +236,14 @@ const sf::Texture &Terrain::slopedImage(const TileSlopes &slopes, const std::vec
     return m_slopeImages[slopes];
 }
 
+//const sf::Texture &Terrain::texture(const MapTile &tile)
+//{
+
+////    const int tileSquareCount = sqrt(m_slp->getFrameCount());
+////    const int frameNum = (y % tileSquareCount) + (x % tileSquareCount) * tileSquareCount;
+
+//}
+
 void Terrain::addOutline(sf::Image &img)
 {
     for (size_t x=2;x<img.getSize().x; x++) {

@@ -86,6 +86,7 @@ public:
 
     void removeEntityAt(unsigned int col, unsigned int row, const int entityId);
     void addEntityAt(unsigned int col, unsigned int row, const EntityPtr &entity);
+    const std::vector<std::weak_ptr<Entity>> &entitiesAt(unsigned int col, unsigned int row);
 
     void updateMapData();
 
@@ -102,6 +103,8 @@ private:
 
     typedef std::vector<MapTile> MapTileArray;
     MapTileArray tiles_;
+
+    std::vector<std::vector<std::weak_ptr<Entity>>> m_tileUnits;
 
     bool m_updated = false;
 };
