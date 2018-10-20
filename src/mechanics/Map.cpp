@@ -287,11 +287,6 @@ void Map::updateTileBlend(int tileX, int tileY)
     MapTile &tile = getTileAt(tileX, tileY);
     const genie::Terrain &tileData = tile.terrain_->data();
 
-//    if (tileData.SLP < 0) {
-//        log.error("Invalid tile data");
-//        return;
-//    }
-
     int32_t tileId = tile.terrain_->id;
 
     std::unordered_map<uint8_t, int> blendDirections;
@@ -486,8 +481,6 @@ void Map::updateTileBlend(int tileX, int tileY)
         if (direction & North) {
             blends.addBlend(Blend::LowerRight1);
         }
-
-
 
         switch (direction & 0xF) {
         case None:

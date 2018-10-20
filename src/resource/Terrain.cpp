@@ -95,7 +95,12 @@ bool Terrain::load()
         m_data = DataManager::Inst().getTerrain(id);
 
         if (!m_slp) {
-            m_slp = AssetManager::Inst()->getSlp(m_data.SLP);
+            if (m_data.TerrainToDraw != -1) {
+                const int replacementSlp = DataManager::Inst().getTerrain(m_data.TerrainToDraw).SLP;
+                m_slp = AssetManager::Inst()->getSlp(replacementSlp);
+            } else {
+                m_slp = AssetManager::Inst()->getSlp(m_data.SLP);
+            }
         }
 
         if (!m_slp) {
