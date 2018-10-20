@@ -564,11 +564,6 @@ void Map::updateTileSlopes(int tileX, int tileY)
     if (tile.slopes.self == Slope::Flat) {
         return;
     }
-    const genie::Terrain &tileData = tile.terrain_->data();
-    if (tileData.SLP == -1) {
-        tile.slopes.self = Slope::Flat;
-        return;
-    }
 
     tile.slopes.north = slopeAt(tileX - 1, tileY + 1);
     tile.slopes.south = slopeAt(tileX + 1, tileY - 1);
