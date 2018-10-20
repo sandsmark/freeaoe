@@ -31,6 +31,8 @@
 #include <resource/Terrain.h>
 #include <genie/script/scn/MapDescription.h>
 
+#include "MapTile.h"
+
 namespace sf {
 class Shape;
 }
@@ -41,30 +43,6 @@ public:
     unsigned int row, col;
     sf::Int8 elevation;
     sf::Int32 x_pos, y_pos, z_pos;
-};
-
-struct MapTile
-{
-    void reset() {
-        yOffset = 0;
-        slopes = TileSlopes();
-        textures.clear();
-        blends.clear();
-    }
-
-    uint32_t terrainId() const {
-        return terrain_->id;
-    }
-
-    int elevation_ = -1;
-    int yOffset = 0;
-    TerrainPtr terrain_;
-
-    std::vector<sf::Texture> textures;
-    std::vector<Blend> blends;
-    std::vector<std::weak_ptr<Entity>> entities;
-
-    TileSlopes slopes;
 };
 
 class Map

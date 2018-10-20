@@ -98,6 +98,7 @@ set(MECHANICS_SRC
     src/mechanics/UnitManager.cpp
     src/mechanics/ActionGather.cpp
     src/mechanics/Unit.cpp
+    src/mechanics/MapTile.cpp
     )
 
 set(RENDER_SRC

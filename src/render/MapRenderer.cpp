@@ -191,7 +191,7 @@ void MapRenderer::updateTexture()
                     m_textureTarget.draw(AssetManager::Inst()->getTerrain(blend.terrainId)->blendImage(blend, col, row), spos);
                 }
             } else {
-                m_textureTarget.draw(mapTile.terrain_->slopedImage(mapTile.slopes, col, row), spos);
+                m_textureTarget.draw(mapTile.terrain_->slopedImage(mapTile.slopes, mapTile.slopePatterns(), col, row), spos);
             }
         }
     }
