@@ -22,7 +22,6 @@
 #include <resource/AssetManager.h>
 #include <resource/DataManager.h>
 #include <SFML/Graphics/Sprite.hpp>
-#include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 
 MapRenderer::MapRenderer() :
@@ -148,11 +147,11 @@ void MapRenderer::updateTexture()
         return;
     }
 
-    sf::CircleShape outline(Constants::TILE_SIZE, 4);
-    outline.setScale(1, 0.5);
-    outline.setFillColor(sf::Color::Transparent);
-    outline.setOutlineThickness(3);
-    outline.setOutlineColor(sf::Color(255, 255, 255, 64));
+    sf::CircleShape invalidIndicator(Constants::TILE_SIZE, 4);
+    invalidIndicator.setScale(1, 0.5);
+    invalidIndicator.setFillColor(sf::Color::Red);
+    invalidIndicator.setOutlineThickness(3);
+    invalidIndicator.setOutlineColor(sf::Color::Transparent);
 
     for (int col = 0; col < m_rColEnd; col++) {
         for (int row = m_rRowEnd-1; row >= 0; row--) {
@@ -180,27 +179,20 @@ void MapRenderer::updateTexture()
             }
 
             if (!mapTile.terrain_) {
-                sf::RectangleShape rect;
-                rect.setFillColor(sf::Color(255, 0, 0, 32));
-                rect.setPosition(spos);
-                rect.setSize(sf::Vector2f(Constants::TILE_SIZE_HORIZONTAL, Constants::TILE_SIZE_VERTICAL));
-                m_textureTarget.draw(rect);
+                invalidIndicator.setPosition(spos);
+                m_textureTarget.draw(invalidIndicator);
                 continue;
             }
-
 
             if (mapTile.slopes.self == Slope::Flat) {
                 m_textureTarget.draw(mapTile.terrain_->texture(col, row), spos);
 
-                for (const Blend &b : mapTile.blends) {
-                    m_textureTarget.draw(AssetManager::Inst()->getTerrain(b.terrainId)->blendImage(b, col, row), spos);
+                for (const Blend &blend : mapTile.blends) {
+                    m_textureTarget.draw(AssetManager::Inst()->getTerrain(blend.terrainId)->blendImage(blend, col, row), spos);
                 }
             } else {
                 m_textureTarget.draw(mapTile.terrain_->slopedImage(mapTile.slopes, col, row), spos);
             }
-
-//            outline.setPosition(spos.x, spos.y);
-//            m_textureTarget.draw(outline);
         }
     }
 
