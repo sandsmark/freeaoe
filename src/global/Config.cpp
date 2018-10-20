@@ -221,13 +221,13 @@ void Config::printUsage(const std::string &programName)
     WARN << "Usage:" << programName << "[options]";
     WARN << "Options:";
 
-    for (const auto &[name, description] : m_allowedOptions) {
+    for (const auto &[name, option] : m_allowedOptions) {
         static_assert(std::is_same<decltype(name), const std::string>()); // fuck auto
-        static_assert(std::is_same<decltype(description), const std::string>()); // fuck auto x2
+        static_assert(std::is_same<decltype(option), const ConfigOption>()); // fuck auto x2
 
         std::cout << std::setw(25) << std::left;
         std::cout << ("  --" + name + "=value");
-        std::cout << description << std::endl;
+        std::cout << option.description << std::endl;
 
     }
 }
@@ -270,10 +270,14 @@ bool Config::parseOptions(int argc, char **argv)
     return true;
 }
 
-void Config::setAllowedOptions(const std::unordered_map<std::string, std::string> &options)
+void Config::setAllowedOptions(const std::vector<Config::ConfigOption> &options)
 {
-    m_allowedOptions = options;
+    m_allowedOptions.clear();
+    for (const ConfigOption &option : options) {
+        m_allowedOptions[option.name] = option;
+    }
 }
+
 
 const std::string Config::getValue(const std::string &name)
 {
@@ -387,6 +391,10 @@ void Config::writeConfigFile(const std::string &path)
     for (const auto &[name, value] : m_options) {
         static_assert(std::is_same<decltype(name), const std::string>()); // fuck auto
         static_assert(std::is_same<decltype(value), const std::string>()); // fuck auto x2
+
+        if (!m_allowedOptions[name].saved) {
+            continue;
+        }
 
         file << name << "=" << value << "\n";
     }

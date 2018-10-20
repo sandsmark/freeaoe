@@ -20,6 +20,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 #include <genie/Types.h>
 
@@ -27,6 +28,16 @@
 class Config
 {
 public:
+    enum StorePolicy {
+        NotStored = 0,
+        Stored = 1
+    };
+    struct ConfigOption {
+        std::string name;
+        std::string description;
+        StorePolicy saved = NotStored;
+    };
+
     Config(const std::string &applicationName);
 
     //----------------------------------------------------------------------------
@@ -41,7 +52,7 @@ public:
     ///
     //
     bool parseOptions(int argc, char **argv);
-    void setAllowedOptions(const std::unordered_map<std::string, std::string> &options);
+    void setAllowedOptions(const std::vector<ConfigOption> &options);
 
 
     const std::string getValue(const std::string &name);
@@ -61,6 +72,6 @@ private:
     std::string m_scenarioFile;
     std::string m_filePath;
     std::unordered_map<std::string, std::string> m_options;
-    std::unordered_map<std::string, std::string> m_allowedOptions;
+    std::unordered_map<std::string, ConfigOption> m_allowedOptions;
 };
 

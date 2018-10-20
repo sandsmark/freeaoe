@@ -43,8 +43,9 @@ int main(int argc, char **argv)
 
     Config config("freeaoe");
     config.setAllowedOptions({
-            {"game-path", "Path to AoE installation with data files"},
-            {"scenario-file", "Path to scenario file to load"}
+            {"game-path", "Path to AoE installation with data files", Config::Stored },
+            {"scenario-file", "Path to scenario file to load", Config::NotStored },
+            {"single-player", "Path to scenario file to load", Config::NotStored }
             });
     if (!config.parseOptions(argc, argv)) {
         return 1;
