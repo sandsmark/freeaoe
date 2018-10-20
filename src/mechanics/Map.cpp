@@ -343,6 +343,9 @@ void Map::updateTileBlend(int tileX, int tileY)
             }
 
             MapTile &neighbor = getTileAt(tileX + dx, tileY + dy);
+            if (neighbor.elevation_ == -1) {
+                continue;
+            }
 
             if (neighbor.elevation_ > tile.elevation_) {
                 neighborsAbove |= direction;

@@ -56,8 +56,8 @@ struct MapTile
         return terrain_->id;
     }
 
-    unsigned int elevation_;
-    int yOffset;
+    int elevation_ = -1;
+    int yOffset = 0;
     TerrainPtr terrain_;
 
     std::vector<sf::Texture> textures;
