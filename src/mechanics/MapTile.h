@@ -226,7 +226,7 @@ struct Blend  {
 struct MapTile
 {
     void reset() {
-        col = row = yOffset = 0;
+        yOffset = 0;
         slopes = TileSlopes();
         blends.clear();
     }
@@ -234,7 +234,7 @@ struct MapTile
     std::vector<genie::Pattern> slopePatterns() const;
 
     int elevation = -1;
-    int col = 0, row = 0;
+    int frame = 0;
 
     int yOffset = 0;
 
@@ -248,7 +248,7 @@ namespace std {
 
 template<> struct hash<TileSlopes>
 {
-    size_t operator()(const TileSlopes s) const {
+    inline size_t operator()(const TileSlopes s) const {
         return hash<int8_t>()(s.self.direction) ^
                hash<int8_t>()(s.north.direction) ^
                hash<int8_t>()(s.south.direction) ^
@@ -263,8 +263,20 @@ template<> struct hash<TileSlopes>
 
 template<> struct hash<Blend>
 {
-    size_t operator()(const Blend b) const {
+    inline size_t operator()(const Blend b) const {
         return hash<uint32_t>()(b.bits) ^ hash<uint8_t>()(b.blendMode);
     }
 };
+
+template<> struct hash<MapTile>
+{
+    inline size_t operator()(const MapTile t) const {
+        size_t ret = hash<uint32_t>()(t.frame) ^ hash<TileSlopes>()(t.slopes);
+        for (const Blend &b : t.blends) {
+            ret ^= hash<Blend>()(b);
+        }
+        return ret;
+    }
+};
+
 }

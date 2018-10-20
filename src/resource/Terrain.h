@@ -55,6 +55,7 @@ public:
 
     const sf::Texture &slopedImage(const TileSlopes &slopes, const std::vector<genie::Pattern> &patterns, int tileX, int tileY);
 
+    uint32_t coordinatesToFrame(int x, int y);
 //    const sf::Texture &texture(const MapTile &tile);
 
 private:

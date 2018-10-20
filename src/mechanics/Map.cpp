@@ -282,8 +282,7 @@ void Map::updateMapData()
         for (int row = 0; row < rows_; row++) {
             MapTile &tile = tiles_[row * cols_ + col];
             tile.reset();
-            tile.col = col;
-            tile.row = row;
+            tile.frame = AssetManager::Inst()->getTerrain(tile.terrainId)->coordinatesToFrame(col, row);
         }
     }
 

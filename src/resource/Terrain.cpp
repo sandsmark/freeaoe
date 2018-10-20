@@ -236,6 +236,12 @@ const sf::Texture &Terrain::slopedImage(const TileSlopes &slopes, const std::vec
     return m_slopeImages[slopes];
 }
 
+uint32_t Terrain::coordinatesToFrame(int x, int y)
+{
+    const int tileSquareCount = sqrt(m_slp->getFrameCount());
+    return (y % tileSquareCount) + (x % tileSquareCount) * tileSquareCount;
+}
+
 //const sf::Texture &Terrain::texture(const MapTile &tile)
 //{
 
