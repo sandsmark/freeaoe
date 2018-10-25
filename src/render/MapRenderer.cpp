@@ -179,6 +179,7 @@ void MapRenderer::updateTexture()
             }
 
             TerrainPtr terrain = AssetManager::Inst()->getTerrain(mapTile.terrainId);
+            m_textureTarget.draw(terrain->texture(mapTile), spos);
 
             if (!terrain) {
                 invalidIndicator.setPosition(spos);
@@ -186,15 +187,15 @@ void MapRenderer::updateTexture()
                 continue;
             }
 
-            if (mapTile.slopes.self == Slope::Flat) {
-                m_textureTarget.draw(terrain->texture(col, row), spos);
+//            if (mapTile.slopes.self == Slope::Flat) {
+//                m_textureTarget.draw(terrain->texture(col, row), spos);
 
-                for (const Blend &blend : mapTile.blends) {
-                    m_textureTarget.draw(AssetManager::Inst()->getTerrain(blend.terrainId)->blendImage(blend, col, row), spos);
-                }
-            } else {
-                m_textureTarget.draw(terrain->slopedImage(mapTile.slopes, mapTile.slopePatterns(), col, row), spos);
-            }
+//                for (const Blend &blend : mapTile.blends) {
+//                    m_textureTarget.draw(AssetManager::Inst()->getTerrain(blend.terrainId)->blendImage(blend, col, row), spos);
+//                }
+//            } else {
+//                m_textureTarget.draw(terrain->slopedImage(mapTile.slopes, mapTile.slopePatterns(), col, row), spos);
+//            }
         }
     }
 

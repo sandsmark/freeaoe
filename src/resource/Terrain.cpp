@@ -146,16 +146,6 @@ const sf::Texture &Terrain::blendImage(const Blend blends, int tileX, int tileY)
         return m_blendImages[blends];
     }
 
-    sf::Image sourceImage = image(tileX, tileY);
-    const Size size = sourceImage.getSize();
-
-    const size_t byteCount = size.width * size.height * 4;
-
-    // fuck msvc
-    std::vector<Uint8> pixelsBuf(byteCount);
-    Uint8 *pixels = pixelsBuf.data();
-    memcpy(pixels, sourceImage.getPixelsPtr(), byteCount);
-
     const genie::BlendMode &blend = AssetManager::Inst()->getBlendmode(blends.blendMode);
     std::vector<uint8_t> alphamask;
     for (unsigned i=0; i < Blend::BlendTileCount; i++) {
@@ -171,6 +161,16 @@ const sf::Texture &Terrain::blendImage(const Blend blends, int tileX, int tileY)
             alphamask[j] = std::min(alphamask[j], blend.alphaValues[i][j]);
         }
     }
+
+    sf::Image sourceImage = image(tileX, tileY);
+    const Size size = sourceImage.getSize();
+
+    const size_t byteCount = size.width * size.height * 4;
+
+    // fuck msvc
+    std::vector<Uint8> pixelsBuf(byteCount);
+    Uint8 *pixels = pixelsBuf.data();
+    memcpy(pixels, sourceImage.getPixelsPtr(), byteCount);
 
     int blendOffset = 0;
     const int height = size.height;
@@ -242,13 +242,230 @@ uint32_t Terrain::coordinatesToFrame(int x, int y)
     return (y % tileSquareCount) + (x % tileSquareCount) * tileSquareCount;
 }
 
-//const sf::Texture &Terrain::texture(const MapTile &tile)
-//{
+const sf::Texture &Terrain::texture(const MapTile &tile)
+{
+    if (m_textures.find(tile) != m_textures.end()) {
+        return m_textures[tile];
+    }
 
-////    const int tileSquareCount = sqrt(m_slp->getFrameCount());
-////    const int frameNum = (y % tileSquareCount) + (x % tileSquareCount) * tileSquareCount;
+    genie::SlpFramePtr srcFrame = m_slp->getUnloadedFrame(tile.frame);
+    assert(srcFrame->getHeight() == 49);
 
-//}
+    std::vector<uint8_t> srcData;
+    std::string stringdata = m_slp->fileData();
+    srcData.reserve(stringdata.size());
+    for (size_t i=0; i<stringdata.size(); i++) {
+        srcData.push_back(stringdata[i]);
+    }
+    const std::vector<genie::Color> &colors = AssetManager::Inst()->getPalette().getColors();
+    const genie::IcmFile::InverseColorMap &icm = AssetManager::Inst()->getSlpTemplateFile()->filtermapFile.patternmasksFile.icmFile.maps[9]; // fixme this shit
+
+    std::vector<uint8_t> data;
+
+    uint8_t width[48];
+    uint8_t size = 1;
+    for(int i = 0; i < 25; i++){
+        width[i] = size;
+        width[48-i] = size;
+        size += 4;
+    }
+
+    data = srcData;
+//    for (const Blend &tileBlend : tile.blends) {
+    for (size_t blendIdx = 0; blendIdx < tile.blends.size(); blendIdx++) {
+//        data = srcData;
+        const Blend &tileBlend = tile.blends[blendIdx];
+        const genie::BlendMode &blendMode = AssetManager::Inst()->getBlendmode(tileBlend.blendMode);
+        std::vector<uint8_t> alphamask;
+        for (unsigned i=0; i < Blend::BlendTileCount; i++) {
+            if ((tileBlend.bits & (1u << i)) == 0) {
+                continue;
+            }
+
+            if (alphamask.size() < blendMode.alphaValues[i].size()) {
+                alphamask.resize(blendMode.alphaValues[i].size(), 0x80);
+            }
+
+            for (size_t j=0; j<blendMode.alphaValues[i].size(); j++) {
+                alphamask[j] = std::min(alphamask[j], blendMode.alphaValues[i][j]);
+            }
+        }
+
+
+        TerrainPtr blendTerrain = AssetManager::Inst()->getTerrain(tileBlend.terrainId);
+        genie::SlpFramePtr blendFrame = blendTerrain->m_slp->getFrame(blendTerrain->coordinatesToFrame(tileBlend.x, tileBlend.y));
+//        const std::vector<uint8_t> &blendSrcData = blendTerrain->m_slp->fileData();
+        std::vector<uint8_t> blendSrcData;
+        std::string stringdata = blendTerrain->m_slp->fileData();
+        blendSrcData.reserve(stringdata.size());
+        for (size_t i=0; i<stringdata.size(); i++) {
+            blendSrcData.push_back(stringdata[i]);
+        }
+
+        int alphaOffset = 0;
+        for (int y=0; y<srcFrame->getHeight(); y++) {
+            int srcOffset = srcFrame->cmd_offsets_[y];
+            int blendSrcOffset = blendFrame->cmd_offsets_[y];
+
+            if (width[y] <= 0x3f) {
+                data[srcOffset++] = width[y] << 2;
+//                data.push_back(width[y] << 2);
+//                srcOffset++;
+                blendSrcOffset++;
+            } else {
+                data[srcOffset++] = 0x2;
+                data[srcOffset++] = width[y];
+//                data.push_back(0x2);
+//                data.push_back(width[y]);
+//                srcOffset += 2;
+                blendSrcOffset += 2;
+            }
+
+            for (int x=0; x<width[y]; x++) {
+                uint8_t alpha = alphamask[alphaOffset++];
+                if (alpha == 0x80) {
+                    data.push_back(srcData[srcOffset]);
+                } else if (alpha == 0) {
+                    data[srcOffset] = blendSrcData[srcOffset];
+//                    data.push_back(blendSrcData[srcOffset]);
+                } else {
+                    genie::Color col1 = colors[srcData[srcOffset]];
+                    genie::Color col2 = colors[blendSrcData[blendSrcOffset]];
+                    int r = col1.r * alpha + col2.r * (0x80 - alpha);
+                    int g = col1.g * alpha + col2.g * (0x80 - alpha);
+                    int b = col1.b * alpha + col2.b * (0x80 - alpha);
+                    data[srcOffset] = icm.paletteIndex(r >> 10, g >> 10, b >> 10);
+//                    data.push_back(icm.paletteIndex(r >> 10, g >> 10, b >> 10));
+                }
+                srcOffset++;
+                blendSrcOffset++;
+            }
+
+            data[srcOffset++] = 0x0f;
+//            data.push_back(0x0f);
+        }
+
+        srcData = data;
+    }
+//    data = srcData;
+//    srcData = data;
+//    data.clear();
+//    WARN << data.size() << srcData.size();
+
+    if (0){
+        sf::Image image;
+        image.create(srcFrame->getWidth(), srcFrame->getHeight(), sf::Color::Transparent);
+
+        int srcOffset = 0;
+//        int srcOffset = srcFrame->outline_table_offset_;
+        for (uint32_t y=0; y<srcFrame->getHeight(); y++) {
+
+//            if (tile.blends.empty()) {
+                srcOffset = srcFrame->cmd_offsets_[y];
+//            }
+
+            int xPos = srcFrame->left_edges_[y];
+
+            for (int x=0; x<width[y]; x++) {
+                assert(srcOffset < srcData.size());
+                uint8_t cmd = srcData[srcOffset];
+//                DBG << srcOffset << int(srcData[srcOffset]);
+                if ((cmd & 0x3) == 0) {
+//                    DBG << "writing small";
+                    int npx = uint8_t(srcData[srcOffset++]) >> 2;
+//                    DBG << "writing small" << npx;
+                    assert(npx >= 0);
+                    assert(npx < image.getSize().x);
+                    while(npx--) {
+                        assert(xPos < image.getSize().x);
+
+                        int idx = srcData[srcOffset++];
+                        const genie::Color color = colors[idx];
+                        image.setPixel(xPos++, y, sf::Color(color.r, color.g, color.b));
+                        x++;
+                    }
+                    continue;
+                }
+                if ((cmd & 0x3) == 1) {
+                    srcOffset++;
+                    xPos++;
+                    x++;
+//                    DBG << "skipping small";
+                    continue;
+                }
+                if ((cmd & 0xf) == 0x2) {
+                    int npx = (srcData[srcOffset++] & 0xF0) << 4;
+                    npx |= srcData[srcOffset++];
+                    while(npx--) {
+                        const genie::Color color = colors[srcData[srcOffset++]];
+                        image.setPixel(xPos++, y, sf::Color(color.r, color.g, color.b));
+                        x++;
+                    }
+                    continue;
+                }
+                if ((cmd & 0xf) == 0x3) {
+                    int npx = int(srcData[srcOffset++] & 0xF0) << 4;
+                    npx |= srcData[srcOffset++];
+                    xPos += npx;
+                    x += npx;
+                    continue;
+                }
+                if ((cmd & 0xf) == 0xf) {
+                    break;
+                }
+                WARN << int(srcData[srcOffset]);
+            }
+        }
+
+//        m_textures[tile].loadFromImage(image);
+//        return m_textures[tile];
+    }
+
+
+    const genie::SlpTemplateFile::SlpTemplate &slpTemplate = AssetManager::Inst()->getSlpTemplateFile()->templates[tile.slopes.self.toGenie()];
+    genie::FiltermapFile &filterFile = AssetManager::Inst()->getSlpTemplateFile()->filtermapFile;
+    const genie::FiltermapFile::Filtermap filter = filterFile.maps[tile.slopes.self.toGenie()];
+//    assert(filter.height == 49);
+    const genie::PatternMasksFile &patternmasksFile = filterFile.patternmasksFile;
+
+    sf::Image image;
+    image.create(srcFrame->getWidth(), filter.height, sf::Color::Transparent);
+    for (uint32_t y=0; y<filter.height; y++) {
+        int xPos = slpTemplate.left_edges_[y];
+
+        assert(y < filter.lines.size());
+
+        const genie::FiltermapFile::FilterLine &line = filter.lines[y];
+
+        for (uint32_t x=0; x<line.width; x++, xPos++) {
+            if (x >= line.commands.size()) {
+                WARN << "out of bounds: "  << x << " " << line.commands.size();
+            }
+            assert(x < line.commands.size());
+
+            const genie::FiltermapFile::FilterCmd &cmd = line.commands[x];
+
+            int r = 0, g = 0, b = 0;
+            for (const genie::FiltermapFile::SourcePixel source : cmd.sourcePixels) {
+                const uint8_t sourcePaletteIndex = data[source.sourceIndex + srcFrame->cmd_offsets_[0]];
+                const genie::Color sourceColor = colors[sourcePaletteIndex];
+                r += int(sourceColor.r) * source.alpha;
+                g += int(sourceColor.g) * source.alpha;
+                b += int(sourceColor.b) * source.alpha;
+            }
+
+            const genie::IcmFile::InverseColorMap &icm = patternmasksFile.getIcm(cmd.lightIndex, tile.slopePatterns());
+            const uint8_t pixelIndex = icm.paletteIndex(r >> 11, g >> 11, b >> 11);
+            const genie::Color newColor = colors[pixelIndex];
+
+            image.setPixel(xPos, y, sf::Color(newColor.r, newColor.g, newColor.b));
+        }
+    }
+
+    m_textures[tile].loadFromImage(image);
+
+    return m_textures[tile];
+}
 
 void Terrain::addOutline(sf::Image &img)
 {

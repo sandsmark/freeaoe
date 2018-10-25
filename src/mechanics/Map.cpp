@@ -80,6 +80,7 @@ void Map::setUpSample()
 
     getTileAt(13, 4).elevation = 1;
     getTileAt(16, 4).elevation = 1;
+    getTileAt(13, 4).terrainId = 2;
     getTileAt(17, 4).elevation = 1;
     getTileAt(18, 5).elevation = 1;
 }
@@ -452,9 +453,9 @@ void Map::updateTileBlend(int tileX, int tileY)
 
     tile.yOffset = DataManager::datFile().TerrainBlock.TileSizes[tile.slopes.self.toGenie()].DeltaY;
 
-    if (tile.slopes.self != Slope::Flat) {
-        return;
-    }
+//    if (tile.slopes.self != Slope::Flat) {
+//        return;
+//    }
 
     if (neighborIds.empty()) {
         return;
@@ -575,7 +576,7 @@ void Map::updateTileBlend(int tileX, int tileY)
         blends.blendMode = Terrain::blendMode(tileData.BlendType, neighbor.BlendType);
         blends.terrainId = id;
         blends.x = tileX;
-        blends.y = tileX;
+        blends.y = tileY;
 
         tile.blends.push_back(blends);
     }

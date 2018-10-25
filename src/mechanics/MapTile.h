@@ -242,6 +242,10 @@ struct MapTile
     std::vector<Blend> blends;
     TileSlopes slopes;
 
+    bool operator==(const MapTile &other) const {
+        return frame == other.frame && blends == other.blends && slopes == other.slopes;
+    }
+
 };
 
 namespace std {

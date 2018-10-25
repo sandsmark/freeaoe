@@ -56,7 +56,8 @@ public:
     const sf::Texture &slopedImage(const TileSlopes &slopes, const std::vector<genie::Pattern> &patterns, int tileX, int tileY);
 
     uint32_t coordinatesToFrame(int x, int y);
-//    const sf::Texture &texture(const MapTile &tile);
+
+    const sf::Texture &texture(const MapTile &tile);
 
 private:
     void addOutline(sf::Image &img);
@@ -67,6 +68,9 @@ private:
     std::unordered_map<int, sf::Texture> m_images; // TODO Frames?
     std::unordered_map<Blend, sf::Texture> m_blendImages;
     std::unordered_map<TileSlopes, sf::Texture> m_slopeImages;
+
+    std::unordered_map<MapTile, sf::Texture> m_textures;
+
     bool m_isLoaded = false;
 };
 

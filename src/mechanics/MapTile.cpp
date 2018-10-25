@@ -499,8 +499,8 @@ std::vector<genie::Pattern> MapTile::slopePatterns() const
     }
 
     default:
-        patterns.push_back(genie::BlackPattern);
-        WARN << "unhandled slope" << slopes.self.direction;
+//        patterns.push_back(genie::BlackPattern);
+//        WARN << "unhandled slope" << slopes.self.direction;
         break;
     }
 
