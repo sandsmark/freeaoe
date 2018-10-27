@@ -301,10 +301,10 @@ bool AssetManager::initialize(const std::string &dataPath, const genie::GameVers
 
         m_stemplatesFile = std::make_unique<genie::SlpTemplateFile>();
         m_stemplatesFile->load(dataPath + "STemplet.dat");
-        m_stemplatesFile->filtermapFile.load(dataPath + "FilterMaps.dat");
-        m_stemplatesFile->filtermapFile.patternmasksFile.load(dataPath + "PatternMasks.dat");
-        m_stemplatesFile->filtermapFile.patternmasksFile.icmFile.load(dataPath + "view_icm.dat");
-        m_stemplatesFile->filtermapFile.patternmasksFile.lightmapFile.load(dataPath + "lightMaps.dat");
+        m_filtermapFile.load(dataPath + "FilterMaps.dat");
+        m_patternmasksFile.load(dataPath + "PatternMasks.dat");
+        m_patternmasksFile.icmFile.load(dataPath + "view_icm.dat");
+        m_patternmasksFile.lightmapFile.load(dataPath + "lightMaps.dat");
     } catch (const std::exception &error) {
         WARN << "Failed to load resource" << error.what();
         return false;

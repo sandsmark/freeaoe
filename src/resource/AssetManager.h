@@ -118,6 +118,8 @@ public:
     std::shared_ptr<uint8_t> getWavPtr(unsigned int id);
 
     genie::SlpTemplateFilePtr getSlpTemplateFile() { return m_stemplatesFile; }
+    const genie::FiltermapFile &filtermapFile() { return m_filtermapFile; }
+    const genie::PatternMasksFile &patternmasksFile() { return m_patternmasksFile; }
 
     //----------------------------------------------------------------------------
     /// Get a Graphic resource object.
@@ -162,6 +164,10 @@ private:
 
     genie::BlendomaticFilePtr blendomatic_file_;
     genie::SlpTemplateFilePtr m_stemplatesFile;
+    genie::FiltermapFile m_filtermapFile;
+    genie::PatternMasksFile m_patternmasksFile;
+    genie::LightmapFile m_lightmapFile;
+    genie::IcmFile m_icmFile;
 
     //TODO: All resources into one map?
     typedef std::unordered_map<unsigned int, GraphicPtr> GraphicMap;

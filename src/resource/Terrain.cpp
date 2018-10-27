@@ -140,102 +140,6 @@ uint8_t Terrain::blendMode(const uint8_t ownMode, const uint8_t neighborMode)
     return blendmodeTable[ownMode][neighborMode];
 }
 
-const sf::Texture &Terrain::blendImage(const Blend blends, int tileX, int tileY)
-{
-    if (m_blendImages.find(blends) != m_blendImages.end()) {
-        return m_blendImages[blends];
-    }
-
-    const genie::BlendMode &blend = AssetManager::Inst()->getBlendmode(blends.blendMode);
-    std::vector<uint8_t> alphamask;
-    for (unsigned i=0; i < Blend::BlendTileCount; i++) {
-        if ((blends.bits & (1u << i)) == 0) {
-            continue;
-        }
-
-        if (alphamask.size() < blend.alphaValues[i].size()) {
-            alphamask.resize(blend.alphaValues[i].size(), 0x7f);
-        }
-
-        for (size_t j=0; j<blend.alphaValues[i].size(); j++) {
-            alphamask[j] = std::min(alphamask[j], blend.alphaValues[i][j]);
-        }
-    }
-
-    sf::Image sourceImage = image(tileX, tileY);
-    const Size size = sourceImage.getSize();
-
-    const size_t byteCount = size.width * size.height * 4;
-
-    // fuck msvc
-    std::vector<Uint8> pixelsBuf(byteCount);
-    Uint8 *pixels = pixelsBuf.data();
-    memcpy(pixels, sourceImage.getPixelsPtr(), byteCount);
-
-    int blendOffset = 0;
-    const int height = size.height;
-    const int width = size.width;
-    for (int y = 0; y < height; y++) {
-        uint32_t lineWidth = 0;
-        if (y < height/2) {
-            lineWidth = 1 + (4 * y);
-        } else {
-            lineWidth = (height * 2 - 1) - (4 * (y - height/2));
-        }
-
-        int offsetLeft = height - 1 - (lineWidth  / 2);
-
-        if (IS_UNLIKELY(blendOffset + lineWidth > alphamask.size())) {
-            WARN << "Trying to read out of bounds (blendoffset" << blendOffset << "linewidth" << lineWidth << "=" << (blendOffset + lineWidth) << ">" << alphamask.size();
-            break;
-        }
-
-        for (uint32_t x = 0; x < lineWidth; x++) {
-            const int paletteIndex = y * width + x + offsetLeft;
-
-            pixels[paletteIndex * 4 + 3] = 255 - std::min((2 * alphamask[blendOffset]), 255);
-            blendOffset++;
-        }
-    }
-
-    sf::Image blendImage;
-    blendImage.create(size.width, size.height, pixels);
-
-    m_blendImages[blends].loadFromImage(blendImage);
-
-    return m_blendImages[blends];
-}
-
-const sf::Texture &Terrain::slopedImage(const TileSlopes &slopes, const std::vector<genie::Pattern> &patterns, int tileX, int tileY)
-{
-    if (m_slopeImages.find(slopes) != m_slopeImages.end()) {
-        return m_slopeImages[slopes];
-    }
-
-    const int tileSquareCount = sqrt(m_slp->getFrameCount());
-    const int frameNum = (tileY % tileSquareCount) + (tileX % tileSquareCount) * tileSquareCount;
-
-    genie::SlpFramePtr frame = AssetManager::Inst()->getSlpTemplateFile()->getFrame(m_slp->getFrame(frameNum), slopes.self.toGenie(), patterns, AssetManager::Inst()->getPalette().getColors(), m_slp);
-    sf::Image img = Resource::convertFrameToImage(frame);
-    if (!img.getSize().x) {
-        static sf::Texture nullTex;
-        if (nullTex.getSize().x == 0) {
-            sf::Image nullImg;
-            nullImg.create(Constants::TILE_SIZE_HORIZONTAL, Constants::TILE_SIZE_VERTICAL, sf::Color::Red);
-            nullTex.loadFromImage(nullImg);
-        }
-
-        return nullTex;
-    }
-
-#ifdef DEBUG
-    addOutline(img);
-#endif
-
-    m_slopeImages[slopes].loadFromImage(img);
-    return m_slopeImages[slopes];
-}
-
 uint32_t Terrain::coordinatesToFrame(int x, int y)
 {
     const int tileSquareCount = sqrt(m_slp->getFrameCount());
@@ -248,15 +152,10 @@ const sf::Texture &Terrain::texture(const MapTile &tile)
         return m_textures[tile];
     }
 
-    genie::SlpFramePtr srcFrame = m_slp->getUnloadedFrame(tile.frame);
-    assert(srcFrame->getHeight() == 49);
-
-    std::string srcData =m_slp->fileData();
+    std::vector<uint8_t> data = m_slp->fileData();
 
     const std::vector<genie::Color> &colors = AssetManager::Inst()->getPalette().getColors();
-    const genie::IcmFile::InverseColorMap &icm = AssetManager::Inst()->getSlpTemplateFile()->filtermapFile.patternmasksFile.icmFile.maps[9]; // fixme this shit
-
-    std::string data;
+    const genie::IcmFile::InverseColorMap &icm = AssetManager::Inst()->patternmasksFile().icmFile.maps[9]; // fixme this shit
 
     uint8_t width[48];
     uint8_t size = 1;
@@ -265,8 +164,6 @@ const sf::Texture &Terrain::texture(const MapTile &tile)
         width[48-i] = size;
         size += 4;
     }
-
-    data = srcData;
 
     for (size_t blendIdx = 0; blendIdx < tile.blends.size(); blendIdx++) {
         const Blend &tileBlend = tile.blends[blendIdx];
@@ -288,68 +185,62 @@ const sf::Texture &Terrain::texture(const MapTile &tile)
 
 
         const TerrainPtr blendTerrain = AssetManager::Inst()->getTerrain(tileBlend.terrainId);
-        const genie::SlpFramePtr blendFrame = blendTerrain->m_slp->getFrame(blendTerrain->coordinatesToFrame(tileBlend.x, tileBlend.y));
-        const std::string &blendSrcData = blendTerrain->m_slp->fileData();
+        const int blendFrame = blendTerrain->coordinatesToFrame(tileBlend.x, tileBlend.y);
+        const std::vector<uint8_t> &blendData = blendTerrain->m_slp->fileData();
 
         int alphaOffset = 0;
-        for (int y=0; y<srcFrame->getHeight(); y++) {
-            int srcOffset = srcFrame->cmd_offsets_[y];
-            int blendSrcOffset = blendFrame->cmd_offsets_[y];
+        for (int y=0; y<m_slp->frameHeight(tile.frame); y++) {
+            int srcOffset = m_slp->frameCommandsOffset(tile.frame, y);
+            int blendOffset = blendTerrain->m_slp->frameCommandsOffset(blendFrame, y);
 
             if (width[y] <= 0x3f) {
                 data[srcOffset++] = width[y] << 2;
-                blendSrcOffset++;
+                blendOffset++;
             } else {
                 data[srcOffset++] = 0x2;
                 data[srcOffset++] = width[y];
-                blendSrcOffset += 2;
+                blendOffset += 2;
             }
 
             for (int x=0; x<width[y]; x++) {
                 uint8_t alpha = alphamask[alphaOffset++];
                 if (alpha == 0x80) {
                 } else if (alpha == 0) {
-                    data[srcOffset] = blendSrcData[srcOffset];
+                    data[srcOffset] = blendData[srcOffset];
                 } else {
-                    genie::Color col1 = colors[uint8_t(srcData[srcOffset])];
-                    genie::Color col2 = colors[uint8_t(blendSrcData[blendSrcOffset])];
+                    genie::Color col1 = colors[data[srcOffset]];
+                    genie::Color col2 = colors[blendData[blendOffset]];
                     int r = col1.r * alpha + col2.r * (0x80 - alpha);
                     int g = col1.g * alpha + col2.g * (0x80 - alpha);
                     int b = col1.b * alpha + col2.b * (0x80 - alpha);
                     data[srcOffset] = icm.paletteIndex(r >> 10, g >> 10, b >> 10);
                 }
                 srcOffset++;
-                blendSrcOffset++;
+                blendOffset++;
             }
 
             data[srcOffset++] = 0x0f;
         }
-
-        srcData = data;
     }
 
     const genie::SlpTemplateFile::SlpTemplate &slpTemplate = AssetManager::Inst()->getSlpTemplateFile()->templates[tile.slopes.self.toGenie()];
-    genie::FiltermapFile &filterFile = AssetManager::Inst()->getSlpTemplateFile()->filtermapFile;
+    const genie::FiltermapFile &filterFile = AssetManager::Inst()->filtermapFile();
     const genie::FiltermapFile::Filtermap filter = filterFile.maps[tile.slopes.self.toGenie()];
-    const genie::PatternMasksFile &patternmasksFile = filterFile.patternmasksFile;
+    const genie::PatternMasksFile &patternmasksFile = AssetManager::Inst()->patternmasksFile();
 
     sf::Image image;
-    image.create(srcFrame->getWidth(), filter.height, sf::Color::Transparent);
+    image.create(m_slp->frameWidth(tile.frame), filter.height, sf::Color::Transparent);
 
-    const uint32_t baseOffset = srcFrame->cmd_offsets_[0];
-    const char *rawData = data.c_str();
+    const uint32_t baseOffset = m_slp->frameCommandsOffset(tile.frame, 0);
+    const uint8_t *rawData = data.data();
     for (uint32_t y=0; y<filter.height; y++) {
         int xPos = slpTemplate.left_edges_[y];
-
-        assert(y < filter.lines.size());
-
         const genie::FiltermapFile::FilterLine &line = filter.lines[y];
 
         for (uint32_t x=0; x<line.width; x++, xPos++) {
             if (x >= line.commands.size()) {
                 WARN << "out of bounds: "  << x << " " << line.commands.size();
             }
-            assert(x < line.commands.size());
 
             const genie::FiltermapFile::FilterCmd &cmd = line.commands[x];
 
