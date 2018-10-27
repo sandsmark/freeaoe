@@ -225,7 +225,7 @@ const sf::Texture &Terrain::texture(const MapTile &tile)
 
     const genie::SlpTemplateFile::SlpTemplate &slpTemplate = AssetManager::Inst()->getSlpTemplateFile()->templates[tile.slopes.self.toGenie()];
     const genie::FiltermapFile &filterFile = AssetManager::Inst()->filtermapFile();
-    const genie::FiltermapFile::Filtermap filter = filterFile.maps[tile.slopes.self.toGenie()];
+    const genie::FiltermapFile::Filtermap &filter = filterFile.maps[tile.slopes.self.toGenie()];
     const genie::PatternMasksFile &patternmasksFile = AssetManager::Inst()->patternmasksFile();
 
     sf::Image image;
@@ -233,6 +233,8 @@ const sf::Texture &Terrain::texture(const MapTile &tile)
 
     const uint32_t baseOffset = m_slp->frameCommandsOffset(tile.frame, 0);
     const uint8_t *rawData = data.data() + baseOffset;
+    const std::vector<genie::Pattern> slopePatterns = tile.slopePatterns();
+    const genie::IcmFile::InverseColorMap &defaultIcm = patternmasksFile.icmFile.maps[4];
     for (uint32_t y=0; y<filter.height; y++) {
         int xPos = slpTemplate.left_edges_[y];
         const genie::FiltermapFile::FilterLine &line = filter.lines[y];
@@ -248,13 +250,19 @@ const sf::Texture &Terrain::texture(const MapTile &tile)
             for (const genie::FiltermapFile::SourcePixel &source : cmd.sourcePixels) {
                 const uint8_t sourcePaletteIndex = rawData[source.sourceIndex];
                 const genie::Color sourceColor = colors[sourcePaletteIndex];
-                r += int(sourceColor.r) * source.alpha;
-                g += int(sourceColor.g) * source.alpha;
-                b += int(sourceColor.b) * source.alpha;
+                r += sourceColor.r * source.alpha;
+                g += sourceColor.g * source.alpha;
+                b += sourceColor.b * source.alpha;
             }
 
-            const genie::IcmFile::InverseColorMap &icm = patternmasksFile.getIcm(cmd.lightIndex, tile.slopePatterns());
-            const uint8_t pixelIndex = icm.paletteIndex(r >> 11, g >> 11, b >> 11);
+            uint8_t pixelIndex;
+            if (slopePatterns.empty()) {
+                pixelIndex = defaultIcm.paletteIndex(r >> 11, g >> 11, b >> 11);
+            } else {
+                const genie::IcmFile::InverseColorMap &icm = patternmasksFile.getIcm(cmd.lightIndex, slopePatterns);
+                pixelIndex = icm.paletteIndex(r >> 11, g >> 11, b >> 11);
+            }
+
             const genie::Color &newColor = colors[pixelIndex];
 
             image.setPixel(xPos, y, sf::Color(newColor.r, newColor.g, newColor.b));

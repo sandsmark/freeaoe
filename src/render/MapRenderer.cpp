@@ -165,9 +165,9 @@ void MapRenderer::updateTexture()
             rect.height = Constants::TILE_SIZE;
 
             // col and row are in map coordinates, so the top corners when rotated 45° we don't need to draw
-            if (!renderTarget_->camera()->isVisible(rect)) {
-                continue;
-            }
+//            if (!renderTarget_->camera()->isVisible(rect)) {
+//                continue;
+//            }
 
             ScreenPos spos = renderTarget_->camera()->absoluteScreenPos(rect.topLeft());
 

@@ -241,6 +241,7 @@ struct MapTile
     uint32_t terrainId;
     std::vector<Blend> blends;
     TileSlopes slopes;
+    std::vector<genie::Pattern> patterns;
 
     bool operator==(const MapTile &other) const {
         return frame == other.frame && blends == other.blends && slopes == other.slopes;
