@@ -219,10 +219,21 @@ void Map::updateTileAt(const int col, const int row, unsigned id)
     }
 
     tiles_[index].terrainId = id;
+    tiles_[index].frame = AssetManager::Inst()->getTerrain(tiles_[index].terrainId)->coordinatesToFrame(col, row);
+    for (int col_ = std::max(col - 1, 0); col_ < std::min(col + 2, cols_); col_++) {
+        for (int row_ = std::max(row - 1, 0); row_ < std::min(row + 2, rows_); row_++) {
+            getTileAt(col_, row_).reset();
+        }
+    }
 
     for (int col_ = std::max(col - 1, 0); col_ < std::min(col + 2, cols_); col_++) {
         for (int row_ = std::max(row - 1, 0); row_ < std::min(row + 2, rows_); row_++) {
             updateTileBlend(col_, row_);
+        }
+    }
+    for (int col_ = std::max(col - 1, 0); col_ < std::min(col + 2, cols_); col_++) {
+        for (int row_ = std::max(row - 1, 0); row_ < std::min(row + 2, rows_); row_++) {
+            updateTileSlopes(col, row);
         }
     }
 

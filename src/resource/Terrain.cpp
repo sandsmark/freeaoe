@@ -158,25 +158,21 @@ const sf::Texture &Terrain::texture(const MapTile &tile)
     const std::vector<genie::Color> colors = AssetManager::Inst()->getPalette().getColors();
     const genie::IcmFile::InverseColorMap &icm = AssetManager::Inst()->patternmasksFile().icmFile.maps[9]; // fixme this shit
 
-    uint8_t width[49];
+    uint8_t widths[49];
     uint8_t size = 1;
     for(int i = 0; i < 25; i++){
-        width[i] = size;
-        width[48-i] = size;
+        widths[i] = size;
+        widths[48-i] = size;
         size += 4;
     }
 
-    for (size_t blendIdx = 0; blendIdx < tile.blends.size(); blendIdx++) {
-        const Blend &tileBlend = tile.blends[blendIdx];
+    for (const Blend &tileBlend : tile.blends) {
         const genie::BlendMode &blendMode = AssetManager::Inst()->getBlendmode(tileBlend.blendMode);
-        std::vector<uint8_t> alphamask(blendMode.pixelCount, 0x80);
+
+        std::vector<uint8_t> alphamask(blendMode.pixelCount, 128);
         for (unsigned i=0; i < Blend::BlendTileCount; i++) {
             if ((tileBlend.bits & (1u << i)) == 0) {
                 continue;
-            }
-
-            if (alphamask.size() < blendMode.alphaValues[i].size()) {
-                alphamask.resize(blendMode.alphaValues[i].size(), 0x80);
             }
 
             for (size_t j=0; j<blendMode.alphaValues[i].size(); j++) {
@@ -193,33 +189,34 @@ const sf::Texture &Terrain::texture(const MapTile &tile)
             int srcOffset = m_slp->frameCommandsOffset(tile.frame, y);
             int blendOffset = blendTerrain->m_slp->frameCommandsOffset(tileBlend.frame, y);
 
-            if (width[y] <= 0x3f) {
-                data[srcOffset++] = width[y] << 2;
+            if (widths[y] <= 63) {
+                data[srcOffset++] = widths[y] << 2;
                 blendOffset++;
             } else {
-                data[srcOffset++] = 0x2;
-                data[srcOffset++] = width[y];
+                data[srcOffset++] = genie::SlpFrame::GreaterBlockCopy;
+                data[srcOffset++] = widths[y];
                 blendOffset += 2;
             }
 
-            for (int x=0; x<width[y]; x++) {
+            for (int x=0; x<widths[y]; x++) {
                 uint8_t alpha = alphamask[alphaOffset++];
-                if (alpha == 0x80) {
-                } else if (alpha == 0) {
-                    data[srcOffset] = blendData[srcOffset];
-                } else {
+
+                // Alpha goes from 0-128
+                if (alpha == 0) {
+                    data[srcOffset] = blendData[blendOffset];
+                } else if (alpha != 128) {
                     const genie::Color &col1 = colors[data[srcOffset]];
                     const genie::Color &col2 = colors[blendData[blendOffset]];
-                    int r = col1.r * alpha + col2.r * (0x80 - alpha);
-                    int g = col1.g * alpha + col2.g * (0x80 - alpha);
-                    int b = col1.b * alpha + col2.b * (0x80 - alpha);
+                    int r = col1.r * alpha + col2.r * (128 - alpha);
+                    int g = col1.g * alpha + col2.g * (128 - alpha);
+                    int b = col1.b * alpha + col2.b * (128 - alpha);
                     data[srcOffset] = icm.paletteIndex(r >> 10, g >> 10, b >> 10);
                 }
                 srcOffset++;
                 blendOffset++;
             }
 
-            data[srcOffset++] = 0x0f;
+            data[srcOffset++] = genie::SlpFrame::EndOfRow;
         }
     }
 

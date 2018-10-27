@@ -213,7 +213,13 @@ struct Blend  {
         bits |= 1 << blend;
     }
 
-    inline bool operator ==(const Blend &other) const { return bits == other.bits && frame == other.frame && blendMode == other.blendMode && terrainId == other.terrainId; }
+    inline bool operator ==(const Blend &other) const
+    {
+        return bits      == other.bits &&
+               frame     == other.frame &&
+               blendMode == other.blendMode &&
+               terrainId == other.terrainId;
+    }
 
     uint32_t bits = 0;
     uint8_t blendMode = 0;
@@ -240,10 +246,9 @@ struct MapTile
     uint32_t terrainId;
     std::vector<Blend> blends;
     TileSlopes slopes;
-    std::vector<genie::Pattern> patterns;
 
     bool operator==(const MapTile &other) const {
-        return frame == other.frame && blends == other.blends && slopes == other.slopes;
+        return frame == other.frame && blends == other.blends && slopes == other.slopes && terrainId == other.terrainId;
     }
 
 };
