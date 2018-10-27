@@ -157,7 +157,7 @@ const sf::Texture &Terrain::texture(const MapTile &tile)
     const std::vector<genie::Color> colors = AssetManager::Inst()->getPalette().getColors();
     const genie::IcmFile::InverseColorMap &icm = AssetManager::Inst()->patternmasksFile().icmFile.maps[9]; // fixme this shit
 
-    uint8_t width[48];
+    uint8_t width[49];
     uint8_t size = 1;
     for(int i = 0; i < 25; i++){
         width[i] = size;
