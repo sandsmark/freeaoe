@@ -9,6 +9,10 @@ struct SignalHolder;
 template<typename T>
 struct SignalEmitter
 {
+    virtual ~SignalEmitter() {
+        delete d;
+    }
+
     enum class Signals {
 
     };
