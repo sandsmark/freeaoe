@@ -63,7 +63,7 @@ public:
     bool init();
 
     bool update(Time time);
-    void render(const std::shared_ptr<SfmlRenderTarget> &renderTarget);
+    void render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, const std::vector<std::weak_ptr<Entity> > &visible);
 
     bool onLeftClick(const MapPos &mapPos);
     void onRightClick(const ScreenPos &screenPos, const CameraPtr &camera);
@@ -88,7 +88,7 @@ public:
     void moveUnitTo(const Unit::Ptr &unit, const MapPos &targetPos);
 
 private:
-    void updateVisibility(const CameraPtr &camera);
+    void updateVisibility(const std::vector<Unit::Ptr> &visibleUnits);
     void assignTask(const Task &task, const Unit::Ptr &unit, const Unit::Ptr &target);
     void playSound(const Unit::Ptr &unit);
 

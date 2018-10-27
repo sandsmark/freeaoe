@@ -238,7 +238,14 @@ bool GameState::init()
 void GameState::draw()
 {
     mapRenderer_.display();
-    m_unitManager->render(renderTarget_);
+
+    std::vector<std::weak_ptr<Entity>> visibleEntities;
+    visibleEntities = map_->entitiesBetween(mapRenderer_.firstVisibleColumn(),
+                                            mapRenderer_.firstVisibleRow(),
+                                            mapRenderer_.lastVisibleColumn(),
+                                            mapRenderer_.lastVisibleRow());
+
+    m_unitManager->render(renderTarget_, visibleEntities);
 
     if (m_selecting) {
         renderTarget_->draw(m_selectionRect, sf::Color::Transparent, sf::Color::White);

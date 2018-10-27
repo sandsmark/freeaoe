@@ -138,6 +138,8 @@ struct Unit : public Entity
 
     std::unordered_set<Task> availableActions();
 
+    virtual void setPosition(const MapPos &pos) override;
+
     void setUnitData(const genie::Unit &data_);
     const genie::Unit *data() const {return m_data; }
 
@@ -151,6 +153,7 @@ protected:
     std::deque<ActionPtr> m_actionQueue;
     float m_creationProgress = 0.f;
 };
+
 
 namespace std {
 

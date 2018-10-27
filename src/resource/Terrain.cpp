@@ -154,7 +154,7 @@ const sf::Texture &Terrain::texture(const MapTile &tile)
 
     std::vector<uint8_t> data = m_slp->fileData();
 
-    const std::vector<genie::Color> &colors = AssetManager::Inst()->getPalette().getColors();
+    const std::vector<genie::Color> colors = AssetManager::Inst()->getPalette().getColors();
     const genie::IcmFile::InverseColorMap &icm = AssetManager::Inst()->patternmasksFile().icmFile.maps[9]; // fixme this shit
 
     uint8_t width[48];
@@ -168,7 +168,7 @@ const sf::Texture &Terrain::texture(const MapTile &tile)
     for (size_t blendIdx = 0; blendIdx < tile.blends.size(); blendIdx++) {
         const Blend &tileBlend = tile.blends[blendIdx];
         const genie::BlendMode &blendMode = AssetManager::Inst()->getBlendmode(tileBlend.blendMode);
-        std::vector<uint8_t> alphamask;
+        std::vector<uint8_t> alphamask(blendMode.pixelCount, 0x80);
         for (unsigned i=0; i < Blend::BlendTileCount; i++) {
             if ((tileBlend.bits & (1u << i)) == 0) {
                 continue;
@@ -232,7 +232,7 @@ const sf::Texture &Terrain::texture(const MapTile &tile)
     image.create(m_slp->frameWidth(tile.frame), filter.height, sf::Color::Transparent);
 
     const uint32_t baseOffset = m_slp->frameCommandsOffset(tile.frame, 0);
-    const uint8_t *rawData = data.data();
+    const uint8_t *rawData = data.data() + baseOffset;
     for (uint32_t y=0; y<filter.height; y++) {
         int xPos = slpTemplate.left_edges_[y];
         const genie::FiltermapFile::FilterLine &line = filter.lines[y];
@@ -246,8 +246,8 @@ const sf::Texture &Terrain::texture(const MapTile &tile)
 
             int r = 0, g = 0, b = 0;
             for (const genie::FiltermapFile::SourcePixel &source : cmd.sourcePixels) {
-                const uint8_t sourcePaletteIndex = rawData[source.sourceIndex + baseOffset];
-                const genie::Color &sourceColor = colors[sourcePaletteIndex];
+                const uint8_t sourcePaletteIndex = rawData[source.sourceIndex];
+                const genie::Color sourceColor = colors[sourcePaletteIndex];
                 r += int(sourceColor.r) * source.alpha;
                 g += int(sourceColor.g) * source.alpha;
                 b += int(sourceColor.b) * source.alpha;

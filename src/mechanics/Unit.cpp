@@ -150,6 +150,14 @@ std::unordered_set<Task> Unit::availableActions()
     return tasks;
 }
 
+void Unit::setPosition(const MapPos &pos)
+{
+    for (Annex &annex : annexes) {
+        annex.unit->setPosition(pos + annex.offset);
+    }
+    Entity::setPosition(pos);
+}
+
 void Unit::setUnitData(const genie::Unit &data_)
 {
     m_data = &data_;

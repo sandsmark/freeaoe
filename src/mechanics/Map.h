@@ -86,7 +86,8 @@ public:
 
     void removeEntityAt(unsigned int col, unsigned int row, const int entityId);
     void addEntityAt(unsigned int col, unsigned int row, const EntityPtr &entity);
-    const std::vector<std::weak_ptr<Entity>> &entitiesAt(unsigned int col, unsigned int row);
+    const std::vector<std::weak_ptr<Entity>> &entitiesAt(unsigned int col, unsigned int row) const;
+    const std::vector<std::weak_ptr<Entity> > entitiesBetween(int firstCol, int firstRow, int lastCol, int lastRow) const;
 
     void updateMapData();
 

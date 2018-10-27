@@ -63,7 +63,7 @@ struct Entity: std::enable_shared_from_this<Entity>, SignalEmitter<Entity>
     bool isVisible = false;
 
     const MapPos &position() const { return m_position; }
-    void setPosition(const MapPos &pos);
+    virtual void setPosition(const MapPos &pos);
 
 protected:
     Entity(const Type type_, const std::string &name, const MapPtr &map_);

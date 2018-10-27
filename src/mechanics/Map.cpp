@@ -262,7 +262,7 @@ void Map::addEntityAt(unsigned int col, unsigned int row, const EntityPtr &entit
     m_tileUnits[index].push_back(entity);
 }
 
-const std::vector<std::weak_ptr<Entity>> &Map::entitiesAt(unsigned int col, unsigned int row)
+const std::vector<std::weak_ptr<Entity> > &Map::entitiesAt(unsigned int col, unsigned int row) const
 {
     unsigned int index = row * cols_ + col;
 
@@ -273,6 +273,17 @@ const std::vector<std::weak_ptr<Entity>> &Map::entitiesAt(unsigned int col, unsi
     }
 
     return m_tileUnits[index];
+}
+
+const std::vector<std::weak_ptr<Entity>> Map::entitiesBetween(int firstCol, int firstRow, int lastCol, int lastRow) const
+{
+    std::vector<std::weak_ptr<Entity>> entities;
+    for (int col=firstCol; col<lastCol; col++) {
+        for (int row=firstRow; row<lastRow; row++) {
+            entities.insert(entities.end(), entitiesAt(col, row).begin(), entitiesAt(col, row).end());
+        }
+    }
+    return entities;
 }
 
 void Map::updateMapData()

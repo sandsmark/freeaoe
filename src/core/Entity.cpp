@@ -71,12 +71,6 @@ std::shared_ptr<Unit> Entity::asUnit(const std::weak_ptr<Entity> &entity)
 
 void Entity::setPosition(const MapPos &pos)
 {
-    MapPtr map = m_map.lock();
-
-    if (!map) {
-        WARN << "No map";
-        return;
-    }
 
     int oldTileX = m_position.x / Constants::TILE_SIZE;
     int oldTileY = m_position.y / Constants::TILE_SIZE;
@@ -84,7 +78,18 @@ void Entity::setPosition(const MapPos &pos)
     int newTileY = pos.y / Constants::TILE_SIZE;
 
     m_position = pos;
+
+    if (type != Type::Unit) {
+        return;
+    }
     if (newTileX == oldTileX && newTileY == oldTileY) {
+        return;
+    }
+
+    MapPtr map = m_map.lock();
+
+    if (!map) {
+        WARN << "No map";
         return;
     }
 

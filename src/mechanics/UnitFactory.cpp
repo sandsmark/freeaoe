@@ -82,7 +82,7 @@ Unit::Ptr UnitFactory::createUnit(int ID, const MapPos &position, const Player::
 
             Unit::Annex annex;
             annex.offset = MapPos(annexData.Misplacement.first * -48, annexData.Misplacement.second * -48);
-            annex.unit = createUnit(annexData.UnitID, position, owner, map);
+            annex.unit = createUnit(annexData.UnitID, position + annex.offset, owner, map);
             unit->annexes.push_back(annex);
         }
 

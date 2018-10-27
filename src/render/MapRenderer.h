@@ -35,6 +35,11 @@ public:
 
     void setMap(const MapPtr &map);
 
+    int firstVisibleRow() { return m_rRowBegin; }
+    int lastVisibleRow() { return m_rRowEnd; }
+    int firstVisibleColumn() { return m_rColBegin; }
+    int lastVisibleColumn() { return m_rColEnd; }
+
 private:
     void updateTexture();
 
