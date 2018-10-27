@@ -148,8 +148,9 @@ uint32_t Terrain::coordinatesToFrame(int x, int y)
 
 const sf::Texture &Terrain::texture(const MapTile &tile)
 {
-    if (m_textures.find(tile) != m_textures.end()) {
-        return m_textures[tile];
+    std::unordered_map<MapTile, sf::Texture>::const_iterator it = m_textures.find(tile);
+    if (it != m_textures.end()) {
+        return it->second;
     }
 
     std::vector<uint8_t> data = m_slp->fileData();
@@ -185,13 +186,12 @@ const sf::Texture &Terrain::texture(const MapTile &tile)
 
 
         const TerrainPtr blendTerrain = AssetManager::Inst()->getTerrain(tileBlend.terrainId);
-        const int blendFrame = blendTerrain->coordinatesToFrame(tileBlend.x, tileBlend.y);
         const std::vector<uint8_t> &blendData = blendTerrain->m_slp->fileData();
 
         int alphaOffset = 0;
         for (int y=0; y<m_slp->frameHeight(tile.frame); y++) {
             int srcOffset = m_slp->frameCommandsOffset(tile.frame, y);
-            int blendOffset = blendTerrain->m_slp->frameCommandsOffset(blendFrame, y);
+            int blendOffset = blendTerrain->m_slp->frameCommandsOffset(tileBlend.frame, y);
 
             if (width[y] <= 0x3f) {
                 data[srcOffset++] = width[y] << 2;
@@ -208,8 +208,8 @@ const sf::Texture &Terrain::texture(const MapTile &tile)
                 } else if (alpha == 0) {
                     data[srcOffset] = blendData[srcOffset];
                 } else {
-                    genie::Color col1 = colors[data[srcOffset]];
-                    genie::Color col2 = colors[blendData[blendOffset]];
+                    const genie::Color &col1 = colors[data[srcOffset]];
+                    const genie::Color &col2 = colors[blendData[blendOffset]];
                     int r = col1.r * alpha + col2.r * (0x80 - alpha);
                     int g = col1.g * alpha + col2.g * (0x80 - alpha);
                     int b = col1.b * alpha + col2.b * (0x80 - alpha);
@@ -234,7 +234,6 @@ const sf::Texture &Terrain::texture(const MapTile &tile)
     const uint32_t baseOffset = m_slp->frameCommandsOffset(tile.frame, 0);
     const uint8_t *rawData = data.data() + baseOffset;
     const std::vector<genie::Pattern> slopePatterns = tile.slopePatterns();
-    const genie::IcmFile::InverseColorMap &defaultIcm = patternmasksFile.icmFile.maps[4];
     for (uint32_t y=0; y<filter.height; y++) {
         int xPos = slpTemplate.left_edges_[y];
         const genie::FiltermapFile::FilterLine &line = filter.lines[y];
@@ -249,22 +248,16 @@ const sf::Texture &Terrain::texture(const MapTile &tile)
             int r = 0, g = 0, b = 0;
             for (const genie::FiltermapFile::SourcePixel &source : cmd.sourcePixels) {
                 const uint8_t sourcePaletteIndex = rawData[source.sourceIndex];
-                const genie::Color sourceColor = colors[sourcePaletteIndex];
+                const genie::Color &sourceColor = colors[sourcePaletteIndex];
                 r += sourceColor.r * source.alpha;
                 g += sourceColor.g * source.alpha;
                 b += sourceColor.b * source.alpha;
             }
 
-            uint8_t pixelIndex;
-            if (slopePatterns.empty()) {
-                pixelIndex = defaultIcm.paletteIndex(r >> 11, g >> 11, b >> 11);
-            } else {
-                const genie::IcmFile::InverseColorMap &icm = patternmasksFile.getIcm(cmd.lightIndex, slopePatterns);
-                pixelIndex = icm.paletteIndex(r >> 11, g >> 11, b >> 11);
-            }
+            const genie::IcmFile::InverseColorMap &icm = patternmasksFile.getIcm(cmd.lightIndex, slopePatterns);
+            const int  pixelIndex = icm.paletteIndex(r >> 11, g >> 11, b >> 11);
 
             const genie::Color &newColor = colors[pixelIndex];
-
             image.setPixel(xPos, y, sf::Color(newColor.r, newColor.g, newColor.b));
         }
     }

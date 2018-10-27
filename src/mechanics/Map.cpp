@@ -584,10 +584,10 @@ void Map::updateTileBlend(int tileX, int tileY)
         }
 
         const genie::Terrain &neighbor = DataManager::Inst().getTerrain(id); //neighborTerrains[id];
+
         blends.blendMode = Terrain::blendMode(tileData.BlendType, neighbor.BlendType);
         blends.terrainId = id;
-        blends.x = tileX;
-        blends.y = tileY;
+        blends.frame = AssetManager::Inst()->getTerrain(id)->coordinatesToFrame(tileX, tileY);
 
         tile.blends.push_back(blends);
     }

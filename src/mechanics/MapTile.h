@@ -213,12 +213,11 @@ struct Blend  {
         bits |= 1 << blend;
     }
 
-    inline bool operator ==(const Blend other) const { return bits == other.bits && x == other.x && y == other.y; }
+    inline bool operator ==(const Blend &other) const { return bits == other.bits && frame == other.frame && blendMode == other.blendMode && terrainId == other.terrainId; }
 
     uint32_t bits = 0;
     uint8_t blendMode = 0;
-    int x = 0;
-    int y = 0;
+    uint32_t frame = 0;
 
     uint32_t terrainId;
 };
@@ -253,7 +252,7 @@ namespace std {
 
 template<> struct hash<TileSlopes>
 {
-    inline size_t operator()(const TileSlopes s) const {
+    inline size_t operator()(const TileSlopes &s) const {
         return hash<int8_t>()(s.self.direction) ^
                hash<int8_t>()(s.north.direction) ^
                hash<int8_t>()(s.south.direction) ^
@@ -268,14 +267,14 @@ template<> struct hash<TileSlopes>
 
 template<> struct hash<Blend>
 {
-    inline size_t operator()(const Blend b) const {
-        return hash<uint32_t>()(b.bits) ^ hash<uint8_t>()(b.blendMode);
+    inline size_t operator()(const Blend &b) const {
+        return hash<uint32_t>()(b.bits) ^ hash<uint8_t>()(b.blendMode) ^ hash<uint8_t>()(b.frame);
     }
 };
 
 template<> struct hash<MapTile>
 {
-    inline size_t operator()(const MapTile t) const {
+    inline size_t operator()(const MapTile &t) const {
         size_t ret = hash<uint32_t>()(t.frame) ^ hash<TileSlopes>()(t.slopes);
         for (const Blend &b : t.blends) {
             ret ^= hash<Blend>()(b);
