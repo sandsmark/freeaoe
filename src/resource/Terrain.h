@@ -43,10 +43,7 @@ public:
     Terrain(unsigned int id_);
     virtual ~Terrain();
 
-    const sf::Texture &texture(int x, int y);
-    const sf::Image image(int x, int y);
-
-    virtual bool load();
+    bool load();
 
     const genie::Terrain &data();
 

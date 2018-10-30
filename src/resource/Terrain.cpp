@@ -37,56 +37,6 @@ Terrain::~Terrain()
 {
 }
 
-const sf::Texture &Terrain::texture(int x, int y)
-{
-    if (!m_slp) {
-        static sf::Texture nullTex;
-        if (nullTex.getSize().x == 0) {
-            sf::Image nullImg;
-            nullImg.create(Constants::TILE_SIZE_HORIZONTAL, Constants::TILE_SIZE_VERTICAL, sf::Color::Red);
-            nullTex.loadFromImage(nullImg);
-        }
-
-        return nullTex;
-    }
-
-    const int tileSquareCount = sqrt(m_slp->getFrameCount());
-    const int frameNum = (y % tileSquareCount) + (x % tileSquareCount) * tileSquareCount;
-
-    if (m_images.find(frameNum) != m_images.end()) {
-        return m_images[frameNum];
-    }
-
-    sf::Image img = Resource::convertFrameToImage(m_slp->getFrame(frameNum));
-
-#ifdef DEBUG
-    addOutline(img);
-#endif
-
-    m_images[frameNum].loadFromImage(img);
-
-    return m_images[frameNum];
-}
-
-const sf::Image Terrain::image(int x, int y)
-{
-    if (!m_slp) {
-        return sf::Image();
-    }
-
-    const int tileSquareCount = sqrt(m_slp->getFrameCount());
-    const int frameNum = (y % tileSquareCount) + (x % tileSquareCount) * tileSquareCount;
-
-
-#ifdef DEBUG
-    sf::Image img = Resource::convertFrameToImage(m_slp->getFrame(frameNum));
-    addOutline(img);
-    return img;
-#else
-    return Resource::convertFrameToImage(m_slp->getFrame(frameNum));
-#endif
-}
-
 bool Terrain::load()
 {
     if (!m_isLoaded) {
@@ -282,6 +232,10 @@ const sf::Texture &Terrain::texture(const MapTile &tile)
             image.setPixel(xPos, y, sf::Color(newColor.r, newColor.g, newColor.b));
         }
     }
+
+#ifdef DEBUG
+    addOutline(image);
+#endif
 
     m_textures[tile].loadFromImage(image);
 
