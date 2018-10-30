@@ -11,6 +11,7 @@ ActionGather::ActionGather(const Unit::Ptr &unit, const Unit::Ptr &target, const
     m_task(task),
     m_unitManager(unitManager)
 {
+    DBG << unit->debugName << "gathering from" << target->debugName;
 
 }
 

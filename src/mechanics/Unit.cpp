@@ -124,7 +124,7 @@ void Unit::increaseCreationProgress(float progress)
 float Unit::creationProgress() const
 {
     if (IS_UNLIKELY(m_data->Creatable.TrainTime == 0)) {
-        return 0;
+        return 1;
     }
 
     return m_creationProgress / float(m_data->Creatable.TrainTime);
@@ -176,23 +176,26 @@ void Unit::setUnitData(const genie::Unit &data_)
 
 int Unit::taskGraphicId(const genie::Task::ActionTypes taskType, const IAction::UnitState state)
 {
-    for (const Task &task : availableActions()) {
-        if (task.data->ActionType != taskType) {
+    for (const genie::Task &task : DataManager::datFile().UnitHeaders[m_data->ID].TaskList) {
+        if (task.ActionType != taskType) {
             continue;
         }
-
         switch(state) {
         case IAction::Idle:
         case IAction::Proceeding:
-            return task.data->ProceedingGraphicID;
+            return task.ProceedingGraphicID;
+            break;
         case IAction::Moving:
-            return task.data->MovingGraphicID;
+            return task.MovingGraphicID;
+            break;
         case IAction::Working:
-            return task.data->WorkingGraphicID;
+            return task.WorkingGraphicID;
+            break;
         case IAction::Carrying:
-            return task.data->CarryingGraphicID;
+            return task.CarryingGraphicID;
+            break;
         default:
-            return m_data->StandingGraphic.first;
+            break;
         }
     }
 

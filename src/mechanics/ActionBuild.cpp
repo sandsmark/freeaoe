@@ -5,6 +5,7 @@
 ActionBuild::ActionBuild(const Unit::Ptr &builder, const Unit::Ptr &building) : IAction(Type::Build, builder),
     m_targetBuilding(building)
 {
+    DBG << builder->debugName << "building" << building->debugName;
 }
 
 ActionBuild::~ActionBuild()
