@@ -316,7 +316,7 @@ static std::vector<MapPos> simplifyRdp(const std::vector<MapPos> &path, const fl
             ranges.push({start, index});
             ranges.push({index, end});
         } else {
-            for (int i=start + 1; i<end-1; i++) {
+            for (int i=start + 1; i<end; i++) {
                 selected[i] = false;
             }
         }
@@ -389,7 +389,6 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
         queue.erase(maxElement);
 
         if (parent.x == endX && parent.y == endY) {
-            DBG << "max element is correct";
             break;
         }
 
@@ -489,9 +488,9 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
 
 //    return path;
 
-    std::vector<MapPos> cleanedPath = simplifyRdp(simplifyAngles(path), coarseness);
-
-    return cleanedPath;
+//    return simplifyRdp(simplifyAngles(path), coarseness);
+//    return simplifyAngles(path);
+    return simplifyRdp(path, coarseness*1.5);
 }
 
 bool ActionMove::isPassable(const int x, const int y, int coarseness)

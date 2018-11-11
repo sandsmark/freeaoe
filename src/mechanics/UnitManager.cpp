@@ -155,6 +155,24 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
                                 pos,
                                 RenderType::Base);
 
+#ifdef DEBUG
+        ActionPtr action = unit->currentAction();
+        if (action && action->type == IAction::Type::Move) {
+            std::shared_ptr<ActionMove> moveAction = std::static_pointer_cast<ActionMove>(action);
+
+            sf::CircleShape circle;
+            circle.setRadius(2);
+//            circle.setScale(1, 0.5);
+            circle.setFillColor(sf::Color::Black);
+            circle.setOutlineColor(sf::Color::White);
+            circle.setOutlineThickness(1);
+            for (const MapPos &p : moveAction->path()) {
+                ScreenPos pos = camera->absoluteScreenPos(p);
+                circle.setPosition(pos.x, pos.y);
+                m_outlineOverlay.draw(circle);
+            }
+        }
+#endif
         unit->renderer().render(m_outlineOverlay, pos, RenderType::Outline);
     }
 
@@ -169,7 +187,7 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
         circle.setPosition(pos.x, pos.y);
         circle.setRadius(2);
         int col = 128 * i / ActionMove::testedPoints.size() + 128;
-        circle.setFillColor(sf::Color(128 + col, 255 - col, 255));
+        circle.setFillColor(sf::Color(128 + col, 255 - col, 255, 64));
         circle.setOutlineColor(sf::Color::Transparent);
         renderTarget->draw(circle);
     }
