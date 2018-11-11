@@ -21,6 +21,7 @@
 
 #include <unordered_set>
 #include <queue>
+#include <stack>
 #include "resource/DataManager.h"
 #include "core/Utility.h"
 
@@ -63,7 +64,7 @@ template<> struct std::hash<PathPoint>
     }
 };
 
-static const float PATHFINDING_HEURISTIC_WEIGHT = 1.2;
+static const float PATHFINDING_HEURISTIC_WEIGHT = 1.1;
 
 ActionMove::ActionMove(MapPos destination, const MapPtr &map, const Unit::Ptr &unit, UnitManager *unitManager) :
     IAction(Type::Move, unit, unitManager),
@@ -139,7 +140,7 @@ MapPos ActionMove::findClosestWalkableBorder(const MapPos &start, const MapPos &
         x += uincrX;
         y += uincrY;
 
-        if (isPassable(x, y, coarseness)) {
+        if (isPassable(x, y, coarseness * 2)) {
             break;
         }
     } while (u <= uend);
@@ -271,6 +272,66 @@ std::shared_ptr<ActionMove> ActionMove::moveUnitTo(const Unit::Ptr &unit, MapPos
 
     return action;
 }
+static std::vector<MapPos> simplifyAngles(const std::vector<MapPos> &path)
+{
+    std::vector<MapPos> cleanedPath;
+    cleanedPath.push_back(path[0]);
+    for (int i=1; i<path.size() - 1; i++) {
+        double lastAngle = std::atan2((path[i].y - path[i-1].y), (path[i].x - path[i-1].x));
+        double nextAngle = std::atan2((path[i+1].y - path[i].y), (path[i+1].x - path[i].x));
+        if (lastAngle != nextAngle) {
+            cleanedPath.push_back(path[i]);
+        }
+    }
+    cleanedPath.push_back(path.back());
+
+    return cleanedPath;
+}
+
+static std::vector<MapPos> simplifyRdp(const std::vector<MapPos> &path, const float epsilon)
+{
+    std::vector<MapPos> cleanedPath;
+
+
+    std::stack<std::pair<int, int>> ranges;
+    ranges.push({0, path.size() - 1});
+    std::vector<bool> selected(path.size(), true);
+
+    while (!ranges.empty()) {
+        const int start = ranges.top().first;
+        const int end = ranges.top().second;
+        ranges.pop();
+
+        float dmax = -1;
+        int index = 0;
+        for (int i = start + 1; i < end - 1; i++) {
+            float d = path[i].distanceToLine(path[start], path[end]);
+            if (d > dmax) {
+                index = i;
+                dmax = d;
+            }
+        }
+
+        if (dmax > epsilon) {
+            ranges.push({start, index});
+            ranges.push({index, end});
+        } else {
+            for (int i=start + 1; i<end-1; i++) {
+                selected[i] = false;
+            }
+        }
+    }
+
+    for (int i=0; i<path.size(); i++) {
+        if (selected[i]) {
+            cleanedPath.push_back(path[i]);
+        }
+    }
+
+    DBG << "after cleaning" << cleanedPath.size() << "/" << path.size();
+
+    return cleanedPath;
+}
 
 std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarseness)
 {
@@ -376,17 +437,6 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
                     visited.insert(pathPoint);
                     continue;
                 }
-//                int attemptedX = nx;
-//                int attemptedY = ny;
-//                do {
-//                    nx += dx;
-//                    ny += dy;
-////                    attemptedX += dx;
-////                    attemptedY += dy;
-//                } while (isPassable(nx * coarseness, ny * coarseness, coarseness));
-//                // We hit a wall
-//                nx -= dx;
-//                ny -= dy;
 
                 if (cameFrom.find(pathPoint) != cameFrom.end()) {
                     if ((cameFrom[pathPoint].pathLength < parent.pathLength)) {
@@ -397,9 +447,9 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
                 pathPoint.dx = dx;
                 pathPoint.dy = dx;
 
-                pathPoint.pathLength = parent.pathLength + 1.; // chebychev
+//                pathPoint.pathLength = parent.pathLength + 1.; // chebychev
 //                pathPoint.pathLength = parent.pathLength + std::abs(dx) + std::abs(dy); // manhattan
-//                pathPoint.pathLength = parent.pathLength + std::hypot(dx, dy); // euclidian
+                pathPoint.pathLength = parent.pathLength + std::hypot(dx, dy); // euclidian
 //                pathPoint.distance = pathPoint.pathLength + (std::abs(nx - endX) + std::abs(ny - endY)) * PATHFINDING_HEURISTIC_WEIGHT; // manhattan
                 pathPoint.distance = pathPoint.pathLength + std::hypot(nx - endX, ny - endY) * PATHFINDING_HEURISTIC_WEIGHT;
                 queue.insert(pathPoint);
@@ -439,21 +489,9 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
 
 //    return path;
 
-    std::vector<MapPos> cleanedPath;
-    cleanedPath.push_back(path[0]);
-    for (int i=1; i<path.size() - 1; i++) {
-        double lastAngle = std::atan2((path[i].y - path[i-1].y), (path[i].x - path[i-1].x));
-        double nextAngle = std::atan2((path[i+1].y - path[i].y), (path[i+1].x - path[i].x));
-        if (lastAngle != nextAngle) {
-            cleanedPath.push_back(path[i]);
-        }
-    }
-    cleanedPath.push_back(path.back());
-
-    DBG << "after cleaning" << cleanedPath.size() << "/" << path.size();
+    std::vector<MapPos> cleanedPath = simplifyRdp(simplifyAngles(path), coarseness);
 
     return cleanedPath;
-
 }
 
 bool ActionMove::isPassable(const int x, const int y, int coarseness)

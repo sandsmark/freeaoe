@@ -25,6 +25,7 @@
 #include <cmath>
 
 #include "global/Logger.h"
+#include "core/Utility.h"
 
 using sf::Uint32;
 using sf::Uint8;
@@ -154,6 +155,25 @@ struct MapPos {
 
     float distance(const MapPos &other) const {
         return std::sqrt((other.x - x) * (other.x - x) + (other.y - y) * (other.y - y));
+    }
+    float distanceToLine(const MapPos &lineP1, const MapPos &lineP2) const {
+        const float deltaX = x - lineP2.x;
+        const float deltaY = y - lineP2.y;
+        float lineLengthX = lineP1.x - lineP2.x;
+        float lineLengthY = lineP1.y - lineP2.y;
+        const float normLength = std::sqrt(lineLengthX * lineLengthX + lineLengthY * lineLengthY);
+        if (IS_UNLIKELY(!normLength)) {
+            return 0;
+        }
+        lineLengthX /= normLength;
+        lineLengthY /= normLength;
+        const float alongDist = lineLengthX * deltaX + lineLengthY * deltaY;
+        const float lengthSquared = deltaX  * deltaX + deltaY * deltaY;
+        const float distSquared = lengthSquared - alongDist * alongDist;
+        if (IS_UNLIKELY(distSquared < 0)) {
+            return 0;
+        }
+        return std::sqrt(lengthSquared - alongDist * alongDist);
     }
 
     inline void round() {
