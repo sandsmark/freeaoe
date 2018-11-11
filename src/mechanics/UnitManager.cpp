@@ -162,6 +162,17 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
     renderTarget->draw(m_outlineOverlay.getTexture(), ScreenPos(0, 0));
 
 #ifdef DEBUG
+    for (size_t i=0; i<ActionMove::testedPoints.size(); i++) {
+        const MapPos &mpos = ActionMove::testedPoints[i];
+        sf::CircleShape circle;
+        ScreenPos pos = camera->absoluteScreenPos(mpos);
+        circle.setPosition(pos.x, pos.y);
+        circle.setRadius(2);
+        int col = 128 * i / ActionMove::testedPoints.size() + 128;
+        circle.setFillColor(sf::Color(128 + col, 255 - col, 255));
+        circle.setOutlineColor(sf::Color::Transparent);
+        renderTarget->draw(circle);
+    }
     for (const Unit::Ptr &unit : visibleUnits) {
         sf::CircleShape circle;
         ScreenPos pos = camera->absoluteScreenPos(unit->position());

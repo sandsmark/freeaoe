@@ -24,21 +24,22 @@
 #include "resource/DataManager.h"
 #include "core/Utility.h"
 
+#ifdef DEBUG
+std::vector<MapPos> ActionMove::testedPoints;
+#endif
+
 namespace { // anonymous namespace, don't export this
 struct PathPoint {
     PathPoint() = default;
-    PathPoint(const PathPoint &other) :
-        x(other.x),
-        y(other.y),
-        pathLength(other.pathLength),
-        distance(other.distance)
-    {
-    }
+    PathPoint(const PathPoint &other) = default;
 
-    PathPoint(int _x, int _y) : x(_x), y(_y) {}
+    int8_t dx = 0;
+    int8_t dy = 0;
 
-    float x = 0;
-    float y = 0;
+    PathPoint(int64_t _x, int64_t _y) : x(_x), y(_y) {}
+
+    int64_t x = 0;
+    int64_t y = 0;
     float pathLength = 0;
     float distance = 0;
 
@@ -49,7 +50,7 @@ struct PathPoint {
         return x != other.x || y != other.y;
     }
     bool operator<(const PathPoint &other) const {
-        return (other.distance + other.pathLength) >= (distance + pathLength);
+        return other.distance < distance;
     }
 };
 } //namespace
@@ -62,7 +63,7 @@ template<> struct std::hash<PathPoint>
     }
 };
 
-static const float PATHFINDING_HEURISTIC_WEIGHT = 1.;
+static const float PATHFINDING_HEURISTIC_WEIGHT = 1.2;
 
 ActionMove::ActionMove(MapPos destination, const MapPtr &map, const Unit::Ptr &unit, UnitManager *unitManager) :
     IAction(Type::Move, unit, unitManager),
@@ -279,20 +280,24 @@ std::shared_ptr<ActionMove> ActionMove::moveUnitTo(const Unit::Ptr &unit, MapPos
 
 std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarseness)
 {
+#ifdef DEBUG
+    testedPoints.clear();
+#endif
+
     sf::Clock clock;
 
     std::vector<MapPos> path;
 
     int startX = std::round(start.x / coarseness);
     int startY = std::round(start.y / coarseness);
-    if (!isPassable(startX * coarseness, startY * coarseness)) {
+    if (!isPassable(startX * coarseness, startY * coarseness, coarseness)) {
         WARN << "handed unpassable start";
         return path;
     }
 
     int endX = std::round(end.x / coarseness);
     int endY = std::round(end.y / coarseness);
-    if (!isPassable(endX * coarseness, endY * coarseness)) {
+    if (!isPassable(endX * coarseness, endY * coarseness, coarseness)) {
         WARN << "handed unpassable target";
         return path;
     }
@@ -302,7 +307,7 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
     std::unordered_map<PathPoint, PathPoint> cameFrom;
 
     // STL is a steaming pile of shit
-    std::set<PathPoint> queue;
+    std::unordered_set<PathPoint> queue;
     currentPosition.distance = std::sqrt((startX - endX) * (startX - endX) + (startY - endY) * (startY - endY));
     currentPosition.pathLength = 0;
     queue.insert(currentPosition);
@@ -310,17 +315,28 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
     std::unordered_set<PathPoint> visited;
     visited.insert(currentPosition);
 
-    PathPoint pathPoint;
-    int tried = 0;
+    PathPoint parent;
+    size_t tried = 0;
     while (!queue.empty()) {
         tried++;
-        pathPoint = queue.extract(queue.begin()).value();
+        std::unordered_set<PathPoint>::iterator maxElement = std::max_element(queue.begin(), queue.end());
+        if (maxElement == queue.end()) {
+            WARN << "FAiled to find max";
+            break;
+        }
+        parent = *maxElement;
+        queue.erase(maxElement);
 
-        if (pathPoint.x == endX && pathPoint.y == endY) {
+        if (parent.x == endX && parent.y == endY) {
+            DBG << "max element is correct";
             break;
         }
 
-        visited.insert(pathPoint);
+        visited.insert(parent);
+
+#ifdef DEBUG
+        testedPoints.push_back(MapPos(parent.x * coarseness, parent.y * coarseness));
+#endif
 
         for (int dx = -1; dx <= 1; dx++) {
             for (int dy = -1; dy <= 1; dy++) {
@@ -328,65 +344,100 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
                     continue;
                 }
 
-                const int nx = pathPoint.x + dx;
-                const int ny = pathPoint.y + dy;
-                PathPoint neighbor(nx, ny);
+                // Check if we're checking backwards
+                if (parent.dy == 0 && dy != 0 && parent.dx * dx < 0)  {
+                    continue;
+                }
+                if (parent.dx == 0 && dx != 0 && parent.dy * dy < 0) {
+                    continue;
+                }
 
-                if (visited.count(neighbor)) {
+                const int nx = parent.x + dx;
+                const int ny = parent.y + dy;
+
+                // looking up in visited is expensive, try to avoid that
+                if (nx == parent.x && ny == parent.y) {
+                    continue;
+                }
+
+                // We already came from there
+                if (nx == parent.x + parent.dx && ny == parent.y + parent.dy) {
+                    continue;
+                }
+
+
+                PathPoint pathPoint(nx, ny);
+
+                if (visited.find(pathPoint) != visited.end()) {
                     continue;
                 }
 
                 if (!isPassable(nx * coarseness, ny * coarseness, coarseness)) {
-                    visited.insert(neighbor);
+                    visited.insert(pathPoint);
                     continue;
                 }
+//                int attemptedX = nx;
+//                int attemptedY = ny;
+//                do {
+//                    nx += dx;
+//                    ny += dy;
+////                    attemptedX += dx;
+////                    attemptedY += dy;
+//                } while (isPassable(nx * coarseness, ny * coarseness, coarseness));
+//                // We hit a wall
+//                nx -= dx;
+//                ny -= dy;
 
-                if (cameFrom.find(neighbor) != cameFrom.end()) {
-                    if ((cameFrom[neighbor].pathLength < pathPoint.pathLength)) {
+                if (cameFrom.find(pathPoint) != cameFrom.end()) {
+                    if ((cameFrom[pathPoint].pathLength < parent.pathLength)) {
                         continue;
                     }
                 }
 
-//                neighbor.pathLength = pathPoint.pathLength + 1.; // chebychev
-                neighbor.pathLength = pathPoint.pathLength + std::abs(dx) + std::abs(dy); // manhattan
-//                neighbor.pathLength = pathPoint.pathLength + std::hypot(dx, dy); // euclidian
-//                neighbor.distance = std::abs(nx - endX) + std::abs(ny - endY); // manhattan
-                neighbor.distance = std::hypot(nx - endX, ny - endY) * PATHFINDING_HEURISTIC_WEIGHT;
-                queue.insert(neighbor);
+                pathPoint.dx = dx;
+                pathPoint.dy = dx;
 
+                pathPoint.pathLength = parent.pathLength + 1.; // chebychev
+//                pathPoint.pathLength = parent.pathLength + std::abs(dx) + std::abs(dy); // manhattan
+//                pathPoint.pathLength = parent.pathLength + std::hypot(dx, dy); // euclidian
+//                pathPoint.distance = pathPoint.pathLength + (std::abs(nx - endX) + std::abs(ny - endY)) * PATHFINDING_HEURISTIC_WEIGHT; // manhattan
+                pathPoint.distance = pathPoint.pathLength + std::hypot(nx - endX, ny - endY) * PATHFINDING_HEURISTIC_WEIGHT;
+                queue.insert(pathPoint);
 
-                cameFrom[neighbor] = pathPoint;
+                cameFrom[pathPoint] = parent;
             }
         }
 
         if (clock.getElapsedTime().asMilliseconds() > 50) {
             WARN << "Timeout while pathing (" << tried << "nodes in" << clock.getElapsedTime().asMilliseconds() << "ms)";
             DBG << "visited" << visited.size();
+            DBG << "queue size" << queue.size();
             return path;
         }
     }
     DBG << "walked" << tried << "nodes in" << clock.getElapsedTime().asMilliseconds() << "ms";
     DBG << "visited" << visited.size();
 
-    if (cameFrom.find(pathPoint) == cameFrom.end()) {
+    if (cameFrom.find(parent) == cameFrom.end()) {
         WARN << "Failed to find path from" << startX << "," << startY << "to" << endX << "," << endY;
+        DBG << parent.x << parent.y;
         return path;
     }
 
     path.push_back(end);
 
-    while (cameFrom[pathPoint] != currentPosition) {
-        pathPoint = cameFrom[pathPoint];
-        path.emplace_back(pathPoint.x * coarseness, pathPoint.y * coarseness);
+    while (cameFrom[parent] != currentPosition) {
+        parent = cameFrom[parent];
+        path.emplace_back(parent.x * coarseness, parent.y * coarseness);
 
-        if (cameFrom.find(pathPoint) == cameFrom.end()) {
+        if (cameFrom.find(parent) == cameFrom.end()) {
             WARN << "invalid path, failed to find previous step";
             return path;
         }
     }
     DBG << "final path length" << path.size();
 
-    return path;
+//    return path;
 
     std::vector<MapPos> cleanedPath;
     cleanedPath.push_back(path[0]);
@@ -399,7 +450,7 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
     }
     cleanedPath.push_back(path.back());
 
-    DBG << cleanedPath.size() << "/" << path.size();
+    DBG << "after cleaning" << cleanedPath.size() << "/" << path.size();
 
     return cleanedPath;
 

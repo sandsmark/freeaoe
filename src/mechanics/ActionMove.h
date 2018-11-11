@@ -29,6 +29,9 @@ class ActionMove : public IAction
 {
 
 public:
+#ifdef DEBUG
+    static std::vector<MapPos> testedPoints;
+#endif
     virtual ~ActionMove();
 
     UpdateResult update(Time time) override;
