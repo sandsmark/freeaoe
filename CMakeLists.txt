@@ -68,8 +68,8 @@ add_subdirectory(tools/resgen)
 
 # additional compiler flags 
 #add_definitions(-Wall -Wextra)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=undefined")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=undefined")
 
 set(GLOBAL_SRC
     src/global/Config.cpp
