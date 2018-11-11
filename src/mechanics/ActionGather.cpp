@@ -6,10 +6,10 @@
 #include <genie/dat/Unit.h>
 #include <limits>
 
-ActionGather::ActionGather(const Unit::Ptr &unit, const Unit::Ptr &target, const genie::Task *task, UnitManager *unitManager) : IAction(Type::Gather, unit),
+ActionGather::ActionGather(const Unit::Ptr &unit, const Unit::Ptr &target, const genie::Task *task, UnitManager *unitManager) :
+    IAction(Type::Gather, unit, unitManager),
     m_target(target),
-    m_task(task),
-    m_unitManager(unitManager)
+    m_task(task)
 {
     DBG << unit->debugName << "gathering from" << target->debugName;
 
@@ -40,6 +40,12 @@ IAction::UpdateResult ActionGather::update(Time time)
     }
 
     if (unit->resources[resourceType] >= unit->data()->ResourceCapacity || target->resources[resourceType] == 0) {
+        if (target->resources[resourceType] == 0) {
+            DBG << target->debugName << "is empty" << target->resources[resourceType];
+        } else {
+            DBG << unit->debugName << "is full" << unit->resources[resourceType] << "/" << unit->data()->ResourceCapacity;
+        }
+
         const MapPos &currentPos = unit->position();
 
         const Unit::Ptr dropSite = findDropSite(unit);
@@ -47,9 +53,9 @@ IAction::UpdateResult ActionGather::update(Time time)
         if (dropSite) {
             DBG << "moving to" << dropSite->position() << "to drop off, then returning to" << currentPos << "to continue gathering";
 
-            unit->queueAction(ActionMove::moveUnitTo(unit, dropSite->position(), m_unitManager->map()));
-            unit->queueAction(std::make_shared<ActionDropOff>(unit, dropSite, m_task));
-            unit->queueAction(ActionMove::moveUnitTo(unit, currentPos, m_unitManager->map()));
+            unit->queueAction(ActionMove::moveUnitTo(unit, dropSite->position(), m_unitManager->map(), m_unitManager));
+            unit->queueAction(std::make_shared<ActionDropOff>(unit, dropSite, m_task, m_unitManager));
+            unit->queueAction(ActionMove::moveUnitTo(unit, currentPos, m_unitManager->map(), m_unitManager));
 
             if (target->resources[resourceType] > 0) {
                 unit->queueAction(std::make_shared<ActionGather>(unit, target, m_task, m_unitManager));
@@ -112,7 +118,8 @@ Unit::Ptr ActionGather::findDropSite(const Unit::Ptr &unit)
 }
 
 
-ActionDropOff::ActionDropOff(const Unit::Ptr &unit, const Unit::Ptr &target, const genie::Task *task) : IAction(Type::DropOff, unit),
+ActionDropOff::ActionDropOff(const Unit::Ptr &unit, const Unit::Ptr &target, const genie::Task *task, UnitManager *unitManager) :
+    IAction(Type::DropOff, unit, unitManager),
     m_target(target),
     m_task(task)
 {

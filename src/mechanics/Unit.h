@@ -137,6 +137,7 @@ struct Unit : public Entity
     int garrisonedUnits = 0;
 
     std::unordered_set<Task> availableActions();
+    Task findMatchingTask(const genie::Task::ActionTypes &type);
 
     virtual void setPosition(const MapPos &pos) override;
 

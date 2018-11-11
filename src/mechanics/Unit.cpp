@@ -150,6 +150,17 @@ std::unordered_set<Task> Unit::availableActions()
     return tasks;
 }
 
+Task Unit::findMatchingTask(const genie::Task::ActionTypes &type)
+{
+    for (const Task &task : availableActions()) {
+        if (task.data->ActionType == type) {
+            return task;
+        }
+    }
+
+    return Task();
+}
+
 void Unit::setPosition(const MapPos &pos)
 {
     for (Annex &annex : annexes) {

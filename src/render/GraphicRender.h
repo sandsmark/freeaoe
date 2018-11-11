@@ -77,7 +77,7 @@ public:
 
     void setPlayerId(int playerId);
 
-    void setGraphic(const GraphicPtr &graphic);
+    bool setGraphic(const GraphicPtr &graphic);
 
     ScreenRect rect() const;
 

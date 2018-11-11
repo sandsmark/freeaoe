@@ -33,10 +33,10 @@ public:
 
     UpdateResult update(Time time) override;
 
-    static std::shared_ptr<ActionMove> moveUnitTo(const Unit::Ptr &unit, MapPos destination, const MapPtr &map);
+    static std::shared_ptr<ActionMove> moveUnitTo(const Unit::Ptr &unit, MapPos destination, const MapPtr &map, UnitManager *unitManager);
 
 private:
-    ActionMove(MapPos destination, const MapPtr &map, const Unit::Ptr &unit);
+    ActionMove(MapPos destination, const MapPtr &map, const Unit::Ptr &unit, UnitManager *unitManager);
 
     MapPos findClosestWalkableBorder(const MapPos &target, int coarseness);
 

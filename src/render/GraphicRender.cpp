@@ -131,14 +131,14 @@ void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos scree
 
 }
 
-void GraphicRender::setGraphic(const GraphicPtr &graphic)
+bool GraphicRender::setGraphic(const GraphicPtr &graphic)
 {
     m_graphic = graphic;
     currentFrame = 0;
     m_deltas.clear();
 
     if (!graphic) {
-        return;
+        return false;
     }
 
     for (const genie::GraphicDelta &deltaData : graphic->deltas()) {
@@ -163,6 +163,7 @@ void GraphicRender::setGraphic(const GraphicPtr &graphic)
 //    if (!m_deltas.empty()) {
 //        std::reverse(m_deltas.begin(), m_deltas.end());
 //    }
+    return true;
 }
 
 ScreenRect GraphicRender::rect() const

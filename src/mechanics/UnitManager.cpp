@@ -191,6 +191,7 @@ bool UnitManager::onLeftClick(const MapPos &/*mapPos*/)
         m_buildingToPlace->setCreationProgress(0);
         m_units.insert(m_buildingToPlace);
 
+        // wat, why did I do this
         for (const Unit::Ptr &unit : m_selectedUnits) {
             Task task;
             for (const Task &potential : unit->availableActions()) {
@@ -418,7 +419,7 @@ const Task UnitManager::defaultActionAt(const ScreenPos &pos, const CameraPtr &c
 
 void UnitManager::moveUnitTo(const Unit::Ptr &unit, const MapPos &targetPos)
 {
-    unit->setCurrentAction(ActionMove::moveUnitTo(unit, targetPos, m_map));
+    unit->setCurrentAction(ActionMove::moveUnitTo(unit, targetPos, m_map, this));
 }
 
 void UnitManager::updateVisibility(const std::vector<Unit::Ptr> &visibleUnits)
@@ -443,10 +444,10 @@ void UnitManager::assignTask(const Task &task, const Unit::Ptr &unit, const Unit
         unit->setUnitData(DataManager::Inst().getUnit(task.unitId));
     }
 
-    unit->queueAction(ActionMove::moveUnitTo(unit, target->position(), m_map));
+    unit->queueAction(ActionMove::moveUnitTo(unit, target->position(), m_map, this));
     switch(task.data->ActionType) {
     case genie::Task::Build:
-        unit->queueAction(std::make_shared<ActionBuild>(unit, target));
+        unit->queueAction(std::make_shared<ActionBuild>(unit, target, this));
         break;
     case genie::Task::GatherRebuild:
 //        DBG << "supposed to gather from" << target->debugName;

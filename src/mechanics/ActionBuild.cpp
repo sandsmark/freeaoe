@@ -1,8 +1,11 @@
 #include "ActionBuild.h"
+#include "ActionGather.h"
+#include "UnitManager.h"
 
 #include <genie/dat/Unit.h>
 
-ActionBuild::ActionBuild(const Unit::Ptr &builder, const Unit::Ptr &building) : IAction(Type::Build, builder),
+ActionBuild::ActionBuild(const Unit::Ptr &builder, const Unit::Ptr &building, UnitManager *unitManager) :
+    IAction(Type::Build, builder, unitManager),
     m_targetBuilding(building)
 {
     DBG << builder->debugName << "building" << building->debugName;
@@ -49,7 +52,8 @@ IAction::UpdateResult ActionBuild::update(Time time)
     if (building->creationProgress() >= 1.) {
         DBG << "building finished";
         if (building->data()->Class == genie::Unit::Farm) {
-//            unit->queueAction(std::make_shared<ActionGather>(unit, building, m_task, m_unitManager));
+            Task task = unit->findMatchingTask(genie::Task::GatherRebuild);
+            m_unitManager->assignTask(task, unit, building);
         }
         return UpdateResult::Completed;
     }

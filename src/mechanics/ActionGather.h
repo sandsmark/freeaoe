@@ -9,7 +9,7 @@ class UnitManager;
 class ActionDropOff : public IAction
 {
 public:
-    ActionDropOff(const Unit::Ptr &unit, const Unit::Ptr &target, const genie::Task *task);
+    ActionDropOff(const Unit::Ptr &unit, const Unit::Ptr &target, const genie::Task *task, UnitManager *unitManager);
 
     UpdateResult update(Time time) override;
     UnitState unitState() const override { return UnitState::Proceeding; }
@@ -32,6 +32,5 @@ private:
 
     std::weak_ptr<Unit> m_target;
     const genie::Task *m_task;
-    UnitManager *m_unitManager;
 };
 

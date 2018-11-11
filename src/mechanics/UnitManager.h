@@ -86,10 +86,10 @@ public:
 
     const Task defaultActionAt(const ScreenPos &pos, const CameraPtr &camera);
     void moveUnitTo(const Unit::Ptr &unit, const MapPos &targetPos);
+    void assignTask(const Task &task, const Unit::Ptr &unit, const Unit::Ptr &target);
 
 private:
     void updateVisibility(const std::vector<Unit::Ptr> &visibleUnits);
-    void assignTask(const Task &task, const Unit::Ptr &unit, const Unit::Ptr &target);
     void playSound(const Unit::Ptr &unit);
 
     std::set<Unit::Ptr, MapPositionSorter> m_units;

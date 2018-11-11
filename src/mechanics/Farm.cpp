@@ -11,7 +11,9 @@ Farm::Farm(const genie::Unit &data_, const std::shared_ptr<Player> &player, cons
     Unit(data_, player, civilization, map),
     m_farmRenderer(Size(data_.Size))
 {
-    m_farmRenderer.setGraphic(defaultGraphics);
+    if (!m_farmRenderer.setGraphic(defaultGraphics)) {
+        WARN << "Failed to set graphic";
+    }
 }
 
 void Farm::setCreationProgress(float progress)

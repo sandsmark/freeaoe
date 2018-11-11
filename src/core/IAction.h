@@ -29,6 +29,7 @@ class Task;
 struct Unit;
 struct Task;
 class Map;
+class UnitManager;
 
 class IAction
 {
@@ -66,9 +67,10 @@ public:
     virtual UpdateResult update(Time time) = 0;
 
 protected:
-    IAction(const Type type_, const std::shared_ptr<Unit> &unit);
+    IAction(const Type type_, const std::shared_ptr<Unit> &unit, UnitManager *unitManager);
     std::weak_ptr<Unit> m_unit;
     Time m_prevTime = 0;
+    UnitManager *m_unitManager;
 };
 
 typedef std::shared_ptr<IAction> ActionPtr;
