@@ -49,7 +49,7 @@ struct PathPoint {
         return x != other.x || y != other.y;
     }
     bool operator<(const PathPoint &other) const {
-        return (other.distance + other.pathLength) < (distance + pathLength);
+        return (other.distance + other.pathLength) >= (distance + pathLength);
     }
 };
 } //namespace
@@ -58,7 +58,7 @@ template<> struct std::hash<PathPoint>
 {
     std::size_t operator()(const PathPoint& point) const
     {
-        return point.y * 255 * 96 + point.x;
+        return point.y * 255 * 48 + point.x;
     }
 };
 
@@ -302,10 +302,10 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
     std::unordered_map<PathPoint, PathPoint> cameFrom;
 
     // STL is a steaming pile of shit
-    std::priority_queue<PathPoint> queue;
+    std::set<PathPoint> queue;
     currentPosition.distance = std::sqrt((startX - endX) * (startX - endX) + (startY - endY) * (startY - endY));
     currentPosition.pathLength = 0;
-    queue.push(currentPosition);
+    queue.insert(currentPosition);
 
     std::unordered_set<PathPoint> visited;
     visited.insert(currentPosition);
@@ -314,8 +314,7 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
     int tried = 0;
     while (!queue.empty()) {
         tried++;
-        pathPoint = queue.top();
-        queue.pop();
+        pathPoint = queue.extract(queue.begin()).value();
 
         if (pathPoint.x == endX && pathPoint.y == endY) {
             break;
@@ -333,12 +332,12 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
                 const int ny = pathPoint.y + dy;
                 PathPoint neighbor(nx, ny);
 
-                if (!isPassable(nx * coarseness, ny * coarseness, coarseness)) {
-                    visited.insert(neighbor);
+                if (visited.count(neighbor)) {
                     continue;
                 }
 
-                if (visited.count(neighbor)) {
+                if (!isPassable(nx * coarseness, ny * coarseness, coarseness)) {
+                    visited.insert(neighbor);
                     continue;
                 }
 
@@ -353,7 +352,7 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
 //                neighbor.pathLength = pathPoint.pathLength + std::hypot(dx, dy); // euclidian
 //                neighbor.distance = std::abs(nx - endX) + std::abs(ny - endY); // manhattan
                 neighbor.distance = std::hypot(nx - endX, ny - endY) * PATHFINDING_HEURISTIC_WEIGHT;
-                queue.push(neighbor);
+                queue.insert(neighbor);
 
 
                 cameFrom[neighbor] = pathPoint;
@@ -362,10 +361,12 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
 
         if (clock.getElapsedTime().asMilliseconds() > 50) {
             WARN << "Timeout while pathing (" << tried << "nodes in" << clock.getElapsedTime().asMilliseconds() << "ms)";
+            DBG << "visited" << visited.size();
             return path;
         }
     }
     DBG << "walked" << tried << "nodes in" << clock.getElapsedTime().asMilliseconds() << "ms";
+    DBG << "visited" << visited.size();
 
     if (cameFrom.find(pathPoint) == cameFrom.end()) {
         WARN << "Failed to find path from" << startX << "," << startY << "to" << endX << "," << endY;
