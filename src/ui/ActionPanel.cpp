@@ -217,8 +217,11 @@ void ActionPanel::updateButtons()
     }
 
     Unit::Ptr unit = *m_selectedUnits.begin();
+    if (unit->player.lock() != m_humanPlayer) {
+        return;
+    }
 
-    if (unit->data()->Type >= genie::Unit::MovingType && unit->data()->Type < genie::Unit::BuildingType && unit->player.lock() == m_humanPlayer) {
+    if (unit->data()->Type >= genie::Unit::MovingType && unit->data()->Type < genie::Unit::BuildingType) {
         InterfaceButton killButton;
         killButton.action = Command::Kill;
         killButton.index = 3;

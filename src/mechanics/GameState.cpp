@@ -450,12 +450,14 @@ void GameState::setupScenario()
     DBG << "Setting up scenario:" << scenario_->scenarioInstructions;
     map_->create(scenario_->map);
 
+    const genie::ScnMainPlayerData &playerData = scenario_->playerData;
     for (size_t playerNum = 0; playerNum < scenario_->enabledPlayerCount; playerNum++) {
         Player::Ptr player;
 
         // player 0 is gaia
         if (playerNum > 0) {
-            player = std::make_shared<Player>(playerNum, m_civilizations[scenario_->players[playerNum-1].playerColor]);
+            player = std::make_shared<Player>(playerNum, m_civilizations[playerData.resourcesPlusPlayerInfo[playerNum-1].civilizationID]);
+            player->name = playerData.playerNames[playerNum - 1];
         } else {
             player = std::make_shared<Player>(playerNum, m_civilizations[0]); // gaia
         }
@@ -471,7 +473,7 @@ void GameState::setupScenario()
 
         m_players.push_back(player);
         for (const genie::ScnUnit &scnunit : scenario_->playerUnits[playerNum].units) {
-            MapPos unitPos((scnunit.positionY - 0.5) * Constants::TILE_SIZE, (scnunit.positionX + 0.5) * Constants::TILE_SIZE, scnunit.positionZ * DataManager::Inst().terrainBlock().ElevHeight);
+            MapPos unitPos((scnunit.positionY) * Constants::TILE_SIZE, (scnunit.positionX) * Constants::TILE_SIZE, scnunit.positionZ * DataManager::Inst().terrainBlock().ElevHeight);
             Unit::Ptr unit = UnitFactory::Inst().createUnit(scnunit.objectID, unitPos, player, map_);
 
             unit->setAngle(scnunit.rotation - M_PI_2/2.);
@@ -485,7 +487,7 @@ void GameState::setupScenario()
             m_unitManager->add(unit);
         }
     }
-    m_humanPlayer = m_players[0];
+    m_humanPlayer = m_players[1];
 }
 
 void GameState::setupGame(const GameType gameType)

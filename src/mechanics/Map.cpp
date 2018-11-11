@@ -245,7 +245,7 @@ void Map::removeEntityAt(unsigned int col, unsigned int row, const int entityId)
     unsigned int index = row * cols_ + col;
 
     if (IS_UNLIKELY(index >= m_tileUnits.size())) {
-        WARN << "Trying to add unit out of range";
+        WARN << "Trying to remove unit out of range" << col << row;
         return;
     }
 
@@ -263,7 +263,7 @@ void Map::addEntityAt(unsigned int col, unsigned int row, const EntityPtr &entit
     unsigned int index = row * cols_ + col;
 
     if (IS_UNLIKELY(index >= m_tileUnits.size())) {
-        WARN << "Trying to add unit out of range";
+        WARN << "Trying to add unit out of range" << col << row;
         return;
     }
 
