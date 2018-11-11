@@ -41,7 +41,7 @@ public:
 private:
     ActionMove(MapPos destination, const MapPtr &map, const Unit::Ptr &unit, UnitManager *unitManager);
 
-    MapPos findClosestWalkableBorder(const MapPos &target, int coarseness);
+    MapPos findClosestWalkableBorder(const MapPos &start, const MapPos &target, int coarseness);
 
     std::vector<MapPos> findPath(MapPos start, MapPos end, int coarseness);
     bool isPassable(const int x, const int y, int coarseness = 0);

@@ -76,20 +76,14 @@ ActionMove::ActionMove(MapPos destination, const MapPtr &map, const Unit::Ptr &u
     speed_ = unit->data()->Speed;
 }
 
-MapPos ActionMove::findClosestWalkableBorder(const MapPos &target, int coarseness)
+MapPos ActionMove::findClosestWalkableBorder(const MapPos &start, const MapPos &target, int coarseness)
 {
-    std::shared_ptr<Unit> unit = m_unit.lock();
-    if (!unit) {
-        WARN << "Lost our unit";
-        return target;
-    }
-
     // follow a straight line from the target to our location, to find the closest position we can get to
     // standard bresenham, not the prettiest implementation
     const int x0 = target.x;
     const int y0 = target.y;
-    const int x1 = unit->position().x;
-    const int y1 = unit->position().y;
+    const int x1 = start.x;
+    const int y1 = start.y;
 
     int dx = x1 - x0;
     int dy = y1 - y0;
@@ -291,7 +285,13 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
     int startX = std::round(start.x / coarseness);
     int startY = std::round(start.y / coarseness);
     if (!isPassable(startX * coarseness, startY * coarseness, coarseness)) {
-        WARN << "handed unpassable start";
+        WARN << "handed unpassable start, attempting to get out";
+        start = findClosestWalkableBorder(end, start, coarseness);
+        startX = std::round(start.x / coarseness);
+        startY = std::round(start.y / coarseness);
+    }
+    if (!isPassable(startX * coarseness, startY * coarseness, coarseness)) {
+        WARN << "handed unpassable start, failed to find new";
         return path;
     }
 
@@ -538,7 +538,7 @@ void ActionMove::updatePath()
 
     MapPos newDest = dest_;
     if (!isPassable(dest_.x, dest_.y)) {
-        newDest = findClosestWalkableBorder(dest_, 2);
+        newDest = findClosestWalkableBorder(unit->position(), dest_, 2);
         dest_ = newDest;
     }
 
@@ -548,7 +548,7 @@ void ActionMove::updatePath()
     // Uglier, but hopefully faster
     if (m_path.empty()) {
         if (newDest != dest_) {
-            newDest = findClosestWalkableBorder(dest_, 5);
+            newDest = findClosestWalkableBorder(unit->position(), dest_, 5);
             dest_ = newDest;
         }
         m_path = findPath(unit->position(), newDest, 5);
@@ -556,7 +556,7 @@ void ActionMove::updatePath()
 
     if (m_path.empty()) {
         if (newDest != dest_) {
-            newDest = findClosestWalkableBorder(dest_, 10);
+            newDest = findClosestWalkableBorder(unit->position(), dest_, 10);
             dest_ = newDest;
         }
         m_path = findPath(unit->position(), newDest, 10);
