@@ -37,6 +37,7 @@
 #include "resource/DataManager.h"
 #include "ui/ActionPanel.h"
 #include "ui/UnitInfoPanel.h"
+#include "ui/Minimap.h"
 #include "global/Constants.h"
 
 #include "resource/LanguageManager.h"
@@ -109,6 +110,7 @@ GameState::GameState(const std::shared_ptr<SfmlRenderTarget> &renderTarget) :
     renderTarget_ = renderTarget;
 
     m_actionPanel = std::make_unique<ActionPanel>(renderTarget_);
+    m_minimap = std::make_unique<Minimap>(renderTarget_);
     m_actionPanel->setUnitManager(m_unitManager);
     m_unitInfoPanel = std::make_unique<UnitInfoPanel>(renderTarget_);
     m_unitInfoPanel->setUnitManager(m_unitManager);
@@ -135,6 +137,10 @@ bool GameState::init()
     }
 
     if (!m_unitInfoPanel->init()) {
+        return false;
+    }
+    if (!m_minimap->init()) {
+        WARN << "failed to init minimap";
         return false;
     }
 
@@ -211,6 +217,7 @@ bool GameState::init()
     }
 
     map_ = std::make_shared<Map>();
+    m_minimap->setMap(map_);
 
     if (scenario_) {
         setupScenario();
@@ -254,6 +261,7 @@ void GameState::draw()
     renderTarget_->draw(m_uiOverlay, ScreenPos(0, 0));
     m_actionPanel->draw();
     m_unitInfoPanel->draw();
+    m_minimap->draw();
 
     renderTarget_->draw(m_woodLabel.text);
     renderTarget_->draw(m_foodLabel.text);
@@ -272,6 +280,7 @@ bool GameState::update(Time time)
     updated = m_unitManager->update(time) || updated;
     updated = m_actionPanel->update(time) || updated;
     updated = m_unitInfoPanel->update(time) || updated;
+    updated = m_minimap->update(time) || updated;
 
     m_woodLabel.setText(std::to_string(int(m_humanPlayer->resources[genie::ResourceType::WoodStorage])));
     m_foodLabel.setText(std::to_string(int(m_humanPlayer->resources[genie::ResourceType::FoodStorage])));

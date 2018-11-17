@@ -299,7 +299,7 @@ inline ScreenPos MapPos::toScreen() const
 {
     return ScreenPos(
         x + y,
-        z + (y - x) / 2
+        z + (y - x) / 2.f
     );
 }
 

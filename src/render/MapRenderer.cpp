@@ -23,6 +23,7 @@
 #include <resource/DataManager.h>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
+#include <SFML/Graphics/Text.hpp>
 
 MapRenderer::MapRenderer() :
     m_camChanged(true),
@@ -153,8 +154,14 @@ void MapRenderer::updateTexture()
     invalidIndicator.setOutlineThickness(3);
     invalidIndicator.setOutlineColor(sf::Color::Transparent);
 
-    for (int col = 0; col < m_rColEnd; col++) {
-        for (int row = m_rRowEnd-1; row >= 0; row--) {
+    sf::Text text;
+    text.setFont(SfmlRenderTarget::defaultFont());
+    text.setOutlineColor(sf::Color::Transparent);
+    text.setFillColor(sf::Color::White);
+    text.setCharacterSize(12);
+
+    for (int col = m_rColBegin; col < m_rColEnd; col++) {
+        for (int row = m_rRowEnd-1; row >= m_rRowBegin; row--) {
             MapTile &mapTile = m_map->getTileAt(col, row);
 
             MapRect rect;
@@ -179,7 +186,6 @@ void MapRenderer::updateTexture()
             }
 
             TerrainPtr terrain = AssetManager::Inst()->getTerrain(mapTile.terrainId);
-            m_textureTarget.draw(terrain->texture(mapTile), spos);
 
             if (!terrain) {
                 invalidIndicator.setPosition(spos);
@@ -187,15 +193,10 @@ void MapRenderer::updateTexture()
                 continue;
             }
 
-//            if (mapTile.slopes.self == Slope::Flat) {
-//                m_textureTarget.draw(terrain->texture(col, row), spos);
-
-//                for (const Blend &blend : mapTile.blends) {
-//                    m_textureTarget.draw(AssetManager::Inst()->getTerrain(blend.terrainId)->blendImage(blend, col, row), spos);
-//                }
-//            } else {
-//                m_textureTarget.draw(terrain->slopedImage(mapTile.slopes, mapTile.slopePatterns(), col, row), spos);
-//            }
+            m_textureTarget.draw(terrain->texture(mapTile), spos);
+            text.setString(std::to_string(col) + "," + std::to_string(row));
+            text.setPosition(spos.x, spos.y);
+            m_textureTarget.draw(text);
         }
     }
 

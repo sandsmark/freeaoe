@@ -43,9 +43,9 @@ struct Camera
     MapPos absoluteMapPos(ScreenPos pos);
 
     ScreenRect m_visibleArea;
-private:
     MapPos m_target;
     Size m_viewportSize;
+private:
 };
 
 typedef std::shared_ptr<Camera> CameraPtr;

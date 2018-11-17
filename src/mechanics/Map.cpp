@@ -253,6 +253,9 @@ void Map::removeEntityAt(unsigned int col, unsigned int row, const int entityId)
     for (;it!=m_tileUnits[index].end(); it++) {
         if (!it->expired() && it->lock()->id == entityId) {
             m_tileUnits[index].erase(it);
+
+            emit(Signals::UnitsChanged);
+
             break;
         }
     }
@@ -271,6 +274,8 @@ void Map::addEntityAt(unsigned int col, unsigned int row, const EntityPtr &entit
     removeEntityAt(col, row, entity->id);
 
     m_tileUnits[index].push_back(entity);
+
+    emit(Signals::UnitsChanged);
 }
 
 const std::vector<std::weak_ptr<Entity> > &Map::entitiesAt(unsigned int col, unsigned int row) const
@@ -322,6 +327,8 @@ void Map::updateMapData()
         }
     }
     m_updated = true;
+
+    emit(Signals::TerrainChanged);
 }
 
 enum Direction : uint8_t {

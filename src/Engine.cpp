@@ -139,7 +139,7 @@ void Engine::showStartScreen()
 //------------------------------------------------------------------------------
 bool Engine::setup(const std::shared_ptr<genie::ScnFile> &scenario)
 {
-    renderWindow_ = std::make_unique<sf::RenderWindow>(sf::VideoMode(1280, 1024), "freeaoe");
+    renderWindow_ = std::make_unique<sf::RenderWindow>(sf::VideoMode(1280, 1024), "freeaoe", sf::Style::None);
     renderWindow_->setMouseCursorVisible(false);
     renderWindow_->setFramerateLimit(60);
 

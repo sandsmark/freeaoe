@@ -32,6 +32,7 @@
 #include <genie/script/scn/MapDescription.h>
 
 #include "MapTile.h"
+#include "core/SignalEmitter.h"
 
 namespace sf {
 class Shape;
@@ -45,9 +46,14 @@ public:
     sf::Int32 x_pos, y_pos, z_pos;
 };
 
-class Map
+class Map : public SignalEmitter<Map>
 {
 public:
+    enum class Signals {
+        UnitsChanged,
+        TerrainChanged
+    };
+
     enum MapSize {
         Tiny = 72,
         Small = 96,
