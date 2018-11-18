@@ -25,13 +25,15 @@ public:
 private:
     void updateUnits();
     void updateTerrain();
-
+    void updateCamera();
 
     bool m_updated = false;
     std::shared_ptr<Map> m_map;
     std::shared_ptr<SfmlRenderTarget> m_renderTarget;
     ScreenRect m_rect;
     sf::RenderTexture m_texture;
+    MapPos m_lastCameraPos;
+    ScreenRect m_cameraRect;
 };
 
 #endif // MINIMAP_H

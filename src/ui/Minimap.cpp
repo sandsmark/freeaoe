@@ -30,6 +30,8 @@ void Minimap::setMap(const std::shared_ptr<Map> &map)
 
     m_updated = true;
 
+    updateCamera();
+
 }
 
 void Minimap::updateUnits()
@@ -40,6 +42,23 @@ void Minimap::updateUnits()
 void Minimap::updateTerrain()
 {
     m_updated = true;
+}
+
+void Minimap::updateCamera()
+{
+    const MapRect mapDimensions(0, 0, m_map->getCols(), m_map->getRows());
+    const float scaleX = m_rect.boundingMapRect().width / mapDimensions.width / 2;
+    const float scaleY = m_rect.boundingMapRect().height / mapDimensions.height / 2;
+    const Size viewSize = m_renderTarget->camera()->m_viewportSize;
+    const MapPos cameraMapPos(m_renderTarget->camera()->m_target.y / Constants::TILE_SIZE, m_renderTarget->camera()->m_target.x / Constants::TILE_SIZE);
+    const ScreenPos cameraPos = cameraMapPos.toScreen();
+    const ScreenRect fullBoundingRect = MapRect(0, 0, mapDimensions.width * Constants::TILE_SIZE, mapDimensions.height * Constants::TILE_SIZE).boundingScreenRect();
+    const ScreenPos center(m_rect.width/2, m_rect.height/2);
+
+    m_cameraRect.width = m_rect.width * viewSize.width / fullBoundingRect.width;
+    m_cameraRect.height = m_rect.height * viewSize.height / fullBoundingRect.height;
+    m_cameraRect.x = m_rect.x + cameraPos.x * scaleX - m_cameraRect.width / 2;
+    m_cameraRect.y = m_rect.y + cameraPos.y * scaleY + center.y - m_cameraRect.height / 2;
 }
 
 
@@ -54,7 +73,12 @@ void Minimap::handleEvent(sf::Event /*event*/)
 
 bool Minimap::update(Time /*time*/)
 {
-    if (/*!m_updated ||*/ !m_map) {
+    if (m_lastCameraPos != m_renderTarget->camera()->m_target) {
+        updateCamera();
+        m_lastCameraPos = m_renderTarget->camera()->m_target;
+    }
+
+    if (!m_updated || !m_map) {
         return false;
     }
     if (m_texture.getSize().x != m_rect.width || m_texture.getSize().y != m_rect.height) {
@@ -87,24 +111,7 @@ bool Minimap::update(Time /*time*/)
 
         }
     }
-    const Size viewSize = m_renderTarget->camera()->m_viewportSize;
-    const MapPos cameraMapPos(m_renderTarget->camera()->m_target.y / Constants::TILE_SIZE, m_renderTarget->camera()->m_target.x / Constants::TILE_SIZE);
-    const ScreenPos cameraPos = cameraMapPos.toScreen();
-    const ScreenRect fullBoundingRect = MapRect(0, 0, mapDimensions.width * Constants::TILE_SIZE, mapDimensions.height * Constants::TILE_SIZE).boundingScreenRect();
-    const Size indicatorSize(m_rect.width * viewSize.width / fullBoundingRect.width, m_rect.height * viewSize.height / fullBoundingRect.height);
 
-    sf::RectangleShape rect;
-    rect.setSize(indicatorSize);
-    rect.setFillColor(sf::Color::Transparent);
-    rect.setOutlineThickness(1);
-
-    rect.setOutlineColor(sf::Color::Black);
-    rect.setPosition(cameraPos.x * scaleX - indicatorSize.width / 2, cameraPos.y * scaleY + center.y - indicatorSize.height / 2 + 1);
-    m_texture.draw(rect);
-
-    rect.setPosition(cameraPos.x * scaleX - indicatorSize.width / 2, cameraPos.y * scaleY + center.y - indicatorSize.height / 2);
-    rect.setOutlineColor(sf::Color::White);
-    m_texture.draw(rect);
 
     m_updated = false;
 
@@ -115,4 +122,19 @@ bool Minimap::update(Time /*time*/)
 void Minimap::draw()
 {
     m_renderTarget->draw(m_texture.getTexture(), m_rect.topLeft());
+
+    const ScreenRect cameraRect = m_cameraRect.intersected(m_rect);
+
+    sf::RectangleShape rect;
+    rect.setSize(cameraRect.size());
+    rect.setFillColor(sf::Color::Transparent);
+    rect.setOutlineThickness(1);
+
+    rect.setOutlineColor(sf::Color::Black);
+    rect.setPosition(cameraRect.x, cameraRect.y + 1);
+    m_renderTarget->draw(rect);
+
+    rect.setPosition(cameraRect.topLeft());
+    rect.setOutlineColor(sf::Color::White);
+    m_renderTarget->draw(rect);
 }

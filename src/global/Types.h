@@ -437,6 +437,8 @@ struct ScreenRect
             contains(otherRect.x + otherRect.width, otherRect.y + otherRect.height)
         );
     }
+
+    ScreenRect intersected(const ScreenRect &otherRect) const;
 };
 
 inline ScreenRect operator +(const ScreenRect& rect, const ScreenPos& pos)
@@ -598,10 +600,15 @@ inline MapRect ScreenRect::boundingMapRect() const
     const float y2 = bottomRight().toMap().y;
 
     return MapRect(MapPos(x1, y1), Size(x2-x1, y2-y1));
-//    return MapRect(
-//        ScreenPos(x, y).toMap(),
-//        ScreenPos(x + width, y + height).toMap()
-//    );
+}
+
+inline ScreenRect ScreenRect::intersected(const ScreenRect &otherRect) const
+{
+    const float left = std::max(x, otherRect.x);
+    const float right = std::min(x + width, otherRect.x + otherRect.width);
+    const float top = std::max(y, otherRect.y);
+    const float bottom = std::min(y + height, otherRect.y + otherRect.height);
+    return ScreenRect(ScreenPos(left, top), Size(right - left, bottom - top));
 }
 
 inline ScreenRect MapRect::boundingScreenRect() const
