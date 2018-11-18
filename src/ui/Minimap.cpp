@@ -47,7 +47,6 @@ void Minimap::setUnitManager(const std::shared_ptr<UnitManager> &unitManager)
 
 void Minimap::updateUnits()
 {
-    DBG << "updated units";
     m_unitsUpdated = true;
 }
 
@@ -184,6 +183,8 @@ bool Minimap::update(Time /*time*/)
     }
 
     if (m_unitsUpdated && m_unitManager) {
+        TIME_THIS;
+
         if (m_unitsTexture.getSize().x != m_rect.width || m_unitsTexture.getSize().y != m_rect.height) {
             m_unitsTexture.create(m_rect.width, m_rect.height);
         }
@@ -202,9 +203,19 @@ bool Minimap::update(Time /*time*/)
 
         sf::RectangleShape rectangleSprite;//(scaleX, scaleY);
 
+        const std::vector<genie::Color> &colors = AssetManager::Inst()->getPalette(50500).getColors();
+
         for (const Unit::Ptr &unit : m_unitManager->units()) {
             const genie::Unit::MinimapModes mode = genie::Unit::MinimapModes(unit->data()->MinimapMode);
-            if (mode != genie::Unit::MinimapUnit && mode != genie::Unit::MinimapBuilding) {
+            if (mode == genie::Unit::MinimapInvisible) {
+                continue;
+            }
+            if (mode == genie::Unit::MinimapFlying) {
+                continue;
+            }
+
+            if (mode != genie::Unit::MinimapUnit && mode != genie::Unit::MinimapBuilding && mode != genie::Unit::MinimapLargeTerrain) {
+                DBG << "Unhandled minimap mode" << int(mode) << unit->data()->MinimapColor;
                 continue;
             }
 
@@ -213,6 +224,7 @@ bool Minimap::update(Time /*time*/)
             float size = std::max(unit->data()->OutlineSize.x * scaleX * 2, 2.f);
             pos.x = pos.x * scaleX - size/2;
             pos.y = pos.y * scaleY + center.y - size/2;
+
             if (mode == genie::Unit::MinimapBuilding) {
                 diamondSprite.setFillColor(unitColor(unit));
                 diamondSprite.setPosition(pos);
@@ -223,9 +235,13 @@ bool Minimap::update(Time /*time*/)
                 rectangleSprite.setPosition(pos);
                 rectangleSprite.setFillColor(unitColor(unit));
                 m_unitsTexture.draw(rectangleSprite);
+            } else if (mode == genie::Unit::MinimapLargeTerrain) {
+                rectangleSprite.setSize(sf::Vector2f(size, size));
+                rectangleSprite.setPosition(pos);
+                const genie::Color &color = colors[unit->data()->MinimapColor];
+                rectangleSprite.setFillColor(sf::Color(color.r, color.g, color.b));
+                m_unitsTexture.draw(rectangleSprite);
             }
-//            const Size unitSize(unit->data()->OutlineSize.x * scaleX, unit->data()->OutlineSize.y * scaleY);
-//            sprite.setSize(sf::Vector2f(unitSize.width / Constants::TILE_SIZE, unitSize.height / Constants::TILE_SIZE));
         }
         m_unitsTexture.display();
         m_unitsUpdated = false;
