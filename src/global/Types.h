@@ -395,7 +395,7 @@ struct ScreenRect
         return *this;
     }
 
-    MapRect toMap() const;
+    MapRect boundingMapRect() const;
 
     operator bool() const {
         return (width >= 0 && height >= 0);
@@ -513,7 +513,7 @@ struct MapRect {
         return !(width > 0 && height > 0);
     }
 
-    ScreenRect toScreen() const;
+    ScreenRect boundingScreenRect() const;
 
     operator bool() const {
         return (width > 0 && height > 0);
@@ -590,21 +590,27 @@ inline MapRect operator +(const MapRect& rect, const MapPos& pos)
 /// Time in milliseconds
 typedef unsigned int Time;
 
-inline MapRect ScreenRect::toMap() const
+inline MapRect ScreenRect::boundingMapRect() const
 {
-    return MapRect(
-        ScreenPos(x, y).toMap(),
-        ScreenPos(x + width, y + height).toMap()
-    );
+    const float x1 = bottomLeft().toMap().x;
+    const float y1 = topLeft().toMap().y;
+    const float x2 = topRight().toMap().x;
+    const float y2 = bottomRight().toMap().y;
+
+    return MapRect(MapPos(x1, y1), Size(x2-x1, y2-y1));
+//    return MapRect(
+//        ScreenPos(x, y).toMap(),
+//        ScreenPos(x + width, y + height).toMap()
+//    );
 }
 
-inline ScreenRect MapRect::toScreen() const
+inline ScreenRect MapRect::boundingScreenRect() const
 {
     const float x1 = topLeft().toScreen().x;
     const float y1 = bottomLeft().toScreen().y;
-    const float x2 = topRight().toScreen().x;
-    const float y2 = bottomRight().toScreen().y;
-    return ScreenRect(ScreenPos(x1, y1), Size(x2-x1, y2-y1));
+    const float x2 = bottomRight().toScreen().x;
+    const float y2 = topRight().toScreen().y;
+    return ScreenRect(ScreenPos(x1, y1), Size(x2-x1, y1-y2));
 }
 
 inline LogPrinter operator <<(LogPrinter os, const MapRect &rect) {
