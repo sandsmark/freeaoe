@@ -17,6 +17,8 @@
 #ifndef UNITINFOPANEL_H
 #define UNITINFOPANEL_H
 
+#include "global/Types.h"
+
 #include <memory>
 #include <unordered_set>
 #include <array>

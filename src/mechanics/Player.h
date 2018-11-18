@@ -1,6 +1,9 @@
 #pragma once
 
+#include "global/Types.h"
+
 #include <memory>
+
 #include <unordered_map>
 #include <genie/dat/ResourceUsage.h>
 #include "core/ResourceMap.h"

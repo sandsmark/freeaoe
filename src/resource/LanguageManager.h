@@ -1,5 +1,7 @@
 #pragma once
 
+#include "global/Types.h"
+
 #include <global/Logger.h>
 
 #include <memory>

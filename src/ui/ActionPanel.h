@@ -1,5 +1,7 @@
 #pragma once
 
+#include "global/Types.h"
+
 #include <mechanics/IState.h>
 #include <mechanics/Player.h>
 #include <SFML/Graphics/Texture.hpp>

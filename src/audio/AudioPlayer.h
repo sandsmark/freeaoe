@@ -1,5 +1,7 @@
 #pragma once
 
+#include "global/Types.h"
+
 #include <memory>
 #include <mutex>
 

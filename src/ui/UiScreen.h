@@ -16,14 +16,14 @@
 */
 #pragma once
 
+#include "global/Types.h"
+
 #include <memory>
 #include <array>
 
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
-
-#include "global/Types.h"
 
 namespace sf {
 class RenderWindow;

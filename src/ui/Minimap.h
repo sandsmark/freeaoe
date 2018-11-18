@@ -1,9 +1,10 @@
 #ifndef MINIMAP_H
 #define MINIMAP_H
 
+#include "global/Types.h"
+
 #include <memory>
 #include "mechanics/IState.h"
-#include "global/Types.h"
 #include <SFML/Graphics/RenderTexture.hpp>
 
 class Map;

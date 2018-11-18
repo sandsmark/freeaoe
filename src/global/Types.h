@@ -18,6 +18,12 @@
 
 #pragma once
 
+// Hack to make qtcreator's builtin code model handle c++17
+#ifdef Q_CREATOR_RUN
+#undef __cplusplus
+#define __cplusplus 201703
+#endif
+
 #include <genie/Types.h>
 
 #include <SFML/Config.hpp>

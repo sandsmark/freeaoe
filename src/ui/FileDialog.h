@@ -1,8 +1,9 @@
 #pragma once
 
+#include "global/Types.h"
+
 #include <memory>
 #include <filesystem>
-#include "global/Types.h"
 
 namespace sf {
 class RenderWindow;

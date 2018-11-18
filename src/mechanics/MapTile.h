@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include "global/Types.h"
+
 #include <genie/dat/Terrain.h>
 #include <genie/resource/SlpTemplate.h>
 #include <memory>

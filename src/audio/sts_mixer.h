@@ -22,6 +22,8 @@
 //
 #pragma once
 
+#include "global/Types.h"
+
 #include <memory>
 
 // The number of concurrent voices (channels) which are used to mix the audio.

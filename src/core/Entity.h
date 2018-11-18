@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include "global/Types.h"
+
 #include "render/GraphicRender.h"
 #include "core/SignalEmitter.h"
 

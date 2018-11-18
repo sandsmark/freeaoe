@@ -1,5 +1,7 @@
 #pragma once
 
+#include "global/Types.h"
+
 #include <genie/dat/Civ.h>
 #include <genie/dat/Research.h>
 #include "core/ResourceMap.h"

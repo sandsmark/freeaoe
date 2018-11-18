@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include "global/Types.h"
+
 #include <memory>
 #include <unordered_map>
 #include <unordered_set>
@@ -25,7 +27,6 @@
 #include <sstream>
 #include "Graphic.h"
 #include "Terrain.h"
-#include <global/Types.h>
 
 #include <genie/resource/PalFile.h>
 #include <genie/resource/SlpFile.h>
