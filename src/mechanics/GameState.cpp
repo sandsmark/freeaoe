@@ -415,6 +415,10 @@ void GameState::handleEvent(sf::Event event)
         m_unitInfoPanel->handleEvent(event);
         return;
     }
+    if (m_minimap->rect().contains(mousePos)) {
+        m_minimap->handleEvent(event);
+        return;
+    }
 
     m_actionPanel->releaseButtons();
 

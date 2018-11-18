@@ -154,11 +154,11 @@ void MapRenderer::updateTexture()
     invalidIndicator.setOutlineThickness(3);
     invalidIndicator.setOutlineColor(sf::Color::Transparent);
 
-    sf::Text text;
-    text.setFont(SfmlRenderTarget::defaultFont());
-    text.setOutlineColor(sf::Color::Transparent);
-    text.setFillColor(sf::Color::White);
-    text.setCharacterSize(12);
+//    sf::Text text;
+//    text.setFont(SfmlRenderTarget::defaultFont());
+//    text.setOutlineColor(sf::Color::Transparent);
+//    text.setFillColor(sf::Color::White);
+//    text.setCharacterSize(12);
 
     for (int col = m_rColBegin; col < m_rColEnd; col++) {
         for (int row = m_rRowEnd-1; row >= m_rRowBegin; row--) {

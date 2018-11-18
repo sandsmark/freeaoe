@@ -30,7 +30,7 @@ void Minimap::setMap(const std::shared_ptr<Map> &map)
 
     m_updated = true;
 
-    updateCamera();
+    m_lastCameraPos = MapPos(-1, -1);
 
 }
 
@@ -49,6 +49,7 @@ void Minimap::updateCamera()
     const MapRect mapDimensions(0, 0, m_map->getCols(), m_map->getRows());
     const float scaleX = m_rect.boundingMapRect().width / mapDimensions.width / 2;
     const float scaleY = m_rect.boundingMapRect().height / mapDimensions.height / 2;
+
     const Size viewSize = m_renderTarget->camera()->m_viewportSize;
     const MapPos cameraMapPos(m_renderTarget->camera()->m_target.y / Constants::TILE_SIZE, m_renderTarget->camera()->m_target.x / Constants::TILE_SIZE);
     const ScreenPos cameraPos = cameraMapPos.toScreen();
@@ -67,8 +68,25 @@ bool Minimap::init()
     return m_texture.create(m_rect.width, m_rect.height);
 }
 
-void Minimap::handleEvent(sf::Event /*event*/)
+void Minimap::handleEvent(sf::Event event)
 {
+    if (event.type != sf::Event::MouseButtonPressed && event.type != sf::Event::MouseButtonReleased) {
+        return;
+    }
+
+    ScreenPos pos(event.mouseButton.x, event.mouseButton.y);
+    // normalize to 0,0
+    pos.x -= m_rect.x;
+    pos.y -= m_rect.y;
+
+    pos.y = m_rect.height/2 - pos.y; // from the center
+
+    const MapRect mapDimensions(0, 0, m_map->getCols(), m_map->getRows());
+    const ScreenRect fullBoundingRect = MapRect(0, 0, mapDimensions.width * Constants::TILE_SIZE, mapDimensions.height * Constants::TILE_SIZE).boundingScreenRect();
+    pos.x = fullBoundingRect.width * pos.x / m_rect.width;
+    pos.y = fullBoundingRect.height * pos.y / m_rect.height;
+
+    m_renderTarget->camera()->setTargetPosition(pos.toMap());
 }
 
 bool Minimap::update(Time /*time*/)

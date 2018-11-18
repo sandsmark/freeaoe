@@ -21,6 +21,7 @@ public:
     void handleEvent(sf::Event event) override;
     bool update(Time time) override;
     void draw() override;
+    ScreenRect rect() const { return m_rect; }
 
 private:
     void updateUnits();
