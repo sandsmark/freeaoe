@@ -111,6 +111,7 @@ GameState::GameState(const std::shared_ptr<SfmlRenderTarget> &renderTarget) :
 
     m_actionPanel = std::make_unique<ActionPanel>(renderTarget_);
     m_minimap = std::make_unique<Minimap>(renderTarget_);
+    m_minimap->setUnitManager(m_unitManager);
     m_actionPanel->setUnitManager(m_unitManager);
     m_unitInfoPanel = std::make_unique<UnitInfoPanel>(renderTarget_);
     m_unitInfoPanel->setUnitManager(m_unitManager);

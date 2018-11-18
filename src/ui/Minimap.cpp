@@ -6,6 +6,7 @@
 #include "render/SfmlRenderTarget.h"
 #include "resource/DataManager.h"
 #include "global/Constants.h"
+#include "mechanics/UnitManager.h"
 
 Minimap::Minimap(const std::shared_ptr<SfmlRenderTarget> &renderTarget) :
     m_renderTarget(renderTarget),
@@ -28,20 +29,31 @@ void Minimap::setMap(const std::shared_ptr<Map> &map)
     map->connect(Map::Signals::UnitsChanged, std::bind(&Minimap::updateUnits, this));
     map->connect(Map::Signals::TerrainChanged, std::bind(&Minimap::updateTerrain, this));
 
-    m_updated = true;
+    m_unitsUpdated = true;
 
     m_lastCameraPos = MapPos(-1, -1);
 
 }
 
+void Minimap::setUnitManager(const std::shared_ptr<UnitManager> &unitManager)
+{
+    if (!unitManager) {
+        WARN << "null unit manager";
+    }
+
+    m_unitManager = unitManager;
+    m_unitsUpdated = true;
+}
+
 void Minimap::updateUnits()
 {
-    m_updated = true;
+    DBG << "updated units";
+    m_unitsUpdated = true;
 }
 
 void Minimap::updateTerrain()
 {
-    m_updated = true;
+    m_terrainUpdated = true;
 }
 
 void Minimap::updateCamera()
@@ -62,10 +74,39 @@ void Minimap::updateCamera()
     m_cameraRect.y = m_rect.y + cameraPos.y * scaleY + center.y - m_cameraRect.height / 2;
 }
 
+sf::Color Minimap::unitColor(const std::shared_ptr<Unit> &unit)
+{
+    if (unit->selected) {
+        return sf::Color::White;
+    }
+
+    switch(m_mode) {
+    case MinimapMode::Normal:
+        //TODO
+        break;
+    case MinimapMode::Diplomatic:
+        if (unit->playerId == 0) {
+            return sf::Color(128, 192, 128);
+        } else if (unit->playerId == 1) { ///TODO fixme get the human player
+            return sf::Color::Blue;
+        } else {
+            return sf::Color::Red;
+        }
+        break;
+    case MinimapMode::Economic:
+        //TODO
+        break;
+    default:
+        break;
+    }
+
+    return sf::Color::Red;
+}
+
 
 bool Minimap::init()
 {
-    return m_texture.create(m_rect.width, m_rect.height);
+    return m_terrainTexture.create(m_rect.width, m_rect.height);
 }
 
 void Minimap::handleEvent(sf::Event event)
@@ -96,50 +137,107 @@ bool Minimap::update(Time /*time*/)
         m_lastCameraPos = m_renderTarget->camera()->m_target;
     }
 
-    if (!m_updated || !m_map) {
+    if (!m_map || (!m_unitsUpdated && !m_terrainUpdated)) {
         return false;
     }
-    if (m_texture.getSize().x != m_rect.width || m_texture.getSize().y != m_rect.height) {
-        m_texture.create(m_rect.width, m_rect.height);
-    }
-
-    m_texture.clear(sf::Color::Transparent);
-
-    sf::CircleShape background(m_rect.width/ 2, 4);
-    background.setScale(1, m_rect.height / m_rect.width);
-    background.setFillColor(sf::Color::Black);
-    m_texture.draw(background);
 
     const MapRect mapDimensions(0, 0, m_map->getCols(), m_map->getRows());
-    const float scaleX = m_rect.boundingMapRect().width / mapDimensions.width / 2;
-    const float scaleY = m_rect.boundingMapRect().height / mapDimensions.height / 2;
-    sf::CircleShape tileShape(scaleY, 4);
-    tileShape.setScale(1, m_rect.height / m_rect.width);
-    const ScreenPos center(m_rect.width/2, m_rect.height/2);
-    for (int col = 0; col < m_map->getCols(); col++) {
-        for (int row = 0; row < m_map->getRows(); row++) {
-            const MapTile &tile = m_map->getTileAt(col, row);
-            const genie::Terrain &terrain = DataManager::Inst().getTerrain(tile.terrainId);
-            tileShape.setFillColor(sf::Color(terrain.Colors[0], terrain.Colors[1], terrain.Colors[2]));
 
-            // WTF TODO FIXME why the fuck is flipping row and col the correct here..
-            const ScreenPos pos = MapPos(row * scaleX, col * scaleY).toScreen();
-            tileShape.setPosition(pos.x, pos.y + center.y - scaleY / 2);
-            m_texture.draw(tileShape);
-
+    if (m_terrainUpdated) {
+        if (m_terrainTexture.getSize().x != m_rect.width || m_terrainTexture.getSize().y != m_rect.height) {
+            m_terrainTexture.create(m_rect.width, m_rect.height);
         }
+
+        m_terrainTexture.clear(sf::Color::Transparent);
+
+        const float scaleX = m_rect.boundingMapRect().width / mapDimensions.width / 2;
+        const float scaleY = m_rect.boundingMapRect().height / mapDimensions.height / 2;
+
+        sf::CircleShape background(m_rect.width/ 2, 4);
+        background.setScale(1, m_rect.height / m_rect.width);
+        background.setFillColor(sf::Color::Black);
+        m_terrainTexture.draw(background);
+
+        sf::CircleShape tileShape(scaleY, 4);
+        tileShape.setScale(1, m_rect.height / m_rect.width);
+        const ScreenPos center(m_rect.width/2, m_rect.height/2);
+
+        const std::vector<genie::Color> &colors = AssetManager::Inst()->getPalette(50500).getColors();
+        for (int col = 0; col < m_map->getCols(); col++) {
+            for (int row = 0; row < m_map->getRows(); row++) {
+                const MapTile &tile = m_map->getTileAt(col, row);
+                const genie::Terrain &terrain = DataManager::Inst().getTerrain(tile.terrainId);
+                const genie::Color &color = colors[terrain.Colors[0]];
+                tileShape.setFillColor(sf::Color(color.r, color.g, color.b));
+
+                // WTF TODO FIXME why the fuck is flipping row and col the correct here..
+                const ScreenPos pos = MapPos(row * scaleX, col * scaleY).toScreen();
+                tileShape.setPosition(pos.x, pos.y + center.y - scaleY / 2);
+                m_terrainTexture.draw(tileShape);
+
+            }
+        }
+
+        m_terrainTexture.display();
+
+        m_terrainUpdated = false;
     }
 
+    if (m_unitsUpdated && m_unitManager) {
+        if (m_unitsTexture.getSize().x != m_rect.width || m_unitsTexture.getSize().y != m_rect.height) {
+            m_unitsTexture.create(m_rect.width, m_rect.height);
+        }
 
-    m_updated = false;
+        m_unitsTexture.clear(sf::Color::Transparent);
 
-    m_texture.display();
+
+        const MapRect mapDimensions(0, 0, m_map->getCols(), m_map->getRows());
+        const float scaleX = m_rect.boundingMapRect().width / mapDimensions.width / 2;
+        const float scaleY = m_rect.boundingMapRect().height / mapDimensions.height / 2;
+
+        const ScreenPos center(m_rect.width/2, m_rect.height/2);
+
+        sf::CircleShape diamondSprite(scaleY, 4);
+        diamondSprite.setScale(1, m_rect.height / m_rect.width);
+
+        sf::RectangleShape rectangleSprite;//(scaleX, scaleY);
+
+        for (const Unit::Ptr &unit : m_unitManager->units()) {
+            const genie::Unit::MinimapModes mode = genie::Unit::MinimapModes(unit->data()->MinimapMode);
+            if (mode != genie::Unit::MinimapUnit && mode != genie::Unit::MinimapBuilding) {
+                continue;
+            }
+
+            const MapPos mapPos = unit->position();
+            ScreenPos pos = MapPos(mapPos.y / Constants::TILE_SIZE, mapPos.x / Constants::TILE_SIZE - 1).toScreen();
+            float size = std::max(unit->data()->OutlineSize.x * scaleX * 2, 2.f);
+            pos.x = pos.x * scaleX - size/2;
+            pos.y = pos.y * scaleY + center.y - size/2;
+            if (mode == genie::Unit::MinimapBuilding) {
+                diamondSprite.setFillColor(unitColor(unit));
+                diamondSprite.setPosition(pos);
+                diamondSprite.setRadius(size);
+                m_unitsTexture.draw(diamondSprite);
+            } else if (mode == genie::Unit::MinimapUnit) {
+                rectangleSprite.setSize(sf::Vector2f(size, size));
+                rectangleSprite.setPosition(pos);
+                rectangleSprite.setFillColor(unitColor(unit));
+                m_unitsTexture.draw(rectangleSprite);
+            }
+//            const Size unitSize(unit->data()->OutlineSize.x * scaleX, unit->data()->OutlineSize.y * scaleY);
+//            sprite.setSize(sf::Vector2f(unitSize.width / Constants::TILE_SIZE, unitSize.height / Constants::TILE_SIZE));
+        }
+        m_unitsTexture.display();
+        m_unitsUpdated = false;
+    }
+
     return true;
 }
 
 void Minimap::draw()
 {
-    m_renderTarget->draw(m_texture.getTexture(), m_rect.topLeft());
+    m_renderTarget->draw(m_terrainTexture.getTexture(), m_rect.topLeft());
+    m_renderTarget->draw(m_unitsTexture.getTexture(), m_rect.topLeft());
 
     const ScreenRect cameraRect = m_cameraRect.intersected(m_rect);
 
