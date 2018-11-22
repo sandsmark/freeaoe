@@ -24,7 +24,7 @@
 #include "IRenderTarget.h"
 
 #include "MapRenderer.h"
-#include "core/Entity.h"
+#include "mechanics/Entity.h"
 
 const sf::Texture GraphicRender::nullImage;
 

@@ -17,8 +17,9 @@
 */
 
 #include "Map.h"
-#include "global/Constants.h"
+#include "core/Constants.h"
 #include "core/Utility.h"
+
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <resource/AssetManager.h>
@@ -26,10 +27,11 @@
 
 #include <genie/resource/SlpFrame.h>
 
+#include <SFML/Graphics/Shape.hpp>
+
 #include <ctime>
 #include <cstdlib>
 #include <stdexcept>
-#include <SFML/Graphics/Shape.hpp>
 #include <resource/DataManager.h>
 #include <unordered_set>
 

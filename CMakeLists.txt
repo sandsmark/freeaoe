@@ -71,9 +71,12 @@ add_subdirectory(tools/resgen)
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=undefined")
 
+set(CORE_SRC
+    src/core/Logger.cpp
+    )
+
 set(GLOBAL_SRC
     src/global/Config.cpp
-    src/global/Logger.cpp
     )
 
 set(RESOURCE_SRC
@@ -86,6 +89,7 @@ set(RESOURCE_SRC
     )
 
 set(MECHANICS_SRC
+    src/mechanics/Entity.cpp
     src/mechanics/Civilization.cpp
     src/mechanics/Farm.cpp
     src/mechanics/GameState.cpp
@@ -129,7 +133,6 @@ set(COMMUNICATION_SRC
     )
 
 set(UNSORTED_SRC
-    src/core/Entity.cpp
     src/audio/AudioPlayer.cpp
     src/audio/sts_mixer.cpp
 )
@@ -149,6 +152,7 @@ add_resource(FONT_RES
     )
 
 add_executable(freeaoe src/Engine.cpp src/main.cpp 
+               ${CORE_SRC}
                ${RESOURCE_SRC}
                ${GLOBAL_SRC}
                ${MECHANICS_SRC}

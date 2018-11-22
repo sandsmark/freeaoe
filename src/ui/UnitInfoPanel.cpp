@@ -17,7 +17,7 @@
 #include "UnitInfoPanel.h"
 
 #include "mechanics/UnitManager.h"
-#include "core/Entity.h"
+#include "mechanics/Entity.h"
 #include "render/SfmlRenderTarget.h"
 #include "resource/LanguageManager.h"
 #include "mechanics/Player.h"

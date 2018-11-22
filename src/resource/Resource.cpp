@@ -18,11 +18,12 @@
 
 #include "Resource.h"
 
-#include <global/Types.h>
-#include <core/Utility.h>
-#include <genie/resource/Color.h>
+#include "core/Types.h"
+#include "core/Utility.h"
 #include "AssetManager.h"
 #include "DataManager.h"
+
+#include <genie/resource/Color.h>
 
 sf::Image Resource::convertFrameToImage(const genie::SlpFramePtr &frame)
 {

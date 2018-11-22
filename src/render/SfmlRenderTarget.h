@@ -18,10 +18,11 @@
 
 #pragma once
 
-#include <core/Entity.h>
+#include "mechanics/Entity.h"
+#include "IRenderTarget.h"
+
 #include <resource/Graphic.h>
 #include <SFML/Graphics/Texture.hpp>
-#include "IRenderTarget.h"
 
 namespace sf {
 class RenderTarget;

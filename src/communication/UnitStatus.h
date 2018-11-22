@@ -18,7 +18,7 @@
 
 #pragma once
 #include <SFML/Config.hpp>
-#include <global/Types.h>
+#include "core/Types.h"
 
 //------------------------------------------------------------------------------
 /// This data package contains information about a units status.

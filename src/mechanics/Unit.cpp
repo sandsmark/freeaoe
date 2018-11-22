@@ -21,7 +21,7 @@
 #include "mechanics/Civilization.h"
 #include "mechanics/Map.h"
 #include "mechanics/Player.h"
-#include "global/Constants.h"
+#include "core/Constants.h"
 #include "resource/DataManager.h"
 #include <genie/dat/Unit.h>
 #include "core/Utility.h"

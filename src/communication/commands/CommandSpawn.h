@@ -19,9 +19,9 @@
 
 #pragma once
 
-#include <communication/ICommand.h>
+#include "communication/ICommand.h"
 #include <SFML/Config.hpp>
-#include <global/Types.h>
+#include "core/Types.h"
 
 
 class CommandSpawn : public ICommand

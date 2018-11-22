@@ -17,9 +17,10 @@
 
 #pragma once
 
-#include "core/Entity.h"
+#include "mechanics/Entity.h"
 #include "core/ResourceMap.h"
 #include "actions/IAction.h"
+
 #include <deque>
 #include <map>
 

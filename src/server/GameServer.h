@@ -18,10 +18,10 @@
 
 #pragma once
 
+#include "core/Types.h"
 #include <SFML/Config.hpp>
 #include <map>
 #include <vector>
-#include <global/Types.h>
 
 class IAction;
 

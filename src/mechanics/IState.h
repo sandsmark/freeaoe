@@ -17,7 +17,7 @@
 */
 #pragma once
 
-#include "global/Types.h"
+#include "core/Types.h"
 
 #include <SFML/Window/Event.hpp>
 

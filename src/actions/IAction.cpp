@@ -17,7 +17,7 @@
 */
 
 #include "IAction.h"
-#include "core/Entity.h"
+#include "mechanics/Entity.h"
 #include "resource/DataManager.h"
 
 IAction::IAction(const Type type_, const std::shared_ptr<Unit> &unit, UnitManager *unitManager) :

@@ -5,7 +5,7 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include "render/SfmlRenderTarget.h"
 #include "resource/DataManager.h"
-#include "global/Constants.h"
+#include "core/Constants.h"
 #include "mechanics/UnitManager.h"
 
 Minimap::Minimap(const std::shared_ptr<SfmlRenderTarget> &renderTarget) :

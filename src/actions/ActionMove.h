@@ -18,12 +18,14 @@
 
 #pragma once
 
+#include "core/Constants.h"
 #include "actions/IAction.h"
 #include "mechanics/Unit.h"
 #include "mechanics/Map.h"
+
 #include <genie/dat/TerrainRestriction.h>
+
 #include <bitset>
-#include "global/Constants.h"
 
 class ActionMove : public IAction
 {

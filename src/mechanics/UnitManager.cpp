@@ -23,7 +23,7 @@
 #include "actions/ActionBuild.h"
 #include "render/SfmlRenderTarget.h"
 #include "resource/LanguageManager.h"
-#include "global/Constants.h"
+#include "core/Constants.h"
 #include "resource/DataManager.h"
 #include "Civilization.h"
 #include "UnitFactory.h"

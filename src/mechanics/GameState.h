@@ -20,7 +20,8 @@
 
 #include "mechanics/IState.h"
 #include "mechanics/Player.h"
-#include "global/Logger.h"
+#include "core/Logger.h"
+
 #include "Map.h"
 #include "render/SfmlRenderTarget.h"
 #include "render/MapRenderer.h"

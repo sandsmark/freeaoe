@@ -18,7 +18,7 @@
 
 #include "MapRenderer.h"
 #include "IRenderTarget.h"
-#include "global/Constants.h"
+#include "core/Constants.h"
 #include <resource/AssetManager.h>
 #include <resource/DataManager.h>
 #include <SFML/Graphics/Sprite.hpp>

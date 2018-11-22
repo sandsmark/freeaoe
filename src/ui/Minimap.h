@@ -1,7 +1,7 @@
 #ifndef MINIMAP_H
 #define MINIMAP_H
 
-#include "global/Types.h"
+#include "core/Types.h"
 
 #include <memory>
 #include "mechanics/IState.h"

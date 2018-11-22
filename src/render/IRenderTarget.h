@@ -18,11 +18,12 @@
 
 #pragma once
 
-#include <core/Entity.h>
-#include <resource/Graphic.h>
+#include "mechanics/Entity.h"
+#include "resource/Graphic.h"
+#include "render/Camera.h"
+
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Shape.hpp>
-#include "render/Camera.h"
 
 class IRenderTarget
 {

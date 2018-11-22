@@ -24,7 +24,7 @@
 #include <genie/resource/SlpFrame.h>
 #include <genie/resource/Color.h>
 
-#include "global/Constants.h"
+#include "core/Constants.h"
 #include "core/Utility.h"
 
 #include <cmath>

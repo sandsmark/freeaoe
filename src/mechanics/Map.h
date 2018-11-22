@@ -18,16 +18,17 @@
 
 #pragma once
 
-#include <global/Logger.h>
+#include "core/Logger.h"
+#include "core/Types.h"
+#include "mechanics/Entity.h"
+
 #include <genie/dat/Terrain.h>
-#include <global/Types.h>
 #include <SFML/Config.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <vector>
 #include <map>
 #include <SFML/Graphics/Image.hpp>
 #include <SFML/Graphics/RenderTexture.hpp>
-#include <core/Entity.h>
 #include <resource/Terrain.h>
 #include <genie/script/scn/MapDescription.h>
 

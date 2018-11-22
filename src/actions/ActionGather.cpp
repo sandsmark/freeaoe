@@ -1,5 +1,5 @@
 #include "ActionGather.h"
-#include "core/Entity.h"
+#include "mechanics/Entity.h"
 #include "mechanics/Player.h"
 #include "ActionMove.h"
 #include "mechanics/UnitManager.h"

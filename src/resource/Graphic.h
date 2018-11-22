@@ -20,12 +20,12 @@
 
 #include "Resource.h"
 
-#include <SFML/Graphics/Texture.hpp>
-#include <global/Types.h>
-#include <global/Logger.h>
-#include <genie/dat/Graphic.h>
+#include "core/Types.h"
+#include "core/Logger.h"
 
+#include <genie/dat/Graphic.h>
 #include <genie/resource/SlpFile.h>
+#include <SFML/Graphics/Texture.hpp>
 
 #include <unordered_map>
 

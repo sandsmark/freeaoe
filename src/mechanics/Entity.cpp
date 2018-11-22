@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "global/Constants.h"
+#include "core/Constants.h"
 #include "Entity.h"
 #include "render/GraphicRender.h"
 #include "mechanics/Map.h"

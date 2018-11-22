@@ -30,7 +30,7 @@
 #include <SFML/Graphics/Rect.hpp>
 #include <cmath>
 
-#include "global/Logger.h"
+#include "core/Logger.h"
 #include "core/Utility.h"
 
 using sf::Uint32;

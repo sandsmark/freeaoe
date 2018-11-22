@@ -17,7 +17,7 @@
 */
 
 #include "Config.h"
-#include "Logger.h"
+#include "core/Logger.h"
 #include "core/Utility.h"
 
 #include <cassert>

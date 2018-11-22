@@ -1,6 +1,6 @@
 #pragma once
 
-#include "global/Types.h"
+#include "core/Types.h"
 
 #include <mechanics/IState.h>
 #include <mechanics/Player.h>

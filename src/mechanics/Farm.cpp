@@ -1,11 +1,13 @@
 #include "Farm.h"
-#include <genie/dat/Unit.h>
-#include <genie/resource/SlpFile.h>
-#include "global/Constants.h"
-#include <SFML/Graphics/Sprite.hpp>
+#include "core/Constants.h"
+#include "Map.h"
 #include "mechanics/Player.h"
 #include "core/Utility.h"
-#include "Map.h"
+
+#include <genie/dat/Unit.h>
+#include <genie/resource/SlpFile.h>
+
+#include <SFML/Graphics/Sprite.hpp>
 
 Farm::Farm(const genie::Unit &data_, const std::shared_ptr<Player> &player, const std::shared_ptr<Civilization> &civilization, const std::shared_ptr<Map> &map) :
     Unit(data_, player, civilization, map),

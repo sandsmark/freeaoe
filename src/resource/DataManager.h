@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include <global/Logger.h>
+#include "core/Logger.h"
 #include <genie/dat/DatFile.h>
 #include <genie/dat/Unit.h>
 #include <genie/dat/Graphic.h>

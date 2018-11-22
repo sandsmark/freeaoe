@@ -38,7 +38,7 @@
 #include "ui/ActionPanel.h"
 #include "ui/UnitInfoPanel.h"
 #include "ui/Minimap.h"
-#include "global/Constants.h"
+#include "core/Constants.h"
 
 #include "resource/LanguageManager.h"
 

@@ -18,10 +18,11 @@
 
 #pragma once
 
+#include "core/Logger.h"
+
 #include <map>
 #include <SFML/Config.hpp>
 #include <SFML/System/Vector2.hpp>
-#include <global/Logger.h>
 
 struct Unit;
 class RenderGame;

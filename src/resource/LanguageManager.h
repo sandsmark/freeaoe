@@ -1,8 +1,7 @@
 #pragma once
 
-#include "global/Types.h"
-
-#include <global/Logger.h>
+#include "core/Types.h"
+#include "core/Logger.h"
 
 #include <memory>
 #include <unordered_map>

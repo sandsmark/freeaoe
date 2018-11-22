@@ -17,12 +17,13 @@
 */
 
 #include "UnitFactory.h"
-#include <genie/dat/Unit.h>
-#include <resource/DataManager.h>
-#include <global/Constants.h>
+#include "resource/DataManager.h"
+#include "core/Constants.h"
 #include "actions/ActionMove.h"
 #include "Farm.h"
 #include "Civilization.h"
+
+#include <genie/dat/Unit.h>
 
 
 UnitFactory &UnitFactory::Inst()

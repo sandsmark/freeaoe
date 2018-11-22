@@ -1,10 +1,10 @@
 #pragma once
 
-#include "global/Types.h"
+#include "core/Types.h"
+#include "core/ResourceMap.h"
 
 #include <genie/dat/Civ.h>
 #include <genie/dat/Research.h>
-#include "core/ResourceMap.h"
 
 #include <unordered_map>
 #include <vector>

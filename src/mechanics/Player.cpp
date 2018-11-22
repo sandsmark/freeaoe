@@ -1,6 +1,6 @@
 #include "Player.h"
 #include "mechanics/Civilization.h"
-#include "global/Logger.h"
+#include "core/Logger.h"
 
 Player::Player(const int id, const std::shared_ptr<Civilization> &c, const ResourceMap &startingResources) :
     playerId(id),

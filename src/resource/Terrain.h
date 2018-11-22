@@ -20,9 +20,10 @@
 
 #include "Resource.h"
 #include "mechanics/MapTile.h"
+#include "core/Logger.h"
+
 #include <SFML/Graphics/Texture.hpp>
 #include <genie/dat/Terrain.h>
-#include <global/Logger.h>
 
 #include <genie/resource/SlpFile.h>
 

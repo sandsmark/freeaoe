@@ -21,7 +21,7 @@
 #include <SFML/System/Clock.hpp>
 #include <SFML/Graphics/Text.hpp>
 
-#include "global/Logger.h"
+#include "core/Logger.h"
 #include "mechanics/StateManager.h"
 
 namespace sf {
