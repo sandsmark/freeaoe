@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/IAction.h"
-#include "Unit.h"
+#include "IAction.h"
+#include "mechanics/Unit.h"
 
 struct Player;
 class UnitManager;

@@ -19,7 +19,7 @@
 
 #include "core/Entity.h"
 #include "core/ResourceMap.h"
-#include "core/IAction.h"
+#include "actions/IAction.h"
 #include <deque>
 #include <map>
 

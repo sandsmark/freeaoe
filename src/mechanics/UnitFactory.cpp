@@ -20,7 +20,7 @@
 #include <genie/dat/Unit.h>
 #include <resource/DataManager.h>
 #include <global/Constants.h>
-#include "ActionMove.h"
+#include "actions/ActionMove.h"
 #include "Farm.h"
 #include "Civilization.h"
 

@@ -1,6 +1,6 @@
 #include "ActionBuild.h"
 #include "ActionGather.h"
-#include "UnitManager.h"
+#include "mechanics/UnitManager.h"
 
 #include <genie/dat/Unit.h>
 

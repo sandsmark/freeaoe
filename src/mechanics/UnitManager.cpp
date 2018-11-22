@@ -18,9 +18,9 @@
 
 #include "UnitManager.h"
 
-#include "ActionMove.h"
-#include "ActionGather.h"
-#include "ActionBuild.h"
+#include "actions/ActionMove.h"
+#include "actions/ActionGather.h"
+#include "actions/ActionBuild.h"
 #include "render/SfmlRenderTarget.h"
 #include "resource/LanguageManager.h"
 #include "global/Constants.h"

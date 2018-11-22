@@ -86,8 +86,6 @@ set(RESOURCE_SRC
     )
 
 set(MECHANICS_SRC
-    src/mechanics/ActionBuild.cpp
-    src/mechanics/ActionMove.cpp
     src/mechanics/Civilization.cpp
     src/mechanics/Farm.cpp
     src/mechanics/GameState.cpp
@@ -96,9 +94,15 @@ set(MECHANICS_SRC
     src/mechanics/StateManager.cpp
     src/mechanics/UnitFactory.cpp
     src/mechanics/UnitManager.cpp
-    src/mechanics/ActionGather.cpp
     src/mechanics/Unit.cpp
     src/mechanics/MapTile.cpp
+    )
+
+set(ACTIONS_SRC
+    src/actions/IAction.cpp
+    src/actions/ActionBuild.cpp
+    src/actions/ActionGather.cpp
+    src/actions/ActionMove.cpp
     )
 
 set(RENDER_SRC
@@ -126,7 +130,6 @@ set(COMMUNICATION_SRC
 
 set(UNSORTED_SRC
     src/core/Entity.cpp
-    src/core/IAction.cpp
     src/audio/AudioPlayer.cpp
     src/audio/sts_mixer.cpp
 )
@@ -149,6 +152,7 @@ add_executable(freeaoe src/Engine.cpp src/main.cpp
                ${RESOURCE_SRC}
                ${GLOBAL_SRC}
                ${MECHANICS_SRC}
+               ${ACTIONS_SRC}
                ${RENDER_SRC}
 #               ${SERVER_SRC}
 #               ${COMMUNICATION_SRC}

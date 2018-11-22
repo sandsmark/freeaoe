@@ -201,7 +201,7 @@ bool Minimap::update(Time /*time*/)
         sf::CircleShape diamondSprite(scaleY, 4);
         diamondSprite.setScale(1, m_rect.height / m_rect.width);
 
-        sf::RectangleShape rectangleSprite;//(scaleX, scaleY);
+        sf::RectangleShape rectangleSprite;
 
         const std::vector<genie::Color> &colors = AssetManager::Inst()->getPalette(50500).getColors();
 

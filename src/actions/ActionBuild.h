@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/IAction.h"
-#include "Unit.h"
+#include "actions/IAction.h"
+#include "mechanics/Unit.h"
 
 class ActionBuild : public IAction
 {

@@ -18,9 +18,9 @@
 
 #pragma once
 
-#include "core/IAction.h"
-#include "Unit.h"
-#include "Map.h"
+#include "actions/IAction.h"
+#include "mechanics/Unit.h"
+#include "mechanics/Map.h"
 #include <genie/dat/TerrainRestriction.h>
 #include <bitset>
 #include "global/Constants.h"

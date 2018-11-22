@@ -2,7 +2,7 @@
 #include "core/Entity.h"
 #include "mechanics/Player.h"
 #include "ActionMove.h"
-#include "UnitManager.h"
+#include "mechanics/UnitManager.h"
 #include <genie/dat/Unit.h>
 #include <limits>
 
