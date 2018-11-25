@@ -29,14 +29,14 @@ const sf::Texture Graphic::nullImage;
 
 //------------------------------------------------------------------------------
 Graphic::Graphic(const genie::Graphic &data) :
-    data_(data)
+    m_data(data)
 {
-    if (data_.SLP < 0) {
-        WARN << data_.Name << "doesn't have a SLP id" << data_.ID << data_.Deltas.size();
+    if (data.SLP < 0) {
+        WARN << data.Name << "doesn't have a SLP id" << data.ID << data.Deltas.size();
         return;
     }
 
-    slp_ = AssetManager::Inst()->getSlp(data_.SLP, AssetManager::ResourceType::Graphics);
+    slp_ = AssetManager::Inst()->getSlp(data.SLP, AssetManager::ResourceType::Graphics);
 
     if (!slp_) {
 //        log.debug("Failed to get slp % for ", data_.SLP, data_.Name);
@@ -186,31 +186,13 @@ ScreenPos Graphic::getHotspot(uint32_t frame_num, float angle) const
 
 const std::vector<genie::GraphicDelta> Graphic::deltas() const
 {
-    return data_.Deltas;
+    return m_data.Deltas;
 }
 
 //------------------------------------------------------------------------------
 float Graphic::getFrameRate() const
 {
-    return data_.FrameDuration;
-}
-
-//------------------------------------------------------------------------------
-float Graphic::getReplayDelay() const
-{
-    return data_.ReplayDelay;
-}
-
-//------------------------------------------------------------------------------
-uint32_t Graphic::getFrameCount() const
-{
-    return data_.FrameCount;
-}
-
-//------------------------------------------------------------------------------
-uint32_t Graphic::getAngleCount() const
-{
-    return data_.AngleCount;
+    return m_data.FrameDuration;
 }
 
 bool Graphic::isValid()
@@ -220,7 +202,7 @@ bool Graphic::isValid()
 
 bool Graphic::runOnce() const
 {
-    return (data_.SequenceType & genie::Graphic::SequenceOnce);
+    return (m_data.SequenceType & genie::Graphic::SequenceOnce);
 }
 
 int Graphic::angleToOrientation(float angle) const
@@ -229,12 +211,12 @@ int Graphic::angleToOrientation(float angle) const
     angle = fmod(- angle - M_PI_2, 2*M_PI);
     if (angle < 0) angle += 2*M_PI;
 
-    return int(std::round(data_.AngleCount * angle / (2*M_PI))) % data_.AngleCount;
+    return int(std::round(m_data.AngleCount * angle / (2*M_PI))) % m_data.AngleCount;
 }
 
 float Graphic::orientationToAngle(float orientation) const
 {
-    float angle = 2. * M_PI * orientation / data_.AngleCount;
+    float angle = 2. * M_PI * orientation / m_data.AngleCount;
     angle = fmod(- angle - M_PI_2, 2*M_PI);
     if (angle < 0) angle += 2*M_PI;
     return angle;
@@ -244,14 +226,14 @@ Graphic::FrameInfo Graphic::calcFrameInfo(uint32_t num, float angle) const
 {
     FrameInfo ret;
     ret.frameNum = num;
-    if (data_.AngleCount > 1) {
+    if (m_data.AngleCount > 1) {
         int lookupAngle = angleToOrientation(angle);
 
-        if (data_.MirroringMode && lookupAngle > data_.AngleCount/2) {
+        if (m_data.MirroringMode && lookupAngle > m_data.AngleCount/2) {
             ret.mirrored = true;
-            lookupAngle = data_.AngleCount - lookupAngle;
+            lookupAngle = m_data.AngleCount - lookupAngle;
         }
-        ret.frameNum += lookupAngle * data_.FrameCount;
+        ret.frameNum += lookupAngle * m_data.FrameCount;
     }
 
     if (ret.frameNum >= slp_->getFrameCount()) {

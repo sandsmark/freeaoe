@@ -100,7 +100,7 @@ public:
     ///
     /// @param id Id of the graphic struct in .dat file.
     //
-    Graphic(const genie::Graphic &data);
+    Graphic(const genie::Graphic &m_data);
     virtual ~Graphic();
 
     //----------------------------------------------------------------------------
@@ -136,21 +136,14 @@ public:
     ///
     /// @return replay delay
     //
-    float getReplayDelay() const;
+    inline float replayDelay() const { return m_data.ReplayDelay; }
 
     //----------------------------------------------------------------------------
     /// Get the graphics frame count.
     ///
     /// @return frame count
     //
-    uint32_t getFrameCount() const;
-
-    //----------------------------------------------------------------------------
-    /// Get the graphics angle count
-    ///
-    /// @return angle count
-    //
-    uint32_t getAngleCount() const;
+    inline uint16_t frameCount() const { return m_data.FrameCount; }
 
     bool load();
     void unload();
@@ -161,11 +154,10 @@ public:
 
     bool runOnce() const;
 
-    const genie::Graphic &data_;
     int angleToOrientation(float angle) const;
     float orientationToAngle(float orientation) const;
-
 private:
+
     struct FrameInfo {
         uint32_t frameNum = 0;
         bool mirrored = false;
@@ -176,8 +168,7 @@ private:
 
     std::unordered_map<GraphicState, sf::Texture> m_cache;
 
-    //TODO: collection with all frames, playercolors and outlines loaded
-    //      And rewrite SlpFile/Frame so that it will not store any data.
+    const genie::Graphic &m_data;
 };
 
 typedef std::shared_ptr<Graphic> GraphicPtr;

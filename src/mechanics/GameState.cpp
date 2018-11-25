@@ -493,7 +493,7 @@ void GameState::setupScenario()
             unit->setAngle(scnunit.rotation - M_PI_2/2.);
 
             if (unit->renderer().frameCount()) {
-                unit->renderer().currentFrame = scnunit.initAnimationFrame % unit->renderer().frameCount();
+                unit->renderer().setCurrentFrame(scnunit.initAnimationFrame % unit->renderer().frameCount());
             } else {
 //                WARN << "invalid graphics";
             }
@@ -504,7 +504,7 @@ void GameState::setupScenario()
     m_humanPlayer = m_players[1];
 }
 
-void GameState::setupGame(const GameType gameType)
+void GameState::setupGame(const GameType /*gameType*/)
 {
     //Map test
 

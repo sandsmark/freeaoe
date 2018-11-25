@@ -84,9 +84,10 @@ public:
     void setAngle(float angle);
     float angle() const { return m_angle; }
 
-    int currentFrame;
+    int frameCount() const { return m_graphic ? m_graphic->frameCount() : 0; }
 
-    int frameCount() const { return m_graphic ? m_graphic->data_.FrameCount : 0; }
+    inline int currentFrame() const { return m_currentFrame; }
+    void setCurrentFrame(int frame);
 
     GraphicPtr m_graphic;
 
@@ -102,6 +103,7 @@ private:
 
     int m_playerId = 2;
 
+    int m_currentFrame;
     float m_angle = 0;
 };
 

@@ -102,13 +102,13 @@ MoveTargetMarker::MoveTargetMarker(const MapPtr &map) :
 {
     m_renderer.setGraphic(AssetManager::Inst()->getGraphic(2961));
 
-    m_renderer.currentFrame = m_renderer.frameCount() - 1; // don't play immediately
+    m_renderer.setCurrentFrame(m_renderer.frameCount() - 1); // don't play immediately
 }
 
 void MoveTargetMarker::moveTo(const MapPos &pos)
 {
     m_position = pos;
-    m_renderer.currentFrame = 0;
+    m_renderer.setCurrentFrame(0);
     m_isRunning = true;
 }
 
@@ -120,7 +120,7 @@ bool MoveTargetMarker::update(Time time)
 
     bool updated = Entity::update(time);
 
-    if (m_renderer.currentFrame >= m_renderer.frameCount() - 1) {
+    if (m_renderer.currentFrame() >= m_renderer.frameCount() - 1) {
         m_isRunning = false;
     }
 

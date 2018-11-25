@@ -30,7 +30,7 @@ const sf::Texture GraphicRender::nullImage;
 
 GraphicRender::GraphicRender()
 {
-    currentFrame = 0;
+    m_currentFrame = 0;
     m_lastFrameTime = 0;
 }
 
@@ -55,16 +55,16 @@ bool GraphicRender::update(Time time)
         return updated;
     }
 
-    if (m_graphic->runOnce() && currentFrame >= m_graphic->data_.FrameCount - 1) {
+    if (m_graphic->runOnce() && m_currentFrame >= m_graphic->frameCount() - 1) {
         return updated;
     }
 
-    int newFrame = currentFrame;
+    int newFrame = m_currentFrame;
 
     Time elapsed = time - m_lastFrameTime;
 
 
-    if (newFrame >= m_graphic->data_.FrameCount - 1 && elapsed < m_graphic->data_.ReplayDelay / 0.0015) {
+    if (newFrame >= m_graphic->frameCount() - 1 && elapsed < m_graphic->replayDelay() / 0.0015) {
         return updated;
     }
 
@@ -75,7 +75,7 @@ bool GraphicRender::update(Time time)
         float framerate = m_graphic->getFrameRate();
 
         if (elapsed > framerate / 0.0015) {
-            if (newFrame < m_graphic->data_.FrameCount - 1) {
+            if (newFrame < m_graphic->frameCount() - 1) {
                 newFrame++;
             } else {
                 newFrame = 0;
@@ -85,11 +85,11 @@ bool GraphicRender::update(Time time)
         }
     }
 
-    if (newFrame != currentFrame) {
+    if (newFrame != m_currentFrame) {
         updated = true;
     }
 
-    currentFrame = newFrame;
+    m_currentFrame = newFrame;
 
     return updated;
 }
@@ -110,22 +110,22 @@ void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos scree
 
         switch(renderpass) {
         case RenderType::Base:
-            sprite.setTexture(m_graphic->texture(currentFrame, m_angle, m_playerId, ImageType::Base));
+            sprite.setTexture(m_graphic->texture(m_currentFrame, m_angle, m_playerId, ImageType::Base));
             break;
         case RenderType::Outline:
-            sprite.setTexture(m_graphic->texture(currentFrame, m_angle, m_playerId, ImageType::Outline));
+            sprite.setTexture(m_graphic->texture(m_currentFrame, m_angle, m_playerId, ImageType::Outline));
             blendMode = sf::BlendAlpha;
             blendMode.alphaSrcFactor = sf::BlendMode::DstAlpha;
             break;
         case RenderType::ConstructAvailable:
-            sprite.setTexture(m_graphic->texture(currentFrame, m_angle, m_playerId, ImageType::Construction));
+            sprite.setTexture(m_graphic->texture(m_currentFrame, m_angle, m_playerId, ImageType::Construction));
             break;
         case RenderType::Shadow:
         case RenderType::ConstructUnavailable:
             break;
         }
 
-        sprite.setPosition(screenPos - m_graphic->getHotspot(currentFrame, m_angle));
+        sprite.setPosition(screenPos - m_graphic->getHotspot(m_currentFrame, m_angle));
         renderTarget.draw(sprite, blendMode);
     }
 
@@ -134,7 +134,7 @@ void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos scree
 bool GraphicRender::setGraphic(const GraphicPtr &graphic)
 {
     m_graphic = graphic;
-    currentFrame = 0;
+    m_currentFrame = 0;
     m_deltas.clear();
 
     if (!graphic) {
@@ -173,10 +173,10 @@ ScreenRect GraphicRender::rect() const
     }
 
     ScreenRect ret;
-    const ScreenPos hotspot = m_graphic->getHotspot(currentFrame, m_angle);
+    const ScreenPos hotspot = m_graphic->getHotspot(m_currentFrame, m_angle);
     ret.x = -hotspot.x;
     ret.y = -hotspot.y;
-    const sf::Vector2u size = m_graphic->size(currentFrame, m_angle);
+    const sf::Vector2u size = m_graphic->size(m_currentFrame, m_angle);
     ret.width = size.x;
     ret.height = size.y;
 
@@ -198,4 +198,20 @@ void GraphicRender::setAngle(float angle)
     for (GraphicDelta &delta : m_deltas) {
         delta.graphic->setAngle(angle);
     }
+}
+
+void GraphicRender::setCurrentFrame(int frame)
+{
+    if (frame == m_currentFrame) {
+        return;
+    }
+
+    if (frame >= frameCount()) {
+        frame = frameCount() - 1;
+    }
+    if (frame < 0) {
+        frame = 0;
+    }
+
+    m_currentFrame = 0;
 }
