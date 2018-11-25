@@ -12,6 +12,25 @@ class Map;
 
 struct Building : public Unit
 {
+
+    typedef std::shared_ptr<Building> Ptr;
+
+    Building(const genie::Unit &data_, const std::shared_ptr<Player> &player, const MapPtr &map_);
+
+    int garrisonedUnits = 0;
+    int constructors = 0;
+
+    void enqueueProduceUnit(const genie::Unit *data);
+    void enqueueProduceResearch(const genie::Tech *data);
+    void abortProduction(const size_t index);
+    size_t productionQueueLength() { return m_productionQueue.size(); }
+
+    bool isProducing() const { return !m_productionQueue.empty(); }
+    int productionQueueIcon(const size_t index);
+    std::string currentProductName();
+    float productionProgress() const;
+
+private:
     struct Product {
         enum {
             Unit,
@@ -26,21 +45,6 @@ struct Building : public Unit
         };
     };
 
-    typedef std::shared_ptr<Building> Ptr;
-
-    Building(const genie::Unit &data_, const std::shared_ptr<Player> &player, const MapPtr &map_);
-
-    int garrisonedUnits = 0;
-    int constructors = 0;
-
-    inline const std::vector<Product> &productionQueue() const { return m_productionQueue; }
-    void enqueueProduceUnit(const genie::Unit *data);
-    void enqueueProduceResearch(const genie::Tech *data);
-    void abortProduction(const size_t index);
-
-    int productionProgressPercent() const;
-
-private:
     std::vector<Product> m_productionQueue;
     float m_productionProgress = 0.f;
 };

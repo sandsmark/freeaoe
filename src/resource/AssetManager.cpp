@@ -348,7 +348,7 @@ int AssetManager::filenameID(const std::string &filename)
         { "health.shp", 50745     }, // Different health bars
         { "mcursors.shp", 51000   },
         { "moveto.shp", 50405     },
-        { "sundial.shp", 50764    }, // Age upgrade progress?
+        { "sundial.shp", 50764    }, // Production progress bar
         { "unithalo.shp", 53003   }, // Box around unit icon
         { "waypoint.shp", 50404   },
         { "arrows.slp", 53004     },

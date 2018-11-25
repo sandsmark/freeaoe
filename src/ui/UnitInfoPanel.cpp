@@ -89,21 +89,38 @@ bool UnitInfoPanel::init()
     }
     m_unitHalo.loadFromImage(Resource::convertFrameToImage(haloSlp->getFrame(0)));
 
+    // Building icons
+    genie::SlpFilePtr progressbarSlp = AssetManager::Inst()->getSlp("sundial.shp", AssetManager::ResourceType::Interface);
+    if (!progressbarSlp) {
+        WARN << "Failed to load progress bar";
+        return false;
+    }
+    m_progressBars.resize(progressbarSlp->getFrameCount());
+    for (size_t i=0; i<progressbarSlp->getFrameCount(); i++) {
+        m_progressBars[i].loadFromImage(Resource::convertFrameToImage(progressbarSlp->getFrame(i)));
+    }
+
     // Labels
     m_name.setFont(SfmlRenderTarget::defaultFont());
     m_civilizationName.setFont(SfmlRenderTarget::defaultFont());
     m_playerName.setFont(SfmlRenderTarget::defaultFont());
     m_hpText.setFont(SfmlRenderTarget::defaultFont());
+    m_productionUpperText.setFont(SfmlRenderTarget::defaultFont());
+    m_productionBottomText.setFont(SfmlRenderTarget::defaultFont());
 
     m_name.setFillColor(sf::Color::Black);
     m_civilizationName.setFillColor(sf::Color::Black);
     m_playerName.setFillColor(sf::Color::Black);
     m_hpText.setFillColor(sf::Color::Black);
+    m_productionUpperText.setFillColor(sf::Color::Black);
+    m_productionBottomText.setFillColor(sf::Color::Black);
 
     m_name.setCharacterSize(17);
     m_civilizationName.setCharacterSize(15);
     m_playerName.setCharacterSize(15);
     m_hpText.setCharacterSize(12);
+    m_productionUpperText.setCharacterSize(12);
+    m_productionBottomText.setCharacterSize(12);
 
     m_name.setPosition(rect().topLeft());
 
@@ -184,8 +201,8 @@ void UnitInfoPanel::drawSingleUnit()
 
     std::shared_ptr<Player> player = unit->player.lock();
 
-    if (building && !building->productionQueue().empty()) {
-        drawConstructionInfo();
+    if (building && building->isProducing()) {
+        drawConstructionInfo(building);
     } else {
         m_civilizationName.setString(player->civ->name());
         m_playerName.setString(player->name);
@@ -357,6 +374,7 @@ void UnitInfoPanel::drawSingleUnit()
 
 void UnitInfoPanel::drawMultipleUnits()
 {
+    // TODO refactor into common function
     sf::RectangleShape bevelRect;
 
     for (const Button &button : m_unitButtons) {
@@ -430,9 +448,59 @@ void UnitInfoPanel::updateUnitButtons()
     }
 }
 
-void UnitInfoPanel::drawConstructionInfo()
+void UnitInfoPanel::drawConstructionInfo(const std::shared_ptr<Building> &building)
 {
+    const sf::Texture &icon = m_unitIcons.at(building->productionQueueIcon(0));
+    const Size iconSize = icon.getSize();
+    ScreenPos pos = rect().center();
+    pos.x -= iconSize.width;
+    pos.y -= iconSize.height/2;
 
+    sf::RectangleShape bevelRect1;
+    bevelRect1.setFillColor(sf::Color(192, 192, 192));
+    bevelRect1.setSize(Size(iconSize.width + 2, iconSize.height + 2));
+    bevelRect1.setPosition(pos.x - 2, pos.y - 2);
+    m_renderTarget->draw(bevelRect1);
+
+    sf::RectangleShape bevelRect2;
+    bevelRect2.setFillColor(sf::Color(64, 64, 64));
+    bevelRect2.setSize(iconSize);
+    bevelRect2.setPosition(pos.x, pos.y);
+    m_renderTarget->draw(bevelRect2);
+
+    m_renderTarget->draw(icon, pos);
+
+    pos.x += iconSize.width + 2;
+    pos.y -= 4;
+    m_productionUpperText.setPosition(pos);
+    m_productionUpperText.setString("Building - " + std::to_string(int(building->productionProgress() * 100)) + "%");
+    m_renderTarget->draw(m_productionUpperText);
+
+    pos.y += m_productionUpperText.getLocalBounds().height;
+    m_productionBottomText.setPosition(pos);
+    m_productionBottomText.setString(building->currentProductName());
+    m_renderTarget->draw(m_productionBottomText);
+
+    // To get the width of the progress bar
+    pos.y += m_productionBottomText.getLocalBounds().height + 4;
+    const size_t currentProgressBar = m_progressBars.size() * building->productionProgress();
+    m_renderTarget->draw(m_progressBars[currentProgressBar], pos);
+
+    pos.y = rect().center().y + iconSize.height / 2 + 4;
+    pos.x = rect().center().x - iconSize.width;
+    for (size_t i = 1; i<building->productionQueueLength(); i++) {
+        const sf::Texture &icon = m_unitIcons.at(building->productionQueueIcon(i));
+        const Size iconSize = icon.getSize();
+
+        bevelRect1.setPosition(pos.x - 2, pos.y - 2);
+        m_renderTarget->draw(bevelRect1);
+        bevelRect2.setPosition(pos.x, pos.y);
+        m_renderTarget->draw(bevelRect2);
+
+        m_renderTarget->draw(icon, pos);
+
+        pos.x += iconSize.width;
+    }
 }
 
 ScreenRect UnitInfoPanel::rect() const

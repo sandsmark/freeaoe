@@ -32,6 +32,7 @@
 class UnitManager;
 
 struct Unit;
+struct Building;
 class SfmlRenderTarget;
 class UnitManager;
 typedef std::unordered_set<std::shared_ptr<Unit>> UnitSet;
@@ -54,7 +55,7 @@ private:
     void drawSingleUnit();
     void drawMultipleUnits();
     void updateUnitButtons();
-    void drawConstructionInfo();
+    void drawConstructionInfo(const std::shared_ptr<Building> &building);
 
     struct StatItem {
         enum Type {
@@ -101,6 +102,9 @@ private:
     sf::Text m_civilizationName;
     sf::Text m_playerName;
 
+    sf::Text m_productionUpperText;
+    sf::Text m_productionBottomText;
+
     sf::Text m_hpText;
 
     sf::RectangleShape m_hpGreenRect;
@@ -112,6 +116,8 @@ private:
     std::vector<sf::Texture> m_buildingIcons;
 
     sf::Texture m_unitHalo;
+
+    std::vector<sf::Texture> m_progressBars;
 };
 
 #endif // UNITINFOPANEL_H

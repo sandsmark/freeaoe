@@ -2,6 +2,7 @@
 #include "Player.h"
 #include <genie/dat/Unit.h>
 #include <genie/dat/Research.h>
+#include "resource/LanguageManager.h"
 
 Building::Building(const genie::Unit &data_, const std::shared_ptr<Player> &player, const MapPtr &map_) :
     Unit(data_, player, map_, Entity::Type::Building)
@@ -86,7 +87,7 @@ void Building::abortProduction(const size_t index)
     m_productionQueue.erase(m_productionQueue.begin() + index);
 }
 
-int Building::productionProgressPercent() const
+float Building::productionProgress() const
 {
     if (m_productionQueue.empty()) {
         return 0;
@@ -98,5 +99,32 @@ int Building::productionProgressPercent() const
         maximum = m_productionQueue.front().tech->ResearchTime;
     }
 
-    return 100 * m_productionProgress / maximum;
+    return std::floor(m_productionProgress / maximum);
 }
+
+int Building::productionQueueIcon(const size_t index)
+{
+    if (index >= m_productionQueue.size()) {
+        WARN << "index for abort" << index << "is out of range" << m_productionQueue.size();
+        return 0;
+    }
+    if (m_productionQueue[index].type == Product::Unit) {
+        return m_productionQueue[index].unit->IconID;
+    } else {
+        return m_productionQueue[index].tech->IconID;
+    }
+}
+
+std::string Building::currentProductName()
+{
+    if (m_productionQueue.empty()) {
+        return "";
+    }
+    const Product &product = m_productionQueue.front();
+    if (product.type == Product::Unit) {
+        return LanguageManager::Inst()->getString(product.unit->LanguageDLLName);
+    } else {
+        return LanguageManager::Inst()->getString(product.tech->LanguageDLLName);
+    }
+}
+
