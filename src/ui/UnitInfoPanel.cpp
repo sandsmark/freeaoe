@@ -159,6 +159,8 @@ void UnitInfoPanel::handleEvent(sf::Event event)
         return;
     }
 
+    DBG << "clicked" << clickedButton;
+
     Unit::Ptr clickedUnit;
 
     if (m_selectedUnits.size() == 1) {
@@ -470,7 +472,7 @@ void UnitInfoPanel::drawConstructionInfo(const std::shared_ptr<Building> &buildi
 {
     m_unitButtons.clear();
 
-    const sf::Texture &icon = m_unitIcons.at(building->productionQueueIcon(0));
+    const sf::Texture &icon = m_unitIcons.at(building->productIcon(0));
     const Size iconSize = icon.getSize();
     ScreenPos pos = rect().center();
     pos.x -= iconSize.width;
@@ -497,11 +499,12 @@ void UnitInfoPanel::drawConstructionInfo(const std::shared_ptr<Building> &buildi
     pos.y += m_productionBottomText.getLocalBounds().height + 4;
     const size_t currentProgressBar = m_progressBars.size() * building->productionProgress();
     m_renderTarget->draw(m_progressBars[currentProgressBar], pos);
+//    DBG << building->productionProgress();
 
     pos.x = rect().center().x - iconSize.width;
     pos.y = rect().center().y + iconSize.height / 2 + 4;
     for (size_t i = 1; i<building->productionQueueLength(); i++) {
-        const sf::Texture &icon = m_unitIcons.at(building->productionQueueIcon(i));
+        const sf::Texture &icon = m_unitIcons.at(building->productIcon(i));
         const Size iconSize = icon.getSize();
 
         Button button;

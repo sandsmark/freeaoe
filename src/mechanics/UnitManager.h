@@ -55,6 +55,9 @@ typedef std::unordered_set<Unit::Ptr> UnitSet;
 class UnitManager
 {
 public:
+    UnitManager(const UnitManager&) = delete;
+    const UnitManager &operator=(const UnitManager&) = delete;
+
     UnitManager();
     virtual ~UnitManager();
 

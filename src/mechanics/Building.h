@@ -12,7 +12,6 @@ class Map;
 
 struct Building : public Unit
 {
-
     typedef std::shared_ptr<Building> Ptr;
 
     Building(const genie::Unit &data_, const std::shared_ptr<Player> &player, const MapPtr &map_);
@@ -22,15 +21,22 @@ struct Building : public Unit
 
     bool enqueueProduceUnit(const genie::Unit *data);
     bool enqueueProduceResearch(const genie::Tech *data);
-    void abortProduction(const size_t index);
-    size_t productionQueueLength() { return m_productionQueue.size(); }
+    void abortProduction(size_t index);
+    size_t productionQueueLength() const { return m_productionQueue.size() + (m_currentProduct != nullptr ? 1 : 0); }
 
-    bool isProducing() const { return !m_productionQueue.empty(); }
-    int productionQueueIcon(const size_t index);
+    bool isProducing() const { return productionQueueLength() > 0; }
+    int productIcon(size_t index);
     std::string currentProductName();
     float productionProgress() const;
 
+    bool update(Time time) override;
+
+    MapPos waypoint;
+
 private:
+    void finalizeUnit();
+    void attemptStartProduction();
+
     struct Product {
         enum {
             Unit,
@@ -45,8 +51,12 @@ private:
         };
     };
 
-    std::vector<Product> m_productionQueue;
+    std::vector<std::unique_ptr<Product>> m_productionQueue;
     float m_productionProgress = 0.f;
+
+    std::unique_ptr<Product> m_currentProduct;
+
+    Time m_lastUpdateTime = 0;
 };
 
 #endif // BUILDING_H
