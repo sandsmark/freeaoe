@@ -31,25 +31,25 @@ bool Building::enqueueProduceUnit(const genie::Unit *data)
     product->type = Product::Unit;
     product->unit = data;
 
-    for (const genie::Resource<short, short> &r : data->Creatable.ResourceCosts) {
-        if (!r.Paid) {
+    for (const genie::Resource<short, short> &cost : data->Creatable.ResourceCosts) {
+        if (!cost.Paid) {
             continue;
         }
 
-        const genie::ResourceType type = genie::ResourceType(r.Type);
-        if (owner->resources[type] < r.Amount) {
+        const genie::ResourceType type = genie::ResourceType(cost.Type);
+        if (owner->resources[type] < cost.Amount) {
             return false;
         }
     }
 
-    for (const genie::Resource<short, short> &r : data->Creatable.ResourceCosts) {
-        if (!r.Paid) {
+    for (const genie::Resource<short, short> &cost : data->Creatable.ResourceCosts) {
+        if (!cost.Paid) {
             continue;
         }
 
-        const genie::ResourceType type = genie::ResourceType(r.Type);
-        owner->resources[type] -= r.Amount;
-        product->cost[type] = r.Amount;
+        const genie::ResourceType type = genie::ResourceType(cost.Type);
+        owner->resources[type] -= cost.Amount;
+        product->cost[type] = cost.Amount;
     }
 
     m_productionQueue.push_back(std::move(product));
@@ -79,13 +79,13 @@ bool Building::enqueueProduceResearch(const genie::Tech *data)
     product->type = Product::Research;
     product->tech = data;
 
-    for (const genie::Resource<int16_t, int8_t> &r : data->ResourceCosts) {
-        if (!r.Paid) {
+    for (const genie::Resource<int16_t, int8_t> &cost : data->ResourceCosts) {
+        if (!cost.Paid) {
             continue;
         }
 
-        const genie::ResourceType type = genie::ResourceType(r.Type);
-        if (owner->resources[type] < r.Amount) {
+        const genie::ResourceType type = genie::ResourceType(cost.Type);
+        if (owner->resources[type] < cost.Amount) {
             return false;
         }
     }
@@ -134,8 +134,8 @@ void Building::abortProduction(size_t index)
     }
     const Product &toAbort = *m_productionQueue.at(index);
 
-    for (const std::pair<const genie::ResourceType, float> &r : toAbort.cost) {
-        owner->resources[r.first] += r.second;
+    for (const std::pair<const genie::ResourceType, float> &cost : toAbort.cost) {
+        owner->resources[cost.first] += cost.second;
     }
 
     m_productionQueue.erase(m_productionQueue.begin() + index);
@@ -252,7 +252,6 @@ void Building::finalizeUnit()
 
     Unit::Ptr unit = UnitFactory::Inst().createUnit(m_currentProduct->unit->ID, waypoint, owner, m_unitManager);
     DBG << "Finalized" << unit->debugName;
-    // todo: add
 }
 
 void Building::attemptStartProduction()
@@ -271,24 +270,24 @@ void Building::attemptStartProduction()
     const Product &product = *m_productionQueue.front();
 
     if (product.type == Product::Unit) {
-        for (const genie::Resource<short, short> &r : product.unit->Creatable.ResourceCosts) {
-            if (r.Paid) {
+        for (const genie::Resource<short, short> &cost : product.unit->Creatable.ResourceCosts) {
+            if (cost.Paid) {
                 continue;
             }
 
-            const genie::ResourceType type = genie::ResourceType(r.Type);
-            if (owner->resources[type] < r.Amount) {
+            const genie::ResourceType type = genie::ResourceType(cost.Type);
+            if (owner->resources[type] < cost.Amount) {
                 return;
             }
         }
     } else {
-        for (const genie::Resource<int16_t, int8_t> &r : product.tech->ResourceCosts) {
-            if (r.Paid) {
+        for (const genie::Resource<int16_t, int8_t> &cost : product.tech->ResourceCosts) {
+            if (cost.Paid) {
                 continue;
             }
 
-            const genie::ResourceType type = genie::ResourceType(r.Type);
-            if (owner->resources[type] < r.Amount) {
+            const genie::ResourceType type = genie::ResourceType(cost.Type);
+            if (owner->resources[type] < cost.Amount) {
                 return;
             }
         }
