@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Unit.h"
+#include "Building.h"
 
 class Map;
 
@@ -18,7 +18,7 @@ private:
 };
 
 
-class Farm : public Unit
+class Farm : public Building
 {
     enum TerrainTypes {
         FarmFinished = 7,

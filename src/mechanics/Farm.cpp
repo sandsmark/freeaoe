@@ -10,7 +10,7 @@
 #include <SFML/Graphics/Sprite.hpp>
 
 Farm::Farm(const genie::Unit &data_, const std::shared_ptr<Player> &player, UnitManager &unitManager) :
-    Unit(data_, player, unitManager),
+    Building(data_, player, unitManager),
     m_farmRenderer(Size(data_.Size))
 {
     if (!m_farmRenderer.setGraphic(defaultGraphics)) {
