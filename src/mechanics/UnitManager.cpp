@@ -295,7 +295,7 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
         }
 
         for (const genie::Resource<float, int8_t> &p : unit->data()->ResourceStorages) {
-            DBG << p.Amount << p.Type << p.Flag;
+            DBG << p.Amount << p.Type << p.Paid;
         }
 
         requiredInteraction = std::max(unit->data()->InteractionMode, requiredInteraction);

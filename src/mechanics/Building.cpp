@@ -10,17 +10,17 @@ Building::Building(const genie::Unit &data_, const std::shared_ptr<Player> &play
 
 }
 
-void Building::enqueueProduceUnit(const genie::Unit *data)
+bool Building::enqueueProduceUnit(const genie::Unit *data)
 {
     if (!data) {
         WARN << "trying to enqueue null unit";
-        return;
+        return false;
     }
 
     Player::Ptr owner = player.lock();
     if (!owner) {
         WARN << "building owner went away";
-        return;
+        return false;
     }
 
     DBG << debugName << "enqueueing production of unit" << data->Name;
@@ -30,26 +30,42 @@ void Building::enqueueProduceUnit(const genie::Unit *data)
     product.unit = data;
 
     for (const genie::Resource<short, short> &r : data->Creatable.ResourceCosts) {
-        const genie::ResourceType type = genie::ResourceType(r.Type);
+        if (!r.Paid) {
+            continue;
+        }
 
+        const genie::ResourceType type = genie::ResourceType(r.Type);
+        if (owner->resources[type] < r.Amount) {
+            return false;
+        }
+    }
+
+    for (const genie::Resource<short, short> &r : data->Creatable.ResourceCosts) {
+        if (!r.Paid) {
+            continue;
+        }
+
+        const genie::ResourceType type = genie::ResourceType(r.Type);
         owner->resources[type] -= r.Amount;
         product.cost[type] = r.Amount;
     }
 
     m_productionQueue.push_back(product);
+
+    return true;
 }
 
-void Building::enqueueProduceResearch(const genie::Tech *data)
+bool Building::enqueueProduceResearch(const genie::Tech *data)
 {
     if (!data) {
         WARN << "trying to enqueue null unit";
-        return;
+        return false;
     }
 
     Player::Ptr owner = player.lock();
     if (!owner) {
         WARN << "building owner went away";
-        return;
+        return false;
     }
 
     Product product;
@@ -57,6 +73,21 @@ void Building::enqueueProduceResearch(const genie::Tech *data)
     product.tech = data;
 
     for (const genie::Resource<int16_t, int8_t> &r : data->ResourceCosts) {
+        if (!r.Paid) {
+            continue;
+        }
+
+        const genie::ResourceType type = genie::ResourceType(r.Type);
+        if (owner->resources[type] < r.Amount) {
+            return false;
+        }
+    }
+
+    for (const genie::Resource<int16_t, int8_t> &r : data->ResourceCosts) {
+        if (!r.Paid) {
+            continue;
+        }
+
         const genie::ResourceType type = genie::ResourceType(r.Type);
 
         owner->resources[type] -= r.Amount;
@@ -64,6 +95,8 @@ void Building::enqueueProduceResearch(const genie::Tech *data)
     }
 
     m_productionQueue.push_back(product);
+
+    return true;
 }
 
 void Building::abortProduction(const size_t index)

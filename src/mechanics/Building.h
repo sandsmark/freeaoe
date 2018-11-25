@@ -20,8 +20,8 @@ struct Building : public Unit
     int garrisonedUnits = 0;
     int constructors = 0;
 
-    void enqueueProduceUnit(const genie::Unit *data);
-    void enqueueProduceResearch(const genie::Tech *data);
+    bool enqueueProduceUnit(const genie::Unit *data);
+    bool enqueueProduceResearch(const genie::Tech *data);
     void abortProduction(const size_t index);
     size_t productionQueueLength() { return m_productionQueue.size(); }
 
