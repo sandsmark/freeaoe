@@ -23,6 +23,7 @@
 #include "Farm.h"
 #include "Civilization.h"
 #include "Building.h"
+#include "UnitManager.h"
 
 #include <genie/dat/Unit.h>
 
@@ -41,17 +42,17 @@ UnitFactory::~UnitFactory()
 {
 }
 
-Unit::Ptr UnitFactory::createUnit(int ID, const MapPos &position, const Player::Ptr &owner, const MapPtr &map)
+Unit::Ptr UnitFactory::createUnit(int ID, const MapPos &position, const Player::Ptr &owner, UnitManager &unitManager)
 {
     const genie::Unit &gunit = DataManager::Inst().getUnit(ID);
 
     Unit::Ptr unit;
     if (ID == Unit::Farm) {
-        unit = std::make_shared<Farm>(gunit, owner, map);
+        unit = std::make_shared<Farm>(gunit, owner, unitManager);
     } else if (gunit.Type == genie::Unit::BuildingType) {
-        unit = std::make_shared<Building>(gunit, owner, map);
+        unit = std::make_shared<Building>(gunit, owner, unitManager);
     } else {
-        unit = std::make_shared<Unit>(gunit, owner, map);
+        unit = std::make_shared<Unit>(gunit, owner, unitManager);
     }
 
     unit->setPosition(position);
@@ -74,8 +75,11 @@ Unit::Ptr UnitFactory::createUnit(int ID, const MapPos &position, const Player::
         unit->snapPositionToGrid();
 
         if (gunit.Building.StackUnitID >= 0) {
+            const genie::Unit &stackData = DataManager::Inst().getUnit(gunit.Building.StackUnitID);
+
             Unit::Annex annex;
-            annex.unit = createUnit(gunit.Building.StackUnitID, position, owner, map);
+            annex.unit = std::make_shared<Unit>(stackData, owner, unitManager);
+            annex.unit->setPosition(position + annex.offset);
             unit->annexes.push_back(annex);
         }
 
@@ -83,10 +87,12 @@ Unit::Ptr UnitFactory::createUnit(int ID, const MapPos &position, const Player::
             if (annexData.UnitID < 0) {
                 continue;
             }
+            const genie::Unit &gunit = DataManager::Inst().getUnit(annexData.UnitID);
 
             Unit::Annex annex;
             annex.offset = MapPos(annexData.Misplacement.first * -48, annexData.Misplacement.second * -48);
-            annex.unit = createUnit(annexData.UnitID, position + annex.offset, owner, map);
+            annex.unit = std::make_shared<Unit>(gunit, owner, unitManager);
+            annex.unit->setPosition(position + annex.offset);
             unit->annexes.push_back(annex);
         }
 
@@ -94,6 +100,8 @@ Unit::Ptr UnitFactory::createUnit(int ID, const MapPos &position, const Player::
             std::reverse(unit->annexes.begin(), unit->annexes.end());
         }
     }
+
+    unitManager.add(unit);
 
     return unit;
 }

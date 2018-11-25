@@ -344,7 +344,7 @@ void UnitManager::setSelectedUnits(const UnitSet &units)
 
 void UnitManager::placeBuilding(const int unitId, const std::shared_ptr<Player> &player)
 {
-    m_buildingToPlace = UnitFactory::Inst().createUnit(unitId, MapPos(), player, m_map);
+    m_buildingToPlace = UnitFactory::Inst().createUnit(unitId, MapPos(), player, *this);
 }
 
 void UnitManager::enqueueProduceUnit(const int unitId, const UnitSet producers)

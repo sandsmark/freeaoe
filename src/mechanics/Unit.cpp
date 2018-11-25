@@ -24,25 +24,28 @@
 #include "mechanics/Building.h"
 #include "core/Constants.h"
 #include "resource/DataManager.h"
+#include "UnitManager.h"
 #include <genie/dat/Unit.h>
 #include "core/Utility.h"
 
-Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, const MapPtr &map) :
-    Entity(Type::Unit, LanguageManager::getString(data_.LanguageDLLName) + " (" + std::to_string(data_.ID) + ")", map),
+Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager) :
+    Entity(Type::Unit, LanguageManager::getString(data_.LanguageDLLName) + " (" + std::to_string(data_.ID) + ")", unitManager.map()),
     playerId(player_->playerId),
     player(player_),
-    civilization(player_->civ)
+    civilization(player_->civ),
+    m_unitManager(unitManager)
 {
     setUnitData(data_);
     hitPoints = m_data->HitPoints;
     m_creationProgress = m_data->Creatable.TrainTime;
 }
 
-Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, const MapPtr &map, const Entity::Type type) :
-    Entity(type, LanguageManager::getString(data_.LanguageDLLName) + " (" + std::to_string(data_.ID) + ")", map),
+Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager, const Entity::Type type) :
+    Entity(type, LanguageManager::getString(data_.LanguageDLLName) + " (" + std::to_string(data_.ID) + ")", unitManager.map()),
     playerId(player_->playerId),
     player(player_),
-    civilization(player_->civ)
+    civilization(player_->civ),
+    m_unitManager(unitManager)
 {
     setUnitData(data_);
     hitPoints = m_data->HitPoints;

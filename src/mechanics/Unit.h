@@ -102,7 +102,7 @@ struct Unit : public Entity
     Unit() = delete;
     Unit(const Unit &unit) = delete;
 
-    Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, const MapPtr &map);
+    Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager);
 
     ~Unit();
 
@@ -146,7 +146,7 @@ struct Unit : public Entity
     const genie::Unit *data() const {return m_data; }
 
 protected:
-    Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, const MapPtr &map, const Type m_type);
+    Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager, const Type m_type);
 
     void removeAction(const ActionPtr &action);
     int taskGraphicId(const genie::Task::ActionTypes taskType, const IAction::UnitState state);
@@ -157,6 +157,8 @@ protected:
     std::deque<ActionPtr> m_actionQueue;
 
     float m_creationProgress = 0.f;
+
+    UnitManager &m_unitManager;
 };
 
 

@@ -30,6 +30,9 @@ Entity::Entity(const Entity::Type type_, const std::string &name, const MapPtr &
     m_map(map),
     m_type(type_)
 {
+    if (!map) {
+        WARN << "no map";
+    }
 }
 
 Entity::~Entity()
