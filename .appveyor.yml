@@ -11,6 +11,7 @@ build:
 install:
   - cd C:\Tools\vcpkg
   - git pull
+  - .\bootstrap-vcpkg.bat
   - cd C:\projects\freeaoe
   - vcpkg update
   - vcpkg install sfml:x86-windows
