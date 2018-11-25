@@ -138,19 +138,39 @@ void UnitInfoPanel::handleEvent(sf::Event event)
         return;
     }
 
-    Unit::Ptr clickedUnit;
+    if (m_selectedUnits.empty()) {
+        return;
+    }
+
     ScreenPos mousePos(event.mouseButton.x, event.mouseButton.y);
-    for (const Button &button : m_unitButtons) {
+
+
+    int clickedButton = -1;
+//    for (const Button &button : m_unitButtons) {
+    for (size_t i=0; i<m_unitButtons.size(); i++) {
+        const Button &button = m_unitButtons[i];
         if (button.rect.contains(mousePos)) {
-            clickedUnit = button.unit;
+            clickedButton = i;
             break;
         }
     }
 
-    if (!clickedUnit) {
+    if (clickedButton < 0) {
         return;
     }
 
+    Unit::Ptr clickedUnit;
+
+    if (m_selectedUnits.size() == 1) {
+        clickedUnit = *m_selectedUnits.begin();
+    }
+    Building::Ptr building = Unit::asBuilding(clickedUnit);
+    if (building && building->isProducing()) {
+        building->abortProduction(clickedButton);
+        return;
+    }
+
+    clickedUnit = m_unitButtons[clickedButton].unit;
     std::shared_ptr<UnitManager> unitManager = m_unitManager.lock();
     unitManager->setSelectedUnits({clickedUnit});
 }
@@ -188,7 +208,7 @@ void UnitInfoPanel::draw()
     if (m_selectedUnits.size() == 1) {
         drawSingleUnit();
     } else {
-        updateUnitButtons();
+        updateSelectedUnitButtons();
         drawMultipleUnits();
     }
 }
@@ -198,12 +218,10 @@ void UnitInfoPanel::drawSingleUnit()
     Unit::Ptr unit = *m_selectedUnits.begin();
 
     Building::Ptr building = Unit::asBuilding(unit);
-
-    std::shared_ptr<Player> player = unit->player.lock();
-
     if (building && building->isProducing()) {
         drawConstructionInfo(building);
     } else {
+        std::shared_ptr<Player> player = unit->player.lock();
         m_civilizationName.setString(player->civ->name());
         m_playerName.setString(player->name);
 
@@ -393,7 +411,7 @@ void UnitInfoPanel::drawMultipleUnits()
 
 }
 
-void UnitInfoPanel::updateUnitButtons()
+void UnitInfoPanel::updateSelectedUnitButtons()
 {
     const int maxVertical = 3;
     Size iconSize;
@@ -450,25 +468,19 @@ void UnitInfoPanel::updateUnitButtons()
 
 void UnitInfoPanel::drawConstructionInfo(const std::shared_ptr<Building> &building)
 {
+    m_unitButtons.clear();
+
     const sf::Texture &icon = m_unitIcons.at(building->productionQueueIcon(0));
     const Size iconSize = icon.getSize();
     ScreenPos pos = rect().center();
     pos.x -= iconSize.width;
     pos.y -= iconSize.height/2;
 
-    sf::RectangleShape bevelRect1;
-    bevelRect1.setFillColor(sf::Color(192, 192, 192));
-    bevelRect1.setSize(Size(iconSize.width + 2, iconSize.height + 2));
-    bevelRect1.setPosition(pos.x - 2, pos.y - 2);
-    m_renderTarget->draw(bevelRect1);
-
-    sf::RectangleShape bevelRect2;
-    bevelRect2.setFillColor(sf::Color(64, 64, 64));
-    bevelRect2.setSize(iconSize);
-    bevelRect2.setPosition(pos.x, pos.y);
-    m_renderTarget->draw(bevelRect2);
-
-    m_renderTarget->draw(icon, pos);
+    Button button;
+    button.sprite.setTexture(icon);
+    button.sprite.setPosition(pos);
+    button.rect = ScreenRect(pos, iconSize);
+    m_unitButtons.push_back(std::move(button));
 
     pos.x += iconSize.width + 2;
     pos.y -= 4;
@@ -486,21 +498,22 @@ void UnitInfoPanel::drawConstructionInfo(const std::shared_ptr<Building> &buildi
     const size_t currentProgressBar = m_progressBars.size() * building->productionProgress();
     m_renderTarget->draw(m_progressBars[currentProgressBar], pos);
 
-    pos.y = rect().center().y + iconSize.height / 2 + 4;
     pos.x = rect().center().x - iconSize.width;
+    pos.y = rect().center().y + iconSize.height / 2 + 4;
     for (size_t i = 1; i<building->productionQueueLength(); i++) {
         const sf::Texture &icon = m_unitIcons.at(building->productionQueueIcon(i));
         const Size iconSize = icon.getSize();
 
-        bevelRect1.setPosition(pos.x - 2, pos.y - 2);
-        m_renderTarget->draw(bevelRect1);
-        bevelRect2.setPosition(pos.x, pos.y);
-        m_renderTarget->draw(bevelRect2);
-
-        m_renderTarget->draw(icon, pos);
+        Button button;
+        button.sprite.setTexture(icon);
+        button.sprite.setPosition(pos);
+        button.rect = ScreenRect(pos, iconSize);
+        m_unitButtons.push_back(std::move(button));
 
         pos.x += iconSize.width;
     }
+
+    drawMultipleUnits();
 }
 
 ScreenRect UnitInfoPanel::rect() const

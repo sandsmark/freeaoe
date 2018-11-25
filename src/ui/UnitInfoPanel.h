@@ -54,7 +54,7 @@ public:
 private:
     void drawSingleUnit();
     void drawMultipleUnits();
-    void updateUnitButtons();
+    void updateSelectedUnitButtons();
     void drawConstructionInfo(const std::shared_ptr<Building> &building);
 
     struct StatItem {
