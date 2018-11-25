@@ -81,6 +81,23 @@ struct LogPrinter
     inline LogPrinter &operator<<(const std::string &str) { std::cout << '\'' << str << "'" << separator; return *this; }
     inline LogPrinter &operator<<(const void *addr) { std::cout << "0x" << std::hex << addr << std::dec << separator; return *this; }
 
+    template<typename T>
+    inline LogPrinter &operator<<(const std::vector<T> &vec) {
+        std::cout << '(';
+        const char *oldSep = separator;
+        separator = "";
+        for (size_t i=0; i<vec.size(); i++) {
+            *this << vec[i];
+            if (i < vec.size() - 1) {
+                std::cout << " ";
+            }
+        }
+        std::cout << ") ";
+        separator = oldSep;
+
+        return *this;
+    }
+
     ~LogPrinter()
     {
         (*m_refs)--;
