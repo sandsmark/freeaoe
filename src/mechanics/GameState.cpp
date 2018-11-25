@@ -543,10 +543,10 @@ void GameState::setupGame(const GameType /*gameType*/)
 
     // some walls for testing wall rotation
     addWall(4, 4, 0);
-    unit->setAngle(unit->renderer().m_graphic->orientationToAngle(0));
-    addWall(5, 4, unit->renderer().m_graphic->orientationToAngle(1));
-    addWall(6, 4, unit->renderer().m_graphic->orientationToAngle(2));
-    addWall(7, 4, unit->renderer().m_graphic->orientationToAngle(3));
-    addWall(8, 4, unit->renderer().m_graphic->orientationToAngle(4));
-    addWall(9, 4, unit->renderer().m_graphic->orientationToAngle(5)); // wraps here
+    unit->setAngle(unit->renderer().graphic()->orientationToAngle(0));
+    addWall(5, 4, unit->renderer().graphic()->orientationToAngle(1));
+    addWall(6, 4, unit->renderer().graphic()->orientationToAngle(2));
+    addWall(7, 4, unit->renderer().graphic()->orientationToAngle(3));
+    addWall(8, 4, unit->renderer().graphic()->orientationToAngle(4));
+    addWall(9, 4, unit->renderer().graphic()->orientationToAngle(5)); // wraps here
 }

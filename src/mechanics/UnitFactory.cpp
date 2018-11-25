@@ -22,6 +22,7 @@
 #include "actions/ActionMove.h"
 #include "Farm.h"
 #include "Civilization.h"
+#include "Building.h"
 
 #include <genie/dat/Unit.h>
 
@@ -46,9 +47,11 @@ Unit::Ptr UnitFactory::createUnit(int ID, const MapPos &position, const Player::
 
     Unit::Ptr unit;
     if (ID == Unit::Farm) {
-        unit = std::make_shared<Farm>(gunit, owner, owner->civ, map);
+        unit = std::make_shared<Farm>(gunit, owner, map);
+    } else if (gunit.Type == genie::Unit::BuildingType) {
+        unit = std::make_shared<Building>(gunit, owner, map);
     } else {
-        unit = std::make_shared<Unit>(gunit, owner, owner->civ, map);
+        unit = std::make_shared<Unit>(gunit, owner, map);
     }
 
     unit->setPosition(position);

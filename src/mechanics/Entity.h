@@ -41,13 +41,6 @@ struct Entity: std::enable_shared_from_this<Entity>, SignalEmitter<Entity>
 {
     const size_t id;
 
-    enum class Type {
-        None,
-        Unit,
-        MoveTargetMarker
-    };
-    const Type type = Type::None;
-
     Entity() = delete;
 
     virtual ~Entity();
@@ -67,7 +60,16 @@ struct Entity: std::enable_shared_from_this<Entity>, SignalEmitter<Entity>
     const MapPos &position() const { return m_position; }
     virtual void setPosition(const MapPos &pos);
 
+    bool isUnit() const { return m_type >= Type::Unit; }
+    bool isBuilding() const { return m_type >= Type::Building; }
+
 protected:
+    enum class Type {
+        None,
+        MoveTargetMarker,
+        Unit,
+        Building
+    };
     Entity(const Type type_, const std::string &name, const MapPtr &map_);
 
     GraphicRender m_renderer;
@@ -75,6 +77,8 @@ protected:
     std::weak_ptr<Map> m_map;
 
 private:
+    const Type m_type = Type::None;
+
     friend struct MoveTargetMarker;
     MapPos m_position;
 };

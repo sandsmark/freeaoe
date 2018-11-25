@@ -78,6 +78,7 @@ public:
     void setPlayerId(int playerId);
 
     bool setGraphic(const GraphicPtr &graphic);
+    inline const GraphicPtr &graphic() const { return m_graphic; }
 
     ScreenRect rect() const;
 
@@ -89,7 +90,6 @@ public:
     inline int currentFrame() const { return m_currentFrame; }
     void setCurrentFrame(int frame);
 
-    GraphicPtr m_graphic;
 
 private:
     struct GraphicDelta {
@@ -105,5 +105,6 @@ private:
 
     int m_currentFrame;
     float m_angle = 0;
+    GraphicPtr m_graphic;
 };
 

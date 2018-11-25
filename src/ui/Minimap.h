@@ -8,7 +8,7 @@
 #include <SFML/Graphics/RenderTexture.hpp>
 
 class Map;
-class Unit;
+struct Unit;
 class UnitManager;
 class SfmlRenderTarget;
 

@@ -1,19 +1,20 @@
 #include "ActionBuild.h"
 #include "ActionGather.h"
 #include "mechanics/UnitManager.h"
+#include "mechanics/Building.h"
 
 #include <genie/dat/Unit.h>
 
 ActionBuild::ActionBuild(const Unit::Ptr &builder, const Unit::Ptr &building, UnitManager *unitManager) :
     IAction(Type::Build, builder, unitManager),
-    m_targetBuilding(building)
+    m_targetBuilding(Unit::asBuilding(building))
 {
     DBG << builder->debugName << "building" << building->debugName;
 }
 
 ActionBuild::~ActionBuild()
 {
-    Unit::Ptr building = m_targetBuilding.lock();
+    Building::Ptr building = m_targetBuilding.lock();
 
     if (building && m_prevTime) {
         building->constructors--;
@@ -28,7 +29,7 @@ IAction::UpdateResult ActionBuild::update(Time time)
         return UpdateResult::Completed;
     }
 
-    Unit::Ptr building = m_targetBuilding.lock();
+    Building::Ptr building = m_targetBuilding.lock();
     if (!building) {
         return UpdateResult::Completed;
     }
@@ -63,7 +64,7 @@ IAction::UpdateResult ActionBuild::update(Time time)
 
 IAction::UnitState ActionBuild::unitState() const
 {
-    std::shared_ptr<Unit> target = m_targetBuilding.lock();
+    Building::Ptr target = m_targetBuilding.lock();
     if (!target) {
         WARN << "target lost";
         return Idle;

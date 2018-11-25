@@ -32,7 +32,6 @@ std::vector<MapPos> ActionMove::testedPoints;
 namespace { // anonymous namespace, don't export this
 struct PathPoint {
     PathPoint() = default;
-    PathPoint(const PathPoint &other) = default;
 
     int8_t dx = 0;
     int8_t dy = 0;
@@ -272,11 +271,12 @@ std::shared_ptr<ActionMove> ActionMove::moveUnitTo(const Unit::Ptr &unit, MapPos
 
     return action;
 }
+
 static std::vector<MapPos> simplifyAngles(const std::vector<MapPos> &path)
 {
     std::vector<MapPos> cleanedPath;
     cleanedPath.push_back(path[0]);
-    for (int i=1; i<path.size() - 1; i++) {
+    for (size_t i=1; i<path.size() - 1; i++) {
         double lastAngle = std::atan2((path[i].y - path[i-1].y), (path[i].x - path[i-1].x));
         double nextAngle = std::atan2((path[i+1].y - path[i].y), (path[i+1].x - path[i].x));
         if (lastAngle != nextAngle) {
@@ -322,7 +322,7 @@ static std::vector<MapPos> simplifyRdp(const std::vector<MapPos> &path, const fl
         }
     }
 
-    for (int i=0; i<path.size(); i++) {
+    for (size_t i=0; i<path.size(); i++) {
         if (selected[i]) {
             cleanedPath.push_back(path[i]);
         }

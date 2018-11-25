@@ -100,6 +100,7 @@ set(MECHANICS_SRC
     src/mechanics/UnitManager.cpp
     src/mechanics/Unit.cpp
     src/mechanics/MapTile.cpp
+    src/mechanics/Building.cpp
     )
 
 set(ACTIONS_SRC

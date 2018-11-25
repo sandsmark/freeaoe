@@ -28,6 +28,7 @@
 
 class Civilization;
 struct Player;
+struct Building;
 
 struct Task {
     Task(const genie::Task &t, uint16_t id) : data(&t), unitId(id) {}
@@ -101,7 +102,7 @@ struct Unit : public Entity
     Unit() = delete;
     Unit(const Unit &unit) = delete;
 
-    Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, const std::shared_ptr<Civilization> &civilization_, const MapPtr &map);
+    Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, const MapPtr &map);
 
     ~Unit();
 
@@ -118,10 +119,11 @@ struct Unit : public Entity
 
     const std::vector<const genie::Unit *> creatableUnits();
 
+    static std::shared_ptr<Building> asBuilding(const Unit::Ptr &unit);
+
     bool selected = false;
     int playerId;
     std::weak_ptr<Player> player;
-    int constructors = 0;
     std::vector<Annex> annexes;
     std::shared_ptr<Civilization> civilization;
 
@@ -129,16 +131,14 @@ struct Unit : public Entity
 
     virtual ScreenRect rect() const;
 
-    virtual void setCreationProgress(float progress);
-    void increaseCreationProgress(float progress);
-    float creationProgress() const;
-
     float hitPoints = 0;
-
-    int garrisonedUnits = 0;
 
     std::unordered_set<Task> availableActions();
     Task findMatchingTask(const genie::Task::ActionTypes &type);
+
+    virtual void setCreationProgress(float progress);
+    void increaseCreationProgress(float progress);
+    float creationProgress() const;
 
     virtual void setPosition(const MapPos &pos) override;
 
@@ -146,6 +146,8 @@ struct Unit : public Entity
     const genie::Unit *data() const {return m_data; }
 
 protected:
+    Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, const MapPtr &map, const Type type);
+
     void removeAction(const ActionPtr &action);
     int taskGraphicId(const genie::Task::ActionTypes taskType, const IAction::UnitState state);
 
@@ -153,6 +155,7 @@ protected:
     GraphicPtr movingGraphics;
     ActionPtr m_currentAction;
     std::deque<ActionPtr> m_actionQueue;
+
     float m_creationProgress = 0.f;
 };
 

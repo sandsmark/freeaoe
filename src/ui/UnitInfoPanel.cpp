@@ -22,6 +22,7 @@
 #include "resource/LanguageManager.h"
 #include "mechanics/Player.h"
 #include "mechanics/Civilization.h"
+#include "mechanics/Building.h"
 
 #include <genie/dat/Unit.h>
 #include <genie/resource/SlpFile.h>
@@ -242,11 +243,12 @@ void UnitInfoPanel::drawSingleUnit()
 
     pos.y += size.height + 5;
 
-    if (unit->data()->GarrisonCapacity) {
+    if (unit->isBuilding() && unit->data()->GarrisonCapacity) {
+        Building::Ptr building = Unit::asBuilding(unit);
         StatItem &item = m_statItems[StatItem::GarrisonCapacity];
         m_renderTarget->draw(item.icon, ScreenPos(pos));
         item.text.setPosition(ScreenPos(rightX, pos.y));
-        item.text.setString(std::to_string(unit->garrisonedUnits) + '/' + std::to_string(unit->data()->GarrisonCapacity));
+        item.text.setString(std::to_string(building->garrisonedUnits) + '/' + std::to_string(unit->data()->GarrisonCapacity));
         m_renderTarget->draw(item.text);
         pos.y += item.icon.getSize().y + 5;
     }

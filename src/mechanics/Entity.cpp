@@ -26,9 +26,9 @@ static size_t s_entityCount = 0;
 
 Entity::Entity(const Entity::Type type_, const std::string &name, const MapPtr &map) :
     id(s_entityCount++),
-    type(type_),
     debugName(name),
-    m_map(map)
+    m_map(map),
+    m_type(type_)
 {
 }
 
@@ -58,9 +58,10 @@ std::shared_ptr<Unit> Entity::asUnit(const EntityPtr &entity)
         return nullptr;
     }
 
-    if (entity->type != Type::Unit) {
+    if (!entity->isUnit()) {
         return nullptr;
     }
+
     return std::static_pointer_cast<Unit>(entity);
 }
 
@@ -79,7 +80,7 @@ void Entity::setPosition(const MapPos &pos)
 
     m_position = pos;
 
-    if (type != Type::Unit) {
+    if (!isUnit()) {
         return;
     }
     if (newTileX == oldTileX && newTileY == oldTileY) {

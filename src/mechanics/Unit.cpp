@@ -21,21 +21,32 @@
 #include "mechanics/Civilization.h"
 #include "mechanics/Map.h"
 #include "mechanics/Player.h"
+#include "mechanics/Building.h"
 #include "core/Constants.h"
 #include "resource/DataManager.h"
 #include <genie/dat/Unit.h>
 #include "core/Utility.h"
 
-Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, const std::shared_ptr<Civilization> &civilization_, const MapPtr &map) :
+Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, const MapPtr &map) :
     Entity(Type::Unit, LanguageManager::getString(data_.LanguageDLLName) + " (" + std::to_string(data_.ID) + ")", map),
     playerId(player_->playerId),
     player(player_),
-    civilization(civilization_)
+    civilization(player_->civ)
 {
     setUnitData(data_);
-
-    m_creationProgress = m_data->Creatable.TrainTime;
     hitPoints = m_data->HitPoints;
+    m_creationProgress = m_data->Creatable.TrainTime;
+}
+
+Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, const MapPtr &map, const Entity::Type type) :
+    Entity(type, LanguageManager::getString(data_.LanguageDLLName) + " (" + std::to_string(data_.ID) + ")", map),
+    playerId(player_->playerId),
+    player(player_),
+    civilization(player_->civ)
+{
+    setUnitData(data_);
+    hitPoints = m_data->HitPoints;
+    m_creationProgress = m_data->Creatable.TrainTime;
 }
 
 Unit::~Unit()
@@ -86,6 +97,18 @@ const std::vector<const genie::Unit *> Unit::creatableUnits()
     }
 
     return civilization->creatableUnits(m_data->ID);
+}
+
+std::shared_ptr<Building> Unit::asBuilding(const Unit::Ptr &unit)
+{
+    if (!unit) {
+        return nullptr;
+    }
+
+    if (!unit->isBuilding()) {
+        return nullptr;
+    }
+    return std::static_pointer_cast<Building>(unit);
 }
 
 ScreenRect Unit::rect() const
@@ -184,6 +207,7 @@ void Unit::setUnitData(const genie::Unit &data_)
 
     m_renderer.setGraphic(defaultGraphics);
 }
+
 
 int Unit::taskGraphicId(const genie::Task::ActionTypes taskType, const IAction::UnitState state)
 {

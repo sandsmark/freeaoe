@@ -29,7 +29,7 @@ class Farm : public Unit
     };
 
 public:
-    Farm(const genie::Unit &data_, const std::shared_ptr<Player> &player, const std::shared_ptr<Civilization> &civilization, const std::shared_ptr<Map> &map);
+    Farm(const genie::Unit &data_, const std::shared_ptr<Player> &player, const std::shared_ptr<Map> &map);
     void setCreationProgress(float progress) override;
     bool update(Time time) override;
 

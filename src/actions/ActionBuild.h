@@ -15,6 +15,6 @@ public:
     UnitState unitState() const override;
 
 private:
-    std::weak_ptr<Unit> m_targetBuilding;
+    std::weak_ptr<Building> m_targetBuilding;
 };
 
