@@ -54,6 +54,7 @@ private:
     void drawSingleUnit();
     void drawMultipleUnits();
     void updateUnitButtons();
+    void drawConstructionInfo();
 
     struct StatItem {
         enum Type {

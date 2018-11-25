@@ -110,6 +110,7 @@ void ActionPanel::handleEvent(sf::Event event)
             }
             button.pressed = false;
         }
+        break;
     }
 }
 
@@ -335,9 +336,9 @@ void ActionPanel::handleButtonClick(const ActionPanel::InterfaceButton &button)
     if (button.type == InterfaceButton::CreateBuilding) {
         m_unitManager->placeBuilding(button.targetId, m_humanPlayer);
         return;
-    }
-
-    if (button.type == InterfaceButton::Other) {
+    } else if (button.type == InterfaceButton::CreateUnit) {
+        m_unitManager->enqueueProduceUnit(button.targetId, m_selectedUnits);
+    } else if (button.type == InterfaceButton::Other) {
         switch(button.action) {
         case Command::BuildMilitary:
             m_currentPage = genie::Unit::MilitaryBuildingsInterface;

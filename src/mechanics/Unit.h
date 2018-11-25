@@ -134,7 +134,7 @@ struct Unit : public Entity
     float hitPoints = 0;
 
     std::unordered_set<Task> availableActions();
-    Task findMatchingTask(const genie::Task::ActionTypes &type);
+    Task findMatchingTask(const genie::Task::ActionTypes &m_type);
 
     virtual void setCreationProgress(float progress);
     void increaseCreationProgress(float progress);
@@ -146,7 +146,7 @@ struct Unit : public Entity
     const genie::Unit *data() const {return m_data; }
 
 protected:
-    Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, const MapPtr &map, const Type type);
+    Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, const MapPtr &map, const Type m_type);
 
     void removeAction(const ActionPtr &action);
     int taskGraphicId(const genie::Task::ActionTypes taskType, const IAction::UnitState state);

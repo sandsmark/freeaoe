@@ -180,15 +180,22 @@ void UnitInfoPanel::drawSingleUnit()
 {
     Unit::Ptr unit = *m_selectedUnits.begin();
 
+    Building::Ptr building = Unit::asBuilding(unit);
+
     std::shared_ptr<Player> player = unit->player.lock();
-    m_civilizationName.setString(player->civ->name());
-    m_playerName.setString(player->name);
 
-    m_civilizationName.setPosition(rect().center() - ScreenPos(0, m_civilizationName.getLocalBounds().height + m_playerName.getLocalBounds().height + 10));
-    m_playerName.setPosition(rect().center() - ScreenPos(0, m_playerName.getLocalBounds().height));
+    if (building && !building->productionQueue().empty()) {
+        drawConstructionInfo();
+    } else {
+        m_civilizationName.setString(player->civ->name());
+        m_playerName.setString(player->name);
 
-    m_renderTarget->draw(m_civilizationName);
-    m_renderTarget->draw(m_playerName);
+        m_civilizationName.setPosition(rect().center() - ScreenPos(0, m_civilizationName.getLocalBounds().height + m_playerName.getLocalBounds().height + 10));
+        m_playerName.setPosition(rect().center() - ScreenPos(0, m_playerName.getLocalBounds().height));
+
+        m_renderTarget->draw(m_civilizationName);
+        m_renderTarget->draw(m_playerName);
+    }
 
     ScreenPos pos = rect().topLeft();
     m_name.setString(LanguageManager::getString(unit->data()->LanguageDLLName));
@@ -421,6 +428,11 @@ void UnitInfoPanel::updateUnitButtons()
             pos.y += iconSize.height + 2;
         }
     }
+}
+
+void UnitInfoPanel::drawConstructionInfo()
+{
+
 }
 
 ScreenRect UnitInfoPanel::rect() const

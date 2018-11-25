@@ -27,6 +27,7 @@
 #include "resource/DataManager.h"
 #include "Civilization.h"
 #include "UnitFactory.h"
+#include "Building.h"
 #include "audio/AudioPlayer.h"
 
 #include <SFML/Graphics/RectangleShape.hpp>
@@ -344,6 +345,22 @@ void UnitManager::setSelectedUnits(const UnitSet &units)
 void UnitManager::placeBuilding(const int unitId, const std::shared_ptr<Player> &player)
 {
     m_buildingToPlace = UnitFactory::Inst().createUnit(unitId, MapPos(), player, m_map);
+}
+
+void UnitManager::enqueueProduceUnit(const int unitId, const UnitSet producers)
+{
+    if (producers.empty()) {
+        WARN << "Handed no producers";
+        return;
+    }
+
+    Building::Ptr producer = Unit::asBuilding(*producers.begin());
+    if (!producer) {
+        WARN << "Invalid producer";
+        return;
+    }
+
+    producer->enqueueProduceUnit(&DataManager::Inst().getUnit(unitId));
 }
 
 Unit::Ptr UnitManager::unitAt(const ScreenPos &pos, const CameraPtr &camera) const
