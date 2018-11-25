@@ -111,7 +111,7 @@ struct Cursor {
             return;
         }
         texture.loadFromImage(Resource::convertFrameToImage(cursorsFile->getFrame(type)));
-        sprite.setTexture(texture);
+        sprite.setTexture(texture, true);
         currentType = type;
     }
 
