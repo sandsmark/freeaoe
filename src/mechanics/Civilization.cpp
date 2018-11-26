@@ -14,6 +14,9 @@ Civilization::Civilization(const int civId, const genie::DatFile &dataFile) :
 {
     m_taskSwapUnits.resize(10);
     for (const genie::Unit &unit : m_data.Units) {
+        if (!unit.Enabled) {
+            continue;
+        }
         if (unit.Creatable.TrainLocationID > 0) {
             m_creatableUnits[unit.Creatable.TrainLocationID].push_back(&unit);
         }

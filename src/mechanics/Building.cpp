@@ -187,8 +187,16 @@ int Building::productIcon(size_t index)
 std::string Building::currentProductName()
 {
     if (!m_currentProduct) {
-        return "";
+        if (m_productionQueue.empty()) {
+            return "";
+        }
+        if (m_productionQueue.front()->type == Product::Unit) {
+            return LanguageManager::Inst()->getString(m_productionQueue.front()->unit->LanguageDLLName);
+        } else {
+            return LanguageManager::Inst()->getString(m_productionQueue.front()->tech->LanguageDLLName);
+        }
     }
+
     if (m_currentProduct->type == Product::Unit) {
         return LanguageManager::Inst()->getString(m_currentProduct->unit->LanguageDLLName);
     } else {
