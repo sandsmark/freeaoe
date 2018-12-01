@@ -44,7 +44,7 @@ UnitFactory::~UnitFactory()
 
 Unit::Ptr UnitFactory::createUnit(int ID, const MapPos &position, const Player::Ptr &owner, UnitManager &unitManager)
 {
-    const genie::Unit &gunit = DataManager::Inst().getUnit(ID);
+    const genie::Unit &gunit = owner->civ->unitData(ID);
 
     Unit::Ptr unit;
     if (ID == Unit::Farm) {
@@ -75,7 +75,7 @@ Unit::Ptr UnitFactory::createUnit(int ID, const MapPos &position, const Player::
         unit->snapPositionToGrid();
 
         if (gunit.Building.StackUnitID >= 0) {
-            const genie::Unit &stackData = DataManager::Inst().getUnit(gunit.Building.StackUnitID);
+            const genie::Unit &stackData = owner->civ->unitData(gunit.Building.StackUnitID);
 
             Unit::Annex annex;
             annex.unit = std::make_shared<Unit>(stackData, owner, unitManager);
@@ -87,7 +87,7 @@ Unit::Ptr UnitFactory::createUnit(int ID, const MapPos &position, const Player::
             if (annexData.UnitID < 0) {
                 continue;
             }
-            const genie::Unit &gunit = DataManager::Inst().getUnit(annexData.UnitID);
+            const genie::Unit &gunit = owner->civ->unitData(annexData.UnitID);
 
             Unit::Annex annex;
             annex.offset = MapPos(annexData.Misplacement.first * -48, annexData.Misplacement.second * -48);

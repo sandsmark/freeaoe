@@ -55,16 +55,6 @@ const genie::Tech &DataManager::getTech(unsigned int id)
     return dat_file_.Techs.at(id);
 }
 
-const genie::Unit &DataManager::getUnit(unsigned int id)
-{
-    if (id >= dat_file_.Civs[0].Units.size()) {
-        WARN << "Invalid unit id" << id;
-        return nullUnit;
-    }
-
-    return dat_file_.Civs[0].Units[id];
-}
-
 const genie::Terrain &DataManager::getTerrain(unsigned int id)
 {
     if (id >= dat_file_.TerrainBlock.Terrains.size()) {

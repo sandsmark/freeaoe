@@ -39,6 +39,8 @@ public:
 
     float startingResource(const genie::ResourceType type) const;
 
+    const genie::Unit &unitData(unsigned id);
+
 private:
     const genie::Unit nullUnit;
 

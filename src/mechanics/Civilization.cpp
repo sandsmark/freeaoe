@@ -115,3 +115,13 @@ float Civilization::startingResource(const genie::ResourceType type) const
 {
     return m_data.Resources[int(type)];
 }
+
+const genie::Unit &Civilization::unitData(unsigned id)
+{
+    if (id >= m_data.Units.size()) {
+        WARN << "invalid unit id" << id;
+        return DataManager::nullUnit;
+    }
+
+    return m_data.Units[id];
+}

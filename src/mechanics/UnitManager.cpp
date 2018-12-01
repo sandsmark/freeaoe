@@ -360,7 +360,7 @@ void UnitManager::enqueueProduceUnit(const int unitId, const UnitSet producers)
         return;
     }
 
-    producer->enqueueProduceUnit(&DataManager::Inst().getUnit(unitId));
+    producer->enqueueProduceUnit(&producer->civilization->unitData(unitId));
 }
 
 Unit::Ptr UnitManager::unitAt(const ScreenPos &pos, const CameraPtr &camera) const
@@ -487,7 +487,7 @@ void UnitManager::assignTask(const Task &task, const Unit::Ptr &unit, const Unit
     }
 
     if (task.unitId != unit->data()->ID) {
-        unit->setUnitData(DataManager::Inst().getUnit(task.unitId));
+        unit->setUnitData(unit->civilization->unitData(task.unitId));
     }
 
     unit->queueAction(ActionMove::moveUnitTo(unit, target->position(), m_map, this));
