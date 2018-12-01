@@ -70,7 +70,7 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    if (!LanguageManager::Inst()->initialize(dataPath)) {
+    if (!LanguageManager::Inst()->initialize(config.getValue("game-path") + "/")) {
         return 1;
     }
 
