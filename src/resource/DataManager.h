@@ -37,6 +37,7 @@ class DataManager
 public:
     static const genie::Unit nullUnit;
     static const genie::Tech nullTech;
+    static const genie::Civ nullCiv;
 
     bool initialize(const std::string &dataPath);
 
@@ -57,6 +58,8 @@ public:
     genie::GameVersion gameVersion() const;
 
     const std::vector<genie::Civ> &civilizations();
+
+    const genie::Civ &civilization(unsigned int id);
 
     static const genie::DatFile &datFile();
 

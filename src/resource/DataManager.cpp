@@ -29,6 +29,7 @@
 
 const genie::Unit DataManager::nullUnit;
 const genie::Tech DataManager::nullTech;
+const genie::Civ DataManager::nullCiv;
 
 DataManager &DataManager::Inst()
 {
@@ -104,6 +105,16 @@ genie::GameVersion DataManager::gameVersion() const
 const std::vector<genie::Civ> &DataManager::civilizations()
 {
     return dat_file_.Civs;
+}
+
+const genie::Civ &DataManager::civilization(unsigned int id)
+{
+    if (id >= dat_file_.Civs.size()) {
+        WARN << "civ out of range";
+        return nullCiv;
+    }
+
+    return dat_file_.Civs[id];
 }
 
 const genie::DatFile &DataManager::datFile()

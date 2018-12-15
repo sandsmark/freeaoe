@@ -14,12 +14,14 @@ namespace genie {
 class Tech;
 class Unit;
 class DatFile;
+class EffectCommand;
 }
 
 class Civilization
 {
 public:
     typedef std::shared_ptr<Civilization> Ptr;
+    const static genie::Unit nullUnit;
 
     Civilization(const int civId, const genie::DatFile &dataFile);
 
@@ -41,8 +43,11 @@ public:
 
     const genie::Unit &unitData(unsigned id);
 
+    void applyTechEffect(const genie::EffectCommand &effect);
+    void enableUnit(const uint16_t id);
+    void applyUnitAttributeModifier(const genie::EffectCommand &effect);
+
 private:
-    const genie::Unit nullUnit;
 
     std::unordered_map<int16_t, std::vector<const genie::Unit*>> m_creatableUnits;
     std::unordered_map<int16_t, std::vector<const genie::Tech*>> m_researchAvailable;
@@ -51,6 +56,7 @@ private:
 
     const int m_civId;
     const genie::Civ &m_data;
+    std::vector<genie::Unit> m_unitsData;
 
     std::unordered_map<uint16_t, genie::Tech> m_techs;
 };

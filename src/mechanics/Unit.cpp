@@ -38,6 +38,8 @@ Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, Uni
     setUnitData(data_);
     hitPoints = m_data->HitPoints;
     m_creationProgress = m_data->Creatable.TrainTime;
+
+    player_->addUnit(this);
 }
 
 Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager, const Entity::Type type) :
@@ -54,6 +56,10 @@ Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, Uni
 
 Unit::~Unit()
 {
+    Player::Ptr owner = player.lock();
+    if (owner) {
+        owner->removeUnit(this);
+    }
 }
 
 bool Unit::update(Time time)
