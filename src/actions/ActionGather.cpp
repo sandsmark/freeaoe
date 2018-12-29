@@ -76,7 +76,7 @@ IAction::UpdateResult ActionGather::update(Time time)
             return UpdateResult::Completed;
         }
 
-        amount *= player->resources[genie::ResourceType(m_task->ResourceMultiplier)];
+        amount *= player->resourcesAvailable[genie::ResourceType(m_task->ResourceMultiplier)];
     }
 
     amount *= (time - m_prevTime) * 0.0015;
@@ -154,7 +154,7 @@ IAction::UpdateResult ActionDropOff::update(Time /*time*/)
     }
     DBG << "dropping off" << unit->resources[resourceType] << "resource of type" << int(resourceType);
 
-    targetPlayer->resources[resourceType] += unit->resources[resourceType] ;
+    targetPlayer->resourcesAvailable[resourceType] += unit->resources[resourceType] ;
     unit->resources[resourceType] = 0;
 
     return UpdateResult::Completed;

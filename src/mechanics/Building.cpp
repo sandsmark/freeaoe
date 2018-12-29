@@ -37,7 +37,7 @@ bool Building::enqueueProduceUnit(const genie::Unit *data)
         }
 
         const genie::ResourceType type = genie::ResourceType(cost.Type);
-        if (owner->resources[type] < cost.Amount) {
+        if (owner->resourcesAvailable[type] < cost.Amount) {
             return false;
         }
     }
@@ -48,7 +48,7 @@ bool Building::enqueueProduceUnit(const genie::Unit *data)
         }
 
         const genie::ResourceType type = genie::ResourceType(cost.Type);
-        owner->resources[type] -= cost.Amount;
+        owner->resourcesAvailable[type] -= cost.Amount;
         product->cost[type] = cost.Amount;
     }
 
@@ -85,7 +85,7 @@ bool Building::enqueueProduceResearch(const genie::Tech *data)
         }
 
         const genie::ResourceType type = genie::ResourceType(cost.Type);
-        if (owner->resources[type] < cost.Amount) {
+        if (owner->resourcesAvailable[type] < cost.Amount) {
             return false;
         }
     }
@@ -97,7 +97,7 @@ bool Building::enqueueProduceResearch(const genie::Tech *data)
 
         const genie::ResourceType type = genie::ResourceType(r.Type);
 
-        owner->resources[type] -= r.Amount;
+        owner->resourcesAvailable[type] -= r.Amount;
         product->cost[type] = r.Amount;
     }
 
@@ -135,7 +135,7 @@ void Building::abortProduction(size_t index)
     const Product &toAbort = *m_productionQueue.at(index);
 
     for (const std::pair<const genie::ResourceType, float> &cost : toAbort.cost) {
-        owner->resources[cost.first] += cost.second;
+        owner->resourcesAvailable[cost.first] += cost.second;
     }
 
     m_productionQueue.erase(m_productionQueue.begin() + index);
@@ -284,7 +284,7 @@ void Building::attemptStartProduction()
             }
 
             const genie::ResourceType type = genie::ResourceType(cost.Type);
-            if (owner->resources[type] < cost.Amount) {
+            if (owner->resourcesAvailable[type] < cost.Amount) {
                 return;
             }
         }
@@ -295,7 +295,7 @@ void Building::attemptStartProduction()
             }
 
             const genie::ResourceType type = genie::ResourceType(cost.Type);
-            if (owner->resources[type] < cost.Amount) {
+            if (owner->resourcesAvailable[type] < cost.Amount) {
                 return;
             }
         }

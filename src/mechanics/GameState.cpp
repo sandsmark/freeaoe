@@ -283,13 +283,13 @@ bool GameState::update(Time time)
     updated = m_unitInfoPanel->update(time) || updated;
     updated = m_minimap->update(time) || updated;
 
-    m_woodLabel.setText(std::to_string(int(m_humanPlayer->resources[genie::ResourceType::WoodStorage])));
-    m_foodLabel.setText(std::to_string(int(m_humanPlayer->resources[genie::ResourceType::FoodStorage])));
-    m_goldLabel.setText(std::to_string(int(m_humanPlayer->resources[genie::ResourceType::GoldStorage])));
-    m_stoneLabel.setText(std::to_string(int(m_humanPlayer->resources[genie::ResourceType::StoneStorage])));
+    m_woodLabel.setText(std::to_string(int(m_humanPlayer->resourcesAvailable[genie::ResourceType::WoodStorage])));
+    m_foodLabel.setText(std::to_string(int(m_humanPlayer->resourcesAvailable[genie::ResourceType::FoodStorage])));
+    m_goldLabel.setText(std::to_string(int(m_humanPlayer->resourcesAvailable[genie::ResourceType::GoldStorage])));
+    m_stoneLabel.setText(std::to_string(int(m_humanPlayer->resourcesAvailable[genie::ResourceType::StoneStorage])));
     m_populationLabel.setText(
-                std::to_string(int(m_humanPlayer->resources[genie::ResourceType::CurrentPopulation])) + '/' +
-                std::to_string(int(m_humanPlayer->resources[genie::ResourceType::PopulationHeadroom]))
+                std::to_string(int(m_humanPlayer->resourcesUsed[genie::ResourceType::PopulationHeadroom])) + '/' +
+                std::to_string(int(m_humanPlayer->resourcesAvailable[genie::ResourceType::PopulationHeadroom]))
             );
 
     if (m_cameraDeltaX != 0 || m_cameraDeltaY != 0) {
@@ -477,13 +477,13 @@ void GameState::setupScenario()
         }
 
         const genie::ScnPlayerResources &resources = scenario_->playerResources[playerNum];
-        player->resources[genie::ResourceType::GoldStorage] = resources.gold;
-        player->resources[genie::ResourceType::FoodStorage] = resources.food;
-        player->resources[genie::ResourceType::WoodStorage] = resources.wood;
-        player->resources[genie::ResourceType::StoneStorage] = resources.stone;
-        player->resources[genie::ResourceType::OreStorage] = resources.ore;
-        player->resources[genie::ResourceType::TradeGoods] = resources.goods;
-        player->resources[genie::ResourceType::PopulationHeadroom] = scenario_->playerResources[playerNum].popLimit;
+        player->resourcesAvailable[genie::ResourceType::GoldStorage] = resources.gold;
+        player->resourcesAvailable[genie::ResourceType::FoodStorage] = resources.food;
+        player->resourcesAvailable[genie::ResourceType::WoodStorage] = resources.wood;
+        player->resourcesAvailable[genie::ResourceType::StoneStorage] = resources.stone;
+        player->resourcesAvailable[genie::ResourceType::OreStorage] = resources.ore;
+        player->resourcesAvailable[genie::ResourceType::TradeGoods] = resources.goods;
+        player->resourcesAvailable[genie::ResourceType::PopulationHeadroom] = scenario_->playerResources[playerNum].popLimit;
 
         m_players.push_back(player);
         for (const genie::ScnUnit &scnunit : scenario_->playerUnits[playerNum].units) {

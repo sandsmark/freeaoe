@@ -23,7 +23,8 @@ struct Player
     const int playerId;
     std::shared_ptr<Civilization> civ;
 
-    ResourceMap resources;
+    ResourceMap resourcesAvailable;
+    ResourceMap resourcesUsed;
 
     typedef std::shared_ptr<Player> Ptr;
     std::string name = "Player";

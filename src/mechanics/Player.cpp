@@ -9,12 +9,12 @@
 Player::Player(const int id, const std::shared_ptr<Civilization> &c, const ResourceMap &startingResources) :
     playerId(id),
     civ(c),
-    resources(civ->startingResources()),
+    resourcesAvailable(civ->startingResources()),
     name("Player " + std::to_string(id))
 {
 
     for (const std::pair<const genie::ResourceType, float> &r : startingResources) {
-        resources[r.first] = r.second;
+        resourcesAvailable[r.first] = r.second;
     }
 
 }
@@ -23,6 +23,11 @@ void Player::applyTechEffect(const genie::EffectCommand &effect)
 {
     switch(effect.Type) {
     case genie::EffectCommand::ResourceModifier:
+        if (effect.UnitClassID) {
+            resourcesAvailable[genie::ResourceType(effect.TargetUnit)] += effect.Amount;
+        } else {
+            resourcesAvailable[genie::ResourceType(effect.TargetUnit)] = effect.Amount;
+        }
         break;
     case genie::EffectCommand::EnableUnit:
         civ->enableUnit(effect.TargetUnit);
@@ -49,14 +54,16 @@ void Player::applyTechEffect(const genie::EffectCommand &effect)
         civ->applyUnitAttributeModifier(effect);
         break;
     case genie::EffectCommand::ResourceMultiplier:
-        resources[genie::ResourceType(effect.TargetUnit)] *= effect.Amount;
+        resourcesAvailable[genie::ResourceType(effect.TargetUnit)] *= effect.Amount;
         break;
     case genie::EffectCommand::TechCostModifier:
+        WARN << "Disable tech cost modifier not implemented";
         break;
     case genie::EffectCommand::DisableTech:
         WARN << "Disable tech effect not implemented";
         return;
     case genie::EffectCommand::TechTimeModifier:
+        WARN << "Disable tech time modifier not implemented";
         break;
     default:
         WARN << "Unhandled tech effect type" << effect.Type;
@@ -67,10 +74,46 @@ void Player::applyTechEffect(const genie::EffectCommand &effect)
 
 void Player::addUnit(Unit *unit)
 {
+    for (const genie::Unit::ResourceStorage &res : unit->data()->ResourceStorages) {
+        if (res.Type == -1) {
+            continue;
+        }
+        switch (res.Type) {
+        case genie::ResourceStoreMode::GiveResourceType:
+        case genie::ResourceStoreMode::GiveAndTakeResourceType:
+        case genie::ResourceStoreMode::BuildingResourceType:
+            if (res.Amount < 0) {
+                resourcesUsed[genie::ResourceType(res.Type)] -= res.Amount;
+            } else {
+                resourcesAvailable[genie::ResourceType(res.Type)] += res.Amount;
+            }
+            break;
+        default:
+            break;
+        }
+    }
     m_units.insert(unit);
 }
 
 void Player::removeUnit(Unit *unit)
 {
+    for (const genie::Unit::ResourceStorage &res : unit->data()->ResourceStorages) {
+        if (res.Type == -1) {
+            continue;
+        }
+        switch (res.Type) {
+        case genie::ResourceStoreMode::GiveAndTakeResourceType:
+        case genie::ResourceStoreMode::BuildingResourceType:
+            if (res.Amount < 0) {
+                resourcesUsed[genie::ResourceType(res.Type)] += res.Amount;
+            } else {
+                resourcesAvailable[genie::ResourceType(res.Type)] -= res.Amount;
+            }
+            break;
+        default:
+            break;
+        }
+    }
+    m_units.insert(unit);
     m_units.erase(unit);
 }
