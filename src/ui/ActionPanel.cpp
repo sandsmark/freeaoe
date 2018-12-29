@@ -9,6 +9,7 @@
 #include "resource/DataManager.h"
 #include "resource/Resource.h"
 #include "mechanics/UnitFactory.h"
+#include "mechanics/Civilization.h"
 
 ActionPanel::ActionPanel(const std::shared_ptr<SfmlRenderTarget> &renderTarget) :
     m_renderTarget(renderTarget)
@@ -283,6 +284,9 @@ void ActionPanel::updateButtons()
     }
 
     addCreateButtons(unit);
+    if (unit->data()->InterfaceKind == genie::Unit::BuildingsInterface) {
+        addResearchButtons(unit);
+    }
 }
 
 void ActionPanel::addCreateButtons(const std::shared_ptr<Unit> &unit)
@@ -317,7 +321,7 @@ void ActionPanel::addCreateButtons(const std::shared_ptr<Unit> &unit)
             button.interfacePage = 0;
         }
         button.index = std::max(creatable->Creatable.ButtonID - 1, 0);
-        button.targetId = creatable->ID;
+        button.unit = creatable;
         button.iconId = creatable->IconID;
 
         currentButtons.push_back(button);
@@ -331,13 +335,57 @@ void ActionPanel::addCreateButtons(const std::shared_ptr<Unit> &unit)
     }
 }
 
+void ActionPanel::addResearchButtons(const std::shared_ptr<Unit> &unit)
+{
+    Player::Ptr player = unit->player.lock();
+    if (!player) {
+        WARN << "Player-less unit";
+        return;
+    }
+    const std::vector<const genie::Tech *> techs = player->civ->researchAvailableAt(unit->data()->ID);
+    if (techs.empty()) {
+        return;
+    }
+
+    bool hasNext = false;
+    DBG << "research available" << techs.size();
+
+    for (const genie::Tech *tech : techs) {
+        if (tech->ButtonID > m_buttonOffset + 15) {
+            hasNext = true;
+            continue;
+        }
+
+        InterfaceButton button;
+        button.type = InterfaceButton::Research;
+
+        button.index = std::max(tech->ButtonID - 1, 0);
+        button.tech = tech;
+        button.iconId = tech->IconID;
+
+        currentButtons.push_back(button);
+
+    }
+
+
+    if (hasNext) {
+        InterfaceButton rightButton;
+        rightButton.action = Command::NextPage;
+        rightButton.index = 14;
+        currentButtons.push_back(rightButton);
+    }
+
+}
+
 void ActionPanel::handleButtonClick(const ActionPanel::InterfaceButton &button)
 {
     if (button.type == InterfaceButton::CreateBuilding) {
-        m_unitManager->placeBuilding(button.targetId, m_humanPlayer);
+        m_unitManager->placeBuilding(button.unit->ID, m_humanPlayer);
         return;
     } else if (button.type == InterfaceButton::CreateUnit) {
-        m_unitManager->enqueueProduceUnit(button.targetId, m_selectedUnits);
+        m_unitManager->enqueueProduceUnit(button.unit, m_selectedUnits);
+    } else if (button.type == InterfaceButton::Research) {
+        m_unitManager->enqueueResearch(button.tech, m_selectedUnits);
     } else if (button.type == InterfaceButton::Other) {
         switch(button.action) {
         case Command::BuildMilitary:

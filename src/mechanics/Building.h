@@ -24,6 +24,7 @@ struct Building : public Unit
     void abortProduction(size_t index);
     size_t productionQueueLength() const { return m_productionQueue.size() + (m_currentProduct != nullptr ? 1 : 0); }
 
+    bool isResearching() const { return m_currentProduct && m_currentProduct->type == Product::Research; }
     bool isProducing() const { return productionQueueLength() > 0; }
     int productIcon(size_t index);
     std::string currentProductName();
@@ -37,6 +38,7 @@ struct Building : public Unit
 
 private:
     void finalizeUnit();
+    void finalizeResearch();
     void attemptStartProduction();
 
     struct Product {

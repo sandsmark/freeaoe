@@ -16,6 +16,10 @@ class SfmlRenderTarget;
 class UnitManager;
 typedef std::unordered_set<std::shared_ptr<Unit>> UnitSet;
 
+namespace genie {
+class Tech;
+}
+
 class ActionPanel : public IState
 {
 public:
@@ -122,7 +126,11 @@ private:
             Other
         };
 
-        int targetId = 0;
+        union {
+            const genie::Unit *unit = nullptr;
+            const genie::Tech *tech;
+        };
+
         int iconId = 0;
 
         Command action = Command::Undefined;
@@ -136,7 +144,7 @@ private:
 
     void updateButtons();
     void addCreateButtons(const std::shared_ptr<Unit> &unit);
-    void addCreateBuildingButtons();
+    void addResearchButtons(const std::shared_ptr<Unit> &unit);
     void handleButtonClick(const InterfaceButton &button);
 
     ScreenPos buttonPosition(const int index) const;

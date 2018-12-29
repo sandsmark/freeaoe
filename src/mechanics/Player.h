@@ -29,6 +29,7 @@ struct Player
     typedef std::shared_ptr<Player> Ptr;
     std::string name = "Player";
 
+    void applyTech(const int effectId);
     void applyTechEffect(const genie::EffectCommand &effect);
 
     void addUnit(Unit *unit);

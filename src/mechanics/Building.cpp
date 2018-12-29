@@ -228,7 +228,7 @@ bool Building::update(Time time)
             if (m_currentProduct->type == Product::Unit) {
                 finalizeUnit();
             } else {
-                DBG << "todo implement research";
+                finalizeResearch();
             }
 
             m_currentProduct.reset();
@@ -271,7 +271,7 @@ bool Building::canPlace()
             if (valid2 != -1 && terrainId != valid2) {
                 return false;
             }
-            if (util::floatsEquals(passable[terrainId], 0)) {
+            if (!passable[terrainId]) {
                 return false;
             }
         }
@@ -298,6 +298,17 @@ void Building::finalizeUnit()
 
     Unit::Ptr unit = UnitFactory::Inst().createUnit(m_currentProduct->unit->ID, waypoint, owner, m_unitManager);
     DBG << "Finalized" << unit->debugName;
+}
+
+void Building::finalizeResearch()
+{
+    Player::Ptr owner = player.lock();
+    if (!owner) {
+        WARN << "building owner went away";
+        return;
+    }
+    owner->applyTech(m_currentProduct->tech->EffectID);
+
 }
 
 void Building::attemptStartProduction()

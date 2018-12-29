@@ -487,7 +487,11 @@ void UnitInfoPanel::drawConstructionInfo(const std::shared_ptr<Building> &buildi
     pos.x += iconSize.width + 2;
     pos.y -= 4;
     m_productionUpperText.setPosition(pos);
-    m_productionUpperText.setString("Building - " + std::to_string(int(building->productionProgress() * 100)) + "%");
+    if (building->isResearching()) {
+        m_productionUpperText.setString("Researching - " + std::to_string(int(building->productionProgress() * 100)) + "%");
+    } else {
+        m_productionUpperText.setString("Building - " + std::to_string(int(building->productionProgress() * 100)) + "%");
+    }
     m_renderTarget->draw(m_productionUpperText);
 
     pos.y += m_productionUpperText.getLocalBounds().height;

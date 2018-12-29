@@ -354,7 +354,7 @@ void UnitManager::placeBuilding(const int unitId, const std::shared_ptr<Player> 
     m_canPlaceBuilding = false;
 }
 
-void UnitManager::enqueueProduceUnit(const int unitId, const UnitSet producers)
+void UnitManager::enqueueProduceUnit(const genie::Unit *unitData, const UnitSet producers)
 {
     if (producers.empty()) {
         WARN << "Handed no producers";
@@ -367,7 +367,23 @@ void UnitManager::enqueueProduceUnit(const int unitId, const UnitSet producers)
         return;
     }
 
-    producer->enqueueProduceUnit(&producer->civilization->unitData(unitId));
+    producer->enqueueProduceUnit(unitData);
+}
+
+void UnitManager::enqueueResearch(const genie::Tech *techData, const UnitSet producers)
+{
+    if (producers.empty()) {
+        WARN << "Handed no producers";
+        return;
+    }
+
+    Building::Ptr producer = Unit::asBuilding(*producers.begin());
+    if (!producer) {
+        WARN << "Invalid producer";
+        return;
+    }
+
+    producer->enqueueProduceResearch(techData);
 }
 
 Unit::Ptr UnitManager::unitAt(const ScreenPos &pos, const CameraPtr &camera) const

@@ -83,7 +83,8 @@ public:
     const std::set<Unit::Ptr, MapPositionSorter> &units() const { return m_units; }
 
     void placeBuilding(const int unitId, const std::shared_ptr<Player> &player);
-    void enqueueProduceUnit(const int unitId, const UnitSet producers);
+    void enqueueProduceUnit(const genie::Unit *unitData, const UnitSet producers);
+    void enqueueResearch(const genie::Tech *techData, const UnitSet producers);
 
     Unit::Ptr unitAt(const ScreenPos &pos, const CameraPtr &camera) const;
 

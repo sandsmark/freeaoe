@@ -18,6 +18,15 @@ Player::Player(const int id, const std::shared_ptr<Civilization> &c, const Resou
     }
 
 }
+void Player::applyTech(const int effectId)
+{
+    const genie::Effect &effect = DataManager::Inst().getEffect(effectId);
+    DBG << "Applying" << effect.Name;
+
+    for (const genie::EffectCommand &command : effect.EffectCommands) {
+        applyTechEffect(command);
+    }
+}
 
 void Player::applyTechEffect(const genie::EffectCommand &effect)
 {

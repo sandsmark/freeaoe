@@ -30,6 +30,7 @@
 const genie::Unit DataManager::nullUnit;
 const genie::Tech DataManager::nullTech;
 const genie::Civ DataManager::nullCiv;
+const genie::Effect DataManager::nullEffect;
 
 DataManager &DataManager::Inst()
 {
@@ -67,7 +68,18 @@ const genie::Terrain &DataManager::getTerrain(unsigned int id)
     return dat_file_.TerrainBlock.Terrains[id];
 }
 
-genie::TerrainRestriction DataManager::getTerrainRestriction(unsigned int id)
+const genie::Effect &DataManager::getEffect(unsigned int id)
+{
+    if (id >= dat_file_.Effects.size()) {
+        WARN << "terrain id" << id << "is out of range";
+        return nullEffect;
+    }
+
+    return dat_file_.Effects[id];
+
+}
+
+const genie::TerrainRestriction &DataManager::getTerrainRestriction(unsigned int id)
 {
     return dat_file_.TerrainRestrictions[id];
 }

@@ -40,7 +40,8 @@ Civilization::Civilization(const int civId, const genie::DatFile &dataFile) :
         if (research.ResearchLocation <= 0) {
             continue;
         }
-        if (research.Civ != m_civId) {
+
+        if (research.Civ != -1 && research.Civ != m_civId) {
             continue;
         }
 
@@ -85,6 +86,7 @@ const genie::Unit &Civilization::unit(const uint16_t id) const
 const genie::Tech &Civilization::tech(const uint16_t id) const
 {
     if (m_techs.find(id) == m_techs.end()) {
+        WARN << "invalid tech" << id;
         return DataManager::nullTech;
     }
 
@@ -172,11 +174,29 @@ void modifyAttribute(T &value, const genie::EffectCommand &effect)
 
 void Civilization::applyUnitAttributeModifier(const genie::EffectCommand &effect)
 {
-    if (effect.TargetUnit < 0 || effect.TargetUnit >= m_unitsData.size()) {
+    DBG << "Applying" << genie::EffectCommand::Attributes(effect.AttributeID);
+    if (effect.TargetUnit >= 0) {
+        applyUnitAttributeModifier(effect, effect.TargetUnit);
+    } else if (effect.UnitClassID >= 0) {
+        for (const genie::Unit &unitData : m_unitsData) {
+            if (unitData.Class != effect.UnitClassID) {
+                continue;
+            }
+            applyUnitAttributeModifier(effect, unitData.ID);
+        }
+    } else {
+        WARN << "Can't apply effect with neither unit id or class id";
+    }
+}
+
+void Civilization::applyUnitAttributeModifier(const genie::EffectCommand &effect, int unitId)
+{
+    if (unitId < 0 || unitId >= m_unitsData.size()) {
         WARN << "invalid target unit" << effect.TargetUnit;
         return;
     }
-    genie::Unit &unitData = m_unitsData[effect.TargetUnit];
+
+    genie::Unit &unitData = m_unitsData[unitId];
 
     using genie::EffectCommand;
     switch (effect.AttributeID) {
