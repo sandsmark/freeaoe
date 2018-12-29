@@ -36,7 +36,6 @@ Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, Uni
     m_unitManager(unitManager)
 {
     setUnitData(data_);
-    hitPoints = m_data->HitPoints;
     m_creationProgress = m_data->Creatable.TrainTime;
 
     player_->addUnit(this);
@@ -50,7 +49,6 @@ Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, Uni
     m_unitManager(unitManager)
 {
     setUnitData(data_);
-    hitPoints = m_data->HitPoints;
     m_creationProgress = m_data->Creatable.TrainTime;
 
     player_->addUnit(this);

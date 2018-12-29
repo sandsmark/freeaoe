@@ -131,7 +131,7 @@ struct Unit : public Entity
 
     virtual ScreenRect rect() const;
 
-    float hitPoints = 0;
+    float damageTaken = 0.f;
 
     std::unordered_set<Task> availableActions();
     Task findMatchingTask(const genie::Task::ActionTypes &m_type);

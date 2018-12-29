@@ -277,11 +277,12 @@ void UnitInfoPanel::drawSingleUnit()
     m_hpGreenRect.setPosition(pos);
     size.height = 5;
     m_hpRedRect.setSize(size);
-    m_hpGreenRect.setSize(Size(size.width * unit->hitPoints / unit->data()->HitPoints, size.height));
+    float hitpointsLeft = unit->data()->HitPoints - unit->damageTaken;
+    m_hpGreenRect.setSize(Size(size.width * hitpointsLeft / unit->data()->HitPoints, size.height));
     m_renderTarget->draw(m_hpRedRect);
     m_renderTarget->draw(m_hpGreenRect);
 
-    m_hpText.setString(std::to_string(int(unit->hitPoints)) + '/' + std::to_string(unit->data()->HitPoints));
+    m_hpText.setString(std::to_string(int(hitpointsLeft)) + '/' + std::to_string(unit->data()->HitPoints));
     m_hpText.setPosition(rightX, pos.y - m_hpText.getLocalBounds().height * 3 / 4);
     m_renderTarget->draw(m_hpText);
 
