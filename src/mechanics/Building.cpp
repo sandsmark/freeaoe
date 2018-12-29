@@ -5,6 +5,8 @@
 #include "resource/LanguageManager.h"
 #include "Map.h"
 #include "UnitFactory.h"
+#include "core/Constants.h"
+#include "resource/DataManager.h"
 
 Building::Building(const genie::Unit &data_, const std::shared_ptr<Player> &player, UnitManager &unitManager) :
     Unit(data_, player, unitManager, Entity::Type::Building)
@@ -240,6 +242,42 @@ bool Building::update(Time time)
     }
 
     return updated;
+}
+
+bool Building::canPlace()
+{
+    MapPtr map = m_map.lock();
+    if (!map) {
+        WARN << "No map available";
+        return false;
+    }
+
+    std::vector<float> passable = DataManager::Inst().getTerrainRestriction(data()->TerrainRestriction).PassableBuildableDmgMultiplier;
+
+    const int tileX = position().x / Constants::TILE_SIZE;
+    const int tileY = position().y / Constants::TILE_SIZE;
+
+    const int valid1 = data()->PlacementTerrain.first;
+    const int valid2 = data()->PlacementTerrain.first;
+
+    const int width = data()->ClearanceSize.x + data()->Size.x;
+    const int height = data()->ClearanceSize.x + data()->Size.x;
+    for (int dx = 0; dx < data()->ClearanceSize.x + data()->Size.x; dx++) {
+        for (int dy = 0; dy < data()->ClearanceSize.y + data()->Size.y; dy++) {
+            const int terrainId = map->getTileAt(tileX + dx - width/2, tileY + dy - height/2).terrainId;
+            if (valid1 != -1 && terrainId != valid1) {
+                return false;
+            }
+            if (valid2 != -1 && terrainId != valid2) {
+                return false;
+            }
+            if (util::floatsEquals(passable[terrainId], 0)) {
+                return false;
+            }
+        }
+    }
+
+    return true;
 }
 
 void Building::finalizeUnit()

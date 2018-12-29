@@ -101,6 +101,14 @@ public:
     bool tilesUpdated() const { return m_updated; }
     void flushDirty() { m_updated = false; }
 
+    inline bool isValidTile(const unsigned col, const unsigned row) const {
+        if (IS_UNLIKELY(row * cols_ + col >= tiles_.size())) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
 private:
     void updateTileBlend(int tileX, int tileY);
     void updateTileSlopes(int tileX, int tileY);

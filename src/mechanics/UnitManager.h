@@ -19,6 +19,7 @@
 #pragma once
 #include <unordered_set>
 #include "Unit.h"
+#include "Building.h"
 
 #include "Map.h"
 class SfmlRenderTarget;
@@ -104,7 +105,9 @@ private:
     sf::RenderTexture m_outlineOverlay;
     MoveTargetMarker::Ptr m_moveTargetMarker;
 
-    Unit::Ptr m_buildingToPlace;
+    Building::Ptr m_buildingToPlace;
+    bool m_canPlaceBuilding;
+
     MapPos m_previousCameraPos;
 };
 

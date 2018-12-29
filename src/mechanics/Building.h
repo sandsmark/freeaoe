@@ -33,6 +33,8 @@ struct Building : public Unit
 
     MapPos waypoint;
 
+    bool canPlace();
+
 private:
     void finalizeUnit();
     void attemptStartProduction();

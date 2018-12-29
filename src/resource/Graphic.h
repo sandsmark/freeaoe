@@ -33,7 +33,8 @@ class SlpFile;
 enum class ImageType {
     Base,
     Outline,
-    Construction
+    Construction,
+    ConstructionUnavailable
 };
 
 inline LogPrinter &operator <<(LogPrinter &os, const ImageType &type) {

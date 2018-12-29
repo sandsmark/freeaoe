@@ -210,13 +210,13 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
     if (m_buildingToPlace) {
         m_buildingToPlace->renderer().render(*renderTarget->renderTarget_,
                                              renderTarget->camera()->absoluteScreenPos(m_buildingToPlace->position()),
-                                             RenderType::ConstructAvailable);
+                                             m_canPlaceBuilding ? RenderType::ConstructAvailable : RenderType::ConstructUnavailable);
     }
 }
 
 bool UnitManager::onLeftClick(const MapPos &/*mapPos*/)
 {
-    if (m_buildingToPlace) {
+    if (m_buildingToPlace && m_canPlaceBuilding) {
         m_buildingToPlace->isVisible = true;
         m_buildingToPlace->setCreationProgress(0);
         m_units.insert(m_buildingToPlace);
@@ -275,6 +275,7 @@ void UnitManager::onMouseMove(const MapPos &mapPos)
     if (m_buildingToPlace) {
         m_buildingToPlace->setPosition(mapPos);
         m_buildingToPlace->snapPositionToGrid();
+        m_canPlaceBuilding = m_buildingToPlace->canPlace();
     }
 }
 
@@ -344,7 +345,13 @@ void UnitManager::setSelectedUnits(const UnitSet &units)
 
 void UnitManager::placeBuilding(const int unitId, const std::shared_ptr<Player> &player)
 {
-    m_buildingToPlace = UnitFactory::Inst().createUnit(unitId, MapPos(), player, *this);
+    Unit::Ptr unit = UnitFactory::Inst().createUnit(unitId, MapPos(), player, *this);
+    m_buildingToPlace = Unit::asBuilding(unit);
+    if (!m_buildingToPlace) {
+        WARN << "Got invalid unit from factory";
+        return;
+    }
+    m_canPlaceBuilding = false;
 }
 
 void UnitManager::enqueueProduceUnit(const int unitId, const UnitSet producers)
