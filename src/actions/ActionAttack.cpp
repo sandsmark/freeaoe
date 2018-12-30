@@ -1,4 +1,7 @@
 #include "ActionAttack.h"
+#include "ActionMove.h"
+#include "mechanics/UnitManager.h"
+#include "core/Constants.h"
 #include <genie/dat/Unit.h>
 
 ActionAttack::ActionAttack(const Unit::Ptr &attacker, const Unit::Ptr &target, UnitManager *unitManager) :
@@ -13,7 +16,6 @@ ActionAttack::ActionAttack(const Unit::Ptr &attacker, const MapPos &target, Unit
     m_targetPosition(target)
 {
 }
-
 
 IAction::UnitState ActionAttack::unitState() const
 {
@@ -42,6 +44,7 @@ IAction::UpdateResult ActionAttack::update(Time time)
         return IAction::UpdateResult::Completed;
     }
 
+    // Siege weapon can attack ground
     if (!targetUnit && unit->data()->Class != genie::Unit::SiegeWeapon) {
         DBG << "Target unit gone";
         return IAction::UpdateResult::Completed;
@@ -53,6 +56,19 @@ IAction::UpdateResult ActionAttack::update(Time time)
         m_firing = true;
     } else {
         m_firing = false;
+    }
+
+    const float angleToTarget = atan2(m_targetPosition.y - unit->position().y, m_targetPosition.x - unit->position().x);
+    unit->setAngle(angleToTarget - M_PI_2 / 2.);
+    const float distance = unit->position().distance(m_targetPosition) / Constants::TILE_SIZE;
+
+    if (distance > unit->data()->Combat.MaxRange || distance < unit->data()->Combat.MinRange) {
+        const float angleToTarget = atan2(unit->position().y - m_targetPosition.y, unit->position().x - m_targetPosition.x);
+        float targetX = m_targetPosition.x + cos(angleToTarget) * unit->data()->Combat.MinRange * Constants::TILE_SIZE * 1.1;
+        float targetY = m_targetPosition.y + sin(angleToTarget) * unit->data()->Combat.MinRange * Constants::TILE_SIZE * 1.1;
+        unit->prependAction(ActionMove::moveUnitTo(unit, MapPos(targetX, targetY), m_unitManager->map(), m_unitManager));
+
+        return IAction::UpdateResult::NotUpdated;
     }
 
     if (timeSinceLastAttack < unit->data()->Combat.ReloadTime) {

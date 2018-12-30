@@ -298,6 +298,13 @@ void Unit::setAngle(const float angle)
     m_renderer.setAngle(angle);
 }
 
+void Unit::prependAction(const ActionPtr &action)
+{
+    m_actionQueue.push_front(std::move(m_currentAction));
+    m_currentAction = action;
+    updateGraphic();
+}
+
 void Unit::queueAction(const ActionPtr &action)
 {
     if (!m_currentAction) {

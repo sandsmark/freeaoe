@@ -108,6 +108,7 @@ struct Unit : public Entity
 
     void setAngle(const float angle);
 
+    void prependAction(const ActionPtr &action);
     void queueAction(const ActionPtr &action);
     void setCurrentAction(const ActionPtr &action);
     void clearActionQueue();
