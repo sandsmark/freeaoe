@@ -114,6 +114,7 @@ private:
 
     std::vector<sf::Texture> m_unitIcons;
     std::vector<sf::Texture> m_buildingIcons;
+    std::vector<sf::Texture> m_researchIcons;
 
     sf::Texture m_unitHalo;
 

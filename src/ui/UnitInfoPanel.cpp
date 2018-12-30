@@ -82,6 +82,17 @@ bool UnitInfoPanel::init()
         m_buildingIcons[i].loadFromImage(Resource::convertFrameToImage(buildingIconsSlp->getFrame(i)));
     }
 
+    // Tech/research icons
+    genie::SlpFilePtr techIconsSlp = AssetManager::Inst()->getSlp("btntech.shp", AssetManager::ResourceType::Interface);
+    if (!techIconsSlp) {
+        WARN << "Failed to load research icons";
+        return false;
+    }
+    m_researchIcons.resize(techIconsSlp->getFrameCount());
+    for (size_t i=0; i<techIconsSlp->getFrameCount(); i++) {
+        m_researchIcons[i].loadFromImage(Resource::convertFrameToImage(techIconsSlp->getFrame(i)));
+    }
+
     genie::SlpFilePtr haloSlp = AssetManager::Inst()->getSlp("unithalo.shp", AssetManager::ResourceType::Interface);
     if (!haloSlp) {
         WARN << "couldn't load halo";
@@ -146,7 +157,6 @@ void UnitInfoPanel::handleEvent(sf::Event event)
 
 
     int clickedButton = -1;
-//    for (const Button &button : m_unitButtons) {
     for (size_t i=0; i<m_unitButtons.size(); i++) {
         const Button &button = m_unitButtons[i];
         if (button.rect.contains(mousePos)) {
@@ -473,7 +483,7 @@ void UnitInfoPanel::drawConstructionInfo(const std::shared_ptr<Building> &buildi
 {
     m_unitButtons.clear();
 
-    const sf::Texture &icon = m_unitIcons.at(building->productIcon(0));
+    const sf::Texture &icon = building->isResearching() ? m_researchIcons.at(building->productIcon(0)) : m_unitIcons.at(building->productIcon(0));
     const Size iconSize = icon.getSize();
     ScreenPos pos = rect().center();
     pos.x -= iconSize.width;
