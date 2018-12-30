@@ -4,6 +4,7 @@
 #include "core/Logger.h"
 
 #include <genie/dat/TechageEffect.h>
+#include <genie/dat/ResourceUsage.h>
 #include "resource/DataManager.h"
 
 Player::Player(const int id, const std::shared_ptr<Civilization> &c, const ResourceMap &startingResources) :
@@ -88,9 +89,9 @@ void Player::addUnit(Unit *unit)
             continue;
         }
         switch (res.Type) {
-        case genie::ResourceStoreMode::GiveResourceType:
-        case genie::ResourceStoreMode::GiveAndTakeResourceType:
-        case genie::ResourceStoreMode::BuildingResourceType:
+        case genie::GiveResourceType:
+        case genie::GiveAndTakeResourceType:
+        case genie::BuildingResourceType:
             if (res.Amount < 0) {
                 resourcesUsed[genie::ResourceType(res.Type)] -= res.Amount;
             } else {
