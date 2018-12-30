@@ -154,6 +154,7 @@ public:
     bool isValid();
 
     bool runOnce() const;
+    void setRunOnce(const bool once);
 
     int angleToOrientation(float angle) const;
     float orientationToAngle(float orientation) const;
@@ -170,6 +171,7 @@ private:
     std::unordered_map<GraphicState, sf::Texture> m_cache;
 
     const genie::Graphic &m_data;
+    bool m_runOnce = false;
 };
 
 typedef std::shared_ptr<Graphic> GraphicPtr;

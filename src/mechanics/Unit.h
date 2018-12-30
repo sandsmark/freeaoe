@@ -145,11 +145,14 @@ struct Unit : public Entity
     void setUnitData(const genie::Unit &data_);
     const genie::Unit *data() const {return m_data; }
 
+    float healthLeft() const;
+
 protected:
     Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager, const Type m_type);
 
     void removeAction(const ActionPtr &action);
     int taskGraphicId(const genie::Task::ActionTypes taskType, const IAction::UnitState state);
+    void updateGraphic();
 
     const genie::Unit *m_data = nullptr;
     GraphicPtr movingGraphics;

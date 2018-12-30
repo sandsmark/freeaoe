@@ -21,6 +21,7 @@
 #include "actions/ActionMove.h"
 #include "actions/ActionGather.h"
 #include "actions/ActionBuild.h"
+#include "actions/ActionAttack.h"
 #include "render/SfmlRenderTarget.h"
 #include "resource/LanguageManager.h"
 #include "core/Constants.h"
@@ -207,21 +208,36 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
                                           renderTarget->camera()->absoluteScreenPos(m_moveTargetMarker->position()),
                                           RenderType::Base);
 
-    if (m_buildingToPlace) {
+    if (m_state == State::PlacingBuilding) {
+        if (!m_buildingToPlace) {
+            WARN << "No building to place";
+            m_state = State::Default;
+            return;
+        }
+
         m_buildingToPlace->renderer().render(*renderTarget->renderTarget_,
                                              renderTarget->camera()->absoluteScreenPos(m_buildingToPlace->position()),
                                              m_canPlaceBuilding ? RenderType::ConstructAvailable : RenderType::ConstructUnavailable);
     }
 }
 
-bool UnitManager::onLeftClick(const MapPos &/*mapPos*/)
+bool UnitManager::onLeftClick(const ScreenPos &screenPos, const CameraPtr &camera)
 {
-    if (m_buildingToPlace && m_canPlaceBuilding) {
+    switch (m_state) {
+    case State::PlacingBuilding: {
+        if (!m_buildingToPlace) {
+            WARN << "Can't place null building";
+            return false;
+        }
+        if (!m_canPlaceBuilding) {
+            WARN << "Can't place building here";
+            return false;
+        }
+
         m_buildingToPlace->isVisible = true;
         m_buildingToPlace->setCreationProgress(0);
         m_units.insert(m_buildingToPlace);
 
-        // wat, why did I do this
         for (const Unit::Ptr &unit : m_selectedUnits) {
             Task task;
             for (const Task &potential : unit->availableActions()) {
@@ -239,10 +255,31 @@ bool UnitManager::onLeftClick(const MapPos &/*mapPos*/)
         }
 
         m_buildingToPlace.reset();
-        return true;
+        break;
+    }
+    case State::SelectingAttackTarget: {
+        DBG << "Selecting attack target";
+        MapPos targetPos = camera->absoluteMapPos(screenPos);
+        Unit::Ptr targetUnit = unitAt(screenPos, camera);
+        for (const Unit::Ptr &unit : m_selectedUnits) {
+            std::shared_ptr<ActionAttack> action;
+            if (targetUnit) {
+                action = std::make_shared<ActionAttack>(unit, targetUnit, this);
+            } else {
+                action = std::make_shared<ActionAttack>(unit, targetPos, this);
+            }
+            unit->setCurrentAction(action);
+        }
+        break;
+    }
+    case State::Default:
+        return false;
+    default:
+        break;
     }
 
-    return false;
+    m_state = State::Default;
+    return true;
 }
 
 void UnitManager::onRightClick(const ScreenPos &screenPos, const CameraPtr &camera)
@@ -526,6 +563,11 @@ void UnitManager::assignTask(const Task &task, const Unit::Ptr &unit, const Unit
         return;
     }
 
+}
+
+void UnitManager::selectAttackTarget()
+{
+    m_state = State::SelectingAttackTarget;
 }
 
 void UnitManager::playSound(const Unit::Ptr &unit)

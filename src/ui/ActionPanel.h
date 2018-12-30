@@ -145,6 +145,7 @@ private:
     void updateButtons();
     void addCreateButtons(const std::shared_ptr<Unit> &unit);
     void addResearchButtons(const std::shared_ptr<Unit> &unit);
+    void addMilitaryButtons(const std::shared_ptr<Unit> &unit);
     void handleButtonClick(const InterfaceButton &button);
 
     ScreenPos buttonPosition(const int index) const;

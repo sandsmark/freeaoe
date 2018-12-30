@@ -69,7 +69,7 @@ public:
     bool update(Time time);
     void render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, const std::vector<std::weak_ptr<Entity> > &visible);
 
-    bool onLeftClick(const MapPos &mapPos);
+    bool onLeftClick(const ScreenPos &screenPos, const CameraPtr &camera);
     void onRightClick(const ScreenPos &screenPos, const CameraPtr &camera);
     void onMouseMove(const MapPos &mapPos);
 
@@ -93,8 +93,15 @@ public:
     const Task defaultActionAt(const ScreenPos &pos, const CameraPtr &camera);
     void moveUnitTo(const Unit::Ptr &unit, const MapPos &targetPos);
     void assignTask(const Task &task, const Unit::Ptr &unit, const Unit::Ptr &target);
+    void selectAttackTarget();
 
 private:
+    enum class State {
+        PlacingBuilding,
+        SelectingAttackTarget,
+        Default
+    } m_state = State::Default;
+
     void updateVisibility(const std::vector<Unit::Ptr> &visibleUnits);
     void playSound(const Unit::Ptr &unit);
 

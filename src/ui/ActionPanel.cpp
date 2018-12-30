@@ -272,6 +272,7 @@ void ActionPanel::updateButtons()
             break;
         }
         default:
+            WARN << "Unhandled action type" << task.data->ActionType << task.data->AutoSearchTargets;
             break;
         }
     }
@@ -286,6 +287,9 @@ void ActionPanel::updateButtons()
     addCreateButtons(unit);
     if (unit->data()->InterfaceKind == genie::Unit::BuildingsInterface) {
         addResearchButtons(unit);
+    }
+    if (unit->data()->InterfaceKind == genie::Unit::SoldiersInterface) {
+        addMilitaryButtons(unit);
     }
 }
 
@@ -377,6 +381,24 @@ void ActionPanel::addResearchButtons(const std::shared_ptr<Unit> &unit)
 
 }
 
+void ActionPanel::addMilitaryButtons(const std::shared_ptr<Unit> &unit)
+{
+    DBG << unit->data()->Creatable.CreatableType << unit->data()->Class;
+    if (unit->data()->InterfaceKind != genie::Unit::SoldiersInterface) {
+        return;
+    }
+
+    if (unit->data()->Class == genie::Unit::SiegeWeapon) {
+        InterfaceButton button;
+        button.type = InterfaceButton::Other;
+        button.interfacePage = 0;
+        button.index = 0;
+        button.action = Command::AttackGround;
+
+        currentButtons.push_back(button);
+    }
+}
+
 void ActionPanel::handleButtonClick(const ActionPanel::InterfaceButton &button)
 {
     if (button.type == InterfaceButton::CreateBuilding) {
@@ -401,6 +423,9 @@ void ActionPanel::handleButtonClick(const ActionPanel::InterfaceButton &button)
             for (Unit::Ptr unit : m_unitManager->selected()) {
                 unit->setCurrentAction(nullptr);
             }
+            break;
+        case Command::AttackGround:
+            m_unitManager->selectAttackTarget();
             break;
         default:
             break;

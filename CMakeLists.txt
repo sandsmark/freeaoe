@@ -105,6 +105,7 @@ set(MECHANICS_SRC
 
 set(ACTIONS_SRC
     src/actions/IAction.cpp
+    src/actions/ActionAttack.cpp
     src/actions/ActionBuild.cpp
     src/actions/ActionGather.cpp
     src/actions/ActionMove.cpp

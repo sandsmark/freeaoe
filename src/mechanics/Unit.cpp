@@ -71,6 +71,8 @@ bool Unit::update(Time time)
     }
 
     if (m_currentAction) {
+        IAction::UnitState prevState = m_currentAction->unitState();
+
         switch(m_currentAction->update(time)) {
         case IAction::UpdateResult::Completed:
             removeAction(m_currentAction);
@@ -80,6 +82,11 @@ bool Unit::update(Time time)
             break;
         case IAction::UpdateResult::NotUpdated:
             break;
+        }
+
+        if (!m_currentAction || prevState != m_currentAction->unitState()) {
+            DBG << "action change";
+            updateGraphic();
         }
     }
 
@@ -217,6 +224,10 @@ void Unit::setUnitData(const genie::Unit &data_)
     m_renderer.setGraphic(defaultGraphics);
 }
 
+float Unit::healthLeft() const
+{
+    return (data()->HitPoints * creationProgress() - damageTaken) / data()->HitPoints;
+}
 
 int Unit::taskGraphicId(const genie::Task::ActionTypes taskType, const IAction::UnitState state)
 {
@@ -246,6 +257,42 @@ int Unit::taskGraphicId(const genie::Task::ActionTypes taskType, const IAction::
     return m_data->StandingGraphic.first;
 }
 
+void Unit::updateGraphic()
+{
+    GraphicPtr graphic;
+    if (m_currentAction) {
+        switch (m_currentAction->type) {
+        case IAction::Type::Move:
+            graphic = movingGraphics;
+            break;
+        case IAction::Type::Build:
+            graphic = AssetManager::Inst()->getGraphic(taskGraphicId(genie::Task::Build, m_currentAction->unitState()));
+            break;
+        case IAction::Type::Gather:
+            graphic = AssetManager::Inst()->getGraphic(taskGraphicId(genie::Task::GatherRebuild, m_currentAction->unitState()));
+            break;
+        case IAction::Type::Attack:
+            if (m_currentAction->unitState() == IAction::UnitState::Attacking) {
+                DBG << "Setting graphic";
+                graphic = AssetManager::Inst()->getGraphic(data()->Combat.AttackGraphic);
+                graphic->setRunOnce(true);
+            }
+            break;
+        default:
+            break;
+        }
+    }
+
+    if (!graphic) {
+        DBG << "No graphic";
+        graphic = defaultGraphics;
+    }
+
+
+    m_renderer.setGraphic(graphic);
+
+}
+
 void Unit::setAngle(const float angle)
 {
     m_renderer.setAngle(angle);
@@ -257,35 +304,14 @@ void Unit::queueAction(const ActionPtr &action)
         setCurrentAction(action);
     } else {
         m_actionQueue.push_back(action);
-
     }
 }
 
 void Unit::setCurrentAction(const ActionPtr &action)
 {
-    if (m_currentAction && !action) {
-        m_renderer.setGraphic(defaultGraphics);
-    }
-
     m_currentAction = action;
 
-    if (!action) {
-        return;
-    }
-
-    switch (action->type) {
-    case IAction::Type::Move:
-        m_renderer.setGraphic(movingGraphics);
-        break;
-    case IAction::Type::Build:
-        m_renderer.setGraphic(AssetManager::Inst()->getGraphic(taskGraphicId(genie::Task::Build, action->unitState())));
-        break;
-    case IAction::Type::Gather:
-        m_renderer.setGraphic(AssetManager::Inst()->getGraphic(taskGraphicId(genie::Task::GatherRebuild, action->unitState())));
-        break;
-    default:
-        m_renderer.setGraphic(defaultGraphics);
-    }
+    updateGraphic();
 }
 
 void Unit::removeAction(const ActionPtr &action)
@@ -315,4 +341,5 @@ void Unit::clearActionQueue()
 {
     m_actionQueue.clear();
     m_currentAction.reset();
+    updateGraphic();
 }

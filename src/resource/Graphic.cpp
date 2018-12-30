@@ -29,8 +29,10 @@ const sf::Texture Graphic::nullImage;
 
 //------------------------------------------------------------------------------
 Graphic::Graphic(const genie::Graphic &data) :
-    m_data(data)
+    m_data(data),
+    m_runOnce(data.SequenceType & genie::Graphic::SequenceOnce)
 {
+
     if (data.SLP < 0) {
         WARN << data.Name << "doesn't have a SLP id" << data.ID << data.Deltas.size();
         return;
@@ -240,7 +242,12 @@ bool Graphic::isValid()
 
 bool Graphic::runOnce() const
 {
-    return (m_data.SequenceType & genie::Graphic::SequenceOnce);
+    return m_runOnce;
+}
+
+void Graphic::setRunOnce(const bool once)
+{
+    m_runOnce = once;
 }
 
 int Graphic::angleToOrientation(float angle) const

@@ -40,7 +40,8 @@ public:
         PlaceOnMap,
         Build,
         Gather,
-        DropOff
+        DropOff,
+        Attack
     };
 
     enum UnitState {
@@ -48,7 +49,8 @@ public:
         Moving,
         Working,
         Carrying,
-        Proceeding
+        Proceeding,
+        Attacking
     };
 
     enum class UpdateResult {

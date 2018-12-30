@@ -63,7 +63,6 @@ bool GraphicRender::update(Time time)
 
     Time elapsed = time - m_lastFrameTime;
 
-
     if (newFrame >= m_graphic->frameCount() - 1 && elapsed < m_graphic->replayDelay() / 0.0015) {
         return updated;
     }
