@@ -29,6 +29,7 @@
 #include "Civilization.h"
 #include "UnitFactory.h"
 #include "Building.h"
+#include "Missile.h"
 #include "audio/AudioPlayer.h"
 
 #include <SFML/Graphics/RectangleShape.hpp>
@@ -61,6 +62,10 @@ bool UnitManager::update(Time time)
 {
     bool updated = false;
 
+    for (const Missile::Ptr &missile : m_missiles) {
+        updated = missile->update(time) || updated;
+    }
+
     for (const Unit::Ptr &unit : m_units) {
         updated = unit->update(time) || updated;
     }
@@ -79,12 +84,17 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
     }
 
     std::vector<Unit::Ptr> visibleUnits;
-    for (const std::weak_ptr<Entity> &entity : visible) {
-        Unit::Ptr unit = Entity::asUnit(entity);
-        if (!unit) {
+    std::vector<Missile::Ptr> visibleMissiles;
+    for (const std::weak_ptr<Entity> &e : visible) {
+        std::shared_ptr<Entity> entity = e.lock();
+
+        if (entity->isUnit()) {
+            visibleUnits.push_back(Entity::asUnit(entity));
             continue;
         }
-        visibleUnits.push_back(std::move(unit));
+        if (entity->isMissile()) {
+            visibleMissiles.push_back(Entity::asMissile(entity));
+        }
     }
     if (camera->targetPosition() != m_previousCameraPos || m_outlineOverlay.getSize().x == 0) {
         updateVisibility(visibleUnits);
@@ -208,6 +218,9 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
                                           renderTarget->camera()->absoluteScreenPos(m_moveTargetMarker->position()),
                                           RenderType::Base);
 
+    for (const Missile::Ptr &missile : visibleMissiles) {
+        missile->renderer().render(*renderTarget->renderTarget_, renderTarget->camera()->absoluteScreenPos(missile->position()), RenderType::Base);
+    }
     if (m_state == State::PlacingBuilding) {
         if (!m_buildingToPlace) {
             WARN << "No building to place";
@@ -568,6 +581,48 @@ void UnitManager::assignTask(const Task &task, const Unit::Ptr &unit, const Unit
 void UnitManager::selectAttackTarget()
 {
     m_state = State::SelectingAttackTarget;
+}
+
+void UnitManager::spawnMissiles(const Unit::Ptr &source, const int unitId, const MapPos &target)
+{
+    DBG << "Spawning missile" << unitId;
+
+    const std::vector<float> &graphicDisplacement = source->data()->Combat.GraphicDisplacement;
+    const std::vector<float> &spawnArea = source->data()->Creatable.ProjectileSpawningArea;
+    DBG << source->data()->Combat.AccuracyPercent << source->data()->Creatable.SecondaryProjectileUnit;
+
+    Player::Ptr owner = source->player.lock();
+    if (!owner) {
+        WARN << "no owning player";
+        return;
+    }
+    const genie::Unit &gunit = owner->civ->unitData(unitId);
+
+    float widthDispersion = 0.;
+    if (source->data()->Creatable.TotalProjectiles > 1) {
+        widthDispersion = spawnArea[0] * Constants::TILE_SIZE / source->data()->Creatable.TotalProjectiles;
+    }
+    for (int i=0; i<source->data()->Creatable.TotalProjectiles; i++) {
+        MapPos individualTarget = target;
+        individualTarget.x += i * widthDispersion;
+        Missile::Ptr missile = std::make_shared<Missile>(gunit, owner, *this, individualTarget);
+
+        float offsetX = graphicDisplacement[0];
+        float offsetY = graphicDisplacement[1];
+
+        MapPos pos = source->position();
+        pos.x += -sin(source->angle()) * offsetX + cos(source->angle()) * offsetY;
+        pos.y +=  cos(source->angle()) * offsetX + sin(source->angle()) * offsetY;
+        pos.z += graphicDisplacement[2];
+
+        if (spawnArea[2] > 0) {
+            pos.x += (rand() % int((100 - spawnArea[2]) * spawnArea[0] * Constants::TILE_SIZE)) / 100.;
+            pos.y += (rand() % int((100 - spawnArea[2]) * spawnArea[1] * Constants::TILE_SIZE)) / 100.;
+        }
+        missile->setPosition(pos);
+        m_missiles.insert(missile);
+    }
+//    Unit::Ptr missile = UnitFactory::Inst().createUnit(unitId, source->position(), source->player.lock(), *this);
 }
 
 void UnitManager::playSound(const Unit::Ptr &unit)

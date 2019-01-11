@@ -33,6 +33,7 @@ class GraphicRender;
 struct Unit;
 struct Entity;
 struct MoveTargetMarker;
+struct Missile;
 
 typedef std::shared_ptr<Map> MapPtr;
 typedef std::shared_ptr<Entity> EntityPtr;
@@ -52,6 +53,7 @@ struct Entity: std::enable_shared_from_this<Entity>, SignalEmitter<Entity>
 
     static std::shared_ptr<Unit> asUnit(const EntityPtr &entity);
     static std::shared_ptr<Unit> asUnit(const std::weak_ptr<Entity> &entity);
+    static std::shared_ptr<Missile> asMissile(const std::shared_ptr<Entity> &entity);
 
     const std::string debugName;
 
@@ -62,13 +64,15 @@ struct Entity: std::enable_shared_from_this<Entity>, SignalEmitter<Entity>
 
     bool isUnit() const { return m_type >= Type::Unit; }
     bool isBuilding() const { return m_type >= Type::Building; }
+    bool isMissile() const { return m_type == Type::Missile; }
 
 protected:
     enum class Type {
         None,
         MoveTargetMarker,
+        Missile,
         Unit,
-        Building
+        Building,
     };
     Entity(const Type type_, const std::string &name, const MapPtr &map_);
 

@@ -154,7 +154,7 @@ ActionMove::~ActionMove()
 
 IAction::UpdateResult ActionMove::update(Time time)
 {
-    std::shared_ptr<Unit> unit = m_unit.lock();
+    Unit::Ptr unit = m_unit.lock();
     if (!unit) {
         WARN << "My unit got deleted";
         return UpdateResult::Completed;

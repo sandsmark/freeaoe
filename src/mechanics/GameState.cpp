@@ -359,13 +359,17 @@ void GameState::handleEvent(sf::Event event)
             m_unitManager->onMouseMove(renderTarget_->camera()->absoluteMapPos(mousePos));
         }
 
-        const Task targetAction = m_unitManager->defaultActionAt(mousePos, renderTarget_->camera());
-        if (!targetAction.data) {
-            m_mouseCursor.setCursor(Cursor::Normal);
-        } else if (targetAction.data->ActionType == genie::Task::Combat) {
+        if (m_unitManager->state() == UnitManager::State::SelectingAttackTarget) {
             m_mouseCursor.setCursor(Cursor::Attack);
         } else {
-            m_mouseCursor.setCursor(Cursor::Action);
+            const Task targetAction = m_unitManager->defaultActionAt(mousePos, renderTarget_->camera());
+            if (!targetAction.data) {
+                m_mouseCursor.setCursor(Cursor::Normal);
+            } else if (targetAction.data->ActionType == genie::Task::Combat) {
+                m_mouseCursor.setCursor(Cursor::Attack);
+            } else {
+                m_mouseCursor.setCursor(Cursor::Action);
+            }
         }
 
         return;
@@ -425,7 +429,6 @@ void GameState::handleEvent(sf::Event event)
 
     if (event.type == sf::Event::MouseButtonPressed) {
         if (event.mouseButton.button == sf::Mouse::Button::Left) {
-            //if (m_unitManager->onLeftClick(renderTarget_->camera()->absoluteMapPos(ScreenPos(event.mouseButton.x, event.mouseButton.y)))) {
             if (m_unitManager->onLeftClick(ScreenPos(event.mouseButton.x, event.mouseButton.y), renderTarget_->camera())) {
                 return;
             }

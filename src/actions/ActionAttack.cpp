@@ -58,14 +58,14 @@ IAction::UpdateResult ActionAttack::update(Time time)
         m_firing = false;
     }
 
-    const float angleToTarget = atan2(m_targetPosition.y - unit->position().y, m_targetPosition.x - unit->position().x);
-    unit->setAngle(angleToTarget - M_PI_2 / 2.);
+    const float angleToTarget = unit->position().toScreen().angleTo(m_targetPosition.toScreen());
+    unit->setAngle(angleToTarget);
     const float distance = unit->position().distance(m_targetPosition) / Constants::TILE_SIZE;
 
     if (distance > unit->data()->Combat.MaxRange || distance < unit->data()->Combat.MinRange) {
-        const float angleToTarget = atan2(unit->position().y - m_targetPosition.y, unit->position().x - m_targetPosition.x);
-        float targetX = m_targetPosition.x + cos(angleToTarget) * unit->data()->Combat.MinRange * Constants::TILE_SIZE * 1.1;
-        float targetY = m_targetPosition.y + sin(angleToTarget) * unit->data()->Combat.MinRange * Constants::TILE_SIZE * 1.1;
+        const float angleToTarget = unit->position().angleTo(m_targetPosition);
+        float targetX = m_targetPosition.x + cos(angleToTarget + M_PI) * unit->data()->Combat.MinRange * Constants::TILE_SIZE * 1.1;
+        float targetY = m_targetPosition.y + sin(angleToTarget + M_PI) * unit->data()->Combat.MinRange * Constants::TILE_SIZE * 1.1;
         unit->prependAction(ActionMove::moveUnitTo(unit, MapPos(targetX, targetY), m_unitManager->map(), m_unitManager));
 
         return IAction::UpdateResult::NotUpdated;
@@ -74,6 +74,11 @@ IAction::UpdateResult ActionAttack::update(Time time)
     if (timeSinceLastAttack < unit->data()->Combat.ReloadTime) {
         return IAction::UpdateResult::NotUpdated;
     }
+
+    DBG << unit->data()->Combat.BlastWidth << unit->data()->Combat.BlastWidth << unit->data()->Combat.BlastWidth << unit->data()->Combat.AccuracyPercent;
+//    for (int i=0; i<unit->data()->Creatable.TotalProjectiles; i++) {
+        m_unitManager->spawnMissiles(unit, unit->data()->Combat.ProjectileUnitID, m_targetPosition);
+//    }
 
     m_lastAttackTime = time;
 

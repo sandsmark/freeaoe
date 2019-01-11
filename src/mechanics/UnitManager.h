@@ -19,6 +19,7 @@
 #pragma once
 #include <unordered_set>
 #include "Unit.h"
+#include "Missile.h"
 #include "Building.h"
 
 #include "Map.h"
@@ -56,6 +57,12 @@ typedef std::unordered_set<Unit::Ptr> UnitSet;
 class UnitManager
 {
 public:
+    enum class State {
+        PlacingBuilding,
+        SelectingAttackTarget,
+        Default
+    };
+
     UnitManager(const UnitManager&) = delete;
     const UnitManager &operator=(const UnitManager&) = delete;
 
@@ -95,16 +102,17 @@ public:
     void assignTask(const Task &task, const Unit::Ptr &unit, const Unit::Ptr &target);
     void selectAttackTarget();
 
+    State state() const { return m_state; }
+
+    void spawnMissiles(const Unit::Ptr &source, const int unitId, const MapPos &target);
+
 private:
-    enum class State {
-        PlacingBuilding,
-        SelectingAttackTarget,
-        Default
-    } m_state = State::Default;
+     State m_state = State::Default;
 
     void updateVisibility(const std::vector<Unit::Ptr> &visibleUnits);
     void playSound(const Unit::Ptr &unit);
 
+    std::unordered_set<Missile::Ptr> m_missiles;
     std::set<Unit::Ptr, MapPositionSorter> m_units;
     std::unordered_set<Task> m_currentActions;
 

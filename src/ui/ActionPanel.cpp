@@ -388,7 +388,7 @@ void ActionPanel::addMilitaryButtons(const std::shared_ptr<Unit> &unit)
         return;
     }
 
-    if (unit->data()->Class == genie::Unit::SiegeWeapon) {
+    if (unit->data()->Class == genie::Unit::SiegeWeapon || unit->data()->Class == genie::Unit::UnpackedSiegeUnit) {
         InterfaceButton button;
         button.type = InterfaceButton::Other;
         button.interfacePage = 0;

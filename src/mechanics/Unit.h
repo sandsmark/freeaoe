@@ -106,6 +106,7 @@ struct Unit : public Entity
 
     ~Unit();
 
+    float angle() const;
     void setAngle(const float angle);
 
     void prependAction(const ActionPtr &action);

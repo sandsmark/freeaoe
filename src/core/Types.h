@@ -182,6 +182,10 @@ struct MapPos {
         return std::sqrt(lengthSquared - alongDist * alongDist);
     }
 
+    float angleTo(const MapPos &other) const {
+        return atan2(other.y - y, other.x - x);
+    }
+
     inline void round() {
         x = std::round(x);
         y = std::round(y);
@@ -238,6 +242,11 @@ struct ScreenPos {
         y(size.height)
     {}
 
+    ScreenPos(const sf::Vector2i &v) :
+        x(v.x),
+        y(v.y)
+    {}
+
 
     ScreenPos (float x_, float y_) :
         x(x_),
@@ -272,6 +281,11 @@ struct ScreenPos {
         y *= d;
         return *this;
     }
+
+    float angleTo(const ScreenPos &other) const {
+        return atan2(other.y - y, other.x - x);
+    }
+
 
     /// screen position to relative map position (map(0,0,0) is on screen(0,0)
     MapPos toMap() const;
@@ -644,7 +658,7 @@ inline LogPrinter operator <<(LogPrinter os, const Size &size) {
 inline LogPrinter operator <<(LogPrinter os, const MapPos &pos) {
     const char *separator = os.separator;
     os.separator = "";
-    os << "MapPos(x: " << pos.x << ", y: " << pos.y << ")" << separator;
+    os << "MapPos(x: " << pos.x << ", y: " << pos.y << ", z: " << pos.z << ")" << separator;
     return os;
 }
 

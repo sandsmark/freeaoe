@@ -139,8 +139,10 @@ bool GraphicRender::setGraphic(const GraphicPtr &graphic)
     m_deltas.clear();
 
     if (!graphic) {
+        WARN << "no graphic";
         return false;
     }
+    DBG << "Setting raphic" << graphic->isValid();
 
     for (const genie::GraphicDelta &deltaData : graphic->deltas()) {
         if (deltaData.GraphicID < 0) {

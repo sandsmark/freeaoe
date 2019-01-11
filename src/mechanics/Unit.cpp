@@ -293,6 +293,11 @@ void Unit::updateGraphic()
 
 }
 
+float Unit::angle() const
+{
+    return m_renderer.angle();
+}
+
 void Unit::setAngle(const float angle)
 {
     m_renderer.setAngle(angle);

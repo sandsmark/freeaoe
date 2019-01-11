@@ -21,6 +21,7 @@
 #include "render/GraphicRender.h"
 #include "mechanics/Map.h"
 #include "mechanics/Unit.h"
+#include "mechanics/Missile.h"
 
 static size_t s_entityCount = 0;
 
@@ -73,6 +74,19 @@ std::shared_ptr<Unit> Entity::asUnit(const std::weak_ptr<Entity> &entity)
     return asUnit(entity.lock());
 }
 
+std::shared_ptr<Missile> Entity::asMissile(const std::shared_ptr<Entity> &entity)
+{
+    if (!entity) {
+        return nullptr;
+    }
+
+    if (!entity->isMissile()) {
+        return nullptr;
+    }
+
+    return std::static_pointer_cast<Missile>(entity);
+}
+
 void Entity::setPosition(const MapPos &pos)
 {
 
@@ -83,7 +97,7 @@ void Entity::setPosition(const MapPos &pos)
 
     m_position = pos;
 
-    if (!isUnit()) {
+    if (!isUnit() && !isMissile()) {
         return;
     }
     if (newTileX == oldTileX && newTileY == oldTileY) {
