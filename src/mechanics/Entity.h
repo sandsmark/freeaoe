@@ -108,9 +108,13 @@ struct Corpse : public Entity
 {
     typedef std::shared_ptr<Corpse> Ptr;
 
-    Corpse(const MapPtr &map, const int corpseGraphic);
+    Corpse(const MapPtr &map, const int corpseGraphic, float decayTime);
 
     bool update(Time time) override;
 
-    bool decaying() const { return m_renderer.currentFrame() < m_renderer.frameCount() - 1; }
+    bool decaying() const { return m_decayTimeLeft > 0; }
+
+private:
+    float m_decayTimeLeft = 0.f;
+    Time m_prevTime = 0;
 };

@@ -79,12 +79,11 @@ bool UnitManager::update(Time time)
         updated = unit->update(time) || updated;
         if (unit->isDead()) {
             unitIterator = m_units.erase(unitIterator);
+            m_selectedUnits.erase(unit);
             Corpse::Ptr corpse = unit->createCorpse();
             if (corpse) {
                 m_corpses.insert(unit->createCorpse());
                 updated = true;
-            } else {
-                DBG << "failed to create corpse for" << unit->debugName;
             }
         } else {
             unitIterator++;

@@ -151,8 +151,9 @@ bool MoveTargetMarker::update(Time time)
     return updated;
 }
 
-Corpse::Corpse(const MapPtr &map, const int corpseGraphic) :
-    Entity(Type::Corpse, "Corpse", map)
+Corpse::Corpse(const MapPtr &map, const int corpseGraphic, float decayTime) :
+    Entity(Type::Corpse, "Corpse", map),
+    m_decayTimeLeft(decayTime)
 {
     m_renderer.setGraphic(AssetManager::Inst()->getGraphic(corpseGraphic));
 }
@@ -164,6 +165,10 @@ bool Corpse::update(Time time)
         return false;
     }
 
-    return Entity::update(time);
+    if (!std::isinf(m_decayTimeLeft)) {
+        m_decayTimeLeft -= (time - m_prevTime) * 0.0015;
+        m_prevTime = time;
+    }
 
+    return Entity::update(time);
 }

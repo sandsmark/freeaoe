@@ -261,7 +261,13 @@ Corpse::Ptr Unit::createCorpse() const
     }
 
     const genie::Unit &corpseData = owner->civ->unitData(m_data->DeadUnitID);
-    Corpse::Ptr corpse = std::make_shared<Corpse>(m_map.lock(), corpseData.StandingGraphic.first);
+    float decayTime = corpseData.ResourceDecay * corpseData.ResourceCapacity;
+
+    // I don't think this is really correct, but it works better
+    if (corpseData.ResourceDecay == -1 || (corpseData.ResourceDecay != 0 && corpseData.ResourceCapacity == 0)) {
+        decayTime = std::numeric_limits<float>::infinity();
+    }
+    Corpse::Ptr corpse = std::make_shared<Corpse>(m_map.lock(), corpseData.StandingGraphic.first, decayTime);
     corpse->setPosition(position());
 
     return corpse;
