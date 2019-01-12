@@ -200,6 +200,16 @@ void Unit::takeDamage(const genie::unit::AttackOrArmor &attack, const float dama
     }
 }
 
+bool Unit::isDying() const
+{
+    return m_damageTaken >= m_data->HitPoints && m_renderer.currentFrame() < m_renderer.frameCount() - 1;
+}
+
+bool Unit::isDead() const
+{
+    return m_damageTaken >= m_data->HitPoints && m_renderer.currentFrame() >= m_renderer.frameCount() - 1;
+}
+
 std::unordered_set<Task> Unit::availableActions()
 {
     std::unordered_set<Task> tasks;

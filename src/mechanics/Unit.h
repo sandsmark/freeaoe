@@ -144,8 +144,8 @@ struct Unit : public Entity
     float hitpointsLeft() const;
     float healthLeft() const;
     void takeDamage(const genie::unit::AttackOrArmor &attack, const float damageMultiplier);
-    bool isDying() const { return hitpointsLeft() <= 0 && m_renderer.currentFrame() < m_renderer.frameCount() - 1; }
-    bool isDead() const { return hitpointsLeft() <= 0 && m_renderer.currentFrame() >= m_renderer.frameCount() - 1; }
+    bool isDying() const;
+    bool isDead() const;
 
     virtual void setPosition(const MapPos &pos) override;
 

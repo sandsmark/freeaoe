@@ -295,6 +295,7 @@ bool UnitManager::onLeftClick(const ScreenPos &screenPos, const CameraPtr &camer
 {
     switch (m_state) {
     case State::PlacingBuilding: {
+        DBG << "placing bulding";
         if (!m_buildingToPlace) {
             WARN << "Can't place null building";
             return false;
@@ -455,6 +456,7 @@ void UnitManager::placeBuilding(const int unitId, const std::shared_ptr<Player> 
         return;
     }
     m_canPlaceBuilding = false;
+    m_state = State::PlacingBuilding;
 }
 
 void UnitManager::enqueueProduceUnit(const genie::Unit *unitData, const UnitSet producers)
