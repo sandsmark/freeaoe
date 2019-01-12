@@ -64,6 +64,19 @@ Unit::~Unit()
 
 bool Unit::update(Time time)
 {
+    if (hitpointsLeft() <= 0) {
+        if (!isDead()) {
+            Entity::update(time);
+            return true;
+        }
+
+        return false;
+    }
+
+    if (isDead()) {
+        return false;
+    }
+
     bool updated = false;
 
     for (Annex &annex : annexes) {
@@ -177,6 +190,9 @@ void Unit::takeDamage(const genie::unit::AttackOrArmor &attack)
         }
 
         m_damageTaken += std::max(attack.Amount - armor.Amount, 0);
+    }
+    if (hitpointsLeft() <= 0) {
+        m_renderer.setGraphic(AssetManager::Inst()->getGraphic(m_data->DyingGraphic));
     }
 }
 
