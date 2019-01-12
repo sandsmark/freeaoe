@@ -66,11 +66,13 @@ struct Entity: std::enable_shared_from_this<Entity>, SignalEmitter<Entity>
     bool isUnit() const { return m_type >= Type::Unit; }
     bool isBuilding() const { return m_type >= Type::Building; }
     bool isMissile() const { return m_type == Type::Missile; }
+    bool isCorpse() const { return m_type == Type::Corpse; }
 
 protected:
     enum class Type {
         None,
         MoveTargetMarker,
+        Corpse,
         Missile,
         Unit,
         Building,
@@ -100,4 +102,15 @@ struct MoveTargetMarker : public Entity
 
 private:
     bool m_isRunning = false;
+};
+
+struct Corpse : public Entity
+{
+    typedef std::shared_ptr<Corpse> Ptr;
+
+    Corpse(const MapPtr &map, const int corpseGraphic);
+
+    bool update(Time time) override;
+
+    bool decaying() const { return m_renderer.currentFrame() < m_renderer.frameCount() - 1; }
 };

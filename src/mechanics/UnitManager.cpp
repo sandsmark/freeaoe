@@ -73,8 +73,34 @@ bool UnitManager::update(Time time)
         }
     }
 
-    for (const Unit::Ptr &unit : m_units) {
+    std::set<Unit::Ptr>::iterator unitIterator = m_units.begin();
+    while (unitIterator != m_units.end()) {
+        Unit::Ptr unit = *unitIterator;
         updated = unit->update(time) || updated;
+        if (unit->isDead()) {
+            unitIterator = m_units.erase(unitIterator);
+            Corpse::Ptr corpse = unit->createCorpse();
+            if (corpse) {
+                m_corpses.insert(unit->createCorpse());
+                updated = true;
+            } else {
+                DBG << "failed to create corpse for" << unit->debugName;
+            }
+        } else {
+            unitIterator++;
+        }
+    }
+
+    std::unordered_set<Corpse::Ptr>::iterator corpseIterator = m_corpses.begin();
+    while (corpseIterator != m_corpses.end()) {
+        Corpse::Ptr corpse = *corpseIterator;
+        updated = corpse->update(time) || updated;
+        if (!corpse->decaying()) {
+            corpseIterator = m_corpses.erase(corpseIterator);
+            updated = true;
+        } else {
+            corpseIterator++;
+        }
     }
 
     updated = m_moveTargetMarker->update(time) || updated;
@@ -90,6 +116,19 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
         m_outlineOverlay.create(renderTarget->getSize().width, renderTarget->getSize().height);
     }
 
+    if (camera->targetPosition() != m_previousCameraPos || m_outlineOverlay.getSize().x == 0) {
+        for (const Unit::Ptr &unit : m_units) {
+            unit->isVisible = false;
+        }
+        for (const Missile::Ptr &missile : m_missiles) {
+            missile->isVisible = false;
+        }
+        for (const Corpse::Ptr &corpse : m_corpses) {
+            corpse->isVisible = false;
+        }
+        m_previousCameraPos = camera->targetPosition();
+    }
+
     std::vector<Unit::Ptr> visibleUnits;
     std::vector<Missile::Ptr> visibleMissiles;
     for (const std::weak_ptr<Entity> &e : visible) {
@@ -98,6 +137,8 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
             WARN << "got dead entity";
             continue;
         }
+
+        entity->isVisible = true;
 
         if (entity->isUnit()) {
             visibleUnits.push_back(Entity::asUnit(entity));
@@ -112,10 +153,10 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
 
             visibleMissiles.push_back(Entity::asMissile(entity));
         }
-    }
-    if (camera->targetPosition() != m_previousCameraPos || m_outlineOverlay.getSize().x == 0) {
-        updateVisibility(visibleUnits);
-        m_previousCameraPos = camera->targetPosition();
+
+        if (entity->isCorpse()) {
+            entity->renderer().render(*renderTarget->renderTarget_, camera->absoluteScreenPos(entity->position()), RenderType::Base);
+        }
     }
 
 
@@ -362,10 +403,6 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
             continue;
         }
 
-        for (const genie::Resource<float, int8_t> &p : unit->data()->ResourceStorages) {
-            DBG << p.Amount << p.Type << p.Paid;
-        }
-
         requiredInteraction = std::max(unit->data()->InteractionMode, requiredInteraction);
         containedUnits.push_back(unit);
     }
@@ -563,6 +600,12 @@ void UnitManager::updateVisibility(const std::vector<Unit::Ptr> &visibleUnits)
     // I'm lazy
     for (const Unit::Ptr &unit : m_units) {
         unit->isVisible = false;
+    }
+    for (const Missile::Ptr &missile : m_missiles) {
+        missile->isVisible = false;
+    }
+    for (const Corpse::Ptr &corpse : m_corpses) {
+        corpse->isVisible = false;
     }
     for (const Unit::Ptr &unit : visibleUnits) {
         unit->isVisible = true;

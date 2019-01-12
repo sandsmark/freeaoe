@@ -22,6 +22,7 @@
 #include "mechanics/Map.h"
 #include "mechanics/Unit.h"
 #include "mechanics/Missile.h"
+#include "genie/dat/Unit.h"
 
 static size_t s_entityCount = 0;
 
@@ -102,7 +103,7 @@ void Entity::setPosition(const MapPos &pos)
 
     m_position = pos;
 
-    if (!isUnit() && !isMissile()) {
+    if (!isUnit() && !isMissile() && !isCorpse()) {
         return;
     }
     if (newTileX == oldTileX && newTileY == oldTileY) {
@@ -148,4 +149,21 @@ bool MoveTargetMarker::update(Time time)
     }
 
     return updated;
+}
+
+Corpse::Corpse(const MapPtr &map, const int corpseGraphic) :
+    Entity(Type::Corpse, "Corpse", map)
+{
+    m_renderer.setGraphic(AssetManager::Inst()->getGraphic(corpseGraphic));
+}
+
+bool Corpse::update(Time time)
+{
+    if (!decaying()) {
+        DBG << "corpse not decaying";
+        return false;
+    }
+
+    return Entity::update(time);
+
 }

@@ -113,6 +113,7 @@ private:
     void playSound(const Unit::Ptr &unit);
 
     std::unordered_set<Missile::Ptr> m_missiles;
+    std::unordered_set<Corpse::Ptr> m_corpses;
     std::set<Unit::Ptr, MapPositionSorter> m_units;
     std::unordered_set<Task> m_currentActions;
 

@@ -144,7 +144,8 @@ struct Unit : public Entity
     float hitpointsLeft() const;
     float healthLeft() const;
     void takeDamage(const genie::unit::AttackOrArmor &attack);
-    bool isDead() const { return hitpointsLeft() <= 0 && m_renderer.currentFrame() < m_renderer.frameCount() - 1; }
+    bool isDying() const { return hitpointsLeft() <= 0 && m_renderer.currentFrame() < m_renderer.frameCount() - 1; }
+    bool isDead() const { return hitpointsLeft() <= 0 && m_renderer.currentFrame() >= m_renderer.frameCount() - 1; }
 
     virtual void setPosition(const MapPos &pos) override;
 
@@ -152,6 +153,8 @@ struct Unit : public Entity
     const genie::Unit *data() const {return m_data; }
 
     int activeMissiles = 0;
+
+    Corpse::Ptr createCorpse() const;
 
 protected:
     Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager, const Type m_type);

@@ -64,13 +64,8 @@ Unit::~Unit()
 
 bool Unit::update(Time time)
 {
-    if (hitpointsLeft() <= 0) {
-        if (!isDead()) {
-            Entity::update(time);
-            return true;
-        }
-
-        return false;
+    if (isDying()) {
+        return Entity::update(time);
     }
 
     if (isDead()) {
@@ -184,6 +179,10 @@ float Unit::creationProgress() const
 
 void Unit::takeDamage(const genie::unit::AttackOrArmor &attack)
 {
+    if (hitpointsLeft() <= 0) {
+        return;
+    }
+
     for (const genie::unit::AttackOrArmor &armor : m_data->Combat.Armours) {
         if (attack.Class != armor.Class) {
             continue;
@@ -191,7 +190,9 @@ void Unit::takeDamage(const genie::unit::AttackOrArmor &attack)
 
         m_damageTaken += std::max(attack.Amount - armor.Amount, 0);
     }
+    DBG << debugName << m_damageTaken;
     if (hitpointsLeft() <= 0) {
+        DBG << "setting" << m_data->DyingGraphic;
         m_renderer.setGraphic(AssetManager::Inst()->getGraphic(m_data->DyingGraphic));
     }
 }
@@ -249,6 +250,21 @@ void Unit::setUnitData(const genie::Unit &data_)
     }
 
     m_renderer.setGraphic(defaultGraphics);
+}
+
+Corpse::Ptr Unit::createCorpse() const
+{
+    Player::Ptr owner = player.lock();
+    if (!owner) {
+        WARN << "no owner for corpse";
+        return nullptr;
+    }
+
+    const genie::Unit &corpseData = owner->civ->unitData(m_data->DeadUnitID);
+    Corpse::Ptr corpse = std::make_shared<Corpse>(m_map.lock(), corpseData.StandingGraphic.first);
+    corpse->setPosition(position());
+
+    return corpse;
 }
 
 float Unit::hitpointsLeft() const
