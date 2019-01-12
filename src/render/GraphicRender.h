@@ -29,6 +29,7 @@ class GraphicRender;
 enum class RenderType {
     Shadow,
     Base,
+    BuildingAlpha,
     Outline,
     ConstructAvailable,
     ConstructUnavailable

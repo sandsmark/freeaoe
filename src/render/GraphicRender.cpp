@@ -111,6 +111,13 @@ void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos scree
         case RenderType::Base:
             sprite.setTexture(m_graphic->texture(m_currentFrame, m_angle, m_playerId, ImageType::Base));
             break;
+        case RenderType::BuildingAlpha:
+            sprite.setTexture(m_graphic->texture(m_currentFrame, m_angle, m_playerId, ImageType::Base));
+            blendMode = sf::BlendAlpha;
+            blendMode.alphaSrcFactor = sf::BlendMode::SrcAlpha;
+            blendMode.colorDstFactor = sf::BlendMode::DstColor;
+            blendMode.colorSrcFactor = sf::BlendMode::DstColor;
+            break;
         case RenderType::Outline:
             sprite.setTexture(m_graphic->texture(m_currentFrame, m_angle, m_playerId, ImageType::Outline));
             blendMode = sf::BlendAlpha;

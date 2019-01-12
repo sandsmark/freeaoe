@@ -166,7 +166,7 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
             continue;
         }
         const ScreenPos unitPosition = camera->absoluteScreenPos(unit->position());
-        unit->renderer().render(m_outlineOverlay, unitPosition, RenderType::Base);
+        unit->renderer().render(m_outlineOverlay, unitPosition, RenderType::BuildingAlpha);
     }
 
     for (const Unit::Ptr &unit : visibleUnits) {
@@ -215,14 +215,15 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
             m_outlineOverlay.draw(rect);
         }
 
-        if (!(unit->data()->OcclusionMode & genie::Unit::ShowOutline)) {
-            continue;
-        }
-
         const ScreenPos pos = renderTarget->camera()->absoluteScreenPos(unit->position());
         unit->renderer().render(*renderTarget->renderTarget_,
                                 pos,
                                 RenderType::Base);
+
+        if (!(unit->data()->OcclusionMode & genie::Unit::ShowOutline)) {
+            continue;
+        }
+
 
 #ifdef DEBUG
         ActionPtr action = unit->currentAction();
@@ -246,7 +247,14 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
     }
 
     m_outlineOverlay.display();
-    renderTarget->draw(m_outlineOverlay.getTexture(), ScreenPos(0, 0));
+
+    {
+        sf::Sprite sprite;
+        sf::BlendMode blendMode;
+        blendMode = sf::BlendAdd;
+        sprite.setTexture(m_outlineOverlay.getTexture());
+        renderTarget->renderTarget_->draw(sprite, blendMode);
+    }
 
 #ifdef DEBUG
     for (size_t i=0; i<ActionMove::testedPoints.size(); i++) {
