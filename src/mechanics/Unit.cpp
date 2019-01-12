@@ -177,22 +177,25 @@ float Unit::creationProgress() const
     return m_creationProgress / float(m_data->Creatable.TrainTime);
 }
 
-void Unit::takeDamage(const genie::unit::AttackOrArmor &attack)
+void Unit::takeDamage(const genie::unit::AttackOrArmor &attack, const float damageMultiplier)
 {
     if (hitpointsLeft() <= 0) {
         return;
     }
 
+    float newDamage = 0;
     for (const genie::unit::AttackOrArmor &armor : m_data->Combat.Armours) {
         if (attack.Class != armor.Class) {
             continue;
         }
 
-        m_damageTaken += std::max(attack.Amount - armor.Amount, 0);
+        newDamage += std::max(attack.Amount - armor.Amount, 0);
     }
-    DBG << debugName << m_damageTaken;
+    newDamage *= damageMultiplier;
+    newDamage = std::max(newDamage, 1.f);
+    m_damageTaken += newDamage;
+
     if (hitpointsLeft() <= 0) {
-        DBG << "setting" << m_data->DyingGraphic;
         m_renderer.setGraphic(AssetManager::Inst()->getGraphic(m_data->DyingGraphic));
     }
 }

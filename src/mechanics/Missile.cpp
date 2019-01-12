@@ -7,12 +7,14 @@
 
 #include <genie/dat/Unit.h>
 
-Missile::Missile(const genie::Unit &data, const Unit::Ptr &sourceUnit, const MapPos &target) :
+Missile::Missile(const genie::Unit &data, const Unit::Ptr &sourceUnit, const MapPos &target, const Unit::Ptr &targetUnit) :
     Entity(Type::Missile, LanguageManager::getString(data.LanguageDLLName) + " (" + std::to_string(data.ID) + ")", sourceUnit->map()),
     m_sourceUnit(sourceUnit),
+    m_targetUnit(targetUnit),
     m_data(data),
     m_targetPosition(target)
 {
+    m_startingElevation = sourceUnit->position().z;
     m_attacks = sourceUnit->data()->Combat.Attacks;
     sourceUnit->activeMissiles++;
     DBG << sourceUnit->activeMissiles;
@@ -82,7 +84,6 @@ bool Missile::update(Time time)
         m_zVelocity = m_data.Missile.ProjectileArc * distance / timeToApex;
         m_zAcceleration = m_zVelocity / timeToApex;
         m_previousUpdateTime = time;
-        m_startingElevation = position().z;
         return false;
     }
 
@@ -111,31 +112,48 @@ bool Missile::update(Time time)
 
     std::vector<Unit::Ptr> hitUnits;
 
-    for (int dx = tileX-1; dx<=tileX+1; dx++) {
-        for (int dy = tileY-1; dy<=tileY+1; dy++) {
-            const std::vector<std::weak_ptr<Entity>> &entities = map->entitiesAt(dx, dy);
-            if (entities.empty()) {
-                continue;
-            }
+    if (m_blastType == DamageTargetOnly) {
+        Unit::Ptr targetUnit = m_targetUnit.lock();
+        if (!targetUnit) {
+            return true;
+        }
+        const float xSize = (targetUnit->data()->Size.x + m_data.Size.x) * Constants::TILE_SIZE;
+        const float ySize = (targetUnit->data()->Size.y + m_data.Size.y) * Constants::TILE_SIZE;
+        const float xDistance = std::abs(targetUnit->position().x - newPos.x);
+        const float yDistance = std::abs(targetUnit->position().y - newPos.y);
 
-            for (const std::weak_ptr<Entity> &entity : entities) {
-                Unit::Ptr otherUnit = Entity::asUnit(entity);
-                if (IS_UNLIKELY(!otherUnit)) {
+        if (xDistance > xSize || yDistance > ySize) {
+            return true;
+        }
+
+        hitUnits.push_back(targetUnit);
+    } else {
+        for (int dx = tileX-1; dx<=tileX+1; dx++) {
+            for (int dy = tileY-1; dy<=tileY+1; dy++) {
+                const std::vector<std::weak_ptr<Entity>> &entities = map->entitiesAt(dx, dy);
+                if (entities.empty()) {
                     continue;
                 }
 
-                if (newPos.z > otherUnit->data()->Size.z) {
-                    continue;
-                }
+                for (const std::weak_ptr<Entity> &entity : entities) {
+                    Unit::Ptr otherUnit = Entity::asUnit(entity);
+                    if (IS_UNLIKELY(!otherUnit)) {
+                        continue;
+                    }
 
-                const float xSize = (otherUnit->data()->Size.x + m_data.Size.x + m_blastRadius) * Constants::TILE_SIZE;
-                const float ySize = (otherUnit->data()->Size.y + m_data.Size.y + m_blastRadius) * Constants::TILE_SIZE;
-                const float xDistance = std::abs(otherUnit->position().x - newPos.x);
-                const float yDistance = std::abs(otherUnit->position().y - newPos.y);
+                    if (newPos.z > otherUnit->data()->Size.z) {
+                        continue;
+                    }
 
-                if (IS_UNLIKELY(xDistance < xSize && yDistance < ySize)) {
-                    hitUnits.push_back(otherUnit);
-                    break;
+                    const float xSize = (otherUnit->data()->Size.x + m_data.Size.x + m_blastRadius) * Constants::TILE_SIZE;
+                    const float ySize = (otherUnit->data()->Size.y + m_data.Size.y + m_blastRadius) * Constants::TILE_SIZE;
+                    const float xDistance = std::abs(otherUnit->position().x - newPos.x);
+                    const float yDistance = std::abs(otherUnit->position().y - newPos.y);
+
+                    if (IS_UNLIKELY(xDistance < xSize && yDistance < ySize)) {
+                        hitUnits.push_back(otherUnit);
+                        break;
+                    }
                 }
             }
         }
@@ -145,13 +163,36 @@ bool Missile::update(Time time)
         return true;
     }
 
+    // Only pick the closest
+    if (m_blastType != DamageNearby) {
+        Unit::Ptr closestUnit;
+        float closestDistance = std::numeric_limits<float>::infinity();
+        for (const Unit::Ptr &unit : hitUnits) {
+            const float distance = unit->position().distance(position());
+            if (distance < closestDistance || !closestUnit) {
+                closestDistance = distance;
+                closestUnit = unit;
+            }
+        }
+        hitUnits.clear();
+        hitUnits.push_back(closestUnit);
+    }
+
     m_isFlying = false;
     m_renderer.setGraphic(AssetManager::Inst()->getGraphic(m_data.DyingGraphic));
 
     for (Unit::Ptr &hitUnit : hitUnits) {
-        DBG << "hit a unit" << hitUnit->debugName;
+        if (m_blastType != DamageTrees && hitUnit->data()->Class == genie::Unit::Tree) {
+            continue;
+        }
+
+        float damageMultiplier = 1.f;
+        if (hitUnit->position().z < m_startingElevation) {
+            damageMultiplier = 3.f/2.f;
+        }
+        DBG << "hit a unit" << hitUnit->debugName << "damage multiplier" << damageMultiplier;
         for (const genie::unit::AttackOrArmor &attack : m_attacks) {
-            hitUnit->takeDamage(attack);
+            hitUnit->takeDamage(attack, damageMultiplier);
         }
     }
 

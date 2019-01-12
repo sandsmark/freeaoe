@@ -22,7 +22,7 @@ public:
 
     typedef std::shared_ptr<Missile> Ptr;
 
-    Missile(const genie::Unit &data, const Unit::Ptr &sourceUnit, const MapPos &target);
+    Missile(const genie::Unit &data, const Unit::Ptr &sourceUnit, const MapPos &target, const Unit::Ptr &targetUnit);
 
     void setBlastType(const BlastType type, const float radius);
 
@@ -34,6 +34,7 @@ public:
 private:
     bool m_isFlying = true;
     std::weak_ptr<Unit> m_sourceUnit;
+    std::weak_ptr<Unit> m_targetUnit;
     const genie::Unit &m_data;
     MapPos m_targetPosition;
     float m_zVelocity = 0.f;
