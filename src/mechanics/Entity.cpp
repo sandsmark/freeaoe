@@ -103,7 +103,7 @@ void Entity::setPosition(const MapPos &pos)
 
     m_position = pos;
 
-    if (!isUnit() && !isMissile() && !isCorpse()) {
+    if (!isUnit() && !isMissile() && !isDecayingEntity()) {
         return;
     }
     if (newTileX == oldTileX && newTileY == oldTileY) {
@@ -151,14 +151,14 @@ bool MoveTargetMarker::update(Time time)
     return updated;
 }
 
-Corpse::Corpse(const MapPtr &map, const int corpseGraphic, float decayTime) :
-    Entity(Type::Corpse, "Corpse", map),
+DecayingEntity::DecayingEntity(const MapPtr &map, const int graphicId, float decayTime) :
+    Entity(Type::Decaying, "Eye Candy Things", map),
     m_decayTimeLeft(decayTime)
 {
-    m_renderer.setGraphic(AssetManager::Inst()->getGraphic(corpseGraphic));
+    m_renderer.setGraphic(AssetManager::Inst()->getGraphic(graphicId));
 }
 
-bool Corpse::update(Time time)
+bool DecayingEntity::update(Time time)
 {
     if (!decaying()) {
         DBG << "corpse not decaying";

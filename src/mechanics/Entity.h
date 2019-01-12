@@ -66,13 +66,13 @@ struct Entity: std::enable_shared_from_this<Entity>, SignalEmitter<Entity>
     bool isUnit() const { return m_type >= Type::Unit; }
     bool isBuilding() const { return m_type >= Type::Building; }
     bool isMissile() const { return m_type == Type::Missile; }
-    bool isCorpse() const { return m_type == Type::Corpse; }
+    bool isDecayingEntity() const { return m_type == Type::Decaying; }
 
 protected:
     enum class Type {
         None,
         MoveTargetMarker,
-        Corpse,
+        Decaying,
         Missile,
         Unit,
         Building,
@@ -104,15 +104,16 @@ private:
     bool m_isRunning = false;
 };
 
-struct Corpse : public Entity
+/// Dumb name, but is corpses and smoke trails and stuff
+struct DecayingEntity : public Entity
 {
-    typedef std::shared_ptr<Corpse> Ptr;
+    typedef std::shared_ptr<DecayingEntity> Ptr;
 
-    Corpse(const MapPtr &map, const int corpseGraphic, float decayTime);
+    DecayingEntity(const MapPtr &map, const int graphicId, float decayTime);
 
     bool update(Time time) override;
 
-    bool decaying() const { return m_decayTimeLeft > 0; }
+    bool decaying() const { return m_decayTimeLeft > 0 || m_renderer.currentFrame() < m_renderer.frameCount() - 1; }
 
 private:
     float m_decayTimeLeft = 0.f;

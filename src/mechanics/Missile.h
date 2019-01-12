@@ -35,11 +35,14 @@ private:
     bool m_isFlying = true;
     std::weak_ptr<Unit> m_sourceUnit;
     std::weak_ptr<Unit> m_targetUnit;
+    std::weak_ptr<Player> m_player;
+    UnitManager &m_unitManager;
     const genie::Unit &m_data;
     MapPos m_targetPosition;
     float m_zVelocity = 0.f;
     float m_zAcceleration = 0.f;
     Time m_previousUpdateTime = 0.f;
+    Time m_previousSmokeTime = 0.f;
     float m_angle = 0.f;
     float m_startingElevation = 0;
     float m_blastRadius = 0.f;

@@ -255,7 +255,7 @@ void Unit::setUnitData(const genie::Unit &data_)
     m_renderer.setGraphic(defaultGraphics);
 }
 
-Corpse::Ptr Unit::createCorpse() const
+DecayingEntity::Ptr Unit::createCorpse() const
 {
     Player::Ptr owner = player.lock();
     if (!owner) {
@@ -270,7 +270,7 @@ Corpse::Ptr Unit::createCorpse() const
     if (corpseData.ResourceDecay == -1 || (corpseData.ResourceDecay != 0 && corpseData.ResourceCapacity == 0)) {
         decayTime = std::numeric_limits<float>::infinity();
     }
-    Corpse::Ptr corpse = std::make_shared<Corpse>(m_map.lock(), corpseData.StandingGraphic.first, decayTime);
+    DecayingEntity::Ptr corpse = std::make_shared<DecayingEntity>(m_map.lock(), corpseData.StandingGraphic.first, decayTime);
     corpse->setPosition(position());
 
     return corpse;

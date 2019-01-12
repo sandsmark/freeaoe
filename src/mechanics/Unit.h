@@ -154,7 +154,9 @@ struct Unit : public Entity
 
     int activeMissiles = 0;
 
-    Corpse::Ptr createCorpse() const;
+    DecayingEntity::Ptr createCorpse() const;
+
+    UnitManager &unitManager() const { return m_unitManager; }
 
 protected:
     Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager, const Type m_type);

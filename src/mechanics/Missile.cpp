@@ -3,6 +3,8 @@
 #include "resource/LanguageManager.h"
 #include "mechanics/UnitManager.h"
 #include "mechanics/Map.h"
+#include "mechanics/Player.h"
+#include "mechanics/Civilization.h"
 #include "core/Constants.h"
 
 #include <genie/dat/Unit.h>
@@ -11,6 +13,8 @@ Missile::Missile(const genie::Unit &data, const Unit::Ptr &sourceUnit, const Map
     Entity(Type::Missile, LanguageManager::getString(data.LanguageDLLName) + " (" + std::to_string(data.ID) + ")", sourceUnit->map()),
     m_sourceUnit(sourceUnit),
     m_targetUnit(targetUnit),
+    m_player(sourceUnit->player),
+    m_unitManager(sourceUnit->unitManager()),
     m_data(data),
     m_targetPosition(target)
 {
@@ -84,6 +88,7 @@ bool Missile::update(Time time)
         m_zVelocity = m_data.Missile.ProjectileArc * distance / timeToApex;
         m_zAcceleration = m_zVelocity / timeToApex;
         m_previousUpdateTime = time;
+        m_previousSmokeTime = time;
         return false;
     }
 
@@ -106,6 +111,19 @@ bool Missile::update(Time time)
         DBG << "out of bounds";
         m_isFlying = false;
         return false;
+    }
+
+    if (m_data.Moving.TrackingUnit != -1&& rand() % 100 < m_data.Moving.TrackingUnitDensity * 100 * 0.15) {
+//        DBG << (m_data.Moving.TrackingUnitDensity / 0.015) << time - m_previousSmokeTime ;
+        m_previousSmokeTime = time;
+        Player::Ptr player = m_player.lock();
+        if (player) {
+            const genie::Unit &trailingData = player->civ->unitData(m_data.Moving.TrackingUnit);
+            DecayingEntity::Ptr trailingUnit = std::make_shared<DecayingEntity>(m_map.lock(), trailingData.StandingGraphic.first, 0.f);
+            trailingUnit->setPosition(position());
+            m_unitManager.addDecayingEntity(trailingUnit);
+        }
+
     }
 
     setPosition(newPos);
@@ -178,8 +196,10 @@ bool Missile::update(Time time)
         hitUnits.push_back(closestUnit);
     }
 
-    m_isFlying = false;
-    m_renderer.setGraphic(AssetManager::Inst()->getGraphic(m_data.DyingGraphic));
+    if (m_data.Missile.HitMode) {
+        m_isFlying = false;
+        m_renderer.setGraphic(AssetManager::Inst()->getGraphic(m_data.DyingGraphic));
+    }
 
     for (Unit::Ptr &hitUnit : hitUnits) {
         if (m_blastType != DamageTrees && hitUnit->data()->Class == genie::Unit::Tree) {

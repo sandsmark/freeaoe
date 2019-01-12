@@ -80,9 +80,9 @@ bool UnitManager::update(Time time)
         if (unit->isDead()) {
             unitIterator = m_units.erase(unitIterator);
             m_selectedUnits.erase(unit);
-            Corpse::Ptr corpse = unit->createCorpse();
+            DecayingEntity::Ptr corpse = unit->createCorpse();
             if (corpse) {
-                m_corpses.insert(unit->createCorpse());
+                m_decayingEntities.insert(unit->createCorpse());
                 updated = true;
             }
         } else {
@@ -90,15 +90,15 @@ bool UnitManager::update(Time time)
         }
     }
 
-    std::unordered_set<Corpse::Ptr>::iterator corpseIterator = m_corpses.begin();
-    while (corpseIterator != m_corpses.end()) {
-        Corpse::Ptr corpse = *corpseIterator;
-        updated = corpse->update(time) || updated;
-        if (!corpse->decaying()) {
-            corpseIterator = m_corpses.erase(corpseIterator);
+    std::unordered_set<DecayingEntity::Ptr>::iterator decayingEntityIterator = m_decayingEntities.begin();
+    while (decayingEntityIterator != m_decayingEntities.end()) {
+        DecayingEntity::Ptr entity = *decayingEntityIterator;
+        updated = entity->update(time) || updated;
+        if (!entity->decaying()) {
+            decayingEntityIterator = m_decayingEntities.erase(decayingEntityIterator);
             updated = true;
         } else {
-            corpseIterator++;
+            decayingEntityIterator++;
         }
     }
 
@@ -122,8 +122,8 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
         for (const Missile::Ptr &missile : m_missiles) {
             missile->isVisible = false;
         }
-        for (const Corpse::Ptr &corpse : m_corpses) {
-            corpse->isVisible = false;
+        for (const DecayingEntity::Ptr &entity : m_decayingEntities) {
+            entity->isVisible = false;
         }
         m_previousCameraPos = camera->targetPosition();
     }
@@ -153,7 +153,7 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
             visibleMissiles.push_back(Entity::asMissile(entity));
         }
 
-        if (entity->isCorpse()) {
+        if (entity->isDecayingEntity()) {
             entity->renderer().render(*renderTarget->renderTarget_, camera->absoluteScreenPos(entity->position()), RenderType::Base);
         }
     }
@@ -603,7 +603,7 @@ void UnitManager::updateVisibility(const std::vector<Unit::Ptr> &visibleUnits)
     for (const Missile::Ptr &missile : m_missiles) {
         missile->isVisible = false;
     }
-    for (const Corpse::Ptr &corpse : m_corpses) {
+    for (const DecayingEntity::Ptr &corpse : m_decayingEntities) {
         corpse->isVisible = false;
     }
     for (const Unit::Ptr &unit : visibleUnits) {

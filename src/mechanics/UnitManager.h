@@ -105,6 +105,7 @@ public:
     State state() const { return m_state; }
 
     void addMissile(const Missile::Ptr &missile) { m_missiles.insert(missile); }
+    void addDecayingEntity(const DecayingEntity::Ptr &entity) { m_decayingEntities.insert(entity); }
 
 private:
      State m_state = State::Default;
@@ -113,7 +114,7 @@ private:
     void playSound(const Unit::Ptr &unit);
 
     std::unordered_set<Missile::Ptr> m_missiles;
-    std::unordered_set<Corpse::Ptr> m_corpses;
+    std::unordered_set<DecayingEntity::Ptr> m_decayingEntities;
     std::set<Unit::Ptr, MapPositionSorter> m_units;
     std::unordered_set<Task> m_currentActions;
 
