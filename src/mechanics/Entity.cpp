@@ -87,6 +87,11 @@ std::shared_ptr<Missile> Entity::asMissile(const std::shared_ptr<Entity> &entity
     return std::static_pointer_cast<Missile>(entity);
 }
 
+MapPtr Entity::map() const
+{
+    return m_map.lock();
+}
+
 void Entity::setPosition(const MapPos &pos)
 {
 

@@ -104,7 +104,7 @@ public:
 
     State state() const { return m_state; }
 
-    void spawnMissiles(const Unit::Ptr &source, const int unitId, const MapPos &target);
+    void addMissile(const Missile::Ptr &missile) { m_missiles.insert(missile); }
 
 private:
      State m_state = State::Default;

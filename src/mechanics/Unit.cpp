@@ -169,6 +169,17 @@ float Unit::creationProgress() const
     return m_creationProgress / float(m_data->Creatable.TrainTime);
 }
 
+void Unit::takeDamage(const genie::unit::AttackOrArmor &attack)
+{
+    for (const genie::unit::AttackOrArmor &armor : m_data->Combat.Armours) {
+        if (attack.Class != armor.Class) {
+            continue;
+        }
+
+        m_damageTaken += std::max(attack.Amount - armor.Amount, 0);
+    }
+}
+
 std::unordered_set<Task> Unit::availableActions()
 {
     std::unordered_set<Task> tasks;
@@ -224,9 +235,19 @@ void Unit::setUnitData(const genie::Unit &data_)
     m_renderer.setGraphic(defaultGraphics);
 }
 
+float Unit::hitpointsLeft() const
+{
+    return std::max((data()->HitPoints * creationProgress() - m_damageTaken), 0.f);
+}
+
 float Unit::healthLeft() const
 {
-    return (data()->HitPoints * creationProgress() - damageTaken) / data()->HitPoints;
+    const float healthpoints = hitpointsLeft();
+    if (healthpoints <= 0) {
+        return 0.f;
+    }
+
+    return healthpoints / data()->HitPoints;
 }
 
 int Unit::taskGraphicId(const genie::Task::ActionTypes taskType, const IAction::UnitState state)

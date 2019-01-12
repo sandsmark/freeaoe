@@ -164,14 +164,14 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
             rect.setOutlineColor(sf::Color::Transparent);
             rect.setPosition(pos);
 
-            if (unit->creationProgress() < 1.) {
+            if (unit->healthLeft() < 1.) {
                 rect.setFillColor(sf::Color::Red);
                 rect.setSize(sf::Vector2f(Constants::TILE_SIZE_HORIZONTAL / 4., 2));
                 m_outlineOverlay.draw(rect);
             }
 
             rect.setFillColor(sf::Color::Green);
-            rect.setSize(sf::Vector2f(unit->creationProgress() * Constants::TILE_SIZE_HORIZONTAL / 4., 2));
+            rect.setSize(sf::Vector2f(unit->healthLeft() * Constants::TILE_SIZE_HORIZONTAL / 4., 2));
             m_outlineOverlay.draw(rect);
         }
 
@@ -598,50 +598,6 @@ void UnitManager::assignTask(const Task &task, const Unit::Ptr &unit, const Unit
 void UnitManager::selectAttackTarget()
 {
     m_state = State::SelectingAttackTarget;
-}
-
-void UnitManager::spawnMissiles(const Unit::Ptr &source, const int unitId, const MapPos &target)
-{
-    DBG << "Spawning missile" << unitId;
-
-    const std::vector<float> &graphicDisplacement = source->data()->Combat.GraphicDisplacement;
-    const std::vector<float> &spawnArea = source->data()->Creatable.ProjectileSpawningArea;
-    DBG << source->data()->Combat.AccuracyPercent << source->data()->Creatable.SecondaryProjectileUnit;
-
-    Player::Ptr owner = source->player.lock();
-    if (!owner) {
-        WARN << "no owning player";
-        return;
-    }
-    const genie::Unit &gunit = owner->civ->unitData(unitId);
-
-    float widthDispersion = 0.;
-    if (source->data()->Creatable.TotalProjectiles > 1) {
-        widthDispersion = spawnArea[0] * Constants::TILE_SIZE / source->data()->Creatable.TotalProjectiles;
-    }
-    for (int i=0; i<source->data()->Creatable.TotalProjectiles; i++) {
-        MapPos individualTarget = target;
-        individualTarget.x +=  -cos(source->angle()) * i*widthDispersion - spawnArea[0]/2.;
-        individualTarget.y +=  sin(source->angle()) * i*widthDispersion - spawnArea[1]/2.;
-        Missile::Ptr missile = std::make_shared<Missile>(gunit, owner, *this, individualTarget);
-        missile->setBlastType(Missile::BlastType(source->data()->Combat.BlastAttackLevel), source->data()->Combat.BlastWidth);
-
-        float offsetX = graphicDisplacement[0];
-        float offsetY = graphicDisplacement[1];
-
-        MapPos pos = source->position();
-        pos.x += -sin(source->angle()) * offsetX + cos(source->angle()) * offsetX;
-        pos.y +=  cos(source->angle()) * offsetY + sin(source->angle()) * offsetY;
-        pos.z += graphicDisplacement[2];
-
-        if (spawnArea[2] > 0) {
-            pos.x += (rand() % int((100 - spawnArea[2]) * spawnArea[0] * Constants::TILE_SIZE)) / 100.;
-            pos.y += (rand() % int((100 - spawnArea[2]) * spawnArea[1] * Constants::TILE_SIZE)) / 100.;
-        }
-        missile->setPosition(pos);
-        m_missiles.insert(missile);
-    }
-//    Unit::Ptr missile = UnitFactory::Inst().createUnit(unitId, source->position(), source->player.lock(), *this);
 }
 
 void UnitManager::playSound(const Unit::Ptr &unit)

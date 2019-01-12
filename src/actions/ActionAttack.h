@@ -13,6 +13,10 @@ public:
     UpdateResult update(Time time) override;
 
 private:
+    void spawnMissiles(const Unit::Ptr &source, const int unitId, const MapPos &target);
+    bool unitFiresMissiles(const Unit::Ptr &unit);
+    int missilesUnitCanFire(const Unit::Ptr &source);
+
     MapPos m_targetPosition;
     std::weak_ptr<Unit> m_targetUnit;
     Time m_lastAttackTime = 0;

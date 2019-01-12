@@ -25,6 +25,7 @@
 #include <map>
 
 #include <genie/dat/UnitCommand.h>
+#include <genie/dat/unit/AttackOrArmor.h>
 
 class Civilization;
 struct Player;
@@ -133,21 +134,23 @@ struct Unit : public Entity
 
     virtual ScreenRect rect() const;
 
-    float damageTaken = 0.f;
-
     std::unordered_set<Task> availableActions();
     Task findMatchingTask(const genie::Task::ActionTypes &m_type);
 
     virtual void setCreationProgress(float progress);
     void increaseCreationProgress(float progress);
     float creationProgress() const;
+//    float damageTaken() const { return std::max(m_damageTaken, healthLeft()); }
+    float hitpointsLeft() const;
+    float healthLeft() const;
+    void takeDamage(const genie::unit::AttackOrArmor &attack);
 
     virtual void setPosition(const MapPos &pos) override;
 
     void setUnitData(const genie::Unit &data_);
     const genie::Unit *data() const {return m_data; }
 
-    float healthLeft() const;
+    int activeMissiles = 0;
 
 protected:
     Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager, const Type m_type);
@@ -164,6 +167,8 @@ protected:
     float m_creationProgress = 0.f;
 
     UnitManager &m_unitManager;
+
+    float m_damageTaken = 0.f;
 };
 
 

@@ -2,6 +2,8 @@
 #define MISSILE_H
 
 #include "Entity.h"
+#include "Unit.h"
+#include "genie/dat/unit/AttackOrArmor.h"
 
 class UnitManager;
 struct Player;
@@ -16,9 +18,11 @@ public:
         DamageTargetOnly = 3
     };
 
+    ~Missile();
+
     typedef std::shared_ptr<Missile> Ptr;
 
-    Missile(const genie::Unit &data, const std::shared_ptr<Player> &player, UnitManager &unitManager, const MapPos &target);
+    Missile(const genie::Unit &data, const Unit::Ptr &sourceUnit, const MapPos &target);
 
     void setBlastType(const BlastType type, const float radius);
 
@@ -29,7 +33,7 @@ public:
 
 private:
     bool m_isFlying = true;
-    std::weak_ptr<Player> m_player;
+    std::weak_ptr<Unit> m_sourceUnit;
     const genie::Unit &m_data;
     MapPos m_targetPosition;
     float m_zVelocity = 0.f;
@@ -39,6 +43,7 @@ private:
     float m_startingElevation = 0;
     float m_blastRadius = 0.f;
     BlastType m_blastType = DamageTargetOnly;
+    std::vector<genie::unit::AttackOrArmor> m_attacks;
 };
 
 #endif // MISSILE_H

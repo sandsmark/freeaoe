@@ -7,15 +7,27 @@
 
 #include <genie/dat/Unit.h>
 
-Missile::Missile(const genie::Unit &data, const std::shared_ptr<Player> &player, UnitManager &unitManager, const MapPos &target) :
-    Entity(Type::Missile, LanguageManager::getString(data.LanguageDLLName) + " (" + std::to_string(data.ID) + ")", unitManager.map()),
-    m_player(player),
+Missile::Missile(const genie::Unit &data, const Unit::Ptr &sourceUnit, const MapPos &target) :
+    Entity(Type::Missile, LanguageManager::getString(data.LanguageDLLName) + " (" + std::to_string(data.ID) + ")", sourceUnit->map()),
+    m_sourceUnit(sourceUnit),
     m_data(data),
     m_targetPosition(target)
 {
+    m_attacks = sourceUnit->data()->Combat.Attacks;
+    sourceUnit->activeMissiles++;
+    DBG << sourceUnit->activeMissiles;
     DBG << "Firing at" << target;
     defaultGraphics = AssetManager::Inst()->getGraphic(data.StandingGraphic.first);
     m_renderer.setGraphic(defaultGraphics);
+}
+
+Missile::~Missile()
+{
+    Unit::Ptr sourceUnit = m_sourceUnit.lock();
+    if (sourceUnit) {
+        sourceUnit->activeMissiles--;
+        DBG << sourceUnit->activeMissiles;
+    }
 }
 
 void Missile::setBlastType(const BlastType type, const float radius)
@@ -97,10 +109,10 @@ bool Missile::update(Time time)
 
     setPosition(newPos);
 
-    Unit::Ptr hitUnit;
+    std::vector<Unit::Ptr> hitUnits;
 
-    for (int dx = tileX-1; dx<=tileX+1 && hitUnit == nullptr; dx++) {
-        for (int dy = tileY-1; dy<=tileY+1 && hitUnit == nullptr; dy++) {
+    for (int dx = tileX-1; dx<=tileX+1; dx++) {
+        for (int dy = tileY-1; dy<=tileY+1; dy++) {
             const std::vector<std::weak_ptr<Entity>> &entities = map->entitiesAt(dx, dy);
             if (entities.empty()) {
                 continue;
@@ -122,21 +134,26 @@ bool Missile::update(Time time)
                 const float yDistance = std::abs(otherUnit->position().y - newPos.y);
 
                 if (IS_UNLIKELY(xDistance < xSize && yDistance < ySize)) {
-                    hitUnit = otherUnit;
+                    hitUnits.push_back(otherUnit);
                     break;
                 }
             }
         }
     }
 
-    if (!hitUnit) {
+    if (hitUnits.empty()) {
         return true;
     }
 
     m_isFlying = false;
     m_renderer.setGraphic(AssetManager::Inst()->getGraphic(m_data.DyingGraphic));
 
-    DBG << "hit a unit" << hitUnit->debugName;
+    for (Unit::Ptr &hitUnit : hitUnits) {
+        DBG << "hit a unit" << hitUnit->debugName;
+        for (const genie::unit::AttackOrArmor &attack : m_attacks) {
+            hitUnit->takeDamage(attack);
+        }
+    }
 
     return true;
 }
