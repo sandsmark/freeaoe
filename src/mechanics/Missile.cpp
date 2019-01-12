@@ -21,6 +21,11 @@ Missile::Missile(const genie::Unit &data, const std::shared_ptr<Player> &player,
 
 bool Missile::update(Time time)
 {
+    if (isExploding()) {
+        m_renderer.setCurrentFrame(m_renderer.currentFrame() + 1);
+        return true;
+    }
+
     if (!m_isFlying) {
         return false;
     }
@@ -32,6 +37,7 @@ bool Missile::update(Time time)
     }
     if (position().z <= map->elevationAt(position())) {
         DBG << "we hit the ground";
+        m_renderer.setGraphic(AssetManager::Inst()->getGraphic(m_data.DyingGraphic));
         m_isFlying = false;
         return false;
     }
@@ -107,6 +113,7 @@ bool Missile::update(Time time)
     }
 
     m_isFlying = false;
+    m_renderer.setGraphic(AssetManager::Inst()->getGraphic(m_data.DyingGraphic));
     DBG << "hit a unit" << hitUnit->debugName;
 
     return true;

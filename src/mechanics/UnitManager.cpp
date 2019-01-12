@@ -65,8 +65,9 @@ bool UnitManager::update(Time time)
     std::unordered_set<Missile::Ptr>::iterator missileIterator = m_missiles.begin();
     while (missileIterator != m_missiles.end()) {
         updated = (*missileIterator)->update(time) || updated;
-        if (!(*missileIterator)->isFlying()) {
+        if (!(*missileIterator)->isFlying() && !(*missileIterator)->isExploding()) {
             missileIterator = m_missiles.erase(missileIterator);
+            updated = true;
         } else {
             missileIterator++;
         }

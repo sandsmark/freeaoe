@@ -16,6 +16,7 @@ public:
     bool update(Time time) override;
 
     bool isFlying() const { return m_isFlying; }
+    bool isExploding() const { return !m_isFlying && m_renderer.currentFrame() < m_renderer.frameCount() - 1; }
 
 private:
     bool m_isFlying = true;

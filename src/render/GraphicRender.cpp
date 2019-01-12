@@ -143,7 +143,6 @@ bool GraphicRender::setGraphic(const GraphicPtr &graphic)
         WARN << "no graphic";
         return false;
     }
-    DBG << "Setting raphic" << graphic->isValid();
 
     for (const genie::GraphicDelta &deltaData : graphic->deltas()) {
         if (deltaData.GraphicID < 0) {
@@ -217,5 +216,5 @@ void GraphicRender::setCurrentFrame(int frame)
         frame = 0;
     }
 
-    m_currentFrame = 0;
+    m_currentFrame = frame;
 }
