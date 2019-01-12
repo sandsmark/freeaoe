@@ -252,14 +252,26 @@ void Map::removeEntityAt(unsigned int col, unsigned int row, const int entityId)
     }
 
     std::vector<std::weak_ptr<Entity>>::iterator it=m_tileUnits[index].begin();
-    for (;it!=m_tileUnits[index].end(); it++) {
-        if (!it->expired() && it->lock()->id == entityId) {
+    while (it != m_tileUnits[index].end()) {
+        if (it->expired()) {
+            it = m_tileUnits[index].erase(it);
+            continue;
+        }
+        EntityPtr entity = it->lock();
+        if (!entity) {
+            it = m_tileUnits[index].erase(it);
+            continue;
+        }
+
+        if (entity->id == entityId) {
             m_tileUnits[index].erase(it);
 
             emit(Signals::UnitsChanged);
 
-            break;
+            return;
         }
+
+        it++;
     }
 }
 

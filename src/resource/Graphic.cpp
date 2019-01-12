@@ -81,6 +81,21 @@ const sf::Texture &Graphic::texture(uint32_t frame, float angleRadians, uint8_t 
     case ImageType::Base:
         img = Resource::convertFrameToImage(slp_->getFrame(state.frame), palette, state.playerId);
         break;
+    case ImageType::Shadow: {
+        const genie::SlpFramePtr frame = slp_->getFrame(state.frame);
+        const genie::SlpFrameData &frameData = frame->img_data;
+
+        const int width = frame->getWidth();
+        const int height = frame->getHeight();
+        img.create(width, height, sf::Color::Transparent);
+
+        const sf::Color shadow(0, 0, 0, 128);
+        for (const genie::XY pos : frameData.shadow_mask) {
+            img.setPixel(pos.x, pos.y, shadow);
+        }
+
+        break;
+    }
     case ImageType::Outline: {
         const genie::SlpFramePtr frame = slp_->getFrame(state.frame);
         const genie::SlpFrameData &frameData = frame->img_data;

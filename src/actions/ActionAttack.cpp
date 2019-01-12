@@ -64,8 +64,8 @@ IAction::UpdateResult ActionAttack::update(Time time)
 
     if (distance > unit->data()->Combat.MaxRange || distance < unit->data()->Combat.MinRange) {
         const float angleToTarget = unit->position().angleTo(m_targetPosition);
-        float targetX = m_targetPosition.x + cos(angleToTarget + M_PI) * unit->data()->Combat.MinRange * Constants::TILE_SIZE * 1.1;
-        float targetY = m_targetPosition.y + sin(angleToTarget + M_PI) * unit->data()->Combat.MinRange * Constants::TILE_SIZE * 1.1;
+        float targetX = m_targetPosition.x + cos(angleToTarget + M_PI) * unit->data()->Combat.MaxRange * Constants::TILE_SIZE / 1.1;
+        float targetY = m_targetPosition.y + sin(angleToTarget + M_PI) * unit->data()->Combat.MaxRange * Constants::TILE_SIZE / 1.1;
         unit->prependAction(ActionMove::moveUnitTo(unit, MapPos(targetX, targetY), m_unitManager->map(), m_unitManager));
 
         return IAction::UpdateResult::NotUpdated;
@@ -77,7 +77,8 @@ IAction::UpdateResult ActionAttack::update(Time time)
 
     DBG << unit->data()->Combat.BlastWidth << unit->data()->Combat.BlastWidth << unit->data()->Combat.BlastWidth << unit->data()->Combat.AccuracyPercent;
 //    for (int i=0; i<unit->data()->Creatable.TotalProjectiles; i++) {
-        m_unitManager->spawnMissiles(unit, unit->data()->Combat.ProjectileUnitID, m_targetPosition);
+//        m_unitManager->spawnMissiles(unit, unit->data()->Combat.ProjectileUnitID, m_targetPosition);
+        m_unitManager->spawnMissiles(unit, unit->data()->Creatable.SecondaryProjectileUnit, m_targetPosition);
 //    }
 
     m_lastAttackTime = time;

@@ -62,8 +62,14 @@ bool UnitManager::update(Time time)
 {
     bool updated = false;
 
-    for (const Missile::Ptr &missile : m_missiles) {
-        updated = missile->update(time) || updated;
+    std::unordered_set<Missile::Ptr>::iterator missileIterator = m_missiles.begin();
+    while (missileIterator != m_missiles.end()) {
+        updated = (*missileIterator)->update(time) || updated;
+        if (!(*missileIterator)->isFlying()) {
+            missileIterator = m_missiles.erase(missileIterator);
+        } else {
+            missileIterator++;
+        }
     }
 
     for (const Unit::Ptr &unit : m_units) {
@@ -87,12 +93,22 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
     std::vector<Missile::Ptr> visibleMissiles;
     for (const std::weak_ptr<Entity> &e : visible) {
         std::shared_ptr<Entity> entity = e.lock();
+        if (!entity) {
+            WARN << "got dead entity";
+            continue;
+        }
 
         if (entity->isUnit()) {
             visibleUnits.push_back(Entity::asUnit(entity));
+            entity->renderer().render(*renderTarget->renderTarget_, camera->absoluteScreenPos(entity->position()), RenderType::Shadow);
             continue;
         }
+
         if (entity->isMissile()) {
+            MapPos shadowPosition = entity->position();
+            shadowPosition.z = m_map->elevationAt(shadowPosition);
+            entity->renderer().render(*renderTarget->renderTarget_, camera->absoluteScreenPos(shadowPosition), RenderType::Shadow);
+
             visibleMissiles.push_back(Entity::asMissile(entity));
         }
     }
@@ -604,15 +620,17 @@ void UnitManager::spawnMissiles(const Unit::Ptr &source, const int unitId, const
     }
     for (int i=0; i<source->data()->Creatable.TotalProjectiles; i++) {
         MapPos individualTarget = target;
-        individualTarget.x += i * widthDispersion;
+//        individualTarget.x += i * widthDispersion;
+        individualTarget.x +=  -cos(source->angle()) * i*widthDispersion - spawnArea[0]/2.;
+        individualTarget.y +=  sin(source->angle()) * i*widthDispersion - spawnArea[1]/2.;
         Missile::Ptr missile = std::make_shared<Missile>(gunit, owner, *this, individualTarget);
 
         float offsetX = graphicDisplacement[0];
         float offsetY = graphicDisplacement[1];
 
         MapPos pos = source->position();
-        pos.x += -sin(source->angle()) * offsetX + cos(source->angle()) * offsetY;
-        pos.y +=  cos(source->angle()) * offsetX + sin(source->angle()) * offsetY;
+        pos.x += -sin(source->angle()) * offsetX + cos(source->angle()) * offsetX;
+        pos.y +=  cos(source->angle()) * offsetY + sin(source->angle()) * offsetY;
         pos.z += graphicDisplacement[2];
 
         if (spawnArea[2] > 0) {

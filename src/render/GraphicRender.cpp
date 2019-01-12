@@ -120,6 +120,7 @@ void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos scree
             sprite.setTexture(m_graphic->texture(m_currentFrame, m_angle, m_playerId, ImageType::Construction));
             break;
         case RenderType::Shadow:
+            sprite.setTexture(m_graphic->texture(m_currentFrame, m_angle, m_playerId, ImageType::Shadow));
             break;
         case RenderType::ConstructUnavailable:
             sprite.setTexture(m_graphic->texture(m_currentFrame, m_angle, m_playerId, ImageType::ConstructionUnavailable));

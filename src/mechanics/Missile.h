@@ -22,7 +22,6 @@ private:
     std::weak_ptr<Player> m_player;
     const genie::Unit &m_data;
     MapPos m_targetPosition;
-    MapPos m_sourcePosition;
     float m_zVelocity = 0.f;
     float m_zAcceleration = 0.f;
     Time m_previousUpdateTime = 0.f;

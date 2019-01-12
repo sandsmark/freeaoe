@@ -33,6 +33,7 @@ class SlpFile;
 enum class ImageType {
     Base,
     Outline,
+    Shadow,
     Construction,
     ConstructionUnavailable
 };

@@ -62,14 +62,6 @@ sf::Image Resource::convertFrameToImage(const genie::SlpFramePtr &frame,
     }
 
     pixels = pixelsBuf.data();
-    for (const genie::XY pos : frameData.shadow_mask) {
-        const size_t pixelPos = (pos.y * width + pos.x) * 4;
-        pixels[pixelPos    ] = 0;
-        pixels[pixelPos + 1] = 0;
-        pixels[pixelPos + 2] = 0;
-        pixels[pixelPos + 3] = 128;
-    }
-
     if (playerId >= 0) {
         genie::PlayerColour pc = DataManager::Inst().getPlayerColor(playerId);
         for (const genie::PlayerColorXY mask : frameData.player_color_mask) {

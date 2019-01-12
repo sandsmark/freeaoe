@@ -160,7 +160,7 @@ struct MapPos {
     }
 
     float distance(const MapPos &other) const {
-        return std::sqrt((other.x - x) * (other.x - x) + (other.y - y) * (other.y - y));
+        return std::sqrt((other.x - x) * (other.x - x) + (other.y - y) * (other.y - y) + (other.z - z) * (other.z - z));
     }
     float distanceToLine(const MapPos &lineP1, const MapPos &lineP2) const {
         const float deltaX = x - lineP2.x;
