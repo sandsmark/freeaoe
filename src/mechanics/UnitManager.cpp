@@ -621,10 +621,10 @@ void UnitManager::spawnMissiles(const Unit::Ptr &source, const int unitId, const
     }
     for (int i=0; i<source->data()->Creatable.TotalProjectiles; i++) {
         MapPos individualTarget = target;
-//        individualTarget.x += i * widthDispersion;
         individualTarget.x +=  -cos(source->angle()) * i*widthDispersion - spawnArea[0]/2.;
         individualTarget.y +=  sin(source->angle()) * i*widthDispersion - spawnArea[1]/2.;
         Missile::Ptr missile = std::make_shared<Missile>(gunit, owner, *this, individualTarget);
+        missile->setBlastType(Missile::BlastType(source->data()->Combat.BlastAttackLevel), source->data()->Combat.BlastWidth);
 
         float offsetX = graphicDisplacement[0];
         float offsetY = graphicDisplacement[1];

@@ -18,6 +18,26 @@ Missile::Missile(const genie::Unit &data, const std::shared_ptr<Player> &player,
     m_renderer.setGraphic(defaultGraphics);
 }
 
+void Missile::setBlastType(const BlastType type, const float radius)
+{
+    m_blastType = type;
+
+    switch(type) {
+    case DamageNearby:
+        m_blastRadius = radius;
+        break;
+    case DamageResources:
+        break;
+    case DamageTrees:
+        break;
+    case DamageTargetOnly:
+        break;
+    default:
+        m_blastType = DamageTargetOnly;
+        break;
+    }
+}
+
 
 bool Missile::update(Time time)
 {
@@ -50,6 +70,7 @@ bool Missile::update(Time time)
         m_zVelocity = m_data.Missile.ProjectileArc * distance / timeToApex;
         m_zAcceleration = m_zVelocity / timeToApex;
         m_previousUpdateTime = time;
+        m_startingElevation = position().z;
         return false;
     }
 
@@ -95,8 +116,8 @@ bool Missile::update(Time time)
                     continue;
                 }
 
-                const float xSize = (otherUnit->data()->Size.x + m_data.Size.x) * Constants::TILE_SIZE;
-                const float ySize = (otherUnit->data()->Size.y + m_data.Size.y) * Constants::TILE_SIZE;
+                const float xSize = (otherUnit->data()->Size.x + m_data.Size.x + m_blastRadius) * Constants::TILE_SIZE;
+                const float ySize = (otherUnit->data()->Size.y + m_data.Size.y + m_blastRadius) * Constants::TILE_SIZE;
                 const float xDistance = std::abs(otherUnit->position().x - newPos.x);
                 const float yDistance = std::abs(otherUnit->position().y - newPos.y);
 
@@ -114,6 +135,7 @@ bool Missile::update(Time time)
 
     m_isFlying = false;
     m_renderer.setGraphic(AssetManager::Inst()->getGraphic(m_data.DyingGraphic));
+
     DBG << "hit a unit" << hitUnit->debugName;
 
     return true;
