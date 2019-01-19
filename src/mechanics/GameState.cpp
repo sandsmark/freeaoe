@@ -48,10 +48,10 @@
 std::unordered_map<GameType, ResourceMap> GameState::defaultStartingResources = {
     {
         GameType::Default, {
-            { genie::ResourceType::FoodStorage, 200 },
-            { genie::ResourceType::WoodStorage, 200 },
-            { genie::ResourceType::StoneStorage, 200 },
-            { genie::ResourceType::GoldStorage, 100 },
+            { genie::ResourceType::FoodStorage, 500 },
+            { genie::ResourceType::WoodStorage, 500 },
+            { genie::ResourceType::StoneStorage, 500 },
+            { genie::ResourceType::GoldStorage, 500 },
         }
     },
     {

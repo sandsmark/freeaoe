@@ -12,32 +12,50 @@ Player::Player(const int id, const std::shared_ptr<Civilization> &c, const Resou
     resourcesAvailable(civ->startingResources()),
     name("Player " + std::to_string(id))
 {
-
     for (const std::pair<const genie::ResourceType, float> &r : startingResources) {
         resourcesAvailable[r.first] = r.second;
     }
-
 }
-void Player::applyTech(const int effectId)
+
+void Player::applyResearch(const int researchId)
 {
+    if (researchId == -1) {
+        return;
+    }
+
+    const genie::Tech &research = DataManager::Inst().getTech(researchId);
+    applyTechEffect(research.EffectID);
+}
+
+void Player::applyTechEffect(const int effectId)
+{
+    if (m_activeTechs.count(effectId)) {
+        DBG << effectId << "already active";
+        return;
+    }
+
+    m_activeTechs.insert(effectId);
+
     const genie::Effect &effect = DataManager::Inst().getEffect(effectId);
     DBG << "Applying" << effect.Name;
 
     for (const genie::EffectCommand &command : effect.EffectCommands) {
-        applyTechEffect(command);
+        applyTechEffectCommand(command);
     }
 }
 
-void Player::applyTechEffect(const genie::EffectCommand &effect)
+void Player::applyTechEffectCommand(const genie::EffectCommand &effect)
 {
     switch(effect.Type) {
-    case genie::EffectCommand::ResourceModifier:
+    case genie::EffectCommand::ResourceModifier: {
+        const genie::ResourceType resourceType = genie::ResourceType(effect.TargetUnit);
         if (effect.UnitClassID) {
-            resourcesAvailable[genie::ResourceType(effect.TargetUnit)] += effect.Amount;
+            resourcesAvailable[resourceType] += effect.Amount;
         } else {
-            resourcesAvailable[genie::ResourceType(effect.TargetUnit)] = effect.Amount;
+            resourcesAvailable[resourceType] = effect.Amount;
         }
         break;
+    }
     case genie::EffectCommand::EnableUnit:
         civ->enableUnit(effect.TargetUnit);
         break;
@@ -79,6 +97,33 @@ void Player::applyTechEffect(const genie::EffectCommand &effect)
         return;
     }
 
+}
+
+void Player::setAge(const Age age)
+{
+    resourcesAvailable[genie::ResourceType::CurrentAge] = age;
+
+    genie::ResourceType effectResourceType;
+    switch (age) {
+    case DarkAge:
+        effectResourceType = genie::ResourceType::DarkAgeTechID;
+        break;
+    case FeudalAge:
+        effectResourceType = genie::ResourceType::FeudalAgeTechID;
+        break;
+    case CastleAge:
+        effectResourceType = genie::ResourceType::CastleAgeTechID;
+        break;
+    case ImperialAge:
+        effectResourceType = genie::ResourceType::ImperialAgeTechID;
+        break;
+    default:
+        WARN << "Invalid age";
+        return;
+    }
+
+    // TODO: need to recurse and research all dependencies
+    applyTechEffect(civ->startingResource(effectResourceType));
 }
 
 void Player::addUnit(Unit *unit)

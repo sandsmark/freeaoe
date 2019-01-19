@@ -307,7 +307,7 @@ void Building::finalizeResearch()
         WARN << "building owner went away";
         return;
     }
-    owner->applyTech(m_currentProduct->tech->EffectID);
+    owner->applyResearch(m_currentProduct->tech->EffectID);
 
 }
 

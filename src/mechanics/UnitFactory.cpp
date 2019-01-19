@@ -24,6 +24,7 @@
 #include "Civilization.h"
 #include "Building.h"
 #include "UnitManager.h"
+#include "Player.h"
 
 #include <genie/dat/Unit.h>
 
@@ -45,6 +46,7 @@ UnitFactory::~UnitFactory()
 Unit::Ptr UnitFactory::createUnit(const int ID, const MapPos &position, const Player::Ptr &owner, UnitManager &unitManager)
 {
     const genie::Unit &gunit = owner->civ->unitData(ID);
+    owner->applyResearch(gunit.Building.TechID);
 
     Unit::Ptr unit;
     if (ID == Unit::Farm) {
@@ -76,6 +78,7 @@ Unit::Ptr UnitFactory::createUnit(const int ID, const MapPos &position, const Pl
 
         if (gunit.Building.StackUnitID >= 0) {
             const genie::Unit &stackData = owner->civ->unitData(gunit.Building.StackUnitID);
+            owner->applyResearch(gunit.Building.TechID);
 
             Unit::Annex annex;
             annex.unit = std::make_shared<Unit>(stackData, owner, unitManager);
@@ -88,6 +91,7 @@ Unit::Ptr UnitFactory::createUnit(const int ID, const MapPos &position, const Pl
                 continue;
             }
             const genie::Unit &gunit = owner->civ->unitData(annexData.UnitID);
+            owner->applyResearch(gunit.Building.TechID);
 
             Unit::Annex annex;
             annex.offset = MapPos(annexData.Misplacement.first * -48, annexData.Misplacement.second * -48);
