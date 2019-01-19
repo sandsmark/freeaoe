@@ -35,6 +35,8 @@ Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, Uni
     civilization(player_->civ),
     m_unitManager(unitManager)
 {
+    m_renderer.setPlayerId(playerId);
+
     setUnitData(data_);
     m_creationProgress = m_data->Creatable.TrainTime;
 
@@ -48,6 +50,8 @@ Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, Uni
     civilization(player_->civ),
     m_unitManager(unitManager)
 {
+    m_renderer.setPlayerId(playerId);
+
     setUnitData(data_);
     m_creationProgress = m_data->Creatable.TrainTime;
 
@@ -281,6 +285,7 @@ DecayingEntity::Ptr Unit::createCorpse() const
         decayTime = std::numeric_limits<float>::infinity();
     }
     DecayingEntity::Ptr corpse = std::make_shared<DecayingEntity>(m_map.lock(), corpseData.StandingGraphic.first, decayTime);
+    corpse->renderer().setPlayerId(playerId);
     corpse->setPosition(position());
 
     return corpse;

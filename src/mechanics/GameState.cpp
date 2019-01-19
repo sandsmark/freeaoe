@@ -228,6 +228,7 @@ bool GameState::init()
     }
 
     m_actionPanel->setHumanPlayer(m_humanPlayer);
+    m_unitManager->setHumanPlayer(m_humanPlayer);
 
     map_->updateMapData();
     mapRenderer_.setRenderTarget(renderTarget_);

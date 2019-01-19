@@ -72,6 +72,7 @@ public:
     void add(const Unit::Ptr &unit);
 
     bool init();
+    void setHumanPlayer(const std::shared_ptr<Player> &player) { m_humanPlayer = player; }
 
     bool update(Time time);
     void render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, const std::vector<std::weak_ptr<Entity> > &visible);
@@ -127,5 +128,6 @@ private:
     bool m_canPlaceBuilding;
 
     MapPos m_previousCameraPos;
+    std::weak_ptr<Player> m_humanPlayer;
 };
 

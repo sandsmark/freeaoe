@@ -76,7 +76,7 @@ public:
 
     virtual void render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType renderpass);
 
-    void setPlayerId(int playerId);
+    void setPlayerId(int playerId) { m_playerId = playerId; }
 
     bool setGraphic(const GraphicPtr &graphic);
     inline const GraphicPtr &graphic() const { return m_graphic; }
@@ -102,7 +102,7 @@ private:
     Time m_lastFrameTime;
     std::vector<GraphicDelta> m_deltas;
 
-    int m_playerId = 2;
+    int m_playerId = 0;
 
     int m_currentFrame;
     float m_angle = 0;

@@ -305,6 +305,12 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
 
 bool UnitManager::onLeftClick(const ScreenPos &screenPos, const CameraPtr &camera)
 {
+    Player::Ptr humanPlayer = m_humanPlayer.lock();
+    if (!humanPlayer) {
+        WARN << "human player gone";
+        return false;
+    }
+
     switch (m_state) {
     case State::PlacingBuilding: {
         DBG << "placing bulding";
@@ -322,6 +328,10 @@ bool UnitManager::onLeftClick(const ScreenPos &screenPos, const CameraPtr &camer
         m_units.insert(m_buildingToPlace);
 
         for (const Unit::Ptr &unit : m_selectedUnits) {
+            if (unit->playerId != humanPlayer->playerId) {
+                continue;
+            }
+
             Task task;
             for (const Task &potential : unit->availableActions()) {
                 if (potential.data->ActionType == genie::Task::Build) {
@@ -345,6 +355,10 @@ bool UnitManager::onLeftClick(const ScreenPos &screenPos, const CameraPtr &camer
         MapPos targetPos = camera->absoluteMapPos(screenPos);
         Unit::Ptr targetUnit = unitAt(screenPos, camera);
         for (const Unit::Ptr &unit : m_selectedUnits) {
+            if (unit->playerId != humanPlayer->playerId) {
+                continue;
+            }
+
             std::shared_ptr<ActionAttack> action;
             if (targetUnit) {
                 action = std::make_shared<ActionAttack>(unit, targetUnit, this);
@@ -371,9 +385,19 @@ void UnitManager::onRightClick(const ScreenPos &screenPos, const CameraPtr &came
         return;
     }
 
+    Player::Ptr humanPlayer = m_humanPlayer.lock();
+    if (!humanPlayer) {
+        WARN << "human player gone";
+        return;
+    }
+
     const Task task = defaultActionAt(screenPos, camera);
     if (task.data) {
         for (const Unit::Ptr &unit : m_selectedUnits) {
+            if (unit->playerId != humanPlayer->playerId) {
+                continue;
+            }
+
             unit->clearActionQueue();
             assignTask(task, unit, unitAt(screenPos, camera));
         }
@@ -383,11 +407,19 @@ void UnitManager::onRightClick(const ScreenPos &screenPos, const CameraPtr &came
 
 
     const MapPos mapPos = camera->absoluteMapPos(screenPos);
+    bool movedSomeone = false;
     for (const Unit::Ptr &unit : m_selectedUnits) {
+        if (unit->playerId != humanPlayer->playerId) {
+            continue;
+        }
+
         moveUnitTo(unit, mapPos);
+        movedSomeone = true;
     }
 
-    m_moveTargetMarker->moveTo(mapPos);
+    if (movedSomeone) {
+        m_moveTargetMarker->moveTo(mapPos);
+    }
 }
 
 void UnitManager::onMouseMove(const MapPos &mapPos)

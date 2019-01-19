@@ -42,7 +42,7 @@ UnitFactory::~UnitFactory()
 {
 }
 
-Unit::Ptr UnitFactory::createUnit(int ID, const MapPos &position, const Player::Ptr &owner, UnitManager &unitManager)
+Unit::Ptr UnitFactory::createUnit(const int ID, const MapPos &position, const Player::Ptr &owner, UnitManager &unitManager)
 {
     const genie::Unit &gunit = owner->civ->unitData(ID);
 

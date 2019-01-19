@@ -26,7 +26,7 @@ class UnitFactory
 public:
     static UnitFactory &Inst();
 
-    Unit::Ptr createUnit(int ID, const MapPos &position, const Player::Ptr &owner, UnitManager &unitManager);
+    Unit::Ptr createUnit(const int ID, const MapPos &position, const Player::Ptr &owner, UnitManager &unitManager);
 
 private:
     UnitFactory();
