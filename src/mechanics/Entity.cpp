@@ -161,7 +161,7 @@ DecayingEntity::DecayingEntity(const MapPtr &map, const int graphicId, float dec
 bool DecayingEntity::update(Time time)
 {
     if (!decaying()) {
-        DBG << "corpse not decaying";
+//        DBG << "corpse not decaying";
         return false;
     }
 

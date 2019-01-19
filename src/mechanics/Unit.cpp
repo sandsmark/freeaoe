@@ -291,6 +291,10 @@ DecayingEntity::Ptr Unit::createCorpse() const
         return nullptr;
     }
 
+    if (m_data->DeadUnitID == -1) {
+        return nullptr;
+    }
+
     const genie::Unit &corpseData = owner->civ->unitData(m_data->DeadUnitID);
     float decayTime = corpseData.ResourceDecay * corpseData.ResourceCapacity;
 

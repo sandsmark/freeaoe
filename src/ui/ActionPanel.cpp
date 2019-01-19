@@ -272,7 +272,7 @@ void ActionPanel::updateButtons()
             break;
         }
         default:
-            WARN << "Unhandled action type" << task.data->ActionType << task.data->AutoSearchTargets;
+            WARN << "Unhandled action type" << task.data->ActionType << task.data->actionTypeName() << task.data->AutoSearchTargets;
             break;
         }
     }

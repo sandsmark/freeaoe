@@ -18,10 +18,7 @@ Civilization::Civilization(const int civId, const genie::DatFile &dataFile) :
 
     m_taskSwapUnits.resize(10);
     for (const genie::Unit &unit : m_unitsData) {
-        if (!unit.Enabled) {
-            continue;
-        }
-        if (unit.Creatable.TrainLocationID > 0) {
+        if (unit.Enabled && unit.Creatable.TrainLocationID > 0) {
             m_creatableUnits[unit.Creatable.TrainLocationID].push_back(&unit);
         }
 
@@ -138,19 +135,10 @@ void Civilization::enableUnit(const uint16_t id)
         WARN << "invalid target unit" << id;
         return;
     }
-    genie::Unit unit = m_unitsData[id];
+    genie::Unit &unit = m_unitsData[id];
     unit.Enabled = true;
     if (unit.Creatable.TrainLocationID > 0) {
         m_creatableUnits[unit.Creatable.TrainLocationID].push_back(&unit);
-    }
-
-    const uint8_t swapGroup = unit.Action.TaskSwapGroup;
-    if (swapGroup > 0) {
-        if (swapGroup >= m_taskSwapUnits.size()) {
-            m_taskSwapUnits.resize(swapGroup + 1);
-        }
-
-        m_taskSwapUnits[swapGroup].push_back(&unit);
     }
 }
 

@@ -504,6 +504,8 @@ void GameState::setupScenario()
             }
         }
     }
+    MapPos cameraPos(scenario_->players[1].initCameraX * Constants::TILE_SIZE, map_->height() - scenario_->players[1].initCameraY * Constants::TILE_SIZE);
+    renderTarget_->camera()->setTargetPosition(cameraPos);
     m_humanPlayer = m_players[1];
 }
 
@@ -511,7 +513,7 @@ void GameState::setupGame(const GameType /*gameType*/)
 {
     //Map test
 
-    m_humanPlayer = std::make_shared<Player>(1, m_civilizations[1], defaultStartingResources[m_gameType]);
+    m_humanPlayer = std::make_shared<Player>(0, m_civilizations[1], defaultStartingResources[m_gameType]);
     m_players.push_back(m_humanPlayer);
     map_->setUpSample();
 

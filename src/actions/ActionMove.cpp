@@ -245,7 +245,7 @@ IAction::UpdateResult ActionMove::update(Time time)
 
     ScreenPos sourceScreen = unit->position().toScreen();
     ScreenPos targetScreen = newPos.toScreen();
-    unit->setAngle(std::atan2((targetScreen.y - sourceScreen.y), (targetScreen.x - sourceScreen.x)));
+    unit->setAngle(sourceScreen.angleTo(targetScreen));
     newPos.z = m_map->elevationAt(newPos);
 
     unit->setPosition(newPos);
