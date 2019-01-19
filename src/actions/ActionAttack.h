@@ -7,7 +7,7 @@ class ActionAttack : public IAction
 {
 public:
     ActionAttack(const Unit::Ptr &attacker, const Unit::Ptr &target, UnitManager *unitManager);
-    ActionAttack(const Unit::Ptr &attacker, const MapPos &target, UnitManager *unitManager);
+    ActionAttack(const Unit::Ptr &attacker, const MapPos &targetPos, UnitManager *unitManager);
 
     UnitState unitState() const override;
     UpdateResult update(Time time) override;

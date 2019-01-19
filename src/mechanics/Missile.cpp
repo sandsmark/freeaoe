@@ -32,7 +32,6 @@ Missile::~Missile()
     Unit::Ptr sourceUnit = m_sourceUnit.lock();
     if (sourceUnit) {
         sourceUnit->activeMissiles--;
-        DBG << sourceUnit->activeMissiles;
     }
 }
 

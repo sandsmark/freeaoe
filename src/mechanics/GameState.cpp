@@ -511,6 +511,7 @@ void GameState::setupGame(const GameType /*gameType*/)
     //Map test
 
     m_humanPlayer = std::make_shared<Player>(0, m_civilizations[1], defaultStartingResources[m_gameType]);
+    m_players.push_back(m_humanPlayer);
     map_->setUpSample();
 
     UnitFactory::Inst().createUnit(Unit::FuriousTheMonkeyBoy, MapPos(48*6, 48*10, 0), m_humanPlayer, *m_unitManager);
@@ -548,4 +549,9 @@ void GameState::setupGame(const GameType /*gameType*/)
     addWall(7, 4, unit->renderer().graphic()->orientationToAngle(3));
     addWall(8, 4, unit->renderer().graphic()->orientationToAngle(4));
     addWall(9, 4, unit->renderer().graphic()->orientationToAngle(5)); // wraps here
+
+    Player::Ptr enemy = std::make_shared<Player>(1, m_civilizations[2], defaultStartingResources[m_gameType]);
+    m_players.push_back(enemy);
+    UnitFactory::Inst().createUnit(74, MapPos(48*8, 48*8, 0), enemy, *m_unitManager); // militia
+
 }

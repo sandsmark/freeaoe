@@ -77,9 +77,13 @@ bool UnitManager::update(Time time)
     while (unitIterator != m_units.end()) {
         Unit::Ptr unit = *unitIterator;
         updated = unit->update(time) || updated;
+
+        if (unit->isDead() || unit->isDying()) {
+            m_selectedUnits.erase(unit);
+        }
+
         if (unit->isDead()) {
             unitIterator = m_units.erase(unitIterator);
-            m_selectedUnits.erase(unit);
             DecayingEntity::Ptr corpse = unit->createCorpse();
             if (corpse) {
                 m_decayingEntities.insert(unit->createCorpse());
@@ -632,14 +636,20 @@ void UnitManager::assignTask(const Task &task, const Unit::Ptr &unit, const Unit
         unit->setUnitData(unit->civilization->unitData(task.unitId));
     }
 
-    unit->queueAction(ActionMove::moveUnitTo(unit, target->position(), m_map, this));
     switch(task.data->ActionType) {
     case genie::Task::Build:
+        unit->queueAction(ActionMove::moveUnitTo(unit, target->position(), m_map, this));
         unit->queueAction(std::make_shared<ActionBuild>(unit, target, this));
         break;
     case genie::Task::GatherRebuild:
-//        DBG << "supposed to gather from" << target->debugName;
+        unit->queueAction(ActionMove::moveUnitTo(unit, target->position(), m_map, this));
         unit->queueAction(std::make_shared<ActionGather>(unit, target, task.data, this));
+        break;
+    case genie::Task::Combat:
+        if (target) {
+            DBG << "attacking" << target->debugName;
+        }
+        unit->queueAction(std::make_shared<ActionAttack>(unit, target, this));
         break;
     default:
         return;

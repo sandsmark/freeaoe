@@ -13,9 +13,9 @@ ActionAttack::ActionAttack(const Unit::Ptr &attacker, const Unit::Ptr &target, U
 {
 }
 
-ActionAttack::ActionAttack(const Unit::Ptr &attacker, const MapPos &target, UnitManager *unitManager) :
+ActionAttack::ActionAttack(const Unit::Ptr &attacker, const MapPos &targetPos, UnitManager *unitManager) :
     IAction(IAction::Type::Attack, attacker, unitManager),
-    m_targetPosition(target)
+    m_targetPosition(targetPos)
 {
 }
 
@@ -35,9 +35,8 @@ IAction::UpdateResult ActionAttack::update(Time time)
         return IAction::UpdateResult::Completed;
     }
 
-    Unit::Ptr targetUnit;
-    if (!m_targetUnit.expired()) {
-        targetUnit = m_targetUnit.lock();
+    Unit::Ptr targetUnit = m_targetUnit.lock();
+    if (targetUnit) {
         m_targetPosition = targetUnit->position();
     }
 
@@ -78,8 +77,8 @@ IAction::UpdateResult ActionAttack::update(Time time)
     }
     if (distance < unit->data()->Combat.MinRange) {
         const float angleToTarget = unit->position().angleTo(m_targetPosition);
-        float targetX = m_targetPosition.x + cos(angleToTarget + M_PI) * unit->data()->Combat.MinRange * Constants::TILE_SIZE / 1.1;
-        float targetY = m_targetPosition.y + sin(angleToTarget + M_PI) * unit->data()->Combat.MinRange * Constants::TILE_SIZE / 1.1;
+        float targetX = m_targetPosition.x + cos(angleToTarget + M_PI) * unit->data()->Combat.MinRange * Constants::TILE_SIZE * 1.1;
+        float targetY = m_targetPosition.y + sin(angleToTarget + M_PI) * unit->data()->Combat.MinRange * Constants::TILE_SIZE * 1.1;
         unit->prependAction(ActionMove::moveUnitTo(unit, MapPos(targetX, targetY), m_unitManager->map(), m_unitManager));
 
         return IAction::UpdateResult::NotUpdated;
