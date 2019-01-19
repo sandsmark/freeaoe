@@ -259,6 +259,11 @@ Task Unit::findMatchingTask(const genie::Task::ActionTypes &type)
     return Task();
 }
 
+Size Unit::selectionSize() const
+{
+    return Size(data()->OutlineSize.x * Constants::TILE_SIZE, data()->OutlineSize.y * Constants::TILE_SIZE);
+}
+
 void Unit::setPosition(const MapPos &pos)
 {
     for (Annex &annex : annexes) {

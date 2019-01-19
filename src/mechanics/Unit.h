@@ -139,6 +139,7 @@ struct Unit : public Entity
 
     std::unordered_set<Task> availableActions();
     Task findMatchingTask(const genie::Task::ActionTypes &m_type);
+    Size selectionSize() const;
 
     virtual void setCreationProgress(float progress);
     void increaseCreationProgress(float progress);

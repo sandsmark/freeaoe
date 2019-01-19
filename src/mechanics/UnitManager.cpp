@@ -549,14 +549,14 @@ void UnitManager::enqueueResearch(const genie::Tech *techData, const UnitSet pro
 
 Unit::Ptr UnitManager::unitAt(const ScreenPos &pos, const CameraPtr &camera) const
 {
+    MapPos mpos = camera->absoluteMapPos(pos);
     for (const Unit::Ptr &unit : m_units) {
         if (!unit->isVisible) {
             continue;
         }
 
-        const ScreenPos unitPosition = camera->absoluteScreenPos(unit->position());
-        const ScreenRect unitRect = unit->rect() + unitPosition;
-        if (unitRect.contains(pos)) {
+        MapRect unitRect(unit->position(), unit->selectionSize());
+        if (unitRect.contains(mpos)) {
             return unit;
         }
     }
