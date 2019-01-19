@@ -511,7 +511,7 @@ void GameState::setupGame(const GameType /*gameType*/)
 {
     //Map test
 
-    m_humanPlayer = std::make_shared<Player>(0, m_civilizations[1], defaultStartingResources[m_gameType]);
+    m_humanPlayer = std::make_shared<Player>(1, m_civilizations[1], defaultStartingResources[m_gameType]);
     m_players.push_back(m_humanPlayer);
     map_->setUpSample();
 

@@ -140,6 +140,15 @@ void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos scree
 
 }
 
+void GraphicRender::setPlayerId(int playerId)
+{
+    m_playerId = playerId;
+
+    for (const GraphicDelta &delta : m_deltas) {
+        delta.graphic->setPlayerId(playerId);
+    }
+}
+
 bool GraphicRender::setGraphic(const GraphicPtr &graphic)
 {
     m_graphic = graphic;
@@ -158,6 +167,7 @@ bool GraphicRender::setGraphic(const GraphicPtr &graphic)
 
         GraphicDelta delta;
         delta.graphic = std::make_shared<GraphicRender>();
+        delta.graphic->setPlayerId(m_playerId);
 
         // Don't use setGraphic, to avoid recursive adding of deltas
         delta.graphic->m_graphic =  AssetManager::Inst()->getGraphic(deltaData.GraphicID);

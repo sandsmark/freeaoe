@@ -76,7 +76,7 @@ public:
 
     virtual void render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType renderpass);
 
-    void setPlayerId(int playerId) { m_playerId = playerId; }
+    void setPlayerId(int playerId);
 
     bool setGraphic(const GraphicPtr &graphic);
     inline const GraphicPtr &graphic() const { return m_graphic; }
