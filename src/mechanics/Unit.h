@@ -100,6 +100,9 @@ struct Unit : public Entity
         MapPos offset;
     };
 
+    // The blinking animation thing when it is selected as a target
+    int targetBlinkTimeLeft = 0;
+
     Unit() = delete;
     Unit(const Unit &unit) = delete;
 
@@ -175,6 +178,7 @@ protected:
     UnitManager &m_unitManager;
 
     float m_damageTaken = 0.f;
+    Time m_prevTime = 0;
 };
 
 

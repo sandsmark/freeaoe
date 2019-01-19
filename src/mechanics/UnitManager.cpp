@@ -174,11 +174,20 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
     }
 
     for (const Unit::Ptr &unit : visibleUnits) {
-        if (m_selectedUnits.count(unit)) { // draw health indicator
+
+        const bool showTargetOutline = unit->targetBlinkTimeLeft > 0 &&
+                (((unit->targetBlinkTimeLeft) / 500) % 2 == 0) &&
+                !unit->isDead() && !unit->isDying();
+
+        if (showTargetOutline || m_selectedUnits.count(unit)) { // draw health indicator
             sf::RectangleShape rect;
             sf::CircleShape circle;
             circle.setFillColor(sf::Color::Transparent);
-            circle.setOutlineColor(sf::Color::White);
+            if (showTargetOutline) {
+                circle.setOutlineColor(sf::Color::Green);
+            } else {
+                circle.setOutlineColor(sf::Color::White);
+            }
             circle.setOutlineThickness(1);
 
             double width = unit->data()->OutlineSize.x * Constants::TILE_SIZE_HORIZONTAL;
@@ -202,21 +211,23 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
             circle.setOutlineColor(sf::Color::Black);
             renderTarget->draw(circle);
 
-            pos.x -= Constants::TILE_SIZE_HORIZONTAL / 8;
-            pos.y -= height + Constants::TILE_SIZE_HEIGHT * unit->data()->HPBarHeight;
+            if (!showTargetOutline) {
+                pos.x -= Constants::TILE_SIZE_HORIZONTAL / 8;
+                pos.y -= height + Constants::TILE_SIZE_HEIGHT * unit->data()->HPBarHeight;
 
-            rect.setOutlineColor(sf::Color::Transparent);
-            rect.setPosition(pos);
+                rect.setOutlineColor(sf::Color::Transparent);
+                rect.setPosition(pos);
 
-            if (unit->healthLeft() < 1.) {
-                rect.setFillColor(sf::Color::Red);
-                rect.setSize(sf::Vector2f(Constants::TILE_SIZE_HORIZONTAL / 4., 2));
+                if (unit->healthLeft() < 1.) {
+                    rect.setFillColor(sf::Color::Red);
+                    rect.setSize(sf::Vector2f(Constants::TILE_SIZE_HORIZONTAL / 4., 2));
+                    m_outlineOverlay.draw(rect);
+                }
+
+                rect.setFillColor(sf::Color::Green);
+                rect.setSize(sf::Vector2f(unit->healthLeft() * Constants::TILE_SIZE_HORIZONTAL / 4., 2));
                 m_outlineOverlay.draw(rect);
             }
-
-            rect.setFillColor(sf::Color::Green);
-            rect.setSize(sf::Vector2f(unit->healthLeft() * Constants::TILE_SIZE_HORIZONTAL / 4., 2));
-            m_outlineOverlay.draw(rect);
         }
 
         const ScreenPos pos = renderTarget->camera()->absoluteScreenPos(unit->position());
@@ -662,6 +673,10 @@ void UnitManager::assignTask(const Task &task, const Unit::Ptr &unit, const Unit
     if (!task.data) {
         WARN << "no task data";
         return;
+    }
+
+    if (target) {
+        target->targetBlinkTimeLeft = 3000; // 3s
     }
 
     if (task.unitId != unit->data()->ID) {
