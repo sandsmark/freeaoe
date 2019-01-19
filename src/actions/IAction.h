@@ -41,7 +41,8 @@ public:
         Build,
         Gather,
         DropOff,
-        Attack
+        Attack,
+        Fly
     };
 
     enum UnitState {

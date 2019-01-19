@@ -424,6 +424,7 @@ void UnitManager::onRightClick(const ScreenPos &screenPos, const CameraPtr &came
             continue;
         }
 
+        unit->clearActionQueue();
         moveUnitTo(unit, mapPos);
         movedSomeone = true;
     }

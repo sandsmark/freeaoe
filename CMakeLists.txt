@@ -110,6 +110,7 @@ set(ACTIONS_SRC
     src/actions/ActionBuild.cpp
     src/actions/ActionGather.cpp
     src/actions/ActionMove.cpp
+    src/actions/ActionFly.cpp
     )
 
 set(RENDER_SRC

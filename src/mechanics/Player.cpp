@@ -64,6 +64,10 @@ void Player::applyResearch(const int researchId)
 
 void Player::applyTechEffect(const int effectId)
 {
+    if (effectId == -1) {
+        return;
+    }
+
     if (m_activeTechs.count(effectId)) {
         DBG << effectId << "already active";
         return;
@@ -72,7 +76,6 @@ void Player::applyTechEffect(const int effectId)
     m_activeTechs.insert(effectId);
 
     const genie::Effect &effect = DataManager::Inst().getEffect(effectId);
-    DBG << "Applying" << effect.Name;
 
     for (const genie::EffectCommand &command : effect.EffectCommands) {
         applyTechEffectCommand(command);

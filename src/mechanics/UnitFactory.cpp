@@ -25,6 +25,7 @@
 #include "Building.h"
 #include "UnitManager.h"
 #include "Player.h"
+#include "actions/ActionFly.h"
 
 #include <genie/dat/Unit.h>
 
@@ -41,6 +42,23 @@ UnitFactory::UnitFactory()
 
 UnitFactory::~UnitFactory()
 {
+}
+
+void UnitFactory::handleDefaultAction(const Unit::Ptr &unit, const genie::Task &task, UnitManager &unitManager)
+{
+    switch(task.ActionType) {
+    case genie::Task::Fly:
+        unit->setCurrentAction(std::make_shared<ActionFly>(unit, &unitManager));
+        break;
+
+        //TODO
+    case genie::Task::Graze:
+    case genie::Task::GetAutoConverted:
+        break;
+    default:
+        WARN << "unhandled default action" << task.actionTypeName();
+    }
+
 }
 
 Unit::Ptr UnitFactory::createUnit(const int ID, const MapPos &position, const Player::Ptr &owner, UnitManager &unitManager)
@@ -65,7 +83,6 @@ Unit::Ptr UnitFactory::createUnit(const int ID, const MapPos &position, const Pl
         }
 
         unit->resources[genie::ResourceType(res.Type)] = res.Amount;
-
     }
 
     if (gunit.Class == genie::Unit::Farm) {
@@ -106,6 +123,18 @@ Unit::Ptr UnitFactory::createUnit(const int ID, const MapPos &position, const Pl
     }
 
     unitManager.add(unit);
+
+    const std::vector<genie::Task>  &taskList = DataManager::datFile().UnitHeaders[ID].TaskList;
+    if (gunit.Action.DefaultTaskID >= 0 && gunit.Action.DefaultTaskID < taskList.size()) {
+        handleDefaultAction(unit, taskList[gunit.Action.DefaultTaskID], unitManager);
+    } else {
+        for (const genie::Task &task : taskList) {
+            if (task.IsDefault) {
+                handleDefaultAction(unit, task, unitManager);
+                break;
+            }
+        }
+    }
 
     return unit;
 }
