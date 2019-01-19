@@ -32,6 +32,17 @@ struct LogPrinter
         Error,
     };
 
+    inline std::string className(const std::string& prettyFunction)
+    {
+        size_t colons = prettyFunction.find("::");
+        if (colons == std::string::npos)
+            return "::";
+        size_t begin = prettyFunction.substr(0,colons).rfind(" ") + 1;
+        size_t end = colons - begin;
+
+        return prettyFunction.substr(begin,end);
+    }
+
     LogPrinter(const char *funcName, const char *filename, const int linenum, const LogType type) :
         m_funcName(funcName),
         m_filename(filename),
@@ -39,6 +50,10 @@ struct LogPrinter
         m_refs(new int)
     {
         *m_refs = 1;
+
+#ifndef _MSC_VER
+        std::cout <<  "\033[0;37m"<< className(funcName) << " ";
+#endif
 
         switch(type) {
         case LogType::Debug:
