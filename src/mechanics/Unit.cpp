@@ -315,6 +315,7 @@ DecayingEntity::Ptr Unit::createCorpse() const
     DecayingEntity::Ptr corpse = std::make_shared<DecayingEntity>(m_map.lock(), corpseData.StandingGraphic.first, decayTime);
     corpse->renderer().setPlayerId(playerId);
     corpse->setPosition(position());
+    corpse->renderer().setAngle(angle());
 
     return corpse;
 }

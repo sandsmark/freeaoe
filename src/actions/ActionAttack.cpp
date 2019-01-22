@@ -11,6 +11,9 @@ ActionAttack::ActionAttack(const Unit::Ptr &attacker, const Unit::Ptr &target, U
     m_targetPosition(target->position()),
     m_targetUnit(target)
 {
+    if (target->playerId == attacker->playerId) {
+        m_targetUnit.reset();
+    }
 }
 
 ActionAttack::ActionAttack(const Unit::Ptr &attacker, const MapPos &targetPos, UnitManager *unitManager) :
@@ -60,12 +63,7 @@ IAction::UpdateResult ActionAttack::update(Time time)
 
     const float angleToTarget = unit->position().toScreen().angleTo(m_targetPosition.toScreen());
     unit->setAngle(angleToTarget);
-    float distance;
-    if (targetUnit) {
-        distance = unit->distanceTo(targetUnit) / Constants::TILE_SIZE;
-    } else {
-        distance = unit->position().distance(m_targetPosition) / Constants::TILE_SIZE;
-    }
+    const float distance = unit->position().distance(m_targetPosition) / Constants::TILE_SIZE;
 
     bool inRange = true;
     if (targetUnit) {
