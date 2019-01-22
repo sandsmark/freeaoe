@@ -162,6 +162,8 @@ struct Unit : public Entity
 
     UnitManager &unitManager() const { return m_unitManager; }
 
+    float distanceTo(const Unit::Ptr &otherUnit) const;
+
 protected:
     Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager, const Type m_type);
 

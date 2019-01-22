@@ -200,6 +200,15 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
                 circle.setPointCount(4);
             }
 
+#ifdef DEBUG
+            rect.setFillColor(sf::Color::Transparent);
+            rect.setOutlineColor(sf::Color::White);
+            rect.setOutlineThickness(1);
+            rect.setSize(unit->rect().size());
+            rect.setPosition(camera->absoluteScreenPos(unit->position()) + unit->rect().topLeft());
+            m_outlineOverlay.draw(rect);
+#endif
+
             ScreenPos pos = camera->absoluteScreenPos(unit->position());
 
             circle.setPosition(pos.x - width, pos.y - height);
@@ -451,6 +460,11 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
 
     m_selectedUnits.clear();
     m_currentActions.clear();
+    Player::Ptr humanPlayer = m_humanPlayer.lock();
+    if (!humanPlayer) {
+        WARN << "human player gone";
+        return;
+    }
 
     std::vector<Unit::Ptr> containedUnits;
     int8_t requiredInteraction = genie::Unit::ObjectInteraction;
@@ -469,8 +483,9 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
         }
 
         m_selectedUnits.insert(unit);
-        m_currentActions.merge(unit->availableActions());
-
+        if (unit->playerId == humanPlayer->playerId) {
+            m_currentActions.merge(unit->availableActions());
+        }
     }
     for (const Unit::Ptr &unit : m_selectedUnits) {
         // stl is shit
@@ -549,14 +564,16 @@ void UnitManager::enqueueResearch(const genie::Tech *techData, const UnitSet pro
 
 Unit::Ptr UnitManager::unitAt(const ScreenPos &pos, const CameraPtr &camera) const
 {
-    MapPos mpos = camera->absoluteMapPos(pos);
+//    MapPos mpos = camera->absoluteMapPos(pos);
     for (const Unit::Ptr &unit : m_units) {
         if (!unit->isVisible) {
             continue;
         }
 
-        MapRect unitRect(unit->position(), unit->selectionSize());
-        if (unitRect.contains(mpos)) {
+//        MapRect unitRect(unit->position(), unit->selectionSize());
+        const ScreenPos unitPosition = camera->absoluteScreenPos(unit->position());
+        const ScreenRect unitRect = unit->rect() + unitPosition;
+        if (unitRect.contains(pos)) {
             return unit;
         }
     }
@@ -624,7 +641,7 @@ const Task UnitManager::defaultActionAt(const ScreenPos &pos, const CameraPtr &c
         }
 
         if (action->ActionType == genie::Task::Combat &&
-                action->TargetDiplomacy == genie::Task::TargetGaiaNeutralEnemies && ownPlayerId != target->playerId) {
+                (action->TargetDiplomacy == genie::Task::TargetGaiaNeutralEnemies || action->TargetDiplomacy == genie::Task::TargetNeutralsEnemies)  && ownPlayerId != target->playerId) {
             return task;
         }
         if (target->creationProgress() < 1) {

@@ -57,7 +57,8 @@ public:
     enum class UpdateResult {
         Updated,
         NotUpdated,
-        Completed
+        Completed,
+        Failed
     };
 
     const Type type = Type::None;

@@ -28,8 +28,8 @@ IAction::UpdateResult ActionFly::update(Time time)
     const float movement = elapsed * unit->data()->Speed * 0.15;
 
     MapPos pos = unit->position();
-    pos.x += cos(unit->angle()) * movement;
-    pos.y += sin(unit->angle()) * movement;
+    pos.x += cos(unit->angle() - M_PI) * movement;
+    pos.y += sin(unit->angle() - M_PI) * movement;
     if (pos.x < 0) {
         pos.x = unit->map()->width() - 1;
     }

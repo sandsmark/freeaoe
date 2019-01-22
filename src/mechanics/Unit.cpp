@@ -108,6 +108,11 @@ bool Unit::update(Time time)
             break;
         case IAction::UpdateResult::NotUpdated:
             break;
+        case IAction::UpdateResult::Failed:
+            WARN << "action failed";
+            m_actionQueue.clear();
+            removeAction(m_currentAction);
+            break;
         }
 
         if (!m_currentAction || prevState != m_currentAction->unitState()) {
@@ -312,6 +317,16 @@ DecayingEntity::Ptr Unit::createCorpse() const
     corpse->setPosition(position());
 
     return corpse;
+}
+
+float Unit::distanceTo(const Unit::Ptr &otherUnit) const
+{
+    const float xSize = (otherUnit->data()->Size.x + data()->Size.x) * Constants::TILE_SIZE;
+    const float ySize = (otherUnit->data()->Size.y + data()->Size.y) * Constants::TILE_SIZE;
+    const float xDistance = std::abs(otherUnit->position().x - position().x);
+    const float yDistance = std::abs(otherUnit->position().y - position().y);
+
+    return std::hypot(std::max(xDistance - xSize, 0.f), std::max(yDistance - ySize, 0.f));
 }
 
 float Unit::hitpointsLeft() const

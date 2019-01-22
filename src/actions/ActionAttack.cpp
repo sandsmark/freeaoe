@@ -40,11 +40,6 @@ IAction::UpdateResult ActionAttack::update(Time time)
         m_targetPosition = targetUnit->position();
     }
 
-    if (targetUnit && targetUnit->healthLeft() <= 0.f) {
-        DBG << "Target unit dead";
-        return IAction::UpdateResult::Completed;
-    }
-
     // Siege weapon can attack ground
     if (!targetUnit && !unitFiresMissiles(unit)) {
         DBG << "Target unit gone";
@@ -65,9 +60,25 @@ IAction::UpdateResult ActionAttack::update(Time time)
 
     const float angleToTarget = unit->position().toScreen().angleTo(m_targetPosition.toScreen());
     unit->setAngle(angleToTarget);
-    const float distance = unit->position().distance(m_targetPosition) / Constants::TILE_SIZE;
+    float distance;
+    if (targetUnit) {
+        distance = unit->distanceTo(targetUnit) / Constants::TILE_SIZE;
+    } else {
+        distance = unit->position().distance(m_targetPosition) / Constants::TILE_SIZE;
+    }
 
-    if (distance > unit->data()->Combat.MaxRange) {
+    bool inRange = true;
+    if (targetUnit) {
+        const float xSize = (targetUnit->data()->Size.x + unit->data()->Size.x) * Constants::TILE_SIZE + unit->data()->Combat.MaxRange + 10;
+        const float ySize = (targetUnit->data()->Size.y + unit->data()->Size.y) * Constants::TILE_SIZE + unit->data()->Combat.MaxRange + 10;
+        const float xDistance = std::abs(targetUnit->position().x - unit->position().x);
+        const float yDistance = std::abs(targetUnit->position().y - unit->position().y);
+        if (xDistance > xSize || yDistance > ySize) {
+            inRange = false;
+        }
+    }
+
+    if (!inRange && distance > unit->data()->Combat.MaxRange) {
         const float angleToTarget = unit->position().angleTo(m_targetPosition);
         float targetX = m_targetPosition.x + cos(angleToTarget + M_PI) * unit->data()->Combat.MaxRange * Constants::TILE_SIZE / 1.1;
         float targetY = m_targetPosition.y + sin(angleToTarget + M_PI) * unit->data()->Combat.MaxRange * Constants::TILE_SIZE / 1.1;
@@ -87,6 +98,10 @@ IAction::UpdateResult ActionAttack::update(Time time)
     if (timeSinceLastAttack < unit->data()->Combat.ReloadTime) {
         return IAction::UpdateResult::NotUpdated;
     }
+
+    if (targetUnit && targetUnit->healthLeft() <= 0.f) {
+        return IAction::UpdateResult::Completed;
+    }
     m_lastAttackTime = time;
 
     if (unit->data()->Creatable.SecondaryProjectileUnit != -1) { // I think we should prefer the secondary, for some reason, at least those are cooler
@@ -95,6 +110,11 @@ IAction::UpdateResult ActionAttack::update(Time time)
     } else if (unit->data()->Combat.ProjectileUnitID != -1) {
         spawnMissiles(unit, unit->data()->Combat.ProjectileUnitID,  m_targetPosition);
         return IAction::UpdateResult::Updated;
+    } else {
+        for (const genie::unit::AttackOrArmor &attack : unit->data()->Combat.Attacks) {
+            targetUnit->takeDamage(attack, 1.); // todo: damage multiplier
+        }
+
     }
 
 
