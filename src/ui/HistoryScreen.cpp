@@ -223,8 +223,9 @@ void HistoryScreen::display()
 void HistoryScreen::render()
 {
     sf::Sprite sprite;
-    sprite.setPosition(317, 32);
-    sprite.setTexture(m_historyEntries[m_currentEntry].illustration);
+    const sf::Texture &illustration = m_historyEntries[m_currentEntry].illustration;
+    sprite.setPosition(525 - illustration.getSize().x/2, 70);
+    sprite.setTexture(illustration);
     m_renderWindow->draw(sprite);
 
     for (int i=0; i<UiElementsCount; i++) {
@@ -388,6 +389,22 @@ bool HistoryScreen::handleMouseEvent(const sf::Event &event)
 
     }
     return false;
+}
+
+void HistoryScreen::handleKeyEvent(const sf::Event &event)
+{
+    if (event.key.code == sf::Keyboard::Up) {
+        if (m_textScrollOffset > 0) {
+            m_textScrollOffset--;
+            updateVisibleText();
+        }
+    } else if (event.key.code == sf::Keyboard::Down) {
+        if (m_textScrollOffset < int(m_textLines.size()) - s_numVisibleTextLines) {
+            m_textScrollOffset++;
+            updateVisibleText();
+        }
+    }
+
 }
 
 void HistoryScreen::loadFile(const std::string &filePath)

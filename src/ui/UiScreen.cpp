@@ -97,6 +97,10 @@ bool UiScreen::run()
             event.mouseMove.y = mappedPos.y;
         }
 
+        if (event.type == sf::Event::KeyPressed) {
+            handleKeyEvent(event);
+        }
+
         if (handleMouseEvent(event)) {
             m_renderWindow->close();
             continue;

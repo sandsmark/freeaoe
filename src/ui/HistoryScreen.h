@@ -91,6 +91,7 @@ private:
 
     void render() override;
     bool handleMouseEvent(const sf::Event &event) override;
+    void handleKeyEvent(const sf::Event &event) override;
     void loadFile(const std::string &filePath);
 
     void updateVisibleText();

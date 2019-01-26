@@ -48,6 +48,7 @@ protected:
     UiScreen(const char *uiFile);
     virtual void render() = 0;
     virtual bool handleMouseEvent(const sf::Event &event) = 0;
+    virtual void handleKeyEvent(const sf::Event &) {}
 
     sf::Color m_textFillColor;
     sf::Color m_textOutlineColor;
