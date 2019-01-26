@@ -52,6 +52,7 @@ protected:
     sf::Color m_textFillColor;
     sf::Color m_textOutlineColor;
     int m_paletteId = 0;
+    float m_buttonOpacity = 1.f;
     std::unique_ptr<sf::RenderWindow> m_renderWindow;
 
 private:

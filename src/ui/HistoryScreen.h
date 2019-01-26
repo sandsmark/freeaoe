@@ -36,6 +36,13 @@ class HistoryScreen : public UiScreen
         ScreenRect rect;
     };
 
+    struct HistoryEntry {
+        sf::Texture illustration;
+        std::string title;
+        std::string filename;
+        int index = 0;
+    };
+
     enum UiElementTextures {
         LargeScrollbarTexture,
         UpButtonTexture,
@@ -60,12 +67,15 @@ class HistoryScreen : public UiScreen
         TextDownButton,
         TextPositionIndicator,
 
+        MainScreenButton,
+
         UiElementsCount
     };
 
     struct UiElement {
         sf::Texture texture;
-        sf::Texture hlTexture;
+        sf::Texture hoverTexture;
+        sf::Texture pressTexture;
         ScreenRect rect;
     };
 
@@ -85,8 +95,7 @@ private:
     void updateVisibleText();
     void updateVisibleTitles();
 
-    std::vector<std::string> m_titles;
-    std::vector<std::string> m_sourceFiles;
+    std::vector<HistoryEntry> m_historyEntries;
 
     std::array<UiElement, UiElementsCount> m_uiElements;
 
@@ -98,7 +107,12 @@ private:
     UiElements m_currentUiElement = InvalidUiElement;
     UiElements m_pressedUiElement = InvalidUiElement;
 
+    ScreenRect m_homeButtonRect;
+    ScreenRect m_textRect;
+
     int m_textScrollOffset = 0;
     int m_titleScrollOffset = 0;
     int m_currentEntry = 0;
+
+    sf::Text m_mainScreenText;
 };

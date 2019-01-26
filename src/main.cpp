@@ -86,45 +86,51 @@ int main(int argc, char **argv)
 
     genie::ScnFilePtr scenarioFile;
     if (config.getValue("single-player") != "true") {
-        HomeScreen home;
-        if (!home.init()) {
-            return 1;
-        }
+        bool startGame = false;
 
-        switch (home.getSelection()) {
-        case HomeScreen::Button::Exit:
-            return 0;
-        case HomeScreen::Button::History: {
-            HistoryScreen history;
-            if (!history.init(config.getValue("game-path") + "/History/")) {
+        while (!startGame) {
+            HomeScreen home;
+            if (!home.init()) {
                 return 1;
             }
-            history.display();
-            return 0;
-        }
-        case HomeScreen::Button::Tutorial: {
-            try {
-                genie::CpxFile cpxFile;
-                cpxFile.setFileName(config.getValue("game-path") + "/Campaign/xcam3.cpx");
-                cpxFile.load();
 
-                scenarioFile = cpxFile.getScnFile(0);
-            } catch (const std::exception &error) {
-                WARN << "Failed to load" << ":" << error.what();
-            }
-
-            break;
-        }
-        default:
-            if (!config.getValue("scenario-file").empty()) {
-                try {
-                    scenarioFile = std::make_shared<genie::ScnFile>();
-                    scenarioFile->load(config.getValue("scenario-file"));
-                } catch (const std::exception &error) {
-                    WARN << "Failed to load" << config.getValue("scenario-file") << ":" << error.what();
+            switch (home.getSelection()) {
+            case HomeScreen::Button::Exit:
+                return 0;
+            case HomeScreen::Button::History: {
+                HistoryScreen history;
+                if (!history.init(config.getValue("game-path") + "/History/")) {
+                    return 1;
                 }
+                history.display();
+                break;
             }
-            break;
+            case HomeScreen::Button::Tutorial: {
+                startGame = true;
+                try {
+                    genie::CpxFile cpxFile;
+                    cpxFile.setFileName(config.getValue("game-path") + "/Campaign/xcam3.cpx");
+                    cpxFile.load();
+
+                    scenarioFile = cpxFile.getScnFile(0);
+                } catch (const std::exception &error) {
+                    WARN << "Failed to load" << ":" << error.what();
+                }
+
+                break;
+            }
+            default:
+                startGame = true;
+                if (!config.getValue("scenario-file").empty()) {
+                    try {
+                        scenarioFile = std::make_shared<genie::ScnFile>();
+                        scenarioFile->load(config.getValue("scenario-file"));
+                    } catch (const std::exception &error) {
+                        WARN << "Failed to load" << config.getValue("scenario-file") << ":" << error.what();
+                    }
+                }
+                break;
+            }
         }
     }
 

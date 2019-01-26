@@ -63,6 +63,7 @@ bool UiScreen::init()
 
     m_textFillColor = sf::Color(uiFile->textColor1.r, uiFile->textColor1.g, uiFile->textColor1.b);
     m_textOutlineColor = sf::Color(uiFile->textColor2.r, uiFile->textColor2.g, uiFile->textColor2.b);
+    m_buttonOpacity = uiFile->shadePercent / 100.;
 
     return true;
 }
