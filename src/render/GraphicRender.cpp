@@ -105,7 +105,7 @@ void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos scree
 {
     if (m_frameChanged) {
         const float pan = (screenPos.x - renderTarget.getSize().x/2) / renderTarget.getSize().x;
-        if (pan > 0 && pan < 1) {
+        if (pan > -1 && pan < 1) {
             maybePlaySound(pan);
         }
     }
