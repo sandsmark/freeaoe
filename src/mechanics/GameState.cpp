@@ -541,6 +541,8 @@ void GameState::setupGame(const GameType /*gameType*/)
         unit->setAngle(angle);
     };
 
+    UnitFactory::Inst().createUnit(827, MapPos(48*10, 48*9, 0), m_humanPlayer, *m_unitManager); // militia
+
     UnitFactory::Inst().createUnit(74, MapPos(48*8, 48*9, 0), m_humanPlayer, *m_unitManager); // militia
 
     // some walls for testing wall rotation

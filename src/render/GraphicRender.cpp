@@ -169,7 +169,7 @@ bool GraphicRender::setGraphic(const GraphicPtr &graphic)
     m_graphic = graphic;
     m_currentFrame = 0;
     m_currentSound = 0;
-    m_firstShowing = true;
+    m_frameChanged = true;
     m_deltas.clear();
 
     if (!graphic) {
@@ -266,33 +266,31 @@ void GraphicRender::maybePlaySound(const float pan)
     }
 
     const genie::GraphicAngleSound angleSound = m_graphic->soundForAngle(m_angle);
-    switch(m_currentSound) {
-    case 0:
+//    switch(m_currentSound) {
+//    case 0:
         if (m_currentFrame != angleSound.FrameNum) {
             return;
         }
         AudioPlayer::instance().playSound(angleSound.SoundID, m_civId, pan);
-        break;
-    case 1:
-        if (m_currentFrame != angleSound.FrameNum2) {
-            return;
-        }
-        AudioPlayer::instance().playSound(angleSound.SoundID2, m_civId, pan);
-        break;
-    case 2:
-        if (m_currentFrame != angleSound.FrameNum3) {
-            return;
-        }
-        AudioPlayer::instance().playSound(angleSound.SoundID3, m_civId, pan);
-        break;
-    default:
-        return;
-    }
+//        break;
+//    case 1:
+//        if (m_currentFrame != angleSound.FrameNum2) {
+//            return;
+//        }
+//        AudioPlayer::instance().playSound(angleSound.SoundID2, m_civId, pan);
+//        break;
+//    case 2:
+//        if (m_currentFrame != angleSound.FrameNum3) {
+//            return;
+//        }
+//        AudioPlayer::instance().playSound(angleSound.SoundID3, m_civId, pan);
+//        break;
+//    default:
+//        return;
+//    }
 
-    m_firstShowing = false;
-
-    m_currentSound++;
-    if (m_currentSound > 2) {
-        m_currentSound = 0;
-    }
+//    m_currentSound++;
+//    if (m_currentSound > 2) {
+//        m_currentSound = 0;
+//    }
 }

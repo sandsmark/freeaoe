@@ -107,7 +107,6 @@ private:
 
     int m_playerId = 0;
     int m_civId = 0;
-    bool m_firstShowing = true;
 
     int m_currentFrame;
     float m_angle = 0;

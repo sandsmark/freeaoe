@@ -76,6 +76,10 @@ bool Missile::update(Time time)
     if (position().z <= map->elevationAt(position())) {
         DBG << "we hit the ground";
         m_renderer.setGraphic(AssetManager::Inst()->getGraphic(m_data.DyingGraphic));
+        Player::Ptr player = m_player.lock();
+        if (player && m_data.DyingSound != -1) {
+            AudioPlayer::instance().playSound(m_data.DyingSound, player->civ->id());
+        }
         m_isFlying = false;
         return false;
     }
