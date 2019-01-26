@@ -18,6 +18,7 @@
 #include "resource/LanguageManager.h"
 #include "render/SfmlRenderTarget.h"
 #include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Window/Event.hpp>
 #include "core/Utility.h"
 
 #include <fstream>
@@ -53,60 +54,62 @@ bool HistoryScreen::init(const std::string &filesDir)
     for (int i=0; i<UiElementsCount; i++) {
         UiElement &element = m_uiElements[i];
 
-        int frameNum = i;
+        int frameNum = -1;
+        int hlFramenum = -1;
         switch(i) {
-        case LargeScrollbar:
-            element.rect.x = 218;
-            element.rect.y = 29;
+        case TitlesScrollbar:
+            element.rect.x = 217;
+            element.rect.y = 30;
+            frameNum = LargeScrollbarTexture;
             break;
-        case UpButton:
-            element.rect.x = 218;
-            element.rect.y = 29;
+        case TitlesPositionIndicator:
+            element.rect.x = 210;
+            element.rect.y = 40;
+            frameNum = ScrollPositionTexture;
             break;
-        case ActiveUpButton:
-            element.rect.x = 218;
-            element.rect.y = 29;
+        case TitlesUpButton:
+            element.rect.x = 212;
+            element.rect.y = 25;
+            hlFramenum = ActiveUpButtonTexture;
+            frameNum = UpButtonTexture;
             break;
-        case DownButton:
-            element.rect.x = 218;
-            element.rect.y = 350;
-            break;
-        case ActiveDownButton:
-            element.rect.x = 218;
-            element.rect.y = 350;
-            break;
-        case SmallScrollbar:
-            element.rect.x = 684;
-            element.rect.y = 300;
-            break;
-        case ScrollPosition:
-            element.rect.x = 218;
-            element.rect.y = 50;
-            break;
-        case UpButton2:
-            element.rect.x = 218;
-            element.rect.y = 29;
-            frameNum = UpButton;
-            break;
-        case ActiveUpButton2:
-            element.rect.x = 218;
-            element.rect.y = 29;
-            frameNum = ActiveUpButton;
-            break;
-        case DownButton2:
-            element.rect.x = 218;
-            element.rect.y = 29;
-            frameNum = DownButton;
-            break;
-        case ActiveDownButton2:
-            element.rect.x = 218;
-            element.rect.y = 29;
-            frameNum = ActiveDownButton;
+        case TitlesDownButton:
+            element.rect.x = 212;
+            element.rect.y = 369;
+            hlFramenum = ActiveDownButtonTexture;
+            frameNum = DownButtonTexture;
             break;
 
+        case TextScrolllbar:
+            element.rect.x = 735;
+            element.rect.y = 286;
+            frameNum = SmallScrollbarTexture;
+            break;
+        case TextPositionIndicator:
+            element.rect.x = 728;
+            element.rect.y = 286;
+            frameNum = ScrollPositionTexture;
+            break;
+        case TextUpButton:
+            element.rect.x = 730;
+            element.rect.y = 271;
+            frameNum = UpButtonTexture;
+            hlFramenum = ActiveUpButtonTexture;
+            break;
+
+        case TextDownButton:
+            element.rect.x = 730;
+            element.rect.y = 510;
+            frameNum = DownButtonTexture;
+            hlFramenum = ActiveDownButtonTexture;
+            break;
         default:
             frameNum = 0;
             break;
+        }
+
+        if (hlFramenum != -1) {
+            element.hlTexture.loadFromImage(Resource::convertFrameToImage(slpFile->getFrame(hlFramenum), palette));
         }
 
         const genie::SlpFramePtr &frame = slpFile->getFrame(frameNum);
@@ -144,14 +147,17 @@ bool HistoryScreen::init(const std::string &filesDir)
 
     float posY = 22;
     for (int i=0; i<s_numListEntries; i++) {
-        m_visibleTitles[i].setFont(font);
-        m_visibleTitles[i].setCharacterSize(s_textSize);
-        m_visibleTitles[i].setPosition(17, posY);
-        m_visibleTitles[i].setFillColor(sf::Color::Black);
+        m_visibleTitles[i].text.setFont(font);
+        m_visibleTitles[i].text.setCharacterSize(s_textSize);
+        m_visibleTitles[i].text.setPosition(17, posY);
+        m_visibleTitles[i].text.setFillColor(sf::Color::Black);
+        m_visibleTitles[i].text.setOutlineThickness(1.5);
+        m_visibleTitles[i].text.setOutlineColor(sf::Color::Transparent);
+        m_visibleTitles[i].rect = ScreenRect(17, posY, 195, font.getLineSpacing(s_textSize));
         posY += font.getLineSpacing(s_textSize);
     }
 
-    posY = 280;
+    posY = 275;
     for (int i=0; i<s_numVisibleTextLines; i++) {
         m_visibleText[i].setFont(font);
         m_visibleText[i].setCharacterSize(s_textSize);
@@ -162,7 +168,6 @@ bool HistoryScreen::init(const std::string &filesDir)
 
     loadFile(m_sourceFiles[0]);
 
-    updateVisibleText();
     updateVisibleTitles();
 
     return true;
@@ -178,7 +183,11 @@ void HistoryScreen::render()
 {
     for (int i=0; i<UiElementsCount; i++) {
         sf::Sprite sprite;
-        sprite.setTexture(m_uiElements[i].texture);
+        if (i == m_currentUiElement && m_uiElements[i].hlTexture.getSize().x > 0) {
+            sprite.setTexture(m_uiElements[i].hlTexture);
+        } else {
+            sprite.setTexture(m_uiElements[i].texture);
+        }
         sprite.setPosition(m_uiElements[i].rect.topLeft());
         m_renderWindow->draw(sprite);
     }
@@ -191,12 +200,106 @@ void HistoryScreen::render()
         m_renderWindow->draw(m_visibleText[i]);
     }
     for (int i=0; i<s_numListEntries; i++) {
-        m_renderWindow->draw(m_visibleTitles[i]);
+        m_renderWindow->draw(m_visibleTitles[i].text);
     }
 }
 
 bool HistoryScreen::handleMouseEvent(const sf::Event &event)
 {
+    if (event.type == sf::Event::MouseMoved) {
+        if (m_pressedUiElement == TitlesPositionIndicator) {
+            const int maxY = m_uiElements[TitlesDownButton].rect.y - m_uiElements[TitlesUpButton].rect.bottom() - m_uiElements[TitlesPositionIndicator].rect.height/2;
+            m_titleScrollOffset = (m_titles.size() - s_numListEntries) * (event.mouseMove.y - m_uiElements[TitlesUpButton].rect.bottom()) / maxY;
+            m_titleScrollOffset = std::min(m_titleScrollOffset, int(m_titles.size()) - s_numListEntries);
+            m_titleScrollOffset = std::max(m_titleScrollOffset, 0);
+            updateVisibleTitles();
+            return false;
+        }
+        if (m_pressedUiElement == TextPositionIndicator) {
+            const int maxY = m_uiElements[TextDownButton].rect.y - m_uiElements[TextUpButton].rect.bottom() - m_uiElements[TextPositionIndicator].rect.height/2;
+            m_textScrollOffset = (m_textLines.size() - s_numListEntries) * (event.mouseMove.y - m_uiElements[TextUpButton].rect.bottom()) / maxY;
+            m_textScrollOffset = std::min(m_textScrollOffset, int(m_textLines.size()) - s_numVisibleTextLines);
+            m_textScrollOffset = std::max(m_textScrollOffset, 0);
+            updateVisibleText();
+            return false;
+        }
+        m_currentUiElement = InvalidUiElement;
+        for (int i=UiElementsCount-1; i>=0; i--) {
+            if (m_uiElements[i].rect.contains(ScreenPos(event.mouseMove.x, event.mouseMove.y)) && m_uiElements[i].hlTexture.getSize().x > 0) {
+                m_currentUiElement = UiElements(i);
+                return false;
+            }
+        }
+        return false;
+    } else if (event.type == sf::Event::MouseButtonPressed) {
+        m_pressedUiElement = InvalidUiElement;
+
+        for (int i=0; i<s_numListEntries; i++) {
+            const int index = i + m_titleScrollOffset;
+            if (m_visibleTitles[i].rect.contains(ScreenPos(event.mouseButton.x, event.mouseButton.y))) {
+                m_currentEntry = index;
+                loadFile(m_sourceFiles[index]);
+                updateVisibleTitles();
+                return false;
+            }
+        }
+
+        for (int i=UiElementsCount-1; i>=0; i--) {
+            if (!m_uiElements[i].rect.contains(ScreenPos(event.mouseButton.x, event.mouseButton.y))) {
+                continue;
+            }
+
+            switch (i) {
+            case TitlesUpButton:
+                if (m_titleScrollOffset > 0) {
+                    m_titleScrollOffset--;
+                    updateVisibleTitles();
+                }
+
+                break;
+            case TitlesDownButton:
+                if (m_titleScrollOffset < int(m_titles.size()) - s_numListEntries) {
+                    m_titleScrollOffset++;
+                    updateVisibleTitles();
+                }
+
+                break;
+            case TitlesScrollbar: {
+                const int maxY = m_uiElements[TitlesDownButton].rect.y - m_uiElements[TitlesUpButton].rect.bottom() - m_uiElements[TitlesPositionIndicator].rect.height/2;
+                m_titleScrollOffset = (m_titles.size() - s_numListEntries) * (event.mouseButton.y - m_uiElements[TitlesUpButton].rect.bottom()) / maxY;
+                updateVisibleTitles();
+                m_pressedUiElement = TitlesPositionIndicator;
+                break;
+            }
+            case TextUpButton:
+                if (m_textScrollOffset > 0) {
+                    m_textScrollOffset--;
+                    updateVisibleText();
+                }
+                break;
+            case TextDownButton:
+                if (m_textScrollOffset < int(m_textLines.size()) - s_numVisibleTextLines) {
+                    m_textScrollOffset++;
+                    updateVisibleText();
+                }
+                break;
+            case TextScrolllbar: {
+                const int maxY = m_uiElements[TextDownButton].rect.y - m_uiElements[TextUpButton].rect.bottom() - m_uiElements[TextPositionIndicator].rect.height/2;
+                m_textScrollOffset = (m_textLines.size() - s_numListEntries) * (event.mouseButton.y - m_uiElements[TextUpButton].rect.bottom()) / maxY;
+                updateVisibleText();
+                m_pressedUiElement = TextPositionIndicator;
+                break;
+            }
+            default:
+                continue;
+            }
+
+
+            return false;
+        }
+    } else if (event.type == sf::Event::MouseButtonReleased) {
+        m_pressedUiElement = InvalidUiElement;
+    }
     return false;
 }
 
@@ -261,6 +364,8 @@ void HistoryScreen::loadFile(const std::string &filePath)
         line.text = util::stringReplace(line.text, "<B>", "");
         line.text = util::stringReplace(line.text, "<I>", "");
     }
+
+    updateVisibleText();
 }
 
 void HistoryScreen::updateVisibleText()
@@ -284,17 +389,29 @@ void HistoryScreen::updateVisibleText()
             m_visibleText[i].setStyle(m_visibleText[i].getStyle() | sf::Text::Italic);
         }
     }
+
+    int maxY = m_uiElements[TextDownButton].rect.y - m_uiElements[TextUpButton].rect.bottom() - m_uiElements[TextPositionIndicator].rect.height;
+    m_uiElements[TextPositionIndicator].rect.y = m_uiElements[TextUpButton].rect.bottom() + maxY * m_textScrollOffset / (m_textLines.size() - s_numVisibleTextLines);
 }
 
 void HistoryScreen::updateVisibleTitles()
 {
     for (int i=0; i<s_numListEntries; i++) {
         const int index = i + m_titleScrollOffset;
+
+        if (index == m_currentEntry) {
+            m_visibleTitles[i].text.setOutlineColor(sf::Color::Yellow);
+        } else {
+            m_visibleTitles[i].text.setOutlineColor(sf::Color::Transparent);
+        }
+
         if (index >= m_titles.size()) {
-            m_visibleTitles[i].setString("");
+            m_visibleTitles[i].text.setString("");
             continue;
         }
-        m_visibleTitles[i].setString(m_titles[index]);
+        m_visibleTitles[i].text.setString(m_titles[index]);
     }
+    int maxY = m_uiElements[TitlesDownButton].rect.y - m_uiElements[TitlesUpButton].rect.bottom() - m_uiElements[TitlesPositionIndicator].rect.height;
+    m_uiElements[TitlesPositionIndicator].rect.y = m_uiElements[TitlesUpButton].rect.bottom() + maxY * m_titleScrollOffset / (m_titles.size() - s_numListEntries);
 }
 

@@ -38,6 +38,7 @@ class UiScreen
 {
 public:
     UiScreen() = delete;
+    virtual ~UiScreen() {}
 
     virtual bool init();
 

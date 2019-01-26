@@ -22,7 +22,7 @@ class HistoryScreen : public UiScreen
 {
     static const int s_numListEntries = 16;
     static const int s_numVisibleTextLines = 11;
-    static const int s_textWidth = 420;
+    static const int s_textWidth = 400; //height = 236
     static const int s_textSize = 16;
 
     struct TextLine {
@@ -31,26 +31,41 @@ class HistoryScreen : public UiScreen
         std::string text;
     };
 
-    enum UiElements {
-        LargeScrollbar,
-        UpButton,
-        ActiveUpButton,
-        DownButton,
-        ActiveDownButton,
-        SmallScrollbar,
-        ScrollPosition,
+    struct ClickableText {
+        sf::Text text;
+        ScreenRect rect;
+    };
 
-        UpButton2,
-        ActiveUpButton2,
-        DownButton2,
-        ActiveDownButton2,
-        ScrollPosition2,
+    enum UiElementTextures {
+        LargeScrollbarTexture,
+        UpButtonTexture,
+        ActiveUpButtonTexture,
+        DownButtonTexture,
+        ActiveDownButtonTexture,
+        SmallScrollbarTexture,
+        ScrollPositionTexture,
+
+        UiElementTextureCount
+    };
+    enum UiElements {
+        InvalidUiElement = -1,
+
+        TitlesScrollbar,
+        TitlesUpButton,
+        TitlesDownButton,
+        TitlesPositionIndicator,
+
+        TextScrolllbar,
+        TextUpButton,
+        TextDownButton,
+        TextPositionIndicator,
 
         UiElementsCount
     };
 
     struct UiElement {
         sf::Texture texture;
+        sf::Texture hlTexture;
         ScreenRect rect;
     };
 
@@ -73,23 +88,17 @@ private:
     std::vector<std::string> m_titles;
     std::vector<std::string> m_sourceFiles;
 
-//    Button m_largeScrollbar;
-//    Button m_smallScrollbar;
-
-//    Button m_scrollIndicator;
-
-//    Button m_upButton;
-//    Button m_downButton;
-//    Button m_upButtonPressed;
-//    Button m_downButtonPressed;
-
     std::array<UiElement, UiElementsCount> m_uiElements;
 
-    std::array<sf::Text, s_numListEntries> m_visibleTitles;
+    std::array<ClickableText, s_numListEntries> m_visibleTitles;
     std::array<sf::Text, s_numVisibleTextLines> m_visibleText;
 
     std::vector<TextLine> m_textLines;
 
+    UiElements m_currentUiElement = InvalidUiElement;
+    UiElements m_pressedUiElement = InvalidUiElement;
+
     int m_textScrollOffset = 0;
     int m_titleScrollOffset = 0;
+    int m_currentEntry = 0;
 };
