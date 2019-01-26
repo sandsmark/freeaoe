@@ -404,9 +404,11 @@ void HistoryScreen::loadFile(const std::string &filePath)
 
     TextLine currentLine;
 
-    float currentWidth = 0.f;
     const sf::Font &font = SfmlRenderTarget::defaultFont();
 
+    std::string currentWord;
+    float currentWordWidth= 0.f;
+    const float spaceWidth = font.getGlyph(' ', s_textSize, false).advance;
     while (!file.eof()) {
         char character = file.get();
 
@@ -414,21 +416,36 @@ void HistoryScreen::loadFile(const std::string &filePath)
             continue;
         }
 
-        if (character == '\n') {
-            m_textLines.push_back(std::move(currentLine));
-            currentWidth = 0;
+        if (character != ' ' && character != '\n') {
+            currentWord += character;
+            currentWordWidth += font.getGlyph(character, s_textSize, false).advance;
             continue;
         }
-        // fixme bold
-        const float width = font.getGlyph(character, s_textSize, false).advance;
-        if (currentWidth + width > s_textWidth) {
+
+        if (character == '\n') {
+            if (currentLine.width + currentWordWidth > s_textWidth) {
+                m_textLines.push_back(std::move(currentLine));
+            }
+
+            currentLine.text += currentWord;
+
             m_textLines.push_back(std::move(currentLine));
-            currentWidth = 0;
-        } else {
-            currentWidth += width;
+            currentLine.width = 0;
+            currentWord.clear();
+            currentWordWidth = 0;
+            continue;
         }
 
-        currentLine.text += character;
+        if (currentLine.width + currentWordWidth > s_textWidth) {
+            m_textLines.push_back(std::move(currentLine));
+            currentLine.width = 0;
+        }
+
+        currentLine.text += currentWord + ' ';
+        currentLine.width += currentWordWidth + spaceWidth;
+
+        currentWord.clear();
+        currentWordWidth = 0;
     }
 
     if (!currentLine.text.empty()) {

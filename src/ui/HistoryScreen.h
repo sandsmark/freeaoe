@@ -28,6 +28,7 @@ class HistoryScreen : public UiScreen
     struct TextLine {
         bool italic = false;
         bool bold = false;
+        float width = 0.f;
         std::string text;
     };
 
