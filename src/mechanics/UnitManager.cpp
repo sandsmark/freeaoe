@@ -516,6 +516,29 @@ void UnitManager::setSelectedUnits(const UnitSet &units)
 {
     m_selectedUnits = units;
     m_buildingToPlace.reset();
+
+    if (!units.empty()) {
+        int selectionSound = (*units.begin())->data()->SelectionSound;
+        for (const Unit::Ptr &unit : units) {
+            if (unit->data()->SelectionSound == -1) {
+                continue;
+            }
+
+            if (selectionSound == -1) {
+                selectionSound = unit->data()->SelectionSound;
+                continue;
+            }
+
+            if (selectionSound != unit->data()->SelectionSound) {
+                selectionSound = -1;
+                break;
+            }
+        }
+
+        if (selectionSound != -1) {
+            AudioPlayer::instance().playSound(selectionSound, (*units.begin())->civilization->id());
+        }
+    }
 }
 
 void UnitManager::placeBuilding(const int unitId, const std::shared_ptr<Player> &player)
@@ -666,6 +689,7 @@ const Task UnitManager::defaultActionAt(const ScreenPos &pos, const CameraPtr &c
 
 void UnitManager::moveUnitTo(const Unit::Ptr &unit, const MapPos &targetPos)
 {
+    AudioPlayer::instance().playSound(unit->data()->Action.MoveSound, unit->civilization->id());
     unit->setCurrentAction(ActionMove::moveUnitTo(unit, targetPos, m_map, this));
 }
 
@@ -714,6 +738,8 @@ void UnitManager::assignTask(const Task &task, const Unit::Ptr &unit, const Unit
         if (target) {
             DBG << "attacking" << target->debugName;
         }
+
+        AudioPlayer::instance().playSound(unit->data()->Action.AttackSound, unit->civilization->id());
         unit->queueAction(std::make_shared<ActionAttack>(unit, target, this));
         break;
     default:

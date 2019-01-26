@@ -244,6 +244,12 @@ const std::vector<genie::GraphicDelta> Graphic::deltas() const
     return m_data.Deltas;
 }
 
+const genie::GraphicAngleSound &Graphic::soundForAngle(float angle)
+{
+    int orientation = angleToOrientation(angle);
+    return m_data.AngleSounds[orientation % m_data.AngleSounds.size()];
+}
+
 //------------------------------------------------------------------------------
 float Graphic::getFrameRate() const
 {

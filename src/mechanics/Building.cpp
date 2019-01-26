@@ -3,10 +3,12 @@
 #include <genie/dat/Unit.h>
 #include <genie/dat/Research.h>
 #include "resource/LanguageManager.h"
+#include "mechanics/Civilization.h"
 #include "Map.h"
 #include "UnitFactory.h"
 #include "core/Constants.h"
 #include "resource/DataManager.h"
+#include "audio/AudioPlayer.h"
 
 Building::Building(const genie::Unit &data_, const std::shared_ptr<Player> &player, UnitManager &unitManager) :
     Unit(data_, player, unitManager, Entity::Type::Building)
@@ -297,6 +299,9 @@ void Building::finalizeUnit()
     waypoint.y = position().y + 24;
 
     Unit::Ptr unit = UnitFactory::Inst().createUnit(m_currentProduct->unit->ID, waypoint, owner, m_unitManager);
+
+    AudioPlayer::instance().playSound(unit->data()->TrainSound, unit->civilization->id());
+
     DBG << "Finalized" << unit->debugName;
 }
 

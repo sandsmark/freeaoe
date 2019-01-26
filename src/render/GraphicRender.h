@@ -77,6 +77,7 @@ public:
     virtual void render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType renderpass);
 
     void setPlayerId(int playerId);
+    void setCivId(int civId) { m_civId = civId; }
 
     bool setGraphic(const GraphicPtr &graphic);
     inline const GraphicPtr &graphic() const { return m_graphic; }
@@ -93,6 +94,8 @@ public:
 
 
 private:
+    void maybePlaySound(const float pan);
+
     struct GraphicDelta {
         GraphicRenderPtr graphic;
         ScreenPos offset;
@@ -103,9 +106,14 @@ private:
     std::vector<GraphicDelta> m_deltas;
 
     int m_playerId = 0;
+    int m_civId = 0;
+    bool m_firstShowing = true;
 
     int m_currentFrame;
     float m_angle = 0;
     GraphicPtr m_graphic;
+
+    bool m_frameChanged = false;
+    int m_currentSound = 0;
 };
 

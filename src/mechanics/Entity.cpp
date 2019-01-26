@@ -52,7 +52,7 @@ bool Entity::update(Time time)
 {
     bool updated = false;
 
-    updated = m_renderer.update(time) || updated;
+    updated = (m_renderer.update(time) && isVisible) || updated;
 
     return updated && isVisible;
 }

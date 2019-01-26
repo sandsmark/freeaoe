@@ -138,7 +138,7 @@ void AudioPlayer::playSample(const std::shared_ptr<uint8_t> &data, const float p
     sts_mixer_play_sample(m_mixer.get(), sample, 1., 1., pan);
 }
 
-void AudioPlayer::playSound(const int id, const int civilization)
+void AudioPlayer::playSound(const int id, const int civilization, const float pan)
 {
     const std::vector<genie::Sound> &sounds = DataManager::datFile().Sounds;
     if (id < 0 || id >= sounds.size()) {
@@ -180,7 +180,7 @@ void AudioPlayer::playSound(const int id, const int civilization)
         return;
     }
 
-    playSample(wavPtr);
+    playSample(wavPtr, pan);
 }
 
 AudioPlayer &AudioPlayer::instance()

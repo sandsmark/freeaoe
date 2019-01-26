@@ -1,5 +1,6 @@
 #include "Missile.h"
 
+#include "audio/AudioPlayer.h"
 #include "resource/LanguageManager.h"
 #include "mechanics/UnitManager.h"
 #include "mechanics/Map.h"
@@ -198,6 +199,11 @@ bool Missile::update(Time time)
     if (m_data.Missile.HitMode) {
         m_isFlying = false;
         m_renderer.setGraphic(AssetManager::Inst()->getGraphic(m_data.DyingGraphic));
+
+        Player::Ptr player = m_player.lock();
+        if (player && m_data.DyingSound != -1) {
+            AudioPlayer::instance().playSound(m_data.DyingSound, player->civ->id());
+        }
     }
 
     for (Unit::Ptr &hitUnit : hitUnits) {

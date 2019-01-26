@@ -517,9 +517,6 @@ void GameState::setupGame(const GameType /*gameType*/)
     m_players.push_back(m_humanPlayer);
     map_->setUpSample();
 
-    UnitFactory::Inst().createUnit(Unit::FuriousTheMonkeyBoy, MapPos(48*6, 48*10, 0), m_humanPlayer, *m_unitManager);
-    UnitFactory::Inst().createUnit(Unit::Cobra, MapPos(48*8, 48*6, 0), m_humanPlayer, *m_unitManager);
-
     UnitFactory::Inst().createUnit(Unit::MaleBuilder, MapPos(48*2, 48*12, 0), m_humanPlayer, *m_unitManager);
 
 
@@ -543,6 +540,8 @@ void GameState::setupGame(const GameType /*gameType*/)
         unit = UnitFactory::Inst().createUnit(117, MapPos(48*x, 48*y, 0), m_humanPlayer, *m_unitManager);
         unit->setAngle(angle);
     };
+
+    UnitFactory::Inst().createUnit(74, MapPos(48*8, 48*9, 0), m_humanPlayer, *m_unitManager); // militia
 
     // some walls for testing wall rotation
     addWall(4, 4, 0);

@@ -1,5 +1,6 @@
 #include "ActionAttack.h"
 #include "ActionMove.h"
+#include "audio/AudioPlayer.h"
 #include "mechanics/UnitManager.h"
 #include "core/Constants.h"
 #include "mechanics/Player.h"

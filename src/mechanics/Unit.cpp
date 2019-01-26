@@ -17,6 +17,7 @@
 */
 
 #include "Unit.h"
+#include "audio/AudioPlayer.h"
 #include "resource/LanguageManager.h"
 #include "mechanics/Civilization.h"
 #include "mechanics/Map.h"
@@ -36,6 +37,7 @@ Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, Uni
     m_unitManager(unitManager)
 {
     m_renderer.setPlayerId(playerId);
+    m_renderer.setCivId(civilization->id());
 
     setUnitData(data_);
     m_creationProgress = m_data->Creatable.TrainTime;
@@ -216,11 +218,18 @@ void Unit::takeDamage(const genie::unit::AttackOrArmor &attack, const float dama
     }
     newDamage *= damageMultiplier;
     newDamage = std::max(newDamage, 1.f);
+
     m_damageTaken += newDamage;
 
     if (hitpointsLeft() <= 0) {
         m_renderer.setGraphic(AssetManager::Inst()->getGraphic(m_data->DyingGraphic));
+
+        DBG  << data()->DyingSound;
+        if (data()->DyingSound != -1) {
+            AudioPlayer::instance().playSound(data()->DyingSound, civilization->id());
+        }
     }
+
 }
 
 bool Unit::isDying() const

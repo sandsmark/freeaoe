@@ -127,6 +127,12 @@ public:
 
     const std::vector<genie::GraphicDelta> deltas() const;
 
+    bool hasSounds() const { return m_data.AngleSoundsUsed; }
+
+    const genie::GraphicAngleSound &soundForAngle(float angle);
+
+    int sound() const { return m_data.SoundID; }
+
     //----------------------------------------------------------------------------
     /// Get the frame rate of the graphic
     ///

@@ -18,6 +18,7 @@
 
 #include "GraphicRender.h"
 
+#include "audio/AudioPlayer.h"
 #include <resource/AssetManager.h>
 #include <resource/DataManager.h>
 #include <SFML/Graphics/Sprite.hpp>
@@ -40,6 +41,8 @@ GraphicRender::~GraphicRender()
 
 bool GraphicRender::update(Time time)
 {
+    m_frameChanged = false;
+
     bool updated = false;
     for (GraphicDelta &delta : m_deltas) {
         if (delta.angleToDrawOn >= 0 && delta.graphic->m_graphic->angleToOrientation(m_angle) != delta.angleToDrawOn) {
@@ -78,6 +81,11 @@ bool GraphicRender::update(Time time)
                 newFrame++;
             } else {
                 newFrame = 0;
+
+                m_currentSound++;
+                if (m_currentSound > 2) {
+                    m_currentSound = 0;
+                }
             }
 
             m_lastFrameTime = time;
@@ -85,16 +93,23 @@ bool GraphicRender::update(Time time)
     }
 
     if (newFrame != m_currentFrame) {
-        updated = true;
+        m_frameChanged = true;
     }
 
     m_currentFrame = newFrame;
 
-    return updated;
+    return updated || m_frameChanged;
 }
 
 void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType renderpass)
 {
+    if (m_frameChanged) {
+        const float pan = (screenPos.x - renderTarget.getSize().x/2) / renderTarget.getSize().x;
+        if (pan > 0 && pan < 1) {
+            maybePlaySound(pan);
+        }
+    }
+
     for (const GraphicDelta &delta : m_deltas) {
         if (delta.angleToDrawOn >= 0 && delta.graphic->m_graphic->angleToOrientation(m_angle) != delta.angleToDrawOn) {
             continue;
@@ -153,6 +168,8 @@ bool GraphicRender::setGraphic(const GraphicPtr &graphic)
 {
     m_graphic = graphic;
     m_currentFrame = 0;
+    m_currentSound = 0;
+    m_firstShowing = true;
     m_deltas.clear();
 
     if (!graphic) {
@@ -234,4 +251,48 @@ void GraphicRender::setCurrentFrame(int frame)
     }
 
     m_currentFrame = frame;
+}
+
+void GraphicRender::maybePlaySound(const float pan)
+{
+    if (m_graphic->sound() != -1 && m_currentFrame == 0) {
+        AudioPlayer::instance().playSound(m_graphic->sound(), m_civId, pan);
+
+    }
+
+
+    if (!m_graphic->hasSounds()) {
+        return;
+    }
+
+    const genie::GraphicAngleSound angleSound = m_graphic->soundForAngle(m_angle);
+    switch(m_currentSound) {
+    case 0:
+        if (m_currentFrame != angleSound.FrameNum) {
+            return;
+        }
+        AudioPlayer::instance().playSound(angleSound.SoundID, m_civId, pan);
+        break;
+    case 1:
+        if (m_currentFrame != angleSound.FrameNum2) {
+            return;
+        }
+        AudioPlayer::instance().playSound(angleSound.SoundID2, m_civId, pan);
+        break;
+    case 2:
+        if (m_currentFrame != angleSound.FrameNum3) {
+            return;
+        }
+        AudioPlayer::instance().playSound(angleSound.SoundID3, m_civId, pan);
+        break;
+    default:
+        return;
+    }
+
+    m_firstShowing = false;
+
+    m_currentSound++;
+    if (m_currentSound > 2) {
+        m_currentSound = 0;
+    }
 }

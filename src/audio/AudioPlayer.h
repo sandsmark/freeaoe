@@ -14,7 +14,7 @@ public:
     AudioPlayer();
     ~AudioPlayer();
 
-    void playSound(const int id, const int civilization);
+    void playSound(const int id, const int civilization, const float pan = 0.f);
 
     static AudioPlayer &instance();
 
