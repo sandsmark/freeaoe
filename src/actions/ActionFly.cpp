@@ -27,9 +27,10 @@ IAction::UpdateResult ActionFly::update(Time time)
 
     const float movement = elapsed * unit->data()->Speed * 0.15;
 
-    MapPos pos = unit->position();
-    pos.x += cos(unit->angle() - M_PI) * movement;
-    pos.y += sin(unit->angle() - M_PI) * movement;
+    // Need to convert to screen, because I'm dumb and the angles are screen relative
+    const ScreenPos screenMovement(cos(unit->angle()), sin(unit->angle()));
+    MapPos pos = unit->position() + screenMovement.toMap() * movement;
+
     if (pos.x < 0) {
         pos.x = unit->map()->width() - 1;
     }
@@ -46,4 +47,9 @@ IAction::UpdateResult ActionFly::update(Time time)
     unit->setPosition(pos);
 
     return UpdateResult::Updated;
+}
+
+IAction::UnitState ActionFly::unitState() const
+{
+    return UnitState::Proceeding;
 }

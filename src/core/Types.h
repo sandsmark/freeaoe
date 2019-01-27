@@ -125,6 +125,13 @@ struct MapPos {
         return *this;
     }
 
+    inline MapPos &operator-=(const MapPos &other) {
+        x -= other.x;
+        y -= other.y;
+        z -= other.z;
+        return *this;
+    }
+
     inline MapPos &operator+=(const Size &size) {
         x += size.width;
         y += size.height;
@@ -144,12 +151,16 @@ struct MapPos {
         return *this;
     }
 
-    inline MapPos operator/(float divisor) {
+    inline MapPos operator/(float divisor) const {
         MapPos ret(*this);
         ret.x /= divisor;
         ret.y /= divisor;
         ret.z /= divisor;
         return ret;
+    }
+
+    inline MapPos operator*(float multiplier) const {
+        return MapPos(x * multiplier, y * multiplier, z * multiplier);
     }
 
     inline MapPos &operator*=(float factor) {
@@ -292,7 +303,7 @@ struct ScreenPos {
 
 
     /// screen position to relative map position (map(0,0,0) is on screen(0,0)
-    MapPos toMap() const;
+    MapPos toMap(const float z = 0.f) const;
 };
 
 inline ScreenPos operator -(const ScreenPos& left, const ScreenPos& right)
@@ -327,11 +338,12 @@ inline ScreenPos MapPos::toScreen() const
     );
 }
 
-inline MapPos ScreenPos::toMap() const
+inline MapPos ScreenPos::toMap(const float z) const
 {
     return MapPos(
         x / 2.0 - y,
-        x / 2.0 + y
+        x / 2.0 + y,
+        z
     );
 
 }

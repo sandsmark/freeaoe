@@ -363,16 +363,24 @@ int Unit::taskGraphicId(const genie::Task::ActionTypes taskType, const IAction::
         switch(state) {
         case IAction::Idle:
         case IAction::Proceeding:
-            return task.ProceedingGraphicID;
+            if (task.ProceedingGraphicID != -1) {
+                return task.ProceedingGraphicID;
+            }
             break;
         case IAction::Moving:
-            return task.MovingGraphicID;
+            if (task.MovingGraphicID != -1) {
+                return task.MovingGraphicID;
+            }
             break;
         case IAction::Working:
-            return task.WorkingGraphicID;
+            if (task.WorkingGraphicID != -1) {
+                return task.WorkingGraphicID;
+            }
             break;
         case IAction::Carrying:
-            return task.CarryingGraphicID;
+            if (task.CarryingGraphicID != -1){
+                return task.CarryingGraphicID;
+            }
             break;
         default:
             break;
@@ -395,6 +403,9 @@ void Unit::updateGraphic()
             break;
         case IAction::Type::Gather:
             graphic = AssetManager::Inst()->getGraphic(taskGraphicId(genie::Task::GatherRebuild, m_currentAction->unitState()));
+            break;
+        case IAction::Type::Fly:
+            graphic = AssetManager::Inst()->getGraphic(taskGraphicId(genie::Task::Fly, m_currentAction->unitState()));
             break;
         case IAction::Type::Attack:
             if (m_currentAction->unitState() == IAction::UnitState::Attacking) {

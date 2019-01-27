@@ -272,6 +272,7 @@ std::shared_ptr<ActionMove> ActionMove::moveUnitTo(const Unit::Ptr &unit, MapPos
     return action;
 }
 
+#if 0
 static std::vector<MapPos> simplifyAngles(const std::vector<MapPos> &path)
 {
     std::vector<MapPos> cleanedPath;
@@ -287,6 +288,7 @@ static std::vector<MapPos> simplifyAngles(const std::vector<MapPos> &path)
 
     return cleanedPath;
 }
+#endif
 
 static std::vector<MapPos> simplifyRdp(const std::vector<MapPos> &path, const float epsilon)
 {
