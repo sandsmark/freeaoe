@@ -73,6 +73,7 @@ public:
     virtual ~GraphicRender();
 
     bool update(Time time);
+    bool isValid() const { return m_graphic && m_graphic->isValid(); }
 
     virtual void render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType renderpass);
 
@@ -92,6 +93,7 @@ public:
     inline int currentFrame() const { return m_currentFrame; }
     void setCurrentFrame(int frame);
 
+    void setPlaySounds(bool playSound) { m_playSounds = playSound; }
 
 private:
     void maybePlaySound(const float pan, const float volume);
@@ -114,5 +116,6 @@ private:
 
     bool m_frameChanged = false;
     int m_currentSound = 0;
+    bool m_playSounds = false;
 };
 

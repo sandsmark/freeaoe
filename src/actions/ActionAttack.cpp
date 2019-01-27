@@ -103,6 +103,8 @@ IAction::UpdateResult ActionAttack::update(Time time)
     }
     m_lastAttackTime = time;
 
+    // TODO: Create a flare here owned by the owner of the targeted unit, to show where the attack is coming from
+
     if (unit->data()->Creatable.SecondaryProjectileUnit != -1) { // I think we should prefer the secondary, for some reason, at least those are cooler
         spawnMissiles(unit, unit->data()->Creatable.SecondaryProjectileUnit, m_targetPosition);
         return IAction::UpdateResult::Updated;

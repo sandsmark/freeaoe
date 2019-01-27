@@ -103,7 +103,7 @@ bool GraphicRender::update(Time time)
 
 void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType renderpass)
 {
-    if (m_frameChanged) {
+    if (m_frameChanged && m_playSounds) {
         m_frameChanged = false;
 
         const ScreenPos screenCenter = ScreenPos(renderTarget.getSize().x/2., renderTarget.getSize().y/2.);
@@ -210,7 +210,7 @@ bool GraphicRender::setGraphic(const GraphicPtr &graphic)
 
 ScreenRect GraphicRender::rect() const
 {
-    if (!m_graphic || !m_graphic->isValid()) {
+    if (!isValid()) {
         return ScreenRect();
     }
 
@@ -223,6 +223,10 @@ ScreenRect GraphicRender::rect() const
     ret.height = size.y;
 
     for (const GraphicDelta &delta : m_deltas) {
+        if (delta.graphic->isValid()) {
+            continue;
+        }
+
         if (delta.angleToDrawOn >= 0 && delta.graphic->m_graphic->angleToOrientation(m_angle) != delta.angleToDrawOn) {
             continue;
         }

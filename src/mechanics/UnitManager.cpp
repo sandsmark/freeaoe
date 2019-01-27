@@ -176,15 +176,15 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
 
     for (const Unit::Ptr &unit : visibleUnits) {
 
-        const bool showTargetOutline = unit->targetBlinkTimeLeft > 0 &&
+        const bool blinkingAsTarget = unit->targetBlinkTimeLeft > 0 &&
                 (((unit->targetBlinkTimeLeft) / 500) % 2 == 0) &&
                 !unit->isDead() && !unit->isDying();
 
-        if (showTargetOutline || m_selectedUnits.count(unit)) { // draw health indicator
+        if (blinkingAsTarget || m_selectedUnits.count(unit)) { // draw health indicator
             sf::RectangleShape rect;
             sf::CircleShape circle;
             circle.setFillColor(sf::Color::Transparent);
-            if (showTargetOutline) {
+            if (blinkingAsTarget) {
                 circle.setOutlineColor(sf::Color::Green);
             } else {
                 circle.setOutlineColor(sf::Color::White);
@@ -221,7 +221,7 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
             circle.setOutlineColor(sf::Color::Black);
             renderTarget->draw(circle);
 
-            if (!showTargetOutline) {
+            if (!blinkingAsTarget) {
                 pos.x -= Constants::TILE_SIZE_HORIZONTAL / 8;
                 pos.y -= height + Constants::TILE_SIZE_HEIGHT * unit->data()->HPBarHeight;
 

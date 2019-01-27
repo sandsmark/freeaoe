@@ -418,6 +418,12 @@ void Unit::updateGraphic()
         }
     }
 
+    if (m_currentAction && m_currentAction->unitState() != IAction::Idle) {
+        m_renderer.setPlaySounds(true);
+    } else {
+        m_renderer.setPlaySounds(false);
+    }
+
     if (!graphic) {
         DBG << "No graphic";
         graphic = defaultGraphics;
@@ -464,14 +470,12 @@ void Unit::setCurrentAction(const ActionPtr &action)
 void Unit::removeAction(const ActionPtr &action)
 {
     if (action == m_currentAction) {
-        m_currentAction.reset();
-        m_renderer.setGraphic(defaultGraphics);
-
         if (!m_actionQueue.empty()) {
             DBG << "changing action to queued one";
             setCurrentAction(m_actionQueue.front());
             m_actionQueue.pop_front();
         } else {
+            setCurrentAction(nullptr);
             DBG << "no actions queued";
         }
     } else {
