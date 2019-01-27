@@ -356,9 +356,11 @@ float Unit::healthLeft() const
 int Unit::taskGraphicId(const genie::Task::ActionTypes taskType, const IAction::UnitState state)
 {
     for (const genie::Task &task : DataManager::datFile().UnitHeaders[m_data->ID].TaskList) {
-        if (task.ActionType != taskType) {
+        if (task.ActionType != taskType &&
+                !(taskType == genie::Task::GatherRebuild && task.ActionType == genie::Task::Hunt)) {
             continue;
         }
+
         switch(state) {
         case IAction::Idle:
         case IAction::Proceeding:

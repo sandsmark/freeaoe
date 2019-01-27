@@ -664,10 +664,6 @@ const Task UnitManager::defaultActionAt(const ScreenPos &pos, const CameraPtr &c
             continue;
         }
 
-        if (action->ActionType == genie::Task::Combat &&
-                (action->TargetDiplomacy == genie::Task::TargetGaiaNeutralEnemies || action->TargetDiplomacy == genie::Task::TargetNeutralsEnemies)  && ownPlayerId != target->playerId) {
-            return task;
-        }
         if (target->creationProgress() < 1) {
             if (action->ActionType == genie::Task::Build) {
                 return task;
@@ -683,6 +679,22 @@ const Task UnitManager::defaultActionAt(const ScreenPos &pos, const CameraPtr &c
         if (action->ClassID == target->data()->Class) {
             return task;
         }
+    }
+
+    // Try more generic targeting
+    for (const Task &task : m_currentActions) {
+        const genie::Task *action = task.data;
+        if (action->ActionType != genie::Task::Combat) {
+            continue;
+        }
+        if (action->TargetDiplomacy != genie::Task::TargetGaiaNeutralEnemies && action->TargetDiplomacy != genie::Task::TargetNeutralsEnemies) {
+            continue;
+        }
+        if (ownPlayerId == target->playerId) {
+            continue;
+        }
+
+        return task;
     }
 
     return Task();
@@ -731,6 +743,7 @@ void UnitManager::assignTask(const Task &task, const Unit::Ptr &unit, const Unit
         unit->queueAction(ActionMove::moveUnitTo(unit, target->position(), m_map, this));
         unit->queueAction(std::make_shared<ActionBuild>(unit, target, this));
         break;
+    case genie::Task::Hunt:
     case genie::Task::GatherRebuild:
         unit->queueAction(ActionMove::moveUnitTo(unit, target->position(), m_map, this));
         unit->queueAction(std::make_shared<ActionGather>(unit, target, task.data, this));
