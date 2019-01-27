@@ -393,37 +393,58 @@ int Unit::taskGraphicId(const genie::Task::ActionTypes taskType, const IAction::
 
 void Unit::updateGraphic()
 {
-    GraphicPtr graphic;
-    if (m_currentAction) {
-        switch (m_currentAction->type) {
-        case IAction::Type::Move:
-            graphic = movingGraphics;
-            break;
-        case IAction::Type::Build:
-            graphic = AssetManager::Inst()->getGraphic(taskGraphicId(genie::Task::Build, m_currentAction->unitState()));
-            break;
-        case IAction::Type::Gather:
-            graphic = AssetManager::Inst()->getGraphic(taskGraphicId(genie::Task::GatherRebuild, m_currentAction->unitState()));
-            break;
-        case IAction::Type::Fly:
-            graphic = AssetManager::Inst()->getGraphic(taskGraphicId(genie::Task::Fly, m_currentAction->unitState()));
-            break;
-        case IAction::Type::Attack:
-            if (m_currentAction->unitState() == IAction::UnitState::Attacking) {
-                DBG << "Setting graphic";
-                graphic = AssetManager::Inst()->getGraphic(data()->Combat.AttackGraphic);
-                graphic->setRunOnce(true);
-            }
-            break;
-        default:
-            break;
-        }
-    }
-
     if (m_currentAction && m_currentAction->unitState() != IAction::Idle) {
         m_renderer.setPlaySounds(true);
     } else {
         m_renderer.setPlaySounds(false);
+    }
+
+    if (!m_currentAction) {
+        m_renderer.setGraphic(defaultGraphics);
+        return;
+    }
+
+    GraphicPtr graphic;
+
+    switch (m_currentAction->type) {
+    case IAction::Type::Move:
+        graphic = movingGraphics;
+        for (const genie::Task &task : DataManager::datFile().UnitHeaders[m_data->ID].TaskList) {
+            if (task.ActionType != genie::Task::GatherRebuild && task.ActionType != genie::Task::Hunt) {
+                continue;
+            }
+
+            if (task.ResourceIn == -1) {
+                continue;
+            }
+
+            if (resources[genie::ResourceType(task.ResourceIn)] > 0) {
+                if (task.CarryingGraphicID != -1) {
+                    graphic = AssetManager::Inst()->getGraphic(task.CarryingGraphicID);
+                    break;
+                }
+            }
+        }
+
+        break;
+    case IAction::Type::Build:
+        graphic = AssetManager::Inst()->getGraphic(taskGraphicId(genie::Task::Build, m_currentAction->unitState()));
+        break;
+    case IAction::Type::Gather:
+        graphic = AssetManager::Inst()->getGraphic(taskGraphicId(genie::Task::GatherRebuild, m_currentAction->unitState()));
+        break;
+    case IAction::Type::Fly:
+        graphic = AssetManager::Inst()->getGraphic(taskGraphicId(genie::Task::Fly, m_currentAction->unitState()));
+        break;
+    case IAction::Type::Attack:
+        if (m_currentAction->unitState() == IAction::UnitState::Attacking) {
+            DBG << "Setting graphic";
+            graphic = AssetManager::Inst()->getGraphic(data()->Combat.AttackGraphic);
+            graphic->setRunOnce(true);
+        }
+        break;
+    default:
+        break;
     }
 
     if (!graphic) {
@@ -431,9 +452,7 @@ void Unit::updateGraphic()
         graphic = defaultGraphics;
     }
 
-
     m_renderer.setGraphic(graphic);
-
 }
 
 float Unit::angle() const
