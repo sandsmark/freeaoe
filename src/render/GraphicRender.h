@@ -94,7 +94,7 @@ public:
 
 
 private:
-    void maybePlaySound(const float pan);
+    void maybePlaySound(const float pan, const float volume);
 
     struct GraphicDelta {
         GraphicRenderPtr graphic;

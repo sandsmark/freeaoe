@@ -286,6 +286,10 @@ struct ScreenPos {
         return atan2(other.y - y, other.x - x);
     }
 
+    float distanceTo(const ScreenPos &other) const {
+        return std::sqrt((other.x - x) * (other.x - x) + (other.y - y) * (other.y - y));
+    }
+
 
     /// screen position to relative map position (map(0,0,0) is on screen(0,0)
     MapPos toMap() const;

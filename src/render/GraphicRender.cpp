@@ -104,10 +104,13 @@ bool GraphicRender::update(Time time)
 void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType renderpass)
 {
     if (m_frameChanged) {
-        const float pan = (screenPos.x - renderTarget.getSize().x/2) / renderTarget.getSize().x;
-        if (pan > -1 && pan < 1) {
-            maybePlaySound(pan);
-        }
+        m_frameChanged = false;
+
+        const ScreenPos screenCenter = ScreenPos(renderTarget.getSize().x/2., renderTarget.getSize().y/2.);
+        const float pan = (screenPos.x - screenCenter.x) / screenCenter.x;
+        const float maxDistance = screenCenter.distanceTo(ScreenPos(0, 0));
+        const float volume = (maxDistance - screenCenter.distanceTo(screenPos)) / maxDistance;
+        maybePlaySound(pan, volume);
     }
 
     for (const GraphicDelta &delta : m_deltas) {
@@ -185,6 +188,8 @@ bool GraphicRender::setGraphic(const GraphicPtr &graphic)
         GraphicDelta delta;
         delta.graphic = std::make_shared<GraphicRender>();
         delta.graphic->setPlayerId(m_playerId);
+        delta.graphic->setCivId(m_civId);
+        delta.graphic->setAngle(m_angle);
 
         // Don't use setGraphic, to avoid recursive adding of deltas
         delta.graphic->m_graphic =  AssetManager::Inst()->getGraphic(deltaData.GraphicID);
@@ -253,44 +258,29 @@ void GraphicRender::setCurrentFrame(int frame)
     m_currentFrame = frame;
 }
 
-void GraphicRender::maybePlaySound(const float pan)
+void GraphicRender::maybePlaySound(const float pan, const float volume)
 {
-    if (m_graphic->sound() != -1 && m_currentFrame == 0) {
-        AudioPlayer::instance().playSound(m_graphic->sound(), m_civId, pan);
-
+    if (pan <= -1.0f || pan >= 1.0f) {
+        return;
     }
 
+    if (m_graphic->sound() != -1 && m_currentFrame == 0) {
+        AudioPlayer::instance().playSound(m_graphic->sound(), m_civId, pan, volume);
+
+    }
 
     if (!m_graphic->hasSounds()) {
         return;
     }
 
     const genie::GraphicAngleSound angleSound = m_graphic->soundForAngle(m_angle);
-//    switch(m_currentSound) {
-//    case 0:
-        if (m_currentFrame != angleSound.FrameNum) {
-            return;
-        }
-        AudioPlayer::instance().playSound(angleSound.SoundID, m_civId, pan);
-//        break;
-//    case 1:
-//        if (m_currentFrame != angleSound.FrameNum2) {
-//            return;
-//        }
-//        AudioPlayer::instance().playSound(angleSound.SoundID2, m_civId, pan);
-//        break;
-//    case 2:
-//        if (m_currentFrame != angleSound.FrameNum3) {
-//            return;
-//        }
-//        AudioPlayer::instance().playSound(angleSound.SoundID3, m_civId, pan);
-//        break;
-//    default:
-//        return;
-//    }
-
-//    m_currentSound++;
-//    if (m_currentSound > 2) {
-//        m_currentSound = 0;
-//    }
+    if (angleSound.FrameNum == m_currentFrame) {
+        AudioPlayer::instance().playSound(angleSound.SoundID, m_civId, pan, volume);
+    }
+    if (angleSound.FrameNum2 == m_currentFrame) {
+        AudioPlayer::instance().playSound(angleSound.SoundID2, m_civId, pan, volume);
+    }
+    if (angleSound.FrameNum3 == m_currentFrame) {
+        AudioPlayer::instance().playSound(angleSound.SoundID3, m_civId, pan, volume);
+    }
 }

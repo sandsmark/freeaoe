@@ -92,7 +92,7 @@ struct WavHeader {
     uint32_t Subchunk2Size;
 };
 
-void AudioPlayer::playSample(const std::shared_ptr<uint8_t> &data, const float pan)
+void AudioPlayer::playSample(const std::shared_ptr<uint8_t> &data, const float pan, const float volume)
 {
     std::lock_guard<std::mutex> guard(m_mutex);
 
@@ -135,10 +135,10 @@ void AudioPlayer::playSample(const std::shared_ptr<uint8_t> &data, const float p
     sample->data = data;
     sample->audiodata = data.get() + sizeof(WavHeader);
 
-    sts_mixer_play_sample(m_mixer.get(), sample, 1., 1., pan);
+    sts_mixer_play_sample(m_mixer.get(), sample, volume, 1., pan);
 }
 
-void AudioPlayer::playSound(const int id, const int civilization, const float pan)
+void AudioPlayer::playSound(const int id, const int civilization, const float pan, const float volume)
 {
     const std::vector<genie::Sound> &sounds = DataManager::datFile().Sounds;
     if (id < 0 || id >= sounds.size()) {
@@ -180,7 +180,7 @@ void AudioPlayer::playSound(const int id, const int civilization, const float pa
         return;
     }
 
-    playSample(wavPtr, pan);
+    playSample(wavPtr, pan, volume);
 }
 
 AudioPlayer &AudioPlayer::instance()
