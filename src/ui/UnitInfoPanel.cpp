@@ -143,14 +143,14 @@ bool UnitInfoPanel::init()
     return true;
 }
 
-void UnitInfoPanel::handleEvent(sf::Event event)
+bool UnitInfoPanel::handleEvent(sf::Event event)
 {
     if (event.type != sf::Event::MouseButtonPressed) {
-        return;
+        return false;
     }
 
     if (m_selectedUnits.empty()) {
-        return;
+        return false;
     }
 
     ScreenPos mousePos(event.mouseButton.x, event.mouseButton.y);
@@ -166,7 +166,7 @@ void UnitInfoPanel::handleEvent(sf::Event event)
     }
 
     if (clickedButton < 0) {
-        return;
+        return false;
     }
 
     DBG << "clicked" << clickedButton;
@@ -179,12 +179,14 @@ void UnitInfoPanel::handleEvent(sf::Event event)
     Building::Ptr building = Unit::asBuilding(clickedUnit);
     if (building && building->isProducing()) {
         building->abortProduction(clickedButton);
-        return;
+        return true;
     }
 
     clickedUnit = m_unitButtons[clickedButton].unit;
     std::shared_ptr<UnitManager> unitManager = m_unitManager.lock();
     unitManager->setSelectedUnits({clickedUnit});
+
+    return true;
 }
 
 bool UnitInfoPanel::update(Time /*time*/)

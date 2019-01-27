@@ -108,13 +108,24 @@ bool Minimap::init()
     return m_terrainTexture.create(m_rect.width, m_rect.height);
 }
 
-void Minimap::handleEvent(sf::Event event)
+bool Minimap::handleEvent(sf::Event event)
 {
-    if (event.type != sf::Event::MouseButtonPressed && event.type != sf::Event::MouseButtonReleased) {
-        return;
+    ScreenPos pos;
+    if (event.type == sf::Event::MouseButtonPressed || event.type == sf::Event::MouseButtonReleased) {
+        pos = ScreenPos (event.mouseButton.x, event.mouseButton.y);
+    } else if (event.type == sf::Event::MouseMoved && m_mousePressed) {
+        pos = ScreenPos (event.mouseMove.x, event.mouseMove.y);
+    } else {
+        return false;
     }
 
-    ScreenPos pos(event.mouseButton.x, event.mouseButton.y);
+    if (event.type == sf::Event::MouseButtonPressed) {
+        m_mousePressed = true;
+    } else if (event.type == sf::Event::MouseButtonReleased) {
+        m_mousePressed = false;
+        return true;
+    }
+
     // normalize to 0,0
     pos.x -= m_rect.x;
     pos.y -= m_rect.y;
@@ -127,6 +138,8 @@ void Minimap::handleEvent(sf::Event event)
     pos.y = fullBoundingRect.height * pos.y / m_rect.height;
 
     m_renderTarget->camera()->setTargetPosition(pos.toMap());
+
+    return true;
 }
 
 bool Minimap::update(Time /*time*/)

@@ -106,7 +106,7 @@ public:
     ActionPanel() = delete;
 
     bool init() override;
-    void handleEvent(sf::Event event) override;
+    bool handleEvent(sf::Event event) override;
     bool update(Time time) override;
     void draw() override;
 

@@ -332,50 +332,8 @@ bool GameState::update(Time time)
     return updated;
 }
 
-void GameState::handleEvent(sf::Event event)
+bool GameState::handleEvent(sf::Event event)
 {
-    if (event.type == sf::Event::MouseMoved) {
-        m_mouseCursor.sprite.setPosition(event.mouseMove.x, event.mouseMove.y);
-
-        if (event.mouseMove.x < MOUSE_MOVE_EDGE_SIZE) {
-            m_cameraDeltaX = -1;
-        } else if (event.mouseMove.x > renderTarget_->getSize().width - MOUSE_MOVE_EDGE_SIZE) {
-            m_cameraDeltaX = 1;
-        } else {
-            m_cameraDeltaX = 0;
-        }
-
-        if (event.mouseMove.y < MOUSE_MOVE_EDGE_SIZE) {
-            m_cameraDeltaY = 1;
-        } else if (event.mouseMove.y > renderTarget_->getSize().height - MOUSE_MOVE_EDGE_SIZE) {
-            m_cameraDeltaY = -1;
-        } else {
-            m_cameraDeltaY = 0;
-        }
-
-        ScreenPos mousePos(event.mouseMove.x, event.mouseMove.y);
-        if (m_selecting) {
-            m_selectionCurr = mousePos;
-        } else {
-            m_unitManager->onMouseMove(renderTarget_->camera()->absoluteMapPos(mousePos));
-        }
-
-        if (m_unitManager->state() == UnitManager::State::SelectingAttackTarget) {
-            m_mouseCursor.setCursor(Cursor::Attack);
-        } else {
-            const Task targetAction = m_unitManager->defaultActionAt(mousePos, renderTarget_->camera());
-            if (!targetAction.data) {
-                m_mouseCursor.setCursor(Cursor::Normal);
-            } else if (targetAction.data->ActionType == genie::Task::Combat) {
-                m_mouseCursor.setCursor(Cursor::Attack);
-            } else {
-                m_mouseCursor.setCursor(Cursor::Action);
-            }
-        }
-
-        return;
-    }
-
     if (event.type == sf::Event::KeyPressed) {
         ScreenPos cameraScreenPos = renderTarget_->camera()->targetPosition().toScreen();
 
@@ -397,7 +355,7 @@ void GameState::handleEvent(sf::Event event)
             break;
 
         default:
-            return;
+            return false;
         }
 
         MapPos cameraMapPos = cameraScreenPos.toMap();
@@ -406,24 +364,78 @@ void GameState::handleEvent(sf::Event event)
         if (cameraMapPos.x > map_->width()) { cameraMapPos.x = map_->width(); }
         if (cameraMapPos.y > map_->height()) { cameraMapPos.y = map_->height(); }
         renderTarget_->camera()->setTargetPosition(cameraMapPos);
+
+        return true;
     }
 
-    if ((event.type != sf::Event::MouseButtonPressed && event.type != sf::Event::MouseButtonReleased)) {
-        return;
+    if (event.type != sf::Event::MouseButtonPressed && event.type != sf::Event::MouseButtonReleased && event.type != sf::Event::MouseMoved) {
+        return false;
     }
 
-    const ScreenPos mousePos(event.mouseButton.x, event.mouseButton.y);
+    const ScreenPos mousePos = event.type == sf::Event::MouseMoved ?
+                ScreenPos(event.mouseMove.x, event.mouseMove.y)
+                    :
+                ScreenPos(event.mouseButton.x, event.mouseButton.y);
+
+    m_mouseCursor.sprite.setPosition(mousePos);
+    if (m_minimap->rect().contains(mousePos)) {
+        if (m_minimap->handleEvent(event)) {
+            return true;
+        }
+    } else {
+        m_minimap->mouseExited();
+    }
+
+    if (event.type == sf::Event::MouseMoved) {
+
+        if (event.mouseMove.x < MOUSE_MOVE_EDGE_SIZE) {
+            m_cameraDeltaX = -1;
+        } else if (event.mouseMove.x > renderTarget_->getSize().width - MOUSE_MOVE_EDGE_SIZE) {
+            m_cameraDeltaX = 1;
+        } else {
+            m_cameraDeltaX = 0;
+        }
+
+        if (event.mouseMove.y < MOUSE_MOVE_EDGE_SIZE) {
+            m_cameraDeltaY = 1;
+        } else if (event.mouseMove.y > renderTarget_->getSize().height - MOUSE_MOVE_EDGE_SIZE) {
+            m_cameraDeltaY = -1;
+        } else {
+            m_cameraDeltaY = 0;
+        }
+
+        if (mousePos.y < 800) {
+            if (m_selecting) {
+                m_selectionCurr = mousePos;
+            } else {
+                m_unitManager->onMouseMove(renderTarget_->camera()->absoluteMapPos(mousePos));
+            }
+
+            if (m_unitManager->state() == UnitManager::State::SelectingAttackTarget) {
+                m_mouseCursor.setCursor(Cursor::Attack);
+            } else {
+                const Task targetAction = m_unitManager->defaultActionAt(mousePos, renderTarget_->camera());
+                if (!targetAction.data) {
+                    m_mouseCursor.setCursor(Cursor::Normal);
+                } else if (targetAction.data->ActionType == genie::Task::Combat) {
+                    m_mouseCursor.setCursor(Cursor::Attack);
+                } else {
+                    m_mouseCursor.setCursor(Cursor::Action);
+                }
+            }
+
+        }
+    }
+
+    if (event.type != sf::Event::MouseButtonPressed && event.type != sf::Event::MouseButtonReleased) {
+        return false;
+    }
+
     if (m_actionPanel->rect().contains(mousePos)) {
-        m_actionPanel->handleEvent(event);
-        return;
+        return m_actionPanel->handleEvent(event);
     }
     if (m_unitInfoPanel->rect().contains(mousePos)) {
-        m_unitInfoPanel->handleEvent(event);
-        return;
-    }
-    if (m_minimap->rect().contains(mousePos)) {
-        m_minimap->handleEvent(event);
-        return;
+        return m_unitInfoPanel->handleEvent(event);
     }
 
     m_actionPanel->releaseButtons();
@@ -431,7 +443,7 @@ void GameState::handleEvent(sf::Event event)
     if (event.type == sf::Event::MouseButtonPressed) {
         if (event.mouseButton.button == sf::Mouse::Button::Left) {
             if (m_unitManager->onLeftClick(ScreenPos(event.mouseButton.x, event.mouseButton.y), renderTarget_->camera())) {
-                return;
+                return true;
             }
 
             m_selectionStart = ScreenPos(event.mouseButton.x, event.mouseButton.y);
@@ -449,8 +461,9 @@ void GameState::handleEvent(sf::Event event)
         } else if (event.mouseButton.button == sf::Mouse::Button::Right) {
             m_unitManager->onRightClick(ScreenPos(event.mouseButton.x, event.mouseButton.y), renderTarget_->camera());
         }
-
     }
+
+    return false;
 }
 
 Size GameState::uiSize() const

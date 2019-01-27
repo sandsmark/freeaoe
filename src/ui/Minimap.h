@@ -28,7 +28,8 @@ public:
     void setUnitManager(const std::shared_ptr<UnitManager> &unitManager);
 
     bool init() override;
-    void handleEvent(sf::Event event) override;
+    bool handleEvent(sf::Event event) override;
+    void mouseExited() { m_mousePressed = false; }
     bool update(Time time) override;
     void draw() override;
     ScreenRect rect() const { return m_rect; }
@@ -49,6 +50,7 @@ private:
     sf::RenderTexture m_unitsTexture;
     MapPos m_lastCameraPos;
     ScreenRect m_cameraRect;
+    bool m_mousePressed = false;
 
     MinimapMode m_mode = MinimapMode::Diplomatic; // easiest, so sue me
 };

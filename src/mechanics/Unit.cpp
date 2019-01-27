@@ -118,7 +118,6 @@ bool Unit::update(Time time)
         }
 
         if (!m_currentAction || prevState != m_currentAction->unitState()) {
-            DBG << "action change";
             updateGraphic();
         }
     }

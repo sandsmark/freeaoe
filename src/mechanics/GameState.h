@@ -140,7 +140,7 @@ public:
 
     void draw() override;
     bool update(Time time) override;
-    void handleEvent(sf::Event event) override;
+    bool handleEvent(sf::Event event) override;
     void setBuildableIcons();
 
     Size uiSize() const;

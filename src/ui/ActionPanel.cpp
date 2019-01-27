@@ -79,10 +79,10 @@ bool ActionPanel::init()
     return m_unitManager != nullptr;
 }
 
-void ActionPanel::handleEvent(sf::Event event)
+bool ActionPanel::handleEvent(sf::Event event)
 {
     if (event.type != sf::Event::MouseButtonPressed && event.type != sf::Event::MouseButtonReleased) {
-        return;
+        return false;
     }
 
     for (InterfaceButton &button : currentButtons) {
@@ -113,6 +113,8 @@ void ActionPanel::handleEvent(sf::Event event)
         }
         break;
     }
+
+    return true;
 }
 
 bool ActionPanel::update(Time /*time*/)

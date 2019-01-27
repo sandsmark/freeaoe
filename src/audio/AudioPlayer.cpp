@@ -172,7 +172,7 @@ void AudioPlayer::playSound(const int id, const int civilization, const float pa
         return;
     }
 
-    DBG << "playing" << sound.Items[selected].FileName;
+//    DBG << "playing" << sound.Items[selected].FileName;
 
     std::shared_ptr<uint8_t> wavPtr = AssetManager::Inst()->getWavPtr(wavId);
     if (!wavPtr) {

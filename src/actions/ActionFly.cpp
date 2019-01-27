@@ -25,6 +25,28 @@ IAction::UpdateResult ActionFly::update(Time time)
     const float elapsed = time - m_lastUpdateTime;
     m_lastUpdateTime = time;
 
+    if (time - m_lastTurnTime > 5000 && rand() % 100 > 99) {
+        m_lastTurnTime = time;
+
+        if (rand() % 2 == 0) {
+            // there are usually (basically always, and I'm lazy) 8 angles
+            unit->setAngle(unit->angle() + M_PI / 4);
+        } else {
+            unit->setAngle(unit->angle() - M_PI / 4);
+        }
+    }
+
+    const int inStateTime = m_currentState == Moving ? 500 : 5000;
+    if (time - m_lastStateChangeTime > inStateTime && rand() % 100 > 95 && unit->renderer().currentFrame() == 0) {
+        m_lastStateChangeTime = time;
+
+        if (rand() % 2 == 0) {
+            m_currentState = UnitState::Proceeding;
+        } else {
+            m_currentState = UnitState::Moving;
+        }
+    }
+
     const float movement = elapsed * unit->data()->Speed * 0.15;
 
     // Need to convert to screen, because I'm dumb and the angles are screen relative
@@ -51,5 +73,5 @@ IAction::UpdateResult ActionFly::update(Time time)
 
 IAction::UnitState ActionFly::unitState() const
 {
-    return UnitState::Proceeding;
+    return m_currentState;
 }
