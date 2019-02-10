@@ -75,7 +75,8 @@ public:
     Map();
     virtual ~Map();
 
-    void setUpSample();
+    void setupBasic();
+    void setupAllunitsMap();
 
     void create(genie::ScnMap mapDescription);
 

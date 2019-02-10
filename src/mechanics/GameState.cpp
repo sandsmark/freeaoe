@@ -39,6 +39,7 @@
 #include "ui/UnitInfoPanel.h"
 #include "ui/Minimap.h"
 #include "core/Constants.h"
+#include "debug/SampleGameFactory.h"
 
 #include "resource/LanguageManager.h"
 
@@ -524,53 +525,11 @@ void GameState::setupScenario()
 
 void GameState::setupGame(const GameType /*gameType*/)
 {
-    //Map test
+   SampleGamePtr sampleGameSetup = SampleGameFactory::Inst().createGameSetup(GameSampleId::AllUnitsGameSample, map_, m_unitManager);
 
-    m_humanPlayer = std::make_shared<Player>(0, m_civilizations[1], defaultStartingResources[m_gameType]);
+   sampleGameSetup->setupMap();
+   sampleGameSetup->setupActors(m_civilizations, defaultStartingResources[m_gameType]);
+
+    m_humanPlayer = sampleGameSetup->getHumanPlayer();
     m_players.push_back(m_humanPlayer);
-    map_->setUpSample();
-
-    UnitFactory::Inst().createUnit(Unit::MaleBuilder, MapPos(48*2, 48*12, 0), m_humanPlayer, *m_unitManager);
-
-
-    UnitFactory::Inst().createUnit(280, MapPos(48*11, 48*10, 0), m_humanPlayer, *m_unitManager); // mangonel
-
-    UnitFactory::Inst().createUnit(Unit::Mill, MapPos(48*15, 48*15, 0), m_humanPlayer, *m_unitManager);
-
-    Unit::Ptr unit = UnitFactory::Inst().createUnit(Unit::TownCenter, MapPos(48*2, 48*2, 0), m_humanPlayer, *m_unitManager);
-
-    if (unit->data()->Building.FoundationTerrainID > 0) {
-        int width = unit->data()->Size.x;
-        int height = unit->data()->Size.y;
-        for (int x = 0; x < width*2; x++) {
-            for (int y = 0; y < height*2; y++) {
-                map_->setTileAt(3 - width + x, 3 - height + y, unit->data()->Building.FoundationTerrainID);
-            }
-        }
-    }
-
-    auto addWall = [&](int x, int y, float angle) {
-        unit = UnitFactory::Inst().createUnit(117, MapPos(48*x, 48*y, 0), m_humanPlayer, *m_unitManager);
-        unit->setAngle(angle);
-    };
-
-    UnitFactory::Inst().createUnit(827, MapPos(48*10, 48*9, 0), m_humanPlayer, *m_unitManager); // militia
-
-    UnitFactory::Inst().createUnit(74, MapPos(48*8, 48*9, 0), m_humanPlayer, *m_unitManager); // militia
-
-    // some walls for testing wall rotation
-    addWall(4, 4, 0);
-    unit->setAngle(unit->renderer().graphic()->orientationToAngle(0));
-    addWall(5, 4, unit->renderer().graphic()->orientationToAngle(1));
-    addWall(6, 4, unit->renderer().graphic()->orientationToAngle(2));
-    addWall(7, 4, unit->renderer().graphic()->orientationToAngle(3));
-    addWall(8, 4, unit->renderer().graphic()->orientationToAngle(4));
-    addWall(9, 4, unit->renderer().graphic()->orientationToAngle(5)); // wraps here
-
-    Player::Ptr enemy = std::make_shared<Player>(1, m_civilizations[2], defaultStartingResources[m_gameType]);
-    m_players.push_back(enemy);
-    UnitFactory::Inst().createUnit(74, MapPos(48*8, 48*8, 0), enemy, *m_unitManager); // militia
-
-    // House
-    UnitFactory::Inst().createUnit(70, MapPos(48*9, 48*15, 0), enemy, *m_unitManager);
 }

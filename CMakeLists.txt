@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6)
+ cmake_minimum_required(VERSION 2.6)
 
 set (CMAKE_CXX_STANDARD 17)
 
@@ -151,6 +151,12 @@ set (UI_SRC
     src/ui/Minimap.cpp
     )
 
+set(DEBUG_SRC
+    src/debug/AllunitsGameSample.cpp
+    src/debug/BasicGameSample.cpp
+    src/debug/SampleGameFactory.cpp
+    )
+
 add_resource(FONT_RES
     fonts/Alegreya-Bold.latin
     )
@@ -167,6 +173,7 @@ add_executable(freeaoe src/Engine.cpp src/main.cpp
                ${UNSORTED_SRC}
                ${UI_SRC}
                ${FONT_RES}
+               ${DEBUG_SRC}
                )
 
 target_link_libraries(freeaoe

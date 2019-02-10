@@ -49,7 +49,7 @@ Map::~Map()
   */
 }
 
-void Map::setUpSample()
+void Map::setupBasic()
 {
     cols_ = 20;
     rows_ = 20;
@@ -85,6 +85,60 @@ void Map::setUpSample()
     getTileAt(13, 4).terrainId = 2;
     getTileAt(17, 4).elevation = 1;
     getTileAt(18, 5).elevation = 1;
+}
+
+void Map::setupAllunitsMap()
+{
+    cols_ = 30;
+    rows_ = 30;
+
+    tiles_.clear();
+
+    MapTile water;
+    water.elevation = 0;
+    water.terrainId = 1;
+
+    tiles_.resize(cols_ * rows_, water);
+    m_tileUnits.resize(cols_ * rows_);
+
+    // add some grass
+    for (int i = 0; i < 20; i++) {
+        for (int j = 0; j < 15; j++) {
+            getTileAt(i, j).elevation = 0;
+            getTileAt(i, j).terrainId = 0;
+        }
+    }
+
+    // creates hill
+    auto elevate = [&] (int x, int y, int cols, int rows) {
+        for (int i = x - 1; i < x + cols + 1; i++) {
+            getTileAt(i, y - 1).elevation = 1;
+            getTileAt(i, y - 1).terrainId = 0;
+        }
+
+        for (int i = y; i < y + rows; i++) {
+            getTileAt(x-1, i).elevation = 1;
+            getTileAt(x-1, i).terrainId = 0;
+
+            for (int j = x; j < x + cols; j++) {
+
+                getTileAt(j, i).elevation = 2;
+                getTileAt(j, i).terrainId = 0;
+
+            }
+            getTileAt(x+cols, i).elevation = 1;
+            getTileAt(x+cols, i).terrainId = 0;
+        }
+
+        for (int i = x - 1; i < x + cols + 1; i++) {
+            getTileAt(i, y + rows).elevation = 1;
+            getTileAt(i, y + rows).terrainId = 0;
+        }
+    };
+
+    elevate(5, 5, 10, 5);
+    elevate(5, 17, 10, 5);
+    elevate(5, 14, 1, 1);
 }
 
 void Map::create(genie::ScnMap mapDescription)
