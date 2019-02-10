@@ -525,7 +525,7 @@ void GameState::setupScenario()
 
 void GameState::setupGame(const GameType /*gameType*/)
 {
-   SampleGamePtr sampleGameSetup = SampleGameFactory::Inst().createGameSetup(GameSampleId::AllUnitsGameSample, map_, m_unitManager);
+   SampleGamePtr sampleGameSetup = SampleGameFactory::Inst().createGameSetup(map_, m_unitManager);
 
    sampleGameSetup->setupMap();
    sampleGameSetup->setupActors(m_civilizations, defaultStartingResources[m_gameType]);

@@ -35,6 +35,7 @@
 #include "audio/AudioPlayer.h"
 #include "ui/HomeScreen.h"
 #include "ui/HistoryScreen.h"
+#include "debug/SampleGameFactory.h"
 
 // TODO: Bad_alloc
 int main(int argc, char **argv)
@@ -45,7 +46,8 @@ int main(int argc, char **argv)
     config.setAllowedOptions({
             {"game-path", "Path to AoE installation with data files", Config::Stored },
             {"scenario-file", "Path to scenario file to load", Config::NotStored },
-            {"single-player", "Path to scenario file to load", Config::NotStored }
+            {"single-player", "Path to scenario file to load", Config::NotStored },
+            {"game-sample", "Game samples to load", Config::NotStored }
             });
     if (!config.parseOptions(argc, argv)) {
         return 1;
@@ -85,7 +87,10 @@ int main(int argc, char **argv)
     AudioPlayer::instance();
 
     genie::ScnFilePtr scenarioFile;
-    if (config.getValue("single-player") != "true") {
+
+    bool skipMenu = config.getValue("single-player") == "true" || !config.getValue("game-sample").empty();
+
+    if (!skipMenu) {
         bool startGame = false;
 
         while (!startGame) {
@@ -132,6 +137,9 @@ int main(int argc, char **argv)
                 break;
             }
         }
+    } else if (!config.getValue("game-sample").empty()) {
+        const std::string alias = config.getValue("game-sample");
+        SampleGameFactory::Inst().setSampleFromAlias(alias);
     }
 
     Engine en;

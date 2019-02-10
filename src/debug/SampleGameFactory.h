@@ -23,6 +23,8 @@
 #include "mechanics/GameState.h"
 #include "ISampleGame.h"
 
+#include <iostream>
+
 typedef std::shared_ptr<ISampleGame> SampleGamePtr;
 
 enum class GameSampleId {
@@ -35,8 +37,9 @@ class SampleGameFactory
 public:
     static SampleGameFactory &Inst();
 
-    SampleGamePtr createGameSetup(GameSampleId id, MapPtr &map, std::shared_ptr<UnitManager> &unitManager);
-
+    SampleGamePtr createGameSetup(const MapPtr &map, const std::shared_ptr<UnitManager> &unitManager);
+    void setSampleFromAlias(const std::string &alias);
 private:
     SampleGameFactory() {}
+    GameSampleId gameSampleId = GameSampleId::BasicGameSample;
 };

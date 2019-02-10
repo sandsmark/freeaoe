@@ -26,7 +26,7 @@
 class BasicGameSample : public ISampleGame
 {
 public:
-    BasicGameSample(MapPtr &map, std::shared_ptr<UnitManager> &unitManager)
+    BasicGameSample(const MapPtr &map, const std::shared_ptr<UnitManager> &unitManager)
         : map_(map),  unitManager_(unitManager) {}
 
     void setupMap() override;

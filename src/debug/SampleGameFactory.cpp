@@ -26,14 +26,23 @@ SampleGameFactory &SampleGameFactory::Inst()
     return inst;
 }
 
-SampleGamePtr SampleGameFactory::createGameSetup(GameSampleId id, MapPtr &map, std::shared_ptr<UnitManager> &unitManager)
+SampleGamePtr SampleGameFactory::createGameSetup(const MapPtr &map, const std::shared_ptr<UnitManager> &unitManager)
 {
-    switch (id) {
+    switch (gameSampleId) {
         case GameSampleId::AllUnitsGameSample:
             return std::make_shared<AllunitsGameSample>(map, unitManager);
         case GameSampleId::BasicGameSample:
         default:
             return std::make_shared<BasicGameSample>(map, unitManager);
+    }
+}
+
+void SampleGameFactory::setSampleFromAlias(const std::string &alias)
+{
+    if (std::string("basic") == alias) {
+        this->gameSampleId = GameSampleId::BasicGameSample;
+    } else  if (std::string("all") == alias) {
+        this->gameSampleId = GameSampleId::AllUnitsGameSample;
     }
 }
 
