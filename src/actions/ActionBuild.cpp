@@ -52,10 +52,6 @@ IAction::UpdateResult ActionBuild::update(Time time)
 
     if (building->creationProgress() >= 1.) {
         DBG << "building finished";
-        if (building->data()->Class == genie::Unit::Farm) {
-            Task task = unit->findMatchingTask(genie::Task::GatherRebuild);
-            m_unitManager->assignTask(task, unit, building);
-        }
         return UpdateResult::Completed;
     }
 

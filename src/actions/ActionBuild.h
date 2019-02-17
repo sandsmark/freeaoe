@@ -14,6 +14,8 @@ public:
 
     UnitState unitState() const override;
 
+    genie::Task::ActionTypes taskType() const override { return genie::Task::Build; }
+
 private:
     std::weak_ptr<Building> m_targetBuilding;
 };

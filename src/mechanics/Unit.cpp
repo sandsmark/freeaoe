@@ -99,11 +99,14 @@ bool Unit::update(Time time)
     }
 
     if (m_currentAction) {
-        IAction::UnitState prevState = m_currentAction->unitState();
+        ActionPtr currentAction = m_currentAction;
 
-        switch(m_currentAction->update(time)) {
+        IAction::UnitState prevState = currentAction->unitState();
+
+        switch(currentAction->update(time)) {
         case IAction::UpdateResult::Completed:
-            removeAction(m_currentAction);
+            DBG << "Action completed" << currentAction->type;
+            removeAction(currentAction);
             break;
         case IAction::UpdateResult::Updated:
             updated = true;
@@ -113,11 +116,11 @@ bool Unit::update(Time time)
         case IAction::UpdateResult::Failed:
             WARN << "action failed";
             m_actionQueue.clear();
-            removeAction(m_currentAction);
+            removeAction(currentAction);
             break;
         }
 
-        if (!m_currentAction || prevState != m_currentAction->unitState()) {
+        if (!m_currentAction || currentAction != m_currentAction || prevState != m_currentAction->unitState()) {
             updateGraphic();
         }
     }
@@ -233,12 +236,48 @@ void Unit::takeDamage(const genie::unit::AttackOrArmor &attack, const float dama
 
 bool Unit::isDying() const
 {
-    return m_damageTaken >= m_data->HitPoints && m_renderer.currentFrame() < m_renderer.frameCount() - 1;
+    if (m_damageTaken < m_data->HitPoints) {
+        return false;
+    }
+
+    // Check if the death animation has finished
+    if (m_renderer.currentFrame() >= m_renderer.frameCount() - 1) {
+        return false;
+    }
+
+    // If it is a gatherable resource, check if there is any left
+    if (m_data->CanBeGathered) {
+        for (const ResourceEntry resource : resources) {
+            if (resource.second > 0) {
+                return false;
+            }
+        }
+    }
+
+    // Otherwise we are dying indeed;
+    return true;
 }
 
 bool Unit::isDead() const
 {
-    return m_damageTaken >= m_data->HitPoints && m_renderer.currentFrame() >= m_renderer.frameCount() - 1;
+    if (m_damageTaken < m_data->HitPoints) {
+        return false;
+    }
+
+    // Check if the death animation has finished
+    if (m_renderer.currentFrame() < m_renderer.frameCount() - 1) {
+        return false;
+    }
+
+    if (m_data->CanBeGathered) {
+        for (const ResourceEntry resource : resources) {
+            if (resource.second > 0) {
+                return false;
+            }
+        }
+    }
+
+    return true;
 }
 
 std::unordered_set<Task> Unit::availableActions()
@@ -261,10 +300,10 @@ std::unordered_set<Task> Unit::availableActions()
     return tasks;
 }
 
-Task Unit::findMatchingTask(const genie::Task::ActionTypes &type)
+Task Unit::findMatchingTask(const genie::Task::ActionTypes &type, int targetUnit)
 {
     for (const Task &task : availableActions()) {
-        if (task.data->ActionType == type) {
+        if (task.data->ActionType == type && task.data->UnitID == targetUnit) {
             return task;
         }
     }
@@ -316,8 +355,16 @@ DecayingEntity::Ptr Unit::createCorpse() const
     const genie::Unit &corpseData = owner->civ->unitData(m_data->DeadUnitID);
     float decayTime = corpseData.ResourceDecay * corpseData.ResourceCapacity;
 
+    for (const genie::Unit::ResourceStorage &r : corpseData.ResourceStorages) {
+        if (r.Type == int(genie::ResourceType::CorpseDecayTime)) {
+            decayTime = r.Amount;
+            break;
+        }
+    }
+
     // I don't think this is really correct, but it works better
     if (corpseData.ResourceDecay == -1 || (corpseData.ResourceDecay != 0 && corpseData.ResourceCapacity == 0)) {
+        DBG << "decaying forever";
         decayTime = std::numeric_limits<float>::infinity();
     }
     DecayingEntity::Ptr corpse = std::make_shared<DecayingEntity>(m_map.lock(), corpseData.StandingGraphic.first, decayTime);
@@ -356,8 +403,8 @@ float Unit::healthLeft() const
 int Unit::taskGraphicId(const genie::Task::ActionTypes taskType, const IAction::UnitState state)
 {
     for (const genie::Task &task : DataManager::datFile().UnitHeaders[m_data->ID].TaskList) {
-        if (task.ActionType != taskType &&
-                !(taskType == genie::Task::GatherRebuild && task.ActionType == genie::Task::Hunt)) {
+        if (task.ActionType != taskType/* &&
+                !(taskType == genie::Task::GatherRebuild && task.ActionType == genie::Task::Hunt)*/) {
             continue;
         }
 
@@ -387,12 +434,18 @@ int Unit::taskGraphicId(const genie::Task::ActionTypes taskType, const IAction::
             break;
         }
     }
+    WARN << "Failed to task graphic for task type" << taskType << "and unit state" << state;
 
     return m_data->StandingGraphic.first;
 }
 
 void Unit::updateGraphic()
 {
+    if (hitpointsLeft() <= 0) {
+        m_renderer.setGraphic(AssetManager::Inst()->getGraphic(m_data->DyingGraphic));
+        return;
+    }
+
     if (m_currentAction && m_currentAction->unitState() != IAction::Idle) {
         m_renderer.setPlaySounds(true);
     } else {
@@ -427,15 +480,6 @@ void Unit::updateGraphic()
         }
 
         break;
-    case IAction::Type::Build:
-        graphic = AssetManager::Inst()->getGraphic(taskGraphicId(genie::Task::Build, m_currentAction->unitState()));
-        break;
-    case IAction::Type::Gather:
-        graphic = AssetManager::Inst()->getGraphic(taskGraphicId(genie::Task::GatherRebuild, m_currentAction->unitState()));
-        break;
-    case IAction::Type::Fly:
-        graphic = AssetManager::Inst()->getGraphic(taskGraphicId(genie::Task::Fly, m_currentAction->unitState()));
-        break;
     case IAction::Type::Attack:
         if (m_currentAction->unitState() == IAction::UnitState::Attacking) {
             DBG << "Setting graphic";
@@ -444,6 +488,7 @@ void Unit::updateGraphic()
         }
         break;
     default:
+        graphic = AssetManager::Inst()->getGraphic(taskGraphicId(m_currentAction->taskType(), m_currentAction->unitState()));
         break;
     }
 
@@ -492,7 +537,7 @@ void Unit::removeAction(const ActionPtr &action)
 {
     if (action == m_currentAction) {
         if (!m_actionQueue.empty()) {
-            DBG << "changing action to queued one";
+            DBG << "changing action to queued one" << m_actionQueue.front()->type;
             setCurrentAction(m_actionQueue.front());
             m_actionQueue.pop_front();
         } else {

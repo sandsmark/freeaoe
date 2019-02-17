@@ -13,6 +13,7 @@ public:
 
     UpdateResult update(Time time) override;
     UnitState unitState() const override { return UnitState::Proceeding; }
+    genie::Task::ActionTypes taskType() const override { return genie::Task::ActionTypes(m_task->ActionType); }
 
 private:
     std::weak_ptr<Unit> m_target;
@@ -25,7 +26,8 @@ public:
     ActionGather(const Unit::Ptr &unit, const Unit::Ptr &target, const genie::Task *task, UnitManager *unitManager);
 
     UpdateResult update(Time time) override;
-    UnitState unitState() const override { return UnitState::Proceeding; }
+    UnitState unitState() const override;
+    genie::Task::ActionTypes taskType() const override { return genie::Task::ActionTypes(m_task->ActionType); }
 
 private:
     Unit::Ptr findDropSite(const Unit::Ptr &unit);

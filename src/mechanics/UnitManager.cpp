@@ -80,6 +80,7 @@ bool UnitManager::update(Time time)
         updated = unit->update(time) || updated;
 
         if (unit->isDead() || unit->isDying()) {
+            DBG << "Unit died" << unit->debugName;
             m_selectedUnits.erase(unit);
         }
 
@@ -740,11 +741,24 @@ void UnitManager::assignTask(const Task &task, const Unit::Ptr &unit, const Unit
 
     switch(task.data->ActionType) {
     case genie::Task::Build:
+        if (!target) {
+            DBG << "Can't build nothing";
+            return;
+        }
         unit->queueAction(ActionMove::moveUnitTo(unit, target->position(), m_map, this));
         unit->queueAction(std::make_shared<ActionBuild>(unit, target, this));
+
+        if (target->data()->Class == genie::Unit::Farm) {
+            Task farmTask = unit->findMatchingTask(genie::Task::GatherRebuild, target->data()->ID);
+            unit->queueAction(std::make_shared<ActionGather>(unit, target, farmTask.data, this));
+        }
         break;
     case genie::Task::Hunt:
     case genie::Task::GatherRebuild:
+        if (!target) {
+            DBG << "Can't gather from nothing";
+            return;
+        }
         unit->queueAction(ActionMove::moveUnitTo(unit, target->position(), m_map, this));
         unit->queueAction(std::make_shared<ActionGather>(unit, target, task.data, this));
         break;

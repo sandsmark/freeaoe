@@ -1,4 +1,5 @@
 #include "ActionGather.h"
+#include "ActionAttack.h"
 #include "mechanics/Entity.h"
 #include "mechanics/Player.h"
 #include "ActionMove.h"
@@ -12,13 +13,13 @@ ActionGather::ActionGather(const Unit::Ptr &unit, const Unit::Ptr &target, const
     m_task(task)
 {
     DBG << unit->debugName << "gathering from" << target->debugName;
-
 }
 
 IAction::UpdateResult ActionGather::update(Time time)
 {
     Unit::Ptr unit = m_unit.lock();
     if (!unit) {
+        WARN << "Missed my own unit";
         return UpdateResult::Completed;
     }
 
@@ -26,6 +27,11 @@ IAction::UpdateResult ActionGather::update(Time time)
     if (!target) {
         WARN << "target gone";
         return UpdateResult::Completed;
+    }
+    if (target->healthLeft() > 0 && target->playerId != unit->playerId) {
+        DBG << "Unit isn't dead, attacking first";
+        unit->prependAction(std::make_shared<ActionAttack>(unit, target, m_unitManager));
+        return UpdateResult::NotUpdated;
     }
 
     if (!m_prevTime) {
@@ -88,6 +94,15 @@ IAction::UpdateResult ActionGather::update(Time time)
     unit->resources[resourceType] += amount;
 
     return UpdateResult::Updated;
+}
+
+IAction::UnitState ActionGather::unitState() const
+{
+    if (m_task->ActionType == genie::Task::Hunt) {
+        return UnitState::Working;
+    } else {
+        return UnitState::Proceeding;
+    }
 }
 
 Unit::Ptr ActionGather::findDropSite(const Unit::Ptr &unit)

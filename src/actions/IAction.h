@@ -19,6 +19,7 @@
 #pragma once
 
 #include "core/Types.h"
+#include <genie/dat/UnitCommand.h>
 
 #include <memory>
 
@@ -64,6 +65,7 @@ public:
     const Type type = Type::None;
 
     virtual UnitState unitState() const { return UnitState::Idle; }
+    virtual genie::Task::ActionTypes taskType() const = 0;
 
     virtual ~IAction();
 

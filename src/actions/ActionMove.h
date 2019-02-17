@@ -40,6 +40,7 @@ public:
 
     static std::shared_ptr<ActionMove> moveUnitTo(const Unit::Ptr &unit, MapPos destination, const MapPtr &map, UnitManager *unitManager);
     const std::vector<MapPos> &path() const { return m_path; }
+    genie::Task::ActionTypes taskType() const override { return genie::Task::MoveTo; }
 
 private:
     ActionMove(MapPos destination, const MapPtr &map, const Unit::Ptr &unit, UnitManager *unitManager);

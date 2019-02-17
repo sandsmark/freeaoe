@@ -138,7 +138,7 @@ struct Unit : public Entity
     virtual ScreenRect rect() const;
 
     std::unordered_set<Task> availableActions();
-    Task findMatchingTask(const genie::Task::ActionTypes &m_type);
+    Task findMatchingTask(const genie::Task::ActionTypes &m_type, int targetUnit);
     Size selectionSize() const;
 
     virtual void setCreationProgress(float progress);

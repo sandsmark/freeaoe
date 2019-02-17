@@ -10,6 +10,8 @@ public:
     UpdateResult update(Time time) override;
     UnitState unitState() const override;
 
+    genie::Task::ActionTypes taskType() const override { return genie::Task::Fly; }
+
 private:
     Time m_lastUpdateTime = 0;
     Time m_lastTurnTime = 0;

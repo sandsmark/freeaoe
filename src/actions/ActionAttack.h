@@ -9,6 +9,7 @@ public:
     ActionAttack(const Unit::Ptr &attacker, const Unit::Ptr &target, UnitManager *unitManager);
     ActionAttack(const Unit::Ptr &attacker, const MapPos &targetPos, UnitManager *unitManager);
 
+    genie::Task::ActionTypes taskType() const override { return genie::Task::Attack; }
     UnitState unitState() const override;
     UpdateResult update(Time time) override;
 

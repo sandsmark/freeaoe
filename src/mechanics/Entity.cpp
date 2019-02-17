@@ -167,6 +167,7 @@ bool DecayingEntity::update(Time time)
 
     if (!std::isinf(m_decayTimeLeft)) {
         m_decayTimeLeft -= (time - m_prevTime) * 0.0015;
+        DBG << m_decayTimeLeft;
         m_prevTime = time;
     }
 
