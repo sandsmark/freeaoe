@@ -161,13 +161,11 @@ DecayingEntity::DecayingEntity(const MapPtr &map, const int graphicId, float dec
 bool DecayingEntity::update(Time time)
 {
     if (!decaying()) {
-//        DBG << "corpse not decaying";
         return false;
     }
 
     if (!std::isinf(m_decayTimeLeft)) {
         m_decayTimeLeft -= (time - m_prevTime) * 0.0015;
-        DBG << m_decayTimeLeft;
         m_prevTime = time;
     }
 

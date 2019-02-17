@@ -62,6 +62,7 @@ bool UnitManager::update(Time time)
 {
     bool updated = false;
 
+    // Update missiles (siege rockthings, arrows, etc.)
     std::unordered_set<Missile::Ptr>::iterator missileIterator = m_missiles.begin();
     while (missileIterator != m_missiles.end()) {
         const Missile::Ptr &missile = *missileIterator;
@@ -74,28 +75,7 @@ bool UnitManager::update(Time time)
         }
     }
 
-    std::set<Unit::Ptr>::iterator unitIterator = m_units.begin();
-    while (unitIterator != m_units.end()) {
-        Unit::Ptr unit = *unitIterator;
-        updated = unit->update(time) || updated;
-
-        if (unit->isDead() || unit->isDying()) {
-            DBG << "Unit died" << unit->debugName;
-            m_selectedUnits.erase(unit);
-        }
-
-        if (unit->isDead()) {
-            unitIterator = m_units.erase(unitIterator);
-            DecayingEntity::Ptr corpse = unit->createCorpse();
-            if (corpse) {
-                m_decayingEntities.insert(unit->createCorpse());
-                updated = true;
-            }
-        } else {
-            unitIterator++;
-        }
-    }
-
+    // Update decaying entities (smoke stuff from siege, corpses, etc.)
     std::unordered_set<DecayingEntity::Ptr>::iterator decayingEntityIterator = m_decayingEntities.begin();
     while (decayingEntityIterator != m_decayingEntities.end()) {
         DecayingEntity::Ptr entity = *decayingEntityIterator;
@@ -106,6 +86,35 @@ bool UnitManager::update(Time time)
         } else {
             decayingEntityIterator++;
         }
+    }
+
+    // Clean up dead units
+    std::set<Unit::Ptr>::iterator unitIterator = m_units.begin();
+    while (unitIterator != m_units.end()) {
+        Unit::Ptr unit = *unitIterator;
+
+        // Remove from selected if it is dying
+        if (unit->isDead() || unit->isDying()) {
+            DBG << "Unit died" << unit->debugName;
+            m_selectedUnits.erase(unit);
+        }
+
+        if (unit->isDead()) {
+            DecayingEntity::Ptr corpse = unit->createCorpse();
+            if (corpse) {
+                m_decayingEntities.insert(unit->createCorpse());
+                updated = true;
+            }
+
+            unitIterator = m_units.erase(unitIterator);
+        } else {
+            unitIterator++;
+        }
+    }
+
+    // Update the living units that are left
+    for (const Unit::Ptr &unit : m_units) {
+        updated = unit->update(time) || updated;
     }
 
     updated = m_moveTargetMarker->update(time) || updated;

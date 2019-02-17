@@ -18,6 +18,7 @@ public:
 private:
     std::weak_ptr<Unit> m_target;
     const genie::Task *m_task;
+    genie::ResourceType m_resourceType;
 };
 
 class ActionGather : public IAction
@@ -30,9 +31,11 @@ public:
     genie::Task::ActionTypes taskType() const override { return genie::Task::ActionTypes(m_task->ActionType); }
 
 private:
+    void maybeDropOff(const Unit::Ptr &unit);
     Unit::Ptr findDropSite(const Unit::Ptr &unit);
 
     std::weak_ptr<Unit> m_target;
     const genie::Task *m_task;
+    genie::ResourceType m_resourceType;
 };
 
