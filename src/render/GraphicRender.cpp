@@ -227,7 +227,7 @@ ScreenRect GraphicRender::rect() const
     ret.height = size.y;
 
     for (const GraphicDelta &delta : m_deltas) {
-        if (delta.graphic->isValid()) {
+        if (!delta.graphic->isValid()) {
             continue;
         }
 
