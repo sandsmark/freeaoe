@@ -169,6 +169,10 @@ void GraphicRender::setPlayerId(int playerId)
 
 bool GraphicRender::setGraphic(const GraphicPtr &graphic)
 {
+    if (graphic == m_graphic) {
+        return true;
+    }
+
     m_graphic = graphic;
     m_currentFrame = 0;
     m_currentSound = 0;
