@@ -230,6 +230,31 @@ void Unit::takeDamage(const genie::unit::AttackOrArmor &attack, const float dama
         if (data()->DyingSound != -1) {
             AudioPlayer::instance().playSound(data()->DyingSound, civilization->id());
         }
+    } else {
+        const int damagedPercent = 100 * m_damageTaken / data()->HitPoints;
+        const genie::unit::DamageGraphic *graphic = nullptr;
+        for (const genie::unit::DamageGraphic &damageGraphic : data()->DamageGraphics) {
+            if (damagedPercent < damageGraphic.DamagePercent) {
+                continue;
+            }
+            if (!graphic || damageGraphic.DamagePercent > graphic->DamagePercent) {
+                graphic = &damageGraphic;
+            }
+        }
+        if (graphic) {
+            switch (graphic->ApplyMode) {
+            case genie::unit::DamageGraphic::OverlayGraphic:
+                m_renderer.setDamageOverlay(graphic->GraphicID);
+                break;
+            case genie::unit::DamageGraphic::OverlayRandomly:
+                WARN << "Random overlay damage graphics not implemented yet";
+                m_renderer.setDamageOverlay(graphic->GraphicID);
+                break;
+            case genie::unit::DamageGraphic::ReplaceGraphic:
+                m_renderer.setGraphic(graphic->GraphicID);
+                break;
+            }
+        }
     }
 
 }

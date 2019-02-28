@@ -151,7 +151,7 @@ GraphicPtr AssetManager::getGraphic(Uint32 id)
     if (graphics_.find(id) != graphics_.end()) {
         graph = graphics_[id];
     } else {
-        graph = std::make_shared<Graphic>(DataManager::Inst().getGraphic(id));
+        graph = std::make_shared<Graphic>(DataManager::Inst().getGraphic(id), id);
 
         graphics_[id] = graph;
     }

@@ -571,4 +571,6 @@ void GameState::setupGame(const GameType /*gameType*/)
     m_players.push_back(enemy);
     UnitFactory::Inst().createUnit(74, MapPos(48*8, 48*8, 0), enemy, *m_unitManager); // militia
 
+    // House
+    UnitFactory::Inst().createUnit(70, MapPos(48*9, 48*15, 0), enemy, *m_unitManager);
 }

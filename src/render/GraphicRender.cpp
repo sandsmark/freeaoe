@@ -51,6 +51,10 @@ bool GraphicRender::update(Time time)
         updated = delta.graphic->update(time) || updated;
     }
 
+    if (m_damageOverlay) {
+        updated = m_damageOverlay->update(time) || updated;
+    }
+
     if (!m_graphic) {
         return updated;
     }
@@ -156,6 +160,10 @@ void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos scree
         renderTarget.draw(sprite, blendMode);
     }
 
+
+    if (m_damageOverlay) {
+        m_damageOverlay->render(renderTarget, screenPos, renderpass);
+    }
 }
 
 void GraphicRender::setPlayerId(int playerId)
@@ -165,6 +173,47 @@ void GraphicRender::setPlayerId(int playerId)
     for (const GraphicDelta &delta : m_deltas) {
         delta.graphic->setPlayerId(playerId);
     }
+
+    if (m_damageOverlay) {
+        m_damageOverlay->setPlayerId(playerId);
+    }
+}
+
+void GraphicRender::setDamageOverlay(const int graphicId)
+{
+    if (graphicId < 0) {
+        m_damageOverlay.reset();
+        return;
+    }
+
+    if (m_damageOverlay && graphicId == m_damageOverlay->graphic()->graphicId) {
+        return;
+    }
+
+    GraphicPtr graphic = AssetManager::Inst()->getGraphic(graphicId);
+    if (!graphic) {
+        WARN << "Failed to find damage graphic" << graphicId;
+        return;
+    }
+
+    if (!graphic->isValid()) {
+        WARN << "Invalid damage graphic" << graphicId;
+        return;
+    }
+
+    if (!m_damageOverlay) {
+        m_damageOverlay = std::make_unique<GraphicRender>();
+    }
+
+    m_damageOverlay->setPlayerId(m_playerId);
+    m_damageOverlay->setCivId(m_civId);
+    m_damageOverlay->setAngle(m_angle);
+    m_damageOverlay->setGraphic(graphic);
+}
+
+bool GraphicRender::setGraphic(const int &graphicId)
+{
+    return setGraphic(AssetManager::Inst()->getGraphic(graphicId));
 }
 
 bool GraphicRender::setGraphic(const GraphicPtr &graphic)
@@ -172,6 +221,8 @@ bool GraphicRender::setGraphic(const GraphicPtr &graphic)
     if (graphic == m_graphic) {
         return true;
     }
+
+    m_damageOverlay.reset();
 
     m_graphic = graphic;
     m_currentFrame = 0;
@@ -196,7 +247,7 @@ bool GraphicRender::setGraphic(const GraphicPtr &graphic)
         delta.graphic->setAngle(m_angle);
 
         // Don't use setGraphic, to avoid recursive adding of deltas
-        delta.graphic->m_graphic =  AssetManager::Inst()->getGraphic(deltaData.GraphicID);
+        delta.graphic->m_graphic = AssetManager::Inst()->getGraphic(deltaData.GraphicID);
         if (!delta.graphic->m_graphic->isValid()) {
             continue;
         }
@@ -210,6 +261,14 @@ bool GraphicRender::setGraphic(const GraphicPtr &graphic)
 //        std::reverse(m_deltas.begin(), m_deltas.end());
 //    }
     return true;
+}
+
+int GraphicRender::graphicId() const
+{
+    if (!m_graphic) {
+        return -1;
+    }
+    return m_graphic->frameCount();
 }
 
 ScreenRect GraphicRender::rect() const
@@ -247,6 +306,10 @@ void GraphicRender::setAngle(float angle)
 
     for (GraphicDelta &delta : m_deltas) {
         delta.graphic->setAngle(angle);
+    }
+
+    if (m_damageOverlay) {
+        m_damageOverlay->setAngle(angle);
     }
 }
 

@@ -28,7 +28,8 @@
 const sf::Texture Graphic::nullImage;
 
 //------------------------------------------------------------------------------
-Graphic::Graphic(const genie::Graphic &data) :
+Graphic::Graphic(const genie::Graphic &data, const int id) :
+    graphicId(id),
     m_data(data),
     m_runOnce(data.SequenceType & genie::Graphic::SequenceOnce)
 {
@@ -258,7 +259,14 @@ float Graphic::getFrameRate() const
 
 bool Graphic::isValid()
 {
-    return slp_ != nullptr;
+    bool valid = slp_ != nullptr;
+
+    // Can be valid if it has deltas
+    if (!valid) {
+        valid = !m_data.Deltas.empty();
+    }
+
+    return valid;
 }
 
 bool Graphic::runOnce() const

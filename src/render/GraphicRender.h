@@ -80,8 +80,12 @@ public:
     void setPlayerId(int playerId);
     void setCivId(int civId) { m_civId = civId; }
 
+    void setDamageOverlay(const int graphicId);
+
+    bool setGraphic(const int &graphicId);
     bool setGraphic(const GraphicPtr &graphic);
     inline const GraphicPtr &graphic() const { return m_graphic; }
+    int graphicId() const;
 
     ScreenRect rect() const;
 
@@ -113,6 +117,8 @@ private:
     int m_currentFrame;
     float m_angle = 0;
     GraphicPtr m_graphic;
+
+    std::unique_ptr<GraphicRender> m_damageOverlay;
 
     bool m_frameChanged = false;
     int m_currentSound = 0;

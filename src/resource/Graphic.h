@@ -96,13 +96,14 @@ class Graphic
     static const sf::Texture nullImage;
 
 public:
+    const int graphicId = -1;
 
     //----------------------------------------------------------------------------
     /// Constructor
     ///
     /// @param id Id of the graphic struct in .dat file.
     //
-    Graphic(const genie::Graphic &m_data);
+    Graphic(const genie::Graphic &m_data, const int id);
     virtual ~Graphic();
 
     //----------------------------------------------------------------------------
