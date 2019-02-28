@@ -532,4 +532,5 @@ void GameState::setupGame(const GameType /*gameType*/)
 
     m_humanPlayer = sampleGameSetup->getHumanPlayer();
     m_players.push_back(m_humanPlayer);
+    m_players.push_back(sampleGameSetup->getEnemyPlayer());
 }
