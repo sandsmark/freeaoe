@@ -130,6 +130,8 @@ bool Missile::update(Time time)
 
     }
 
+    m_renderer.setAngle(position().toScreen().angleTo(newPos.toScreen()));
+
     setPosition(newPos);
 
     std::vector<Unit::Ptr> hitUnits;
