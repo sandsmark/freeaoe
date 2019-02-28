@@ -14,7 +14,7 @@ public:
     UpdateResult update(Time time) override;
 
 private:
-    void spawnMissiles(const Unit::Ptr &source, const int unitId, const MapPos &target);
+    void spawnMissiles(const Unit::Ptr &source, const int unitId, const MapPos &target, const Unit::Ptr &targetUnit);
     bool unitFiresMissiles(const Unit::Ptr &unit);
     int missilesUnitCanFire(const Unit::Ptr &source);
 
@@ -22,4 +22,5 @@ private:
     std::weak_ptr<Unit> m_targetUnit;
     Time m_lastAttackTime = 0;
     bool m_firing = false;
+    bool m_attackGround = false;
 };

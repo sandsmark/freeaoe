@@ -20,7 +20,8 @@ ActionAttack::ActionAttack(const Unit::Ptr &attacker, const Unit::Ptr &target, U
 
 ActionAttack::ActionAttack(const Unit::Ptr &attacker, const MapPos &targetPos, UnitManager *unitManager) :
     IAction(IAction::Type::Attack, attacker, unitManager),
-    m_targetPosition(targetPos)
+    m_targetPosition(targetPos),
+    m_attackGround(true)
 {
 }
 
@@ -41,15 +42,15 @@ IAction::UpdateResult ActionAttack::update(Time time)
     }
 
     Unit::Ptr targetUnit = m_targetUnit.lock();
+    if (!targetUnit && !m_attackGround) {
+        DBG << "Target unit gone";
+        return IAction::UpdateResult::Completed;
+    }
+
     if (targetUnit) {
         m_targetPosition = targetUnit->position();
     }
 
-    // Siege weapon can attack ground
-    if (!targetUnit && !unitFiresMissiles(unit)) {
-        DBG << "Target unit gone";
-        return IAction::UpdateResult::Completed;
-    }
 
     if (unitFiresMissiles(unit) && missilesUnitCanFire(unit) <= 0) {
         return IAction::UpdateResult::NotUpdated;
@@ -107,10 +108,10 @@ IAction::UpdateResult ActionAttack::update(Time time)
     // TODO: Create a flare here owned by the owner of the targeted unit, to show where the attack is coming from
 
     if (unit->data()->Creatable.SecondaryProjectileUnit != -1) { // I think we should prefer the secondary, for some reason, at least those are cooler
-        spawnMissiles(unit, unit->data()->Creatable.SecondaryProjectileUnit, m_targetPosition);
+        spawnMissiles(unit, unit->data()->Creatable.SecondaryProjectileUnit, m_targetPosition, targetUnit);
         return IAction::UpdateResult::Updated;
     } else if (unit->data()->Combat.ProjectileUnitID != -1) {
-        spawnMissiles(unit, unit->data()->Combat.ProjectileUnitID,  m_targetPosition);
+        spawnMissiles(unit, unit->data()->Combat.ProjectileUnitID,  m_targetPosition, targetUnit);
         return IAction::UpdateResult::Updated;
     } else {
         for (const genie::unit::AttackOrArmor &attack : unit->data()->Combat.Attacks) {
@@ -123,7 +124,7 @@ IAction::UpdateResult ActionAttack::update(Time time)
     return IAction::UpdateResult::Updated;
 }
 
-void ActionAttack::spawnMissiles(const Unit::Ptr &source, const int unitId, const MapPos &target)
+void ActionAttack::spawnMissiles(const Unit::Ptr &source, const int unitId, const MapPos &target, const Unit::Ptr &targetUnit)
 {
     DBG << "Spawning missile" << unitId;
 
@@ -146,7 +147,7 @@ void ActionAttack::spawnMissiles(const Unit::Ptr &source, const int unitId, cons
         MapPos individualTarget = target;
         individualTarget.x +=  -cos(source->angle()) * i*widthDispersion - spawnArea[0]/2.;
         individualTarget.y +=  sin(source->angle()) * i*widthDispersion - spawnArea[1]/2.;
-        Missile::Ptr missile = std::make_shared<Missile>(gunit, source, individualTarget, nullptr);
+        Missile::Ptr missile = std::make_shared<Missile>(gunit, source, individualTarget, targetUnit);
         missile->setBlastType(Missile::BlastType(source->data()->Combat.BlastAttackLevel), source->data()->Combat.BlastWidth);
 
         float offsetX = graphicDisplacement[0];

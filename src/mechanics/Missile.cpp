@@ -22,7 +22,6 @@ Missile::Missile(const genie::Unit &data, const Unit::Ptr &sourceUnit, const Map
     m_startingElevation = sourceUnit->position().z;
     m_attacks = sourceUnit->data()->Combat.Attacks;
     sourceUnit->activeMissiles++;
-    DBG << sourceUnit->activeMissiles;
     DBG << "Firing at" << target;
     defaultGraphics = AssetManager::Inst()->getGraphic(data.StandingGraphic.first);
     m_renderer.setGraphic(defaultGraphics);
@@ -73,6 +72,7 @@ bool Missile::update(Time time)
         WARN << "No map!";
         return false;
     }
+
     if (position().z <= map->elevationAt(position())) {
         DBG << "we hit the ground";
         m_renderer.setGraphic(AssetManager::Inst()->getGraphic(m_data.DyingGraphic));
