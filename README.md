@@ -38,6 +38,7 @@ To build
 
 TODO (this is probably going to get outdated)
 ----
+ - Fix the path finding.
  - Figure out why the coordinate system feels wrong. We need to flip x and y
    when fetching map tiles sometimes (e. g. in the minimap), and we need to
    flip x and y when positioning units from scenario files).
