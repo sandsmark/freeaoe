@@ -67,9 +67,20 @@ struct Label {
         text.setCharacterSize(16);
     }
 
-    void setText(const std::string &t) {
-        text.setString(t);
-        updatePosition();
+    void setValue(const int value) {
+        if (value == m_value) {
+            return;
+        }
+        m_value = value;
+        updateText();
+    }
+
+    void setMaxValue(const int maxValue) {
+        if (maxValue == m_maxValue) {
+            return;
+        }
+        m_maxValue = maxValue;
+        updateText();
     }
 
     sf::Text text;
@@ -78,6 +89,19 @@ private:
     void updatePosition() {
         text.setPosition(sf::Vector2f(m_right - text.getLocalBounds().width, m_top));
     }
+
+    void updateText() {
+        std::string string = std::to_string(m_value);
+        if (m_maxValue) {
+            string += '/';
+            string += std::to_string(m_maxValue);
+        }
+        text.setString(string);
+        updatePosition();
+    }
+
+    int m_maxValue = 0;
+    int m_value = 0;
 
     const int m_right = 0;
     const int m_top = 0;

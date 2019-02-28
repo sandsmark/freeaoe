@@ -236,11 +236,12 @@ bool GameState::init()
     mapRenderer_.setMap(map_);
 
 
-    m_woodLabel.setText(std::to_string(12345));
-    m_foodLabel.setText(std::to_string(12345));
-    m_goldLabel.setText(std::to_string(12345));
-    m_stoneLabel.setText(std::to_string(12345));
-    m_populationLabel.setText(std::to_string(125) + '/' + std::to_string(125));
+    m_woodLabel.setValue(12345);
+    m_foodLabel.setValue(12345);
+    m_goldLabel.setValue(12345);
+    m_stoneLabel.setValue(12345);
+    m_populationLabel.setValue(125);
+    m_populationLabel.setMaxValue(125);
 
     return true;
 }
@@ -285,14 +286,13 @@ bool GameState::update(Time time)
     updated = m_unitInfoPanel->update(time) || updated;
     updated = m_minimap->update(time) || updated;
 
-    m_woodLabel.setText(std::to_string(int(m_humanPlayer->resourcesAvailable[genie::ResourceType::WoodStorage])));
-    m_foodLabel.setText(std::to_string(int(m_humanPlayer->resourcesAvailable[genie::ResourceType::FoodStorage])));
-    m_goldLabel.setText(std::to_string(int(m_humanPlayer->resourcesAvailable[genie::ResourceType::GoldStorage])));
-    m_stoneLabel.setText(std::to_string(int(m_humanPlayer->resourcesAvailable[genie::ResourceType::StoneStorage])));
-    m_populationLabel.setText(
-                std::to_string(int(m_humanPlayer->resourcesUsed[genie::ResourceType::PopulationHeadroom])) + '/' +
-                std::to_string(int(m_humanPlayer->resourcesAvailable[genie::ResourceType::PopulationHeadroom]))
-            );
+    m_woodLabel.setValue(m_humanPlayer->resourcesAvailable[genie::ResourceType::WoodStorage]);
+    m_foodLabel.setValue(m_humanPlayer->resourcesAvailable[genie::ResourceType::FoodStorage]);
+    m_goldLabel.setValue(m_humanPlayer->resourcesAvailable[genie::ResourceType::GoldStorage]);
+    m_stoneLabel.setValue(m_humanPlayer->resourcesAvailable[genie::ResourceType::StoneStorage]);
+
+    m_populationLabel.setValue(m_humanPlayer->resourcesUsed[genie::ResourceType::PopulationHeadroom]);
+    m_populationLabel.setMaxValue(m_humanPlayer->resourcesAvailable[genie::ResourceType::PopulationHeadroom]);
 
     if (m_cameraDeltaX != 0 || m_cameraDeltaY != 0) {
         const int deltaTime = time - m_lastUpdate;
