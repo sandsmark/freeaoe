@@ -23,7 +23,7 @@ public:
     typedef std::shared_ptr<Civilization> Ptr;
     const static genie::Unit nullUnit;
 
-    Civilization(const int civId, const genie::DatFile &dataFile);
+    Civilization(const int civId);
 
     int id() { return m_civId; }
 

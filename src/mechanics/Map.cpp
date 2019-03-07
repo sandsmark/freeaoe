@@ -548,7 +548,7 @@ void Map::updateTileBlend(int tileX, int tileY)
         tile.slopes.self = Slope::NorthWestUp;
     }
 
-    tile.yOffset = DataManager::datFile().TerrainBlock.TileSizes[tile.slopes.self.toGenie()].DeltaY;
+    tile.yOffset = DataManager::Inst().terrainBlock().TileSizes[tile.slopes.self.toGenie()].DeltaY;
 
 //    if (tile.slopes.self != Slope::Flat) {
 //        return;

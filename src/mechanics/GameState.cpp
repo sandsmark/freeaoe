@@ -146,23 +146,6 @@ bool GameState::init()
         return false;
     }
 
-    std::unordered_set<int16_t> usedActionTypes;
-    std::unordered_set<int> interestingActions({
-        genie::Task::SetInitialResources,
-
-    });
-
-    for (size_t i=0; i<DataManager::datFile().UnitHeaders.size(); i++) {
-        const genie::UnitHeader &h = DataManager::datFile().UnitHeaders[i];
-        for (const genie::Task &t : h.TaskList) {
-            usedActionTypes.insert(t.ActionType);
-            if (interestingActions.count(t.ActionType) == 0 && t.CarryCheck == 0) {
-                continue;
-            }
-
-        }
-    }
-
     std::shared_ptr<genie::SlpFile> overlayFile = AssetManager::Inst()->getUiOverlay(AssetManager::Ui1280x1024, AssetManager::Viking);
     if (overlayFile) {
         m_uiOverlay.loadFromImage(Resource::convertFrameToImage(overlayFile->getFrame()));
@@ -211,7 +194,7 @@ bool GameState::init()
 
     const std::vector<genie::Civ> &civilizations = DataManager::Inst().civilizations();
     for (size_t i=0; i<civilizations.size(); i++) {
-        m_civilizations.push_back(std::make_shared<Civilization>(i, DataManager::datFile()));
+        m_civilizations.push_back(std::make_shared<Civilization>(i));
     }
     if (m_civilizations.empty()) {
         WARN << "Failed to load any civilizations";

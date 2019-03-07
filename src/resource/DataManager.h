@@ -35,10 +35,16 @@
 class DataManager
 {
 public:
+    // Because I like to return const refs, and also do error checking
     static const genie::Unit nullUnit;
     static const genie::Tech nullTech;
     static const genie::Civ nullCiv;
     static const genie::Effect nullEffect;
+    static const genie::TerrainRestriction nullTerrainRestriction;
+    static const genie::PlayerColour nullPlayerColor;
+    static const genie::Terrain nullTerrain;
+    static const genie::Sound nullSound;
+    static const std::vector<genie::Task> nullTaskList;
 
     bool initialize(const std::string &dataPath);
 
@@ -47,14 +53,17 @@ public:
 
     static DataManager &Inst();
 
-    const genie::Graphic &getGraphic(unsigned int id);
-    const genie::Tech &getTech(unsigned int id);
-    const genie::Terrain &getTerrain(unsigned int id);
-    const genie::Effect &getEffect(unsigned int id);
-    const genie::TerrainRestriction &getTerrainRestriction(unsigned int id);
-    const genie::PlayerColour &getPlayerColor(unsigned int id);
+    const genie::Graphic &getGraphic(unsigned int id) const;
+    const genie::Tech &getTech(unsigned int id) const;
+    const genie::Terrain &getTerrain(unsigned int id) const;
+    const genie::Effect &getEffect(unsigned int id) const;
+    const genie::TerrainRestriction &getTerrainRestriction(unsigned int id) const;
+    const genie::PlayerColour &getPlayerColor(unsigned int id) const;
+    const genie::Sound &getSound(unsigned int id) const;
+    const std::vector<genie::Task> &getTasks(unsigned int id) const;
 
-    const genie::TerrainBlock &terrainBlock();
+    const std::vector<genie::Tech> &allTechs() const { return dat_file_.Techs; }
+    const genie::TerrainBlock &terrainBlock() const { return dat_file_.TerrainBlock; }
 
     static std::string gameName(const genie::GameVersion version);
     genie::GameVersion gameVersion() const;
@@ -62,8 +71,6 @@ public:
     const std::vector<genie::Civ> &civilizations();
 
     const genie::Civ &civilization(unsigned int id);
-
-    static const genie::DatFile &datFile();
 
 private:
     DataManager();

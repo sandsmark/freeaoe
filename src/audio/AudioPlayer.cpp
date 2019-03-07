@@ -140,13 +140,7 @@ void AudioPlayer::playSample(const std::shared_ptr<uint8_t> &data, const float p
 
 void AudioPlayer::playSound(const int id, const int civilization, const float pan, const float volume)
 {
-    const std::vector<genie::Sound> &sounds = DataManager::datFile().Sounds;
-    if (id < 0 || id >= sounds.size()) {
-        WARN << "invalid sound id" << id;
-        return;
-    }
-
-    const genie::Sound &sound = sounds[id];
+    const genie::Sound &sound = DataManager::Inst().getSound(id);
     if (sound.Items.empty()) {
         WARN << "no sounds";
         return;

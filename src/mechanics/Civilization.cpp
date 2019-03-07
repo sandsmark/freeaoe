@@ -10,9 +10,9 @@
 
 const genie::Unit Civilization::nullUnit;
 
-Civilization::Civilization(const int civId, const genie::DatFile &dataFile) :
+Civilization::Civilization(const int civId) :
     m_civId(civId),
-    m_data(dataFile.Civs.at(civId))
+    m_data(DataManager::Inst().civilization(civId))
 {
     m_unitsData = m_data.Units;
 
@@ -32,18 +32,19 @@ Civilization::Civilization(const int civId, const genie::DatFile &dataFile) :
         }
     }
 
-    for (size_t i=0; i<dataFile.Techs.size(); i++) {
-        const genie::Tech &research = dataFile.Techs.at(i);
-        if (research.ResearchLocation <= 0) {
+    const std::vector<genie::Tech> &techs = DataManager::Inst().allTechs();
+    for (size_t i=0; i<techs.size(); i++) {
+        const genie::Tech &tech = techs.at(i);
+        if (tech.ResearchLocation <= 0) {
             continue;
         }
 
-        if (research.Civ != -1 && research.Civ != m_civId) {
+        if (tech.Civ != -1 && tech.Civ != m_civId) {
             continue;
         }
 
-        m_techs[i] = research;
-        m_researchAvailable[research.ResearchLocation].push_back(&m_techs.at(i));
+        m_techs[i] = tech;
+        m_researchAvailable[tech.ResearchLocation].push_back(&m_techs.at(i));
     }
 
 }

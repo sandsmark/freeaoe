@@ -27,7 +27,7 @@ void Player::applyResearch(const int researchId)
     applyTechEffect(research.EffectID);
 
     // Apply all implicit research
-    for (const genie::Tech &research : DataManager::Inst().datFile().Techs) {
+    for (const genie::Tech &research : DataManager::Inst().allTechs()) {
         if (research.ResearchLocation != -1) {
             continue;
         }

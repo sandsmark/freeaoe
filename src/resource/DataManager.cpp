@@ -31,6 +31,11 @@ const genie::Unit DataManager::nullUnit;
 const genie::Tech DataManager::nullTech;
 const genie::Civ DataManager::nullCiv;
 const genie::Effect DataManager::nullEffect;
+const genie::TerrainRestriction DataManager::nullTerrainRestriction;
+const genie::PlayerColour DataManager::nullPlayerColor;
+const genie::Terrain DataManager::nullTerrain;
+const genie::Sound DataManager::nullSound;
+const std::vector<genie::Task> DataManager::nullTaskList;
 
 DataManager &DataManager::Inst()
 {
@@ -38,7 +43,7 @@ DataManager &DataManager::Inst()
     return inst;
 }
 
-const genie::Graphic &DataManager::getGraphic(unsigned int id)
+const genie::Graphic &DataManager::getGraphic(unsigned int id) const
 {
     static const genie::Graphic nullGraphic;
     if (id >= dat_file_.Graphics.size()) {
@@ -48,7 +53,7 @@ const genie::Graphic &DataManager::getGraphic(unsigned int id)
     return dat_file_.Graphics[id];
 }
 
-const genie::Tech &DataManager::getTech(unsigned int id)
+const genie::Tech &DataManager::getTech(unsigned int id) const
 {
     if (id >= dat_file_.Techs.size()) {
         return nullTech;
@@ -57,18 +62,17 @@ const genie::Tech &DataManager::getTech(unsigned int id)
     return dat_file_.Techs.at(id);
 }
 
-const genie::Terrain &DataManager::getTerrain(unsigned int id)
+const genie::Terrain &DataManager::getTerrain(unsigned int id) const
 {
     if (id >= dat_file_.TerrainBlock.Terrains.size()) {
-        static genie::Terrain nullterrain;
         WARN << "terrain id" << id << "is out of range";
-        return nullterrain;
+        return nullTerrain;
     }
 
     return dat_file_.TerrainBlock.Terrains[id];
 }
 
-const genie::Effect &DataManager::getEffect(unsigned int id)
+const genie::Effect &DataManager::getEffect(unsigned int id) const
 {
     if (id >= dat_file_.Effects.size()) {
         WARN << "terrain id" << id << "is out of range";
@@ -79,19 +83,44 @@ const genie::Effect &DataManager::getEffect(unsigned int id)
 
 }
 
-const genie::TerrainRestriction &DataManager::getTerrainRestriction(unsigned int id)
+const genie::TerrainRestriction &DataManager::getTerrainRestriction(unsigned int id) const
 {
+    if (id >= dat_file_.TerrainRestrictions.size()) {
+        WARN << "terrain restriction" << id << "out of range";
+        return nullTerrainRestriction;
+    }
+
     return dat_file_.TerrainRestrictions[id];
 }
 
-const genie::PlayerColour &DataManager::getPlayerColor(unsigned int id)
+const genie::PlayerColour &DataManager::getPlayerColor(unsigned int id) const
 {
+    if (id >= dat_file_.PlayerColours.size()) {
+        WARN << "invalid player color id" << id;
+        return nullPlayerColor;
+    }
+
     return dat_file_.PlayerColours[id];
 }
 
-const genie::TerrainBlock &DataManager::terrainBlock()
+const genie::Sound &DataManager::getSound(unsigned int id) const
 {
-    return dat_file_.TerrainBlock;
+    if (id >= dat_file_.Sounds.size()) {
+        WARN << "Invalid sound ID" << id;
+        return nullSound;
+    }
+
+    return dat_file_.Sounds[id];
+}
+
+const std::vector<genie::Task> &DataManager::getTasks(unsigned int id) const
+{
+    if (id >= dat_file_.UnitHeaders.size()) {
+        WARN << "Invalid unit id, can't give tasks" << id;
+        return nullTaskList;
+    }
+
+    return dat_file_.UnitHeaders[id].TaskList;
 }
 
 std::string DataManager::gameName(const genie::GameVersion version)
@@ -109,6 +138,7 @@ std::string DataManager::gameName(const genie::GameVersion version)
         return "Unknown";
     }
 }
+
 genie::GameVersion DataManager::gameVersion() const
 {
     return dat_file_.getGameVersion();
@@ -127,11 +157,6 @@ const genie::Civ &DataManager::civilization(unsigned int id)
     }
 
     return dat_file_.Civs[id];
-}
-
-const genie::DatFile &DataManager::datFile()
-{
-    return Inst().dat_file_;
 }
 
 DataManager::DataManager()

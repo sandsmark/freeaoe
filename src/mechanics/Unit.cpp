@@ -308,7 +308,7 @@ bool Unit::isDead() const
 std::unordered_set<Task> Unit::availableActions()
 {
     std::unordered_set<Task> tasks;
-    for (const genie::Task &task : DataManager::datFile().UnitHeaders[m_data->ID].TaskList) {
+    for (const genie::Task &task : DataManager::Inst().getTasks(m_data->ID)) {
         tasks.insert(Task(task, m_data->ID));
     }
 
@@ -317,7 +317,7 @@ std::unordered_set<Task> Unit::availableActions()
     }
 
     for (const genie::Unit *swappable : civilization->swappableUnits(m_data->Action.TaskSwapGroup)) {
-        for (const genie::Task &task : DataManager::datFile().UnitHeaders[swappable->ID].TaskList) {
+        for (const genie::Task &task : DataManager::Inst().getTasks(swappable->ID)) {
             tasks.insert(Task(task, swappable->ID));
         }
     }
@@ -427,7 +427,7 @@ float Unit::healthLeft() const
 
 int Unit::taskGraphicId(const genie::Task::ActionTypes taskType, const IAction::UnitState state)
 {
-    for (const genie::Task &task : DataManager::datFile().UnitHeaders[m_data->ID].TaskList) {
+    for (const genie::Task &task : DataManager::Inst().getTasks(m_data->ID)) {
         if (task.ActionType != taskType/* &&
                 !(taskType == genie::Task::GatherRebuild && task.ActionType == genie::Task::Hunt)*/) {
             continue;
@@ -487,7 +487,7 @@ void Unit::updateGraphic()
     switch (m_currentAction->type) {
     case IAction::Type::Move:
         graphic = movingGraphics;
-        for (const genie::Task &task : DataManager::datFile().UnitHeaders[m_data->ID].TaskList) {
+        for (const genie::Task &task : DataManager::Inst().getTasks(m_data->ID)) {
             if (task.ActionType != genie::Task::GatherRebuild && task.ActionType != genie::Task::Hunt) {
                 continue;
             }
