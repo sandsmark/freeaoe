@@ -385,6 +385,9 @@ bool UnitManager::onLeftClick(const ScreenPos &screenPos, const CameraPtr &camer
         DBG << "Selecting attack target";
         MapPos targetPos = camera->absoluteMapPos(screenPos);
         Unit::Ptr targetUnit = unitAt(screenPos, camera);
+        if (targetUnit && targetUnit->playerId == humanPlayer->playerId) {
+            targetUnit.reset();
+        }
         for (const Unit::Ptr &unit : m_selectedUnits) {
             if (unit->playerId != humanPlayer->playerId) {
                 continue;
