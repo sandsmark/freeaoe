@@ -35,17 +35,6 @@
 class DataManager
 {
 public:
-    // Because I like to return const refs, and also do error checking
-    static const genie::Unit nullUnit;
-    static const genie::Tech nullTech;
-    static const genie::Civ nullCiv;
-    static const genie::Effect nullEffect;
-    static const genie::TerrainRestriction nullTerrainRestriction;
-    static const genie::PlayerColour nullPlayerColor;
-    static const genie::Terrain nullTerrain;
-    static const genie::Sound nullSound;
-    static const std::vector<genie::Task> nullTaskList;
-
     bool initialize(const std::string &dataPath);
 
     DataManager(const DataManager &) = delete;
@@ -68,9 +57,20 @@ public:
     static std::string gameName(const genie::GameVersion version);
     genie::GameVersion gameVersion() const;
 
-    const std::vector<genie::Civ> &civilizations();
+    const std::vector<genie::Civ> &civilizations() const;
 
-    const genie::Civ &civilization(unsigned int id);
+    const genie::Civ &civilization(unsigned int id) const;
+
+    // Because I like to return const refs, and also do error checking
+    static const genie::Unit nullUnit;
+    static const genie::Tech nullTech;
+    static const genie::Civ nullCiv;
+    static const genie::Effect nullEffect;
+    static const genie::TerrainRestriction nullTerrainRestriction;
+    static const genie::PlayerColour nullPlayerColor;
+    static const genie::Terrain nullTerrain;
+    static const genie::Sound nullSound;
+    static const std::vector<genie::Task> nullTaskList;
 
 private:
     DataManager();

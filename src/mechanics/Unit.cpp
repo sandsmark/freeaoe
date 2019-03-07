@@ -179,7 +179,7 @@ void Unit::setCreationProgress(float progress)
         if (m_creationProgress < m_data->Creatable.TrainTime && progress >= m_data->Creatable.TrainTime) {
             m_renderer.setGraphic(defaultGraphics);
         } else if (m_creationProgress == m_data->Creatable.TrainTime && progress < m_data->Creatable.TrainTime) {
-            m_renderer.setGraphic(AssetManager::Inst()->getGraphic(m_data->Building.ConstructionGraphicID));
+            m_renderer.setGraphic(m_data->Building.ConstructionGraphicID);
         }
     }
 
@@ -224,7 +224,7 @@ void Unit::takeDamage(const genie::unit::AttackOrArmor &attack, const float dama
     m_damageTaken += newDamage;
 
     if (hitpointsLeft() <= 0) {
-        m_renderer.setGraphic(AssetManager::Inst()->getGraphic(m_data->DyingGraphic));
+        m_renderer.setGraphic(m_data->DyingGraphic);
 
         DBG  << data()->DyingSound;
         if (data()->DyingSound != -1) {
@@ -467,7 +467,7 @@ int Unit::taskGraphicId(const genie::Task::ActionTypes taskType, const IAction::
 void Unit::updateGraphic()
 {
     if (hitpointsLeft() <= 0) {
-        m_renderer.setGraphic(AssetManager::Inst()->getGraphic(m_data->DyingGraphic));
+        m_renderer.setGraphic(m_data->DyingGraphic);
         return;
     }
 

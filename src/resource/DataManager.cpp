@@ -144,12 +144,12 @@ genie::GameVersion DataManager::gameVersion() const
     return dat_file_.getGameVersion();
 }
 
-const std::vector<genie::Civ> &DataManager::civilizations()
+const std::vector<genie::Civ> &DataManager::civilizations() const
 {
     return dat_file_.Civs;
 }
 
-const genie::Civ &DataManager::civilization(unsigned int id)
+const genie::Civ &DataManager::civilization(unsigned int id) const
 {
     if (id >= dat_file_.Civs.size()) {
         WARN << "civ out of range";

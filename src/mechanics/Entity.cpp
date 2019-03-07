@@ -124,7 +124,7 @@ void Entity::setPosition(const MapPos &pos)
 MoveTargetMarker::MoveTargetMarker(const MapPtr &map) :
     Entity(Type::MoveTargetMarker, "Move target marker", map)
 {
-    m_renderer.setGraphic(AssetManager::Inst()->getGraphic(2961));
+    m_renderer.setGraphic(2961);
 
     m_renderer.setCurrentFrame(m_renderer.frameCount() - 1); // don't play immediately
 }
@@ -155,7 +155,7 @@ DecayingEntity::DecayingEntity(const MapPtr &map, const int graphicId, float dec
     Entity(Type::Decaying, "Eye Candy Things", map),
     m_decayTimeLeft(decayTime)
 {
-    m_renderer.setGraphic(AssetManager::Inst()->getGraphic(graphicId));
+    m_renderer.setGraphic(graphicId);
 }
 
 bool DecayingEntity::update(Time time)

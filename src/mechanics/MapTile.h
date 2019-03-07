@@ -291,3 +291,57 @@ template<> struct hash<MapTile>
 };
 
 }
+
+inline LogPrinter operator <<(LogPrinter os, const Slope &slope)
+{
+    const char *separator = os.separator;
+    os.separator = "";
+
+    os << "Slope::";
+    switch (slope.direction) {
+    case Slope::Flat:
+        os << "Flat";
+        break;
+    case Slope::SouthUp:
+        os << "SouthUp";
+        break;
+    case Slope::NorthUp:
+        os << "NorthUp";
+        break;
+    case Slope::WestUp:
+        os << "WestUp";
+        break;
+    case Slope::EastUp:
+        os << "EastUp";
+        break;
+    case Slope::SouthWestUp:
+        os << "SouthWestUp";
+        break;
+    case Slope::NorthWestUp:
+        os << "NorthWestUp";
+        break;
+    case Slope::SouthEastUp:
+        os << "SouthEastUp";
+        break;
+    case Slope::NorthEastUp:
+        os << "NorthEastUp";
+        break;
+    case Slope::SouthWestEastUp:
+        os << "SouthWestEastUp";
+        break;
+    case Slope::NorthWestEastUp:
+        os << "NorthWestEastUp";
+        break;
+    case Slope::NorthSouthWestUp:
+        os << "NorthWestEastUp";
+        break;
+    case Slope::NorthSouthEastUp:
+        os << "NorthWestEastUp";
+        break;
+    }
+
+    os << separator;
+    os.separator = separator;
+
+    return os;
+}
