@@ -53,7 +53,7 @@ void UnitManager::add(const Unit::Ptr &unit)
 
 bool UnitManager::init()
 {
-    m_moveTargetMarker = std::make_shared<MoveTargetMarker>(m_map);
+    m_moveTargetMarker = std::make_unique<MoveTargetMarker>(m_map);
 
     return true;
 }
@@ -95,7 +95,6 @@ bool UnitManager::update(Time time)
 
         // Remove from selected if it is dying
         if (unit->isDead() || unit->isDying()) {
-            DBG << "Unit died" << unit->debugName;
             m_selectedUnits.erase(unit);
         }
 

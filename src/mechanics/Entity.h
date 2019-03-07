@@ -92,7 +92,7 @@ private:
 
 struct MoveTargetMarker : public Entity
 {
-    typedef std::shared_ptr<MoveTargetMarker> Ptr;
+    typedef std::unique_ptr<MoveTargetMarker> Ptr;
 
     MoveTargetMarker(const MapPtr &map);
 
