@@ -79,7 +79,9 @@ void Engine::start()
                 event.mouseMove.y = mappedPos.y;
             }
 
-            state->handleEvent(event);
+            if (!handleEvent(event)) {
+                state->handleEvent(event);
+            }
 
             updated = true;
         }
@@ -90,6 +92,7 @@ void Engine::start()
             // Clear screen
             renderWindow_->clear(sf::Color::Green);
             state->draw();
+            drawButtons();
             const int renderTime = GameClock.getElapsedTime().asMilliseconds() - renderStart;
 
             if (renderTime > 0) {
@@ -136,6 +139,76 @@ void Engine::showStartScreen()
     renderWindow_->display();
 }
 
+void Engine::loadTopButtons()
+{
+    genie::SlpFilePtr buttonsFile = AssetManager::Inst()->getSlp("btngame2x.shp");
+    if (!buttonsFile) {
+        WARN << "Failed to load SLP for buttons";
+        return;
+    }
+
+    if (buttonsFile->getFrameCount() < TopMenuButton::ButtonsCount * 2) {
+        WARN << "Not enough buttons";
+    }
+
+    int x = renderWindow_->getSize().x - 5;
+    for (int i=0; i<TopMenuButton::ButtonsCount; i++) {
+        TopMenuButton button;
+        button.type = TopMenuButton::Type(i);
+
+        button.texture.loadFromImage(Resource::convertFrameToImage(buttonsFile->getFrame(i * 2)));
+        button.pressedTexture.loadFromImage(Resource::convertFrameToImage(buttonsFile->getFrame(i * 2 + 1)));
+
+        button.rect.setSize(button.texture.getSize());
+        x -= button.rect.width;
+
+        button.rect.x = x;
+        button.rect.y = 5;
+
+        m_buttons.push_back(std::move(button));
+    }
+}
+
+void Engine::drawButtons()
+{
+    for (const TopMenuButton &button : m_buttons) {
+        sf::Sprite sprite;
+        if (button.type == m_pressedButton) {
+            sprite.setTexture(button.pressedTexture);
+        } else {
+            sprite.setTexture(button.texture);
+        }
+
+        sprite.setPosition(button.rect.topLeft());
+        renderWindow_->draw(sprite);
+    }
+}
+
+bool Engine::handleEvent(sf::Event event)
+{
+    if (event.type == sf::Event::MouseButtonReleased) {
+        if (m_pressedButton != TopMenuButton::Invalid) {
+            m_pressedButton = TopMenuButton::Invalid;
+            return true;
+        }
+
+        return false;
+    }
+
+    if (event.type != sf::Event::MouseButtonPressed) {
+        return false;
+    }
+    const ScreenPos mousePos(event.mouseButton.x, event.mouseButton.y);
+    for (const TopMenuButton &button : m_buttons) {
+        if (button.rect.contains(mousePos)) {
+            m_pressedButton = button.type;
+            return true;
+        }
+    }
+
+    return false;
+}
+
 //------------------------------------------------------------------------------
 bool Engine::setup(const std::shared_ptr<genie::ScnFile> &scenario)
 {
@@ -159,10 +232,12 @@ bool Engine::setup(const std::shared_ptr<genie::ScnFile> &scenario)
     renderWindow_->setSize(gameState->uiSize());
     renderTarget_->setSize(gameState->uiSize());
 
-    fps_label_.setPosition(sf::Vector2f(gameState->uiSize().width - 75, 5));
+    fps_label_.setPosition(sf::Vector2f(gameState->uiSize().width - 75, gameState->uiSize().height - 20));
     fps_label_.setFillColor(sf::Color::White);
     fps_label_.setFont(SfmlRenderTarget::defaultFont());
     fps_label_.setCharacterSize(15);
+
+    loadTopButtons();
 
     return true;
 }

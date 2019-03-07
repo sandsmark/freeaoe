@@ -30,8 +30,23 @@ class RenderWindow;
 
 class Engine
 {
+    struct TopMenuButton {
+        enum Type {
+            Invalid = -1,
+            Settings = 0,
+            TechTree = 1,
+            Chat = 2,
+            Diplo = 3,
+            GameMenu = 4,
+            ButtonsCount
+        } type;
 
+        ScreenRect rect;
+        sf::Texture texture;
+        sf::Texture pressedTexture;
+    };
 public:
+
     static const sf::Clock GameClock;
 
     Engine();
@@ -42,6 +57,9 @@ public:
 
 private:
     void showStartScreen();
+    void loadTopButtons();
+    void drawButtons();
+    bool handleEvent(sf::Event event);
 
     std::unique_ptr<sf::RenderWindow> renderWindow_;
     std::shared_ptr<SfmlRenderTarget> renderTarget_;
@@ -49,5 +67,7 @@ private:
     StateManager state_manager_;
 
     sf::Text fps_label_;
+    std::vector<TopMenuButton> m_buttons;
+    TopMenuButton::Type m_pressedButton = TopMenuButton::Invalid;
 };
 

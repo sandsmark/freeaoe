@@ -407,6 +407,11 @@ struct ScreenRect
         return Size(width, height);
     }
 
+    void setSize(const Size s) {
+        width = s.width;
+        height = s.height;
+    }
+
     inline ScreenRect &operator +=(const ScreenRect& other)
     {
         float x1 = std::min(x, other.x);
