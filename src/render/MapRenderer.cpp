@@ -235,9 +235,9 @@ void MapRenderer::updateTexture()
                 continue;
             }
 
-            sf::Sprite sprite = terrain->sprite(mapTile);
-            sprite.move(spos);
-            m_textureTarget->draw(sprite);
+//            sf::Sprite sprite = terrain->sprite(mapTile);
+//            sprite.move(spos);
+            m_textureTarget->draw(terrain->texture(mapTile, m_textureTarget), spos);
 //                invalidIndicator.setPosition(spos);
 //                m_textureTarget.draw(invalidIndicator);
 //            m_textureTarget.draw(terrain->texture(mapTile), spos);

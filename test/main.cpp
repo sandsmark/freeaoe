@@ -36,7 +36,7 @@ void testLoadTiles()
             for (int row = 0; row < map.getRows(); row++) {
                 MapTile &tile = map.getTileAt(col, row);
                 TerrainPtr terrain = AssetManager::Inst()->getTerrain(tile.terrainId);
-                terrain->texture(tile);
+                terrain->texture(tile, nullptr);
             }
         }
     }
@@ -50,7 +50,7 @@ void testLoadTiles()
             for (int row = 0; row < map.getRows(); row++) {
                 MapTile &tile = map.getTileAt(col, row);
                 TerrainPtr terrain = AssetManager::Inst()->getTerrain(tile.terrainId);
-                terrain->texture(tile);
+                terrain->texture(tile, nullptr);
             }
         }
     }

@@ -71,8 +71,9 @@ public:
         }
     }
 
-    const sf::Texture &texture(const MapTile &tile) noexcept;
-    sf::Sprite sprite(const MapTile &tile) noexcept;
+#if PNG_TERRAIN_TEXTURES
+    sf::Sprite sprite(const MapTile &tile, const IRenderTargetPtr &renderer) noexcept;
+#endif
 
     bool isValid() const noexcept;
 

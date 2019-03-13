@@ -87,6 +87,7 @@ struct Circle : public Shape
 struct Image
 {
     typedef std::shared_ptr<Image> Ptr;
+    static Ptr null;
 
     Size size;
 

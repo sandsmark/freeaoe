@@ -137,7 +137,7 @@ const Drawable::Image::Ptr &TerrainSprite::texture(const MapTile &tile, const IR
         return it->second;
     }
     if (IS_UNLIKELY(!m_slp)) {
-        return Graphic::nullImage;
+        return Drawable::Image::null;
     }
 
     // This defines lightning textures (e. g. to darken edges)
@@ -281,18 +281,23 @@ const Drawable::Image::Ptr &TerrainSprite::texture(const MapTile &tile, const IR
     addOutline(pixels, width, filter.height);
 #endif
 
-    m_textures[tile] = renderer->createImage(Size(width, filter.height), reinterpret_cast<uint8_t*>(pixels));
+    if (IS_LIKELY(renderer)) {
+        m_textures[tile] = renderer->createImage(Size(width, filter.height), reinterpret_cast<uint8_t*>(pixels));
+    } else {
+        WARN << "no renderer!";
+    }
 
     return m_textures[tile];
 }
 
-sf::Sprite TerrainSprite::sprite(const MapTile &tile) noexcept
+#if PNG_TERRAIN_TEXTURES
+sf::Sprite TerrainSprite::sprite(const MapTile &tile, const IRenderTargetPtr &renderer) noexcept
 {
     if (!m_isPng) {
-        return sf::Sprite(texture(tile));
+        return sf::Sprite(texture(tile, renderer));
     }
 
-    const std::unordered_map<MapTile, sf::Texture>::const_iterator it = m_textures.find(tile);
+    const std::unordered_map<MapTile, Drawable::Image::Ptr>::const_iterator it = m_textures.find(tile);
     if (it == m_textures.end()) {
         sf::Image sourceImage;
         sourceImage.loadFromFile(m_pngPath);
@@ -353,7 +358,7 @@ sf::Sprite TerrainSprite::sprite(const MapTile &tile) noexcept
         }
         sf::Image image;
         image.create(subRect.width, subRect.height, pixels);
-        m_textures[tile].loadFromImage(image);
+        m_textures[tile] = rend loadFromImage(image);
     }
 
      sf::Texture &texture = m_textures[tile];
@@ -364,6 +369,7 @@ sf::Sprite TerrainSprite::sprite(const MapTile &tile) noexcept
 //    sprite.move(48.5, 0);
     return sprite;
 }
+#endif
 
 bool TerrainSprite::isValid() const noexcept
 {

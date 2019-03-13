@@ -27,6 +27,7 @@
 #include "mechanics/ScenarioController.h"
 #include "mechanics/UnitManager.h"
 #include "render/Camera.h"
+
 #include "render/SfmlRenderTarget.h"
 #include "resource/AssetManager.h"
 #include "resource/Resource.h"

@@ -4,6 +4,10 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Text.hpp>
+#include "core/Types.h"
+#include <SFML/Graphics/Text.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
+
 #include <filesystem>
 #include <memory>
 #include <string>

@@ -27,6 +27,7 @@
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/RenderTexture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Transform.hpp>
@@ -40,6 +41,8 @@ namespace sf {
 class Drawable;
 class Image;
 }  // namespace sf
+
+Drawable::Image::Ptr Drawable::Image::null = std::make_shared<SfmlImage>();
 
 #define SCALE 1.
 
@@ -198,7 +201,7 @@ Drawable::Image::Ptr SfmlRenderTarget::createImage(const Size &size, const uint8
     ret->size = size;
 
     // clang complains if we don't use move here because of mismatching return types and old compilers (I bet msvc)
-    return std::move(ret);
+    return ret;
 }
 
 
@@ -300,7 +303,7 @@ Drawable::Text::Ptr SfmlRenderTarget::createText()
 {
     std::shared_ptr<SfmlText> ret = std::make_shared<SfmlText>();
     ret->text.setFont(defaultFont());
-    return std::move(ret);
+    return ret;
 }
 
 void SfmlRenderTarget::draw(const Drawable::Text::Ptr &text)
