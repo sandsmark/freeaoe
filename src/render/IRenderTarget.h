@@ -97,6 +97,27 @@ private:
     friend class IRenderTarget;
 };
 
+struct Text
+{
+    enum Alignment {
+        AlignLeft, AlignRight
+    } alignment = AlignLeft;
+
+    typedef std::shared_ptr<Text> Ptr;
+
+    ScreenPos position;
+    std::string string;
+    float pointSize = 12.;
+    Color color = Black;
+    Color outlineColor = Transparent;
+
+protected:
+    Text() {}
+
+private:
+    friend class IRenderTarget;
+};
+
 }
 
 struct Window
@@ -151,10 +172,14 @@ public:
     virtual void draw(const std::shared_ptr<IRenderTarget> &renderTarget) = 0;
 
     virtual Drawable::Image::Ptr createImage(const Size &size, const uint8_t *pixels) = 0;
-    virtual Drawable::Image::Ptr convertFrameToImage(const genie::SlpFramePtr &frame, const genie::PalFile &palette, const int playerId = -1);
+    Drawable::Image::Ptr convertFrameToImage(const genie::SlpFramePtr &frame);
+    Drawable::Image::Ptr convertFrameToImage(const genie::SlpFramePtr &frame, const genie::PalFile &palette, const int playerId = -1);
     virtual void draw(const Drawable::Image::Ptr &image, const ScreenPos &position) = 0;
 
     virtual std::shared_ptr<IRenderTarget> createTextureTarget(const Size &size) = 0;
+
+    virtual Drawable::Text::Ptr createText() = 0;
+    virtual void draw(const Drawable::Text::Ptr &text) = 0;
 
     virtual void clear() = 0;
 

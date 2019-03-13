@@ -1,9 +1,15 @@
 #include "IRenderTarget.h"
 
 #include "resource/DataManager.h"
+#include "resource/AssetManager.h"
 #include <genie/resource/Color.h>
 #include <genie/resource/SlpFrame.h>
 #include <genie/resource/PalFile.h>
+
+Drawable::Image::Ptr IRenderTarget::convertFrameToImage(const genie::SlpFramePtr &frame)
+{
+    return convertFrameToImage(frame, AssetManager::Inst()->getPalette(50500));
+}
 
 Drawable::Image::Ptr IRenderTarget::convertFrameToImage(const genie::SlpFramePtr &frame, const genie::PalFile &palette, const int playerId)
 {

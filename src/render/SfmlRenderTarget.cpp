@@ -250,6 +250,11 @@ void SfmlRenderTarget::draw(const Drawable::Circle &circle)
 
 void SfmlRenderTarget::draw(const Drawable::Image::Ptr &image, const ScreenPos &position)
 {
+    if (!image) {
+        WARN << "can't render null image";
+        return;
+    }
+
     const std::shared_ptr<const SfmlImage> sfmlImage = std::static_pointer_cast<const SfmlImage>(image);
 
     sf::Sprite sprite;
@@ -263,7 +268,6 @@ void SfmlRenderTarget::draw(const Drawable::Image::Ptr &image, const ScreenPos &
 
 std::shared_ptr<IRenderTarget> SfmlRenderTarget::createTextureTarget(const Size &size)
 {
-//    const std::shared_ptr<const SfmlImage> sfmlImage = std::static_pointer_cast<const SfmlImage>(image);
     return std::make_shared<SfmlRenderTarget>(size);
 }
 
@@ -276,6 +280,11 @@ void SfmlRenderTarget::clear()
 
 void SfmlRenderTarget::draw(const std::shared_ptr<IRenderTarget> &renderTarget)
 {
+    if (!renderTarget) {
+        WARN << "can't render null render target";
+        return;
+    }
+
     const std::shared_ptr<const SfmlRenderTarget> sfmlRenderTarget = std::static_pointer_cast<const SfmlRenderTarget>(renderTarget);
 
     if (!sfmlRenderTarget->m_renderTexture) {
@@ -284,4 +293,53 @@ void SfmlRenderTarget::draw(const std::shared_ptr<IRenderTarget> &renderTarget)
 
     sfmlRenderTarget->m_renderTexture->display();
     draw(sfmlRenderTarget->m_renderTexture->getTexture(), ScreenPos(0, 0));
+}
+
+
+Drawable::Text::Ptr SfmlRenderTarget::createText()
+{
+    std::shared_ptr<SfmlText> ret = std::make_shared<SfmlText>();
+    ret->text.setFont(defaultFont());
+    return std::move(ret);
+}
+
+void SfmlRenderTarget::draw(const Drawable::Text::Ptr &text)
+{
+    if (!text) {
+        WARN << "can't render null text";
+        return;
+    }
+
+    const std::shared_ptr<SfmlText> sfmlText = std::static_pointer_cast<SfmlText>(text);
+
+    bool changed = false;
+
+    if (sfmlText->text.getCharacterSize() != text->pointSize) {
+        sfmlText->text.setCharacterSize(text->pointSize);
+        changed = true;
+    }
+
+    if (sfmlText->text.getString() != text->string) {
+        sfmlText->text.setString(text->string);
+        changed = true;
+    }
+
+    sfmlText->text.setFillColor(convertColor(text->color));
+    if (text->outlineColor.a > 0) {
+        sfmlText->text.setOutlineColor(convertColor(text->outlineColor));
+        sfmlText->text.setOutlineThickness(2);
+
+    }
+
+    if (sfmlText->lastAlignment != text->alignment || sfmlText->lastPos != text->position || changed) {
+        sfmlText->lastPos = text->position;
+        sfmlText->lastAlignment = text->alignment;
+
+        if (text->alignment == Drawable::Text::AlignRight) {
+            sfmlText->text.setPosition(sf::Vector2f(text->position.x - sfmlText->text.getLocalBounds().width, text->position.y));
+        } else {
+            sfmlText->text.setPosition(text->position);
+        }
+    }
+    renderTarget_->draw(sfmlText->text);
 }

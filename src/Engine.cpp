@@ -254,8 +254,8 @@ void Engine::loadUiOverlay()
 {
     std::shared_ptr<genie::SlpFile> overlayFile = AssetManager::Inst()->getUiOverlay(AssetManager::Ui1280x1024, AssetManager::Viking);
     if (overlayFile) {
-        m_uiOverlay.loadFromImage(Resource::convertFrameToImage(overlayFile->getFrame()));
-        DBG << "Loaded UI overlay with size" << Size(m_uiOverlay.getSize());
+        m_uiOverlay = renderTarget_->convertFrameToImage(overlayFile->getFrame());
+        DBG << "Loaded UI overlay with size" << m_uiOverlay->size;
     } else {
         AssetManager::UiResolution attemptedResolution = AssetManager::Ui1280x1024;
         AssetManager::UiCiv attemptedCiv = AssetManager::Briton;
@@ -267,7 +267,6 @@ void Engine::loadUiOverlay()
                 } else if (attemptedResolution == AssetManager::Ui1024x768) {
                     attemptedResolution = AssetManager::Ui800x600;
                 } else {
-                    m_uiOverlay = sf::Texture();
                     break;
                 }
 
@@ -278,7 +277,7 @@ void Engine::loadUiOverlay()
 
         if (overlayFile) {
             WARN << "Loaded fallback ui overlay res" << attemptedResolution << "for civ" << attemptedCiv;
-            m_uiOverlay.loadFromImage(Resource::convertFrameToImage(overlayFile->getFrame()));
+            m_uiOverlay = renderTarget_->convertFrameToImage(overlayFile->getFrame());
         } else {
             WARN << "Failed to load ui overlay";
         }
@@ -554,8 +553,8 @@ bool Engine::setup(const std::shared_ptr<genie::ScnFile> &scenario)
 
     loadUiOverlay();
 
-    Size uiSize = m_uiOverlay.getSize();
-    if (uiSize.width == 0 || uiSize.height == 0) {
+    Size uiSize = m_uiOverlay->size;
+    if (!m_uiOverlay->size.isValid()) {
         WARN << "We don't have a valid UI overlay";
         uiSize = Size(640, 480);
     }

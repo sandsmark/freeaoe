@@ -116,7 +116,7 @@ private:
 
     std::array<sf::Text, s_numMessagesLines> m_visibleText;
 
-    sf::Texture m_uiOverlay;
+    Drawable::Image::Ptr m_uiOverlay;
 
     ScreenPos m_selectionStart;
     ScreenPos m_selectionCurr;

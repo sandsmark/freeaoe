@@ -56,6 +56,7 @@ enum class GameType {
 namespace sf {
 class RenderTarget;
 }
+
 class SfmlRenderTarget;
 
 //------------------------------------------------------------------------------
