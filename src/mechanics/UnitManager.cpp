@@ -177,12 +177,15 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
     m_outlineOverlay.clear(sf::Color::Transparent);
 
     for (const Unit::Ptr &unit : visibleUnits) {
-        if (!(unit->data()->OcclusionMode & genie::Unit::OccludeOthers)) {
-            continue;
-        }
         const ScreenPos unitPosition = camera->absoluteScreenPos(unit->position());
-        unit->renderer().render(m_outlineOverlay, unitPosition, RenderType::BuildingAlpha);
+        if (!(unit->data()->OcclusionMode & genie::Unit::OccludeOthers)) {
+            unit->renderer().render(m_outlineOverlay, unitPosition, RenderType::Outline);
+        } else {
+            unit->renderer().render(m_outlineOverlay, unitPosition, RenderType::BuildingAlpha);
+
+        }
     }
+    std::reverse(visibleUnits.begin(), visibleUnits.end());
 
     for (const Unit::Ptr &unit : visibleUnits) {
 
@@ -251,13 +254,7 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
         }
 
         const ScreenPos pos = renderTarget->camera()->absoluteScreenPos(unit->position());
-        unit->renderer().render(*renderTarget->renderTarget_,
-                                pos,
-                                RenderType::Base);
-
-        if (!(unit->data()->OcclusionMode & genie::Unit::ShowOutline)) {
-            continue;
-        }
+        unit->renderer().render(*renderTarget->renderTarget_, pos, RenderType::Base);
 
 
 #ifdef DEBUG
@@ -278,17 +275,14 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
             }
         }
 #endif
-        unit->renderer().render(m_outlineOverlay, pos, RenderType::Outline);
     }
 
     m_outlineOverlay.display();
 
-    {
+    { // this is a bit wrong, on bright buildings it's almost not visible, but haven't found a better solution other than writing a custom shader
         sf::Sprite sprite;
-        sf::BlendMode blendMode;
-        blendMode = sf::BlendAdd;
         sprite.setTexture(m_outlineOverlay.getTexture());
-        renderTarget->renderTarget_->draw(sprite, blendMode);
+        renderTarget->renderTarget_->draw(sprite, sf::BlendAdd);
     }
 
 #ifdef DEBUG

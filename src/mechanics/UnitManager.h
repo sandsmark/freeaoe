@@ -38,15 +38,15 @@ struct MapPositionSorter
 
 
         if (pos1.y != pos2.y) {
-            return pos1.y > pos2.y;
+            return pos1.y < pos2.y;
         }
 
         if (pos1.x != pos2.x) {
-            return pos1.x > pos2.x;
+            return pos1.x < pos2.x;
         }
 
         // std sucks
-        return lhs > rhs;
+        return lhs < rhs;
     }
 };
 
