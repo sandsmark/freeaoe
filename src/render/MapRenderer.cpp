@@ -18,11 +18,6 @@
 
 #include "MapRenderer.h"
 
-#include <SFML/Graphics/CircleShape.hpp>
-#include <SFML/Graphics/Color.hpp>
-#include <SFML/Graphics/Sprite.hpp>
-#include <SFML/Graphics/Texture.hpp>
-#include <SFML/System/Vector2.hpp>
 #include <genie/dat/TerrainBlock.h>
 #include <genie/resource/EdgeFiles.h>
 #include <mechanics/MapTile.h>
@@ -48,7 +43,6 @@ MapRenderer::MapRenderer() :
     m_rRowEnd(0),
     m_rColBegin(0),
     m_rColEnd(0),
-    m_textureTarget(m_mapRenderTexture),
     m_elevationHeight(DataManager::Inst().terrainBlock().ElevHeight)
 {
 }
@@ -66,7 +60,7 @@ bool MapRenderer::update(Time /*time*/)
     const MapPos cameraPos = renderTarget_->camera()->targetPosition();
 
     if (!m_camChanged && m_lastCameraPos == cameraPos &&
-        Size(m_mapRenderTexture.getSize()) == renderTarget_->getSize() &&
+        (m_textureTarget && m_textureTarget->getSize() == renderTarget_->getSize()) &&
         !m_map->tilesUpdated()) {
         return false;
     }
@@ -138,13 +132,13 @@ void MapRenderer::display()
         return;
     }
 
-    if (Size(m_mapRenderTexture.getSize()) != renderTarget_->getSize() || m_visibilityMap->isDirty) {
+    if (!m_textureTarget || m_textureTarget->getSize() != renderTarget_->getSize() || m_visibilityMap->isDirty) {
         m_visibilityMap->isDirty = false;
 
         updateTexture();
     }
 
-    renderTarget_->draw(m_mapRenderTexture.getTexture(), ScreenPos(0, 0));
+    renderTarget_->draw(m_textureTarget);
 }
 
 void MapRenderer::setMap(const MapPtr &map)
@@ -178,21 +172,23 @@ void MapRenderer::updateTexture()
         return;
     }
 
-    if (m_mapRenderTexture.getSize().x != renderTarget_->getSize().width || m_mapRenderTexture.getSize().y != renderTarget_->getSize().height) {
-        m_mapRenderTexture.create(renderTarget_->getSize().width, renderTarget_->getSize().height);
+    if (!m_textureTarget || m_textureTarget->getSize() == renderTarget_->getSize()) {
+        m_textureTarget = renderTarget_->createTextureTarget(renderTarget_->getSize());
     }
 
-    m_mapRenderTexture.clear();
+    m_textureTarget->clear();
 
-    if (!m_mapRenderTexture.getSize().x || !m_mapRenderTexture.getSize().y) {
-        return;
-    }
-
-    sf::CircleShape invalidIndicator(Constants::TILE_SIZE, 4);
-    invalidIndicator.setScale(1, 0.5);
-    invalidIndicator.setFillColor(sf::Color::Red);
-    invalidIndicator.setOutlineThickness(3);
-    invalidIndicator.setOutlineColor(sf::Color::Transparent);
+    Drawable::Circle invalidIndicator;
+    invalidIndicator.radius = Constants::TILE_SIZE;
+    invalidIndicator.pointCount = 4;
+    invalidIndicator.aspectRatio = 0.5;
+    invalidIndicator.filled = true;
+    invalidIndicator.fillColor = Drawable::Red;
+//    sf::CircleShape invalidIndicator(Constants::TILE_SIZE, 4);
+//    invalidIndicator.setScale(1, 0.5);
+//    invalidIndicator.setFillColor(sf::Color::Red);
+//    invalidIndicator.setOutlineThickness(3);
+//    invalidIndicator.setOutlineColor(sf::Color::Transparent);
 
 //    sf::Text text;
 //    text.setFont(SfmlRenderTarget::defaultFont());
@@ -234,33 +230,31 @@ void MapRenderer::updateTexture()
             TerrainPtr terrain = AssetManager::Inst()->getTerrain(mapTile.terrainId);
 
             if (!terrain || !terrain->isValid()) {
-                invalidIndicator.setPosition(spos);
-                m_textureTarget.draw(invalidIndicator);
+                invalidIndicator.center = spos + ScreenPos(Constants::TILE_SIZE_HORIZONTAL/2, Constants::TILE_SIZE_VERTICAL/2);
+                m_textureTarget->draw(invalidIndicator);
                 continue;
             }
 
             sf::Sprite sprite = terrain->sprite(mapTile);
             sprite.move(spos);
-            m_textureTarget.draw(sprite);
+            m_textureTarget->draw(sprite);
 //                invalidIndicator.setPosition(spos);
 //                m_textureTarget.draw(invalidIndicator);
 //            m_textureTarget.draw(terrain->texture(mapTile), spos);
 
             // TODO actually load the blkedge and tileedge
             if (m_visibilityMap->visibilityAt(col, row) == VisibilityMap::Explored) {
-                m_textureTarget.draw(shadowMask(mapTile.slopes.self.toGenie(), 0), spos);
+                m_textureTarget->draw(shadowMask(mapTile.slopes.self.toGenie(), 0), spos);
             } else {
-                m_textureTarget.draw(shadowMask(mapTile.slopes.self.toGenie(), m_visibilityMap->edgeTileNum(col, row, VisibilityMap::Explored) * 2 + 1), spos);
+                m_textureTarget->draw(shadowMask(mapTile.slopes.self.toGenie(), m_visibilityMap->edgeTileNum(col, row, VisibilityMap::Explored) * 2 + 1), spos);
             }
-            m_textureTarget.draw(unexploredMask(mapTile.slopes.self.toGenie(), m_visibilityMap->edgeTileNum(col, row, VisibilityMap::Unexplored)), spos);
+            m_textureTarget->draw(unexploredMask(mapTile.slopes.self.toGenie(), m_visibilityMap->edgeTileNum(col, row, VisibilityMap::Unexplored)), spos);
 
 //            text.setString(std::to_string(col) + "," + std::to_string(row));
 //            text.setPosition(spos.x, spos.y);
 //            m_textureTarget.draw(text);
         }
     }
-
-    m_mapRenderTexture.display();
 }
 
 static sf::Image drawTileSpans(const std::vector<genie::TileSpan> &tileSpans, const uint32_t color)

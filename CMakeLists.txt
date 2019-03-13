@@ -180,6 +180,7 @@ set(RENDER_SRC
     src/render/Camera.cpp
     src/render/GraphicRender.cpp
     src/render/IRenderer.cpp
+    src/render/IRenderTarget.cpp
     src/render/MapRenderer.cpp
     src/render/SfmlRenderTarget.cpp
     )

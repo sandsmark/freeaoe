@@ -78,7 +78,14 @@ const sf::Font &SfmlRenderTarget::stylishFont()
     } fontLoader;
 
     return fontLoader.font;
+}
 
+SfmlRenderTarget::SfmlRenderTarget(const Size &size)
+{
+//    m_renderTexture = std::make_unique<sf::RenderTexture>(size);
+    m_renderTexture = std::make_unique<sf::RenderTexture>();
+    m_renderTexture->create(size.width, size.height);
+    renderTarget_ = m_renderTexture.get();
 }
 
 SfmlRenderTarget::SfmlRenderTarget(sf::RenderTarget &render_target)
@@ -176,11 +183,19 @@ void SfmlRenderTarget::display()
 
 Drawable::Image::Ptr SfmlRenderTarget::createImage(const Size &size, const uint8_t *bytes)
 {
-    sf::Image image;
-    image.create(size.width, size.height, bytes);
-
     std::shared_ptr<SfmlImage> ret = std::make_shared<SfmlImage>();
+    sf::Image image;
+
+    if (bytes) {
+        image.create(size.width, size.height, bytes);
+    } else if (size.isValid() ) {
+        image.create(size.width, size.height, sf::Color::Transparent);
+    } else {
+        image.create(10, 10, sf::Color::Red);
+    }
+
     ret->texture.loadFromImage(image);
+    ret->rect.setSize(size);
 
     // clang complains if we don't use move here because of mismatching return types and old compilers (I bet msvc)
     return std::move(ret);
@@ -240,7 +255,33 @@ void SfmlRenderTarget::draw(const Drawable::Image::Ptr &image)
     sf::Sprite sprite;
     sprite.setTexture(sfmlImage->texture);
     sprite.setScale(SCALE, SCALE);
-    sprite.setPosition(image->position);
+    sprite.setPosition(image->rect.topLeft());
 
     renderTarget_->draw(sprite);
+}
+
+
+std::shared_ptr<IRenderTarget> SfmlRenderTarget::createTextureTarget(const Size &size)
+{
+//    const std::shared_ptr<const SfmlImage> sfmlImage = std::static_pointer_cast<const SfmlImage>(image);
+    return std::make_shared<SfmlRenderTarget>(size);
+}
+
+
+void SfmlRenderTarget::clear()
+{
+    renderTarget_->clear();
+}
+
+
+void SfmlRenderTarget::draw(const std::shared_ptr<IRenderTarget> &renderTarget)
+{
+    const std::shared_ptr<const SfmlRenderTarget> sfmlRenderTarget = std::static_pointer_cast<const SfmlRenderTarget>(renderTarget);
+
+    if (!sfmlRenderTarget->m_renderTexture) {
+        return;
+    }
+
+    sfmlRenderTarget->m_renderTexture->display();
+    draw(sfmlRenderTarget->m_renderTexture->getTexture(), ScreenPos(0, 0));
 }

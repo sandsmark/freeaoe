@@ -44,6 +44,7 @@ public:
     static const sf::Font &defaultFont();
     static const sf::Font &stylishFont();
 
+    SfmlRenderTarget(const Size &size);
     SfmlRenderTarget(sf::RenderTarget &render_target);
     virtual ~SfmlRenderTarget();
 
@@ -68,6 +69,7 @@ public:
 
     Drawable::Image::Ptr createImage(const Size &size, const uint8_t *bytes) override;
     void draw(const Drawable::Image::Ptr &image) override;
+    void draw(const std::shared_ptr<IRenderTarget> &renderTarget) override;
 
     //----------------------------------------------------------------------------
     /// Displays frame.
@@ -75,5 +77,12 @@ public:
     void display() override;
 
     sf::RenderTarget *renderTarget_;
+
+    std::shared_ptr<IRenderTarget> createTextureTarget(const Size &size) override;
+
+    void clear() override;
+
+    std::unique_ptr<sf::RenderTexture> m_renderTexture;
+
 };
 

@@ -27,7 +27,7 @@
 #include "IRenderer.h"
 #include "core/Types.h"
 #include "mechanics/Map.h"
-#include "render/SfmlRenderTarget.h"
+#include "render/IRenderTarget.h"
 
 namespace sf {
 class Texture;
@@ -68,13 +68,10 @@ private:
     int m_rRowBegin, m_rRowEnd;
     int m_rColBegin, m_rColEnd;
 
-    sf::RenderTexture m_mapRenderTexture;
-    SfmlRenderTarget m_textureTarget;
-
     std::unordered_map<int, sf::Texture> m_shadowCaches;
     std::unordered_map<int, sf::Texture> m_unexploredMaskCache;
 
-    sf::Image m_mapImage;
+    IRenderTargetPtr m_textureTarget;
 
     const int m_elevationHeight;
 };

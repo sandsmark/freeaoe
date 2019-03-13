@@ -60,6 +60,10 @@ struct Size {
         width(sfVector.x), height(sfVector.y)
     {}
 
+    inline bool isValid() const {
+        return width > 0.f && height > 0.f;
+    }
+
     inline operator sf::Vector2f() const {
         return sf::Vector2f(width, height);
     }

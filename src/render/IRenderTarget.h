@@ -35,8 +35,16 @@ class Sprite;
 
 namespace Drawable {
 struct Color {
-    uint8_t r = 0, g = 0, b = 0;
+    Color() = default;
+    Color(const uint8_t r_, const uint8_t g_, const uint8_t b_, const uint8_t a_ = 255) :
+        r(r_), g(g_), b(b_), a(a_) {}
+
+    uint8_t r = 0, g = 0, b = 0, a = 0;
+
 };
+static const Color Red(255, 0, 0);
+static const Color Green(0, 255, 0);
+static const Color Blue(0, 0, 255);
 
 struct Shape
 {
@@ -67,7 +75,7 @@ struct Image
 {
     typedef std::shared_ptr<Image> Ptr;
 
-    ScreenPos position;
+    ScreenRect rect;
 
 protected:
     Image() {}
@@ -76,8 +84,17 @@ private:
     friend class IRenderTarget;
 };
 
-
 }
+
+struct Window
+{
+
+};
+
+struct TextureTarget
+{
+
+};
 
 class IRenderTarget
 {
@@ -117,9 +134,15 @@ public:
 
     virtual void draw(const Drawable::Rect &rect) = 0;
     virtual void draw(const Drawable::Circle &circle) = 0;
+    virtual void draw(const std::shared_ptr<IRenderTarget> &renderTarget) = 0;
 
     virtual Drawable::Image::Ptr createImage(const Size &size, const uint8_t *pixels) = 0;
+    virtual Drawable::Image::Ptr convertFrameToImage(const genie::SlpFramePtr &frame, const genie::PalFile &palette, const int playerId = -1);
     virtual void draw(const Drawable::Image::Ptr &image) = 0;
+
+    virtual std::shared_ptr<IRenderTarget> createTextureTarget(const Size &size) = 0;
+
+    virtual void clear() = 0;
 
 
 protected:

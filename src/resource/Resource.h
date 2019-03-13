@@ -42,5 +42,6 @@ public:
     static sf::Image convertFrameToImage(const genie::SlpFramePtr &frame);
     static sf::Image convertFrameToImage(const genie::SlpFramePtr &frame, const genie::PalFile &palette,
                                          const int playerId = -1);
+
 };
 
