@@ -33,6 +33,52 @@ namespace sf {
 class Sprite;
 }
 
+namespace Drawable {
+struct Color {
+    uint8_t r = 0, g = 0, b = 0;
+};
+
+struct Shape
+{
+    Color borderColor;
+    float borderSize = 1;
+
+    Color fillColor;
+
+    bool filled = false;
+};
+
+struct Rect : public Shape
+{
+    ScreenRect rect;
+};
+
+struct Circle : public Shape
+{
+    ScreenRect boundingRect;
+
+    int pointCount = 0;
+    ScreenPos center;
+    float radius = 0.f;
+    float aspectRatio = 1.f;
+};
+
+struct Image
+{
+    typedef std::shared_ptr<Image> Ptr;
+
+    ScreenPos position;
+
+protected:
+    Image() {}
+
+private:
+    friend class IRenderTarget;
+};
+
+
+}
+
 class IRenderTarget
 {
 public:
@@ -68,6 +114,12 @@ public:
     virtual void display(void) = 0;
 
     CameraPtr camera() { return m_camera; }
+
+    virtual void draw(const Drawable::Rect &rect) = 0;
+    virtual void draw(const Drawable::Circle &circle) = 0;
+
+    virtual Drawable::Image::Ptr createImage(const Size &size, const uint8_t *pixels) = 0;
+    virtual void draw(const Drawable::Image::Ptr &image) = 0;
 
 
 protected:

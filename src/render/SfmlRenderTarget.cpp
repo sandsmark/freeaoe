@@ -34,6 +34,7 @@
 #include <SFML/System/Vector2.hpp>
 
 #include <memory>
+#include <SFML/Graphics/CircleShape.hpp>
 
 namespace sf {
 class Drawable;
@@ -41,6 +42,15 @@ class Image;
 }  // namespace sf
 
 #define SCALE 1.
+
+static inline sf::Color convertColor(const Drawable::Color &color)
+{
+    // so sue me, it's fun code
+    // And the layout is even public in sf::Color
+
+    return *reinterpret_cast<const sf::Color*>(&color);
+}
+
 
 const sf::Font &SfmlRenderTarget::defaultFont()
 {
@@ -161,4 +171,76 @@ void SfmlRenderTarget::draw(const ScreenRect &rect, const sf::Color &fillColor, 
 void SfmlRenderTarget::display()
 {
     //  render_window_->Display();
+}
+
+
+Drawable::Image::Ptr SfmlRenderTarget::createImage(const Size &size, const uint8_t *bytes)
+{
+    sf::Image image;
+    image.create(size.width, size.height, bytes);
+
+    std::shared_ptr<SfmlImage> ret = std::make_shared<SfmlImage>();
+    ret->texture.loadFromImage(image);
+
+    // clang complains if we don't use move here because of mismatching return types and old compilers (I bet msvc)
+    return std::move(ret);
+}
+
+
+void SfmlRenderTarget::draw(const Drawable::Rect &rect)
+{
+    sf::RectangleShape shape;
+
+    if (rect.borderSize > 0) {
+        shape.setOutlineColor(convertColor(rect.borderColor));
+        shape.setOutlineThickness(rect.borderSize);
+    }
+
+    if (rect.filled) {
+        shape.setFillColor(convertColor(rect.fillColor));
+    }
+
+    shape.setPosition(rect.rect.topLeft());
+    shape.setSize(rect.rect.size());
+
+    renderTarget_->draw(shape);
+}
+
+void SfmlRenderTarget::draw(const Drawable::Circle &circle)
+{
+    sf::CircleShape shape;
+
+    if (circle.borderSize > 0) {
+        shape.setOutlineColor(convertColor(circle.borderColor));
+        shape.setOutlineThickness(circle.borderSize);
+    }
+
+    if (circle.filled) {
+        shape.setFillColor(convertColor(circle.fillColor));
+    }
+
+    if (circle.pointCount > 0) {
+        shape.setPointCount(circle.pointCount);
+    }
+
+    if (circle.aspectRatio != 1.) {
+        shape.setScale(1., circle.aspectRatio);
+    }
+
+    shape.setPosition(circle.center);
+    shape.setRadius(circle.radius);
+
+    renderTarget_->draw(shape);
+}
+
+void SfmlRenderTarget::draw(const Drawable::Image::Ptr &image)
+{
+    const std::shared_ptr<const SfmlImage> sfmlImage = std::static_pointer_cast<const SfmlImage>(image);
+
+    sf::Sprite sprite;
+    sprite.setTexture(sfmlImage->texture);
+    sprite.setScale(SCALE, SCALE);
+    sprite.setPosition(image->position);
+
+    renderTarget_->draw(sprite);
 }
