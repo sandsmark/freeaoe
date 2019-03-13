@@ -36,6 +36,7 @@ struct MapPositionSorter
         const ScreenPos pos1 = lhs->position().toScreen();
         const ScreenPos pos2 = rhs->position().toScreen();
 
+
         if (pos1.y != pos2.y) {
             return pos1.y > pos2.y;
         }
@@ -88,7 +89,7 @@ public:
     void setSelectedUnits(const UnitSet &units);
     const UnitSet &selected() const { return m_selectedUnits; }
 
-    const std::set<Unit::Ptr, MapPositionSorter> &units() const { return m_units; }
+    const std::unordered_set<Unit::Ptr> &units() const { return m_units; }
 
     void placeBuilding(const int unitId, const std::shared_ptr<Player> &player);
     void enqueueProduceUnit(const genie::Unit *unitData, const UnitSet producers);
@@ -116,7 +117,7 @@ private:
 
     std::unordered_set<Missile::Ptr> m_missiles;
     std::unordered_set<DecayingEntity::Ptr> m_decayingEntities;
-    std::set<Unit::Ptr, MapPositionSorter> m_units;
+    std::unordered_set<Unit::Ptr> m_units;
     std::unordered_set<Task> m_currentActions;
 
     UnitSet m_selectedUnits;

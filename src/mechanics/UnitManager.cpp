@@ -89,7 +89,7 @@ bool UnitManager::update(Time time)
     }
 
     // Clean up dead units
-    std::set<Unit::Ptr>::iterator unitIterator = m_units.begin();
+    std::unordered_set<Unit::Ptr>::iterator unitIterator = m_units.begin();
     while (unitIterator != m_units.end()) {
         Unit::Ptr unit = *unitIterator;
 
@@ -171,6 +171,7 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
             entity->renderer().render(*renderTarget->renderTarget_, camera->absoluteScreenPos(entity->position()), RenderType::Base);
         }
     }
+    std::sort(visibleUnits.begin(), visibleUnits.end(), MapPositionSorter());
 
 
     m_outlineOverlay.clear(sf::Color::Transparent);
