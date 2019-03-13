@@ -255,8 +255,6 @@ void GameState::draw()
     renderTarget_->draw(m_goldLabel.text);
     renderTarget_->draw(m_stoneLabel.text);
     renderTarget_->draw(m_populationLabel.text);
-
-    renderTarget_->renderTarget_->draw(m_mouseCursor.sprite);
 }
 
 bool GameState::update(Time time)

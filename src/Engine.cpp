@@ -100,6 +100,7 @@ void Engine::start()
             }
 
             renderWindow_->draw(fps_label_);
+            renderWindow_->draw(state->cursor().sprite);
 
             // Update the window
             renderWindow_->display();

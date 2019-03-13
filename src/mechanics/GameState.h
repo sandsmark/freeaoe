@@ -171,6 +171,8 @@ public:
 
     const std::shared_ptr<UnitManager> &unitManager() { return m_unitManager; }
 
+    const Cursor &cursor() const { return m_mouseCursor; }
+
 private:
     void setupScenario();
     void setupGame(const GameType gameType);
