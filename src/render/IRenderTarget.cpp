@@ -2,6 +2,8 @@
 
 #include "resource/DataManager.h"
 #include <genie/resource/Color.h>
+#include <genie/resource/SlpFrame.h>
+#include <genie/resource/PalFile.h>
 
 Drawable::Image::Ptr IRenderTarget::convertFrameToImage(const genie::SlpFramePtr &frame, const genie::PalFile &palette, const int playerId)
 {

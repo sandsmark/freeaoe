@@ -288,7 +288,7 @@ void Engine::loadUiOverlay()
 void Engine::drawUi()
 {
     if (m_selecting) {
-        renderTarget_->draw(m_selectionRect, sf::Color::Transparent, sf::Color::White);
+        renderTarget_->draw(m_selectionRect, Drawable::Transparent, Drawable::White);
     }
 
     renderTarget_->draw(m_uiOverlay, ScreenPos(0, 0));

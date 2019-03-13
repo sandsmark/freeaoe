@@ -62,13 +62,13 @@ public:
     void draw(const sf::Drawable &shape) override;
     void draw(const sf::Sprite &sprite) override;
 
-    void draw(const ScreenRect &rect, const sf::Color &fillColor, const sf::Color &outlineColor = sf::Color::Transparent, const float outlineSize = 1.) override;
+    void draw(const ScreenRect &rect, const Drawable::Color &fillColor, const Drawable::Color &outlineColor = Drawable::Transparent, const float outlineSize = 1.) override;
 
     void draw(const Drawable::Rect &rect) override;
     void draw(const Drawable::Circle &circle) override;
 
     Drawable::Image::Ptr createImage(const Size &size, const uint8_t *bytes) override;
-    void draw(const Drawable::Image::Ptr &image) override;
+    void draw(const Drawable::Image::Ptr &image, const ScreenPos &position) override;
     void draw(const std::shared_ptr<IRenderTarget> &renderTarget) override;
 
     //----------------------------------------------------------------------------

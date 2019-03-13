@@ -162,13 +162,13 @@ void SfmlRenderTarget::draw(const sf::Sprite &sprite)
     renderTarget_->draw(toDraw, transform);
 }
 
-void SfmlRenderTarget::draw(const ScreenRect &rect, const sf::Color &fillColor, const sf::Color &outlineColor, const float outlineSize)
+void SfmlRenderTarget::draw(const ScreenRect &rect, const Drawable::Color &fillColor, const Drawable::Color &outlineColor, const float outlineSize)
 {
     sf::RectangleShape shape;
 
-    shape.setOutlineColor(outlineColor);
+    shape.setOutlineColor(convertColor(outlineColor));
     shape.setOutlineThickness(outlineSize);
-    shape.setFillColor(fillColor);
+    shape.setFillColor(convertColor(fillColor));
     shape.setPosition(rect.topLeft());
     shape.setSize(sf::Vector2f(rect.width, rect.height));
 
@@ -195,7 +195,7 @@ Drawable::Image::Ptr SfmlRenderTarget::createImage(const Size &size, const uint8
     }
 
     ret->texture.loadFromImage(image);
-    ret->rect.setSize(size);
+    ret->size = size;
 
     // clang complains if we don't use move here because of mismatching return types and old compilers (I bet msvc)
     return std::move(ret);
@@ -248,14 +248,14 @@ void SfmlRenderTarget::draw(const Drawable::Circle &circle)
     renderTarget_->draw(shape);
 }
 
-void SfmlRenderTarget::draw(const Drawable::Image::Ptr &image)
+void SfmlRenderTarget::draw(const Drawable::Image::Ptr &image, const ScreenPos &position)
 {
     const std::shared_ptr<const SfmlImage> sfmlImage = std::static_pointer_cast<const SfmlImage>(image);
 
     sf::Sprite sprite;
     sprite.setTexture(sfmlImage->texture);
     sprite.setScale(SCALE, SCALE);
-    sprite.setPosition(image->rect.topLeft());
+    sprite.setPosition(position);
 
     renderTarget_->draw(sprite);
 }

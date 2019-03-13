@@ -128,11 +128,11 @@ uint8_t TerrainSprite::blendMode(const uint8_t ownMode, const uint8_t neighborMo
 
 
 
-const sf::Texture &TerrainSprite::texture(const MapTile &tile) noexcept
+const Drawable::Image::Ptr &TerrainSprite::texture(const MapTile &tile, const IRenderTargetPtr &renderer)
 {
     // The original graphics code in aoe was apparently hand-written assembly according to people on the internet,
     // and since I'm too lazy and too dumb to optimize this properly we just cache heavily instead
-    const std::unordered_map<MapTile, sf::Texture>::const_iterator it = m_textures.find(tile);
+    const std::unordered_map<MapTile, Drawable::Image::Ptr>::const_iterator it = m_textures.find(tile);
     if (it != m_textures.end()) {
         return it->second;
     }
@@ -281,10 +281,7 @@ const sf::Texture &TerrainSprite::texture(const MapTile &tile) noexcept
     addOutline(pixels, width, filter.height);
 #endif
 
-    sf::Image image;
-    image.create(width, filter.height, pixelsBuf.data());
-
-    m_textures[tile].loadFromImage(image);
+    m_textures[tile] = renderer->createImage(Size(width, filter.height), reinterpret_cast<uint8_t*>(pixels));
 
     return m_textures[tile];
 }

@@ -19,6 +19,8 @@
 #pragma once
 
 #include "core/Utility.h"
+#include "render/IRenderTarget.h"
+#include "Resource.h"
 #include "mechanics/MapTile.h"
 
 #include <genie/dat/Terrain.h>
@@ -76,13 +78,15 @@ public:
 
     size_t cacheSize() const { return m_textures.size(); }
 
+    const Drawable::Image::Ptr &texture(const MapTile &tile, const IRenderTargetPtr &renderer);
+
 private:
     void addOutline(uint32_t *pixels, const int width, const int height) noexcept;
 
     genie::Terrain m_data;
     genie::SlpFilePtr m_slp;
 
-    std::unordered_map<MapTile, sf::Texture> m_textures;
+    std::unordered_map<MapTile, Drawable::Image::Ptr> m_textures;
 
     bool m_isLoaded = false;
 
