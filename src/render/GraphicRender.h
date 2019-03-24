@@ -75,7 +75,7 @@ public:
     bool update(Time time);
     bool isValid() const { return m_graphic && m_graphic->isValid(); }
 
-    virtual void render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType renderpass);
+    virtual void render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType renderpass, bool selected);
 
     void setPlayerId(int playerId);
     void setCivId(int civId) { m_civId = civId; }
@@ -88,6 +88,7 @@ public:
     int graphicId() const;
 
     ScreenRect rect() const;
+    bool checkClick(const ScreenPos &pos) const;
 
     void setAngle(float angle);
     float angle() const { return m_angle; }

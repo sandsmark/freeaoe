@@ -213,9 +213,22 @@ const Size Graphic::size(uint32_t frame_num, float angle) const
         return Size(0, 0);
     }
 
-    genie::SlpFramePtr frame = slp_->getFrame(calcFrameInfo(frame_num, angle).frameNum);
+    genie::SlpFramePtr frame = getFrame(frame_num, angle);
 
     return Size(frame->getWidth(), frame->getHeight());
+}
+
+const ScreenRect Graphic::rect(uint32_t frame_num, float angle) const
+{
+    ScreenRect ret;
+    const ScreenPos hotspot = getHotspot(frame_num, angle);
+    ret.x = -hotspot.x;
+    ret.y = -hotspot.y;
+    const sf::Vector2u frameSize = size(frame_num, angle);
+    ret.width = frameSize.x;
+    ret.height = frameSize.y;
+
+    return ret;
 }
 
 //------------------------------------------------------------------------------
@@ -238,6 +251,60 @@ ScreenPos Graphic::getHotspot(uint32_t frame_num, float angle) const
     }
 
     return ScreenPos(hot_spot_x, frame->hotspot_y);
+}
+
+bool Graphic::checkClick(const ScreenPos &pos, uint32_t frame_num, float angle) const
+{
+    FrameInfo frameInfo = calcFrameInfo(frame_num, angle);
+    genie::SlpFramePtr frame = slp_->getFrame(frameInfo.frameNum);
+    if (!frame || pos.x < 0 || pos.y < 0 || pos.x > frame->getWidth() || pos.y > frame->getHeight()) {
+        return false;
+    }
+
+
+    switch (m_data.TransparentSelection) {
+    case genie::Graphic::SelectOnPixels: {
+
+        const std::vector<uint8_t> &alphachannel = frame->img_data.alpha_channel;
+
+        const size_t pixelPos = (std::round(pos.y) * frame->getWidth() + std::round(pos.x));
+        if (pixelPos > alphachannel.size()) {
+            return false;
+        }
+
+        if (alphachannel[pixelPos] > 0) {
+            return true;
+        }
+
+        const genie::GameVersion gameVersion = DataManager::Inst().gameVersion();
+        if (gameVersion >= genie::GV_AoKE3 && gameVersion <= genie::GV_TC) {
+            return false;
+        }
+        DBG << "Assuming" << gameVersion << "needs to check pixels with mask";
+        // I assume this is needed for another version of Genie
+        genie::XY spot;
+        spot.x = std::round(pos.x);
+        spot.y = std::round(pos.y);
+
+        const std::vector<genie::XY> &mask = frame->img_data.transparency_mask;
+        return std::find(mask.begin(), mask.end(), spot) != mask.end();
+    }
+    case genie::Graphic::SelectInBox: {
+        const Size frameSize(frame->getWidth(), frame->getHeight());
+
+        int32_t hotspotX = frame->hotspot_x;
+        if (frameInfo.mirrored) {
+            hotspotX = frameSize.width - hotspotX;
+        }
+
+        const ScreenRect rect(ScreenPos(-hotspotX, -frame->hotspot_y), frameSize);
+
+        return rect.contains(pos);
+    }
+    case genie::Graphic::NotSelectable:
+    default:
+        return false;
+    }
 }
 
 const std::vector<genie::GraphicDelta> Graphic::deltas() const
@@ -294,6 +361,11 @@ float Graphic::orientationToAngle(float orientation) const
     angle = fmod(- angle - M_PI_2, 2*M_PI);
     if (angle < 0) angle += 2*M_PI;
     return angle;
+}
+
+const genie::SlpFramePtr &Graphic::getFrame(uint32_t frame_num, float angle) const
+{
+    return slp_->getFrame(calcFrameInfo(frame_num, angle).frameNum);
 }
 
 Graphic::FrameInfo Graphic::calcFrameInfo(uint32_t num, float angle) const

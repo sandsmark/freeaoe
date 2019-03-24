@@ -400,7 +400,7 @@ struct ScreenRect
     }
 
     bool isEmpty() const {
-        return !(width > 0 && height > 0);
+        return (width <= 0 || height <= 0);
     }
 
     Size size() const {
@@ -659,6 +659,7 @@ inline LogPrinter operator <<(LogPrinter os, const MapRect &rect) {
     const char *separator = os.separator;
     os.separator = "";
     os << "MapRect(x: "  << rect.x << ", y: " << rect.y << ", width: " << rect.width << ", height: " << rect.height << ", z:" << rect.z << ")" << separator;
+    os.separator = separator;
     return os;
 }
 
@@ -666,6 +667,7 @@ inline LogPrinter operator <<(LogPrinter os, const ScreenRect &rect) {
     const char *separator = os.separator;
     os.separator = "";
     os << "ScreenRect(x: "  << rect.x << ", y: " << rect.y << ", width: " << rect.width << ", height: " << rect.height << ")" << separator;
+    os.separator = separator;
     return os;
 }
 
@@ -673,6 +675,7 @@ inline LogPrinter operator <<(LogPrinter os, const Size &size) {
     const char *separator = os.separator;
     os.separator = "";
     os << "Size(width: " << size.width << ", height: " << size.height << ")" << separator;
+    os.separator = separator;
     return os;
 }
 
@@ -680,6 +683,7 @@ inline LogPrinter operator <<(LogPrinter os, const MapPos &pos) {
     const char *separator = os.separator;
     os.separator = "";
     os << "MapPos(x: " << pos.x << ", y: " << pos.y << ", z: " << pos.z << ")" << separator;
+    os.separator = separator;
     return os;
 }
 
@@ -688,5 +692,6 @@ inline LogPrinter operator <<(LogPrinter os, const ScreenPos &pos) {
     const char *separator = os.separator;
     os.separator = "";
     os << "ScreenPos(x: " << pos.x << ", y: " << pos.y << ")" << separator;
+    os.separator = separator;
     return os;
 }

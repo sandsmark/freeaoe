@@ -22,6 +22,7 @@
 #include <resource/AssetManager.h>
 #include <resource/DataManager.h>
 #include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
 #include "IRenderTarget.h"
 
 #include "MapRenderer.h"
@@ -105,7 +106,7 @@ bool GraphicRender::update(Time time)
     return updated || m_frameChanged;
 }
 
-void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType renderpass)
+void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType renderpass, bool selected)
 {
     if (m_frameChanged && m_playSounds) {
         m_frameChanged = false;
@@ -122,7 +123,7 @@ void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos scree
             continue;
         }
 
-        delta.graphic->render(renderTarget, screenPos + delta.offset, renderpass);
+        delta.graphic->render(renderTarget, screenPos + delta.offset, renderpass, selected);
     }
 
     if (m_graphic && m_graphic->isValid()) {
@@ -162,11 +163,24 @@ void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos scree
 
         sprite.setPosition(screenPos - m_graphic->getHotspot(m_currentFrame, m_angle));
         renderTarget.draw(sprite, blendMode);
+
+#ifdef DEBUG
+        if (selected) {
+            sf::RectangleShape drawrect;
+            drawrect.setPosition(sprite.getPosition());
+            drawrect.setSize(m_graphic->size(m_currentFrame, m_angle));
+            drawrect.setFillColor(sf::Color::Transparent);
+            drawrect.setOutlineColor(sf::Color::Red);
+            drawrect.setOutlineThickness(1);
+
+            renderTarget.draw(drawrect);
+        }
+#endif
     }
 
 
     if (m_damageOverlay) {
-        m_damageOverlay->render(renderTarget, screenPos, renderpass);
+        m_damageOverlay->render(renderTarget, screenPos, renderpass, selected);
     }
 }
 
@@ -297,11 +311,47 @@ ScreenRect GraphicRender::rect() const
         if (delta.angleToDrawOn >= 0 && delta.graphic->m_graphic->angleToOrientation(m_angle) != delta.angleToDrawOn) {
             continue;
         }
+        const ScreenRect deltaRect = delta.graphic->rect();
+        if (deltaRect.isEmpty()) {
+            continue;
+        }
 
-        ret += (delta.graphic->rect() + delta.offset);
+        if (ret.isEmpty()) {
+            ret = (deltaRect + delta.offset);
+        } else {
+            ret += (deltaRect + delta.offset);
+        }
     }
 
     return ret;
+}
+
+bool GraphicRender::checkClick(const ScreenPos &pos) const
+{
+    if (!isValid()) {
+        return false;
+    }
+    const ScreenPos correctedPos = pos + m_graphic->getHotspot(m_currentFrame, m_angle);
+
+    if (m_graphic->checkClick(correctedPos, m_currentFrame, m_angle)) {
+        return true;
+    }
+
+    for (const GraphicDelta &delta : m_deltas) {
+        if (!delta.graphic->isValid()) {
+            continue;
+        }
+
+        if (delta.angleToDrawOn >= 0 && delta.graphic->m_graphic->angleToOrientation(m_angle) != delta.angleToDrawOn) {
+            continue;
+        }
+
+        if (delta.graphic->checkClick(pos - delta.offset)) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 void GraphicRender::setAngle(float angle)

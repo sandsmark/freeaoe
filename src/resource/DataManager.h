@@ -54,8 +54,9 @@ public:
     const std::vector<genie::Tech> &allTechs() const { return dat_file_.Techs; }
     const genie::TerrainBlock &terrainBlock() const { return dat_file_.TerrainBlock; }
 
-    static std::string gameName(const genie::GameVersion version);
     genie::GameVersion gameVersion() const;
+    static std::string gameName(const genie::GameVersion version);
+    static std::string genieVersionString(const genie::GameVersion version);
 
     const std::vector<genie::Civ> &civilizations() const;
 
@@ -78,4 +79,16 @@ private:
 
     genie::DatFile dat_file_;
 };
+
+inline LogPrinter operator <<(LogPrinter os, const genie::GameVersion version) {
+    const char *separator = os.separator;
+    os.separator = "";
+    os << "Game("
+       << DataManager::gameName(version)
+       << ", Genie " << DataManager::genieVersionString(version)
+       << ")" << separator;
+    os.separator = separator;
+    return os;
+}
+
 

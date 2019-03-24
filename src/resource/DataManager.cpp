@@ -125,18 +125,65 @@ const std::vector<genie::Task> &DataManager::getTasks(unsigned int id) const
 
 std::string DataManager::gameName(const genie::GameVersion version)
 {
-    switch (version) {
-    case genie::GV_AoE:
-        return "Age of Empires";
-    case genie::GV_RoR:
-        return "Rise of Rome";
-    case genie::GV_AoK:
-        return "Age of Empires 2: Age of Kings";
-    case genie::GV_TC:
-        return "Age of Empires 2: The Conquerors";
-    default:
-        return "Unknown";
+    static const std::unordered_map<genie::GameVersion, std::string> versionNames({
+        { genie::GV_TEST, "Test" },
+        { genie::GV_MIK, "Mike" },
+        { genie::GV_DAVE, "Dave" },
+        { genie::GV_MATT, "Matt" },
+        { genie::GV_AoEB, "Age of Empires Beta" },
+        { genie::GV_AoE, "Age of Empires" },
+        { genie::GV_RoR, "Age of Empires: Rise of Rome" },
+        { genie::GV_Tapsa, "Tapsa" },
+        { genie::GV_T2, "Tapsa Test 2" },
+        { genie::GV_T3, "Tapsa Test 3" },
+        { genie::GV_T4, "Tapsa Test 4" },
+        { genie::GV_T5, "Tapsa Test 5" },
+        { genie::GV_T6, "Tapsa Test 6" },
+        { genie::GV_T7, "Tapsa Test 7" },
+        { genie::GV_T8, "Tapsa Test 8" },
+        { genie::GV_AoKE3, "Age of Empires 2: Age of Kings E3 Preview" },
+        { genie::GV_AoKA, "Age of Empires 2: Age of Kings Alpha" },
+        { genie::GV_AoKB, "Age of Empires 2: Age of Kings Beta" },
+        { genie::GV_AoK, "Age of Empires 2: Age of Kings" },
+        { genie::GV_TC, "Age of Empires 2: The Conquerors" },
+        { genie::GV_Cysion, "Age of Empires 2: Cysion" },
+        { genie::GV_SWGB, "Star Wars: Galactic Battlegrounds" },
+        { genie::GV_CC, "Star Wars: Galactic Battlegrounds: Clone Campaigns" }
+    });
+    if (versionNames.find(version) == versionNames.end()) {
+        static const std::string unknownString("Unknown game");
+        return unknownString;
     }
+
+    return versionNames.at(version);
+
+
+
+}
+
+std::string DataManager::genieVersionString(const genie::GameVersion version)
+{
+
+    static const std::unordered_map<genie::GameVersion, std::string> engineVersions ({
+        { genie::GV_MATT, "<6.92" },
+        { genie::GV_AoEB, "7.04 - 7.11" },
+        { genie::GV_AoE, "7.2" },
+        { genie::GV_RoR, "7.24" },
+        { genie::GV_AoKE3, "9.36" },
+        { genie::GV_AoKA, "10.19" },
+        { genie::GV_AoKB, "11.05" },
+        { genie::GV_AoK, "11.5" },
+        { genie::GV_TC, "11.76 - 12.0" },
+        { genie::GV_Cysion, "12.0" },
+        { genie::GV_SWGB, "1.0" },
+        { genie::GV_CC, "1.1" }
+    });
+    if (engineVersions.find(version) == engineVersions.end()) {
+        static const std::string unknownString("Unknown version");
+        return unknownString;
+    }
+
+    return engineVersions.at(version);
 }
 
 genie::GameVersion DataManager::gameVersion() const

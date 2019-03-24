@@ -144,7 +144,7 @@ FarmRender::FarmRender(const Size &size) :
     m_texture.loadFromImage(img);
 }
 
-void FarmRender::render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType pass)
+void FarmRender::render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType pass, bool selected)
 {
     if (pass != RenderType::ConstructAvailable) {
         return;

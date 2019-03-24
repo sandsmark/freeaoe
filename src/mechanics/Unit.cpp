@@ -167,10 +167,33 @@ ScreenRect Unit::rect() const
     ScreenRect ret = m_renderer.rect();
 
     for (const Annex &annex : annexes) {
-        ret += annex.unit->rect();
+        ScreenRect annexRect = annex.unit->rect();
+        if (annexRect.isEmpty()) {
+            continue;
+        }
+        annexRect = annexRect + annex.offset.toScreen();
+        if (ret.isEmpty()) {
+            ret = annex.unit->rect();
+        } else {
+            ret += annex.unit->rect();
+        }
     }
 
     return ret;
+}
+
+bool Unit::checkClick(const ScreenPos &pos) const
+{
+    if (m_renderer.checkClick(pos)) {
+        return true;
+    }
+
+    for (const Annex &annex : annexes) {
+        if (annex.unit->checkClick(pos + annex.offset.toScreen())) {
+            return true;
+        }
+    }
+    return false;
 }
 
 void Unit::setCreationProgress(float progress)

@@ -119,12 +119,10 @@ public:
     const sf::Texture &texture(uint32_t frame = 0, float angleRadians = 0, uint8_t playerId = 0, const ImageType imageType = ImageType::Base);
 
     const Size size(uint32_t frame_num, float angle) const;
-
-    //----------------------------------------------------------------------------
-    /// Get the hotspot of a frame.
-    // TODO: Maybe inherit from sf::Image and include this property
-    //
+    const ScreenRect rect(uint32_t frame_num, float angle) const;
     ScreenPos getHotspot(uint32_t frame_num, float angle) const;
+
+    bool checkClick(const ScreenPos &pos, uint32_t frame_num, float angle) const;
 
     const std::vector<genie::GraphicDelta> deltas() const;
 
@@ -167,6 +165,7 @@ public:
     int angleToOrientation(float angle) const;
     float orientationToAngle(float orientation) const;
 private:
+    const genie::SlpFramePtr &getFrame(uint32_t frame_num, float angle) const;
 
     struct FrameInfo {
         uint32_t frameNum = 0;

@@ -155,20 +155,20 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
 
         if (entity->isUnit()) {
             visibleUnits.push_back(Entity::asUnit(entity));
-            entity->renderer().render(*renderTarget->renderTarget_, camera->absoluteScreenPos(entity->position()), RenderType::Shadow);
+            entity->renderer().render(*renderTarget->renderTarget_, camera->absoluteScreenPos(entity->position()), RenderType::Shadow, false);
             continue;
         }
 
         if (entity->isMissile()) {
             MapPos shadowPosition = entity->position();
             shadowPosition.z = m_map->elevationAt(shadowPosition);
-            entity->renderer().render(*renderTarget->renderTarget_, camera->absoluteScreenPos(shadowPosition), RenderType::Shadow);
+            entity->renderer().render(*renderTarget->renderTarget_, camera->absoluteScreenPos(shadowPosition), RenderType::Shadow, false);
 
             visibleMissiles.push_back(Entity::asMissile(entity));
         }
 
         if (entity->isDecayingEntity()) {
-            entity->renderer().render(*renderTarget->renderTarget_, camera->absoluteScreenPos(entity->position()), RenderType::Base);
+            entity->renderer().render(*renderTarget->renderTarget_, camera->absoluteScreenPos(entity->position()), RenderType::Base, false);
         }
     }
     std::sort(visibleUnits.begin(), visibleUnits.end(), MapPositionSorter());
@@ -179,9 +179,9 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
     for (const Unit::Ptr &unit : visibleUnits) {
         const ScreenPos unitPosition = camera->absoluteScreenPos(unit->position());
         if (!(unit->data()->OcclusionMode & genie::Unit::OccludeOthers)) {
-            unit->renderer().render(m_outlineOverlay, unitPosition, RenderType::Outline);
+            unit->renderer().render(m_outlineOverlay, unitPosition, RenderType::Outline, m_selectedUnits.count(unit));
         } else {
-            unit->renderer().render(m_outlineOverlay, unitPosition, RenderType::BuildingAlpha);
+            unit->renderer().render(m_outlineOverlay, unitPosition, RenderType::BuildingAlpha, m_selectedUnits.count(unit));
 
         }
     }
@@ -254,7 +254,7 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
         }
 
         const ScreenPos pos = renderTarget->camera()->absoluteScreenPos(unit->position());
-        unit->renderer().render(*renderTarget->renderTarget_, pos, RenderType::Base);
+        unit->renderer().render(*renderTarget->renderTarget_, pos, RenderType::Base, m_selectedUnits.count(unit));
 
 
 #ifdef DEBUG
@@ -310,10 +310,10 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
 
     m_moveTargetMarker->renderer().render(*renderTarget->renderTarget_,
                                           renderTarget->camera()->absoluteScreenPos(m_moveTargetMarker->position()),
-                                          RenderType::Base);
+                                          RenderType::Base, false);
 
     for (const Missile::Ptr &missile : visibleMissiles) {
-        missile->renderer().render(*renderTarget->renderTarget_, renderTarget->camera()->absoluteScreenPos(missile->position()), RenderType::Base);
+        missile->renderer().render(*renderTarget->renderTarget_, renderTarget->camera()->absoluteScreenPos(missile->position()), RenderType::Base, false);
     }
     if (m_state == State::PlacingBuilding) {
         if (!m_buildingToPlace) {
@@ -324,7 +324,7 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
 
         m_buildingToPlace->renderer().render(*renderTarget->renderTarget_,
                                              renderTarget->camera()->absoluteScreenPos(m_buildingToPlace->position()),
-                                             m_canPlaceBuilding ? RenderType::ConstructAvailable : RenderType::ConstructUnavailable);
+                                             m_canPlaceBuilding ? RenderType::ConstructAvailable : RenderType::ConstructUnavailable, false);
     }
 }
 
@@ -468,6 +468,7 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
 
     m_selectedUnits.clear();
     m_currentActions.clear();
+
     Player::Ptr humanPlayer = m_humanPlayer.lock();
     if (!humanPlayer) {
         WARN << "human player gone";
@@ -475,43 +476,47 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
     }
 
     std::vector<Unit::Ptr> containedUnits;
+    bool hasHumanPlayer = false;
     int8_t requiredInteraction = genie::Unit::ObjectInteraction;
+    const bool isClick = selectionRect.width < 10 && selectionRect.height < 10;
+
     for (const Unit::Ptr &unit : m_units) {
-        if (!selectionRect.overlaps(unit->rect() + camera->absoluteScreenPos(unit->position()))) {
+        const ScreenPos absoluteUnitPosition = camera->absoluteScreenPos(unit->position());
+        if (!selectionRect.overlaps(unit->rect() + absoluteUnitPosition)) {
             continue;
         }
+        if (isClick && !unit->checkClick(selectionRect.bottomRight() - absoluteUnitPosition)) {
+            continue;
+        }
+        hasHumanPlayer = hasHumanPlayer || unit->playerId == humanPlayer->playerId;
 
         requiredInteraction = std::max(unit->data()->InteractionMode, requiredInteraction);
         containedUnits.push_back(unit);
     }
 
+    UnitSet newSelection;
+
     for (const Unit::Ptr &unit : containedUnits) {
         if (unit->data()->InteractionMode < requiredInteraction) {
             continue;
         }
+        if (hasHumanPlayer && unit->playerId != humanPlayer->playerId) {
+            continue;
+        }
 
-        m_selectedUnits.insert(unit);
-        if (unit->playerId == humanPlayer->playerId) {
-            m_currentActions.merge(unit->availableActions());
-        }
-    }
-    for (const Unit::Ptr &unit : m_selectedUnits) {
-        // stl is shit
-        for (std::unordered_set<Task>::iterator it = m_currentActions.begin(); it != m_currentActions.end();) {
-            if (unit->availableActions().count(*it) == 0) {
-                it = m_currentActions.erase(it);
-            } else {
-                it++;
-            }
-        }
+        newSelection.insert(unit);
     }
 
-    if (m_selectedUnits.empty()) {
+    if (newSelection.empty()) {
         DBG << "Unable to find anything to select in " << selectionRect;
+        return;
     }
 
-    if (m_selectedUnits.size() == 1) {
-        playSound(*m_selectedUnits.begin());
+    if (isClick) {
+        Unit::Ptr mostVisibleUnit = *std::min_element(newSelection.begin(), newSelection.end(), MapPositionSorter());
+        setSelectedUnits({mostVisibleUnit});
+    } else {
+        setSelectedUnits(newSelection);
     }
 }
 
@@ -523,30 +528,46 @@ void UnitManager::setMap(const MapPtr &map)
 void UnitManager::setSelectedUnits(const UnitSet &units)
 {
     m_selectedUnits = units;
+    m_currentActions.clear();
     m_buildingToPlace.reset();
 
-    if (!units.empty()) {
-        int selectionSound = (*units.begin())->data()->SelectionSound;
-        for (const Unit::Ptr &unit : units) {
-            if (unit->data()->SelectionSound == -1) {
-                continue;
-            }
+    if (units.empty()) {
+        return;
+    }
 
-            if (selectionSound == -1) {
-                selectionSound = unit->data()->SelectionSound;
-                continue;
-            }
+    for (const Unit::Ptr &unit : m_selectedUnits) {
+        m_currentActions.merge(unit->availableActions());
+    }
 
-            if (selectionSound != unit->data()->SelectionSound) {
-                selectionSound = -1;
-                break;
-            }
+    // Not sure what is the actual correct behavior here:
+    // If all units are the same type, do we play "their" sound,
+    // or do we only play it if there's only one selected unit
+#if 1
+    if (m_selectedUnits.size() == 1) {
+        playSound(*m_selectedUnits.begin());
+    }
+#else
+    int selectionSound = (*units.begin())->data()->SelectionSound;
+    for (const Unit::Ptr &unit : units) {
+        if (unit->data()->SelectionSound == -1) {
+            continue;
         }
 
-        if (selectionSound != -1) {
-            AudioPlayer::instance().playSound(selectionSound, (*units.begin())->civilization->id());
+        if (selectionSound == -1) {
+            selectionSound = unit->data()->SelectionSound;
+            continue;
+        }
+
+        if (selectionSound != unit->data()->SelectionSound) {
+            selectionSound = -1;
+            break;
         }
     }
+
+    if (selectionSound != -1) {
+        AudioPlayer::instance().playSound(selectionSound, (*units.begin())->civilization->id());
+    }
+#endif
 }
 
 void UnitManager::placeBuilding(const int unitId, const std::shared_ptr<Player> &player)
@@ -610,6 +631,19 @@ Unit::Ptr UnitManager::unitAt(const ScreenPos &pos, const CameraPtr &camera) con
     }
 
     return nullptr;
+}
+
+Unit::Ptr UnitManager::clickedUnitAt(const ScreenPos &pos, const CameraPtr &camera)
+{
+    Unit::Ptr unit = unitAt(pos, camera);
+    if (!unit) {
+        return nullptr;
+    }
+    const ScreenPos relativePosition = pos - camera->absoluteScreenPos(unit->position());
+    if (!unit->checkClick(relativePosition)) {
+        return nullptr;
+    }
+    return unit;
 }
 
 const Task UnitManager::defaultActionAt(const ScreenPos &pos, const CameraPtr &camera)

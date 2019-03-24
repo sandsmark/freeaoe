@@ -136,6 +136,7 @@ struct Unit : public Entity
     ResourceMap resources;
 
     virtual ScreenRect rect() const;
+    virtual bool checkClick(const ScreenPos &pos) const;
 
     std::unordered_set<Task> availableActions();
     Task findMatchingTask(const genie::Task::ActionTypes &m_type, int targetUnit);

@@ -96,6 +96,7 @@ public:
     void enqueueResearch(const genie::Tech *techData, const UnitSet producers);
 
     Unit::Ptr unitAt(const ScreenPos &pos, const CameraPtr &camera) const;
+    Unit::Ptr clickedUnitAt(const ScreenPos &pos, const CameraPtr &camera);
 
     const std::unordered_set<Task> availableActions() const { return m_currentActions; }
 
