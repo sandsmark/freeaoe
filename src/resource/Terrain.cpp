@@ -199,11 +199,17 @@ const sf::Texture &Terrain::texture(const MapTile &tile)
     const genie::FiltermapFile::Filtermap &filter = filterFile.maps[tile.slopes.self.toGenie()];
 
     sf::Image image;
-    image.create(m_slp->frameWidth(tile.frame), filter.height, sf::Color::Transparent);
+//    image.create(m_slp->frameWidth(tile.frame), filter.height, sf::Color::Transparent);
 
     const uint32_t baseOffset = m_slp->frameCommandsOffset(tile.frame, 0);
     const uint8_t *rawData = data.data() + baseOffset;
     const std::vector<genie::Pattern> slopePatterns = tile.slopePatterns();
+
+    const int width = m_slp->frameWidth(tile.frame);
+    const int area = width * filter.height;
+    std::vector<Uint8> pixelsBuf(area * 4, 0);
+    Uint8 *pixels = pixelsBuf.data();
+
     for (uint32_t y=0; y<filter.height; y++) {
         int xPos = slpTemplate.left_edges_[y];
         const genie::FiltermapFile::FilterLine &line = filter.lines[y];
@@ -229,9 +235,15 @@ const sf::Texture &Terrain::texture(const MapTile &tile)
 
             // And then finally we get the color for a single pixel
             const genie::Color &newColor = colors[pixelIndex];
-            image.setPixel(xPos, y, sf::Color(newColor.r, newColor.g, newColor.b));
+            const size_t pixelPos = (y * width + xPos) * 4;
+            pixels[pixelPos    ] = newColor.r;
+            pixels[pixelPos + 1] = newColor.g;
+            pixels[pixelPos + 2] = newColor.b;
+            pixels[pixelPos + 3] = 255;
+//            image.setPixel(xPos, y, sf::Color(newColor.r, newColor.g, newColor.b));
         }
     }
+    image.create(width, filter.height, pixels);
 
 #ifdef DEBUG
     addOutline(image);

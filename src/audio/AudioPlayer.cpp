@@ -131,7 +131,7 @@ void AudioPlayer::playSample(const std::shared_ptr<uint8_t> &data, const float p
     sts_mixer_sample_t *sample = new sts_mixer_sample_t;
     sample->audio_format = audioFormat;
     sample->frequency = header->SampleRate;
-    sample->length = (header->Subchunk2Size / (header->BitsPerSample/8));
+    sample->length = (header->Subchunk2Size / (header->BitsPerSample/8)) - sizeof(WavHeader);
     sample->data = data;
     sample->audiodata = data.get() + sizeof(WavHeader);
 
