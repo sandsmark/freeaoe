@@ -275,16 +275,8 @@ bool Graphic::checkClick(const ScreenPos &pos, uint32_t frame_num, float angle) 
         return std::find(mask.begin(), mask.end(), spot) != mask.end();
     }
     case genie::Graphic::SelectInBox: {
-        const Size frameSize(frame->getWidth(), frame->getHeight());
-
-        int32_t hotspotX = frame->hotspot_x;
-        if (frameInfo.mirrored) {
-            hotspotX = frameSize.width - hotspotX;
-        }
-
-        const ScreenRect rect(ScreenPos(-hotspotX, -frame->hotspot_y), frameSize);
-
-        return rect.contains(pos);
+        return (pos.x > 0 && pos.y > 0 &&
+                pos.x < frame->getWidth() && pos.y < frame->getHeight());
     }
     case genie::Graphic::NotSelectable:
     default:
@@ -356,6 +348,10 @@ const genie::SlpFramePtr &Graphic::getFrame(uint32_t frame_num, float angle) con
 Graphic::FrameInfo Graphic::calcFrameInfo(uint32_t num, float angle) const
 {
     FrameInfo ret;
+    if (!slp_) {
+        return ret;
+    }
+
     ret.frameNum = num;
     if (m_data.AngleCount > 1) {
         int lookupAngle = angleToOrientation(angle);

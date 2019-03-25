@@ -63,6 +63,11 @@ ScreenRect Farm::rect() const
     return rect;
 }
 
+bool Farm::checkClick(const ScreenPos &pos) const
+{
+    return rect().contains(pos);
+}
+
 void Farm::setTerrain(const Farm::TerrainTypes terrainToSet)
 {
     if (terrainToSet == m_currentTerrain) {
@@ -122,12 +127,12 @@ void FarmRender::render(sf::RenderTarget &renderTarget, const ScreenPos screenPo
 
     const ScreenPos pos = screenPos - ScreenPos(Constants::TILE_SIZE_HORIZONTAL / 2., Constants::TILE_SIZE_VERTICAL / 2.);
 
-    const int height = Constants::TILE_SIZE;
-    const int width = Constants::TILE_SIZE;
+    const int tileHeight = Constants::TILE_SIZE;
+    const int tileWidth = Constants::TILE_SIZE;
 
     for (int x = -m_size.width; x < m_size.width; x++) {
         for (int y = -m_size.height; y < m_size.height; y++) {
-            const ScreenPos offset = MapPos(x*width, y*height).toScreen();
+            const ScreenPos offset = MapPos(x*tileWidth, y*tileHeight).toScreen();
             sprite.setPosition(pos + offset);
             renderTarget.draw(sprite);
         }

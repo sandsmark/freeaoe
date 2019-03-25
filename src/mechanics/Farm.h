@@ -34,6 +34,7 @@ public:
 
     GraphicRender &renderer() override { return m_farmRenderer; }
     ScreenRect rect() const override;
+    bool checkClick(const ScreenPos &pos) const override;
 
 private:
     void setTerrain(const TerrainTypes terrainToSet);
