@@ -50,15 +50,6 @@ Player::Ptr BasicGameSample::getEnemyPlayer()
 void BasicGameSample::addHumanTownCenter()
 {
     Unit::Ptr unit = UnitFactory::Inst().createUnit(Unit::TownCenter, MapPos(48*2, 48*2, 0), m_humanPlayer, *unitManager_);
-    if (unit->data()->Building.FoundationTerrainID > 0) {
-        int width = unit->data()->Size.x;
-        int height = unit->data()->Size.y;
-        for (int x = 0; x < width*2; x++) {
-            for (int y = 0; y < height*2; y++) {
-                map_->setTileAt(3 - width + x, 3 - height + y, unit->data()->Building.FoundationTerrainID);
-            }
-        }
-    }
     unitManager_->add(unit);
 }
 
