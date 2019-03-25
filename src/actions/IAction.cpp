@@ -89,20 +89,20 @@ Task IAction::findMatchingTask(const int ownPlayerId, const std::shared_ptr<Unit
     }
 
     // Try more generic targeting
-    for (const Task &task : potentials) {
-        const genie::Task *action = task.data;
-        if (action->ActionType != genie::Task::Combat) {
-            continue;
-        }
-        if (action->TargetDiplomacy != genie::Task::TargetGaiaNeutralEnemies && action->TargetDiplomacy != genie::Task::TargetNeutralsEnemies) {
-            continue;
-        }
-        if (ownPlayerId == target->playerId) {
-            continue;
-        }
+//    for (const Task &task : potentials) {
+//        const genie::Task *action = task.data;
+//        if (action->ActionType != genie::Task::Combat) {
+//            continue;
+//        }
+//        if (action->TargetDiplomacy != genie::Task::TargetGaiaNeutralEnemies && action->TargetDiplomacy != genie::Task::TargetNeutralsEnemies) {
+//            continue;
+//        }
+//        if (ownPlayerId == target->playerId) {
+//            continue;
+//        }
 
-        return task;
-    }
+//        return task;
+//    }
 
     return Task();
 

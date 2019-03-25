@@ -60,6 +60,11 @@ sf::Image Graphic::slpFrameToImage(const genie::SlpFramePtr &frame, uint8_t play
     const int height = frame->getHeight();
 
     sf::Image img;
+    if (width < 1 || height < 1) {
+        img.create(1, 1, sf::Color::Transparent);
+        return img;
+    }
+
     switch(imageType) {
     case ImageType::Base:
         img = Resource::convertFrameToImage(frame, palette, playerId);

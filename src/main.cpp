@@ -125,7 +125,7 @@ int main(int argc, char **argv)
                 if (home.getGameType() == HomeScreen::TextButton::Campaign) {
                     try {
                         genie::CpxFile cpxFile;
-                        cpxFile.setFileName(config.getValue("game-path") + "/Campaign/xcam2.cpx");
+                        cpxFile.setFileName(config.getValue("game-path") + "/Campaign/xcam3.cpx");
                         cpxFile.load();
 
                         scenarioFile = cpxFile.getScnFile(0);
