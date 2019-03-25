@@ -19,8 +19,6 @@ Missile::Missile(const genie::Unit &data, const Unit::Ptr &sourceUnit, const Map
     m_data(data),
     m_targetPosition(target)
 {
-    setMap(sourceUnit->map());
-
     m_startingElevation = sourceUnit->position().z;
     m_attacks = sourceUnit->data()->Combat.Attacks;
     sourceUnit->activeMissiles++;
@@ -125,7 +123,8 @@ bool Missile::update(Time time)
         Player::Ptr player = m_player.lock();
         if (player) {
             const genie::Unit &trailingData = player->civ->unitData(m_data.Moving.TrackingUnit);
-            DecayingEntity::Ptr trailingUnit = std::make_shared<DecayingEntity>(m_map.lock(), trailingData.StandingGraphic.first, 0.f);
+            DecayingEntity::Ptr trailingUnit = std::make_shared<DecayingEntity>(trailingData.StandingGraphic.first, 0.f);
+            trailingUnit->setMap(m_map.lock());
             trailingUnit->setPosition(position());
             m_unitManager.addDecayingEntity(trailingUnit);
         }

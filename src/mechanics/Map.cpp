@@ -344,22 +344,26 @@ void Map::addEntityAt(unsigned int col, unsigned int row, const EntityPtr &entit
 
     m_tileUnits[index].push_back(entity);
 
-    if (entity->isUnit()) {
-        Unit::Ptr unit = Entity::asUnit(entity);
-        const int newTerrain = unit->data()->Building.FoundationTerrainID;
+    emit(Signals::UnitsChanged);
 
-        const int width = unit->data()->Size.x;
-        const int height = unit->data()->Size.y;
-        for (int x = 0; x < width*2; x++) {
-            for (int y = 0; y < height*2; y++) {
-                setTileAt(3 - width + x, 3 - height + y, newTerrain);
-            }
-        }
-    } else {
-        WARN << "Not a unit" << entity->debugName;
+    if (!entity->isUnit()) {
+        return;
     }
 
-    emit(Signals::UnitsChanged);
+    Unit::Ptr unit = Entity::asUnit(entity);
+    const int newTerrain = unit->data()->Building.FoundationTerrainID;
+
+    if (newTerrain < 0) {
+        return;
+    }
+
+    const int width = unit->data()->Size.x;
+    const int height = unit->data()->Size.y;
+    for (int x = 0; x < width*2; x++) {
+        for (int y = 0; y < height*2; y++) {
+            setTileAt(col + x - width, row + y - width, newTerrain);
+        }
+    }
 }
 
 const std::vector<std::weak_ptr<Entity> > &Map::entitiesAt(unsigned int col, unsigned int row) const

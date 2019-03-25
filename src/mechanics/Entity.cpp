@@ -130,10 +130,9 @@ void Entity::setPosition(const MapPos &pos)
     map->addEntityAt(newTileX, newTileY, shared_from_this());
 }
 
-MoveTargetMarker::MoveTargetMarker(const MapPtr &map) :
+MoveTargetMarker::MoveTargetMarker() :
     Entity(Type::MoveTargetMarker, "Move target marker")
 {
-    setMap(map);
     m_renderer.setGraphic(2961);
 
     m_renderer.setCurrentFrame(m_renderer.frameCount() - 1); // don't play immediately
@@ -161,11 +160,10 @@ bool MoveTargetMarker::update(Time time)
     return updated;
 }
 
-DecayingEntity::DecayingEntity(const MapPtr &map, const int graphicId, float decayTime) :
+DecayingEntity::DecayingEntity(const int graphicId, float decayTime) :
     Entity(Type::Decaying, "Eye Candy Things"),
     m_decayTimeLeft(decayTime)
 {
-    setMap(map);
     m_renderer.setGraphic(graphicId);
 }
 

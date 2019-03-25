@@ -424,10 +424,11 @@ DecayingEntity::Ptr Unit::createCorpse() const
         DBG << "decaying forever";
         decayTime = std::numeric_limits<float>::infinity();
     }
-    DecayingEntity::Ptr corpse = std::make_shared<DecayingEntity>(m_map.lock(), corpseData.StandingGraphic.first, decayTime);
+    DecayingEntity::Ptr corpse = std::make_shared<DecayingEntity>(corpseData.StandingGraphic.first, decayTime);
     corpse->renderer().setPlayerId(playerId);
     corpse->setPosition(position());
     corpse->renderer().setAngle(angle());
+    corpse->setMap(map());
 
     return corpse;
 }

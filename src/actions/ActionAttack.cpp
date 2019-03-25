@@ -156,6 +156,8 @@ void ActionAttack::spawnMissiles(const Unit::Ptr &source, const int unitId, cons
         individualTarget.x +=  -cos(source->angle()) * i*widthDispersion - spawnArea[0]/2.;
         individualTarget.y +=  sin(source->angle()) * i*widthDispersion - spawnArea[1]/2.;
         Missile::Ptr missile = std::make_shared<Missile>(gunit, source, individualTarget, targetUnit);
+        missile->setMap(source->map());
+
         missile->setBlastType(Missile::BlastType(source->data()->Combat.BlastAttackLevel), source->data()->Combat.BlastWidth);
 
         float offsetX = graphicDisplacement[0];

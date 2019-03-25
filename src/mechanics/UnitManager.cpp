@@ -54,7 +54,8 @@ void UnitManager::add(const Unit::Ptr &unit)
 
 bool UnitManager::init()
 {
-    m_moveTargetMarker = std::make_unique<MoveTargetMarker>(m_map);
+    m_moveTargetMarker = std::make_unique<MoveTargetMarker>();
+    m_moveTargetMarker->setMap(m_map);
 
     return true;
 }

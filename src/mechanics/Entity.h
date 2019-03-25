@@ -95,7 +95,7 @@ struct MoveTargetMarker : public Entity
 {
     typedef std::unique_ptr<MoveTargetMarker> Ptr;
 
-    MoveTargetMarker(const MapPtr &map);
+    MoveTargetMarker();
 
     void moveTo(const MapPos &pos);
 
@@ -110,7 +110,7 @@ struct DecayingEntity : public Entity
 {
     typedef std::shared_ptr<DecayingEntity> Ptr;
 
-    DecayingEntity(const MapPtr &map, const int graphicId, float decayTime);
+    DecayingEntity(const int graphicId, float decayTime);
 
     bool update(Time time) override;
 
