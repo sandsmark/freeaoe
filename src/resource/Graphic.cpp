@@ -52,42 +52,19 @@ Graphic::~Graphic()
 {
 }
 
-const sf::Texture &Graphic::texture(uint32_t frame, float angleRadians, uint8_t playerId, const ImageType imageType)
+sf::Image Graphic::slpFrameToImage(const genie::SlpFramePtr &frame, uint8_t playerId, const ImageType imageType)
 {
-    if (!slp_) {
-        return nullImage;
-    }
-
-    GraphicState state;
-    state.frame = frame;
-    state.playerId = playerId;
-    state.type = imageType;
-
-    const FrameInfo frameInfo = calcFrameInfo(frame, angleRadians);
-    state.frame = frameInfo.frameNum;
-    state.flipped = frameInfo.mirrored;
-
-    if (m_cache.count(state)) {
-        return m_cache[state];
-    }
-
-    if (state.frame >= slp_->getFrameCount()) {
-        WARN << "trying to look up" << state.frame << "but we only have" << slp_->getFrameCount();
-        state.frame = 0;
-    }
-
     const genie::PalFile &palette = AssetManager::Inst()->getPalette(50500);
+    const genie::SlpFrameData &frameData = frame->img_data;
+    const int width = frame->getWidth();
+    const int height = frame->getHeight();
+
     sf::Image img;
-    switch(state.type) {
+    switch(imageType) {
     case ImageType::Base:
-        img = Resource::convertFrameToImage(slp_->getFrame(state.frame), palette, state.playerId);
+        img = Resource::convertFrameToImage(frame, palette, playerId);
         break;
     case ImageType::Shadow: {
-        const genie::SlpFramePtr frame = slp_->getFrame(state.frame);
-        const genie::SlpFrameData &frameData = frame->img_data;
-
-        const int width = frame->getWidth();
-        const int height = frame->getHeight();
         img.create(width, height, sf::Color::Transparent);
 
         const sf::Color shadow(0, 0, 0, 128);
@@ -98,14 +75,9 @@ const sf::Texture &Graphic::texture(uint32_t frame, float angleRadians, uint8_t 
         break;
     }
     case ImageType::Outline: {
-        const genie::SlpFramePtr frame = slp_->getFrame(state.frame);
-        const genie::SlpFrameData &frameData = frame->img_data;
-
-        const int width = frame->getWidth();
-        const int height = frame->getHeight();
         img.create(width, height, sf::Color::Transparent);
 
-        const genie::PlayerColour pc = DataManager::Inst().getPlayerColor(state.playerId);
+        const genie::PlayerColour pc = DataManager::Inst().getPlayerColor(playerId);
         const genie::PalFile &palette = AssetManager::Inst()->getPalette(50500);
         genie::Color outlineColor = palette[pc.UnitOutlineColor];
         const sf::Color outline(outlineColor.r, outlineColor.g, outlineColor.b);
@@ -117,14 +89,6 @@ const sf::Texture &Graphic::texture(uint32_t frame, float angleRadians, uint8_t 
         break;
     }
     case ImageType::ConstructionUnavailable: {
-        const genie::PalFile &palette = AssetManager::Inst()->getPalette(50500);
-
-        const genie::SlpFramePtr frame = slp_->getFrame(state.frame);
-        const genie::SlpFrameData &frameData = frame->img_data;
-
-        const uint32_t width = frame->getWidth();
-        const uint32_t height = frame->getHeight();
-
         // fuck msvc
         std::vector<Uint8> pixelsBuf(width * height * 4);
         Uint8 *pixels = pixelsBuf.data();
@@ -155,14 +119,6 @@ const sf::Texture &Graphic::texture(uint32_t frame, float angleRadians, uint8_t 
         break;
     }
     case ImageType::Construction: {
-        const genie::PalFile &palette = AssetManager::Inst()->getPalette(50500);
-
-        const genie::SlpFramePtr frame = slp_->getFrame(state.frame);
-        const genie::SlpFrameData &frameData = frame->img_data;
-
-        const uint32_t width = frame->getWidth();
-        const uint32_t height = frame->getHeight();
-
         // fuck msvc
         std::vector<Uint8> pixelsBuf(width * height * 4);
         Uint8 *pixels = pixelsBuf.data();
@@ -193,9 +149,38 @@ const sf::Texture &Graphic::texture(uint32_t frame, float angleRadians, uint8_t 
         break;
     }
     default:
-        WARN << "Trying to get invalid image type" << state.type;
+        WARN << "Trying to get invalid image type" << imageType;
+        break;
+    }
+
+    return img;
+}
+
+const sf::Texture &Graphic::texture(uint32_t frameNum, float angleRadians, uint8_t playerId, const ImageType imageType)
+{
+    if (!slp_) {
         return nullImage;
     }
+
+    GraphicState state;
+    state.frame = frameNum;
+    state.playerId = playerId;
+    state.type = imageType;
+
+    const FrameInfo frameInfo = calcFrameInfo(frameNum, angleRadians);
+    state.frame = frameInfo.frameNum;
+    state.flipped = frameInfo.mirrored;
+
+    if (m_cache.count(state)) {
+        return m_cache[state];
+    }
+
+    if (state.frame >= slp_->getFrameCount()) {
+        WARN << "trying to look up" << state.frame << "but we only have" << slp_->getFrameCount();
+        state.frame = 0;
+    }
+
+    sf::Image img = slpFrameToImage(slp_->getFrame(state.frame), playerId, imageType);
 
     if (state.flipped) {
         img.flipHorizontally();

@@ -24,6 +24,7 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <resource/AssetManager.h>
 #include <resource/Resource.h>
+#include <mechanics/Unit.h>
 
 #include <genie/resource/SlpFrame.h>
 
@@ -342,6 +343,21 @@ void Map::addEntityAt(unsigned int col, unsigned int row, const EntityPtr &entit
     removeEntityAt(col, row, entity->id);
 
     m_tileUnits[index].push_back(entity);
+
+    if (entity->isUnit()) {
+        Unit::Ptr unit = Entity::asUnit(entity);
+        const int newTerrain = unit->data()->Building.FoundationTerrainID;
+
+        const int width = unit->data()->Size.x;
+        const int height = unit->data()->Size.y;
+        for (int x = 0; x < width*2; x++) {
+            for (int y = 0; y < height*2; y++) {
+                setTileAt(3 - width + x, 3 - height + y, newTerrain);
+            }
+        }
+    } else {
+        WARN << "Not a unit" << entity->debugName;
+    }
 
     emit(Signals::UnitsChanged);
 }

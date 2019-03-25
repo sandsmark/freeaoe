@@ -156,20 +156,20 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
 
         if (entity->isUnit()) {
             visibleUnits.push_back(Entity::asUnit(entity));
-            entity->renderer().render(*renderTarget->renderTarget_, camera->absoluteScreenPos(entity->position()), RenderType::Shadow, false);
+            entity->renderer().render(*renderTarget->renderTarget_, camera->absoluteScreenPos(entity->position()), RenderType::Shadow);
             continue;
         }
 
         if (entity->isMissile()) {
             MapPos shadowPosition = entity->position();
             shadowPosition.z = m_map->elevationAt(shadowPosition);
-            entity->renderer().render(*renderTarget->renderTarget_, camera->absoluteScreenPos(shadowPosition), RenderType::Shadow, false);
+            entity->renderer().render(*renderTarget->renderTarget_, camera->absoluteScreenPos(shadowPosition), RenderType::Shadow);
 
             visibleMissiles.push_back(Entity::asMissile(entity));
         }
 
         if (entity->isDecayingEntity()) {
-            entity->renderer().render(*renderTarget->renderTarget_, camera->absoluteScreenPos(entity->position()), RenderType::Base, false);
+            entity->renderer().render(*renderTarget->renderTarget_, camera->absoluteScreenPos(entity->position()), RenderType::Base);
         }
     }
     std::sort(visibleUnits.begin(), visibleUnits.end(), MapPositionSorter());
@@ -180,9 +180,9 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
     for (const Unit::Ptr &unit : visibleUnits) {
         const ScreenPos unitPosition = camera->absoluteScreenPos(unit->position());
         if (!(unit->data()->OcclusionMode & genie::Unit::OccludeOthers)) {
-            unit->renderer().render(m_outlineOverlay, unitPosition, RenderType::Outline, m_selectedUnits.count(unit));
+            unit->renderer().render(m_outlineOverlay, unitPosition, RenderType::Outline);
         } else {
-            unit->renderer().render(m_outlineOverlay, unitPosition, RenderType::BuildingAlpha, m_selectedUnits.count(unit));
+            unit->renderer().render(m_outlineOverlay, unitPosition, RenderType::BuildingAlpha);
 
         }
     }
@@ -255,7 +255,7 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
         }
 
         const ScreenPos pos = renderTarget->camera()->absoluteScreenPos(unit->position());
-        unit->renderer().render(*renderTarget->renderTarget_, pos, RenderType::Base, m_selectedUnits.count(unit));
+        unit->renderer().render(*renderTarget->renderTarget_, pos, RenderType::Base);
 
 
 #ifdef DEBUG
@@ -311,10 +311,10 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
 
     m_moveTargetMarker->renderer().render(*renderTarget->renderTarget_,
                                           renderTarget->camera()->absoluteScreenPos(m_moveTargetMarker->position()),
-                                          RenderType::Base, false);
+                                          RenderType::Base);
 
     for (const Missile::Ptr &missile : visibleMissiles) {
-        missile->renderer().render(*renderTarget->renderTarget_, renderTarget->camera()->absoluteScreenPos(missile->position()), RenderType::Base, false);
+        missile->renderer().render(*renderTarget->renderTarget_, renderTarget->camera()->absoluteScreenPos(missile->position()), RenderType::Base);
     }
     if (m_state == State::PlacingBuilding) {
         if (!m_buildingToPlace) {
@@ -325,7 +325,7 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
 
         m_buildingToPlace->renderer().render(*renderTarget->renderTarget_,
                                              renderTarget->camera()->absoluteScreenPos(m_buildingToPlace->position()),
-                                             m_canPlaceBuilding ? RenderType::ConstructAvailable : RenderType::ConstructUnavailable, false);
+                                             m_canPlaceBuilding ? RenderType::ConstructAvailable : RenderType::ConstructUnavailable);
     }
 }
 
@@ -350,8 +350,8 @@ bool UnitManager::onLeftClick(const ScreenPos &screenPos, const CameraPtr &camer
         }
 
         m_buildingToPlace->isVisible = true;
-        m_buildingToPlace->setCreationProgress(0);
         add(m_buildingToPlace);
+        m_buildingToPlace->setCreationProgress(0);
 
         for (const Unit::Ptr &unit : m_selectedUnits) {
             if (unit->playerId != humanPlayer->playerId) {

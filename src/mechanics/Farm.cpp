@@ -92,8 +92,6 @@ void Farm::setTerrain(const Farm::TerrainTypes terrainToSet)
 FarmRender::FarmRender(const Size &size) :
     m_size(size)
 {
-    const genie::PalFile &palette = AssetManager::Inst()->getPalette(50500);
-
     genie::SlpFilePtr slpFile = AssetManager::Inst()->getSlp(15023);
     if (!slpFile) {
         WARN << "failed to get slp for farm";
@@ -106,52 +104,21 @@ FarmRender::FarmRender(const Size &size) :
         return;
     }
 
-    m_hotspot = ScreenPos(frame->hotspot_x, frame->hotspot_y) * 2;
-
-    const genie::SlpFrameData &frameData = frame->img_data;
-
-    const uint32_t width = frame->getWidth();
-    const uint32_t height = frame->getHeight();
-
-    // fuck msvc
-    std::vector<Uint8> pixelsBuf(width * height * 4 * 4);
-    Uint8 *pixels = pixelsBuf.data();
-
-    for (uint32_t row = 0; row < height; row++) {
-        for (uint32_t col = 0; col < width; col++) {
-            const uint8_t paletteIndex = frameData.pixel_indexes[row * width + col];
-            assert(paletteIndex < palette.colors_.size());
-
-            const genie::Color &g_color = palette.colors_[paletteIndex];
-            const size_t pixelPos = (row * width + col) * 4;
-
-            if ((row + col) % 2 == 1) {
-                pixels[pixelPos    ] = g_color.r;
-                pixels[pixelPos + 1] = g_color.g;
-                pixels[pixelPos + 2] = g_color.b;
-                pixels[pixelPos + 3] = frameData.alpha_channel[row * width + col];
-            } else {
-                pixels[pixelPos    ] = g_color.r/2;
-                pixels[pixelPos + 1] = g_color.g/2;
-                pixels[pixelPos + 2] = g_color.b/2;
-                pixels[pixelPos + 3] = frameData.alpha_channel[row * width + col]/2;
-            }
-        }
-    }
-
-    sf::Image img;
-    img.create(width, height, pixels);
-    m_texture.loadFromImage(img);
+    m_availableTexture.loadFromImage(Graphic::slpFrameToImage(frame, 0, ImageType::Construction));
+    m_unavailableTexture.loadFromImage(Graphic::slpFrameToImage(frame, 0, ImageType::ConstructionUnavailable));
 }
 
-void FarmRender::render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType pass, bool selected)
+void FarmRender::render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType pass)
 {
-    if (pass != RenderType::ConstructAvailable) {
+    sf::Sprite sprite;
+    if (pass == RenderType::ConstructAvailable) {
+        sprite.setTexture(m_availableTexture);
+    } else if (pass == RenderType::ConstructUnavailable) {
+        sprite.setTexture(m_unavailableTexture);
+    } else {
         return;
     }
 
-    sf::Sprite sprite;
-    sprite.setTexture(m_texture);
 
     const ScreenPos pos = screenPos - ScreenPos(Constants::TILE_SIZE_HORIZONTAL / 2., Constants::TILE_SIZE_VERTICAL / 2.);
 

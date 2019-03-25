@@ -106,7 +106,7 @@ bool GraphicRender::update(Time time)
     return updated || m_frameChanged;
 }
 
-void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType renderpass, bool selected)
+void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType renderpass)
 {
     if (m_frameChanged && m_playSounds) {
         m_frameChanged = false;
@@ -123,7 +123,7 @@ void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos scree
             continue;
         }
 
-        delta.graphic->render(renderTarget, screenPos + delta.offset, renderpass, selected);
+        delta.graphic->render(renderTarget, screenPos + delta.offset, renderpass);
     }
 
     if (m_graphic && m_graphic->isValid()) {
@@ -163,24 +163,11 @@ void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos scree
 
         sprite.setPosition(screenPos - m_graphic->getHotspot(m_currentFrame, m_angle));
         renderTarget.draw(sprite, blendMode);
-
-#ifdef DEBUG
-        if (selected) {
-            sf::RectangleShape drawrect;
-            drawrect.setPosition(sprite.getPosition());
-            drawrect.setSize(m_graphic->size(m_currentFrame, m_angle));
-            drawrect.setFillColor(sf::Color::Transparent);
-            drawrect.setOutlineColor(sf::Color::Red);
-            drawrect.setOutlineThickness(1);
-
-            renderTarget.draw(drawrect);
-        }
-#endif
     }
 
 
     if (m_damageOverlay) {
-        m_damageOverlay->render(renderTarget, screenPos, renderpass, selected);
+        m_damageOverlay->render(renderTarget, screenPos, renderpass);
     }
 }
 

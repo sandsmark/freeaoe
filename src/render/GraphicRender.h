@@ -75,7 +75,7 @@ public:
     bool update(Time time);
     bool isValid() const { return m_graphic && m_graphic->isValid(); }
 
-    virtual void render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType renderpass, bool selected);
+    virtual void render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType renderpass);
 
     void setPlayerId(int playerId);
     void setCivId(int civId) { m_civId = civId; }

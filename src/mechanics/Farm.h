@@ -7,10 +7,11 @@ class FarmRender : public GraphicRender
 public:
     FarmRender(const Size &size);
 
-    void render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType pass, bool selected) override;
+    void render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType pass) override;
 
 private:
-    sf::Texture m_texture;
+    sf::Texture m_availableTexture;
+    sf::Texture m_unavailableTexture;
     ScreenPos m_hotspot;
     Size m_size;
 };

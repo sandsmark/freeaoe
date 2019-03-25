@@ -106,6 +106,8 @@ public:
     Graphic(const genie::Graphic &m_data, const int id);
     virtual ~Graphic();
 
+    static sf::Image slpFrameToImage(const genie::SlpFramePtr &frame, uint8_t playerId, const ImageType imageType);
+
     //----------------------------------------------------------------------------
     /// Returns the image of the graphic.
     ///
@@ -116,7 +118,7 @@ public:
 //    const sf::Texture &getImage(uint32_t frame_num = 0, float angle = 0, uint8_t playerId = 0, const ImageType type = ImageType::Base);
 //    const sf::Texture &overlayImage(uint32_t frame_num, float angle, uint8_t playerId);
 
-    const sf::Texture &texture(uint32_t frame = 0, float angleRadians = 0, uint8_t playerId = 0, const ImageType imageType = ImageType::Base);
+    const sf::Texture &texture(uint32_t frameNum = 0, float angleRadians = 0, uint8_t playerId = 0, const ImageType imageType = ImageType::Base);
 
     const Size size(uint32_t frame_num, float angle) const;
     const ScreenRect rect(uint32_t frame_num, float angle) const;
