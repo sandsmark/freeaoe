@@ -93,24 +93,23 @@ int main(int argc, char **argv)
     if (!skipMenu) {
         bool startGame = false;
 
+        // TODO: clean up this mess...
         while (!startGame) {
             HomeScreen home;
             if (!home.init()) {
                 return 1;
             }
 
-            switch (home.getSelection()) {
-            case HomeScreen::Button::Exit:
+            const HomeScreen::Button::Type button = home.getSelection();
+            if (button == HomeScreen::Button::Exit) {
                 return 0;
-            case HomeScreen::Button::History: {
+            } else if (button == HomeScreen::Button::History) {
                 HistoryScreen history;
                 if (!history.init(config.getValue("game-path") + "/History/")) {
                     return 1;
                 }
                 history.display();
-                break;
-            }
-            case HomeScreen::Button::Tutorial: {
+            } else if (button == HomeScreen::Button::Tutorial) {
                 startGame = true;
                 try {
                     genie::CpxFile cpxFile;
@@ -121,10 +120,20 @@ int main(int argc, char **argv)
                 } catch (const std::exception &error) {
                     WARN << "Failed to load" << ":" << error.what();
                 }
+            } else if (button == HomeScreen::Button::Singleplayer) {
+                startGame = true;
+                if (home.getGameType() == HomeScreen::TextButton::Campaign) {
+                    try {
+                        genie::CpxFile cpxFile;
+                        cpxFile.setFileName(config.getValue("game-path") + "/Campaign/xcam2.cpx");
+                        cpxFile.load();
 
-                break;
-            }
-            default:
+                        scenarioFile = cpxFile.getScnFile(0);
+                    } catch (const std::exception &error) {
+                        WARN << "Failed to load" << ":" << error.what();
+                    }
+                }
+            } else {
                 startGame = true;
                 if (!config.getValue("scenario-file").empty()) {
                     try {

@@ -283,6 +283,9 @@ void ActionPanel::updateButtons()
             currentButtons.push_back(repairButton);
             break;
         }
+        case genie::Task::RetreatToShootingRage:
+        case genie::Task::Combat:
+            break;
         default:
             WARN << "Unhandled action type" << task.data->ActionType << task.data->actionTypeName() << task.data->AutoSearchTargets;
             break;

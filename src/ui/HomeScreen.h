@@ -73,11 +73,23 @@ public:
         ScreenRect textRect;
     };
 
+    struct TextButton {
+        enum Choice {
+            Campaign,
+            StandardGame,
+            ButtonsCount
+        };
+
+        sf::Text text;
+        ScreenRect rect;
+    };
+
     HomeScreen();
 
     bool init();
 
     Button::Type getSelection();
+    TextButton::Choice getGameType() const { return (m_gameType == -1) ? TextButton::StandardGame : TextButton::Choice(m_gameType); }
 
 private:
     void render();
@@ -87,6 +99,11 @@ private:
 
     ScreenRect m_descriptionRect;
     sf::Text m_description;
+    sf::Text m_todoText;
+    sf::Text m_versionText;
+    std::array<TextButton, TextButton::ButtonsCount> m_textButtons;
 
     int m_hoveredButton = -1;
+    int m_selectedButton = -1;
+    int m_gameType = -1;
 };

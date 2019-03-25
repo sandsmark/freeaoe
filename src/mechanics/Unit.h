@@ -114,7 +114,7 @@ struct Unit : public Entity
         Defensive,
         StandGround,
         NoAttack
-    } stance = Stance::Aggressive;
+    } stance = Stance::Defensive;
 
     // The blinking animation thing when it is selected as a target
     int targetBlinkTimeLeft = 0;
