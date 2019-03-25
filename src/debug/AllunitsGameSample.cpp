@@ -58,6 +58,7 @@ void AllunitsGameSample::addHumanTownCenter()
             }
         }
     }
+    unitManager_->add(unit);
 }
 
 void AllunitsGameSample::addHumanUnits()
@@ -79,7 +80,8 @@ void AllunitsGameSample::addHumanUnits()
         int y = (pos / 5) * dy + baseY;
 
         WARN << "::::: createUnit" << unitID;
-        UnitFactory::Inst().createUnit(unitID, MapPos(x, y, 0), m_humanPlayer, *unitManager_);
+        Unit::Ptr unit = UnitFactory::Inst().createUnit(unitID, MapPos(x, y, 0), m_humanPlayer, *unitManager_);
+        unitManager_->add(unit);
 
         pos++;
     }
@@ -87,13 +89,19 @@ void AllunitsGameSample::addHumanUnits()
 
 void AllunitsGameSample::addEnemyUnits()
 {
-    UnitFactory::Inst().createUnit(74, MapPos(48*12, 48*20, 0), m_enemyPlayer, *unitManager_);
-    UnitFactory::Inst().createUnit(74, MapPos(48*11, 48*20, 0), m_enemyPlayer, *unitManager_);
+    Unit::Ptr unit;
 
-    UnitFactory::Inst().createUnit(358, MapPos(48*9, 48*20, 0), m_enemyPlayer, *unitManager_);
+    unit = UnitFactory::Inst().createUnit(74, MapPos(48*12, 48*20, 0), m_enemyPlayer, *unitManager_);
+    unitManager_->add(unit);
+    unit = UnitFactory::Inst().createUnit(74, MapPos(48*11, 48*20, 0), m_enemyPlayer, *unitManager_);
+    unitManager_->add(unit);
+
+    unit = UnitFactory::Inst().createUnit(358, MapPos(48*9, 48*20, 0), m_enemyPlayer, *unitManager_);
+    unitManager_->add(unit);
 }
 
 void AllunitsGameSample::addEnemyBuildings()
 {
-    UnitFactory::Inst().createUnit(Unit::Dock, MapPos(48*15, 48*20, 0), m_enemyPlayer, *unitManager_);
+    Unit::Ptr unit = UnitFactory::Inst().createUnit(Unit::Dock, MapPos(48*15, 48*20, 0), m_enemyPlayer, *unitManager_);
+    unitManager_->add(unit);
 }

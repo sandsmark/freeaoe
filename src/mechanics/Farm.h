@@ -2,8 +2,6 @@
 
 #include "Building.h"
 
-class Map;
-
 class FarmRender : public GraphicRender
 {
 public:

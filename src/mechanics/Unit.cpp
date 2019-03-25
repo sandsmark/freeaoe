@@ -30,7 +30,7 @@
 #include "core/Utility.h"
 
 Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager) :
-    Entity(Type::Unit, LanguageManager::getString(data_.LanguageDLLName) + " (" + std::to_string(data_.ID) + ")", unitManager.map()),
+    Entity(Type::Unit, LanguageManager::getString(data_.LanguageDLLName) + " (" + std::to_string(data_.ID) + ")"),
     playerId(player_->playerId),
     player(player_),
     civilization(player_->civ),
@@ -46,7 +46,7 @@ Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, Uni
 }
 
 Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager, const Entity::Type type) :
-    Entity(type, LanguageManager::getString(data_.LanguageDLLName) + " (" + std::to_string(data_.ID) + ")", unitManager.map()),
+    Entity(type, LanguageManager::getString(data_.LanguageDLLName) + " (" + std::to_string(data_.ID) + ")"),
     playerId(player_->playerId),
     player(player_),
     civilization(player_->civ),
@@ -362,6 +362,15 @@ Task Unit::findMatchingTask(const genie::Task::ActionTypes &type, int targetUnit
 Size Unit::selectionSize() const
 {
     return Size(data()->OutlineSize.x * Constants::TILE_SIZE, data()->OutlineSize.y * Constants::TILE_SIZE);
+}
+
+void Unit::setMap(const MapPtr &newMap)
+{
+    for (Annex &annex : annexes) {
+        annex.unit->setMap(newMap);
+    }
+
+    Entity::setMap(newMap);
 }
 
 void Unit::setPosition(const MapPos &pos)

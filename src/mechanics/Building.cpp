@@ -4,6 +4,7 @@
 #include <genie/dat/Research.h>
 #include "resource/LanguageManager.h"
 #include "mechanics/Civilization.h"
+#include "mechanics/UnitManager.h"
 #include "Map.h"
 #include "UnitFactory.h"
 #include "core/Constants.h"
@@ -246,9 +247,8 @@ bool Building::update(Time time)
     return updated;
 }
 
-bool Building::canPlace()
+bool Building::canPlace(const MapPtr &map)
 {
-    MapPtr map = m_map.lock();
     if (!map) {
         WARN << "No map available";
         return false;
@@ -284,11 +284,6 @@ bool Building::canPlace()
 
 void Building::finalizeUnit()
 {
-    MapPtr map = m_map.lock();
-    if (!map) {
-        WARN << "map went away";
-        return;
-    }
     Player::Ptr owner = player.lock();
     if (!owner) {
         WARN << "owner went away";
@@ -299,6 +294,7 @@ void Building::finalizeUnit()
     waypoint.y = position().y + 24;
 
     Unit::Ptr unit = UnitFactory::Inst().createUnit(m_currentProduct->unit->ID, waypoint, owner, m_unitManager);
+    m_unitManager.add(unit);
 
     AudioPlayer::instance().playSound(unit->data()->TrainSound, unit->civilization->id());
 

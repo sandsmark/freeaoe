@@ -48,6 +48,7 @@ UnitManager::~UnitManager()
 
 void UnitManager::add(const Unit::Ptr &unit)
 {
+    unit->setMap(m_map);
     m_units.insert(unit);
 }
 
@@ -350,7 +351,7 @@ bool UnitManager::onLeftClick(const ScreenPos &screenPos, const CameraPtr &camer
 
         m_buildingToPlace->isVisible = true;
         m_buildingToPlace->setCreationProgress(0);
-        m_units.insert(m_buildingToPlace);
+        add(m_buildingToPlace);
 
         for (const Unit::Ptr &unit : m_selectedUnits) {
             if (unit->playerId != humanPlayer->playerId) {
@@ -456,7 +457,7 @@ void UnitManager::onMouseMove(const MapPos &mapPos)
     if (m_buildingToPlace) {
         m_buildingToPlace->setPosition(mapPos);
         m_buildingToPlace->snapPositionToGrid();
-        m_canPlaceBuilding = m_buildingToPlace->canPlace();
+        m_canPlaceBuilding = m_buildingToPlace->canPlace(m_map);
     }
 }
 
@@ -578,6 +579,7 @@ void UnitManager::placeBuilding(const int unitId, const std::shared_ptr<Player> 
         WARN << "Got invalid unit from factory";
         return;
     }
+    m_buildingToPlace->selected = true;
     m_canPlaceBuilding = false;
     m_state = State::PlacingBuilding;
 }

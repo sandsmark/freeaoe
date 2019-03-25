@@ -26,15 +26,11 @@
 
 static size_t s_entityCount = 0;
 
-Entity::Entity(const Entity::Type type_, const std::string &name, const MapPtr &map) :
+Entity::Entity(const Entity::Type type_, const std::string &name) :
     id(s_entityCount++),
     debugName(name),
-    m_map(map),
     m_type(type_)
 {
-    if (!map) {
-        WARN << "no map";
-    }
 }
 
 Entity::~Entity()
@@ -88,6 +84,22 @@ std::shared_ptr<Missile> Entity::asMissile(const std::shared_ptr<Entity> &entity
     return std::static_pointer_cast<Missile>(entity);
 }
 
+void Entity::setMap(const MapPtr &newMap)
+{
+    const int tileX = m_position.x / Constants::TILE_SIZE;
+    const int tileY = m_position.y / Constants::TILE_SIZE;
+
+    MapPtr oldMap = m_map.lock();
+    if (oldMap) {
+        oldMap->removeEntityAt(tileX, tileY, id);
+    }
+
+    m_map = newMap;
+    if (newMap) {
+        newMap->addEntityAt(tileX, tileY, shared_from_this());
+    }
+}
+
 MapPtr Entity::map() const
 {
     return m_map.lock();
@@ -95,11 +107,10 @@ MapPtr Entity::map() const
 
 void Entity::setPosition(const MapPos &pos)
 {
-
-    int oldTileX = m_position.x / Constants::TILE_SIZE;
-    int oldTileY = m_position.y / Constants::TILE_SIZE;
-    int newTileX = pos.x / Constants::TILE_SIZE;
-    int newTileY = pos.y / Constants::TILE_SIZE;
+    const int oldTileX = m_position.x / Constants::TILE_SIZE;
+    const int oldTileY = m_position.y / Constants::TILE_SIZE;
+    const int newTileX = pos.x / Constants::TILE_SIZE;
+    const int newTileY = pos.y / Constants::TILE_SIZE;
 
     m_position = pos;
 
@@ -110,20 +121,19 @@ void Entity::setPosition(const MapPos &pos)
         return;
     }
 
-    MapPtr map = m_map.lock();
 
+    MapPtr map = m_map.lock();
     if (!map) {
-        WARN << "No map";
         return;
     }
-
     map->removeEntityAt(oldTileX, oldTileY, id);
     map->addEntityAt(newTileX, newTileY, shared_from_this());
 }
 
 MoveTargetMarker::MoveTargetMarker(const MapPtr &map) :
-    Entity(Type::MoveTargetMarker, "Move target marker", map)
+    Entity(Type::MoveTargetMarker, "Move target marker")
 {
+    setMap(map);
     m_renderer.setGraphic(2961);
 
     m_renderer.setCurrentFrame(m_renderer.frameCount() - 1); // don't play immediately
@@ -152,9 +162,10 @@ bool MoveTargetMarker::update(Time time)
 }
 
 DecayingEntity::DecayingEntity(const MapPtr &map, const int graphicId, float decayTime) :
-    Entity(Type::Decaying, "Eye Candy Things", map),
+    Entity(Type::Decaying, "Eye Candy Things"),
     m_decayTimeLeft(decayTime)
 {
+    setMap(map);
     m_renderer.setGraphic(graphicId);
 }
 

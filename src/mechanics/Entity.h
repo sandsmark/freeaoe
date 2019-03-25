@@ -59,6 +59,7 @@ struct Entity: std::enable_shared_from_this<Entity>, SignalEmitter<Entity>
 
     bool isVisible = false;
 
+    virtual void setMap(const MapPtr &newMap);
     MapPtr map() const;
     const MapPos &position() const { return m_position; }
     virtual void setPosition(const MapPos &pos);
@@ -77,7 +78,7 @@ protected:
         Unit,
         Building,
     };
-    Entity(const Type type_, const std::string &name, const MapPtr &map_);
+    Entity(const Type type_, const std::string &name);
 
     GraphicRender m_renderer;
     GraphicPtr defaultGraphics;

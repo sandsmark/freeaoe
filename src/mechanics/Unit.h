@@ -152,7 +152,9 @@ struct Unit : public Entity
     bool isDying() const;
     bool isDead() const;
 
-    virtual void setPosition(const MapPos &pos) override;
+
+    void setMap(const MapPtr &newMap) override;
+    void setPosition(const MapPos &pos) override;
 
     void setUnitData(const genie::Unit &data_);
     const genie::Unit *data() const {return m_data; }

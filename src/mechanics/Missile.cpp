@@ -11,7 +11,7 @@
 #include <genie/dat/Unit.h>
 
 Missile::Missile(const genie::Unit &data, const Unit::Ptr &sourceUnit, const MapPos &target, const Unit::Ptr &targetUnit) :
-    Entity(Type::Missile, LanguageManager::getString(data.LanguageDLLName) + " (" + std::to_string(data.ID) + ")", sourceUnit->map()),
+    Entity(Type::Missile, LanguageManager::getString(data.LanguageDLLName) + " (" + std::to_string(data.ID) + ")"),
     m_sourceUnit(sourceUnit),
     m_targetUnit(targetUnit),
     m_player(sourceUnit->player),
@@ -19,6 +19,8 @@ Missile::Missile(const genie::Unit &data, const Unit::Ptr &sourceUnit, const Map
     m_data(data),
     m_targetPosition(target)
 {
+    setMap(sourceUnit->map());
+
     m_startingElevation = sourceUnit->position().z;
     m_attacks = sourceUnit->data()->Combat.Attacks;
     sourceUnit->activeMissiles++;

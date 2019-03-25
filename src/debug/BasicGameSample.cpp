@@ -59,6 +59,7 @@ void BasicGameSample::addHumanTownCenter()
             }
         }
     }
+    unitManager_->add(unit);
 }
 
 void BasicGameSample::addHumanWalls()
@@ -66,6 +67,7 @@ void BasicGameSample::addHumanWalls()
     Unit::Ptr unit;
     auto addWall = [&](int x, int y, float angle) {
         unit = UnitFactory::Inst().createUnit(117, MapPos(48*x, 48*y, 0), m_humanPlayer, *unitManager_);
+        unitManager_->add(unit);
         unit->setAngle(angle);
     };
 
@@ -80,15 +82,29 @@ void BasicGameSample::addHumanWalls()
 
 void BasicGameSample::addHumanUnits()
 {
-    UnitFactory::Inst().createUnit(Unit::MaleBuilder, MapPos(48*2, 48*12, 0), m_humanPlayer, *unitManager_);
-    UnitFactory::Inst().createUnit(280, MapPos(48*11, 48*10, 0), m_humanPlayer, *unitManager_);
-    UnitFactory::Inst().createUnit(279, MapPos(48*13, 48*11, 0), m_humanPlayer, *unitManager_);
-    UnitFactory::Inst().createUnit(Unit::Mill, MapPos(48*15, 48*15, 0), m_humanPlayer, *unitManager_);
-    UnitFactory::Inst().createUnit(827, MapPos(48*10, 48*9, 0), m_humanPlayer, *unitManager_);
-    UnitFactory::Inst().createUnit(74, MapPos(48*8, 48*9, 0), m_humanPlayer, *unitManager_);
+    Unit::Ptr unit;
+
+    unit = UnitFactory::Inst().createUnit(Unit::MaleBuilder, MapPos(48*2, 48*12, 0), m_humanPlayer, *unitManager_);
+    unitManager_->add(unit);
+
+    unit = UnitFactory::Inst().createUnit(280, MapPos(48*11, 48*10, 0), m_humanPlayer, *unitManager_);
+    unitManager_->add(unit);
+
+    unit = UnitFactory::Inst().createUnit(279, MapPos(48*13, 48*11, 0), m_humanPlayer, *unitManager_);
+    unitManager_->add(unit);
+
+    unit = UnitFactory::Inst().createUnit(Unit::Mill, MapPos(48*15, 48*15, 0), m_humanPlayer, *unitManager_);
+    unitManager_->add(unit);
+
+    unit = UnitFactory::Inst().createUnit(827, MapPos(48*10, 48*9, 0), m_humanPlayer, *unitManager_);
+    unitManager_->add(unit);
+
+    unit = UnitFactory::Inst().createUnit(74, MapPos(48*8, 48*9, 0), m_humanPlayer, *unitManager_);
+    unitManager_->add(unit);
 }
 
 void BasicGameSample::addEnemyUnits()
 {
-    UnitFactory::Inst().createUnit(74, MapPos(48*8, 48*8, 0), m_enemyPlayer, *unitManager_);
+    Unit::Ptr unit = UnitFactory::Inst().createUnit(74, MapPos(48*8, 48*8, 0), m_enemyPlayer, *unitManager_);
+    unitManager_->add(unit);
 }

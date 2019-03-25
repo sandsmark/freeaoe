@@ -8,8 +8,6 @@ namespace genie {
 class Tech;
 }
 
-class Map;
-
 struct Building : public Unit
 {
     typedef std::shared_ptr<Building> Ptr;
@@ -34,7 +32,7 @@ struct Building : public Unit
 
     MapPos waypoint;
 
-    bool canPlace();
+    bool canPlace(const MapPtr &map);
 
 private:
     void finalizeUnit();
