@@ -18,6 +18,7 @@
 
 #include "IAction.h"
 #include "mechanics/Entity.h"
+#include "mechanics/Unit.h"
 #include "resource/DataManager.h"
 
 IAction::IAction(const Type type_, const std::shared_ptr<Unit> &unit, UnitManager *unitManager) :
@@ -25,6 +26,86 @@ IAction::IAction(const Type type_, const std::shared_ptr<Unit> &unit, UnitManage
     m_unit(unit),
     m_unitManager(unitManager)
 {
+}
+
+Task IAction::findMatchingTask(const int ownPlayerId, const std::shared_ptr<Unit> &target, const std::unordered_set<Task> &potentials)
+{
+    for (const Task &task : potentials) {
+        const genie::Task *action = task.data;
+
+        switch (action->TargetDiplomacy) {
+        case genie::Task::TargetSelf:
+            if (target->playerId != ownPlayerId) {
+                continue;
+            }
+            break;
+        case genie::Task::TargetNeutralsEnemies: // TODO: neutrals
+            if (target->playerId == ownPlayerId) {
+                continue;
+            }
+            break;
+
+        case genie::Task::TargetGaiaOnly:
+            if (target->playerId != 0) {
+                continue;
+            }
+            break;
+        case genie::Task::TargetSelfAllyGaia: // TODO: Allies
+            if (target->playerId != ownPlayerId && target->playerId != 0) {
+                continue;
+            }
+            break;
+        case genie::Task::TargetGaiaNeutralEnemies:
+        case genie::Task::TargetOthers:
+            if (target->playerId == ownPlayerId) { // TODO: allies
+                continue;
+            }
+            break;
+        case genie::Task::TargetAnyDiplo:
+        case genie::Task::TargetAnyDiplo2:
+        default:
+            break;
+        }
+
+        if (action->ActionType == genie::Task::Garrison) {
+            continue;
+        }
+
+        if (target->creationProgress() < 1) {
+            if (action->ActionType == genie::Task::Build) {
+                return task;
+            }
+
+            continue;
+        }
+
+        if (action->UnitID == target->data()->ID) {
+            return task;
+        }
+
+        if (action->ClassID == target->data()->Class) {
+            return task;
+        }
+    }
+
+    // Try more generic targeting
+    for (const Task &task : potentials) {
+        const genie::Task *action = task.data;
+        if (action->ActionType != genie::Task::Combat) {
+            continue;
+        }
+        if (action->TargetDiplomacy != genie::Task::TargetGaiaNeutralEnemies && action->TargetDiplomacy != genie::Task::TargetNeutralsEnemies) {
+            continue;
+        }
+        if (ownPlayerId == target->playerId) {
+            continue;
+        }
+
+        return task;
+    }
+
+    return Task();
+
 }
 
 IAction::~IAction()

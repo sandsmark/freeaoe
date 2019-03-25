@@ -123,6 +123,9 @@ bool Unit::update(Time time)
         if (!m_currentAction || currentAction != m_currentAction || prevState != m_currentAction->unitState()) {
             updateGraphic();
         }
+        if (!m_currentAction) {
+            checkForAutoTargets();
+        }
     }
 
 
@@ -328,6 +331,37 @@ bool Unit::isDead() const
     return true;
 }
 
+void Unit::checkForAutoTargets()
+{
+    if (stance != Stance::Aggressive || m_autoTargetTasks.empty() || m_currentAction) {
+        return;
+    }
+
+    const float maxRange = m_data->LineOfSight * Constants::TILE_SIZE;
+    Task newTask;
+    Unit::Ptr target;
+
+    for (const Unit::Ptr &other : m_unitManager.units()) {
+        if (other->id == this->id) {
+            continue;
+        }
+        if (other->position().distance(position()) > maxRange) {
+            continue;
+        }
+        newTask = IAction::findMatchingTask(playerId, other, m_autoTargetTasks);
+        if (newTask.data) {
+            target = other;
+            break;
+        }
+    }
+
+    if (!newTask.data || !target) {
+        return;
+    }
+
+    m_unitManager.assignTask(newTask, Entity::asUnit(shared_from_this()), target);
+}
+
 std::unordered_set<Task> Unit::availableActions()
 {
     std::unordered_set<Task> tasks;
@@ -395,6 +429,14 @@ void Unit::setUnitData(const genie::Unit &data_)
     }
 
     m_renderer.setGraphic(defaultGraphics);
+
+    m_autoTargetTasks.clear();
+    for (const Task &task : availableActions()) {
+        if (!task.data->EnableTargeting) {
+            continue;
+        }
+        m_autoTargetTasks.insert(task);
+    }
 }
 
 DecayingEntity::Ptr Unit::createCorpse() const

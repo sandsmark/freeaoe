@@ -22,6 +22,7 @@
 #include <genie/dat/UnitCommand.h>
 
 #include <memory>
+#include <unordered_set>
 
 namespace genie {
 class Task;
@@ -31,6 +32,8 @@ struct Unit;
 struct Task;
 class Map;
 class UnitManager;
+
+
 
 class IAction
 {
@@ -63,6 +66,8 @@ public:
     };
 
     const Type type = Type::None;
+
+    static Task findMatchingTask(const int ownPlayerId, const std::shared_ptr<Unit> &target, const std::unordered_set<Task> &potentials);
 
     virtual UnitState unitState() const { return UnitState::Idle; }
     virtual genie::Task::ActionTypes taskType() const = 0;

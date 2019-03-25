@@ -46,6 +46,15 @@ struct Task {
     }
 };
 
+namespace std {
+template<> struct hash<Task>
+{
+    size_t operator()(const Task &b) const {
+        return hash<int16_t>()(b.data->ID) ^ hash<uint16_t>()(b.unitId);
+    }
+};
+}
+
 struct Unit : public Entity
 {
     enum HardcodedTypes {
@@ -100,6 +109,13 @@ struct Unit : public Entity
         MapPos offset;
     };
 
+    enum class Stance {
+        Aggressive,
+        Defensive,
+        StandGround,
+        NoAttack
+    } stance = Stance::Aggressive;
+
     // The blinking animation thing when it is selected as a target
     int targetBlinkTimeLeft = 0;
 
@@ -138,6 +154,7 @@ struct Unit : public Entity
     virtual ScreenRect rect() const;
     virtual bool checkClick(const ScreenPos &pos) const;
 
+    void checkForAutoTargets();
     std::unordered_set<Task> availableActions();
     Task findMatchingTask(const genie::Task::ActionTypes &m_type, int targetUnit);
     Size selectionSize() const;
@@ -151,7 +168,6 @@ struct Unit : public Entity
     void takeDamage(const genie::unit::AttackOrArmor &attack, const float damageMultiplier);
     bool isDying() const;
     bool isDead() const;
-
 
     void setMap(const MapPtr &newMap) override;
     void setPosition(const MapPos &pos) override;
@@ -179,6 +195,8 @@ protected:
     ActionPtr m_currentAction;
     std::deque<ActionPtr> m_actionQueue;
 
+    std::unordered_set<Task> m_autoTargetTasks;
+
     float m_creationProgress = 0.f;
 
     UnitManager &m_unitManager;
@@ -187,14 +205,4 @@ protected:
     Time m_prevTime = 0;
 };
 
-
-namespace std {
-
-template<> struct hash<Task>
-{
-    size_t operator()(const Task &b) const {
-        return hash<int16_t>()(b.data->ID) ^ hash<uint16_t>()(b.unitId);
-    }
-};
-}
 

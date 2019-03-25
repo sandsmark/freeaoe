@@ -64,6 +64,14 @@ bool UnitManager::update(Time time)
 {
     bool updated = false;
 
+    if (m_unitsMoved) {
+        m_unitsMoved = false;
+
+        for (const Unit::Ptr &unit : m_units) {
+            unit->checkForAutoTargets();
+        }
+    }
+
     // Update missiles (siege rockthings, arrows, etc.)
     std::unordered_set<Missile::Ptr>::iterator missileIterator = m_missiles.begin();
     while (missileIterator != m_missiles.end()) {
@@ -550,6 +558,9 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
 void UnitManager::setMap(const MapPtr &map)
 {
     m_map = map;
+
+    // FIXME disconnect this shit
+    map->connect(Map::Signals::UnitsChanged, std::bind(&UnitManager::onUnitsMoved, this));
 }
 
 void UnitManager::setSelectedUnits(const UnitSet &units)
@@ -688,83 +699,9 @@ const Task UnitManager::defaultActionAt(const ScreenPos &pos, const CameraPtr &c
         return Task();
     }
 
-    int ownPlayerId = (*m_selectedUnits.begin())->playerId;
+    const int ownPlayerId = (*m_selectedUnits.begin())->playerId;
 
-    for (const Task &task : m_currentActions) {
-        const genie::Task *action = task.data;
-
-        switch (action->TargetDiplomacy) {
-        case genie::Task::TargetSelf:
-            if (target->playerId != ownPlayerId) {
-                continue;
-            }
-            break;
-        case genie::Task::TargetNeutralsEnemies: // TODO: neutrals
-            if (target->playerId == ownPlayerId) {
-                continue;
-            }
-            break;
-
-        case genie::Task::TargetGaiaOnly:
-            if (target->playerId != 0) {
-                continue;
-            }
-            break;
-        case genie::Task::TargetSelfAllyGaia: // TODO: Allies
-            if (target->playerId != ownPlayerId && target->playerId != 0) {
-                continue;
-            }
-            break;
-        case genie::Task::TargetGaiaNeutralEnemies:
-        case genie::Task::TargetOthers:
-            if (target->playerId == ownPlayerId) { // TODO: allies
-                continue;
-            }
-            break;
-        case genie::Task::TargetAnyDiplo:
-        case genie::Task::TargetAnyDiplo2:
-        default:
-            break;
-        }
-
-        if (action->ActionType == genie::Task::Garrison) {
-            continue;
-        }
-
-        if (target->creationProgress() < 1) {
-            if (action->ActionType == genie::Task::Build) {
-                return task;
-            }
-
-            continue;
-        }
-
-        if (action->UnitID == target->data()->ID) {
-            return task;
-        }
-
-        if (action->ClassID == target->data()->Class) {
-            return task;
-        }
-    }
-
-    // Try more generic targeting
-    for (const Task &task : m_currentActions) {
-        const genie::Task *action = task.data;
-        if (action->ActionType != genie::Task::Combat) {
-            continue;
-        }
-        if (action->TargetDiplomacy != genie::Task::TargetGaiaNeutralEnemies && action->TargetDiplomacy != genie::Task::TargetNeutralsEnemies) {
-            continue;
-        }
-        if (ownPlayerId == target->playerId) {
-            continue;
-        }
-
-        return task;
-    }
-
-    return Task();
+    return IAction::findMatchingTask(ownPlayerId, target, m_currentActions);
 }
 
 void UnitManager::moveUnitTo(const Unit::Ptr &unit, const MapPos &targetPos)
