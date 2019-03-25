@@ -80,20 +80,30 @@ IAction::UpdateResult ActionAttack::update(Time time)
     }
 
     if (!inRange && distance > unit->data()->Combat.MaxRange) {
-        const float angleToTarget = unit->position().angleTo(m_targetPosition);
-        float targetX = m_targetPosition.x + cos(angleToTarget + M_PI) * unit->data()->Combat.MaxRange * Constants::TILE_SIZE / 1.1;
-        float targetY = m_targetPosition.y + sin(angleToTarget + M_PI) * unit->data()->Combat.MaxRange * Constants::TILE_SIZE / 1.1;
-        unit->prependAction(ActionMove::moveUnitTo(unit, MapPos(targetX, targetY), m_unitManager->map(), m_unitManager));
+        if (unit->findMatchingTask(genie::Task::RetreatToShootingRage, -1).data) {
+            const float angleToTarget = unit->position().angleTo(m_targetPosition);
 
-        return IAction::UpdateResult::NotUpdated;
+            float targetX = m_targetPosition.x + cos(angleToTarget + M_PI) * unit->data()->Combat.MaxRange * Constants::TILE_SIZE / 1.1;
+            float targetY = m_targetPosition.y + sin(angleToTarget + M_PI) * unit->data()->Combat.MaxRange * Constants::TILE_SIZE / 1.1;
+
+            unit->prependAction(ActionMove::moveUnitTo(unit, MapPos(targetX, targetY), m_unitManager->map(), m_unitManager));
+            return IAction::UpdateResult::NotUpdated;
+        }
+
+        return IAction::UpdateResult::Failed;
     }
     if (distance < unit->data()->Combat.MinRange) {
-        const float angleToTarget = unit->position().angleTo(m_targetPosition);
-        float targetX = m_targetPosition.x + cos(angleToTarget + M_PI) * unit->data()->Combat.MinRange * Constants::TILE_SIZE * 1.1;
-        float targetY = m_targetPosition.y + sin(angleToTarget + M_PI) * unit->data()->Combat.MinRange * Constants::TILE_SIZE * 1.1;
-        unit->prependAction(ActionMove::moveUnitTo(unit, MapPos(targetX, targetY), m_unitManager->map(), m_unitManager));
+        if (unit->findMatchingTask(genie::Task::RetreatToShootingRage, -1).data) {
+            const float angleToTarget = unit->position().angleTo(m_targetPosition);
 
-        return IAction::UpdateResult::NotUpdated;
+            float targetX = m_targetPosition.x + cos(angleToTarget + M_PI) * unit->data()->Combat.MinRange * Constants::TILE_SIZE * 1.1;
+            float targetY = m_targetPosition.y + sin(angleToTarget + M_PI) * unit->data()->Combat.MinRange * Constants::TILE_SIZE * 1.1;
+
+            unit->prependAction(ActionMove::moveUnitTo(unit, MapPos(targetX, targetY), m_unitManager->map(), m_unitManager));
+            return IAction::UpdateResult::NotUpdated;
+        }
+
+        return IAction::UpdateResult::Failed;
     }
 
     if (timeSinceLastAttack < unit->data()->Combat.ReloadTime) {
@@ -117,9 +127,7 @@ IAction::UpdateResult ActionAttack::update(Time time)
         for (const genie::unit::AttackOrArmor &attack : unit->data()->Combat.Attacks) {
             targetUnit->takeDamage(attack, 1.); // todo: damage multiplier
         }
-
     }
-
 
     return IAction::UpdateResult::Updated;
 }
