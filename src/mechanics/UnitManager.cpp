@@ -198,11 +198,6 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
             sf::RectangleShape rect;
             sf::CircleShape circle;
             circle.setFillColor(sf::Color::Transparent);
-            if (blinkingAsTarget) {
-                circle.setOutlineColor(sf::Color::Green);
-            } else {
-                circle.setOutlineColor(sf::Color::White);
-            }
             circle.setOutlineThickness(1);
 
             double width = unit->data()->OutlineSize.x * Constants::TILE_SIZE_HORIZONTAL;
@@ -229,11 +224,18 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
             circle.setPosition(pos.x - width, pos.y - height);
             circle.setRadius(width);
             circle.setScale(1, height / width);
-            renderTarget->draw(circle);
-
-            circle.setPosition(pos.x - width, pos.y - height + 1);
             circle.setOutlineColor(sf::Color::Black);
             renderTarget->draw(circle);
+
+            if (blinkingAsTarget) {
+                circle.setOutlineColor(sf::Color::Green);
+            } else {
+                circle.setOutlineColor(sf::Color::White);
+            }
+            circle.setOutlineThickness(2);
+            circle.setPosition(pos.x - width, pos.y - height + 1);
+            renderTarget->draw(circle);
+
 
             if (!blinkingAsTarget) {
                 pos.x -= Constants::TILE_SIZE_HORIZONTAL / 8;
@@ -323,6 +325,27 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
             return;
         }
 
+        const double width = m_buildingToPlace->data()->OutlineSize.x * Constants::TILE_SIZE_HORIZONTAL + 1;
+        const double height =  m_buildingToPlace->data()->OutlineSize.y * Constants::TILE_SIZE_VERTICAL + 1;
+
+        sf::CircleShape circle;
+        circle.setFillColor(sf::Color::Transparent);
+        circle.setOutlineThickness(1);
+        circle.setRadius(width);
+        circle.setPointCount(4);
+        circle.setScale(1, height / width);
+
+        ScreenPos pos = camera->absoluteScreenPos(m_buildingToPlace->position());
+
+
+        circle.setPosition(pos.x - width, pos.y - height + 1);
+        circle.setOutlineColor(sf::Color::Black);
+        renderTarget->draw(circle);
+
+        circle.setPosition(pos.x - width, pos.y - height);
+        circle.setOutlineColor(sf::Color::White);
+        renderTarget->draw(circle);
+
         m_buildingToPlace->renderer().render(*renderTarget->renderTarget_,
                                              renderTarget->camera()->absoluteScreenPos(m_buildingToPlace->position()),
                                              m_canPlaceBuilding ? RenderType::ConstructAvailable : RenderType::ConstructUnavailable);
@@ -410,6 +433,8 @@ bool UnitManager::onLeftClick(const ScreenPos &screenPos, const CameraPtr &camer
 
 void UnitManager::onRightClick(const ScreenPos &screenPos, const CameraPtr &camera)
 {
+    m_buildingToPlace.reset();
+
     if (m_selectedUnits.empty()) {
         return;
     }
@@ -618,13 +643,11 @@ void UnitManager::enqueueResearch(const genie::Tech *techData, const UnitSet pro
 
 Unit::Ptr UnitManager::unitAt(const ScreenPos &pos, const CameraPtr &camera) const
 {
-//    MapPos mpos = camera->absoluteMapPos(pos);
     for (const Unit::Ptr &unit : m_units) {
         if (!unit->isVisible) {
             continue;
         }
 
-//        MapRect unitRect(unit->position(), unit->selectionSize());
         const ScreenPos unitPosition = camera->absoluteScreenPos(unit->position());
         const ScreenRect unitRect = unit->rect() + unitPosition;
         if (unitRect.contains(pos)) {
