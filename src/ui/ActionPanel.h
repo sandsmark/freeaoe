@@ -3,6 +3,7 @@
 #include "core/Types.h"
 
 #include <mechanics/IState.h>
+#include <mechanics/Unit.h>
 #include <mechanics/Player.h>
 #include <SFML/Graphics/Texture.hpp>
 
@@ -74,11 +75,11 @@ public:
         OpenGate,
         CloseGate,
         RingTownBell,
-        SwordInStone,
+        NoAttack,
         StandGroundEnabled,
         DefensiveEnabled,
         AggressiveEnabled,
-        SwordInStoneEnabled,
+        NoAttackEnabled,
         PatrolEnabled,
         GuardEnabled,
         FollowEnabled,
@@ -116,6 +117,7 @@ public:
     ScreenRect rect() const;
 
     void releaseButtons();
+    void setAttackStance(const Unit::Stance stance) const;
 
 private:
     struct InterfaceButton {
@@ -123,6 +125,7 @@ private:
             CreateUnit,
             CreateBuilding,
             Research,
+            AttackStance,
             Other
         };
 
@@ -138,6 +141,8 @@ private:
         int index = 0;
         bool pressed = false;
         int interfacePage = 0;
+
+        bool showBorder = true;
 
         Type type = Other;
     };

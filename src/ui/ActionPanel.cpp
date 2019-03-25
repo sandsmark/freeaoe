@@ -98,6 +98,13 @@ bool ActionPanel::handleEvent(sf::Event event)
             button.pressed = false;
             continue;
         }
+        if (button.type == InterfaceButton::AttackStance) {
+            if (event.type == sf::Event::MouseButtonPressed) {
+                handleButtonClick(button);
+            }
+
+            break;
+        }
 
         if (event.type == sf::Event::MouseButtonPressed) {
             if (button.pressed) {
@@ -140,28 +147,30 @@ void ActionPanel::draw()
             continue;
         }
 
-        sf::RectangleShape bevelRect(Size(40, 40));
-        sf::RectangleShape shadowRect(Size(38, 38));
+        if (button.showBorder) {
+            sf::RectangleShape bevelRect(Size(40, 40));
+            sf::RectangleShape shadowRect(Size(38, 38));
 
-        // need this because the garrison icon is actually a cursor
-        sf::RectangleShape backgroundRect(Size(36, 36));
-        backgroundRect.setFillColor(sf::Color::Black);
+            // need this because the garrison icon is actually a cursor
+            sf::RectangleShape backgroundRect(Size(36, 36));
+            backgroundRect.setFillColor(sf::Color::Black);
 
-        bevelRect.setPosition(buttonPosition(button.index) - ScreenPos(2, 2));
-        shadowRect.setPosition(buttonPosition(button.index));
-        backgroundRect.setPosition(buttonPosition(button.index));
+            bevelRect.setPosition(buttonPosition(button.index) - ScreenPos(2, 2));
+            shadowRect.setPosition(buttonPosition(button.index));
+            backgroundRect.setPosition(buttonPosition(button.index));
 
-        if (button.pressed) {
-            bevelRect.setFillColor(sf::Color(64, 64, 64));
-            shadowRect.setFillColor(sf::Color(192, 192, 192));
-        } else {
-            bevelRect.setFillColor(sf::Color(192, 192, 192));
-            shadowRect.setFillColor(sf::Color(64, 64, 64));
+            if (button.pressed) {
+                bevelRect.setFillColor(sf::Color(64, 64, 64));
+                shadowRect.setFillColor(sf::Color(192, 192, 192));
+            } else {
+                bevelRect.setFillColor(sf::Color(192, 192, 192));
+                shadowRect.setFillColor(sf::Color(64, 64, 64));
+            }
+
+            m_renderTarget->draw(bevelRect);
+            m_renderTarget->draw(shadowRect);
+            m_renderTarget->draw(backgroundRect);
         }
-
-        m_renderTarget->draw(bevelRect);
-        m_renderTarget->draw(shadowRect);
-        m_renderTarget->draw(backgroundRect);
 
         switch(button.type) {
         case InterfaceButton::CreateBuilding:
@@ -173,6 +182,7 @@ void ActionPanel::draw()
         case InterfaceButton::Research:
             m_renderTarget->draw(m_researchIcons[button.iconId], buttonPosition(button.index));
             break;
+        case InterfaceButton::AttackStance:
         case InterfaceButton::Other:
             m_renderTarget->draw(m_commandIcons[button.action], buttonPosition(button.index));
             break;
@@ -354,7 +364,6 @@ void ActionPanel::addResearchButtons(const std::shared_ptr<Unit> &unit)
     }
 
     bool hasNext = false;
-    DBG << "research available" << techs.size();
 
     for (const genie::Tech *tech : techs) {
         if (tech->ButtonID > m_buttonOffset + 15) {
@@ -385,7 +394,6 @@ void ActionPanel::addResearchButtons(const std::shared_ptr<Unit> &unit)
 
 void ActionPanel::addMilitaryButtons(const std::shared_ptr<Unit> &unit)
 {
-    DBG << unit->data()->Creatable.CreatableType << unit->data()->Class;
     if (unit->data()->InterfaceKind != genie::Unit::SoldiersInterface) {
         return;
     }
@@ -399,6 +407,48 @@ void ActionPanel::addMilitaryButtons(const std::shared_ptr<Unit> &unit)
 
         currentButtons.push_back(button);
     }
+
+    // Stance buttons
+    if (unit->hasAutoTargets()) {
+        const Unit::Stance current = unit->stance;
+        InterfaceButton button;
+        button.showBorder = false;
+        button.type = InterfaceButton::AttackStance;
+        button.interfacePage = 0;
+
+        if (current == Unit::Stance::Aggressive) {
+            button.action = Command::AggressiveEnabled;
+        } else {
+            button.action = Command::Aggressive;
+        }
+        button.index = 5;
+        currentButtons.push_back(button);
+
+        if (current == Unit::Stance::Defensive) {
+            button.action = Command::DefensiveEnabled;
+        } else {
+            button.action = Command::Defensive;
+        }
+        button.index = 6;
+        currentButtons.push_back(button);
+
+        if (current == Unit::Stance::StandGround) {
+            button.action = Command::StandGroundEnabled;
+        } else {
+            button.action = Command::StandGround;
+        }
+        button.index = 7;
+        currentButtons.push_back(button);
+
+        if (current == Unit::Stance::NoAttack) {
+            button.action = Command::NoAttackEnabled;
+        } else {
+            button.action = Command::NoAttack;
+        }
+        button.index = 8;
+        currentButtons.push_back(button);
+
+    }
 }
 
 void ActionPanel::handleButtonClick(const ActionPanel::InterfaceButton &button)
@@ -410,6 +460,31 @@ void ActionPanel::handleButtonClick(const ActionPanel::InterfaceButton &button)
         m_unitManager->enqueueProduceUnit(button.unit, m_selectedUnits);
     } else if (button.type == InterfaceButton::Research) {
         m_unitManager->enqueueResearch(button.tech, m_selectedUnits);
+    } else if (button.type == InterfaceButton::AttackStance) {
+        Unit::Stance newStance = Unit::Stance::Aggressive;
+        switch(button.action) {
+        case Command::Aggressive:
+            newStance = Unit::Stance::Aggressive;
+            break;
+        case Command::Defensive:
+            newStance = Unit::Stance::Defensive;
+            break;
+        case Command::StandGround:
+            newStance = Unit::Stance::StandGround;
+            break;
+        case Command::NoAttack:
+            newStance = Unit::Stance::NoAttack;
+            break;
+        default:
+            return;
+        }
+
+        for (const Unit::Ptr &unit : m_selectedUnits) {
+            unit->stance = newStance;
+        }
+
+        updateButtons();
+
     } else if (button.type == InterfaceButton::Other) {
         switch(button.action) {
         case Command::BuildMilitary:

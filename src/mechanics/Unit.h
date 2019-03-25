@@ -154,6 +154,7 @@ struct Unit : public Entity
     virtual ScreenRect rect() const;
     virtual bool checkClick(const ScreenPos &pos) const;
 
+    bool hasAutoTargets() const { return !m_autoTargetTasks.empty(); }
     void checkForAutoTargets();
     std::unordered_set<Task> availableActions();
     Task findMatchingTask(const genie::Task::ActionTypes &m_type, int targetUnit);
