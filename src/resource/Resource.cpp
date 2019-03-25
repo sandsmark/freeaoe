@@ -42,6 +42,11 @@ sf::Image Resource::convertFrameToImage(const genie::SlpFramePtr &frame,
 
     const uint32_t width = frame->getWidth();
     const uint32_t height = frame->getHeight();
+    if (!width || !height) {
+        sf::Image img;
+        img.create(1, 1, sf::Color::Transparent);
+        return img;
+    }
     const genie::SlpFrameData &frameData = frame->img_data;
     const int area = width * height;
 

@@ -240,6 +240,10 @@ ScreenPos Graphic::getHotspot(uint32_t frame_num, float angle) const
 
 bool Graphic::checkClick(const ScreenPos &pos, uint32_t frame_num, float angle) const
 {
+    if (!slp_) {
+        return false;
+    }
+
     FrameInfo frameInfo = calcFrameInfo(frame_num, angle);
     genie::SlpFramePtr frame = slp_->getFrame(frameInfo.frameNum);
     if (!frame || pos.x < 0 || pos.y < 0 || pos.x > frame->getWidth() || pos.y > frame->getHeight()) {
@@ -348,9 +352,6 @@ const genie::SlpFramePtr &Graphic::getFrame(uint32_t frame_num, float angle) con
 Graphic::FrameInfo Graphic::calcFrameInfo(uint32_t num, float angle) const
 {
     FrameInfo ret;
-    if (!slp_) {
-        return ret;
-    }
 
     ret.frameNum = num;
     if (m_data.AngleCount > 1) {
