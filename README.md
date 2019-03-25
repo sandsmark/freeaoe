@@ -48,5 +48,3 @@ TODO (this is probably going to get outdated)
  - Map analysis stuff (for RMS and AI).
  - Unit grouping/formations.
  - Patrolling.
- - Stances/behavior (aggressive, defensive, stand ground, no attack).
- - Automatic targeting of actions (including attack) when other units in range.
