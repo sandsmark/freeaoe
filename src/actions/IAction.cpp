@@ -19,6 +19,7 @@
 #include "IAction.h"
 #include "mechanics/Entity.h"
 #include "mechanics/Unit.h"
+#include "mechanics/UnitManager.h"
 #include "resource/DataManager.h"
 
 IAction::IAction(const Type type_, const std::shared_ptr<Unit> &unit, UnitManager *unitManager) :
@@ -46,12 +47,12 @@ Task IAction::findMatchingTask(const int ownPlayerId, const std::shared_ptr<Unit
             break;
 
         case genie::Task::TargetGaiaOnly:
-            if (target->playerId != 0) {
+            if (target->playerId != UnitManager::GaiaID) {
                 continue;
             }
             break;
         case genie::Task::TargetSelfAllyGaia: // TODO: Allies
-            if (target->playerId != ownPlayerId && target->playerId != 0) {
+            if (target->playerId != ownPlayerId && target->playerId != UnitManager::GaiaID) {
                 continue;
             }
             break;
@@ -89,20 +90,24 @@ Task IAction::findMatchingTask(const int ownPlayerId, const std::shared_ptr<Unit
     }
 
     // Try more generic targeting
-//    for (const Task &task : potentials) {
-//        const genie::Task *action = task.data;
-//        if (action->ActionType != genie::Task::Combat) {
-//            continue;
-//        }
-//        if (action->TargetDiplomacy != genie::Task::TargetGaiaNeutralEnemies && action->TargetDiplomacy != genie::Task::TargetNeutralsEnemies) {
-//            continue;
-//        }
-//        if (ownPlayerId == target->playerId) {
-//            continue;
-//        }
+    for (const Task &task : potentials) {
+        const genie::Task *action = task.data;
+        if (action->ActionType != genie::Task::Combat) {
+            continue;
+        }
+        if (action->TargetDiplomacy != genie::Task::TargetGaiaNeutralEnemies && action->TargetDiplomacy != genie::Task::TargetNeutralsEnemies) {
+            continue;
+        }
+        if (ownPlayerId == target->playerId) {
+            continue;
+        }
 
-//        return task;
-//    }
+        if (target->data()->Type < genie::Unit::CombatantType) {
+            continue;
+        }
+
+        return task;
+    }
 
     return Task();
 

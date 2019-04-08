@@ -469,11 +469,11 @@ void GameState::setupScenario()
         Player::Ptr player;
 
         // player 0 is gaia
-        if (playerNum > 0) {
+        if (playerNum != UnitManager::GaiaID) {
             player = std::make_shared<Player>(playerNum, m_civilizations[playerData.resourcesPlusPlayerInfo[playerNum-1].civilizationID]);
             player->name = playerData.playerNames[playerNum - 1];
         } else {
-            player = std::make_shared<Player>(playerNum, m_civilizations[0]); // gaia
+            player = std::make_shared<Player>(playerNum, m_civilizations[UnitManager::GaiaID]); // gaia
         }
 
         const genie::ScnPlayerResources &resources = scenario_->playerResources[playerNum];

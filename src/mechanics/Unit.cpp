@@ -345,6 +345,10 @@ void Unit::checkForAutoTargets()
         if (other->id == this->id) {
             continue;
         }
+        if (other->playerId == UnitManager::GaiaID) {
+            // I don't think we should auto-target gaia units?
+            continue;
+        }
         if (other->position().distance(position()) > maxRange) {
             continue;
         }
