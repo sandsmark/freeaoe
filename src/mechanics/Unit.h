@@ -163,7 +163,6 @@ struct Unit : public Entity
     virtual void setCreationProgress(float progress);
     void increaseCreationProgress(float progress);
     float creationProgress() const;
-//    float damageTaken() const { return std::max(m_damageTaken, healthLeft()); }
     float hitpointsLeft() const;
     float healthLeft() const;
     void takeDamage(const genie::unit::AttackOrArmor &attack, const float damageMultiplier);
@@ -177,8 +176,6 @@ struct Unit : public Entity
     const genie::Unit *data() const {return m_data; }
 
     int activeMissiles = 0;
-
-    DecayingEntity::Ptr createCorpse() const;
 
     UnitManager &unitManager() const { return m_unitManager; }
 

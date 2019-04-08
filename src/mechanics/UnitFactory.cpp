@@ -136,3 +136,45 @@ Unit::Ptr UnitFactory::createUnit(const int ID, const MapPos &position, const Pl
 
     return unit;
 }
+
+DecayingEntity::Ptr UnitFactory::createCorpseFor(const Unit::Ptr &unit)
+{
+    if (IS_UNLIKELY(!unit)) {
+        WARN << "can't create corpse for null unit";
+        return nullptr;
+    }
+
+    Player::Ptr owner = unit->player.lock();
+    if (!owner) {
+        WARN << "no owner for corpse";
+        return nullptr;
+    }
+
+    if (unit->data()->DeadUnitID == -1) {
+        return nullptr;
+    }
+
+    const genie::Unit &corpseData = owner->civ->unitData(unit->data()->DeadUnitID);
+    float decayTime = corpseData.ResourceDecay * corpseData.ResourceCapacity;
+
+    for (const genie::Unit::ResourceStorage &r : corpseData.ResourceStorages) {
+        if (r.Type == int(genie::ResourceType::CorpseDecayTime)) {
+            decayTime = r.Amount;
+            break;
+        }
+    }
+
+    // I don't think this is really correct, but it works better
+    if (corpseData.ResourceDecay == -1 || (corpseData.ResourceDecay != 0 && corpseData.ResourceCapacity == 0)) {
+        DBG << "decaying forever";
+        decayTime = std::numeric_limits<float>::infinity();
+    }
+    DecayingEntity::Ptr corpse = std::make_shared<DecayingEntity>(corpseData.StandingGraphic.first, decayTime);
+    corpse->renderer().setPlayerId(unit->playerId);
+    corpse->setPosition(unit->position());
+    corpse->renderer().setAngle(unit->angle());
+    corpse->setMap(unit->map());
+
+    return corpse;
+
+}

@@ -109,9 +109,9 @@ bool UnitManager::update(Time time)
         }
 
         if (unit->isDead()) {
-            DecayingEntity::Ptr corpse = unit->createCorpse();
+            DecayingEntity::Ptr corpse = UnitFactory::Inst().createCorpseFor(unit);
             if (corpse) {
-                m_decayingEntities.insert(unit->createCorpse());
+                m_decayingEntities.insert(corpse);
                 updated = true;
             }
 

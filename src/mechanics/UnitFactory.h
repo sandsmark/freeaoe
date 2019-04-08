@@ -27,6 +27,7 @@ public:
     static UnitFactory &Inst();
 
     Unit::Ptr createUnit(const int ID, const MapPos &position, const Player::Ptr &owner, UnitManager &unitManager);
+    DecayingEntity::Ptr createCorpseFor(const Unit::Ptr &unit);
 
 private:
     UnitFactory();
