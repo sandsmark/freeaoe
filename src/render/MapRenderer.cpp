@@ -19,6 +19,7 @@
 #include "MapRenderer.h"
 #include "IRenderTarget.h"
 #include "core/Constants.h"
+#include "mechanics/Player.h" // for visibilitymap
 #include <resource/AssetManager.h>
 #include <resource/DataManager.h>
 #include <SFML/Graphics/Sprite.hpp>
@@ -111,14 +112,21 @@ bool MapRenderer::update(Time /*time*/)
 
     updateTexture();
 
-    m_map->flushDirty();;
+    m_map->flushDirty();
 
     return true;
 }
 
 void MapRenderer::display()
 {
-    if (Size(m_mapRenderTexture.getSize()) != renderTarget_->getSize()) {
+    if (IS_UNLIKELY(!m_visibilityMap)) {
+        WARN << "no visibility map set";
+        return;
+    }
+
+    if (Size(m_mapRenderTexture.getSize()) != renderTarget_->getSize() || m_visibilityMap->isDirty) {
+        m_visibilityMap->isDirty = false;
+
         updateTexture();
     }
 
@@ -154,6 +162,9 @@ void MapRenderer::updateTexture()
     invalidIndicator.setOutlineThickness(3);
     invalidIndicator.setOutlineColor(sf::Color::Transparent);
 
+    sf::CircleShape noVisionindicator = invalidIndicator;
+    noVisionindicator.setFillColor(sf::Color(0, 0, 0, 200));
+
 //    sf::Text text;
 //    text.setFont(SfmlRenderTarget::defaultFont());
 //    text.setOutlineColor(sf::Color::Transparent);
@@ -162,6 +173,11 @@ void MapRenderer::updateTexture()
 
     for (int col = m_rColBegin; col < m_rColEnd; col++) {
         for (int row = m_rRowEnd-1; row >= m_rRowBegin; row--) {
+            const VisibilityMap::Visibility visibility = m_visibilityMap->visibilityAt(col, row);
+            if (visibility == VisibilityMap::Unexplored) {
+                continue;
+            }
+
             MapTile &mapTile = m_map->getTileAt(col, row);
 
             MapRect rect;
@@ -185,6 +201,7 @@ void MapRenderer::updateTexture()
                 spos.y -= mapTile.yOffset * 2;
             }
 
+
             TerrainPtr terrain = AssetManager::Inst()->getTerrain(mapTile.terrainId);
 
             if (!terrain) {
@@ -194,6 +211,13 @@ void MapRenderer::updateTexture()
             }
 
             m_textureTarget.draw(terrain->texture(mapTile), spos);
+
+            // TODO actually load the blkedge and tileedge
+            if (m_visibilityMap->visibilityAt(col, row) == VisibilityMap::Explored) {
+                noVisionindicator.setPosition(spos);
+                m_textureTarget.draw(noVisionindicator);
+            }
+
 //            text.setString(std::to_string(col) + "," + std::to_string(row));
 //            text.setPosition(spos.x, spos.y);
 //            m_textureTarget.draw(text);

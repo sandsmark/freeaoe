@@ -422,8 +422,49 @@ void Unit::setMap(const MapPtr &newMap)
     Entity::setMap(newMap);
 }
 
+inline void addLineOfSight(const int los, const MapPos offset, const std::shared_ptr<VisibilityMap> vismap)
+{
+    const int tileXOffset = offset.x / Constants::TILE_SIZE;
+    const int tileYOffset = offset.y / Constants::TILE_SIZE;
+    for (int y=-los; y<= los; y++) {
+        for (int x=-los; x<= los; x++) {
+            if (x*x + y*y > los*los) {
+                continue;
+            }
+
+            vismap->addUnitLookingAt(x + tileXOffset, y + tileYOffset);
+        }
+    }
+}
+
+inline void removeLineOfSight(const int los, const MapPos offset, const std::shared_ptr<VisibilityMap> &vismap)
+{
+    const int tileXOffset = offset.x / Constants::TILE_SIZE;
+    const int tileYOffset = offset.y / Constants::TILE_SIZE;
+    for (int y=-los; y<= los; y++) {
+        for (int x=-los; x<= los; x++) {
+            if (x*x + y*y > los*los) {
+                continue;
+            }
+
+            vismap->removeUnitLookingAt(x + tileXOffset, y + tileYOffset);
+        }
+    }
+}
+
 void Unit::setPosition(const MapPos &pos)
 {
+    if (pos == position()) {
+        return;
+    }
+
+    const int los = data()->LineOfSight;
+    Player::Ptr owner = player.lock();
+
+    if (owner) {
+        removeLineOfSight(los, position(), owner->visibility);
+    }
+
     for (Annex &annex : annexes) {
         annex.unit->setPosition(pos + annex.offset);
     }
@@ -431,6 +472,10 @@ void Unit::setPosition(const MapPos &pos)
 
     if (data()->Type >= genie::Unit::CombatantType) {
         m_unitManager.onCombatantUnitsMoved();
+    }
+
+    if (owner) {
+        addLineOfSight(los, pos, owner->visibility);
     }
 }
 

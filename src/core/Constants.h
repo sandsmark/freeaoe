@@ -22,6 +22,8 @@ namespace Constants {
 
 static const int TILE_SIZE = 48;
 
+static const int MAP_MAX_SIZE = 255;
+
 // Isometric sizes:
 static const int TILE_SIZE_VERTICAL = 48;
 static const int TILE_SIZE_HORIZONTAL = 96;

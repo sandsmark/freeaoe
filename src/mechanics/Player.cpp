@@ -7,6 +7,7 @@
 #include "resource/DataManager.h"
 
 Player::Player(const int id, const std::shared_ptr<Civilization> &c, const ResourceMap &startingResources) :
+    visibility(std::make_shared<VisibilityMap>()),
     playerId(id),
     civ(c),
     resourcesAvailable(civ->startingResources()),

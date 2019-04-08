@@ -20,6 +20,7 @@
 
 #include "core/Logger.h"
 #include "core/Types.h"
+#include "core/Constants.h"
 #include "mechanics/Entity.h"
 
 #include <genie/dat/Terrain.h>
@@ -61,7 +62,7 @@ public:
         Medium = 120,
         Large = 144,
         Huge = 200,
-        Gigantic = 255,
+        Gigantic = Constants::MAP_MAX_SIZE,
     };
     /*
    * A tiny-size map? 72 x 72.

@@ -22,6 +22,8 @@
 #include "mechanics/Map.h"
 #include "render/SfmlRenderTarget.h"
 
+class VisibilityMap;
+
 class MapRenderer : public IRenderer
 {
 
@@ -34,6 +36,7 @@ public:
     void display() override;
 
     void setMap(const MapPtr &map);
+    void setVisibilityMap(const std::shared_ptr<VisibilityMap> &visibilityMap) { m_visibilityMap = visibilityMap; }
 
     int firstVisibleRow() { return m_rRowBegin; }
     int lastVisibleRow() { return m_rRowEnd; }
@@ -45,6 +48,7 @@ private:
 
     MapPos m_lastCameraPos;
     bool m_camChanged;
+    std::shared_ptr<VisibilityMap> m_visibilityMap;
 
     MapPtr m_map;
 
