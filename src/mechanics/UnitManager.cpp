@@ -558,9 +558,6 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
 void UnitManager::setMap(const MapPtr &map)
 {
     m_map = map;
-
-    // FIXME disconnect this shit
-    map->connect(Map::Signals::UnitsChanged, std::bind(&UnitManager::onUnitsMoved, this));
 }
 
 void UnitManager::setSelectedUnits(const UnitSet &units)

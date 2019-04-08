@@ -428,6 +428,10 @@ void Unit::setPosition(const MapPos &pos)
         annex.unit->setPosition(pos + annex.offset);
     }
     Entity::setPosition(pos);
+
+    if (data()->Type >= genie::Unit::CombatantType) {
+        m_unitManager.onCombatantUnitsMoved();
+    }
 }
 
 void Unit::setUnitData(const genie::Unit &data_)

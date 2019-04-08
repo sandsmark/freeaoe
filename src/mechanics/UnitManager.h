@@ -112,7 +112,7 @@ public:
     void addMissile(const Missile::Ptr &missile) { m_missiles.insert(missile); }
     void addDecayingEntity(const DecayingEntity::Ptr &entity) { m_decayingEntities.insert(entity); }
 
-    void onUnitsMoved() { m_unitsMoved = true; }
+    void onCombatantUnitsMoved() { m_unitsMoved = true; }
 
 private:
      State m_state = State::Default;
