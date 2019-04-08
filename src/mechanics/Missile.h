@@ -32,6 +32,8 @@ public:
     bool isExploding() const { return !m_isFlying && m_renderer.currentFrame() < m_renderer.frameCount() - 1; }
 
 private:
+    void die();
+
     bool m_isFlying = true;
     std::weak_ptr<Unit> m_sourceUnit;
     std::weak_ptr<Unit> m_targetUnit;
@@ -46,6 +48,7 @@ private:
     float m_angle = 0.f;
     float m_startingElevation = 0;
     float m_blastRadius = 0.f;
+    float m_distanceLeft = 0.f;
     BlastType m_blastType = DamageTargetOnly;
     std::vector<genie::unit::AttackOrArmor> m_attacks;
 };

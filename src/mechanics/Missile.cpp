@@ -73,23 +73,20 @@ bool Missile::update(Time time)
         return false;
     }
 
+    Player::Ptr player = m_player.lock();
+
     if (position().z <= map->elevationAt(position())) {
         DBG << "we hit the ground";
-        m_renderer.setGraphic(m_data.DyingGraphic);
-        Player::Ptr player = m_player.lock();
-        if (player && m_data.DyingSound != -1) {
-            AudioPlayer::instance().playSound(m_data.DyingSound, player->civ->id());
-        }
-        m_isFlying = false;
+        die();
         return false;
     }
 
     if (m_previousUpdateTime == 0) {
-        const float distance = position().distance(m_targetPosition);
+        m_distanceLeft = position().distance(m_targetPosition);
         m_angle = std::atan2(m_targetPosition.y - position().y, m_targetPosition.x - position().x);
-        float flightTime = distance / m_data.Speed;
+        float flightTime = m_distanceLeft / m_data.Speed;
         float timeToApex = flightTime / 2;
-        m_zVelocity = m_data.Missile.ProjectileArc * distance / timeToApex;
+        m_zVelocity = m_data.Missile.ProjectileArc * m_distanceLeft / timeToApex;
         m_zAcceleration = m_zVelocity / timeToApex;
         m_previousUpdateTime = time;
         m_previousSmokeTime = time;
@@ -100,6 +97,7 @@ bool Missile::update(Time time)
     m_previousUpdateTime = time;
 
     const float movement = elapsed * m_data.Speed * 0.15;
+    m_distanceLeft -= movement;
 
     MapPos newPos = position();
     newPos.x += movement * cos(m_angle);
@@ -120,7 +118,6 @@ bool Missile::update(Time time)
     if (m_data.Moving.TrackingUnit != -1&& rand() % 100 < m_data.Moving.TrackingUnitDensity * 100 * 0.15) {
 //        DBG << (m_data.Moving.TrackingUnitDensity / 0.015) << time - m_previousSmokeTime ;
         m_previousSmokeTime = time;
-        Player::Ptr player = m_player.lock();
         if (player) {
             const genie::Unit &trailingData = player->civ->unitData(m_data.Moving.TrackingUnit);
             DecayingEntity::Ptr trailingUnit = std::make_shared<DecayingEntity>(trailingData.StandingGraphic.first, 0.f);
@@ -150,9 +147,11 @@ bool Missile::update(Time time)
         if (xDistance > xSize || yDistance > ySize) {
             return true;
         }
+        DBG << debugName << "hit out target" << targetUnit->debugName;
 
         hitUnits.push_back(targetUnit);
     } else {
+        Unit::Ptr sourceUnit = m_sourceUnit.lock();
         for (int dx = tileX-1; dx<=tileX+1; dx++) {
             for (int dy = tileY-1; dy<=tileY+1; dy++) {
                 const std::vector<std::weak_ptr<Entity>> &entities = map->entitiesAt(dx, dy);
@@ -163,6 +162,10 @@ bool Missile::update(Time time)
                 for (const std::weak_ptr<Entity> &entity : entities) {
                     Unit::Ptr otherUnit = Entity::asUnit(entity);
                     if (IS_UNLIKELY(!otherUnit)) {
+                        continue;
+                    }
+
+                    if (IS_UNLIKELY(otherUnit == sourceUnit)) {
                         continue;
                     }
 
@@ -203,18 +206,19 @@ bool Missile::update(Time time)
         hitUnits.push_back(closestUnit);
     }
 
-    if (m_data.Missile.HitMode) {
-        m_isFlying = false;
-        m_renderer.setGraphic(m_data.DyingGraphic);
-
-        Player::Ptr player = m_player.lock();
-        if (player && m_data.DyingSound != -1) {
-            AudioPlayer::instance().playSound(m_data.DyingSound, player->civ->id());
-        }
+    if (!m_data.Missile.HitMode) {
+        die();
+    } else if (m_distanceLeft <= 0) {
+        die();
     }
 
+    int playerId = player ? player->playerId : -1;
     for (Unit::Ptr &hitUnit : hitUnits) {
         if (m_blastType != DamageTrees && hitUnit->data()->Class == genie::Unit::Tree) {
+            continue;
+        }
+
+        if (m_data.Missile.HitMode && hitUnit->playerId == playerId) {
             continue;
         }
 
@@ -222,11 +226,22 @@ bool Missile::update(Time time)
         if (hitUnit->position().z < m_startingElevation) {
             damageMultiplier = 3.f/2.f;
         }
-        DBG << "hit a unit" << hitUnit->debugName << "damage multiplier" << damageMultiplier;
+        DBG << debugName << "hit a unit" << hitUnit->debugName << "damage multiplier" << damageMultiplier;
         for (const genie::unit::AttackOrArmor &attack : m_attacks) {
             hitUnit->takeDamage(attack, damageMultiplier);
         }
     }
 
     return true;
+}
+
+void Missile::die()
+{
+    m_isFlying = false;
+    m_renderer.setGraphic(m_data.DyingGraphic);
+
+    Player::Ptr player = m_player.lock();
+    if (player && m_data.DyingSound != -1) {
+        AudioPlayer::instance().playSound(m_data.DyingSound, player->civ->id());
+    }
 }
