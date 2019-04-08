@@ -114,7 +114,7 @@ bool Unit::update(Time time)
         case IAction::UpdateResult::NotUpdated:
             break;
         case IAction::UpdateResult::Failed:
-            WARN << "action failed";
+            WARN << currentAction->type << "action failed";
             m_actionQueue.clear();
             removeAction(currentAction);
             break;
@@ -353,6 +353,17 @@ void Unit::checkForAutoTargets()
             continue;
         }
         newTask = IAction::findMatchingTask(playerId, other, m_autoTargetTasks);
+        if (!newTask.data) {
+            continue;
+        }
+
+        // TODO: should only prefer civilians (and I think only wolves? lions?)
+        // should attack others as well
+        // Maybe check combat level instead? but then suddenly we get wolves trying to find a path to ships
+        if (newTask.data->ActionType == genie::Task::Combat && data()->Type == genie::Unit::PredatorAnimal && other->data()->Type != genie::Unit::Civilian) {
+            continue;
+        }
+
         if (newTask.data) {
             target = other;
             break;
