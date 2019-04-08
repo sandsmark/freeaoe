@@ -104,6 +104,8 @@ private:
     void maybePlaySound(const float pan, const float volume);
 
     struct GraphicDelta {
+        bool validForAngle(const float angle) const;
+
         GraphicRenderPtr graphic;
         ScreenPos offset;
         int angleToDrawOn = -1;

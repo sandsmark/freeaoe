@@ -46,9 +46,10 @@ bool GraphicRender::update(Time time)
 
     bool updated = false;
     for (GraphicDelta &delta : m_deltas) {
-        if (delta.angleToDrawOn >= 0 && delta.graphic->m_graphic->angleToOrientation(m_angle) != delta.angleToDrawOn) {
+        if (!delta.validForAngle(m_angle)) {
             continue;
         }
+
         updated = delta.graphic->update(time) || updated;
     }
 
@@ -59,7 +60,7 @@ bool GraphicRender::update(Time time)
     if (!m_graphic) {
         return updated;
     }
-    if (!m_graphic->getFrameRate()) {
+    if (!m_graphic->framerate()) {
         return updated;
     }
 
@@ -78,23 +79,19 @@ bool GraphicRender::update(Time time)
     if (m_lastFrameTime == 0) {
         m_lastFrameTime = time;
         newFrame = 0;
-    } else {
-        float framerate = m_graphic->getFrameRate();
+    } else if (elapsed > m_graphic->framerate() / 0.0015) {
+        if (newFrame < m_graphic->frameCount() - 1) {
+            newFrame++;
+        } else {
+            newFrame = 0;
 
-        if (elapsed > framerate / 0.0015) {
-            if (newFrame < m_graphic->frameCount() - 1) {
-                newFrame++;
-            } else {
-                newFrame = 0;
-
-                m_currentSound++;
-                if (m_currentSound > 2) {
-                    m_currentSound = 0;
-                }
+            m_currentSound++;
+            if (m_currentSound > 2) {
+                m_currentSound = 0;
             }
-
-            m_lastFrameTime = time;
         }
+
+        m_lastFrameTime = time;
     }
 
     if (newFrame != m_currentFrame) {
@@ -119,7 +116,7 @@ void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos scree
     }
 
     for (const GraphicDelta &delta : m_deltas) {
-        if (delta.angleToDrawOn >= 0 && delta.graphic->m_graphic->angleToOrientation(m_angle) != delta.angleToDrawOn) {
+        if (!delta.validForAngle(m_angle)) {
             continue;
         }
 
@@ -295,7 +292,7 @@ ScreenRect GraphicRender::rect() const
             continue;
         }
 
-        if (delta.angleToDrawOn >= 0 && delta.graphic->m_graphic->angleToOrientation(m_angle) != delta.angleToDrawOn) {
+        if (!delta.validForAngle(m_angle)) {
             continue;
         }
         const ScreenRect deltaRect = delta.graphic->rect();
@@ -378,7 +375,6 @@ void GraphicRender::maybePlaySound(const float pan, const float volume)
 
     if (m_graphic->sound() != -1 && m_currentFrame == 0) {
         AudioPlayer::instance().playSound(m_graphic->sound(), m_civId, pan, volume);
-
     }
 
     if (!m_graphic->hasSounds()) {
@@ -395,4 +391,13 @@ void GraphicRender::maybePlaySound(const float pan, const float volume)
     if (angleSound.FrameNum3 == m_currentFrame) {
         AudioPlayer::instance().playSound(angleSound.SoundID3, m_civId, pan, volume);
     }
+}
+
+bool GraphicRender::GraphicDelta::validForAngle(const float angle) const
+{
+    if (angleToDrawOn < 0) {
+        return true;
+    }
+
+    return graphic->m_graphic->angleToOrientation(angle) == angleToDrawOn;
 }

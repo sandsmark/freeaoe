@@ -305,7 +305,7 @@ const genie::GraphicAngleSound &Graphic::soundForAngle(float angle)
 }
 
 //------------------------------------------------------------------------------
-float Graphic::getFrameRate() const
+float Graphic::framerate() const
 {
     return m_data.FrameDuration;
 }

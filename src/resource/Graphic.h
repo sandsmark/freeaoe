@@ -139,7 +139,7 @@ public:
     ///
     /// @return frame rate
     //
-    float getFrameRate() const;
+    float framerate() const;
 
     //----------------------------------------------------------------------------
     ///
