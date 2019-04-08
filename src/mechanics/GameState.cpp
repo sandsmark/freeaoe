@@ -515,4 +515,7 @@ void GameState::setupGame(const GameType /*gameType*/)
     m_humanPlayer = sampleGameSetup->getHumanPlayer();
     m_players.push_back(m_humanPlayer);
     m_players.push_back(sampleGameSetup->getEnemyPlayer());
+
+    MapPos cameraPos(map_->width() / 2, map_->height()  / 2);
+    renderTarget_->camera()->setTargetPosition(cameraPos);
 }
