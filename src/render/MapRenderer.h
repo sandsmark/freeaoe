@@ -45,6 +45,7 @@ public:
 
 private:
     void updateTexture();
+    const sf::Texture &shadowMask(const genie::Slope slope, const int edges);
 
     MapPos m_lastCameraPos;
     bool m_camChanged;
@@ -58,6 +59,9 @@ private:
 
     sf::RenderTexture m_mapRenderTexture;
     SfmlRenderTarget m_textureTarget;
+
+    std::unordered_map<int, sf::Texture> m_shadowCaches;
+    std::unordered_map<int, sf::Texture> m_unexploredMaskCache;
 
     sf::Image m_mapImage;
 

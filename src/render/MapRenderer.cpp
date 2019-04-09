@@ -25,6 +25,7 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Text.hpp>
+#include <mechanics/MapTile.h>
 
 MapRenderer::MapRenderer() :
     m_camChanged(true),
@@ -211,6 +212,7 @@ void MapRenderer::updateTexture()
             }
 
             m_textureTarget.draw(terrain->texture(mapTile), spos);
+            m_textureTarget.draw(shadowMask(mapTile.slopes.self.toGenie(), 15), spos);
 
             // TODO actually load the blkedge and tileedge
             if (m_visibilityMap->visibilityAt(col, row) == VisibilityMap::Explored) {
@@ -225,4 +227,57 @@ void MapRenderer::updateTexture()
     }
 
     m_mapRenderTexture.display();
+}
+
+const sf::Texture &MapRenderer::shadowMask(const genie::Slope slope, const int edges)
+{
+    // I'm lazy, sue me
+    const int cacheIndex = slope * edges;
+    // the STL APIs are a steaming pile of shit: TODO replace them (or just start using Qt)
+    // This is "slow", but the alternative is to use an iterator and get a full copy of the texture instead of just a ref
+    if (m_shadowCaches.find(cacheIndex) != m_shadowCaches.end()) {
+        return m_shadowCaches[cacheIndex];
+    }
+//    DBG << slope << edges;
+    for (int foo=0;foo<94; foo++) {
+        const genie::VisibilityMask &mask = AssetManager::Inst()->exploredVisibilityMask(slope, foo);
+        DBG << foo << mask.lines.size();
+    }
+//    const genie::VisibilityMask &mask = AssetManager::Inst()->exploredVisibilityMask(slope, edges);
+    const genie::VisibilityMask &mask = AssetManager::Inst()->unexploredVisibilityMask(slope, edges);
+    const int width = 96;
+    const int height = 96;
+    std::vector<uint32_t> pixelsBuf(width * height);
+//    Uint8 *pixels = pixelsBuf.data();
+
+//    sf::Image image;
+//    image.create(width, height, sf::Color::Transparent);
+    DBG << mask.lines.size();
+//    uint32_t *data = pixelsBuf.data();
+    for (const genie::TileSpan &span : mask.lines) {
+//        const int startIndex = span.y * width + span.xStart;
+//        const int endIndex = span.y * width + span.xEnd;
+        if (IS_UNLIKELY(span.xEnd < span.xStart)) {
+            WARN << "bad span" << span.xStart << "to" << span.xEnd;
+            continue;
+        }
+        int count = span.xEnd - span.xStart;
+        int offset = span.y * width + span.xStart;
+        std::fill_n(pixelsBuf.begin() + offset, count, 0xff000000);
+//        std::fill_n(pixelsBuf.begin() + offset, count, 0x000000ff);
+//        memset(data + offset, 0x000000ff, count);
+//        DBG << span.y << span.xStart << span.xEnd << startIndex << endIndex << pixelsBuf.size();
+
+//        for (int index = startIndex; index < endIndex; index += 4) {
+//        for (int index = span.xStart; index < span.xEnd; index++) {
+//            DBG << index << span.y  << image.getSize();
+//            image.setPixel(index, span.y, sf::Color(255, 0, 0));
+//            pixels[index + 3] = 0xff;
+//        }
+    }
+    sf::Image image;
+    image.create(width, height, reinterpret_cast<uint8_t*>(pixelsBuf.data()));
+    m_shadowCaches[cacheIndex].loadFromImage(image);
+
+    return m_shadowCaches[cacheIndex];
 }

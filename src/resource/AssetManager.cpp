@@ -189,6 +189,17 @@ const genie::BlendMode &AssetManager::getBlendmode(unsigned int id)
     return blendomatic_file_->getBlendMode(id);
 }
 
+const genie::VisibilityMask &AssetManager::unexploredVisibilityMask(const genie::Slope slope, int edges) const
+{
+    return m_tileEdgeFile.visibilityMask(slope, edges);
+}
+
+const genie::VisibilityMask &AssetManager::exploredVisibilityMask(const genie::Slope slope, int edges) const
+{
+    return m_blkEdgeFile.visibilityMask(slope, edges);
+
+}
+
 //------------------------------------------------------------------------------
 const genie::PalFile &AssetManager::getPalette(sf::Uint32 id)
 {
@@ -305,6 +316,8 @@ bool AssetManager::initialize(const std::string &dataPath, const genie::GameVers
         m_patternmasksFile.load(dataPath + "PatternMasks.dat");
         m_patternmasksFile.icmFile.load(dataPath + "view_icm.dat");
         m_patternmasksFile.lightmapFile.load(dataPath + "lightMaps.dat");
+        m_blkEdgeFile.load(findFile("blkedge.dat"));
+        m_tileEdgeFile.load(findFile("tileedge.dat"));
     } catch (const std::exception &error) {
         WARN << "Failed to load resource" << error.what();
         return false;

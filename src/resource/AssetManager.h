@@ -32,6 +32,7 @@
 #include <genie/resource/SlpFile.h>
 #include <genie/resource/SlpTemplate.h>
 #include <genie/resource/BlendomaticFile.h>
+#include <genie/resource/EdgeFiles.h>
 #include <genie/script/ScnFile.h>
 
 class ColorPalette;
@@ -143,6 +144,9 @@ public:
 
     const genie::BlendMode &getBlendmode(unsigned int id = 0);
 
+    const genie::VisibilityMask &unexploredVisibilityMask(const genie::Slope slope, int edges) const;
+    const genie::VisibilityMask &exploredVisibilityMask(const genie::Slope slope, int edges) const;
+
     bool initialize(const std::string &dataPath, const genie::GameVersion gameVersion);
 
     static int filenameID(const std::string &filename);
@@ -169,6 +173,8 @@ private:
     genie::PatternMasksFile m_patternmasksFile;
     genie::LightmapFile m_lightmapFile;
     genie::IcmFile m_icmFile;
+    genie::TileEdgeFile m_tileEdgeFile;
+    genie::BlkEdgeFile m_blkEdgeFile;
 
     //TODO: All resources into one map?
     typedef std::unordered_map<unsigned int, GraphicPtr> GraphicMap;

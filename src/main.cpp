@@ -37,6 +37,8 @@
 #include "ui/HistoryScreen.h"
 #include "debug/SampleGameFactory.h"
 
+#include <genie/resource/EdgeFiles.h>
+
 // TODO: Bad_alloc
 int main(int argc, char **argv)
 {
