@@ -32,7 +32,8 @@ enum class RenderType {
     BuildingAlpha,
     Outline,
     ConstructAvailable,
-    ConstructUnavailable
+    ConstructUnavailable,
+    InTheShadows, // TODO find a proper name for units not visible
 };
 
 inline LogPrinter &operator <<(LogPrinter &os, const RenderType &type) {
@@ -52,6 +53,9 @@ inline LogPrinter &operator <<(LogPrinter &os, const RenderType &type) {
         break;
     case RenderType::ConstructUnavailable:
         os << "ConstructUnavailable";
+        break;
+    case RenderType::InTheShadows:
+        os << "InTheShadows";
         break;
     default:
         os << "Invalid";
@@ -122,6 +126,8 @@ private:
     GraphicPtr m_graphic;
 
     std::unique_ptr<GraphicRender> m_damageOverlay;
+
+    sf::Texture m_halfBlackTexture; // for shading half visible units
 
     bool m_frameChanged = false;
     int m_currentSound = 0;

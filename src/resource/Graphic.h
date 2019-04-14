@@ -35,7 +35,8 @@ enum class ImageType {
     Outline,
     Shadow,
     Construction,
-    ConstructionUnavailable
+    ConstructionUnavailable,
+    InTheShadows, // TODO find a proper name for units not visible
 };
 
 inline LogPrinter &operator <<(LogPrinter &os, const ImageType &type) {
@@ -178,8 +179,6 @@ private:
     genie::SlpFilePtr slp_;
 
     std::unordered_map<GraphicState, sf::Texture> m_cache;
-
-    sf::Texture m_halfBlackTexture; // for shading half visible units
 
     const genie::Graphic &m_data;
     bool m_runOnce = false;

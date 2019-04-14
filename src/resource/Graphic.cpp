@@ -153,6 +153,29 @@ sf::Image Graphic::slpFrameToImage(const genie::SlpFramePtr &frame, uint8_t play
         img.create(width, height, pixels);
         break;
     }
+    case ImageType::InTheShadows: {
+        // fuck msvc
+        std::vector<Uint8> pixelsBuf(width * height * 4);
+        Uint8 *pixels = pixelsBuf.data();
+
+        for (uint32_t row = 0; row < height; row++) {
+            for (uint32_t col = 0; col < width; col++) {
+                const uint8_t paletteIndex = frameData.pixel_indexes[row * width + col];
+                assert(paletteIndex < palette.colors_.size());
+
+                const genie::Color &g_color = palette.colors_[paletteIndex];
+                const size_t pixelPos = (row * width + col) * 4;
+
+                pixels[pixelPos    ] = g_color.r / 2;
+                pixels[pixelPos + 1] = g_color.g / 2;
+                pixels[pixelPos + 2] = g_color.b / 2;
+                pixels[pixelPos + 3] = frameData.alpha_channel[row * width + col];
+            }
+        }
+
+        img.create(width, height, pixels);
+        break;
+    }
     default:
         WARN << "Trying to get invalid image type" << imageType;
         break;

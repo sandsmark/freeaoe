@@ -156,6 +156,9 @@ void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos scree
         case RenderType::ConstructUnavailable:
             sprite.setTexture(m_graphic->texture(m_currentFrame, m_angle, m_playerId, ImageType::ConstructionUnavailable));
             break;
+        case RenderType::InTheShadows:
+            sprite.setTexture(m_graphic->texture(m_currentFrame, m_angle, m_playerId, ImageType::InTheShadows));
+            break;
         }
 
         sprite.setPosition(screenPos - m_graphic->getHotspot(m_currentFrame, m_angle));

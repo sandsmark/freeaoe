@@ -174,14 +174,20 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
 
         if (entity->isUnit()) {
             Unit::Ptr unit = Entity::asUnit(entity);
-            if (visibility == VisibilityMap::Explored && unit->playerId != GaiaID) {
+
+            if (visibility == VisibilityMap::Visible) {
+                entity->isVisible = true;
+                visibleUnits.push_back(Entity::asUnit(entity));
+                entity->renderer().render(*renderTarget->renderTarget_, camera->absoluteScreenPos(entity->position()), RenderType::Shadow);
+
                 continue;
             }
-            entity->isVisible = true;
 
-            visibleUnits.push_back(Entity::asUnit(entity));
+            if (unit->playerId != GaiaID) {
+                continue;
+            }
 
-            entity->renderer().render(*renderTarget->renderTarget_, camera->absoluteScreenPos(entity->position()), RenderType::Shadow);
+            entity->renderer().render(*renderTarget->renderTarget_, camera->absoluteScreenPos(entity->position()), RenderType::InTheShadows);
 
             continue;
         }
@@ -191,6 +197,7 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
             if (visibility == VisibilityMap::Explored && missile->playerId != GaiaID) {
                 continue;
             }
+
             entity->isVisible = true;
 
             MapPos shadowPosition = entity->position();
@@ -203,8 +210,13 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
         }
 
         if (entity->isDecayingEntity() || entity->isDoppleganger()) {
+            if (visibility == VisibilityMap::Visible) {
+                entity->renderer().render(*renderTarget->renderTarget_, camera->absoluteScreenPos(entity->position()), RenderType::Base);
+            } else {
+                entity->renderer().render(*renderTarget->renderTarget_, camera->absoluteScreenPos(entity->position()), RenderType::InTheShadows);
+            }
+
             entity->isVisible = true;
-            entity->renderer().render(*renderTarget->renderTarget_, camera->absoluteScreenPos(entity->position()), RenderType::Base);
         }
     }
     std::sort(visibleUnits.begin(), visibleUnits.end(), MapPositionSorter());
