@@ -122,6 +122,8 @@ Unit::Ptr UnitFactory::createUnit(const int ID, const MapPos &position, const Pl
         }
     }
 
+    unit->setPosition(position, true);
+
     const std::vector<genie::Task>  &taskList = DataManager::Inst().getTasks(ID);
     if (gunit.Action.DefaultTaskID >= 0 && gunit.Action.DefaultTaskID < taskList.size()) {
         handleDefaultAction(unit, taskList[gunit.Action.DefaultTaskID], unitManager);

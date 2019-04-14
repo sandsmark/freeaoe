@@ -105,7 +105,7 @@ MapPtr Entity::map() const
     return m_map.lock();
 }
 
-void Entity::setPosition(const MapPos &pos)
+void Entity::setPosition(const MapPos &pos, const bool initial)
 {
     const int oldTileX = m_position.x / Constants::TILE_SIZE;
     const int oldTileY = m_position.y / Constants::TILE_SIZE;
@@ -126,7 +126,9 @@ void Entity::setPosition(const MapPos &pos)
     if (!map) {
         return;
     }
-    map->removeEntityAt(oldTileX, oldTileY, id);
+    if (!initial) {
+        map->removeEntityAt(oldTileX, oldTileY, id);
+    }
     map->addEntityAt(newTileX, newTileY, shared_from_this());
 }
 

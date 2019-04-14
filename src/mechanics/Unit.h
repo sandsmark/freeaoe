@@ -170,7 +170,7 @@ struct Unit : public Entity
     bool isDead() const;
 
     void setMap(const MapPtr &newMap) override;
-    void setPosition(const MapPos &pos) override;
+    void setPosition(const MapPos &pos, const bool initial = false) override;
 
     void setUnitData(const genie::Unit &data_);
     const genie::Unit *data() const {return m_data; }

@@ -449,7 +449,7 @@ void Unit::setMap(const MapPtr &newMap)
     Entity::setMap(newMap);
 }
 
-void Unit::setPosition(const MapPos &pos)
+void Unit::setPosition(const MapPos &pos, const bool initial)
 {
     if (pos == position()) {
         return;
@@ -457,16 +457,16 @@ void Unit::setPosition(const MapPos &pos)
 
     Player::Ptr owner = player.lock();
 
-    if (owner) {
+    if (!initial && owner) {
         forEachVisibleTile([&](const int tileX, const int tileY) {
             owner->visibility->removeUnitLookingAt(tileX, tileY);
         });
     }
 
     for (Annex &annex : annexes) {
-        annex.unit->setPosition(pos + annex.offset);
+        annex.unit->setPosition(pos + annex.offset, initial);
     }
-    Entity::setPosition(pos);
+    Entity::setPosition(pos, initial);
 
     if (data()->Type >= genie::Unit::CombatantType) {
         m_unitManager.onCombatantUnitsMoved();

@@ -62,7 +62,7 @@ struct Entity: std::enable_shared_from_this<Entity>, SignalEmitter<Entity>
     virtual void setMap(const MapPtr &newMap);
     MapPtr map() const;
     const MapPos &position() const { return m_position; }
-    virtual void setPosition(const MapPos &pos);
+    virtual void setPosition(const MapPos &pos, const bool initial = false);
 
     bool isUnit() const { return m_type >= Type::Unit; }
     bool isBuilding() const { return m_type >= Type::Building; }
