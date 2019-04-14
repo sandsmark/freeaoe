@@ -27,13 +27,19 @@ void AllunitsGameSample::setupMap()
 
 void AllunitsGameSample::setupActors(const std::vector<Civilization::Ptr> &civilizations, const ResourceMap &startingResources)
 {
-    m_humanPlayer = std::make_shared<Player>(0, civilizations[1], startingResources);
-    m_enemyPlayer = std::make_shared<Player>(1, civilizations[2], startingResources);
+    m_gaiaPlayer = std::make_shared<Player>(UnitManager::GaiaID, civilizations[0], startingResources);
+    m_humanPlayer = std::make_shared<Player>(1, civilizations[1], startingResources);
+    m_enemyPlayer = std::make_shared<Player>(2, civilizations[2], startingResources);
 
     addHumanTownCenter();
     addHumanUnits();
     addEnemyBuildings();
     addEnemyUnits();
+}
+
+Player::Ptr AllunitsGameSample::getGaiaPlayer()
+{
+    return m_gaiaPlayer;
 }
 
 Player::Ptr AllunitsGameSample::getHumanPlayer()

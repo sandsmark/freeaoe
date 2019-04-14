@@ -49,6 +49,14 @@ struct VisibilityMap
         }
     }
 
+    void setExplored(const int tileX, const int tileY) {
+        const size_t index = tileY * Constants::MAP_MAX_SIZE + tileX;
+        if (IS_UNLIKELY(index >= m_visibility.size())) {
+            return;
+        }
+        m_visibility[index] = 0;
+    }
+
     void addUnitLookingAt(const int tileX, const int tileY) {
         const size_t index = tileY * Constants::MAP_MAX_SIZE + tileX;
         if (IS_UNLIKELY(index >= m_visibility.size())) {

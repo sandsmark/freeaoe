@@ -27,14 +27,21 @@ void BasicGameSample::setupMap()
 
 void BasicGameSample::setupActors(const std::vector<Civilization::Ptr> &civilizations, const ResourceMap &startingResources)
 {
-    m_humanPlayer = std::make_shared<Player>(0, civilizations[1], startingResources);
-    m_enemyPlayer = std::make_shared<Player>(1, civilizations[2], startingResources);
+    m_gaiaPlayer = std::make_shared<Player>(UnitManager::GaiaID, civilizations[0], startingResources);
+    m_humanPlayer = std::make_shared<Player>(1, civilizations[1], startingResources);
+    m_enemyPlayer = std::make_shared<Player>(2, civilizations[2], startingResources);
 
     addHumanTownCenter();
     addHumanWalls();
     addHumanUnits();
 
     addEnemyUnits();
+    addGaia();
+}
+
+Player::Ptr BasicGameSample::getGaiaPlayer()
+{
+    return m_gaiaPlayer;
 }
 
 Player::Ptr BasicGameSample::getHumanPlayer()
@@ -97,5 +104,15 @@ void BasicGameSample::addHumanUnits()
 void BasicGameSample::addEnemyUnits()
 {
     Unit::Ptr unit = UnitFactory::Inst().createUnit(74, MapPos(48*8, 48*8, 0), m_enemyPlayer, *unitManager_);
+    unitManager_->add(unit);
+}
+
+void BasicGameSample::addGaia()
+{
+    Unit::Ptr unit = UnitFactory::Inst().createUnit(399, MapPos(48 * 2, 48*19, 0), m_gaiaPlayer, *unitManager_); // tree
+    m_humanPlayer->visibility->setExplored(1, 18);
+    m_humanPlayer->visibility->setExplored(2, 18);
+    m_humanPlayer->visibility->setExplored(1, 19);
+    m_humanPlayer->visibility->setExplored(2, 19);
     unitManager_->add(unit);
 }

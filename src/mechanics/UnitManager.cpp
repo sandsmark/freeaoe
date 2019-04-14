@@ -167,45 +167,43 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
             continue;
         }
 
-        switch (humanPlayer->visibility->visibilityAt(entity->position())) {
-        case VisibilityMap::Unexplored:
+        const VisibilityMap::Visibility visibility = humanPlayer->visibility->visibilityAt(entity->position());
+        if (visibility == VisibilityMap::Unexplored) {
             continue;
-        case VisibilityMap::Explored: {
-            if (entity->isDoppleganger()) {
-                break;
-            }
-            if (entity->isDecayingEntity()) {
-                break;
-            }
-            Unit::Ptr unit = Entity::asUnit(entity);
-            if (unit->playerId != GaiaID) {
-                continue;
-            }
-            break;
         }
-        case VisibilityMap::Visible:
-        default:
-            break;
-
-        }
-
-        entity->isVisible = true;
 
         if (entity->isUnit()) {
+            Unit::Ptr unit = Entity::asUnit(entity);
+            if (visibility == VisibilityMap::Explored && unit->playerId != GaiaID) {
+                continue;
+            }
+            entity->isVisible = true;
+
             visibleUnits.push_back(Entity::asUnit(entity));
+
             entity->renderer().render(*renderTarget->renderTarget_, camera->absoluteScreenPos(entity->position()), RenderType::Shadow);
+
             continue;
         }
 
         if (entity->isMissile()) {
+            Missile::Ptr missile = Entity::asMissile(entity);
+            if (visibility == VisibilityMap::Explored && missile->playerId != GaiaID) {
+                continue;
+            }
+            entity->isVisible = true;
+
             MapPos shadowPosition = entity->position();
             shadowPosition.z = m_map->elevationAt(shadowPosition);
             entity->renderer().render(*renderTarget->renderTarget_, camera->absoluteScreenPos(shadowPosition), RenderType::Shadow);
 
-            visibleMissiles.push_back(Entity::asMissile(entity));
+            visibleMissiles.push_back(missile);
+
+            continue;
         }
 
-        if (entity->isDecayingEntity()) {
+        if (entity->isDecayingEntity() || entity->isDoppleganger()) {
+            entity->isVisible = true;
             entity->renderer().render(*renderTarget->renderTarget_, camera->absoluteScreenPos(entity->position()), RenderType::Base);
         }
     }

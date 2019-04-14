@@ -147,6 +147,11 @@ void MapRenderer::setMap(const MapPtr &map)
 
 void MapRenderer::updateTexture()
 {
+    if (IS_UNLIKELY(!m_visibilityMap)) {
+        WARN << "no visibility map set";
+        return;
+    }
+
     if (m_mapRenderTexture.getSize().x != renderTarget_->getSize().width || m_mapRenderTexture.getSize().y != renderTarget_->getSize().height) {
         m_mapRenderTexture.create(renderTarget_->getSize().width, renderTarget_->getSize().height);
     }

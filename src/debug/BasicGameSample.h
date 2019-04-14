@@ -32,6 +32,7 @@ public:
     void setupMap() override;
     void setupActors(const std::vector<Civilization::Ptr> &civilizations, const ResourceMap &startingResources) override;
 
+    Player::Ptr getGaiaPlayer() override;
     Player::Ptr getHumanPlayer() override;
     Player::Ptr getEnemyPlayer() override;
 
@@ -40,9 +41,11 @@ private:
     void addHumanWalls();
     void addHumanUnits();
     void addEnemyUnits();
+    void addGaia();
 
     MapPtr map_;
     std::shared_ptr<UnitManager> unitManager_;
+    Player::Ptr m_gaiaPlayer;
     Player::Ptr m_humanPlayer;
     Player::Ptr m_enemyPlayer;
 };

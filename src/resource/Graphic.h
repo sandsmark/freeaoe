@@ -179,6 +179,8 @@ private:
 
     std::unordered_map<GraphicState, sf::Texture> m_cache;
 
+    sf::Texture m_halfBlackTexture; // for shading half visible units
+
     const genie::Graphic &m_data;
     bool m_runOnce = false;
 };

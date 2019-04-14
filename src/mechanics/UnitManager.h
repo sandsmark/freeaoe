@@ -58,7 +58,7 @@ typedef std::unordered_set<Unit::Ptr> UnitSet;
 class UnitManager
 {
 public:
-    static const int GaiaID = 0;
+    static constexpr int GaiaID = 0;
 
     enum class State {
         PlacingBuilding,

@@ -11,6 +11,8 @@ struct Player;
 struct Missile : public Entity
 {
 public:
+    const int playerId = 0;
+
     enum BlastType : uint8_t {
         DamageResources = 0,
         DamageTrees = 1,

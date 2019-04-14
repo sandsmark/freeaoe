@@ -514,6 +514,8 @@ void GameState::setupGame(const GameType /*gameType*/)
    sampleGameSetup->setupActors(m_civilizations, defaultStartingResources[m_gameType]);
 
     m_humanPlayer = sampleGameSetup->getHumanPlayer();
+
+    m_players.push_back(sampleGameSetup->getGaiaPlayer());
     m_players.push_back(m_humanPlayer);
     m_players.push_back(sampleGameSetup->getEnemyPlayer());
 
