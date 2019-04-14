@@ -28,6 +28,7 @@
 #include "UnitManager.h"
 #include <genie/dat/Unit.h>
 #include "core/Utility.h"
+#include <limits>
 
 Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager) :
     Entity(Type::Unit, LanguageManager::getString(data_.LanguageDLLName) + " (" + std::to_string(data_.ID) + ")"),
@@ -342,51 +343,64 @@ void Unit::checkForAutoTargets()
         return;
     }
 
-    const float maxRange = m_data->LineOfSight * Constants::TILE_SIZE;
+    const int los = data()->LineOfSight;
+
     Task newTask;
     Unit::Ptr target;
 
-//    for (const Unit::Ptr &other : m_unitManager.units()) {
-    forEachVisibleTile([&](const int tileX, const int tileY) {
-        for (const std::weak_ptr<Entity> &weakEntity : map->entitiesAt(tileX, tileY)) {
-            Unit::Ptr other = Entity::asUnit(weakEntity);
-            if (!other) {
-                continue;
-            }
 
-            if (other->id == this->id) {
-                continue;
-            }
-            if (other->playerId == UnitManager::GaiaID) {
-                // I don't think we should auto-target gaia units?
-                continue;
-            }
-            if (other->position().distance(position()) > maxRange) {
-                continue;
-            }
-            newTask = IAction::findMatchingTask(playerId, other, m_autoTargetTasks);
-            if (!newTask.data) {
-                continue;
-            }
+    const int left = position().x / Constants::TILE_SIZE - los;
+    const int top = position().y / Constants::TILE_SIZE - los;
+    const int right = position().x / Constants::TILE_SIZE + los;
+    const int bottom = position().y / Constants::TILE_SIZE + los;
 
-            // TODO: should only prefer civilians (and I think only wolves? lions?)
-            // should attack others as well
-            // Maybe check combat level instead? but then suddenly we get wolves trying to find a path to ships
-            if (newTask.data->ActionType == genie::Task::Combat && data()->Type == genie::Unit::PredatorAnimal && other->data()->Type != genie::Unit::Civilian) {
-                continue;
-            }
+    float closestDistance = los * Constants::TILE_SIZE;
 
-            if (newTask.data) {
-                target = other;
-                break;
-            }
+    for (const std::weak_ptr<Entity> &weakEntity : map->entitiesBetween(left, top, right, bottom)) {
+        Unit::Ptr other = Entity::asUnit(weakEntity);
+        if (!other) {
+            continue;
         }
-    });
+
+        if (other->id == this->id) {
+            continue;
+        }
+        if (other->playerId == UnitManager::GaiaID) {
+            // I don't think we should auto-target gaia units?
+            continue;
+        }
+
+        const float distance = other->position().distance(position());
+
+        if (distance > closestDistance) {
+            continue;
+        }
+
+        Task potentialTask;
+        potentialTask = IAction::findMatchingTask(playerId, other, m_autoTargetTasks);
+        if (!potentialTask.data) {
+            continue;
+        }
+
+        // TODO: should only prefer civilians (and I think only wolves? lions?)
+        // should attack others as well
+        // Maybe check combat level instead? but then suddenly we get wolves trying to find a path to ships
+        if (potentialTask.data->ActionType == genie::Task::Combat && data()->Type == genie::Unit::PredatorAnimal && other->data()->Type != genie::Unit::Civilian) {
+            continue;
+        }
+
+        if (potentialTask.data) {
+            newTask = potentialTask;
+            target = other;
+            closestDistance = distance;
+        }
+    }
 
     if (!newTask.data || !target) {
         return;
     }
 
+    DBG << "found auto task" << newTask.data->actionTypeName() << "for" << debugName;
     m_unitManager.assignTask(newTask, Entity::asUnit(shared_from_this()), target);
 }
 
