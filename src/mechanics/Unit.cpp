@@ -422,47 +422,18 @@ void Unit::setMap(const MapPtr &newMap)
     Entity::setMap(newMap);
 }
 
-inline void addLineOfSight(const int los, const MapPos offset, const std::shared_ptr<VisibilityMap> vismap)
-{
-    const int tileXOffset = offset.x / Constants::TILE_SIZE;
-    const int tileYOffset = offset.y / Constants::TILE_SIZE;
-    for (int y=-los; y<= los; y++) {
-        for (int x=-los; x<= los; x++) {
-            if (x*x + y*y > los*los) {
-                continue;
-            }
-
-            vismap->addUnitLookingAt(x + tileXOffset, y + tileYOffset);
-        }
-    }
-}
-
-inline void removeLineOfSight(const int los, const MapPos offset, const std::shared_ptr<VisibilityMap> &vismap)
-{
-    const int tileXOffset = offset.x / Constants::TILE_SIZE;
-    const int tileYOffset = offset.y / Constants::TILE_SIZE;
-    for (int y=-los; y<= los; y++) {
-        for (int x=-los; x<= los; x++) {
-            if (x*x + y*y > los*los) {
-                continue;
-            }
-
-            vismap->removeUnitLookingAt(x + tileXOffset, y + tileYOffset);
-        }
-    }
-}
-
 void Unit::setPosition(const MapPos &pos)
 {
     if (pos == position()) {
         return;
     }
 
-    const int los = data()->LineOfSight;
     Player::Ptr owner = player.lock();
 
     if (owner) {
-        removeLineOfSight(los, position(), owner->visibility);
+        forEachVisibleTile([&](const int tileX, const int tileY) {
+            owner->visibility->removeUnitLookingAt(tileX, tileY);
+        });
     }
 
     for (Annex &annex : annexes) {
@@ -475,7 +446,9 @@ void Unit::setPosition(const MapPos &pos)
     }
 
     if (owner) {
-        addLineOfSight(los, pos, owner->visibility);
+        forEachVisibleTile([&](const int tileX, const int tileY) {
+            owner->visibility->addUnitLookingAt(tileX, tileY);
+        });
     }
 }
 
@@ -511,6 +484,22 @@ float Unit::distanceTo(const Unit::Ptr &otherUnit) const
     const float yDistance = std::abs(otherUnit->position().y - position().y);
 
     return std::hypot(std::max(xDistance - xSize, 0.f), std::max(yDistance - ySize, 0.f));
+}
+
+void Unit::forEachVisibleTile(std::function<void (const int, const int)> action)
+{
+    const int los = data()->LineOfSight;
+    const int tileXOffset = position().x / Constants::TILE_SIZE;
+    const int tileYOffset = position().y / Constants::TILE_SIZE;
+    for (int y=-los; y<= los; y++) {
+        for (int x=-los; x<= los; x++) {
+            if (x*x + y*y > los*los) {
+                continue;
+            }
+
+            action(x + tileXOffset, y + tileYOffset);
+        }
+    }
 }
 
 float Unit::hitpointsLeft() const

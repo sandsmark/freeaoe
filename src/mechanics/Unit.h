@@ -182,6 +182,8 @@ struct Unit : public Entity
     float distanceTo(const Unit::Ptr &otherUnit) const;
 
 protected:
+    void forEachVisibleTile(std::function<void(const int, const int)> action);
+
     Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager, const Type m_type);
 
     void removeAction(const ActionPtr &action);
