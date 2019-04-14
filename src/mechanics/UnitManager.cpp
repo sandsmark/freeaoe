@@ -48,8 +48,15 @@ UnitManager::~UnitManager()
 
 void UnitManager::add(const Unit::Ptr &unit)
 {
+    if (IS_UNLIKELY(!unit)) {
+        WARN << "trying to add null unit";
+        return;
+    }
     unit->setMap(m_map);
     m_units.insert(unit);
+    if (unit->hasAutoTargets()) {
+        m_unitsWithActions.insert(unit);
+    }
 }
 
 bool UnitManager::init()
@@ -67,7 +74,7 @@ bool UnitManager::update(Time time)
     if (m_unitsMoved) {
         m_unitsMoved = false;
 
-        for (const Unit::Ptr &unit : m_units) {
+        for (const Unit::Ptr &unit : m_unitsWithActions) {
             unit->checkForAutoTargets();
         }
     }
@@ -114,6 +121,7 @@ bool UnitManager::update(Time time)
                 m_decayingEntities.insert(corpse);
                 updated = true;
             }
+            m_unitsWithActions.erase(unit);
 
             unitIterator = m_units.erase(unitIterator);
         } else {
