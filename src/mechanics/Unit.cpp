@@ -336,39 +336,52 @@ void Unit::checkForAutoTargets()
     if (stance != Stance::Aggressive || m_autoTargetTasks.empty() || m_currentAction) {
         return;
     }
+    MapPtr map = m_map.lock();
+    if (!map) {
+        WARN << "no map";
+        return;
+    }
 
     const float maxRange = m_data->LineOfSight * Constants::TILE_SIZE;
     Task newTask;
     Unit::Ptr target;
 
-    for (const Unit::Ptr &other : m_unitManager.units()) {
-        if (other->id == this->id) {
-            continue;
-        }
-        if (other->playerId == UnitManager::GaiaID) {
-            // I don't think we should auto-target gaia units?
-            continue;
-        }
-        if (other->position().distance(position()) > maxRange) {
-            continue;
-        }
-        newTask = IAction::findMatchingTask(playerId, other, m_autoTargetTasks);
-        if (!newTask.data) {
-            continue;
-        }
+//    for (const Unit::Ptr &other : m_unitManager.units()) {
+    forEachVisibleTile([&](const int tileX, const int tileY) {
+        for (const std::weak_ptr<Entity> &weakEntity : map->entitiesAt(tileX, tileY)) {
+            Unit::Ptr other = Entity::asUnit(weakEntity);
+            if (!other) {
+                continue;
+            }
 
-        // TODO: should only prefer civilians (and I think only wolves? lions?)
-        // should attack others as well
-        // Maybe check combat level instead? but then suddenly we get wolves trying to find a path to ships
-        if (newTask.data->ActionType == genie::Task::Combat && data()->Type == genie::Unit::PredatorAnimal && other->data()->Type != genie::Unit::Civilian) {
-            continue;
-        }
+            if (other->id == this->id) {
+                continue;
+            }
+            if (other->playerId == UnitManager::GaiaID) {
+                // I don't think we should auto-target gaia units?
+                continue;
+            }
+            if (other->position().distance(position()) > maxRange) {
+                continue;
+            }
+            newTask = IAction::findMatchingTask(playerId, other, m_autoTargetTasks);
+            if (!newTask.data) {
+                continue;
+            }
 
-        if (newTask.data) {
-            target = other;
-            break;
+            // TODO: should only prefer civilians (and I think only wolves? lions?)
+            // should attack others as well
+            // Maybe check combat level instead? but then suddenly we get wolves trying to find a path to ships
+            if (newTask.data->ActionType == genie::Task::Combat && data()->Type == genie::Unit::PredatorAnimal && other->data()->Type != genie::Unit::Civilian) {
+                continue;
+            }
+
+            if (newTask.data) {
+                target = other;
+                break;
+            }
         }
-    }
+    });
 
     if (!newTask.data || !target) {
         return;
