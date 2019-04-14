@@ -11,8 +11,8 @@
 #include "resource/DataManager.h"
 #include "audio/AudioPlayer.h"
 
-Building::Building(const genie::Unit &data_, const std::shared_ptr<Player> &player, UnitManager &unitManager) :
-    Unit(data_, player, unitManager, Entity::Type::Building)
+Building::Building(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager) :
+    Unit(data_, player_, unitManager, Entity::Type::Building)
 {
 
 }
