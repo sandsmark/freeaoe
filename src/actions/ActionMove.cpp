@@ -157,7 +157,7 @@ IAction::UpdateResult ActionMove::update(Time time)
     Unit::Ptr unit = m_unit.lock();
     if (!unit) {
         WARN << "My unit got deleted";
-        return UpdateResult::Completed;
+        return UpdateResult::Failed;
     }
 
     if (m_passableDirty) {
@@ -200,8 +200,9 @@ IAction::UpdateResult ActionMove::update(Time time)
         updatePath();
 
         if (m_path.empty()) {
+            WARN << "failed to find new target path";
             target_reached = true;
-            return UpdateResult::Completed;
+            return UpdateResult::Failed;
         }
 
         return UpdateResult::NotUpdated;
@@ -235,7 +236,7 @@ IAction::UpdateResult ActionMove::update(Time time)
         if (partial.size() < 2) {
             WARN << "failed to find intermediary path";
             target_reached = true;
-            return UpdateResult::Completed;
+            return UpdateResult::Failed;
         } else {
             m_path.insert(m_path.begin(), ++partial.begin(), partial.end());
             return UpdateResult::Updated;
@@ -251,11 +252,6 @@ IAction::UpdateResult ActionMove::update(Time time)
     unit->setPosition(newPos);
 
     m_prevTime = time;
-
-    if (std::hypot(newPos.x - dest_.x, newPos.y - dest_.y) < movement) {
-        target_reached = true;
-        return UpdateResult::Completed;
-    }
 
     return UpdateResult::Updated;
 }
