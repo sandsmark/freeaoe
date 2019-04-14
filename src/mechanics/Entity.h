@@ -68,12 +68,14 @@ struct Entity: std::enable_shared_from_this<Entity>, SignalEmitter<Entity>
     bool isBuilding() const { return m_type >= Type::Building; }
     bool isMissile() const { return m_type == Type::Missile; }
     bool isDecayingEntity() const { return m_type == Type::Decaying; }
+    bool isDoppleganger() const { return m_type == Type::Doppleganger; }
 
 protected:
     enum class Type {
         None,
         MoveTargetMarker,
         Decaying,
+        Doppleganger, // units that we have seen, but have lost vision of (typically buildings)
         Missile,
         Unit,
         Building,
