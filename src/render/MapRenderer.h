@@ -22,7 +22,7 @@
 #include "mechanics/Map.h"
 #include "render/SfmlRenderTarget.h"
 
-class VisibilityMap;
+struct VisibilityMap;
 
 class MapRenderer : public IRenderer
 {

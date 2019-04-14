@@ -133,6 +133,12 @@ bool UnitManager::update(Time time)
 
 void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, const std::vector<std::weak_ptr<Entity>> &visible)
 {
+    Player::Ptr humanPlayer = m_humanPlayer.lock();
+    if (!humanPlayer) {
+        WARN << "human gone!";
+        return;
+    }
+
     CameraPtr camera = renderTarget->camera();
 
     if (Size(m_outlineOverlay.getSize()) != renderTarget->getSize()) {
@@ -159,6 +165,28 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
         if (!entity) {
             WARN << "got dead entity";
             continue;
+        }
+
+        switch (humanPlayer->visibility->visibilityAt(entity->position())) {
+        case VisibilityMap::Unexplored:
+            continue;
+        case VisibilityMap::Explored: {
+            if (entity->isDoppleganger()) {
+                break;
+            }
+            if (entity->isDecayingEntity()) {
+                break;
+            }
+            Unit::Ptr unit = Entity::asUnit(entity);
+            if (unit->playerId != GaiaID) {
+                continue;
+            }
+            break;
+        }
+        case VisibilityMap::Visible:
+        default:
+            break;
+
         }
 
         entity->isVisible = true;

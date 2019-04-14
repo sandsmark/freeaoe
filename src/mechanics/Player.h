@@ -30,6 +30,9 @@ struct VisibilityMap
 
     VisibilityMap() { m_visibility.fill(-1); }
 
+    inline Visibility visibilityAt(const MapPos &pos) {
+        return visibilityAt(pos.x / Constants::TILE_SIZE, pos.y / Constants::TILE_SIZE);
+    }
 
     inline Visibility visibilityAt(const int tileX, const int tileY) {
         const size_t index = tileY * Constants::MAP_MAX_SIZE + tileX;
