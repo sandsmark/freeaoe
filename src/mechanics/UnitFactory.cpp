@@ -75,7 +75,6 @@ Unit::Ptr UnitFactory::createUnit(const int ID, const MapPos &position, const Pl
         unit = std::make_shared<Unit>(gunit, owner, unitManager);
     }
 
-    unit->setPosition(position);
 
     for (const genie::Unit::ResourceStorage &res : gunit.ResourceStorages) {
         if (res.Type == -1) {
@@ -99,7 +98,6 @@ Unit::Ptr UnitFactory::createUnit(const int ID, const MapPos &position, const Pl
 
             Unit::Annex annex;
             annex.unit = std::make_shared<Unit>(stackData, owner, unitManager);
-            annex.unit->setPosition(position + annex.offset);
             unit->annexes.push_back(annex);
         }
 
@@ -113,7 +111,6 @@ Unit::Ptr UnitFactory::createUnit(const int ID, const MapPos &position, const Pl
             Unit::Annex annex;
             annex.offset = MapPos(annexData.Misplacement.first * -48, annexData.Misplacement.second * -48);
             annex.unit = std::make_shared<Unit>(gunit, owner, unitManager);
-            annex.unit->setPosition(position + annex.offset);
             unit->annexes.push_back(annex);
         }
 
