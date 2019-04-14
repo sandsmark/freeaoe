@@ -22,13 +22,13 @@ struct VisibilityMap
 {
     bool isDirty = true; // needs re-render
 
-    enum Visibility {
-        Unexplored,
-        Explored,
+    enum Visibility : int {
+        Unexplored = std::numeric_limits<int>::min(),
+        Explored = 0,
         Visible
     };
 
-    VisibilityMap() { m_visibility.fill(-1); }
+    VisibilityMap() { m_visibility.fill(Unexplored); }
 
     inline Visibility visibilityAt(const MapPos &pos) {
         return visibilityAt(pos.x / Constants::TILE_SIZE, pos.y / Constants::TILE_SIZE);
@@ -39,13 +39,13 @@ struct VisibilityMap
         if (IS_UNLIKELY(index >= m_visibility.size())) {
             return Unexplored;
         }
-        switch(m_visibility[index]) {
-        case -1:
-            return Unexplored;
-        case 0:
-            return Explored;
-        default:
+
+        if (m_visibility[index] > 0) {
             return Visible;
+        } else if (m_visibility[index] == Unexplored) {
+            return Unexplored;
+        } else {
+            return Explored;
         }
     }
 
@@ -54,7 +54,8 @@ struct VisibilityMap
         if (IS_UNLIKELY(index >= m_visibility.size())) {
             return;
         }
-        m_visibility[index] = 0;
+        m_visibility[index] = Explored;
+        isDirty = true;
     }
 
     void addUnitLookingAt(const int tileX, const int tileY) {
@@ -62,11 +63,16 @@ struct VisibilityMap
         if (IS_UNLIKELY(index >= m_visibility.size())) {
             return;
         }
-        if (m_visibility[index] <= 0) {
+
+        if (m_visibility[index] == Unexplored) {
+            m_visibility[index] = Visible;
             isDirty = true;
-            m_visibility[index] = 1;
         } else {
             m_visibility[index]++;
+
+            if (m_visibility[index] == Visible) {
+                isDirty = true;
+            }
         }
     }
 
@@ -76,14 +82,15 @@ struct VisibilityMap
             return;
         }
 
-        if (IS_UNLIKELY(m_visibility[index] <= 0)) {
+        if (IS_UNLIKELY(m_visibility[index] == Unexplored)) {
             return;
         }
 
-        m_visibility[index]--;
-        if (!m_visibility[index]) {
+        if (m_visibility[index] == Visible) {
             isDirty = true;
         }
+
+        m_visibility[index]--;
     }
 
 private:

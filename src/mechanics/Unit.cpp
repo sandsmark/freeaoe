@@ -65,6 +65,12 @@ Unit::~Unit()
 {
     Player::Ptr owner = player.lock();
     if (owner) {
+        if (owner) {
+            forEachVisibleTile([&](const int tileX, const int tileY) {
+                owner->visibility->removeUnitLookingAt(tileX, tileY);
+            });
+        }
+
         owner->removeUnit(this);
     }
 }
@@ -463,19 +469,20 @@ void Unit::setPosition(const MapPos &pos, const bool initial)
         });
     }
 
-    for (Annex &annex : annexes) {
-        annex.unit->setPosition(pos + annex.offset, initial);
-    }
     Entity::setPosition(pos, initial);
-
-    if (data()->Type >= genie::Unit::CombatantType) {
-        m_unitManager.onCombatantUnitsMoved();
-    }
 
     if (owner) {
         forEachVisibleTile([&](const int tileX, const int tileY) {
             owner->visibility->addUnitLookingAt(tileX, tileY);
         });
+    }
+
+    for (Annex &annex : annexes) {
+        annex.unit->setPosition(pos + annex.offset, initial);
+    }
+
+    if (data()->Type >= genie::Unit::CombatantType) {
+        m_unitManager.onCombatantUnitsMoved();
     }
 }
 
