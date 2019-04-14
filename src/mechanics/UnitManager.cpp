@@ -195,6 +195,8 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
                 continue;
             }
 
+            entity->isVisible = true;
+
             entity->renderer().render(*renderTarget->renderTarget_, camera->absoluteScreenPos(entity->position()), RenderType::InTheShadows);
 
             continue;
