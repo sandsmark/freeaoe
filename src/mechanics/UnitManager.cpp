@@ -510,7 +510,11 @@ void UnitManager::onRightClick(const ScreenPos &screenPos, const CameraPtr &came
             }
 
             unit->clearActionQueue();
-            assignTask(task, unit, unitAt(screenPos, camera));
+            Unit::Ptr target = unitAt(screenPos, camera);
+            assignTask(task, unit, target);
+            if (target) {
+                target->targetBlinkTimeLeft = 3000; // 3s
+            }
         }
 
         return;
@@ -760,10 +764,6 @@ void UnitManager::assignTask(const Task &task, const Unit::Ptr &unit, const Unit
     if (!task.data) {
         WARN << "no task data";
         return;
-    }
-
-    if (target) {
-        target->targetBlinkTimeLeft = 3000; // 3s
     }
 
     if (task.unitId != unit->data()->ID) {
