@@ -2,7 +2,7 @@
 	path = extern/genieutils
 	url = https://github.com/sandsmark/genieutils.git
 [submodule "extern/geniedoc"]
-	path = extern/geniedoc
+	path = doc/geniedoc
 	url = https://github.com/aap/geniedoc.git
 [submodule "extern/pcrio"]
 	path = extern/pcrio
