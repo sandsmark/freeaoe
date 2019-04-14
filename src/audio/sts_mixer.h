@@ -53,7 +53,7 @@ struct sts_mixer_sample_t {
   unsigned int              length;           // length in samples (so 1024 samples of STS_MIXER_SAMPLE_FORMAT_16 would be 2048 bytes)
   unsigned int              frequency;        // frequency of this sample (e.g. 44100, 22000 ...)
   int                       audio_format;     // one of STS_MIXER_SAMPLE_FORMAT_*
-  std::shared_ptr<uint8_t>  data;             // pointer to the wav data
+  std::shared_ptr<uint8_t[]>  data;             // pointer to the wav data
   unsigned char             *audiodata;       // pointer to the actual audio data
 };
 
@@ -105,7 +105,7 @@ struct sts_mixer_t {
   float                     gain;             // the global gain (you can change it if you want to change to overall volume)
   unsigned int              frequency;        // the frequency for the output of mixed audio data
   int                       audio_format;     // the audio format for the output of mixed audio data
-  sts_mixer_voice_t         voices[STS_MIXER_VOICES]; // holding all audio voices for this state
+  sts_mixer_voice_t         voices[STS_MIXER_VOICES]{}; // holding all audio voices for this state
 };
 
 

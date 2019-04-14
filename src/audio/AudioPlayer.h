@@ -19,7 +19,7 @@ public:
     static AudioPlayer &instance();
 
 private:
-    void playSample(const std::shared_ptr<uint8_t> &data, const float pan = 0.f, const float volume = 1.f);
+    void playSample(const std::shared_ptr<uint8_t[]> &data, const float pan = 0.f, const float volume = 1.f);
 
     static uint32_t malCallback(mal_device *device, uint32_t frameCount, void *buffer);
 

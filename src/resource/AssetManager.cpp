@@ -75,10 +75,10 @@ std::shared_ptr<genie::UIFile> AssetManager::getUIFile(const std::string &name)
     return m_interfaceFile->getUIFile(filenameID(name));
 }
 
-std::shared_ptr<uint8_t> AssetManager::getWavPtr(unsigned int id)
+std::shared_ptr<uint8_t[]> AssetManager::getWavPtr(unsigned int id)
 {
-    std::weak_ptr<uint8_t> weakPtr = m_wavCache[id];
-    std::shared_ptr<uint8_t> wavPtr = weakPtr.lock();
+    std::weak_ptr<uint8_t[]> weakPtr = m_wavCache[id];
+    std::shared_ptr<uint8_t[]> wavPtr = weakPtr.lock();
     if (wavPtr) {
         return wavPtr;
     }

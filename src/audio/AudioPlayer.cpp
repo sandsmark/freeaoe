@@ -92,7 +92,7 @@ struct WavHeader {
     uint32_t Subchunk2Size;
 };
 
-void AudioPlayer::playSample(const std::shared_ptr<uint8_t> &data, const float pan, const float volume)
+void AudioPlayer::playSample(const std::shared_ptr<uint8_t[]> &data, const float pan, const float volume)
 {
     std::lock_guard<std::mutex> guard(m_mutex);
 
@@ -168,7 +168,7 @@ void AudioPlayer::playSound(const int id, const int civilization, const float pa
 
 //    DBG << "playing" << sound.Items[selected].FileName;
 
-    std::shared_ptr<uint8_t> wavPtr = AssetManager::Inst()->getWavPtr(wavId);
+    std::shared_ptr<uint8_t[]> wavPtr = AssetManager::Inst()->getWavPtr(wavId);
     if (!wavPtr) {
         WARN << "failed to get wav data for" << wavId;
         return;

@@ -117,7 +117,7 @@ public:
 
     std::shared_ptr<genie::UIFile> getUIFile(const std::string &name);
 
-    std::shared_ptr<uint8_t> getWavPtr(unsigned int id);
+    std::shared_ptr<uint8_t[]> getWavPtr(unsigned int id);
 
     genie::SlpTemplateFilePtr getSlpTemplateFile() { return m_stemplatesFile; }
     const genie::FiltermapFile &filtermapFile() { return m_filtermapFile; }
@@ -183,7 +183,7 @@ private:
     typedef std::unordered_map<unsigned int, TerrainPtr> TerrainMap;
     TerrainMap terrains_;
 
-    std::unordered_map<unsigned int, std::weak_ptr<uint8_t>> m_wavCache;
+    std::unordered_map<unsigned int, std::weak_ptr<uint8_t[]>> m_wavCache;
 
     genie::GameVersion m_gameVersion;
     std::string m_dataPath;

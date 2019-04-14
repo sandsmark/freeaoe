@@ -371,7 +371,6 @@ const std::vector<std::weak_ptr<Entity> > &Map::entitiesAt(unsigned int col, uns
     unsigned int index = row * cols_ + col;
 
     if (IS_UNLIKELY(index >= m_tileUnits.size())) {
-        WARN << "Trying to get MapTile out of range!";
         static const std::vector<std::weak_ptr<Entity>> nullVector;
         return nullVector;
     }
