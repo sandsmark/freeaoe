@@ -117,7 +117,6 @@ public:
 private:
      State m_state = State::Default;
 
-    void updateVisibility(const std::vector<Unit::Ptr> &visibleUnits);
     void playSound(const Unit::Ptr &unit);
 
     std::unordered_set<Missile::Ptr> m_missiles;

@@ -735,23 +735,6 @@ void UnitManager::moveUnitTo(const Unit::Ptr &unit, const MapPos &targetPos)
     unit->setCurrentAction(ActionMove::moveUnitTo(unit, targetPos, m_map, this));
 }
 
-void UnitManager::updateVisibility(const std::vector<Unit::Ptr> &visibleUnits)
-{
-    // I'm lazy
-    for (const Unit::Ptr &unit : m_units) {
-        unit->isVisible = false;
-    }
-    for (const Missile::Ptr &missile : m_missiles) {
-        missile->isVisible = false;
-    }
-    for (const DecayingEntity::Ptr &corpse : m_decayingEntities) {
-        corpse->isVisible = false;
-    }
-    for (const Unit::Ptr &unit : visibleUnits) {
-        unit->isVisible = true;
-    }
-}
-
 void UnitManager::assignTask(const Task &task, const Unit::Ptr &unit, const Unit::Ptr &target)
 {
     if (!task.data) {
