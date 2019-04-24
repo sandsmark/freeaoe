@@ -527,11 +527,9 @@ void Unit::forEachVisibleTile(std::function<void (const int, const int)> action)
     const int tileYOffset = position().y / Constants::TILE_SIZE;
     for (int y=-los; y<= los; y++) {
         for (int x=-los; x<= los; x++) {
-            if (x*x + y*y > los*los) {
-                continue;
+            if (x*x + y*y < los*los) {
+                action(x + tileXOffset, y + tileYOffset);
             }
-
-            action(x + tileXOffset, y + tileYOffset);
         }
     }
 }
