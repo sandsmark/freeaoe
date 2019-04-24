@@ -210,3 +210,172 @@ void Player::removeUnit(Unit *unit)
     m_units.insert(unit);
     m_units.erase(unit);
 }
+
+VisibilityMap::VisibilityMap()
+{
+    int count = 0;
+    for (int edge=0; edge<256; edge++) {
+        bool isValid = true;
+//        bool west = (edge & West);
+//        bool south = (edge & South);
+//        bool east = (edge & East);
+//        bool north = (edge & North);
+
+//        bool southWest = (edge & SouthWest);
+//        bool southEast = (edge & SouthEast);
+//        bool northWest = (edge & NorthWest);
+//        bool northEast = (edge & NorthEast);
+
+        bool west = (edge & West) == West;
+        bool south = (edge & South) == South;
+        bool east = (edge & East) == East;
+        bool north = (edge & North) == North;
+
+        bool southWest = (edge & SouthWest) == SouthWest;
+        bool southEast = (edge & SouthEast) == SouthEast;
+        bool northWest = (edge & NorthWest) == NorthWest;
+        bool northEast = (edge & NorthEast) == NorthEast;
+
+        if (southWest && (west || north)) {
+            isValid = false;
+        }
+        if (southEast && (east || north)) {
+            isValid = false;
+        }
+        if (northEast && (east || south)) {
+            isValid = false;
+        }
+//        if (northWest && (east || south)) {
+//            isValid = false;
+//        }
+
+//        if (edge & SouthWest && (edge & West || edge & North)) {
+//            isValid = false;
+//        }
+//        if (edge & SouthEast && (edge & East || edge & North)) {
+//            isValid = false;
+//        }
+//        if (edge & NorthEast && (edge & South || edge & East)) {
+//            isValid = false;
+//        }
+//        if (edge & NorthWest && (edge & West || edge & South)) {
+//            isValid = false;
+//        }
+//        if (isValid) {
+        if ((((edge & NorthWest) != NorthWest) || ((!west && (!south)))) && (isValid)) {
+            m_edgetileLut[edge] = count++;
+        } else {
+            m_edgetileLut[edge] = -1;
+//            m_edgetileLut[edge] = 0;
+        }
+    }
+
+    for (int edge=0; edge<256; edge++) {
+        if (m_edgetileLut[edge] != -1) {
+            continue;
+        }
+//        int west = num & 1;
+//        int south = num & 2;
+//        int east = num & 4;
+//        int north = num & 8;
+//        if ((num & 0x80) != 0) {
+//            north = 0;
+//            west = 0;
+//        }
+//        if ((num & 0x40) != 0) {
+//            north = 0;
+//            east = 0;
+//        }
+//        if ((num & 0x20) != 0) {
+//            east = 0;
+//            south = 0;
+//        }
+//        if ((num & 0x10) != 0) {
+//            south = 0;
+//            west = 0;
+//        }
+//        m_edgetileLut[num] = m_edgetileLut[(num & 0xf0) | north | east | south | west];
+
+        int west = edge & West;
+        int south = edge & South;
+        int east = edge & East;
+        int north = edge & North;
+
+        if (edge & SouthWest) {
+            north = 0;
+            west = 0;
+        }
+
+        if (edge & SouthEast) {
+            north = 0;
+            east = 0;
+        }
+
+        if (edge & NorthEast) {
+            east = 0;
+            south = 0;
+        }
+
+        if (edge & NorthWest) {
+            south = 0;
+            west = 0;
+        }
+        m_edgetileLut[edge] = m_edgetileLut[west | south | east | north | (edge & (NorthWest | NorthEast | SouthEast |  SouthWest))];
+    }
+    for (int edge=0; edge<256; edge++) {
+        if (m_edgetileLut[edge] != -1) {
+            continue;
+        }
+        WARN << edge;
+        m_edgetileLut[edge] = 0;
+    }
+    m_visibility.fill(Explored);
+}
+
+int VisibilityMap::edges(const int tileX, const int tileY) const
+{
+    if (visibilityAt(tileX, tileY) != Visible) {
+        return 0;
+    }
+    int edges = 0;
+//    if (visibilityAt(tileX    , tileY - 1) == Visible) { ret |= SouthWest; }
+//    if (visibilityAt(tileX + 1, tileY + 0) == Visible) { ret |= 0x40; }
+//    if (visibilityAt(tileX    , tileY + 1) == Visible) { ret |= 0x20; }
+//    if (visibilityAt(tileX - 1, tileY + 1) == Visible) { ret |= 0x10; }
+//    if (visibilityAt(tileX + 1, tileY    ) == Visible) { ret |= 8; }
+//    if (visibilityAt(tileX + 1, tileY + 1) == Visible) { ret |= 4; }
+//    if (visibilityAt(tileX - 1, tileY + 1) == Visible) { ret |= 2; }
+//    if (visibilityAt(tileX - 1, tileY    ) == Visible) { ret |= 1; }
+
+//    if (visibilityAt( tileX    , tileY    ) != Visible) { ret |= 0x80; }
+//    if (visibilityAt( tileX + 1, tileY + 1) != Visible) { ret |= 0x40; }
+//    if (visibilityAt( tileX + 2, tileY    ) != Visible) { ret |= 0x20; }
+//    if (visibilityAt( tileX + 1, tileY - 1) != Visible) { ret |= 0x10; }
+//    if (visibilityAt( tileX    , tileY + 1) != Visible) { ret |= 8; }
+//    if (visibilityAt( tileX + 2, tileY + 1) != Visible) { ret |= 4; }
+//    if (visibilityAt( tileX + 2, tileY - 1) != Visible) { ret |= 2; }
+//    if (visibilityAt( tileX    , tileY - 1) != Visible) { ret |= 1; }
+
+//    if (visibilityAt(tileX - 1, tileY + 0) != Visible) { ret |= NorthWest; }
+//    if (visibilityAt(tileX + 1, tileY + 0) != Visible) { ret |= SouthEast; }
+//    if (visibilityAt(tileX + 0, tileY - 1) != Visible) { ret |= SouthWest; }
+//    if (visibilityAt(tileX + 0, tileY + 1) != Visible) { ret |= NorthEast; }
+//    if (visibilityAt(tileX - 1, tileY - 1) != Visible) { ret |= East; }
+//    if (visibilityAt(tileX - 1, tileY + 1) != Visible) { ret |= South; }
+//    if (visibilityAt(tileX + 1, tileY - 1) != Visible) { ret |= North; }
+//    if (visibilityAt(tileX + 1, tileY + 1) != Visible) { ret |= West; }
+
+    if (visibilityAt(tileX - 1, tileY + 0) != Visible) { edges |= SouthWest; }
+    if (visibilityAt(tileX + 1, tileY + 0) != Visible) { edges |= NorthEast; }
+    if (visibilityAt(tileX + 0, tileY - 1) != Visible) { edges |= NorthWest; }
+    if (visibilityAt(tileX + 0, tileY + 1) != Visible) { edges |= SouthEast; }
+
+    if (visibilityAt(tileX - 1, tileY - 1) != Visible) { edges |= East; }
+    if (visibilityAt(tileX - 1, tileY + 1) != Visible) { edges |= North; }
+    if (visibilityAt(tileX + 1, tileY - 1) != Visible) { edges |= South; }
+    if (visibilityAt(tileX + 1, tileY + 1) != Visible) { edges |= West; }
+
+//    return ret + 1;
+//    return m_edgetileLut[ret ^ 0xff]*2;
+    return m_edgetileLut[edges]*2 + 1;
+}

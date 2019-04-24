@@ -48,7 +48,7 @@ int main(int argc, char **argv)
     config.setAllowedOptions({
             {"game-path", "Path to AoE installation with data files", Config::Stored },
             {"scenario-file", "Path to scenario file to load", Config::NotStored },
-            {"single-player", "Path to scenario file to load", Config::NotStored },
+            {"single-player", "Launch a simple test map", Config::NotStored },
             {"game-sample", "Game samples to load", Config::NotStored }
             });
     if (!config.parseOptions(argc, argv)) {

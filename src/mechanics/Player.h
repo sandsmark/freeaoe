@@ -20,6 +20,18 @@ class EffectCommand;
 
 struct VisibilityMap
 {
+    enum Direction {
+        West = 1 << 0, // 0x1
+        South = 1 << 1, // 0x2
+        East = 1 << 2, // 0x4
+        North = 1 << 3, // 0x8
+
+        NorthWest = 1 << 4, // 0x10
+        NorthEast = 1 << 5, // 0x20
+        SouthEast = 1 << 6, // 0x40
+        SouthWest = 1 << 7, // 0x80
+    };
+
     bool isDirty = true; // needs re-render
 
     enum Visibility : int {
@@ -28,13 +40,13 @@ struct VisibilityMap
         Visible
     };
 
-    VisibilityMap() { m_visibility.fill(Unexplored); }
+    VisibilityMap();
 
-    inline Visibility visibilityAt(const MapPos &pos) {
+    inline Visibility visibilityAt(const MapPos &pos) const {
         return visibilityAt(pos.x / Constants::TILE_SIZE, pos.y / Constants::TILE_SIZE);
     }
 
-    inline Visibility visibilityAt(const int tileX, const int tileY) {
+    inline Visibility visibilityAt(const int tileX, const int tileY) const {
         const size_t index = tileY * Constants::MAP_MAX_SIZE + tileX;
         if (IS_UNLIKELY(index >= m_visibility.size())) {
             return Unexplored;
@@ -93,8 +105,11 @@ struct VisibilityMap
         m_visibility[index]--;
     }
 
+    int edges(const int tileX, const int tileY) const;
+
 private:
     std::array<int, Constants::MAP_MAX_SIZE * Constants::MAP_MAX_SIZE> m_visibility;
+    int m_edgetileLut[256];
 };
 
 struct Player
