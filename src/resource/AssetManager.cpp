@@ -191,12 +191,12 @@ const genie::BlendMode &AssetManager::getBlendmode(unsigned int id)
 
 const genie::VisibilityMask &AssetManager::unexploredVisibilityMask(const genie::Slope slope, int edges) const
 {
-    return m_tileEdgeFile.visibilityMask(slope, edges);
+    return m_blkEdgeFile.visibilityMask(slope, edges);
 }
 
 const genie::VisibilityMask &AssetManager::exploredVisibilityMask(const genie::Slope slope, int edges) const
 {
-    return m_blkEdgeFile.visibilityMask(slope, edges);
+    return m_tileEdgeFile.visibilityMask(slope, edges);
 
 }
 

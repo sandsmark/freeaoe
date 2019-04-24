@@ -46,6 +46,7 @@ public:
 private:
     void updateTexture();
     const sf::Texture &shadowMask(const genie::Slope slope, const int edges);
+    const sf::Texture &unexploredMask(const genie::Slope slope, const int edges);
 
     MapPos m_lastCameraPos;
     bool m_camChanged;

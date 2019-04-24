@@ -34,10 +34,10 @@ struct VisibilityMap
         return visibilityAt(pos.x / Constants::TILE_SIZE, pos.y / Constants::TILE_SIZE);
     }
 
-    inline Visibility visibilityAt(const int tileX, const int tileY) const {
+    inline Visibility visibilityAt(const int tileX, const int tileY, const Visibility def = Unexplored) const {
         const size_t index = tileY * Constants::MAP_MAX_SIZE + tileX;
         if (IS_UNLIKELY(index >= m_visibility.size())) {
-            return Unexplored;
+            return def;
         }
 
         if (m_visibility[index] > 0) {
@@ -93,7 +93,7 @@ struct VisibilityMap
         m_visibility[index]--;
     }
 
-    int edgeShadowTile(const int tileX, const int tileY) const;
+    int edgeTileNum(const int tileX, const int tileY, const Visibility type) const;
 
 private:
     std::array<int, Constants::MAP_MAX_SIZE * Constants::MAP_MAX_SIZE> m_visibility;

@@ -285,22 +285,22 @@ VisibilityMap::VisibilityMap()
         m_edgetileLut[edge] = m_edgetileLut[aliasEdge];
     }
 
-    m_visibility.fill(Explored);
+    m_visibility.fill(Unexplored);
 }
 
-int VisibilityMap::edgeShadowTile(const int tileX, const int tileY) const
+int VisibilityMap::edgeTileNum(const int tileX, const int tileY, const Visibility type) const
 {
     int edges = 0;
 
-    if (visibilityAt(tileX - 1, tileY + 0) != Visible) { edges |= SouthWest; }
-    if (visibilityAt(tileX + 1, tileY + 0) != Visible) { edges |= NorthEast; }
-    if (visibilityAt(tileX + 0, tileY - 1) != Visible) { edges |= NorthWest; }
-    if (visibilityAt(tileX + 0, tileY + 1) != Visible) { edges |= SouthEast; }
+    if (visibilityAt(tileX - 1, tileY + 0, type) <= type) { edges |= SouthWest; }
+    if (visibilityAt(tileX + 1, tileY + 0, type) <= type) { edges |= NorthEast; }
+    if (visibilityAt(tileX + 0, tileY - 1, type) <= type) { edges |= NorthWest; }
+    if (visibilityAt(tileX + 0, tileY + 1, type) <= type) { edges |= SouthEast; }
 
-    if (visibilityAt(tileX - 1, tileY - 1) != Visible) { edges |= West; }
-    if (visibilityAt(tileX - 1, tileY + 1) != Visible) { edges |= North; }
-    if (visibilityAt(tileX + 1, tileY - 1) != Visible) { edges |= South; }
-    if (visibilityAt(tileX + 1, tileY + 1) != Visible) { edges |= East; }
+    if (visibilityAt(tileX - 1, tileY - 1, type) <= type) { edges |= West; }
+    if (visibilityAt(tileX - 1, tileY + 1, type) <= type) { edges |= North; }
+    if (visibilityAt(tileX + 1, tileY - 1, type) <= type) { edges |= South; }
+    if (visibilityAt(tileX + 1, tileY + 1, type) <= type) { edges |= East; }
 
     return m_edgetileLut[edges];
 }
