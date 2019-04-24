@@ -232,22 +232,12 @@ void MapRenderer::updateTexture()
     m_mapRenderTexture.display();
 }
 
-const sf::Texture &MapRenderer::shadowMask(const genie::Slope slope, const int edges)
+static sf::Image drawTileSpans(const std::vector<genie::TileSpan> &tileSpans, const uint32_t color)
 {
-    const int cacheIndex = slope * 256 + edges;
-
-    // the STL APIs are a steaming pile of shit: TODO replace them (or just start using Qt)
-    // This is "slow", but the alternative is to use an iterator and get a full copy of the texture instead of just a ref
-    if (m_shadowCaches.find(cacheIndex) != m_shadowCaches.end()) {
-        return m_shadowCaches[cacheIndex];
-    }
-
-    const genie::VisibilityMask &mask = AssetManager::Inst()->exploredVisibilityMask(slope, edges);
     const int width = 96;
     const int height = 96;
     std::vector<uint32_t> pixelsBuf(width * height);
-
-    for (const genie::TileSpan &span : mask.lines) {
+    for (const genie::TileSpan &span : tileSpans) {
         if (IS_UNLIKELY(span.xEnd < span.xStart)) {
             WARN << "bad span" << span.xStart << "to" << span.xEnd;
             continue;
@@ -262,51 +252,35 @@ const sf::Texture &MapRenderer::shadowMask(const genie::Slope slope, const int e
         }
         int count = span.xEnd - span.xStart;
         int offset = span.y * width + span.xStart;
-        std::fill_n(pixelsBuf.begin() + offset, count, 0x7f000000);
+        std::fill_n(pixelsBuf.begin() + offset, count, color);
     }
     sf::Image image;
     image.create(width, height, reinterpret_cast<uint8_t*>(pixelsBuf.data()));
-    m_shadowCaches[cacheIndex].loadFromImage(image);
+    return image;
+}
 
-    return m_shadowCaches[cacheIndex];
+const sf::Texture &MapRenderer::shadowMask(const genie::Slope slope, const int edges)
+{
+    const int cacheIndex = slope * 256 + edges;
+    sf::Texture &texture = m_shadowCaches[cacheIndex];
+    if (texture.getSize().x > 0) {
+        return texture;
+    }
+
+    const genie::VisibilityMask &mask = AssetManager::Inst()->exploredVisibilityMask(slope, edges);
+    texture.loadFromImage(drawTileSpans(mask.lines, 0x7f000000));
+    return texture;
 }
 
 const sf::Texture &MapRenderer::unexploredMask(const genie::Slope slope, const int edges)
 {
     const int cacheIndex = slope * 256 + edges;
-
-    // the STL APIs are a steaming pile of shit: TODO replace them (or just start using Qt)
-    // This is "slow", but the alternative is to use an iterator and get a full copy of the texture instead of just a ref
-    if (m_unexploredMaskCache.find(cacheIndex) != m_unexploredMaskCache.end()) {
-        return m_unexploredMaskCache[cacheIndex];
+    sf::Texture &texture = m_unexploredMaskCache[cacheIndex];
+    if (texture.getSize().x > 0) {
+        return texture;
     }
 
     const genie::VisibilityMask &mask = AssetManager::Inst()->unexploredVisibilityMask(slope, edges);
-    const int width = 96;
-    const int height = 96;
-    std::vector<uint32_t> pixelsBuf(width * height);
-
-    for (const genie::TileSpan &span : mask.lines) {
-        if (IS_UNLIKELY(span.xEnd < span.xStart)) {
-            WARN << "bad span" << span.xStart << "to" << span.xEnd;
-            continue;
-        }
-        if (IS_UNLIKELY(width < span.xEnd)) {
-            WARN << "bad span" << span.xStart << "to" << span.xEnd;
-            continue;
-        }
-        if (IS_UNLIKELY(height < span.y)) {
-            WARN << "bad span" << span.xStart << "to" << span.xEnd;
-            continue;
-        }
-        int count = span.xEnd - span.xStart;
-        int offset = span.y * width + span.xStart;
-        std::fill_n(pixelsBuf.begin() + offset, count, 0xff000000);
-    }
-    sf::Image image;
-    image.create(width, height, reinterpret_cast<uint8_t*>(pixelsBuf.data()));
-    m_unexploredMaskCache[cacheIndex].loadFromImage(image);
-
-    return m_unexploredMaskCache[cacheIndex];
-
+    texture.loadFromImage(drawTileSpans(mask.lines, 0xff000000));
+    return texture;
 }
