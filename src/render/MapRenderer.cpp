@@ -168,9 +168,6 @@ void MapRenderer::updateTexture()
     invalidIndicator.setOutlineThickness(3);
     invalidIndicator.setOutlineColor(sf::Color::Transparent);
 
-    sf::CircleShape noVisionindicator = invalidIndicator;
-    noVisionindicator.setFillColor(sf::Color(0, 0, 0, 200));
-
 //    sf::Text text;
 //    text.setFont(SfmlRenderTarget::defaultFont());
 //    text.setOutlineColor(sf::Color::Transparent);
@@ -217,13 +214,15 @@ void MapRenderer::updateTexture()
             }
 
             m_textureTarget.draw(terrain->texture(mapTile), spos);
-            m_textureTarget.draw(shadowMask(mapTile.slopes.self.toGenie(), m_visibilityMap->edges(col, row)), spos);
 
             // TODO actually load the blkedge and tileedge
-//            if (m_visibilityMap->visibilityAt(col, row) == VisibilityMap::Explored) {
+            if (m_visibilityMap->visibilityAt(col, row) == VisibilityMap::Explored) {
+                m_textureTarget.draw(shadowMask(mapTile.slopes.self.toGenie(), 0), spos);
 //                noVisionindicator.setPosition(spos);
 //                m_textureTarget.draw(noVisionindicator);
-//            }
+            } else {
+                m_textureTarget.draw(shadowMask(mapTile.slopes.self.toGenie(), m_visibilityMap->edgeShadowTile(col, row) * 2 + 1), spos);
+            }
 
 //            text.setString(std::to_string(col) + "," + std::to_string(row));
 //            text.setPosition(spos.x, spos.y);
@@ -236,15 +235,14 @@ void MapRenderer::updateTexture()
 
 const sf::Texture &MapRenderer::shadowMask(const genie::Slope slope, const int edges)
 {
-    // I'm lazy, sue me
-    const int cacheIndex = slope * edges;
+    const int cacheIndex = slope * 256 + edges;
+
     // the STL APIs are a steaming pile of shit: TODO replace them (or just start using Qt)
     // This is "slow", but the alternative is to use an iterator and get a full copy of the texture instead of just a ref
-//    if (m_shadowCaches.find(cacheIndex) != m_shadowCaches.end()) {
-//        return m_shadowCaches[cacheIndex];
-//    }
+    if (m_shadowCaches.find(cacheIndex) != m_shadowCaches.end()) {
+        return m_shadowCaches[cacheIndex];
+    }
 
-//    const genie::VisibilityMask &mask = AssetManager::Inst()->unexploredVisibilityMask(slope, edges);
     const genie::VisibilityMask &mask = AssetManager::Inst()->unexploredVisibilityMask(slope, edges);
     const int width = 96;
     const int height = 96;
@@ -266,7 +264,6 @@ const sf::Texture &MapRenderer::shadowMask(const genie::Slope slope, const int e
         int count = span.xEnd - span.xStart;
         int offset = span.y * width + span.xStart;
         std::fill_n(pixelsBuf.begin() + offset, count, 0x7f000000);
-//        std::fill_n(pixelsBuf.begin() + offset, count, 0x7f707070);
     }
     sf::Image image;
     image.create(width, height, reinterpret_cast<uint8_t*>(pixelsBuf.data()));
