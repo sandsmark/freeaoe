@@ -234,7 +234,7 @@ void MapRenderer::updateTexture()
 
 static sf::Image drawTileSpans(const std::vector<genie::TileSpan> &tileSpans, const uint32_t color)
 {
-    const int width = 96;
+    const int width = 97;
     const int height = 96;
     std::vector<uint32_t> pixelsBuf(width * height);
     for (const genie::TileSpan &span : tileSpans) {
@@ -242,7 +242,7 @@ static sf::Image drawTileSpans(const std::vector<genie::TileSpan> &tileSpans, co
             WARN << "bad span" << span.xStart << "to" << span.xEnd;
             continue;
         }
-        if (IS_UNLIKELY(width < span.xEnd)) {
+        if (IS_UNLIKELY(width < span.xEnd + 1)) {
             WARN << "bad span" << span.xStart << "to" << span.xEnd;
             continue;
         }
@@ -250,7 +250,7 @@ static sf::Image drawTileSpans(const std::vector<genie::TileSpan> &tileSpans, co
             WARN << "bad span" << span.xStart << "to" << span.xEnd;
             continue;
         }
-        int count = span.xEnd - span.xStart;
+        int count = span.xEnd - span.xStart + 1;
         int offset = span.y * width + span.xStart;
         std::fill_n(pixelsBuf.begin() + offset, count, color);
     }
