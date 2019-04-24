@@ -7,6 +7,7 @@
 #include "resource/DataManager.h"
 #include "core/Constants.h"
 #include "mechanics/UnitManager.h"
+#include "mechanics/Player.h"
 
 Minimap::Minimap(const std::shared_ptr<SfmlRenderTarget> &renderTarget) :
     m_renderTarget(renderTarget),
@@ -144,6 +145,11 @@ bool Minimap::handleEvent(sf::Event event)
 
 bool Minimap::update(Time /*time*/)
 {
+    if (IS_UNLIKELY(!m_visibilityMap)) {
+        WARN << "no visibility map set";
+        return false;
+    }
+
     if (m_lastCameraPos != m_renderTarget->camera()->m_target) {
         updateCamera();
         m_lastCameraPos = m_renderTarget->camera()->m_target;
@@ -177,10 +183,19 @@ bool Minimap::update(Time /*time*/)
         const std::vector<genie::Color> &colors = AssetManager::Inst()->getPalette(50500).getColors();
         for (int col = 0; col < m_map->getCols(); col++) {
             for (int row = 0; row < m_map->getRows(); row++) {
+                const VisibilityMap::Visibility visibility = m_visibilityMap->visibilityAt(col, row);
+                if (visibility == VisibilityMap::Unexplored) {
+                    continue;
+                }
+
                 const MapTile &tile = m_map->getTileAt(col, row);
                 const genie::Terrain &terrain = DataManager::Inst().getTerrain(tile.terrainId);
                 const genie::Color &color = colors[terrain.Colors[0]];
-                tileShape.setFillColor(sf::Color(color.r, color.g, color.b));
+                if (visibility == VisibilityMap::Explored) {
+                    tileShape.setFillColor(sf::Color(color.r/2, color.g/2, color.b/2));
+                } else {
+                    tileShape.setFillColor(sf::Color(color.r, color.g, color.b));
+                }
 
                 // WTF TODO FIXME why the fuck is flipping row and col the correct here..
                 const ScreenPos pos = MapPos(row * scaleX, col * scaleY).toScreen();
@@ -219,6 +234,14 @@ bool Minimap::update(Time /*time*/)
         const std::vector<genie::Color> &colors = AssetManager::Inst()->getPalette(50500).getColors();
 
         for (const Unit::Ptr &unit : m_unitManager->units()) {
+            const VisibilityMap::Visibility visibility = m_visibilityMap->visibilityAt(unit->position());
+            if (visibility == VisibilityMap::Unexplored) {
+                continue;
+            }
+            if (visibility == VisibilityMap::Explored && unit->playerId != UnitManager::GaiaID) {
+                continue;
+            }
+
             const genie::Unit::MinimapModes mode = genie::Unit::MinimapModes(unit->data()->MinimapMode);
             if (mode == genie::Unit::MinimapInvisible) {
                 continue;

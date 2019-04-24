@@ -11,6 +11,7 @@ class Map;
 struct Unit;
 class UnitManager;
 class SfmlRenderTarget;
+class VisibilityMap;
 
 class Minimap : public IState
 {
@@ -26,6 +27,7 @@ public:
 
     void setMap(const std::shared_ptr<Map> &map);
     void setUnitManager(const std::shared_ptr<UnitManager> &unitManager);
+    void setVisibilityMap(const std::shared_ptr<VisibilityMap> &visibilityMap) { m_visibilityMap = visibilityMap; }
 
     bool init() override;
     bool handleEvent(sf::Event event) override;
@@ -51,6 +53,7 @@ private:
     MapPos m_lastCameraPos;
     ScreenRect m_cameraRect;
     bool m_mousePressed = false;
+    std::shared_ptr<VisibilityMap> m_visibilityMap;
 
     MinimapMode m_mode = MinimapMode::Diplomatic; // easiest, so sue me
 };
