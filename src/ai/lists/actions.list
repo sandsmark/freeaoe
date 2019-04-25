@@ -1,0 +1,55 @@
+do-nothing
+acknowledge-event <event-type> <event-id>
+acknowledge-taunt <player-number> <taunt-id>
+attack-now
+build <building>
+build-forward <building>
+build-gate <perimeter>
+build-wall <perimeter> <wall-type>
+buy-commodity <commodity>
+cc-add-resource <resource-type> <value>
+chat-local <string>
+chat-local-using-id <string-id>
+chat-local-using-range <string-id-start> <string-id-range>
+chat-local-to-self <string>
+chat-to-all <string>
+chat-to-all-using-id <string-id>
+chat-to-all-using-range <string-id-start> <string-id-range>
+chat-to-allies <string>
+chat-to-allies-using-id <string-id>
+chat-to-allies-using-range <string-id-start> <string-id-range>
+chat-to-enemies <string>
+chat-to-enemies-using-id <string-id>
+chat-to-enemies-using-range <string-id-start> <string-id-range>
+chat-to-player <player-number> <string>
+chat-to-player-using-id <player-number> <string-id>
+chat-to-player-using-range <player-number> <string-id-start> <string-id-range>
+chat-trace <value>
+clear-tribute-memory <player-number> <resource-type>
+delete-building <building>
+delete-unit <unit>
+disable-self
+disable-timer <timer-id>
+enable-timer <timer-id>
+enable-wall-placement <perimeter>
+generate-random-number <value>
+log <string>
+log-trace <value>
+release-escrow <resource-type>
+research <research-item>
+research <age>
+resign
+sell-commodity <commodity>
+set-difficulty-parameter <difficulty-parameter> <value>
+set-doctrine <value>
+set-escrow-percentage <resource-type> <value>
+set-goal <goal-id> <value>
+set-shared-goal <shared-goal-id> <value>
+set-signal <signal-id>
+set-stance <player-number> <diplomatic-stance>
+set-strategic-number <strategic-number> <value>
+spy
+taunt <value>
+taunt-using-range <taunt-start> <taunt-range>
+train <unit>
+tribute-to-player <player-number> <resource-type> <value>
