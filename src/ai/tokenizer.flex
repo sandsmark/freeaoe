@@ -26,6 +26,7 @@ comment     ;.*
 "=>"                { printf(" - conditionactionseparator\n"); return ConditionActionSeparator; }
 
 "not"                 { return Not; }
+"or"                 { return Or; }
 
 "<"                 { return LessThan; }
 "less-than"         { return LessThan; }
