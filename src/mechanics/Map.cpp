@@ -330,7 +330,7 @@ void Map::removeEntityAt(unsigned int col, unsigned int row, const int entityId)
     }
 }
 
-void Map::addEntityAt(unsigned int col, unsigned int row, const EntityPtr &entity)
+void Map::addEntityAt(int col, int row, const EntityPtr &entity)
 {
     unsigned int index = row * cols_ + col;
 
@@ -361,7 +361,15 @@ void Map::addEntityAt(unsigned int col, unsigned int row, const EntityPtr &entit
     const int height = unit->data()->Size.y;
     for (int x = 0; x < width*2; x++) {
         for (int y = 0; y < height*2; y++) {
-            setTileAt(col + x - width, row + y - width, newTerrain);
+            updateTileAt(col + x - width, row + y - width, newTerrain);
+        }
+    }
+
+    for (int col_ = std::max(col - 1, 0); col_ < std::min(col + width + 2, cols_); col_++) {
+        for (int row_ = std::max(row - 1, 0); row_ < std::min(row + height + 2, rows_); row_++) {
+            getTileAt(col_, row_).reset();
+            updateTileBlend(col_, row_);
+            updateTileSlopes(col_, row_);
         }
     }
 }
