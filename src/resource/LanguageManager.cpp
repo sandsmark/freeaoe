@@ -32,7 +32,7 @@ bool LanguageManager::initialize(const std::string &dataPath)
     return true;
 }
 
-std::string LanguageManager::getString(unsigned int id)
+const std::string &LanguageManager::getString(unsigned int id)
 {
     std::unordered_map<unsigned int, std::string> &cache = Inst()->m_cache;
 
@@ -54,7 +54,7 @@ std::string LanguageManager::getString(unsigned int id)
 
     cache[id] = ret;
 
-    return ret;
+    return cache[id];
 }
 
 LanguageManager::LanguageManager()

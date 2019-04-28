@@ -65,15 +65,15 @@ public:
         RotateFormationLeft,
         MoveFormationFrontToBack,
         DisbandFormation,
-        NormalFormation,
+        LineFormation,
         AttackWithSword,
         JumpOverWall,
         BoxFormation,
-        LooseFormation,
+        HordeFormation,
         SetRallyPoint,
         RemoveRallyPoint,
-        OpenGate,
         CloseGate,
+        OpenGate,
         RingTownBell,
         NoAttack,
         StandGroundEnabled,
@@ -83,7 +83,7 @@ public:
         PatrolEnabled,
         GuardEnabled,
         FollowEnabled,
-        EyeThing,
+        ResearchSpies,
         Kill,
         AttackGround,
         AbortTownBell,
@@ -118,6 +118,8 @@ public:
 
     void releaseButtons();
     void setAttackStance(const Unit::Stance stance) const;
+
+    static const std::string &helpTextId(const Command icon);
 
 private:
     struct InterfaceButton {

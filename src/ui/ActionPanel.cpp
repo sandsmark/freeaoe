@@ -8,6 +8,7 @@
 #include <genie/dat/UnitCommand.h>
 #include "resource/DataManager.h"
 #include "resource/Resource.h"
+#include "resource/LanguageManager.h"
 #include "mechanics/UnitFactory.h"
 #include "mechanics/Civilization.h"
 
@@ -221,6 +222,57 @@ void ActionPanel::releaseButtons()
 
         button.pressed = false;
     }
+}
+
+const std::string &ActionPanel::helpTextId(const ActionPanel::Command icon)
+{
+    static const std::unordered_map<ActionPanel::Command, int> helpTextIds = {
+        { Command::Cancel, 4911 },
+        { Command::Ungarrison, 41014}, // TODO: 4950 for ram
+        { Command::Stop, 4905 },
+        { Command::Patrol, 4938 },
+        { Command::Guard, 4936},
+        { Command::Pack, 41055 },
+        { Command::Unpack, 41056 },
+        { Command::Convert, 4925  },
+        { Command::SellWood, 41072 },
+        { Command::SellFood, 41073 },
+        { Command::SellStone, 41074 },
+        { Command::CollectWood, 41076 }, // buy wood
+        { Command::CollectFood, 41077 }, // buy food
+        { Command::BuyFood, 41077 }, // buy food
+        { Command::CollectStone, 41078 }, // buy stone
+        { Command::BuyStone, 41078 }, // buy stone
+        { Command::BuildCivilian, 41061 },
+        { Command::BuildMilitary, 41062 },
+        { Command::NextPage, 4912 }, // TODO 4918 for dock
+        { Command::NextPage, 4912 },
+        { Command::DisbandFormation, 41006 },
+        { Command::LineFormation, 41021 },
+        { Command::BoxFormation, 41020 },
+        { Command::HordeFormation, 41019 },
+        { Command::SetRallyPoint, 4944 },
+        { Command::RemoveRallyPoint, 4949 },
+        { Command::CloseGate, 41104 },
+        { Command::OpenGate, 41105 },
+
+        { Command::ResearchSpies, 41113 },
+
+        { Command::Kill, 4941 },
+        { Command::AttackGround, 4923 },
+        { Command::FlankFormation, 41023 },
+        { Command::SpreadOutFormation, 41022 },
+        { Command::AbortTownBell, 41015 },
+        { Command::RingTownBell, 41111 },
+        { }
+    };
+
+    if (helpTextIds.find(icon) == helpTextIds.end()) {
+        static const std::string nullString;
+        return nullString;
+    }
+
+    return LanguageManager::Inst()->getString(helpTextIds.at(icon));
 }
 
 void ActionPanel::updateButtons()
