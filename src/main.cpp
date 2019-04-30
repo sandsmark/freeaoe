@@ -42,8 +42,6 @@
 // TODO: Bad_alloc
 int main(int argc, char **argv)
 {
-//    genie::Logger::setLogLevel(genie::Logger::L_DEBUG);
-
     Config config("freeaoe");
     config.setAllowedOptions({
             {"game-path", "Path to AoE installation with data files", Config::Stored },
@@ -115,7 +113,7 @@ int main(int argc, char **argv)
                 startGame = true;
                 try {
                     genie::CpxFile cpxFile;
-                    cpxFile.setFileName(config.getValue("game-path") + "/Campaign/xcam3.cpx");
+                    cpxFile.setFileName(config.getValue("game-path") + "/Campaign/cam8.cpn");
                     cpxFile.load();
 
                     scenarioFile = cpxFile.getScnFile(0);
