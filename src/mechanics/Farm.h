@@ -7,7 +7,7 @@ class FarmRender : public GraphicRender
 public:
     FarmRender(const Size &size);
 
-    void render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType pass) override;
+    void render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType pass) noexcept override;
 
 private:
     sf::Texture m_availableTexture;
@@ -29,15 +29,15 @@ class Farm : public Building
 
 public:
     Farm(const genie::Unit &data_, const std::shared_ptr<Player> &player, UnitManager &unitManager);
-    void setCreationProgress(float progress) override;
-    bool update(Time time) override;
+    void setCreationProgress(float progress) noexcept override;
+    bool update(Time time) noexcept override;
 
-    GraphicRender &renderer() override { return m_farmRenderer; }
-    ScreenRect rect() const override;
-    bool checkClick(const ScreenPos &pos) const override;
+    GraphicRender &renderer() noexcept override { return m_farmRenderer; }
+    ScreenRect rect() const noexcept override;
+    bool checkClick(const ScreenPos &pos) const noexcept override;
 
 private:
-    void setTerrain(const TerrainTypes terrainToSet);
+    void setTerrain(const TerrainTypes terrainToSet) noexcept;
 
     int m_currentTerrain = -1;
     bool m_updated = true;

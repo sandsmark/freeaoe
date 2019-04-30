@@ -36,7 +36,7 @@ Missile::~Missile()
     }
 }
 
-void Missile::setBlastType(const BlastType type, const float radius)
+void Missile::setBlastType(const BlastType type, const float radius) noexcept
 {
     m_blastType = type;
 
@@ -57,7 +57,7 @@ void Missile::setBlastType(const BlastType type, const float radius)
 }
 
 
-bool Missile::update(Time time)
+bool Missile::update(Time time) noexcept
 {
     if (isExploding()) {
         m_renderer.setCurrentFrame(m_renderer.currentFrame() + 1);

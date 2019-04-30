@@ -47,7 +47,7 @@ Graphic::Graphic(const genie::Graphic &data, const int id) :
     }
 }
 
-sf::Image Graphic::slpFrameToImage(const genie::SlpFramePtr &frame, uint8_t playerId, const ImageType imageType)
+sf::Image Graphic::slpFrameToImage(const genie::SlpFramePtr &frame, uint8_t playerId, const ImageType imageType) noexcept
 {
     const genie::PalFile &palette = AssetManager::Inst()->getPalette(50500);
     const genie::SlpFrameData &frameData = frame->img_data;
@@ -179,7 +179,7 @@ sf::Image Graphic::slpFrameToImage(const genie::SlpFramePtr &frame, uint8_t play
     return img;
 }
 
-const sf::Texture &Graphic::texture(uint32_t frameNum, float angleRadians, uint8_t playerId, const ImageType imageType)
+const sf::Texture &Graphic::texture(uint32_t frameNum, float angleRadians, uint8_t playerId, const ImageType imageType) noexcept
 {
     if (!slp_) {
         return nullImage;
@@ -215,7 +215,7 @@ const sf::Texture &Graphic::texture(uint32_t frameNum, float angleRadians, uint8
 
 }
 
-Size Graphic::size(uint32_t frame_num, float angle) const
+Size Graphic::size(uint32_t frame_num, float angle) const noexcept
 {
     if (!slp_) {
         return Size(0, 0);
@@ -226,7 +226,7 @@ Size Graphic::size(uint32_t frame_num, float angle) const
     return Size(frame->getWidth(), frame->getHeight());
 }
 
-ScreenRect Graphic::rect(uint32_t frame_num, float angle) const
+ScreenRect Graphic::rect(uint32_t frame_num, float angle) const noexcept
 {
     ScreenRect ret;
     const ScreenPos hotspot = getHotspot(frame_num, angle);
@@ -240,7 +240,7 @@ ScreenRect Graphic::rect(uint32_t frame_num, float angle) const
 }
 
 //------------------------------------------------------------------------------
-ScreenPos Graphic::getHotspot(uint32_t frame_num, float angle) const
+ScreenPos Graphic::getHotspot(uint32_t frame_num, float angle) const noexcept
 {
     if (!slp_) {
         return ScreenPos();
@@ -261,7 +261,7 @@ ScreenPos Graphic::getHotspot(uint32_t frame_num, float angle) const
     return ScreenPos(hot_spot_x, frame->hotspot_y);
 }
 
-bool Graphic::checkClick(const ScreenPos &pos, uint32_t frame_num, float angle) const
+bool Graphic::checkClick(const ScreenPos &pos, uint32_t frame_num, float angle) const noexcept
 {
     if (!slp_) {
         return false;
@@ -311,46 +311,17 @@ bool Graphic::checkClick(const ScreenPos &pos, uint32_t frame_num, float angle) 
     }
 }
 
-const std::vector<genie::GraphicDelta> &Graphic::deltas() const
-{
-    return m_data.Deltas;
-}
 
-const genie::GraphicAngleSound &Graphic::soundForAngle(float angle)
+
+const genie::GraphicAngleSound &Graphic::soundForAngle(float angle) const noexcept
 {
-    int orientation = angleToOrientation(angle);
+    const int orientation = angleToOrientation(angle);
     return m_data.AngleSounds[orientation % m_data.AngleSounds.size()];
 }
 
 //------------------------------------------------------------------------------
-float Graphic::framerate() const
-{
-    return m_data.FrameDuration;
-}
 
-bool Graphic::isValid()
-{
-    bool valid = slp_ != nullptr;
-
-    // Can be valid if it has deltas
-    if (!valid) {
-        valid = !m_data.Deltas.empty();
-    }
-
-    return valid;
-}
-
-bool Graphic::runOnce() const
-{
-    return m_runOnce;
-}
-
-void Graphic::setRunOnce(const bool once)
-{
-    m_runOnce = once;
-}
-
-int Graphic::angleToOrientation(float angle) const
+int Graphic::angleToOrientation(float angle) const noexcept
 {
     // The graphics start pointing south, and goes clock-wise
     angle = fmod(- angle - M_PI_2, 2*M_PI);
@@ -359,7 +330,7 @@ int Graphic::angleToOrientation(float angle) const
     return int(std::round(m_data.AngleCount * angle / (2*M_PI))) % m_data.AngleCount;
 }
 
-float Graphic::orientationToAngle(float orientation) const
+float Graphic::orientationToAngle(float orientation) const noexcept
 {
     float angle = 2. * M_PI * orientation / m_data.AngleCount;
     angle = fmod(- angle - M_PI_2, 2*M_PI);
@@ -367,12 +338,12 @@ float Graphic::orientationToAngle(float orientation) const
     return angle;
 }
 
-const genie::SlpFramePtr &Graphic::getFrame(uint32_t frame_num, float angle) const
+const genie::SlpFramePtr &Graphic::getFrame(uint32_t frame_num, float angle) const noexcept
 {
     return slp_->getFrame(calcFrameInfo(frame_num, angle).frameNum);
 }
 
-Graphic::FrameInfo Graphic::calcFrameInfo(uint32_t num, float angle) const
+Graphic::FrameInfo Graphic::calcFrameInfo(uint32_t num, float angle) const noexcept
 {
     FrameInfo ret;
 

@@ -17,7 +17,7 @@ Building::Building(const genie::Unit &data_, const std::shared_ptr<Player> &play
 
 }
 
-bool Building::enqueueProduceUnit(const genie::Unit *data)
+bool Building::enqueueProduceUnit(const genie::Unit *data) noexcept
 {
     if (!data) {
         WARN << "trying to enqueue null unit";
@@ -67,7 +67,7 @@ bool Building::enqueueProduceUnit(const genie::Unit *data)
     return true;
 }
 
-bool Building::enqueueProduceResearch(const genie::Tech *data)
+bool Building::enqueueProduceResearch(const genie::Tech *data) noexcept
 {
     if (!data) {
         WARN << "trying to enqueue null unit";
@@ -115,7 +115,7 @@ bool Building::enqueueProduceResearch(const genie::Tech *data)
     return true;
 }
 
-void Building::abortProduction(size_t index)
+void Building::abortProduction(size_t index) noexcept
 {
     if (m_currentProduct) {
         if (index == 0) {
@@ -146,7 +146,7 @@ void Building::abortProduction(size_t index)
     m_productionQueue.erase(m_productionQueue.begin() + index);
 }
 
-float Building::productionProgress() const
+float Building::productionProgress() const noexcept
 {
     if (!m_currentProduct) {
         return 0;
@@ -162,7 +162,7 @@ float Building::productionProgress() const
     return std::min(m_productionProgress / maximum, 1.f);
 }
 
-int Building::productIcon(size_t index)
+int Building::productIcon(size_t index) noexcept
 {
     if (m_currentProduct) {
         if (index == 0) {
@@ -189,7 +189,7 @@ int Building::productIcon(size_t index)
     }
 }
 
-std::string Building::currentProductName()
+std::string Building::currentProductName() noexcept
 {
     if (!m_currentProduct) {
         if (m_productionQueue.empty()) {
@@ -211,7 +211,7 @@ std::string Building::currentProductName()
 
 
 
-bool Building::update(Time time)
+bool Building::update(Time time) noexcept
 {
     const Time deltaTime = time - m_lastUpdateTime;
     m_lastUpdateTime = time;
@@ -247,7 +247,7 @@ bool Building::update(Time time)
     return updated;
 }
 
-bool Building::canPlace(const MapPtr &map)
+bool Building::canPlace(const MapPtr &map) noexcept
 {
     if (!map) {
         WARN << "No map available";
@@ -282,7 +282,7 @@ bool Building::canPlace(const MapPtr &map)
     return true;
 }
 
-void Building::finalizeUnit()
+void Building::finalizeUnit() noexcept
 {
     Player::Ptr owner = player.lock();
     if (!owner) {
@@ -301,7 +301,7 @@ void Building::finalizeUnit()
     DBG << "Finalized" << unit->debugName;
 }
 
-void Building::finalizeResearch()
+void Building::finalizeResearch() noexcept
 {
     Player::Ptr owner = player.lock();
     if (!owner) {
@@ -312,7 +312,7 @@ void Building::finalizeResearch()
 
 }
 
-void Building::attemptStartProduction()
+void Building::attemptStartProduction() noexcept
 {
     if (m_productionQueue.empty()) {
         DBG << "empty queue";

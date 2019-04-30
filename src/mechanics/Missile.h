@@ -26,12 +26,12 @@ public:
 
     Missile(const genie::Unit &data, const Unit::Ptr &sourceUnit, const MapPos &target, const Unit::Ptr &targetUnit);
 
-    void setBlastType(const BlastType type, const float radius);
+    void setBlastType(const BlastType type, const float radius) noexcept;
 
-    bool update(Time time) override;
+    bool update(Time time) noexcept override;
 
-    bool isFlying() const { return m_isFlying; }
-    bool isExploding() const { return !m_isFlying && m_renderer.currentFrame() < m_renderer.frameCount() - 1; }
+    inline bool isFlying() const noexcept { return m_isFlying; }
+    inline bool isExploding() const noexcept { return !m_isFlying && m_renderer.currentFrame() < m_renderer.frameCount() - 1; }
 
 private:
     void die();

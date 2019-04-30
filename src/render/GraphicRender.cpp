@@ -40,7 +40,7 @@ GraphicRender::~GraphicRender()
 {
 }
 
-bool GraphicRender::update(Time time)
+bool GraphicRender::update(Time time) noexcept
 {
     m_frameChanged = false;
 
@@ -103,7 +103,7 @@ bool GraphicRender::update(Time time)
     return updated || m_frameChanged;
 }
 
-void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType renderpass)
+void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType renderpass) noexcept
 {
     if (m_frameChanged && m_playSounds) {
         m_frameChanged = false;
@@ -171,7 +171,7 @@ void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos scree
     }
 }
 
-void GraphicRender::setPlayerId(int playerId)
+void GraphicRender::setPlayerId(int playerId) noexcept
 {
     m_playerId = playerId;
 
@@ -184,7 +184,7 @@ void GraphicRender::setPlayerId(int playerId)
     }
 }
 
-void GraphicRender::setDamageOverlay(const int graphicId)
+void GraphicRender::setDamageOverlay(const int graphicId) noexcept
 {
     if (graphicId < 0) {
         m_damageOverlay.reset();
@@ -216,12 +216,12 @@ void GraphicRender::setDamageOverlay(const int graphicId)
     m_damageOverlay->setGraphic(graphic);
 }
 
-bool GraphicRender::setGraphic(const int &graphicId)
+bool GraphicRender::setGraphic(const int &graphicId) noexcept
 {
     return setGraphic(AssetManager::Inst()->getGraphic(graphicId));
 }
 
-bool GraphicRender::setGraphic(const GraphicPtr &graphic)
+bool GraphicRender::setGraphic(const GraphicPtr &graphic) noexcept
 {
     if (graphic == m_graphic) {
         return true;
@@ -268,7 +268,7 @@ bool GraphicRender::setGraphic(const GraphicPtr &graphic)
     return true;
 }
 
-int GraphicRender::graphicId() const
+int GraphicRender::graphicId() const noexcept
 {
     if (!m_graphic) {
         return -1;
@@ -276,7 +276,7 @@ int GraphicRender::graphicId() const
     return m_graphic->frameCount();
 }
 
-ScreenRect GraphicRender::rect() const
+ScreenRect GraphicRender::rect() const noexcept
 {
     if (!isValid()) {
         return ScreenRect();
@@ -313,7 +313,7 @@ ScreenRect GraphicRender::rect() const
     return ret;
 }
 
-bool GraphicRender::checkClick(const ScreenPos &pos) const
+bool GraphicRender::checkClick(const ScreenPos &pos) const noexcept
 {
     if (!isValid()) {
         return false;
@@ -341,7 +341,7 @@ bool GraphicRender::checkClick(const ScreenPos &pos) const
     return false;
 }
 
-void GraphicRender::setAngle(float angle)
+void GraphicRender::setAngle(float angle) noexcept
 {
     m_angle = angle;
 
@@ -354,7 +354,7 @@ void GraphicRender::setAngle(float angle)
     }
 }
 
-void GraphicRender::setCurrentFrame(int frame)
+void GraphicRender::setCurrentFrame(int frame) noexcept
 {
     if (frame == m_currentFrame) {
         return;
@@ -370,7 +370,7 @@ void GraphicRender::setCurrentFrame(int frame)
     m_currentFrame = frame;
 }
 
-void GraphicRender::maybePlaySound(const float pan, const float volume)
+void GraphicRender::maybePlaySound(const float pan, const float volume) noexcept
 {
     if (pan <= -1.0f || pan >= 1.0f) {
         return;
@@ -396,7 +396,7 @@ void GraphicRender::maybePlaySound(const float pan, const float volume)
     }
 }
 
-bool GraphicRender::GraphicDelta::validForAngle(const float angle) const
+bool GraphicRender::GraphicDelta::validForAngle(const float angle) const noexcept
 {
     if (angleToDrawOn < 0) {
         return true;

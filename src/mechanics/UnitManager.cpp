@@ -732,7 +732,7 @@ Unit::Ptr UnitManager::clickedUnitAt(const ScreenPos &pos, const CameraPtr &came
     return unit;
 }
 
-const Task UnitManager::defaultActionAt(const ScreenPos &pos, const CameraPtr &camera)
+const Task UnitManager::defaultActionAt(const ScreenPos &pos, const CameraPtr &camera) const noexcept
 {
     if (m_selectedUnits.empty()) {
         return Task();

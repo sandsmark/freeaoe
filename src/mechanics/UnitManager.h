@@ -102,7 +102,7 @@ public:
 
     const std::unordered_set<Task> availableActions() const { return m_currentActions; }
 
-    const Task defaultActionAt(const ScreenPos &pos, const CameraPtr &camera);
+    const Task defaultActionAt(const ScreenPos &pos, const CameraPtr &camera) const noexcept;
     void moveUnitTo(const Unit::Ptr &unit, const MapPos &targetPos);
     void assignTask(const Task &task, const Unit::Ptr &unit, const Unit::Ptr &target);
     void selectAttackTarget();

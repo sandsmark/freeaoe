@@ -17,27 +17,27 @@ struct Building : public Unit
     int garrisonedUnits = 0;
     int constructors = 0;
 
-    bool enqueueProduceUnit(const genie::Unit *data);
-    bool enqueueProduceResearch(const genie::Tech *data);
-    void abortProduction(size_t index);
-    size_t productionQueueLength() const { return m_productionQueue.size() + (m_currentProduct != nullptr ? 1 : 0); }
+    bool enqueueProduceUnit(const genie::Unit *data) noexcept;
+    bool enqueueProduceResearch(const genie::Tech *data) noexcept;
+    void abortProduction(size_t index) noexcept;
+    size_t productionQueueLength() const noexcept { return m_productionQueue.size() + (m_currentProduct != nullptr ? 1 : 0); }
 
-    bool isResearching() const { return m_currentProduct && m_currentProduct->type == Product::Research; }
-    bool isProducing() const { return productionQueueLength() > 0; }
-    int productIcon(size_t index);
-    std::string currentProductName();
-    float productionProgress() const;
+    bool isResearching() const noexcept { return m_currentProduct && m_currentProduct->type == Product::Research; }
+    bool isProducing() const noexcept { return productionQueueLength() > 0; }
+    int productIcon(size_t index) noexcept;
+    std::string currentProductName() noexcept;
+    float productionProgress() const noexcept;
 
-    bool update(Time time) override;
+    bool update(Time time) noexcept override;
 
     MapPos waypoint;
 
-    bool canPlace(const MapPtr &map);
+    bool canPlace(const MapPtr &map) noexcept;
 
 private:
-    void finalizeUnit();
-    void finalizeResearch();
-    void attemptStartProduction();
+    void finalizeUnit() noexcept;
+    void finalizeResearch() noexcept;
+    void attemptStartProduction() noexcept;
 
     struct Product {
         enum {

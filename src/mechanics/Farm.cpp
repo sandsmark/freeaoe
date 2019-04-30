@@ -9,8 +9,8 @@
 
 #include <SFML/Graphics/Sprite.hpp>
 
-Farm::Farm(const genie::Unit &data_, const std::shared_ptr<Player> &player, UnitManager &unitManager) :
-    Building(data_, player, unitManager),
+Farm::Farm(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager) :
+    Building(data_, player_, unitManager),
     m_farmRenderer(Size(data_.Size))
 {
     if (!m_farmRenderer.setGraphic(defaultGraphics)) {
@@ -18,7 +18,7 @@ Farm::Farm(const genie::Unit &data_, const std::shared_ptr<Player> &player, Unit
     }
 }
 
-void Farm::setCreationProgress(float progress)
+void Farm::setCreationProgress(float progress) noexcept
 {
     if (progress == m_creationProgress) {
         return;
@@ -37,7 +37,7 @@ void Farm::setCreationProgress(float progress)
     }
 }
 
-bool Farm::update(Time time)
+bool Farm::update(Time time) noexcept
 {
     bool updated = Unit::update(time);
 
@@ -53,7 +53,7 @@ bool Farm::update(Time time)
     return updated;
 }
 
-ScreenRect Farm::rect() const
+ScreenRect Farm::rect() const noexcept
 {
     ScreenRect rect;
     rect.x = -Constants::TILE_SIZE_HORIZONTAL;
@@ -63,12 +63,12 @@ ScreenRect Farm::rect() const
     return rect;
 }
 
-bool Farm::checkClick(const ScreenPos &pos) const
+bool Farm::checkClick(const ScreenPos &pos) const noexcept
 {
     return rect().contains(pos);
 }
 
-void Farm::setTerrain(const Farm::TerrainTypes terrainToSet)
+void Farm::setTerrain(const Farm::TerrainTypes terrainToSet) noexcept
 {
     if (terrainToSet == m_currentTerrain) {
         return;
@@ -113,7 +113,7 @@ FarmRender::FarmRender(const Size &size) :
     m_unavailableTexture.loadFromImage(Graphic::slpFrameToImage(frame, 0, ImageType::ConstructionUnavailable));
 }
 
-void FarmRender::render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType pass)
+void FarmRender::render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType pass) noexcept
 {
     sf::Sprite sprite;
     if (pass == RenderType::ConstructAvailable) {

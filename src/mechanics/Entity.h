@@ -46,29 +46,32 @@ struct Entity: std::enable_shared_from_this<Entity>, SignalEmitter<Entity>
 
     virtual ~Entity();
 
-    virtual bool update(Time time);
+    virtual bool update(Time time) noexcept;
 
+    virtual GraphicRender &renderer() noexcept { return m_renderer; }
 
-    virtual GraphicRender &renderer() { return m_renderer; }
+    static std::shared_ptr<Unit> asUnit(const EntityPtr &entity) noexcept;
 
-    static std::shared_ptr<Unit> asUnit(const EntityPtr &entity);
-    static std::shared_ptr<Unit> asUnit(const std::weak_ptr<Entity> &entity);
-    static std::shared_ptr<Missile> asMissile(const std::shared_ptr<Entity> &entity);
+    static inline std::shared_ptr<Unit> asUnit(const std::weak_ptr<Entity> &entity) noexcept {
+        return asUnit(entity.lock());
+    }
+
+    static std::shared_ptr<Missile> asMissile(const std::shared_ptr<Entity> &entity) noexcept;
 
     const std::string debugName;
 
     bool isVisible = false;
 
-    virtual void setMap(const MapPtr &newMap);
-    MapPtr map() const;
-    const MapPos &position() const { return m_position; }
-    virtual void setPosition(const MapPos &pos, const bool initial = false);
+    virtual void setMap(const MapPtr &newMap) noexcept;
+    MapPtr map() const noexcept;
+    inline const MapPos &position() const noexcept { return m_position; }
+    virtual void setPosition(const MapPos &pos, const bool initial = false) noexcept;
 
-    bool isUnit() const { return m_type >= Type::Unit; }
-    bool isBuilding() const { return m_type >= Type::Building; }
-    bool isMissile() const { return m_type == Type::Missile; }
-    bool isDecayingEntity() const { return m_type == Type::Decaying; }
-    bool isDoppleganger() const { return m_type == Type::Doppleganger; }
+    inline bool isUnit() const noexcept { return m_type >= Type::Unit; }
+    inline bool isBuilding() const noexcept { return m_type >= Type::Building; }
+    inline bool isMissile() const noexcept { return m_type == Type::Missile; }
+    inline bool isDecayingEntity() const noexcept { return m_type == Type::Decaying; }
+    inline bool isDoppleganger() const noexcept { return m_type == Type::Doppleganger; }
 
 protected:
     enum class Type {
@@ -93,15 +96,17 @@ private:
     MapPos m_position;
 };
 
+
+
 struct MoveTargetMarker : public Entity
 {
     typedef std::unique_ptr<MoveTargetMarker> Ptr;
 
     MoveTargetMarker();
 
-    void moveTo(const MapPos &pos);
+    void moveTo(const MapPos &pos) noexcept;
 
-    bool update(Time time) override;
+    bool update(Time time) noexcept override;
 
 private:
     bool m_isRunning = false;
@@ -114,9 +119,9 @@ struct DecayingEntity : public Entity
 
     DecayingEntity(const int graphicId, float decayTime);
 
-    bool update(Time time) override;
+    bool update(Time time) noexcept override;
 
-    bool decaying() const { return m_decayTimeLeft > 0 || m_renderer.currentFrame() < m_renderer.frameCount() - 1; }
+    inline bool decaying() const noexcept { return m_decayTimeLeft > 0 || m_renderer.currentFrame() < m_renderer.frameCount() - 1; }
 
 private:
     float m_decayTimeLeft = 0.f;

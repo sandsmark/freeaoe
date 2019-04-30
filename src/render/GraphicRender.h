@@ -76,39 +76,39 @@ public:
     GraphicRender();
     virtual ~GraphicRender();
 
-    bool update(Time time);
-    bool isValid() const { return m_graphic && m_graphic->isValid(); }
+    bool update(Time time) noexcept;
+    bool isValid() const noexcept { return m_graphic && m_graphic->isValid(); }
 
-    virtual void render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType renderpass);
+    virtual void render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType renderpass) noexcept;
 
-    void setPlayerId(int playerId);
-    void setCivId(int civId) { m_civId = civId; }
+    void setPlayerId(int playerId) noexcept;
+    void setCivId(int civId) noexcept { m_civId = civId; }
 
-    void setDamageOverlay(const int graphicId);
+    void setDamageOverlay(const int graphicId) noexcept;
 
-    bool setGraphic(const int &graphicId);
-    bool setGraphic(const GraphicPtr &graphic);
-    inline const GraphicPtr &graphic() const { return m_graphic; }
-    int graphicId() const;
+    bool setGraphic(const int &graphicId) noexcept;
+    bool setGraphic(const GraphicPtr &graphic) noexcept;
+    inline const GraphicPtr &graphic() const noexcept { return m_graphic; }
+    int graphicId() const noexcept;
 
-    ScreenRect rect() const;
-    bool checkClick(const ScreenPos &pos) const;
+    ScreenRect rect() const noexcept;
+    bool checkClick(const ScreenPos &pos) const noexcept;
 
-    void setAngle(float angle);
+    void setAngle(float angle) noexcept;
     float angle() const { return m_angle; }
 
-    int frameCount() const { return m_graphic ? m_graphic->frameCount() : 0; }
+    int frameCount() const noexcept { return m_graphic ? m_graphic->frameCount() : 0; }
 
-    inline int currentFrame() const { return m_currentFrame; }
-    void setCurrentFrame(int frame);
+    inline int currentFrame() const noexcept { return m_currentFrame; }
+    void setCurrentFrame(int frame) noexcept;
 
-    void setPlaySounds(bool playSound) { m_playSounds = playSound; }
+    void setPlaySounds(bool playSound) noexcept { m_playSounds = playSound; }
 
 private:
-    void maybePlaySound(const float pan, const float volume);
+    void maybePlaySound(const float pan, const float volume) noexcept;
 
     struct GraphicDelta {
-        bool validForAngle(const float angle) const;
+        bool validForAngle(const float angle) const noexcept;
 
         GraphicRenderPtr graphic;
         ScreenPos offset;

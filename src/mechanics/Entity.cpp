@@ -44,7 +44,7 @@ Entity::~Entity()
     }
 }
 
-bool Entity::update(Time time)
+bool Entity::update(Time time) noexcept
 {
     bool updated = false;
 
@@ -53,25 +53,17 @@ bool Entity::update(Time time)
     return updated && isVisible;
 }
 
-std::shared_ptr<Unit> Entity::asUnit(const EntityPtr &entity)
-{
+std::shared_ptr<Unit> Entity::asUnit(const EntityPtr &entity) noexcept {
     if (!entity) {
         return nullptr;
     }
-
     if (!entity->isUnit()) {
         return nullptr;
     }
-
     return std::static_pointer_cast<Unit>(entity);
 }
 
-std::shared_ptr<Unit> Entity::asUnit(const std::weak_ptr<Entity> &entity)
-{
-    return asUnit(entity.lock());
-}
-
-std::shared_ptr<Missile> Entity::asMissile(const std::shared_ptr<Entity> &entity)
+std::shared_ptr<Missile> Entity::asMissile(const std::shared_ptr<Entity> &entity) noexcept
 {
     if (!entity) {
         return nullptr;
@@ -84,7 +76,7 @@ std::shared_ptr<Missile> Entity::asMissile(const std::shared_ptr<Entity> &entity
     return std::static_pointer_cast<Missile>(entity);
 }
 
-void Entity::setMap(const MapPtr &newMap)
+void Entity::setMap(const MapPtr &newMap) noexcept
 {
     const int tileX = m_position.x / Constants::TILE_SIZE;
     const int tileY = m_position.y / Constants::TILE_SIZE;
@@ -100,12 +92,12 @@ void Entity::setMap(const MapPtr &newMap)
     }
 }
 
-MapPtr Entity::map() const
+MapPtr Entity::map() const noexcept
 {
     return m_map.lock();
 }
 
-void Entity::setPosition(const MapPos &pos, const bool initial)
+void Entity::setPosition(const MapPos &pos, const bool initial) noexcept
 {
     const int oldTileX = m_position.x / Constants::TILE_SIZE;
     const int oldTileY = m_position.y / Constants::TILE_SIZE;
@@ -140,14 +132,14 @@ MoveTargetMarker::MoveTargetMarker() :
     m_renderer.setCurrentFrame(m_renderer.frameCount() - 1); // don't play immediately
 }
 
-void MoveTargetMarker::moveTo(const MapPos &pos)
+void MoveTargetMarker::moveTo(const MapPos &pos) noexcept
 {
     m_position = pos;
     m_renderer.setCurrentFrame(0);
     m_isRunning = true;
 }
 
-bool MoveTargetMarker::update(Time time)
+bool MoveTargetMarker::update(Time time) noexcept
 {
     if (!m_isRunning) {
         return false;
@@ -169,7 +161,7 @@ DecayingEntity::DecayingEntity(const int graphicId, float decayTime) :
     m_renderer.setGraphic(graphicId);
 }
 
-bool DecayingEntity::update(Time time)
+bool DecayingEntity::update(Time time) noexcept
 {
     if (!decaying()) {
         return false;

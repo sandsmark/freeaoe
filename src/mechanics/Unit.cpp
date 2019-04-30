@@ -75,7 +75,7 @@ Unit::~Unit()
     }
 }
 
-bool Unit::update(Time time)
+bool Unit::update(Time time) noexcept
 {
     if (isDying()) {
         return Entity::update(time);
@@ -139,7 +139,7 @@ bool Unit::update(Time time)
     return Entity::update(time) || updated;
 }
 
-void Unit::snapPositionToGrid()
+void Unit::snapPositionToGrid() noexcept
 {
     MapPos newPos = position();
     newPos /= Constants::TILE_SIZE;
@@ -151,7 +151,7 @@ void Unit::snapPositionToGrid()
     setPosition(newPos);
 }
 
-const std::vector<const genie::Unit *> Unit::creatableUnits()
+const std::vector<const genie::Unit *> Unit::creatableUnits() noexcept
 {
     if (creationProgress() < 1.) {
         return {};
@@ -160,7 +160,7 @@ const std::vector<const genie::Unit *> Unit::creatableUnits()
     return civilization->creatableUnits(m_data->ID);
 }
 
-std::shared_ptr<Building> Unit::asBuilding(const Unit::Ptr &unit)
+std::shared_ptr<Building> Unit::asBuilding(const Unit::Ptr &unit) noexcept
 {
     if (!unit) {
         return nullptr;
@@ -172,7 +172,7 @@ std::shared_ptr<Building> Unit::asBuilding(const Unit::Ptr &unit)
     return std::static_pointer_cast<Building>(unit);
 }
 
-ScreenRect Unit::rect() const
+ScreenRect Unit::rect() const noexcept
 {
     ScreenRect ret = m_renderer.rect();
 
@@ -192,7 +192,7 @@ ScreenRect Unit::rect() const
     return ret;
 }
 
-bool Unit::checkClick(const ScreenPos &pos) const
+bool Unit::checkClick(const ScreenPos &pos) const noexcept
 {
     if (m_renderer.checkClick(pos)) {
         return true;
@@ -206,7 +206,7 @@ bool Unit::checkClick(const ScreenPos &pos) const
     return false;
 }
 
-void Unit::setCreationProgress(float progress)
+void Unit::setCreationProgress(float progress) noexcept
 {
     if (m_data->Type == genie::Unit::BuildingType) {
         if (m_creationProgress < m_data->Creatable.TrainTime && progress >= m_data->Creatable.TrainTime) {
@@ -223,12 +223,12 @@ void Unit::setCreationProgress(float progress)
     }
 }
 
-void Unit::increaseCreationProgress(float progress)
+void Unit::increaseCreationProgress(float progress) noexcept
 {
     setCreationProgress(m_creationProgress + progress);
 }
 
-float Unit::creationProgress() const
+float Unit::creationProgress() const noexcept
 {
     if (IS_UNLIKELY(m_data->Creatable.TrainTime == 0)) {
         return 1;
@@ -237,7 +237,7 @@ float Unit::creationProgress() const
     return m_creationProgress / float(m_data->Creatable.TrainTime);
 }
 
-void Unit::takeDamage(const genie::unit::AttackOrArmor &attack, const float damageMultiplier)
+void Unit::takeDamage(const genie::unit::AttackOrArmor &attack, const float damageMultiplier) noexcept
 {
     if (hitpointsLeft() <= 0) {
         return;
@@ -292,7 +292,7 @@ void Unit::takeDamage(const genie::unit::AttackOrArmor &attack, const float dama
 
 }
 
-bool Unit::isDying() const
+bool Unit::isDying() const noexcept
 {
     if (m_damageTaken < m_data->HitPoints) {
         return false;
@@ -316,7 +316,7 @@ bool Unit::isDying() const
     return true;
 }
 
-bool Unit::isDead() const
+bool Unit::isDead() const noexcept
 {
     if (m_damageTaken < m_data->HitPoints) {
         return false;
@@ -338,7 +338,7 @@ bool Unit::isDead() const
     return true;
 }
 
-void Unit::checkForAutoTargets()
+void Unit::checkForAutoTargets() noexcept
 {
     if (stance != Stance::Aggressive || m_autoTargetTasks.empty() || m_currentAction) {
         return;
@@ -410,7 +410,7 @@ void Unit::checkForAutoTargets()
     m_unitManager.assignTask(newTask, Entity::asUnit(shared_from_this()), target);
 }
 
-std::unordered_set<Task> Unit::availableActions()
+std::unordered_set<Task> Unit::availableActions() noexcept
 {
     std::unordered_set<Task> tasks;
     for (const genie::Task &task : DataManager::Inst().getTasks(m_data->ID)) {
@@ -430,7 +430,7 @@ std::unordered_set<Task> Unit::availableActions()
     return tasks;
 }
 
-Task Unit::findMatchingTask(const genie::Task::ActionTypes &type, int targetUnit)
+Task Unit::findMatchingTask(const genie::Task::ActionTypes &type, int targetUnit) noexcept
 {
     for (const Task &task : availableActions()) {
         if (task.data->ActionType == type && task.data->UnitID == targetUnit) {
@@ -441,12 +441,12 @@ Task Unit::findMatchingTask(const genie::Task::ActionTypes &type, int targetUnit
     return Task();
 }
 
-Size Unit::selectionSize() const
+Size Unit::selectionSize() const noexcept
 {
     return Size(data()->OutlineSize.x * Constants::TILE_SIZE, data()->OutlineSize.y * Constants::TILE_SIZE);
 }
 
-void Unit::setMap(const MapPtr &newMap)
+void Unit::setMap(const MapPtr &newMap) noexcept
 {
     for (Annex &annex : annexes) {
         annex.unit->setMap(newMap);
@@ -455,7 +455,7 @@ void Unit::setMap(const MapPtr &newMap)
     Entity::setMap(newMap);
 }
 
-void Unit::setPosition(const MapPos &pos, const bool initial)
+void Unit::setPosition(const MapPos &pos, const bool initial) noexcept
 {
     if (pos == position()) {
         return;
@@ -486,7 +486,7 @@ void Unit::setPosition(const MapPos &pos, const bool initial)
     }
 }
 
-void Unit::setUnitData(const genie::Unit &data_)
+void Unit::setUnitData(const genie::Unit &data_) noexcept
 {
     m_data = &data_;
 
@@ -510,16 +510,6 @@ void Unit::setUnitData(const genie::Unit &data_)
     }
 }
 
-float Unit::distanceTo(const Unit::Ptr &otherUnit) const
-{
-    const float xSize = (otherUnit->data()->Size.x + data()->Size.x) * Constants::TILE_SIZE;
-    const float ySize = (otherUnit->data()->Size.y + data()->Size.y) * Constants::TILE_SIZE;
-    const float xDistance = std::abs(otherUnit->position().x - position().x);
-    const float yDistance = std::abs(otherUnit->position().y - position().y);
-
-    return std::hypot(std::max(xDistance - xSize, 0.f), std::max(yDistance - ySize, 0.f));
-}
-
 void Unit::forEachVisibleTile(std::function<void (const int, const int)> action)
 {
     const int los = data()->LineOfSight;
@@ -534,12 +524,12 @@ void Unit::forEachVisibleTile(std::function<void (const int, const int)> action)
     }
 }
 
-float Unit::hitpointsLeft() const
+float Unit::hitpointsLeft() const noexcept
 {
     return std::max((data()->HitPoints * creationProgress() - m_damageTaken), 0.f);
 }
 
-float Unit::healthLeft() const
+float Unit::healthLeft() const noexcept
 {
     const float healthpoints = hitpointsLeft();
     if (healthpoints <= 0) {
@@ -649,24 +639,14 @@ void Unit::updateGraphic()
     m_renderer.setGraphic(graphic);
 }
 
-float Unit::angle() const
-{
-    return m_renderer.angle();
-}
-
-void Unit::setAngle(const float angle)
-{
-    m_renderer.setAngle(angle);
-}
-
-void Unit::prependAction(const ActionPtr &action)
+void Unit::prependAction(const ActionPtr &action) noexcept
 {
     m_actionQueue.push_front(std::move(m_currentAction));
     m_currentAction = action;
     updateGraphic();
 }
 
-void Unit::queueAction(const ActionPtr &action)
+void Unit::queueAction(const ActionPtr &action) noexcept
 {
     if (!m_currentAction) {
         setCurrentAction(action);
@@ -675,7 +655,7 @@ void Unit::queueAction(const ActionPtr &action)
     }
 }
 
-void Unit::setCurrentAction(const ActionPtr &action)
+void Unit::setCurrentAction(const ActionPtr &action) noexcept
 {
     m_currentAction = action;
 
@@ -703,7 +683,7 @@ void Unit::removeAction(const ActionPtr &action)
     }
 }
 
-void Unit::clearActionQueue()
+void Unit::clearActionQueue() noexcept
 {
     m_actionQueue.clear();
     m_currentAction.reset();

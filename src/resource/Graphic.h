@@ -63,7 +63,7 @@ struct GraphicState {
     ImageType type = ImageType::Base;
     bool flipped = false;
 
-    bool operator==(const GraphicState &other) const {
+    bool operator==(const GraphicState &other) const noexcept {
         return frame == other.frame &&
                angle == other.angle &&
                playerId == other.playerId &&
@@ -75,7 +75,7 @@ struct GraphicState {
 namespace std {
 template<> struct hash<GraphicState>
 {
-    size_t operator()(const GraphicState b) const {
+    size_t operator()(const GraphicState b) const noexcept {
         return hash<uint32_t>()(b.frame) ^
                hash<int>()(b.angle) ^
                hash<uint8_t>()(b.playerId) ^
@@ -107,7 +107,7 @@ public:
     Graphic(const genie::Graphic &m_data, const int id);
     virtual ~Graphic() = default;
 
-    static sf::Image slpFrameToImage(const genie::SlpFramePtr &frame, uint8_t playerId, const ImageType imageType);
+    static sf::Image slpFrameToImage(const genie::SlpFramePtr &frame, uint8_t playerId, const ImageType imageType) noexcept;
 
     //----------------------------------------------------------------------------
     /// Returns the image of the graphic.
@@ -119,62 +119,65 @@ public:
 //    const sf::Texture &getImage(uint32_t frame_num = 0, float angle = 0, uint8_t playerId = 0, const ImageType type = ImageType::Base);
 //    const sf::Texture &overlayImage(uint32_t frame_num, float angle, uint8_t playerId);
 
-    const sf::Texture &texture(uint32_t frameNum = 0, float angleRadians = 0, uint8_t playerId = 0, const ImageType imageType = ImageType::Base);
+    const sf::Texture &texture(uint32_t frameNum = 0, float angleRadians = 0, uint8_t playerId = 0, const ImageType imageType = ImageType::Base) noexcept;
 
-    Size size(uint32_t frame_num, float angle) const;
-    ScreenRect rect(uint32_t frame_num, float angle) const;
-    ScreenPos getHotspot(uint32_t frame_num, float angle) const;
+    Size size(uint32_t frame_num, float angle) const noexcept;
+    ScreenRect rect(uint32_t frame_num, float angle) const noexcept;
+    ScreenPos getHotspot(uint32_t frame_num, float angle) const noexcept;
 
-    bool checkClick(const ScreenPos &pos, uint32_t frame_num, float angle) const;
+    bool checkClick(const ScreenPos &pos, uint32_t frame_num, float angle) const noexcept;
 
-    const std::vector<genie::GraphicDelta> &deltas() const;
+    inline const std::vector<genie::GraphicDelta> &deltas() const noexcept { return m_data.Deltas; }
 
-    bool hasSounds() const { return m_data.AngleSoundsUsed; }
+    bool hasSounds() const noexcept { return m_data.AngleSoundsUsed; }
 
-    const genie::GraphicAngleSound &soundForAngle(float angle);
+    const genie::GraphicAngleSound &soundForAngle(float angle) const noexcept;
 
-    int sound() const { return m_data.SoundID; }
+    int sound() const noexcept { return m_data.SoundID; }
 
     //----------------------------------------------------------------------------
     /// Get the frame rate of the graphic
     ///
     /// @return frame rate
     //
-    float framerate() const;
+    float framerate() const noexcept { return m_data.FrameDuration; }
 
     //----------------------------------------------------------------------------
     ///
     /// @return replay delay
     //
-    inline float replayDelay() const { return m_data.ReplayDelay; }
+    inline float replayDelay() const noexcept { return m_data.ReplayDelay; }
 
     //----------------------------------------------------------------------------
     /// Get the graphics frame count.
     ///
     /// @return frame count
     //
-    inline uint16_t frameCount() const { return m_data.FrameCount; }
+    inline uint16_t frameCount() const noexcept { return m_data.FrameCount; }
 
-    bool load();
-    void unload();
+    bool load() noexcept;
+    void unload() noexcept;
 
     ScreenPos offset_;
 
-    bool isValid();
+    bool isValid() const noexcept {
+        // Coud be valid if it has deltas
+        return slp_ != nullptr || !m_data.Deltas.empty();;
+    }
 
-    bool runOnce() const;
-    void setRunOnce(const bool once);
+    inline bool runOnce() const noexcept { return m_runOnce; }
+    inline void setRunOnce(const bool once) noexcept { m_runOnce = once; }
 
-    int angleToOrientation(float angle) const;
-    float orientationToAngle(float orientation) const;
+    int angleToOrientation(float angle) const noexcept;
+    float orientationToAngle(float orientation) const noexcept;
 private:
-    const genie::SlpFramePtr &getFrame(uint32_t frame_num, float angle) const;
+    const genie::SlpFramePtr &getFrame(uint32_t frame_num, float angle) const noexcept;
 
     struct FrameInfo {
         uint32_t frameNum = 0;
         bool mirrored = false;
     };
-    FrameInfo calcFrameInfo(uint32_t num, float angle) const;
+    FrameInfo calcFrameInfo(uint32_t num, float angle) const noexcept;
 
     genie::SlpFilePtr slp_;
 

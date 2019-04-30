@@ -19,11 +19,13 @@
 
 #include "mechanics/Entity.h"
 #include "core/ResourceMap.h"
+#include "core/Constants.h"
 #include "actions/IAction.h"
 
 #include <deque>
 #include <map>
 
+#include <genie/dat/Unit.h>
 #include <genie/dat/UnitCommand.h>
 #include <genie/dat/unit/AttackOrArmor.h>
 
@@ -126,22 +128,22 @@ struct Unit : public Entity
 
     ~Unit();
 
-    float angle() const;
-    void setAngle(const float angle);
+    inline float angle() const noexcept { return m_renderer.angle(); }
+    inline void setAngle(const float angle) noexcept { m_renderer.setAngle(angle); }
 
-    void prependAction(const ActionPtr &action);
-    void queueAction(const ActionPtr &action);
-    void setCurrentAction(const ActionPtr &action);
-    void clearActionQueue();
-    const ActionPtr &currentAction() const { return m_currentAction; }
+    void prependAction(const ActionPtr &action) noexcept;
+    void queueAction(const ActionPtr &action) noexcept;
+    void setCurrentAction(const ActionPtr &action) noexcept;
+    void clearActionQueue() noexcept;
+    const ActionPtr &currentAction() const noexcept { return m_currentAction; }
 
-    void snapPositionToGrid();
+    void snapPositionToGrid() noexcept;
 
-    bool update(Time time) override;
+    bool update(Time time) noexcept override;
 
-    const std::vector<const genie::Unit *> creatableUnits();
+    const std::vector<const genie::Unit *> creatableUnits() noexcept;
 
-    static std::shared_ptr<Building> asBuilding(const Unit::Ptr &unit);
+    static std::shared_ptr<Building> asBuilding(const Unit::Ptr &unit) noexcept;
 
     bool selected = false;
     int playerId;
@@ -151,35 +153,43 @@ struct Unit : public Entity
 
     ResourceMap resources;
 
-    virtual ScreenRect rect() const;
-    virtual bool checkClick(const ScreenPos &pos) const;
+    virtual ScreenRect rect() const noexcept;
+    virtual bool checkClick(const ScreenPos &pos) const noexcept;
 
-    bool hasAutoTargets() const { return !m_autoTargetTasks.empty(); }
-    void checkForAutoTargets();
-    std::unordered_set<Task> availableActions();
-    Task findMatchingTask(const genie::Task::ActionTypes &m_type, int targetUnit);
-    Size selectionSize() const;
+    bool hasAutoTargets() const noexcept { return !m_autoTargetTasks.empty(); }
+    void checkForAutoTargets() noexcept;
+    std::unordered_set<Task> availableActions() noexcept;
+    Task findMatchingTask(const genie::Task::ActionTypes &m_type, int targetUnit) noexcept;
+    Size selectionSize() const noexcept;
 
-    virtual void setCreationProgress(float progress);
-    void increaseCreationProgress(float progress);
-    float creationProgress() const;
-    float hitpointsLeft() const;
-    float healthLeft() const;
-    void takeDamage(const genie::unit::AttackOrArmor &attack, const float damageMultiplier);
-    bool isDying() const;
-    bool isDead() const;
+    virtual void setCreationProgress(float progress) noexcept;
+    void increaseCreationProgress(float progress) noexcept;
+    float creationProgress() const noexcept;
+    float hitpointsLeft() const noexcept;
+    float healthLeft() const noexcept;
+    void takeDamage(const genie::unit::AttackOrArmor &attack, const float damageMultiplier) noexcept;
+    bool isDying() const noexcept;
+    bool isDead() const noexcept;
 
-    void setMap(const MapPtr &newMap) override;
-    void setPosition(const MapPos &pos, const bool initial = false) override;
+    void setMap(const MapPtr &newMap) noexcept override;
+    void setPosition(const MapPos &pos, const bool initial = false) noexcept override;
 
-    void setUnitData(const genie::Unit &data_);
-    const genie::Unit *data() const {return m_data; }
+    void setUnitData(const genie::Unit &data_) noexcept;
+    const genie::Unit *data() const noexcept {return m_data; }
 
     int activeMissiles = 0;
 
-    UnitManager &unitManager() const { return m_unitManager; }
+    UnitManager &unitManager() const noexcept { return m_unitManager; }
 
-    float distanceTo(const Unit::Ptr &otherUnit) const;
+    float distanceTo(const Unit::Ptr &otherUnit) const noexcept
+    {
+        const float xSize = (otherUnit->data()->Size.x + data()->Size.x) * Constants::TILE_SIZE;
+        const float ySize = (otherUnit->data()->Size.y + data()->Size.y) * Constants::TILE_SIZE;
+        const float xDistance = std::abs(otherUnit->position().x - position().x);
+        const float yDistance = std::abs(otherUnit->position().y - position().y);
+
+        return std::hypot(std::max(xDistance - xSize, 0.f), std::max(yDistance - ySize, 0.f));
+    }
 
 protected:
     void forEachVisibleTile(std::function<void(const int, const int)> action);
