@@ -502,7 +502,12 @@ void GameState::setupScenario()
             }
         }
     }
-    MapPos cameraPos(scenario_->players[1].initCameraX * Constants::TILE_SIZE, map_->height() - scenario_->players[1].initCameraY * Constants::TILE_SIZE);
+    MapPos cameraPos;
+    if (scenario_->playerData.player1CameraX >= 0 &&  scenario_->playerData.player1CameraX >= 0) {
+        cameraPos = MapPos(scenario_->playerData.player1CameraX * Constants::TILE_SIZE, scenario_->playerData.player1CameraY * Constants::TILE_SIZE);
+    } else {
+        cameraPos = MapPos (scenario_->players[1].initCameraX * Constants::TILE_SIZE, map_->height() - scenario_->players[1].initCameraY * Constants::TILE_SIZE);
+    }
     renderTarget_->camera()->setTargetPosition(cameraPos);
     m_humanPlayer = m_players[1];
 }
