@@ -80,10 +80,11 @@ MapPos ActionMove::findClosestWalkableBorder(const MapPos &start, const MapPos &
 {
     // follow a straight line from the target to our location, to find the closest position we can get to
     // standard bresenham, not the prettiest implementation
-    const int x0 = target.x;
-    const int y0 = target.y;
-    const int x1 = start.x;
-    const int y1 = start.y;
+
+    const int x0 = std::round(target.x / coarseness) * coarseness;
+    const int y0 = std::round(target.y / coarseness) * coarseness;
+    const int x1 = std::round(start.x / coarseness) * coarseness;
+    const int y1 = std::round(start.y / coarseness) * coarseness;
 
     int dx = x1 - x0;
     int dy = y1 - y0;
@@ -140,9 +141,12 @@ MapPos ActionMove::findClosestWalkableBorder(const MapPos &start, const MapPos &
         y += uincrY;
 
         if (isPassable(x, y)) {
+            x += uincrX;
+            y += uincrY;
             break;
         }
     } while (u <= uend);
+
 
 
     return MapPos(x, y);
@@ -379,6 +383,13 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
     if (!isPassable(startX * coarseness, startY * coarseness)) {
         WARN << "handed unpassable start, failed to find new";
         return path;
+    }
+
+    if (!isPassable(endX * coarseness, endY * coarseness)) {
+        WARN << "handed unpassable target, attempting to get out";
+        start = findClosestWalkableBorder(start, end, coarseness);
+        startX = std::round(start.x / coarseness);
+        startY = std::round(start.y / coarseness);
     }
 
     if (!isPassable(endX * coarseness, endY * coarseness)) {

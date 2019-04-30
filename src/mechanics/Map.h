@@ -149,7 +149,13 @@ private:
     void updateTileBlend(int tileX, int tileY) noexcept;
     void updateTileSlopes(int tileX, int tileY) noexcept;
 
-    inline Slope slopeAt(const int x, const int y) const noexcept { return getTileAt(x, y).slopes.self; }
+    inline Slope slopeAt(const int col, const int row) const noexcept {
+        const unsigned int index = row * cols_ + col;
+        if (IS_UNLIKELY(index >= tiles_.size())) {
+            return Slope::Flat;
+        }
+        return tiles_[index].slopes.self;
+    }
 
     // cols_ = x, rows_ = y
     int rows_, cols_;
