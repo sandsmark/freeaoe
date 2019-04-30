@@ -76,7 +76,7 @@ ActionMove::ActionMove(MapPos destination, const MapPtr &map, const Unit::Ptr &u
     speed_ = unit->data()->Speed;
 }
 
-MapPos ActionMove::findClosestWalkableBorder(const MapPos &start, const MapPos &target, int coarseness) noexcept
+MapPos ActionMove::findClosestWalkableBorder(const MapPos &start, const MapPos &target) noexcept
 {
     // follow a straight line from the target to our location, to find the closest position we can get to
     // standard bresenham, not the prettiest implementation
@@ -177,9 +177,21 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
         return UpdateResult::NotUpdated;
     }
 
-    if (target_reached || m_path.empty()) {
-        target_reached = true;
+    if (target_reached) {
         return UpdateResult::Completed;
+    }
+
+    if (m_path.empty()) {
+        target_reached = true;
+
+        if (unit->position().distance(dest_) < 1) {
+            if (isPassable(dest_.x, dest_.y)) {
+                unit->setPosition(dest_);
+                return UpdateResult::Completed;
+            }
+        }
+
+        return UpdateResult::Failed;
     }
 
     float elapsed = time - m_prevTime;
@@ -197,6 +209,7 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
 
     if (m_path.empty()) {
         target_reached = true;
+        WARN << "path empty after loop, complete, distance left:" << unit->position().distance(dest_);
         return UpdateResult::Completed;
     }
 
@@ -248,6 +261,7 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
             target_reached = true;
             return UpdateResult::Failed;
         } else {
+            DBG << "found intermediary";
             m_path.insert(m_path.begin(), ++partial.begin(), partial.end());
             return UpdateResult::Updated;
         }
@@ -353,16 +367,11 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
 
     int startX = std::round(start.x / coarseness);
     int startY = std::round(start.y / coarseness);
+    int endX = std::round(end.x / coarseness);
+    int endY = std::round(end.y / coarseness);
     if (!isPassable(startX * coarseness, startY * coarseness)) {
         WARN << "handed unpassable start, attempting to get out";
-        start = findClosestWalkableBorder(end, start, coarseness);
-        startX = std::round(start.x / coarseness);
-        startY = std::round(start.y / coarseness);
-    }
-
-    if (!isPassable(startX * coarseness, startY * coarseness)) {
-        WARN << "failed to find better path forward, attempting to go backwards a bit";
-        start = findClosestWalkableBorder(start, end, 10);
+        start = findClosestWalkableBorder(MapPos(endX * coarseness, endY * coarseness), MapPos(startX * coarseness, startY * coarseness), coarseness);
         startX = std::round(start.x / coarseness);
         startY = std::round(start.y / coarseness);
     }
@@ -372,8 +381,6 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
         return path;
     }
 
-    int endX = std::round(end.x / coarseness);
-    int endY = std::round(end.y / coarseness);
     if (!isPassable(endX * coarseness, endY * coarseness)) {
         WARN << "handed unpassable target";
         return path;
