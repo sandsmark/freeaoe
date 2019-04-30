@@ -168,6 +168,9 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
     if (!m_prevTime) {
         m_prevTime = time;
         updatePath();
+        if (m_path.empty()) {
+            return UpdateResult::Failed;
+        }
         return UpdateResult::NotUpdated;
     }
 
@@ -563,6 +566,7 @@ bool ActionMove::isPassable(const int x, const int y, int coarseness) noexcept
 
 void ActionMove::updatePath() noexcept
 {
+    m_path.clear();
     std::shared_ptr<Unit> unit = m_unit.lock();
     if (!unit) {
         WARN << "Lost our unit";
