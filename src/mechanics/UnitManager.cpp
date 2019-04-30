@@ -502,21 +502,27 @@ void UnitManager::onRightClick(const ScreenPos &screenPos, const CameraPtr &came
         return;
     }
 
-    const Task task = defaultActionAt(screenPos, camera);
-    if (task.data) {
-        for (const Unit::Ptr &unit : m_selectedUnits) {
-            if (unit->playerId != humanPlayer->playerId) {
-                continue;
-            }
-
-            unit->clearActionQueue();
-            Unit::Ptr target = unitAt(screenPos, camera);
-            assignTask(task, unit, target);
-            if (target) {
-                target->targetBlinkTimeLeft = 3000; // 3s
-            }
+    // Thanks task swap group satan
+    bool foundTasks = false;
+    for (const Unit::Ptr &unit : m_selectedUnits) {
+        if (unit->playerId != humanPlayer->playerId) {
+            continue;
+        }
+        Task task = taskForPosition(unit, screenPos, camera);
+        if (!task.data) {
+            continue;
         }
 
+        unit->clearActionQueue();
+        Unit::Ptr target = unitAt(screenPos, camera);
+        assignTask(task, unit, target);
+        if (target) {
+            target->targetBlinkTimeLeft = 3000; // 3s
+        }
+        foundTasks = true;
+    }
+
+    if (foundTasks) {
         return;
     }
 
@@ -821,4 +827,25 @@ void UnitManager::playSound(const Unit::Ptr &unit)
     }
 
     AudioPlayer::instance().playSound(id, unit->civilization->id());
+}
+
+const Task UnitManager::taskForPosition(const Unit::Ptr &unit, const ScreenPos &pos, const CameraPtr &camera) const noexcept
+{
+    if (m_selectedUnits.empty()) {
+        return Task();
+    }
+
+    Unit::Ptr target = unitAt(pos, camera);
+    if (!target) {
+        return Task();
+    }
+
+    // One of the selected themselves
+    if (m_selectedUnits.count(target)) {
+        return Task();
+    }
+
+    const int ownPlayerId = (*m_selectedUnits.begin())->playerId;
+
+    return IAction::findMatchingTask(ownPlayerId, target, unit->availableActions());
 }

@@ -115,9 +115,10 @@ public:
     void onCombatantUnitsMoved() { m_unitsMoved = true; }
 
 private:
-     State m_state = State::Default;
+    State m_state = State::Default;
 
     void playSound(const Unit::Ptr &unit);
+    const Task taskForPosition(const Unit::Ptr &unit, const ScreenPos &pos, const CameraPtr &camera) const noexcept;
 
     std::unordered_set<Missile::Ptr> m_missiles;
     std::unordered_set<DecayingEntity::Ptr> m_decayingEntities;
