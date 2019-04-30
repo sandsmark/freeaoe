@@ -76,7 +76,7 @@ ActionMove::ActionMove(MapPos destination, const MapPtr &map, const Unit::Ptr &u
     speed_ = unit->data()->Speed;
 }
 
-MapPos ActionMove::findClosestWalkableBorder(const MapPos &start, const MapPos &target) noexcept
+MapPos ActionMove::findClosestWalkableBorder(const MapPos &start, const MapPos &target, int coarseness) noexcept
 {
     // follow a straight line from the target to our location, to find the closest position we can get to
     // standard bresenham, not the prettiest implementation
@@ -118,8 +118,8 @@ MapPos ActionMove::findClosestWalkableBorder(const MapPos &start, const MapPos &
 
     const int uend = u + distanceU;
     int d = (2 * distanceV) - distanceU;	    /* Initial value as in Bresenham's */
-    const int incrS = 2 * distanceV;	/* Δd for straight increments */
-    const int incrD = 2 *(distanceV - distanceU);	/* Δd for diagonal increments */
+    const int incrS = coarseness * 2 * distanceV;	/* Δd for straight increments */
+    const int incrD = coarseness * 2 *(distanceV - distanceU);	/* Δd for diagonal increments */
 
     int x = x0, y = y0;
 

@@ -45,7 +45,7 @@ public:
 private:
     ActionMove(MapPos destination, const MapPtr &map, const Unit::Ptr &unit, UnitManager *unitManager);
 
-    MapPos findClosestWalkableBorder(const MapPos &start, const MapPos &target) noexcept;
+    MapPos findClosestWalkableBorder(const MapPos &start, const MapPos &target, int coarseness) noexcept;
 
     std::vector<MapPos> findPath(MapPos start, MapPos end, int coarseness) noexcept;
     bool isPassable(const int x, const int y) noexcept;
