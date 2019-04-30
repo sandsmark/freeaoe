@@ -139,7 +139,7 @@ MapPos ActionMove::findClosestWalkableBorder(const MapPos &start, const MapPos &
         x += uincrX;
         y += uincrY;
 
-        if (isPassable(x, y, coarseness * 2)) {
+        if (isPassable(x, y)) {
             break;
         }
     } while (u <= uend);
@@ -170,6 +170,9 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
         updatePath();
         if (m_path.empty()) {
             return UpdateResult::Failed;
+        }
+        if (m_path.back() != unit->position()) {
+            unit->setPosition(m_path.back()); // Just in case we had to do a coarse check
         }
         return UpdateResult::NotUpdated;
     }
@@ -207,15 +210,19 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
             target_reached = true;
             return UpdateResult::Failed;
         }
+        WARN << "found new path";
 
         return UpdateResult::NotUpdated;
     }
 
     const float direction = std::atan2(nextPos.y - unit->position().y, nextPos.x - unit->position().x);
     MapPos newPos = unit->position();
-    movement = std::min(movement, std::hypot(nextPos.x - newPos.x, nextPos.y - newPos.y));
-    newPos.x += std::cos(direction) * movement;
-    newPos.y += std::sin(direction) * movement;
+    if (std::hypot(nextPos.x - newPos.x, nextPos.y - newPos.y) < movement) {
+        newPos = nextPos;
+    } else {
+        newPos.x += std::cos(direction) * movement;
+        newPos.y += std::sin(direction) * movement;
+    }
 
     // Try to wiggle past
     if (!isPassable(newPos.x, newPos.y)) {
@@ -346,20 +353,28 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
 
     int startX = std::round(start.x / coarseness);
     int startY = std::round(start.y / coarseness);
-    if (!isPassable(startX * coarseness, startY * coarseness, coarseness)) {
+    if (!isPassable(startX * coarseness, startY * coarseness)) {
         WARN << "handed unpassable start, attempting to get out";
         start = findClosestWalkableBorder(end, start, coarseness);
         startX = std::round(start.x / coarseness);
         startY = std::round(start.y / coarseness);
     }
-    if (!isPassable(startX * coarseness, startY * coarseness, coarseness)) {
+
+    if (!isPassable(startX * coarseness, startY * coarseness)) {
+        WARN << "failed to find better path forward, attempting to go backwards a bit";
+        start = findClosestWalkableBorder(start, end, 10);
+        startX = std::round(start.x / coarseness);
+        startY = std::round(start.y / coarseness);
+    }
+
+    if (!isPassable(startX * coarseness, startY * coarseness)) {
         WARN << "handed unpassable start, failed to find new";
         return path;
     }
 
     int endX = std::round(end.x / coarseness);
     int endY = std::round(end.y / coarseness);
-    if (!isPassable(endX * coarseness, endY * coarseness, coarseness)) {
+    if (!isPassable(endX * coarseness, endY * coarseness)) {
         WARN << "handed unpassable target";
         return path;
     }
@@ -433,7 +448,7 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
                     continue;
                 }
 
-                if (!isPassable(nx * coarseness, ny * coarseness, coarseness)) {
+                if (!isPassable(nx * coarseness, ny * coarseness)) {
                     visited.insert(pathPoint);
                     continue;
                 }
@@ -494,7 +509,7 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
     return simplifyRdp(path, coarseness*1.5);
 }
 
-bool ActionMove::isPassable(const int x, const int y, int coarseness) noexcept
+bool ActionMove::isPassable(const int x, const int y) noexcept
 {
     if (IS_UNLIKELY(x < 0 || y < 0)) {
         return false;
@@ -547,12 +562,13 @@ bool ActionMove::isPassable(const int x, const int y, int coarseness) noexcept
                     continue;
                 }
 
-                const float xSize = (otherUnit->data()->Size.x + unit->data()->Size.x) * Constants::TILE_SIZE + coarseness;
-                const float ySize = (otherUnit->data()->Size.y + unit->data()->Size.y) * Constants::TILE_SIZE + coarseness;
+                const float xSize = (otherUnit->data()->Size.x + unit->data()->Size.x) * Constants::TILE_SIZE;
+                const float ySize = (otherUnit->data()->Size.y + unit->data()->Size.y) * Constants::TILE_SIZE;
                 const float xDistance = std::abs(otherUnit->position().x - mapPos.x);
                 const float yDistance = std::abs(otherUnit->position().y - mapPos.y);
 
-                if (IS_UNLIKELY(xDistance < xSize && yDistance < ySize)) {
+//                if (IS_UNLIKELY(xDistance < xSize && yDistance < ySize)) {
+                if (IS_UNLIKELY(xDistance * xDistance + yDistance * yDistance < xSize * ySize)) {
                     m_passable[cacheIndex] = false;
                     return false;
                 }
