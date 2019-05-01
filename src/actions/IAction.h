@@ -32,6 +32,7 @@ struct Unit;
 struct Task;
 class Map;
 class UnitManager;
+struct Player;
 
 struct Task {
     Task(const genie::Task &t, int id) : data(&t), unitId(id) {}
@@ -82,7 +83,7 @@ public:
 
     const Type type = Type::None;
 
-    static Task findMatchingTask(const int ownPlayerId, const std::shared_ptr<Unit> &target, const std::unordered_set<Task> &potentials);
+    static Task findMatchingTask(const std::shared_ptr<Player> ownPlayer, const std::shared_ptr<Unit> &target, const std::unordered_set<Task> &potentials);
 
     virtual UnitState unitState() const { return UnitState::Idle; }
     virtual genie::Task::ActionTypes taskType() const = 0;

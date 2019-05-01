@@ -754,9 +754,7 @@ const Task UnitManager::defaultActionAt(const ScreenPos &pos, const CameraPtr &c
         return Task();
     }
 
-    const int ownPlayerId = (*m_selectedUnits.begin())->playerId;
-
-    return IAction::findMatchingTask(ownPlayerId, target, m_currentActions);
+    return IAction::findMatchingTask(m_humanPlayer.lock(), target, m_currentActions);
 }
 
 void UnitManager::moveUnitTo(const Unit::Ptr &unit, const MapPos &targetPos)
@@ -797,7 +795,5 @@ const Task UnitManager::taskForPosition(const Unit::Ptr &unit, const ScreenPos &
         return Task();
     }
 
-    const int ownPlayerId = (*m_selectedUnits.begin())->playerId;
-
-    return IAction::findMatchingTask(ownPlayerId, target, unit->availableActions());
+    return IAction::findMatchingTask(m_humanPlayer.lock(), target, unit->availableActions());
 }

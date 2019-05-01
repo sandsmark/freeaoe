@@ -211,6 +211,22 @@ void Player::removeUnit(Unit *unit)
     m_units.erase(unit);
 }
 
+void Player::addAlliedPlayer(int playerId)
+{
+    m_alliedPlayers.insert(playerId);
+}
+
+void Player::removeAlliedPlayer(int playerId)
+{
+    m_alliedPlayers.erase(playerId);
+}
+
+bool Player::isAllied(int playerId)
+{
+    // STL sucks
+    return m_alliedPlayers.count(playerId) > 0;
+}
+
 namespace {
     enum Direction {
         West = 1 << 0,

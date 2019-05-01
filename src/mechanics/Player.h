@@ -92,7 +92,6 @@ struct VisibilityMap
 
         m_visibility[index]--;
     }
-
     int edgeTileNum(const int tileX, const int tileY, const Visibility type) const;
 
 private:
@@ -129,8 +128,14 @@ struct Player
     void addUnit(Unit *unit);
     void removeUnit(Unit *unit);
 
+    void addAlliedPlayer(int playerId);
+    void removeAlliedPlayer(int playerId);
+    bool isAllied(int playerId);
+
+
 private:
     std::unordered_set<Unit*> m_units;
     std::unordered_set<int> m_activeTechs;
+    std::unordered_set<int> m_alliedPlayers;
 };
 

@@ -383,7 +383,7 @@ void Unit::checkForAutoTargets() noexcept
         }
 
         Task potentialTask;
-        potentialTask = IAction::findMatchingTask(playerId, other, m_autoTargetTasks);
+        potentialTask = IAction::findMatchingTask(player.lock(), other, m_autoTargetTasks);
         if (!potentialTask.data) {
             continue;
         }

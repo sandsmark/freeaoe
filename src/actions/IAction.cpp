@@ -21,6 +21,7 @@
 #include "mechanics/Unit.h"
 #include "mechanics/UnitManager.h"
 #include "mechanics/Civilization.h"
+#include "mechanics/Player.h"
 #include "resource/DataManager.h"
 #include "audio/AudioPlayer.h"
 
@@ -36,19 +37,23 @@ IAction::IAction(const Type type_, const std::shared_ptr<Unit> &unit, const Task
 {
 }
 
-Task IAction::findMatchingTask(const int ownPlayerId, const std::shared_ptr<Unit> &target, const std::unordered_set<Task> &potentials)
+Task IAction::findMatchingTask(const std::shared_ptr<Player> ownPlayer, const std::shared_ptr<Unit> &target, const std::unordered_set<Task> &potentials)
 {
+    if (!ownPlayer){
+        WARN << "no player passed for task finding";
+        return Task();
+    }
     for (const Task &task : potentials) {
         const genie::Task *action = task.data;
 
         switch (action->TargetDiplomacy) {
         case genie::Task::TargetSelf:
-            if (target->playerId != ownPlayerId) {
+            if (target->playerId != ownPlayer->playerId) {
                 continue;
             }
             break;
         case genie::Task::TargetNeutralsEnemies: // TODO: neutrals
-            if (target->playerId == ownPlayerId) {
+            if (target->playerId == ownPlayer->playerId) {
                 continue;
             }
             break;
@@ -58,14 +63,17 @@ Task IAction::findMatchingTask(const int ownPlayerId, const std::shared_ptr<Unit
                 continue;
             }
             break;
-        case genie::Task::TargetSelfAllyGaia: // TODO: Allies
-            if (target->playerId != ownPlayerId && target->playerId != UnitManager::GaiaID) {
+        case genie::Task::TargetSelfAllyGaia:
+            if (target->playerId != ownPlayer->playerId && target->playerId != UnitManager::GaiaID && !ownPlayer->isAllied(target->playerId)) {
                 continue;
             }
             break;
         case genie::Task::TargetGaiaNeutralEnemies:
         case genie::Task::TargetOthers:
-            if (target->playerId == ownPlayerId) { // TODO: allies
+            if (target->playerId == ownPlayer->playerId) {
+                continue;
+            }
+            if (ownPlayer->isAllied(target->playerId)) {
                 continue;
             }
             break;
@@ -105,7 +113,7 @@ Task IAction::findMatchingTask(const int ownPlayerId, const std::shared_ptr<Unit
         if (action->TargetDiplomacy != genie::Task::TargetGaiaNeutralEnemies && action->TargetDiplomacy != genie::Task::TargetNeutralsEnemies) {
             continue;
         }
-        if (ownPlayerId == target->playerId) {
+        if (ownPlayer->playerId == target->playerId) {
             continue;
         }
 
