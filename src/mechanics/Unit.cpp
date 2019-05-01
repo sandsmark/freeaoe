@@ -407,7 +407,7 @@ void Unit::checkForAutoTargets() noexcept
     }
 
     DBG << "found auto task" << newTask.data->actionTypeName() << "for" << debugName;
-    m_unitManager.assignTask(newTask, Entity::asUnit(shared_from_this()), target);
+    IAction::assignTask(newTask, Entity::asUnit(shared_from_this()), target);
 }
 
 std::unordered_set<Task> Unit::availableActions() noexcept

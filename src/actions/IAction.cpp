@@ -20,7 +20,14 @@
 #include "mechanics/Entity.h"
 #include "mechanics/Unit.h"
 #include "mechanics/UnitManager.h"
+#include "mechanics/Civilization.h"
 #include "resource/DataManager.h"
+#include "audio/AudioPlayer.h"
+
+#include "ActionAttack.h"
+#include "ActionMove.h"
+#include "ActionBuild.h"
+#include "ActionGather.h"
 
 IAction::IAction(const Type type_, const std::shared_ptr<Unit> &unit, UnitManager *unitManager) :
     type(type_),
@@ -110,6 +117,63 @@ Task IAction::findMatchingTask(const int ownPlayerId, const std::shared_ptr<Unit
     }
 
     return Task();
+
+}
+
+void IAction::assignTask(const Task &task, const std::shared_ptr<Unit> &unit, const std::shared_ptr<Unit> &target)
+{
+    if (!task.data) {
+        WARN << "no task data";
+        return;
+    }
+
+    switch(task.data->ActionType) {
+    case genie::Task::Build: {
+        if (!target) {
+            DBG << "Can't build nothing";
+            return;
+        }
+
+        unit->queueAction(ActionMove::moveUnitTo(unit, target->position(), unit->map(), &unit->unitManager()));
+
+        ActionPtr buildAction = std::make_shared<ActionBuild>(unit, target, &unit->unitManager());
+        buildAction->requiredUnitID = task.unitId;
+        unit->queueAction(buildAction);
+
+        if (target->data()->Class == genie::Unit::Farm) {
+            Task farmTask = unit->findMatchingTask(genie::Task::GatherRebuild, target->data()->ID);
+            ActionPtr farmAction = std::make_shared<ActionGather>(unit, target, farmTask.data, &unit->unitManager());
+            farmAction->requiredUnitID = farmTask.unitId;
+            unit->queueAction(farmAction);
+        }
+        break;
+    }
+    case genie::Task::Hunt:
+    case genie::Task::GatherRebuild: {
+        if (!target) {
+            DBG << "Can't gather from nothing";
+            return;
+        }
+        unit->queueAction(ActionMove::moveUnitTo(unit, target->position(), unit->map(), &unit->unitManager()));
+        ActionPtr farmAction = std::make_shared<ActionGather>(unit, target, task.data, &unit->unitManager());
+        farmAction->requiredUnitID = task.unitId;
+        unit->queueAction(farmAction);
+        break;
+    }
+    case genie::Task::Combat: {
+        if (target) {
+            DBG << "attacking" << target->debugName;
+        }
+
+        AudioPlayer::instance().playSound(unit->data()->Action.AttackSound, unit->civilization->id());
+        ActionPtr combatAction = std::make_shared<ActionAttack>(unit, target, &unit->unitManager());
+        combatAction->requiredUnitID = task.unitId;
+        unit->queueAction(combatAction);
+        break;
+    }
+    default:
+        return;
+    }
 
 }
 

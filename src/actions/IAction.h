@@ -72,6 +72,8 @@ public:
     virtual UnitState unitState() const { return UnitState::Idle; }
     virtual genie::Task::ActionTypes taskType() const = 0;
 
+    static void assignTask(const Task &task, const std::shared_ptr<Unit> &unit, const std::shared_ptr<Unit> &target);
+
     virtual ~IAction();
 
     /// @return true if action is done

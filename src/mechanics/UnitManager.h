@@ -104,7 +104,6 @@ public:
 
     const Task defaultActionAt(const ScreenPos &pos, const CameraPtr &camera) const noexcept;
     void moveUnitTo(const Unit::Ptr &unit, const MapPos &targetPos);
-    void assignTask(const Task &task, const Unit::Ptr &unit, const Unit::Ptr &target);
     void selectAttackTarget();
 
     State state() const { return m_state; }

@@ -450,7 +450,7 @@ bool UnitManager::onLeftClick(const ScreenPos &screenPos, const CameraPtr &camer
             }
 
             unit->clearActionQueue();
-            assignTask(task, unit, m_buildingToPlace);
+            IAction::assignTask(task, unit, m_buildingToPlace);
         }
 
         m_buildingToPlace.reset();
@@ -515,7 +515,7 @@ void UnitManager::onRightClick(const ScreenPos &screenPos, const CameraPtr &came
 
         unit->clearActionQueue();
         Unit::Ptr target = unitAt(screenPos, camera);
-        assignTask(task, unit, target);
+        IAction::assignTask(task, unit, target);
         if (target) {
             target->targetBlinkTimeLeft = 3000; // 3s
         }
@@ -763,63 +763,6 @@ void UnitManager::moveUnitTo(const Unit::Ptr &unit, const MapPos &targetPos)
 {
     AudioPlayer::instance().playSound(unit->data()->Action.MoveSound, unit->civilization->id());
     unit->setCurrentAction(ActionMove::moveUnitTo(unit, targetPos, m_map, this));
-}
-
-void UnitManager::assignTask(const Task &task, const Unit::Ptr &unit, const Unit::Ptr &target)
-{
-    if (!task.data) {
-        WARN << "no task data";
-        return;
-    }
-
-    switch(task.data->ActionType) {
-    case genie::Task::Build: {
-        if (!target) {
-            DBG << "Can't build nothing";
-            return;
-        }
-
-        unit->queueAction(ActionMove::moveUnitTo(unit, target->position(), m_map, this));
-
-        ActionPtr buildAction = std::make_shared<ActionBuild>(unit, target, this);
-        buildAction->requiredUnitID = task.unitId;
-        unit->queueAction(buildAction);
-
-        if (target->data()->Class == genie::Unit::Farm) {
-            Task farmTask = unit->findMatchingTask(genie::Task::GatherRebuild, target->data()->ID);
-            ActionPtr farmAction = std::make_shared<ActionGather>(unit, target, farmTask.data, this);
-            farmAction->requiredUnitID = farmTask.unitId;
-            unit->queueAction(farmAction);
-        }
-        break;
-    }
-    case genie::Task::Hunt:
-    case genie::Task::GatherRebuild: {
-        if (!target) {
-            DBG << "Can't gather from nothing";
-            return;
-        }
-        unit->queueAction(ActionMove::moveUnitTo(unit, target->position(), m_map, this));
-        ActionPtr farmAction = std::make_shared<ActionGather>(unit, target, task.data, this);
-        farmAction->requiredUnitID = task.unitId;
-        unit->queueAction(farmAction);
-        break;
-    }
-    case genie::Task::Combat: {
-        if (target) {
-            DBG << "attacking" << target->debugName;
-        }
-
-        AudioPlayer::instance().playSound(unit->data()->Action.AttackSound, unit->civilization->id());
-        ActionPtr combatAction = std::make_shared<ActionAttack>(unit, target, this);
-        combatAction->requiredUnitID = task.unitId;
-        unit->queueAction(combatAction);
-        break;
-    }
-    default:
-        return;
-    }
-
 }
 
 void UnitManager::selectAttackTarget()
