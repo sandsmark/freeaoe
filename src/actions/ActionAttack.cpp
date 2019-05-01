@@ -85,7 +85,7 @@ IAction::UpdateResult ActionAttack::update(Time time)
         float targetX = m_targetPosition.x + cos(angleToTarget + M_PI) * unit->data()->Combat.MaxRange * Constants::TILE_SIZE / 1.1;
         float targetY = m_targetPosition.y + sin(angleToTarget + M_PI) * unit->data()->Combat.MaxRange * Constants::TILE_SIZE / 1.1;
 
-        unit->prependAction(ActionMove::moveUnitTo(unit, MapPos(targetX, targetY), unit->map()));
+        unit->prependAction(ActionMove::moveUnitTo(unit, MapPos(targetX, targetY)));
         return IAction::UpdateResult::NotUpdated;
     }
     if (distance < unit->data()->Combat.MinRange) {
@@ -95,7 +95,7 @@ IAction::UpdateResult ActionAttack::update(Time time)
             float targetX = m_targetPosition.x + cos(angleToTarget + M_PI) * unit->data()->Combat.MinRange * Constants::TILE_SIZE * 1.1;
             float targetY = m_targetPosition.y + sin(angleToTarget + M_PI) * unit->data()->Combat.MinRange * Constants::TILE_SIZE * 1.1;
 
-            unit->prependAction(ActionMove::moveUnitTo(unit, MapPos(targetX, targetY), unit->map()));
+            unit->prependAction(ActionMove::moveUnitTo(unit, MapPos(targetX, targetY)));
             return IAction::UpdateResult::NotUpdated;
         }
 

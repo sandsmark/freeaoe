@@ -133,7 +133,7 @@ void IAction::assignTask(const Task &task, const std::shared_ptr<Unit> &unit, co
             return;
         }
 
-        unit->queueAction(ActionMove::moveUnitTo(unit, target->position(), unit->map()));
+        unit->queueAction(ActionMove::moveUnitTo(unit, target->position()));
 
         ActionPtr buildAction = std::make_shared<ActionBuild>(unit, target);
         buildAction->requiredUnitID = task.unitId;
@@ -153,7 +153,7 @@ void IAction::assignTask(const Task &task, const std::shared_ptr<Unit> &unit, co
             DBG << "Can't gather from nothing";
             return;
         }
-        unit->queueAction(ActionMove::moveUnitTo(unit, target->position(), unit->map()));
+        unit->queueAction(ActionMove::moveUnitTo(unit, target->position()));
         ActionPtr farmAction = std::make_shared<ActionGather>(unit, target, task.data);
         farmAction->requiredUnitID = task.unitId;
         unit->queueAction(farmAction);

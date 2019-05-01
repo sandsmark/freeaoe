@@ -123,11 +123,11 @@ Unit::Ptr UnitFactory::createUnit(const int ID, const MapPos &position, const Pl
 
     const std::vector<genie::Task>  &taskList = DataManager::Inst().getTasks(ID);
     if (gunit.Action.DefaultTaskID >= 0 && gunit.Action.DefaultTaskID < taskList.size()) {
-        handleDefaultAction(unit, taskList[gunit.Action.DefaultTaskID], unitManager);
+        handleDefaultAction(unit, taskList[gunit.Action.DefaultTaskID]);
     } else {
         for (const genie::Task &task : taskList) {
             if (task.IsDefault) {
-                handleDefaultAction(unit, task, unitManager);
+                handleDefaultAction(unit, task);
                 break;
             }
         }

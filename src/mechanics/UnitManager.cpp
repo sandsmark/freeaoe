@@ -762,7 +762,7 @@ const Task UnitManager::defaultActionAt(const ScreenPos &pos, const CameraPtr &c
 void UnitManager::moveUnitTo(const Unit::Ptr &unit, const MapPos &targetPos)
 {
     AudioPlayer::instance().playSound(unit->data()->Action.MoveSound, unit->civilization->id());
-    unit->setCurrentAction(ActionMove::moveUnitTo(unit, targetPos, m_map));
+    unit->setCurrentAction(ActionMove::moveUnitTo(unit, targetPos));
 }
 
 void UnitManager::selectAttackTarget()

@@ -43,9 +43,9 @@ IAction::UpdateResult ActionGather::update(Time time)
         DBG << "moving to" << dropSite->position() << "to drop off, then returning to" << unit->position();
 
         // Bleh, will be fucked if there's more in the queue, but I'm lazy
-        unit->queueAction(ActionMove::moveUnitTo(unit, dropSite->position(), unit->map()));
+        unit->queueAction(ActionMove::moveUnitTo(unit, dropSite->position()));
         unit->queueAction(std::make_shared<ActionDropOff>(unit, dropSite, m_task));
-        unit->queueAction(ActionMove::moveUnitTo(unit, unit->position(), unit->map()));
+        unit->queueAction(ActionMove::moveUnitTo(unit, unit->position()));
 
         return UpdateResult::Completed;
     }
@@ -75,9 +75,9 @@ IAction::UpdateResult ActionGather::update(Time time)
         if (dropSite) {
             DBG << "moving to" << dropSite->position() << "to drop off, then returning to" << currentPos << "to continue gathering";
 
-            unit->queueAction(ActionMove::moveUnitTo(unit, dropSite->position(), unit->map()));
+            unit->queueAction(ActionMove::moveUnitTo(unit, dropSite->position()));
             unit->queueAction(std::make_shared<ActionDropOff>(unit, dropSite, m_task));
-            unit->queueAction(ActionMove::moveUnitTo(unit, currentPos, unit->map()));
+            unit->queueAction(ActionMove::moveUnitTo(unit, currentPos));
 
             if (target->resources[m_resourceType] > 0) {
                 unit->queueAction(std::make_shared<ActionGather>(unit, target, m_task));
