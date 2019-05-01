@@ -48,6 +48,8 @@ struct ListView
 
     void updateScrollbar() const;
 
+    const ScreenRect &rect() const noexcept { return m_rect; }
+
 private:
     void moveScrollbar(int mouseY);
 
@@ -82,6 +84,7 @@ private:
     std::unique_ptr<sf::Font> m_font;
     std::unique_ptr<Button> m_okButton;
     std::unique_ptr<Button> m_cancelButton;
+    std::unique_ptr<Button> m_openDownloadUrlButton;
     std::unique_ptr<ListView> m_fileList;
     std::unique_ptr<sf::Text> m_description;
 };

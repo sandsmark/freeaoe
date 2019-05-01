@@ -20,12 +20,7 @@ bool FileDialog::setup(int width, int height)
     m_renderWindow->setSize(sf::Vector2u(width, height));
     m_renderWindow->setView(sf::View(sf::FloatRect(0, 0, width, height)));
 
-    const Size buttonSize(200, 50);
 
-    m_okButton = std::make_unique<Button>("OK", SfmlRenderTarget::defaultFont(), ScreenRect(ScreenPos(200, 700), buttonSize));
-
-    m_cancelButton = std::make_unique<Button>("Cancel", SfmlRenderTarget::defaultFont(), ScreenRect(ScreenPos(624, 700), buttonSize));
-    m_cancelButton->enabled = true;
 
     {
         m_description = std::make_unique<sf::Text>("Please select the directory containing your Age of Empires 2 installation.", SfmlRenderTarget::defaultFont());
@@ -35,8 +30,18 @@ bool FileDialog::setup(int width, int height)
         m_description->setFillColor(sf::Color::White);
     }
 
+    const Size buttonSize(250, 50);
+
     m_fileList = std::make_unique<ListView>(SfmlRenderTarget::defaultFont(), ScreenRect(ScreenPos(width/2 - width*3/8, 50), Size(width*3/4, 550)));
     m_fileList->setCurrentPath(std::filesystem::current_path());
+
+    m_okButton = std::make_unique<Button>("OK", SfmlRenderTarget::defaultFont(), ScreenRect(ScreenPos(m_fileList->rect().x, 700), buttonSize));
+
+    m_cancelButton = std::make_unique<Button>("Cancel", SfmlRenderTarget::defaultFont(), ScreenRect(ScreenPos(m_fileList->rect().right() - buttonSize.width, 700), buttonSize));
+    m_cancelButton->enabled = true;
+
+    m_openDownloadUrlButton = std::make_unique<Button>("Download trial version", SfmlRenderTarget::defaultFont(), ScreenRect(ScreenPos(m_fileList->rect().center().x - buttonSize.width/2, 700), buttonSize));
+    m_openDownloadUrlButton->enabled = true;
 
     return true;
 }
@@ -58,6 +63,11 @@ std::string FileDialog::getPath()
             continue;
         }
 
+        if (m_openDownloadUrlButton->checkClick(event)) {
+            util::openUrl("https://archive.org/details/AgeOfEmpiresIiTheConquerorsDemo", nullptr);
+            continue;
+        }
+
         if (m_cancelButton->checkClick(event)) {
             m_renderWindow->close();
         }
@@ -71,6 +81,7 @@ std::string FileDialog::getPath()
         m_okButton->enabled = m_fileList->hasDataFolder;
 
         m_renderWindow->clear(sf::Color::Black);
+        m_openDownloadUrlButton->render(m_renderWindow.get());
         m_cancelButton->render(m_renderWindow.get());
         m_okButton->render(m_renderWindow.get());
         m_fileList->render(m_renderWindow.get());
