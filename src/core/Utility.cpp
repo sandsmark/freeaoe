@@ -11,7 +11,7 @@ extern "C" {
 #endif
 
 
-bool util::openUrl(const std::__cxx11::string &url, std::__cxx11::string *error)
+bool util::openUrl(const std::string &url, std::string *error)
 {
 #if defined(WIN32) || defined(__WIN32) || defined(__WIN32__)
     uintptr_t ret = reinterpret_cast<uintptr_t>(ShellExecuteA(nullptr, nullptr,
