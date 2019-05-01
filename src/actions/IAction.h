@@ -77,6 +77,8 @@ public:
     /// @return true if action is done
     virtual UpdateResult update(Time time) = 0;
 
+    int requiredUnitID = -1;
+
 protected:
     IAction(const Type type_, const std::shared_ptr<Unit> &unit, UnitManager *unitManager);
     std::weak_ptr<Unit> m_unit;

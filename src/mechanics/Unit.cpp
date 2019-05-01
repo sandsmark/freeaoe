@@ -659,6 +659,10 @@ void Unit::setCurrentAction(const ActionPtr &action) noexcept
 {
     m_currentAction = action;
 
+    if (action && action->requiredUnitID != -1 && action->requiredUnitID != m_data->ID) {
+        setUnitData(civilization->unitData(action->requiredUnitID));
+    }
+
     updateGraphic();
 }
 

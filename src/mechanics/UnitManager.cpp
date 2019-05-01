@@ -772,41 +772,50 @@ void UnitManager::assignTask(const Task &task, const Unit::Ptr &unit, const Unit
         return;
     }
 
-    if (task.unitId != unit->data()->ID) {
-        unit->setUnitData(unit->civilization->unitData(task.unitId));
-    }
-
     switch(task.data->ActionType) {
-    case genie::Task::Build:
+    case genie::Task::Build: {
         if (!target) {
             DBG << "Can't build nothing";
             return;
         }
+
         unit->queueAction(ActionMove::moveUnitTo(unit, target->position(), m_map, this));
-        unit->queueAction(std::make_shared<ActionBuild>(unit, target, this));
+
+        ActionPtr buildAction = std::make_shared<ActionBuild>(unit, target, this);
+        buildAction->requiredUnitID = task.unitId;
+        unit->queueAction(buildAction);
 
         if (target->data()->Class == genie::Unit::Farm) {
             Task farmTask = unit->findMatchingTask(genie::Task::GatherRebuild, target->data()->ID);
-            unit->queueAction(std::make_shared<ActionGather>(unit, target, farmTask.data, this));
+            ActionPtr farmAction = std::make_shared<ActionGather>(unit, target, farmTask.data, this);
+            farmAction->requiredUnitID = farmTask.unitId;
+            unit->queueAction(farmAction);
         }
         break;
+    }
     case genie::Task::Hunt:
-    case genie::Task::GatherRebuild:
+    case genie::Task::GatherRebuild: {
         if (!target) {
             DBG << "Can't gather from nothing";
             return;
         }
         unit->queueAction(ActionMove::moveUnitTo(unit, target->position(), m_map, this));
-        unit->queueAction(std::make_shared<ActionGather>(unit, target, task.data, this));
+        ActionPtr farmAction = std::make_shared<ActionGather>(unit, target, task.data, this);
+        farmAction->requiredUnitID = task.unitId;
+        unit->queueAction(farmAction);
         break;
-    case genie::Task::Combat:
+    }
+    case genie::Task::Combat: {
         if (target) {
             DBG << "attacking" << target->debugName;
         }
 
         AudioPlayer::instance().playSound(unit->data()->Action.AttackSound, unit->civilization->id());
-        unit->queueAction(std::make_shared<ActionAttack>(unit, target, this));
+        ActionPtr combatAction = std::make_shared<ActionAttack>(unit, target, this);
+        combatAction->requiredUnitID = task.unitId;
+        unit->queueAction(combatAction);
         break;
+    }
     default:
         return;
     }

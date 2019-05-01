@@ -170,6 +170,10 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
     }
 
     if (!m_prevTime) {
+        if (unit->position().distance(dest_) < 1) { // just in case
+            return UpdateResult::Completed;
+        }
+
         m_prevTime = time;
         updatePath();
         if (m_path.empty()) {
