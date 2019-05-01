@@ -8,8 +8,8 @@
 #include "mechanics/Civilization.h"
 #include <genie/dat/Unit.h>
 
-ActionAttack::ActionAttack(const Unit::Ptr &attacker, const Unit::Ptr &target, UnitManager *unitManager) :
-    IAction(IAction::Type::Attack, attacker, unitManager),
+ActionAttack::ActionAttack(const Unit::Ptr &attacker, const Unit::Ptr &target) :
+    IAction(IAction::Type::Attack, attacker),
     m_targetPosition(target->position()),
     m_targetUnit(target)
 {
@@ -18,8 +18,8 @@ ActionAttack::ActionAttack(const Unit::Ptr &attacker, const Unit::Ptr &target, U
     }
 }
 
-ActionAttack::ActionAttack(const Unit::Ptr &attacker, const MapPos &targetPos, UnitManager *unitManager) :
-    IAction(IAction::Type::Attack, attacker, unitManager),
+ActionAttack::ActionAttack(const Unit::Ptr &attacker, const MapPos &targetPos) :
+    IAction(IAction::Type::Attack, attacker),
     m_targetPosition(targetPos),
     m_attackGround(true)
 {
@@ -85,7 +85,7 @@ IAction::UpdateResult ActionAttack::update(Time time)
         float targetX = m_targetPosition.x + cos(angleToTarget + M_PI) * unit->data()->Combat.MaxRange * Constants::TILE_SIZE / 1.1;
         float targetY = m_targetPosition.y + sin(angleToTarget + M_PI) * unit->data()->Combat.MaxRange * Constants::TILE_SIZE / 1.1;
 
-        unit->prependAction(ActionMove::moveUnitTo(unit, MapPos(targetX, targetY), m_unitManager->map(), m_unitManager));
+        unit->prependAction(ActionMove::moveUnitTo(unit, MapPos(targetX, targetY), unit->map()));
         return IAction::UpdateResult::NotUpdated;
     }
     if (distance < unit->data()->Combat.MinRange) {
@@ -95,7 +95,7 @@ IAction::UpdateResult ActionAttack::update(Time time)
             float targetX = m_targetPosition.x + cos(angleToTarget + M_PI) * unit->data()->Combat.MinRange * Constants::TILE_SIZE * 1.1;
             float targetY = m_targetPosition.y + sin(angleToTarget + M_PI) * unit->data()->Combat.MinRange * Constants::TILE_SIZE * 1.1;
 
-            unit->prependAction(ActionMove::moveUnitTo(unit, MapPos(targetX, targetY), m_unitManager->map(), m_unitManager));
+            unit->prependAction(ActionMove::moveUnitTo(unit, MapPos(targetX, targetY), unit->map()));
             return IAction::UpdateResult::NotUpdated;
         }
 
@@ -169,7 +169,7 @@ void ActionAttack::spawnMissiles(const Unit::Ptr &source, const int unitId, cons
             pos.y += (rand() % int((100 - spawnArea[2]) * spawnArea[1] * Constants::TILE_SIZE)) / 100.;
         }
         missile->setPosition(pos);
-        m_unitManager->addMissile(missile);
+        source->unitManager().addMissile(missile);
     }
 }
 

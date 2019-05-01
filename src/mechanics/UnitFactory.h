@@ -32,6 +32,6 @@ public:
 private:
     UnitFactory();
     virtual ~UnitFactory();
-    void handleDefaultAction(const Unit::Ptr &unit, const genie::Task &task, UnitManager &unitManager);
+    void handleDefaultAction(const Unit::Ptr &unit, const genie::Task &task);
 };
 

@@ -44,11 +44,11 @@ UnitFactory::~UnitFactory()
 {
 }
 
-void UnitFactory::handleDefaultAction(const Unit::Ptr &unit, const genie::Task &task, UnitManager &unitManager)
+void UnitFactory::handleDefaultAction(const Unit::Ptr &unit, const genie::Task &task)
 {
     switch(task.ActionType) {
     case genie::Task::Fly:
-        unit->setCurrentAction(std::make_shared<ActionFly>(unit, &unitManager));
+        unit->setCurrentAction(std::make_shared<ActionFly>(unit));
         break;
 
         //TODO

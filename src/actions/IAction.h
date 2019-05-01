@@ -82,10 +82,9 @@ public:
     int requiredUnitID = -1;
 
 protected:
-    IAction(const Type type_, const std::shared_ptr<Unit> &unit, UnitManager *unitManager);
+    IAction(const Type type_, const std::shared_ptr<Unit> &unit);
     std::weak_ptr<Unit> m_unit;
     Time m_prevTime = 0;
-    UnitManager *m_unitManager;
 };
 
 inline LogPrinter operator <<(LogPrinter os, const IAction::UnitState unitState)

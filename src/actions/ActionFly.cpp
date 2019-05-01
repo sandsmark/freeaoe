@@ -3,8 +3,8 @@
 #include <genie/dat/Unit.h>
 #include "mechanics/Map.h"
 
-ActionFly::ActionFly(const std::shared_ptr<Unit> &unit, UnitManager *unitManager) :
-    IAction(IAction::Type::Fly, unit, unitManager)
+ActionFly::ActionFly(const std::shared_ptr<Unit> &unit) :
+    IAction(IAction::Type::Fly, unit)
 {
 
 }

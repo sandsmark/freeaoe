@@ -7,8 +7,8 @@
 #include <genie/dat/Unit.h>
 #include <limits>
 
-ActionGather::ActionGather(const Unit::Ptr &unit, const Unit::Ptr &target, const genie::Task *task, UnitManager *unitManager) :
-    IAction(Type::Gather, unit, unitManager),
+ActionGather::ActionGather(const Unit::Ptr &unit, const Unit::Ptr &target, const genie::Task *task) :
+    IAction(Type::Gather, unit),
     m_target(target),
     m_task(task)
 {
@@ -43,16 +43,16 @@ IAction::UpdateResult ActionGather::update(Time time)
         DBG << "moving to" << dropSite->position() << "to drop off, then returning to" << unit->position();
 
         // Bleh, will be fucked if there's more in the queue, but I'm lazy
-        unit->queueAction(ActionMove::moveUnitTo(unit, dropSite->position(), m_unitManager->map(), m_unitManager));
-        unit->queueAction(std::make_shared<ActionDropOff>(unit, dropSite, m_task, m_unitManager));
-        unit->queueAction(ActionMove::moveUnitTo(unit, unit->position(), m_unitManager->map(), m_unitManager));
+        unit->queueAction(ActionMove::moveUnitTo(unit, dropSite->position(), unit->map()));
+        unit->queueAction(std::make_shared<ActionDropOff>(unit, dropSite, m_task));
+        unit->queueAction(ActionMove::moveUnitTo(unit, unit->position(), unit->map()));
 
         return UpdateResult::Completed;
     }
 
     if (target->healthLeft() > 0 && target->playerId != unit->playerId) {
         DBG << "Unit isn't dead, attacking first";
-        unit->prependAction(std::make_shared<ActionAttack>(unit, target, m_unitManager));
+        unit->prependAction(std::make_shared<ActionAttack>(unit, target));
         return UpdateResult::NotUpdated;
     }
 
@@ -75,12 +75,12 @@ IAction::UpdateResult ActionGather::update(Time time)
         if (dropSite) {
             DBG << "moving to" << dropSite->position() << "to drop off, then returning to" << currentPos << "to continue gathering";
 
-            unit->queueAction(ActionMove::moveUnitTo(unit, dropSite->position(), m_unitManager->map(), m_unitManager));
-            unit->queueAction(std::make_shared<ActionDropOff>(unit, dropSite, m_task, m_unitManager));
-            unit->queueAction(ActionMove::moveUnitTo(unit, currentPos, m_unitManager->map(), m_unitManager));
+            unit->queueAction(ActionMove::moveUnitTo(unit, dropSite->position(), unit->map()));
+            unit->queueAction(std::make_shared<ActionDropOff>(unit, dropSite, m_task));
+            unit->queueAction(ActionMove::moveUnitTo(unit, currentPos, unit->map()));
 
             if (target->resources[m_resourceType] > 0) {
-                unit->queueAction(std::make_shared<ActionGather>(unit, target, m_task, m_unitManager));
+                unit->queueAction(std::make_shared<ActionGather>(unit, target, m_task));
             }
         } else {
             WARN << "failed to find a drop site";
@@ -130,7 +130,7 @@ Unit::Ptr ActionGather::findDropSite(const Unit::Ptr &unit)
     const int dropUnitId1 = unit->data()->Action.DropSite.first;
     const int dropUnitId2 = unit->data()->Action.DropSite.second;
 
-    for (const Unit::Ptr &other : m_unitManager->units()) {
+    for (const Unit::Ptr &other : unit->unitManager().units()) {
         if (other->data()->ID != dropUnitId1 && other->data()->ID != dropUnitId2) {
             continue;
         }
@@ -149,8 +149,8 @@ Unit::Ptr ActionGather::findDropSite(const Unit::Ptr &unit)
 }
 
 
-ActionDropOff::ActionDropOff(const Unit::Ptr &unit, const Unit::Ptr &target, const genie::Task *task, UnitManager *unitManager) :
-    IAction(Type::DropOff, unit, unitManager),
+ActionDropOff::ActionDropOff(const Unit::Ptr &unit, const Unit::Ptr &target, const genie::Task *task) :
+    IAction(Type::DropOff, unit),
     m_target(target),
     m_task(task)
 {

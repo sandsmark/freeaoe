@@ -9,7 +9,7 @@ class UnitManager;
 class ActionDropOff : public IAction
 {
 public:
-    ActionDropOff(const Unit::Ptr &unit, const Unit::Ptr &target, const genie::Task *task, UnitManager *unitManager);
+    ActionDropOff(const Unit::Ptr &unit, const Unit::Ptr &target, const genie::Task *task);
 
     UpdateResult update(Time time) override;
     UnitState unitState() const override { return UnitState::Proceeding; }
@@ -24,7 +24,7 @@ private:
 class ActionGather : public IAction
 {
 public:
-    ActionGather(const Unit::Ptr &unit, const Unit::Ptr &target, const genie::Task *task, UnitManager *unitManager);
+    ActionGather(const Unit::Ptr &unit, const Unit::Ptr &target, const genie::Task *task);
 
     UpdateResult update(Time time) override;
     UnitState unitState() const override;

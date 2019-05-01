@@ -5,8 +5,8 @@
 
 #include <genie/dat/Unit.h>
 
-ActionBuild::ActionBuild(const Unit::Ptr &builder, const Unit::Ptr &building, UnitManager *unitManager) :
-    IAction(Type::Build, builder, unitManager),
+ActionBuild::ActionBuild(const Unit::Ptr &builder, const Unit::Ptr &building) :
+    IAction(Type::Build, builder),
     m_targetBuilding(Unit::asBuilding(building))
 {
     DBG << builder->debugName << "building" << building->debugName;

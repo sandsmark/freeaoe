@@ -470,9 +470,9 @@ bool UnitManager::onLeftClick(const ScreenPos &screenPos, const CameraPtr &camer
 
             std::shared_ptr<ActionAttack> action;
             if (targetUnit) {
-                action = std::make_shared<ActionAttack>(unit, targetUnit, this);
+                action = std::make_shared<ActionAttack>(unit, targetUnit);
             } else {
-                action = std::make_shared<ActionAttack>(unit, targetPos, this);
+                action = std::make_shared<ActionAttack>(unit, targetPos);
             }
             unit->setCurrentAction(action);
         }
@@ -762,7 +762,7 @@ const Task UnitManager::defaultActionAt(const ScreenPos &pos, const CameraPtr &c
 void UnitManager::moveUnitTo(const Unit::Ptr &unit, const MapPos &targetPos)
 {
     AudioPlayer::instance().playSound(unit->data()->Action.MoveSound, unit->civilization->id());
-    unit->setCurrentAction(ActionMove::moveUnitTo(unit, targetPos, m_map, this));
+    unit->setCurrentAction(ActionMove::moveUnitTo(unit, targetPos, m_map));
 }
 
 void UnitManager::selectAttackTarget()

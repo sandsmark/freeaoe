@@ -38,12 +38,12 @@ public:
 
     UpdateResult update(Time time) noexcept override;
 
-    static std::shared_ptr<ActionMove> moveUnitTo(const Unit::Ptr &unit, MapPos destination, const MapPtr &map, UnitManager *unitManager) noexcept;
+    static std::shared_ptr<ActionMove> moveUnitTo(const Unit::Ptr &unit, MapPos destination, const MapPtr &map) noexcept;
     const std::vector<MapPos> &path() const noexcept { return m_path; }
     genie::Task::ActionTypes taskType() const noexcept override { return genie::Task::MoveTo; }
 
 private:
-    ActionMove(MapPos destination, const MapPtr &map, const Unit::Ptr &unit, UnitManager *unitManager);
+    ActionMove(MapPos destination, const MapPtr &map, const Unit::Ptr &unit);
 
     MapPos findClosestWalkableBorder(const MapPos &start, const MapPos &target, int coarseness) noexcept;
 

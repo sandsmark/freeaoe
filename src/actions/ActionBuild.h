@@ -7,7 +7,7 @@ class ActionBuild : public IAction
 {
 
 public:
-    ActionBuild(const Unit::Ptr &builder, const Unit::Ptr &building, UnitManager *unitManager);
+    ActionBuild(const Unit::Ptr &builder, const Unit::Ptr &building);
     ~ActionBuild();
 
     UpdateResult update(Time time) override;

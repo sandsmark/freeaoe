@@ -29,10 +29,9 @@
 #include "ActionBuild.h"
 #include "ActionGather.h"
 
-IAction::IAction(const Type type_, const std::shared_ptr<Unit> &unit, UnitManager *unitManager) :
+IAction::IAction(const Type type_, const std::shared_ptr<Unit> &unit) :
     type(type_),
-    m_unit(unit),
-    m_unitManager(unitManager)
+    m_unit(unit)
 {
 }
 
@@ -134,15 +133,15 @@ void IAction::assignTask(const Task &task, const std::shared_ptr<Unit> &unit, co
             return;
         }
 
-        unit->queueAction(ActionMove::moveUnitTo(unit, target->position(), unit->map(), &unit->unitManager()));
+        unit->queueAction(ActionMove::moveUnitTo(unit, target->position(), unit->map()));
 
-        ActionPtr buildAction = std::make_shared<ActionBuild>(unit, target, &unit->unitManager());
+        ActionPtr buildAction = std::make_shared<ActionBuild>(unit, target);
         buildAction->requiredUnitID = task.unitId;
         unit->queueAction(buildAction);
 
         if (target->data()->Class == genie::Unit::Farm) {
             Task farmTask = unit->findMatchingTask(genie::Task::GatherRebuild, target->data()->ID);
-            ActionPtr farmAction = std::make_shared<ActionGather>(unit, target, farmTask.data, &unit->unitManager());
+            ActionPtr farmAction = std::make_shared<ActionGather>(unit, target, farmTask.data);
             farmAction->requiredUnitID = farmTask.unitId;
             unit->queueAction(farmAction);
         }
@@ -154,8 +153,8 @@ void IAction::assignTask(const Task &task, const std::shared_ptr<Unit> &unit, co
             DBG << "Can't gather from nothing";
             return;
         }
-        unit->queueAction(ActionMove::moveUnitTo(unit, target->position(), unit->map(), &unit->unitManager()));
-        ActionPtr farmAction = std::make_shared<ActionGather>(unit, target, task.data, &unit->unitManager());
+        unit->queueAction(ActionMove::moveUnitTo(unit, target->position(), unit->map()));
+        ActionPtr farmAction = std::make_shared<ActionGather>(unit, target, task.data);
         farmAction->requiredUnitID = task.unitId;
         unit->queueAction(farmAction);
         break;
@@ -166,7 +165,7 @@ void IAction::assignTask(const Task &task, const std::shared_ptr<Unit> &unit, co
         }
 
         AudioPlayer::instance().playSound(unit->data()->Action.AttackSound, unit->civilization->id());
-        ActionPtr combatAction = std::make_shared<ActionAttack>(unit, target, &unit->unitManager());
+        ActionPtr combatAction = std::make_shared<ActionAttack>(unit, target);
         combatAction->requiredUnitID = task.unitId;
         unit->queueAction(combatAction);
         break;
