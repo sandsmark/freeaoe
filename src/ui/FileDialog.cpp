@@ -260,6 +260,14 @@ void ListView::handleEvent(const sf::Event &event)
         return;
     }
 
+    if (event.type == sf::Event::MouseWheelScrolled) {
+        if (event.mouseWheelScroll.delta < 0) {
+            setOffset(m_offset + 1);
+        } else {
+            setOffset(m_offset - 1);
+        }
+    }
+
     if (event.type != sf::Event::MouseButtonPressed) {
         return;
     }
@@ -381,12 +389,12 @@ void ListView::setCurrentPath(std::filesystem::path path)
 
 void ListView::setOffset(int offset)
 {
-    if (offset < 0) {
-        offset = 0;
+    if (offset > int(m_list.size()) - numVisible) {
+        offset = int(m_list.size()) - numVisible;
     }
 
-    if (offset > m_list.size() - numVisible) {
-        offset = m_list.size() - numVisible;
+    if (offset < 0) {
+        offset = 0;
     }
 
     if (offset == m_offset) {
