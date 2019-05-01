@@ -82,7 +82,7 @@ static std::string resolvePath(const char *path)
     return resolved;
 }
 
-static std::string winePath()
+std::string Config::winePath()
 {
     const std::string prefixPath = resolvePath(getenv("WINEPREFIX"));
     const std::string defaultPath = resolvePath("~/.wine");
@@ -134,7 +134,7 @@ static std::string resolvePathCaseInsensitive(const std::string &inputPath, cons
 // Dumb parsing of the wine registry file
 static std::string getRegistryString(const std::string &regGroup, const std::string &key)
 {
-    std::string regPath = winePath() + "/system.reg";
+    std::string regPath = Config::winePath() + "/system.reg";
     if (regPath.empty()) {
         DBG << "failed to find wine folder";
         return {};
@@ -208,7 +208,7 @@ static std::string getRegistryString(const std::string &regGroup, const std::str
         path = path.substr(2);
     }
 
-    path = winePath() + "/drive_c" + path;
+    path = Config::winePath() + "/drive_c" + path;
 
     DBG << "Found game path" << path;
 

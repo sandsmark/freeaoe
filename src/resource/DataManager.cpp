@@ -232,12 +232,7 @@ bool DataManager::initialize(const std::string &dataPath)
         return false;
     }
 
-    try {
-        dat_file_.load(filePath);
-    } catch (const std::exception &error) {
-        WARN << "Failed to load dat file" << filePath << error.what();
-        return false;
-    }
+    dat_file_.load(filePath);
 
     return true;
 }

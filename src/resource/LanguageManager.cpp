@@ -26,7 +26,8 @@ bool LanguageManager::initialize(const std::string &dataPath)
             WARN << "got at least one file, continoung";
             return true;
         }
-        return false;
+
+        throw error;
     }
 
     return true;

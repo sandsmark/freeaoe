@@ -252,66 +252,62 @@ bool AssetManager::initialize(const std::string &dataPath, const genie::GameVers
     m_dataPath = dataPath;
     m_gameVersion = gameVersion;
 
-    try {
-        const std::vector<std::string> gamedataFiles({
-                { "gamedata.drs" },
-                { "gamedata_x1.drs" },
-                { "gamedata_x1_p1.drs" },
-        });
+    const std::vector<std::string> gamedataFiles({
+                                                     { "gamedata.drs" },
+                                                     { "gamedata_x1.drs" },
+                                                     { "gamedata_x1_p1.drs" },
+                                                 });
 
-        m_gamedataFiles = loadDrs(gamedataFiles);
-        if (m_gamedataFiles.empty()) {
-            WARN << "Failed to find any gamedata files in" << dataPath;
-            return false;
-        }
-
-        m_interfaceFile = loadDrs("interfac.drs");
-        if (!m_interfaceFile) {
-            WARN << "Failed to load interface file";
-            return false;
-        }
-
-        m_graphicsFile = loadDrs("graphics.drs");
-        if (!m_graphicsFile) {
-            WARN << "Failed to load graphics file";
-            return false;
-        }
-
-        m_terrainFile = loadDrs("terrain.drs");
-        if (!m_terrainFile) {
-            WARN << "Failed to load terrain file";
-            return false;
-        }
-
-        const std::vector<std::string> soundFiles({
-                { "sounds.drs" },
-                { "sounds_x1.drs" },
-        });
-
-        m_soundFiles = loadDrs(soundFiles);
-
-        if (m_soundFiles.empty()) {
-            WARN << "Failed to find any sound files in" << dataPath;
-            return false;
-        }
-
-        blendomatic_file_ = std::make_unique<genie::BlendomaticFile>();
-        std::string blendomaticPath = dataPath + "blendomatic.dat";
-        blendomatic_file_->load(blendomaticPath);
-
-
-        m_stemplatesFile = std::make_unique<genie::SlpTemplateFile>();
-        m_stemplatesFile->load(dataPath + "STemplet.dat");
-        m_filtermapFile.load(dataPath + "FilterMaps.dat");
-        m_patternmasksFile.load(dataPath + "PatternMasks.dat");
-        m_patternmasksFile.icmFile.load(dataPath + "view_icm.dat");
-        m_patternmasksFile.lightmapFile.load(dataPath + "lightMaps.dat");
-        m_blkEdgeFile.load(findFile("blkedge.dat"));
-        m_tileEdgeFile.load(findFile("tileedge.dat"));
-    } catch (const std::exception &error) {
-        WARN << "Failed to load resource" << error.what();
+    m_gamedataFiles = loadDrs(gamedataFiles);
+    if (m_gamedataFiles.empty()) {
+        WARN << "Failed to find any gamedata files in" << dataPath;
         return false;
     }
+
+    m_interfaceFile = loadDrs("interfac.drs");
+    if (!m_interfaceFile) {
+        WARN << "Failed to load interface file";
+        return false;
+    }
+
+    m_graphicsFile = loadDrs("graphics.drs");
+    if (!m_graphicsFile) {
+        WARN << "Failed to load graphics file";
+        return false;
+    }
+
+    m_terrainFile = loadDrs("terrain.drs");
+    if (!m_terrainFile) {
+        WARN << "Failed to load terrain file";
+        return false;
+    }
+
+    const std::vector<std::string> soundFiles({
+                                                  { "sounds.drs" },
+                                                  { "sounds_x1.drs" },
+                                              });
+
+    m_soundFiles = loadDrs(soundFiles);
+
+    if (m_soundFiles.empty()) {
+        WARN << "Failed to find any sound files in" << dataPath;
+        return false;
+    }
+
+    blendomatic_file_ = std::make_unique<genie::BlendomaticFile>();
+    std::string blendomaticPath = dataPath + "blendomatic.dat";
+    blendomatic_file_->load(blendomaticPath);
+
+
+    m_stemplatesFile = std::make_unique<genie::SlpTemplateFile>();
+    m_stemplatesFile->load(dataPath + "STemplet.dat");
+    m_filtermapFile.load(dataPath + "FilterMaps.dat");
+    m_patternmasksFile.load(dataPath + "PatternMasks.dat");
+    m_patternmasksFile.icmFile.load(dataPath + "view_icm.dat");
+    m_patternmasksFile.lightmapFile.load(dataPath + "lightMaps.dat");
+    m_blkEdgeFile.load(findFile("blkedge.dat"));
+    m_tileEdgeFile.load(findFile("tileedge.dat"));
+
     DBG << "Loaded" << m_allFiles.size() << "files";
 
     return true;
@@ -561,8 +557,7 @@ std::string AssetManager::findFile(const std::string &filename) const
         }
     }
 
-    DBG << "Can't find file" << filename;
-    return std::string();
+    return filename; // so the error message makes more sense
 }
 
 //------------------------------------------------------------------------------

@@ -79,6 +79,8 @@ public:
 
     std::string getPath();
 
+    void setErrorString(const std::string &error) noexcept;
+
 private:
     std::unique_ptr<sf::RenderWindow> m_renderWindow;
     std::unique_ptr<sf::Font> m_font;
@@ -87,5 +89,12 @@ private:
     std::unique_ptr<Button> m_openDownloadUrlButton;
     std::unique_ptr<ListView> m_fileList;
     std::unique_ptr<sf::Text> m_description;
+    std::unique_ptr<sf::Text> m_errorText;
+    std::unique_ptr<sf::Text> m_secondaryErrorText;
+
+#if defined(__linux__)
+    std::string m_winePath;
+    std::unique_ptr<Button> m_goToWineButton;
+#endif
 };
 

@@ -1,6 +1,7 @@
 #include "FileDialog.h"
 
 #include "core/Utility.h"
+#include "global/Config.h"
 #include "render/SfmlRenderTarget.h"
 
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -24,15 +25,15 @@ bool FileDialog::setup(int width, int height)
 
     {
         m_description = std::make_unique<sf::Text>("Please select the directory containing your Age of Empires 2 installation.", SfmlRenderTarget::defaultFont());
-        m_description->setCharacterSize(24);
+        m_description->setCharacterSize(20);
         const int descWidth = m_description->getLocalBounds().width;
-        m_description->setPosition(width/2 - descWidth/2, 10);
+        m_description->setPosition(width/2 - descWidth/2, 2);
         m_description->setFillColor(sf::Color::White);
     }
 
     const Size buttonSize(250, 50);
 
-    m_fileList = std::make_unique<ListView>(SfmlRenderTarget::defaultFont(), ScreenRect(ScreenPos(width/2 - width*3/8, 50), Size(width*3/4, 550)));
+    m_fileList = std::make_unique<ListView>(SfmlRenderTarget::defaultFont(), ScreenRect(ScreenPos(width/2 - width*3/8, 55), Size(width*3/4, 550)));
     m_fileList->setCurrentPath(std::filesystem::current_path());
 
     m_okButton = std::make_unique<Button>("OK", SfmlRenderTarget::defaultFont(), ScreenRect(ScreenPos(m_fileList->rect().x, 700), buttonSize));
@@ -42,6 +43,17 @@ bool FileDialog::setup(int width, int height)
 
     m_openDownloadUrlButton = std::make_unique<Button>("Download trial version", SfmlRenderTarget::defaultFont(), ScreenRect(ScreenPos(m_fileList->rect().center().x - buttonSize.width/2, 700), buttonSize));
     m_openDownloadUrlButton->enabled = true;
+
+#if defined(__linux__)
+    m_winePath = Config::winePath();
+    if (!m_winePath.empty()) {
+        if (std::filesystem::exists(m_winePath + "/drive_c")) {
+            m_winePath += "/drive_c";
+        }
+        m_goToWineButton = std::make_unique<Button>("Go to Wine folder", SfmlRenderTarget::defaultFont(), ScreenRect(ScreenPos(m_fileList->rect().x, m_fileList->rect().bottom() + 10), buttonSize));
+        m_goToWineButton->enabled = true;
+    }
+#endif
 
     return true;
 }
@@ -77,6 +89,14 @@ std::string FileDialog::getPath()
             ret = m_fileList->currentText();
         }
 
+#if defined(__linux__)
+        if (m_goToWineButton) {
+            if (m_goToWineButton->checkClick(event)) {
+                m_fileList->setCurrentPath(m_winePath);
+            }
+        }
+#endif
+
         m_fileList->handleEvent(event);
         m_okButton->enabled = m_fileList->hasDataFolder;
 
@@ -86,10 +106,28 @@ std::string FileDialog::getPath()
         m_okButton->render(m_renderWindow.get());
         m_fileList->render(m_renderWindow.get());
         m_renderWindow->draw(*m_description);
+        if (m_errorText) {
+            m_renderWindow->draw(*m_errorText);
+        }
+
+#if defined(__linux__)
+        if (m_goToWineButton) {
+            m_goToWineButton->render(m_renderWindow.get());
+        }
+#endif
         m_renderWindow->display();
     }
 
     return ret;
+}
+
+void FileDialog::setErrorString(const std::string &error) noexcept
+{
+    m_errorText = std::make_unique<sf::Text>("Failed to load game data: " + error, SfmlRenderTarget::defaultFont());
+    m_errorText->setCharacterSize(17);
+    const int textWidth = m_errorText->getLocalBounds().width;
+    m_errorText->setPosition(m_renderWindow->getSize().x/2 - textWidth/2, 25);
+    m_errorText->setFillColor(sf::Color(255, 128, 128));
 }
 
 Button::Button(const std::string &text, const sf::Font &font, const ScreenRect rect) :

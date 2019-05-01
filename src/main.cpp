@@ -52,37 +52,52 @@ int main(int argc, char **argv)
     if (!config.parseOptions(argc, argv)) {
         return 1;
     }
-    std::string dataPath = config.getValue("game-path") + "/Data/";
+    std::string dataPath;
 
-    if (!std::filesystem::exists(dataPath)) {
-        FileDialog filediag;
-        if (!filediag.setup(1024, 768)) {
-            WARN << "failed to open file dialog!";
-            return 1;
+    do {
+        try {
+            if (config.getValue("game-path").empty()) {
+                throw std::runtime_error("No data path set");
+            }
+
+            dataPath = config.getValue("game-path") + "/Data/";
+
+            if (!std::filesystem::exists(dataPath)) {
+                throw std::runtime_error("Data path does not exist");
+            }
+
+            if (!LanguageManager::Inst()->initialize(config.getValue("game-path") + "/")) {
+                throw std::runtime_error("Failed to load language.dll");
+            }
+
+            if (!DataManager::Inst().initialize(dataPath)) {
+                throw std::runtime_error("Failed to load game data");
+            }
+
+            if (!AssetManager::Inst()->initialize(dataPath, DataManager::Inst().gameVersion())) {
+                throw std::runtime_error("Failed to load game assets");
+            }
+        } catch(const std::exception &e) {
+            dataPath = "";
+
+            WARN << "failed to load:" << e.what() << strerror(errno);
+
+            FileDialog filediag;
+            if (!filediag.setup(1024, 768)) {
+                WARN << "failed to open file dialog!";
+                return 1;
+            }
+            filediag.setErrorString(e.what());
+
+            const std::string selectedPath = filediag.getPath();
+            if (selectedPath.empty()) {
+                WARN << "user aborted";
+                return 1;
+            }
+
+            config.setValue("game-path", selectedPath);
         }
-
-        config.setValue("game-path", filediag.getPath());
-    }
-
-    dataPath = config.getValue("game-path") + "/Data/";
-
-    if (!std::filesystem::exists(dataPath)) {
-        WARN << "Game path " << dataPath << " does not exist";
-        config.printUsage(argv[0]);
-        return 1;
-    }
-
-    if (!LanguageManager::Inst()->initialize(config.getValue("game-path") + "/")) {
-        return 1;
-    }
-
-    if (!DataManager::Inst().initialize(dataPath)) {
-        return 1;
-    }
-
-    if (!AssetManager::Inst()->initialize(dataPath, DataManager::Inst().gameVersion())) {
-        return 1;
-    }
+    } while (!std::filesystem::exists(dataPath));
 
     AudioPlayer::instance();
 

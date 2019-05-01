@@ -60,6 +60,10 @@ public:
 
     void printUsage(const std::string &programName);
 
+#if defined(__linux__)
+    static std::string winePath();
+#endif
+
 private:
     bool parseOption(const std::string &option);
     bool checkOption(const std::string &name, const std::string &value);
