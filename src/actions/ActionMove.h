@@ -36,21 +36,21 @@ public:
 #endif
     virtual ~ActionMove();
 
-    UpdateResult update(Time time) override;
+    UpdateResult update(Time time) noexcept override;
 
-    static std::shared_ptr<ActionMove> moveUnitTo(const Unit::Ptr &unit, MapPos destination, const MapPtr &map, UnitManager *unitManager);
-    const std::vector<MapPos> &path() const { return m_path; }
-    genie::Task::ActionTypes taskType() const override { return genie::Task::MoveTo; }
+    static std::shared_ptr<ActionMove> moveUnitTo(const Unit::Ptr &unit, MapPos destination, const MapPtr &map, UnitManager *unitManager) noexcept;
+    const std::vector<MapPos> &path() const noexcept { return m_path; }
+    genie::Task::ActionTypes taskType() const noexcept override { return genie::Task::MoveTo; }
 
 private:
     ActionMove(MapPos destination, const MapPtr &map, const Unit::Ptr &unit, UnitManager *unitManager);
 
-    MapPos findClosestWalkableBorder(const MapPos &start, const MapPos &target, int coarseness);
+    MapPos findClosestWalkableBorder(const MapPos &start, const MapPos &target, int coarseness) noexcept;
 
-    std::vector<MapPos> findPath(MapPos start, MapPos end, int coarseness);
-    bool isPassable(const int x, const int y, int coarseness = 0);
+    std::vector<MapPos> findPath(MapPos start, MapPos end, int coarseness) noexcept;
+    bool isPassable(const int x, const int y, int coarseness = 0) noexcept;
 
-    void updatePath();
+    void updatePath() noexcept;
 
     MapPtr m_map;
     MapPos dest_;

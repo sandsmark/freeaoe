@@ -47,11 +47,6 @@ Graphic::Graphic(const genie::Graphic &data, const int id) :
     }
 }
 
-//------------------------------------------------------------------------------
-Graphic::~Graphic()
-{
-}
-
 sf::Image Graphic::slpFrameToImage(const genie::SlpFramePtr &frame, uint8_t playerId, const ImageType imageType)
 {
     const genie::PalFile &palette = AssetManager::Inst()->getPalette(50500);
@@ -220,7 +215,7 @@ const sf::Texture &Graphic::texture(uint32_t frameNum, float angleRadians, uint8
 
 }
 
-const Size Graphic::size(uint32_t frame_num, float angle) const
+Size Graphic::size(uint32_t frame_num, float angle) const
 {
     if (!slp_) {
         return Size(0, 0);
@@ -231,7 +226,7 @@ const Size Graphic::size(uint32_t frame_num, float angle) const
     return Size(frame->getWidth(), frame->getHeight());
 }
 
-const ScreenRect Graphic::rect(uint32_t frame_num, float angle) const
+ScreenRect Graphic::rect(uint32_t frame_num, float angle) const
 {
     ScreenRect ret;
     const ScreenPos hotspot = getHotspot(frame_num, angle);
@@ -316,7 +311,7 @@ bool Graphic::checkClick(const ScreenPos &pos, uint32_t frame_num, float angle) 
     }
 }
 
-const std::vector<genie::GraphicDelta> Graphic::deltas() const
+const std::vector<genie::GraphicDelta> &Graphic::deltas() const
 {
     return m_data.Deltas;
 }

@@ -221,16 +221,6 @@ const genie::PalFile &AssetManager::getPalette(sf::Uint32 id)
     return palette;
 }
 
-//------------------------------------------------------------------------------
-AssetManager::AssetManager()
-{
-}
-
-//------------------------------------------------------------------------------
-AssetManager::~AssetManager()
-{
-}
-
 std::string AssetManager::uiFilename(const AssetManager::UiResolution resolution, const AssetManager::UiCiv civ)
 {
     std::string ret = "game_";

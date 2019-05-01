@@ -105,7 +105,7 @@ public:
     /// @param id Id of the graphic struct in .dat file.
     //
     Graphic(const genie::Graphic &m_data, const int id);
-    virtual ~Graphic();
+    virtual ~Graphic() = default;
 
     static sf::Image slpFrameToImage(const genie::SlpFramePtr &frame, uint8_t playerId, const ImageType imageType);
 
@@ -121,13 +121,13 @@ public:
 
     const sf::Texture &texture(uint32_t frameNum = 0, float angleRadians = 0, uint8_t playerId = 0, const ImageType imageType = ImageType::Base);
 
-    const Size size(uint32_t frame_num, float angle) const;
-    const ScreenRect rect(uint32_t frame_num, float angle) const;
+    Size size(uint32_t frame_num, float angle) const;
+    ScreenRect rect(uint32_t frame_num, float angle) const;
     ScreenPos getHotspot(uint32_t frame_num, float angle) const;
 
     bool checkClick(const ScreenPos &pos, uint32_t frame_num, float angle) const;
 
-    const std::vector<genie::GraphicDelta> deltas() const;
+    const std::vector<genie::GraphicDelta> &deltas() const;
 
     bool hasSounds() const { return m_data.AngleSoundsUsed; }
 

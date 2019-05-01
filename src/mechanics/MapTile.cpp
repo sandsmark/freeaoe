@@ -1,7 +1,9 @@
 #include "MapTile.h"
 #include "resource/Terrain.h"
 
-std::vector<genie::Pattern> MapTile::slopePatterns() const
+MapTile MapTile::null;
+
+std::vector<genie::Pattern> MapTile::slopePatterns() const noexcept
 {
     // The correct patterns for the different slopes is from aoetwols by aap
     // (I just chose a much more horrible way of looking up and storing them, FIXME I guess)

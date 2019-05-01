@@ -49,8 +49,8 @@ public:
 
     static const sf::Clock GameClock;
 
-    Engine();
-    virtual ~Engine();
+    Engine() = default;
+    virtual ~Engine() = default;
 
     bool setup(const std::shared_ptr<genie::ScnFile> &scenario = nullptr);
     void start();

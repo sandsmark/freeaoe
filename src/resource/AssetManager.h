@@ -49,8 +49,8 @@ class UIFile;
 class AssetManager
 {
 private:
-    AssetManager();
-    virtual ~AssetManager();
+    AssetManager() = default;
+    virtual ~AssetManager() = default;
 
 public:
     enum UiResolution {

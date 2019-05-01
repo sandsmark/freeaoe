@@ -76,32 +76,66 @@ public:
     Map();
     virtual ~Map();
 
-    void setupBasic();
-    void setupAllunitsMap();
+    void setupBasic() noexcept;
+    void setupAllunitsMap() noexcept;
 
-    void create(genie::ScnMap mapDescription);
+    void create(genie::ScnMap mapDescription) noexcept;
 
-    int getRows();
-    int getCols();
+    inline int getRows() const noexcept { return rows_; }
+    inline int getCols() const noexcept { return cols_; }
 
-    int height();
-    int width();
+    inline int height() const noexcept { return rows_ * Constants::TILE_SIZE; }
+    inline int width() const noexcept { return cols_ * Constants::TILE_SIZE; }
 
-    float elevationAt(const MapPos &position);
+    float elevationAt(const MapPos &position) noexcept;
 
-    MapTile &getTileAt(unsigned int col, unsigned int row);
-    void setTileAt(unsigned col, unsigned row, unsigned id);
-    void updateTileAt(const int col, const int row, unsigned id);
+    const MapTile &getTileAt(unsigned int col, unsigned int row) const noexcept {
+        const unsigned int index = row * cols_ + col;
+        if (IS_UNLIKELY(index >= tiles_.size())) {
+            assert(col < cols_ && row < rows_);
+            return MapTile::null;
+        }
+        return tiles_.at(index);
+    }
 
-    void removeEntityAt(unsigned int col, unsigned int row, const int entityId);
-    void addEntityAt(int col, int row, const EntityPtr &entity);
-    const std::vector<std::weak_ptr<Entity>> &entitiesAt(unsigned int col, unsigned int row) const;
-    const std::vector<std::weak_ptr<Entity> > entitiesBetween(int firstCol, int firstRow, int lastCol, int lastRow) const;
+    MapTile &getTileAt(unsigned int col, unsigned int row) noexcept {
+        const unsigned int index = row * cols_ + col;
+        if (IS_UNLIKELY(index >= tiles_.size())) {
+            assert(col < cols_ && row < rows_);
+            return MapTile::null;
+        }
+        return tiles_.at(index);
+    }
 
-    void updateMapData();
+    void setTileAt(unsigned col, unsigned row, unsigned id) noexcept;
+    void updateTileAt(const int col, const int row, unsigned id) noexcept;
 
-    bool tilesUpdated() const { return m_updated; }
-    void flushDirty() { m_updated = false; }
+    void removeEntityAt(unsigned int col, unsigned int row, const int entityId) noexcept;
+    void addEntityAt(int col, int row, const EntityPtr &entity) noexcept;
+
+    inline const std::vector<std::weak_ptr<Entity>> &entitiesAt(unsigned int col, unsigned int row) const noexcept {
+        unsigned int index = row * cols_ + col;
+        if (IS_UNLIKELY(index >= m_tileUnits.size())) {
+            static const std::vector<std::weak_ptr<Entity>> nullVector;
+            return nullVector;
+        }
+        return m_tileUnits[index];
+    }
+
+    inline const std::vector<std::weak_ptr<Entity>> entitiesBetween(int firstCol, int firstRow, int lastCol, int lastRow) const noexcept {
+        std::vector<std::weak_ptr<Entity>> entities;
+        for (int col=firstCol; col<lastCol; col++) {
+            for (int row=firstRow; row<lastRow; row++) {
+                entities.insert(entities.end(), entitiesAt(col, row).begin(), entitiesAt(col, row).end());
+            }
+        }
+        return entities;
+    }
+
+    void updateMapData() noexcept;
+
+    bool tilesUpdated() const noexcept { return m_updated; }
+    void flushDirty() noexcept { m_updated = false; }
 
     inline bool isValidTile(const unsigned col, const unsigned row) const {
         if (IS_UNLIKELY(row * cols_ + col >= tiles_.size())) {
@@ -112,9 +146,10 @@ public:
     }
 
 private:
-    void updateTileBlend(int tileX, int tileY);
-    void updateTileSlopes(int tileX, int tileY);
-    Slope slopeAt(const int x, const int y);
+    void updateTileBlend(int tileX, int tileY) noexcept;
+    void updateTileSlopes(int tileX, int tileY) noexcept;
+
+    inline Slope slopeAt(const int x, const int y) const noexcept { return getTileAt(x, y).slopes.self; }
 
     // cols_ = x, rows_ = y
     int rows_, cols_;

@@ -279,7 +279,7 @@ void Config::setAllowedOptions(const std::vector<Config::ConfigOption> &options)
 }
 
 
-const std::string Config::getValue(const std::string &name)
+const std::string &Config::getValue(const std::string &name)
 {
     return m_options[name];
 }

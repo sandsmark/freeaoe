@@ -29,15 +29,9 @@
 
 #include <cmath>
 
-Terrain::Terrain(unsigned int id_) : id(id_)
-{
-}
 
-Terrain::~Terrain()
-{
-}
 
-bool Terrain::load()
+bool Terrain::load() noexcept
 {
     if (!m_isLoaded) {
         m_isLoaded = true;
@@ -64,12 +58,12 @@ bool Terrain::load()
     return true;
 }
 
-const genie::Terrain &Terrain::data()
+const genie::Terrain &Terrain::data() noexcept
 {
     return m_data;
 }
 
-uint8_t Terrain::blendMode(const uint8_t ownMode, const uint8_t neighborMode)
+uint8_t Terrain::blendMode(const uint8_t ownMode, const uint8_t neighborMode) noexcept
 {
     const std::array<std::array<uint8_t, 8>, 8> blendmodeTable = {{
         {{ 2, 3, 2, 1, 1, 6, 5, 4 }},
@@ -90,13 +84,13 @@ uint8_t Terrain::blendMode(const uint8_t ownMode, const uint8_t neighborMode)
     return blendmodeTable[ownMode][neighborMode];
 }
 
-uint32_t Terrain::coordinatesToFrame(int x, int y)
+uint32_t Terrain::coordinatesToFrame(int x, int y) noexcept
 {
     const int tileSquareCount = sqrt(m_slp->getFrameCount());
     return (y % tileSquareCount) + (x % tileSquareCount) * tileSquareCount;
 }
 
-const sf::Texture &Terrain::texture(const MapTile &tile)
+const sf::Texture &Terrain::texture(const MapTile &tile) noexcept
 {
     // The original graphics code in aoe was apparently hand-written assembly according to people on the internet,
     // and since I'm too lazy and too dumb to optimize this properly we just cache heavily instead
@@ -254,7 +248,7 @@ const sf::Texture &Terrain::texture(const MapTile &tile)
     return m_textures[tile];
 }
 
-void Terrain::addOutline(sf::Image &img)
+void Terrain::addOutline(sf::Image &img) noexcept
 {
     for (size_t x=2;x<img.getSize().x; x++) {
         for (size_t y=0;y<img.getSize().y; y++) {

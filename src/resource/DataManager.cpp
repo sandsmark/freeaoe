@@ -206,14 +206,6 @@ const genie::Civ &DataManager::civilization(unsigned int id) const
     return dat_file_.Civs[id];
 }
 
-DataManager::DataManager()
-{
-}
-
-DataManager::~DataManager()
-{
-}
-
 bool DataManager::initialize(const std::string &dataPath)
 {
 

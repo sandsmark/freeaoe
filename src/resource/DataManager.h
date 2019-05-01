@@ -74,8 +74,8 @@ public:
     static const std::vector<genie::Task> nullTaskList;
 
 private:
-    DataManager();
-    virtual ~DataManager();
+    DataManager() = default;
+    virtual ~DataManager() = default;
 
     genie::DatFile dat_file_;
 };

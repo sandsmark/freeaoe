@@ -50,18 +50,18 @@ struct Slope {
     };
 
     Slope (const Direction s) : direction(s) {}
-    Slope &operator =(const Direction s) { direction = s; return *this; }
-    Slope &operator =(const uint8_t s) { direction = Direction(s); return *this; }
+    Slope &operator =(const Direction s) noexcept { direction = s; return *this; }
+    Slope &operator =(const uint8_t s) noexcept { direction = Direction(s); return *this; }
 
-    inline bool operator <(const Direction other) const { return direction < other; }
-    inline bool operator==(const Direction other) const { return other == direction; }
-    inline bool operator!=(const Direction other) const { return other != direction; }
-    inline bool operator <(const Slope other) const { return direction < other.direction; }
-    inline bool operator==(const Slope other) const { return other.direction == direction; }
+    inline bool operator <(const Direction other) const noexcept { return direction < other; }
+    inline bool operator==(const Direction other) const noexcept { return other == direction; }
+    inline bool operator!=(const Direction other) const noexcept { return other != direction; }
+    inline bool operator <(const Slope other) const noexcept { return direction < other.direction; }
+    inline bool operator==(const Slope other) const noexcept { return other.direction == direction; }
 
-    inline operator Direction() const { return direction; }
+    inline operator Direction() const noexcept { return direction; }
 
-    inline std::string toAbbreviation() const {
+    inline std::string toAbbreviation() const noexcept {
         switch (direction) {
         case Flat:
             return "Flat";
@@ -92,7 +92,7 @@ struct Slope {
         }
     }
 
-    inline std::string toString() const {
+    inline std::string toString() const noexcept {
         switch (direction) {
         case Flat:
             return "Flat";
@@ -123,7 +123,7 @@ struct Slope {
         }
     }
 
-    inline genie::Slope toGenie() const {
+    inline genie::Slope toGenie() const noexcept {
         switch (direction){
         case Flat: return genie::SlopeFlat;
         case SouthUp: return genie::SlopeSouthUp;
@@ -167,7 +167,7 @@ struct TileSlopes
     Slope northWest = Slope::Flat;
     Slope northEast = Slope::Flat;
 
-    bool operator==(const TileSlopes &other) const {
+    bool operator==(const TileSlopes &other) const noexcept {
         return self == other.self &&
                north == other.north &&
                south == other.south &&
@@ -210,12 +210,12 @@ struct Blend  {
         BlendTileCount
     };
 
-    inline void addBlend(const BlendTile blend)
+    inline void addBlend(const BlendTile blend) noexcept
     {
         bits |= 1 << blend;
     }
 
-    inline bool operator ==(const Blend &other) const
+    inline bool operator ==(const Blend &other) const noexcept
     {
         return bits      == other.bits &&
                frame     == other.frame &&
@@ -232,13 +232,15 @@ struct Blend  {
 
 struct MapTile
 {
+    static MapTile null;
+
     void reset() {
         yOffset = 0;
         slopes = TileSlopes();
         blends.clear();
     }
 
-    std::vector<genie::Pattern> slopePatterns() const;
+    std::vector<genie::Pattern> slopePatterns() const noexcept;
 
     int elevation = -1;
     int frame = 0;
@@ -249,7 +251,7 @@ struct MapTile
     std::vector<Blend> blends;
     TileSlopes slopes;
 
-    bool operator==(const MapTile &other) const {
+    bool operator==(const MapTile &other) const noexcept {
         return frame == other.frame && blends == other.blends && slopes == other.slopes && terrainId == other.terrainId;
     }
 
@@ -259,7 +261,7 @@ namespace std {
 
 template<> struct hash<TileSlopes>
 {
-    inline size_t operator()(const TileSlopes &s) const {
+    inline size_t operator()(const TileSlopes &s) const noexcept {
         return hash<int8_t>()(s.self.direction) ^
                hash<int8_t>()(s.north.direction) ^
                hash<int8_t>()(s.south.direction) ^
@@ -274,14 +276,14 @@ template<> struct hash<TileSlopes>
 
 template<> struct hash<Blend>
 {
-    inline size_t operator()(const Blend &b) const {
+    inline size_t operator()(const Blend &b) const noexcept {
         return hash<uint32_t>()(b.bits) ^ hash<uint8_t>()(b.blendMode) ^ hash<uint8_t>()(b.frame);
     }
 };
 
 template<> struct hash<MapTile>
 {
-    inline size_t operator()(const MapTile &t) const {
+    inline size_t operator()(const MapTile &t) const noexcept {
         size_t ret = hash<uint32_t>()(t.frame) ^ hash<TileSlopes>()(t.slopes);
         for (const Blend &b : t.blends) {
             ret ^= hash<Blend>()(b);

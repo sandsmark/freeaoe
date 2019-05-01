@@ -47,25 +47,35 @@ Civilization::Civilization(const int civId) :
         m_researchAvailable[tech.ResearchLocation].push_back(&m_techs.at(i));
     }
 
+    for (size_t i=0; i<m_data.Resources.size(); i++) {
+        if (i >= int(genie::ResourceType::NumberOfTypes)) {
+            WARN << "Too many resources" << i;
+            break;
+        }
+
+        m_startingResources[genie::ResourceType(i)] = m_data.Resources[i];
+    }
 }
 
-const std::vector<const genie::Unit *> Civilization::creatableUnits(int16_t creator) const
+const std::vector<const genie::Unit *> &Civilization::creatableUnits(int16_t creator) const
 {
     if (creator != 118 && unit(creator).Action.TaskSwapGroup != 0) {
         creator = 118;
     }
 
     if (m_creatableUnits.find(creator) == m_creatableUnits.end()) {
-        return std::vector<const genie::Unit*>();
+        static const std::vector<const genie::Unit*> nullVector;
+        return nullVector;
     }
 
     return m_creatableUnits.at(creator);
 }
 
-const std::vector<const genie::Tech *> Civilization::researchAvailableAt(int16_t creator) const
+const std::vector<const genie::Tech *> &Civilization::researchAvailableAt(int16_t creator) const
 {
     if (m_researchAvailable.find(creator) == m_researchAvailable.end()) {
-        return std::vector<const genie::Tech*>();
+        static const std::vector<const genie::Tech*> nullVector;
+        return nullVector;
     }
 
     return m_researchAvailable.at(creator);
@@ -91,28 +101,14 @@ const genie::Tech &Civilization::tech(const uint16_t id) const
     return m_techs.at(id);
 }
 
-std::vector<const genie::Unit *> Civilization::swappableUnits(const uint16_t taskSwapGroup) const
+const std::vector<const genie::Unit *> &Civilization::swappableUnits(const uint16_t taskSwapGroup) const
 {
     if (taskSwapGroup >= m_taskSwapUnits.size()) {
-        return {};
+        static const std::vector<const genie::Unit*> nullVector;
+        return nullVector;
     }
 
     return m_taskSwapUnits[taskSwapGroup];
-}
-
-const ResourceMap Civilization::startingResources() const
-{
-    ResourceMap ret;
-    for (size_t i=0; i<m_data.Resources.size(); i++) {
-        if (i >= int(genie::ResourceType::NumberOfTypes)) {
-            WARN << "Too many resources" << i;
-            break;
-        }
-
-        ret[genie::ResourceType(i)] = m_data.Resources[i];
-    }
-
-    return ret;
 }
 
 float Civilization::startingResource(const genie::ResourceType type) const

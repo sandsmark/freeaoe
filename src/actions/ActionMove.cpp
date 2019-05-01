@@ -43,13 +43,13 @@ struct PathPoint {
     float pathLength = 0;
     float distance = 0;
 
-    bool operator==(const PathPoint &other) const {
+    bool operator==(const PathPoint &other) const noexcept {
         return x == other.x && y == other.y;
     }
-    bool operator!=(const PathPoint &other) const {
+    bool operator!=(const PathPoint &other) const noexcept {
         return x != other.x || y != other.y;
     }
-    bool operator<(const PathPoint &other) const {
+    bool operator<(const PathPoint &other) const noexcept {
         return other.distance < distance;
     }
 };
@@ -57,7 +57,7 @@ struct PathPoint {
 
 template<> struct std::hash<PathPoint>
 {
-    std::size_t operator()(const PathPoint& point) const
+    std::size_t operator()(const PathPoint& point) const noexcept
     {
         return point.y * 255 * 48 + point.x;
     }
@@ -76,7 +76,7 @@ ActionMove::ActionMove(MapPos destination, const MapPtr &map, const Unit::Ptr &u
     speed_ = unit->data()->Speed;
 }
 
-MapPos ActionMove::findClosestWalkableBorder(const MapPos &start, const MapPos &target, int coarseness)
+MapPos ActionMove::findClosestWalkableBorder(const MapPos &start, const MapPos &target, int coarseness) noexcept
 {
     // follow a straight line from the target to our location, to find the closest position we can get to
     // standard bresenham, not the prettiest implementation
@@ -152,7 +152,7 @@ ActionMove::~ActionMove()
 {
 }
 
-IAction::UpdateResult ActionMove::update(Time time)
+IAction::UpdateResult ActionMove::update(Time time) noexcept
 {
     Unit::Ptr unit = m_unit.lock();
     if (!unit) {
@@ -256,7 +256,7 @@ IAction::UpdateResult ActionMove::update(Time time)
     return UpdateResult::Updated;
 }
 
-std::shared_ptr<ActionMove> ActionMove::moveUnitTo(const Unit::Ptr &unit, MapPos destination, const MapPtr &map, UnitManager *unitManager)
+std::shared_ptr<ActionMove> ActionMove::moveUnitTo(const Unit::Ptr &unit, MapPos destination, const MapPtr &map, UnitManager *unitManager) noexcept
 {
     if (!unit->data()->Speed) {
         DBG << "Handed unit that can't move" << unit->debugName;
@@ -286,7 +286,7 @@ static std::vector<MapPos> simplifyAngles(const std::vector<MapPos> &path)
 }
 #endif
 
-static std::vector<MapPos> simplifyRdp(const std::vector<MapPos> &path, const float epsilon)
+static std::vector<MapPos> simplifyRdp(const std::vector<MapPos> &path, const float epsilon) noexcept
 {
     std::vector<MapPos> cleanedPath;
 
@@ -331,7 +331,7 @@ static std::vector<MapPos> simplifyRdp(const std::vector<MapPos> &path, const fl
     return cleanedPath;
 }
 
-std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarseness)
+std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarseness) noexcept
 {
 #ifdef DEBUG
     testedPoints.clear();
@@ -491,7 +491,7 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
     return simplifyRdp(path, coarseness*1.5);
 }
 
-bool ActionMove::isPassable(const int x, const int y, int coarseness)
+bool ActionMove::isPassable(const int x, const int y, int coarseness) noexcept
 {
     if (IS_UNLIKELY(x < 0 || y < 0)) {
         return false;
@@ -561,7 +561,7 @@ bool ActionMove::isPassable(const int x, const int y, int coarseness)
     return true;
 }
 
-void ActionMove::updatePath()
+void ActionMove::updatePath() noexcept
 {
     std::shared_ptr<Unit> unit = m_unit.lock();
     if (!unit) {

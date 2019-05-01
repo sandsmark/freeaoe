@@ -27,15 +27,15 @@ public:
 
     int id() { return m_civId; }
 
-    const std::vector<const genie::Unit *> creatableUnits(int16_t creator) const;
-    const std::vector<const genie::Tech *> researchAvailableAt(int16_t creator) const;
+    const std::vector<const genie::Unit *> &creatableUnits(int16_t creator) const;
+    const std::vector<const genie::Tech *> &researchAvailableAt(int16_t creator) const;
 
     const genie::Unit &unit(const uint16_t id) const;
     const genie::Tech &tech(const uint16_t id) const;
 
-    std::vector<const genie::Unit *> swappableUnits(const uint16_t taskSwapGroup) const;
+    const std::vector<const genie::Unit *> &swappableUnits(const uint16_t taskSwapGroup) const;
 
-    const ResourceMap startingResources() const;
+    const ResourceMap &startingResources() const { return m_startingResources; }
 
     const std::string &name() const { return m_data.Name; }
 
@@ -60,6 +60,7 @@ private:
     std::vector<genie::Unit> m_unitsData;
 
     std::unordered_map<uint16_t, genie::Tech> m_techs;
+    ResourceMap m_startingResources;
 };
 
 

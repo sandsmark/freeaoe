@@ -41,24 +41,24 @@ public:
     //----------------------------------------------------------------------------
     /// @param Id resource id
     //
-    Terrain(unsigned int id_);
-    virtual ~Terrain();
+    Terrain(unsigned int id_) : id(id_) { }
+    virtual ~Terrain() = default;
 
-    bool load();
+    bool load() noexcept;
 
-    const genie::Terrain &data();
+    const genie::Terrain &data() noexcept;
 
-    static uint8_t blendMode(const uint8_t ownMode, const uint8_t neighborMode);
-    const sf::Texture &blendImage(const Blend blends, int tileX, int tileY);
+    static uint8_t blendMode(const uint8_t ownMode, const uint8_t neighborMode) noexcept;
+    const sf::Texture &blendImage(const Blend blends, int tileX, int tileY) noexcept;
 
-    const sf::Texture &slopedImage(const TileSlopes &slopes, const std::vector<genie::Pattern> &patterns, int tileX, int tileY);
+    const sf::Texture &slopedImage(const TileSlopes &slopes, const std::vector<genie::Pattern> &patterns, int tileX, int tileY) noexcept;
 
-    uint32_t coordinatesToFrame(int x, int y);
+    uint32_t coordinatesToFrame(int x, int y) noexcept;
 
-    const sf::Texture &texture(const MapTile &tile);
+    const sf::Texture &texture(const MapTile &tile) noexcept;
 
 private:
-    void addOutline(sf::Image &img);
+    void addOutline(sf::Image &img) noexcept;
 
     genie::Terrain m_data;
     genie::SlpFilePtr m_slp;

@@ -57,10 +57,6 @@ const std::string &LanguageManager::getString(unsigned int id)
     return cache[id];
 }
 
-LanguageManager::LanguageManager()
-{
-}
-
 void LanguageManager::loadLangFile(const std::string &filename)
 {
     DBG << "Loading" << filename;

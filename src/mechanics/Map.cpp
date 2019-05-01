@@ -50,7 +50,7 @@ Map::~Map()
   */
 }
 
-void Map::setupBasic()
+void Map::setupBasic() noexcept
 {
     cols_ = 20;
     rows_ = 20;
@@ -88,7 +88,7 @@ void Map::setupBasic()
     getTileAt(18, 5).elevation = 1;
 }
 
-void Map::setupAllunitsMap()
+void Map::setupAllunitsMap() noexcept
 {
     cols_ = 30;
     rows_ = 30;
@@ -142,7 +142,7 @@ void Map::setupAllunitsMap()
     elevate(5, 14, 1, 1);
 }
 
-void Map::create(genie::ScnMap mapDescription)
+void Map::create(genie::ScnMap mapDescription) noexcept
 {
     DBG << "tile count:" << mapDescription.tiles.size();
     DBG << "size:" << mapDescription.width << "x" << mapDescription.height;
@@ -164,27 +164,7 @@ void Map::create(genie::ScnMap mapDescription)
     }
 }
 
-int Map::getCols()
-{
-    return cols_;
-}
-
-int Map::getRows()
-{
-    return rows_;
-}
-
-int Map::height()
-{
-    return rows_ * Constants::TILE_SIZE;
-}
-
-int Map::width()
-{
-    return cols_ * Constants::TILE_SIZE;
-}
-
-float Map::elevationAt(const MapPos &position)
+float Map::elevationAt(const MapPos &position) noexcept
 {
     const int tileX = position.x / Constants::TILE_SIZE;
     const int tileY = position.y / Constants::TILE_SIZE;
@@ -240,20 +220,9 @@ float Map::elevationAt(const MapPos &position)
     return elevation * DataManager::Inst().terrainBlock().ElevHeight;
 }
 
-MapTile &Map::getTileAt(unsigned int col, unsigned int row)
-{
-    unsigned int index = row * cols_ + col;
 
-    if (IS_UNLIKELY(index >= tiles_.size())) {
-//        WARN << "Trying to get MapTile (" << col << "x" << row << ") out of bounds (" << cols_ << "x" << rows_ << ")";
-        static MapTile nulltile;
-        return nulltile;
-    }
 
-    return tiles_[index];
-}
-
-void Map::setTileAt(unsigned col, unsigned row, unsigned id)
+void Map::setTileAt(unsigned col, unsigned row, unsigned id) noexcept
 {
     unsigned int index = row * cols_ + col;
 
@@ -266,7 +235,7 @@ void Map::setTileAt(unsigned col, unsigned row, unsigned id)
     m_updated = true;
 }
 
-void Map::updateTileAt(const int col, const int row, unsigned id)
+void Map::updateTileAt(const int col, const int row, unsigned id) noexcept
 {
     unsigned int index = row * cols_ + col;
 
@@ -297,7 +266,7 @@ void Map::updateTileAt(const int col, const int row, unsigned id)
     m_updated = true;
 }
 
-void Map::removeEntityAt(unsigned int col, unsigned int row, const int entityId)
+void Map::removeEntityAt(unsigned int col, unsigned int row, const int entityId) noexcept
 {
     unsigned int index = row * cols_ + col;
 
@@ -330,7 +299,7 @@ void Map::removeEntityAt(unsigned int col, unsigned int row, const int entityId)
     }
 }
 
-void Map::addEntityAt(int col, int row, const EntityPtr &entity)
+void Map::addEntityAt(int col, int row, const EntityPtr &entity) noexcept
 {
     unsigned int index = row * cols_ + col;
 
@@ -374,30 +343,11 @@ void Map::addEntityAt(int col, int row, const EntityPtr &entity)
     }
 }
 
-const std::vector<std::weak_ptr<Entity> > &Map::entitiesAt(unsigned int col, unsigned int row) const
-{
-    unsigned int index = row * cols_ + col;
 
-    if (IS_UNLIKELY(index >= m_tileUnits.size())) {
-        static const std::vector<std::weak_ptr<Entity>> nullVector;
-        return nullVector;
-    }
 
-    return m_tileUnits[index];
-}
 
-const std::vector<std::weak_ptr<Entity>> Map::entitiesBetween(int firstCol, int firstRow, int lastCol, int lastRow) const
-{
-    std::vector<std::weak_ptr<Entity>> entities;
-    for (int col=firstCol; col<lastCol; col++) {
-        for (int row=firstRow; row<lastRow; row++) {
-            entities.insert(entities.end(), entitiesAt(col, row).begin(), entitiesAt(col, row).end());
-        }
-    }
-    return entities;
-}
 
-void Map::updateMapData()
+void Map::updateMapData() noexcept
 {
     TIME_THIS;
 
@@ -438,7 +388,7 @@ enum Direction : uint8_t {
     SouthEast = 1 << 7,
 };
 
-void Map::updateTileBlend(int tileX, int tileY)
+void Map::updateTileBlend(int tileX, int tileY) noexcept
 {
     MapTile &tile = getTileAt(tileX, tileY);
     const genie::Terrain &tileData = DataManager::Inst().getTerrain(tile.terrainId);
@@ -706,7 +656,7 @@ void Map::updateTileBlend(int tileX, int tileY)
     }
 }
 
-void Map::updateTileSlopes(int tileX, int tileY)
+void Map::updateTileSlopes(int tileX, int tileY) noexcept
 {
     MapTile &tile = getTileAt(tileX, tileY);
     if (tile.slopes.self == Slope::Flat) {
@@ -729,12 +679,4 @@ void Map::updateTileSlopes(int tileX, int tileY)
 //    tile.terrain_->slopedImage(tile.slopes, tileX, tileY);
 }
 
-Slope Map::slopeAt(const int x, const int y)
-{
-    if (IS_UNLIKELY(x < 0 || y < 0 || x >= cols_ || y >= rows_)) {
-        return Slope::Flat;
-    }
-
-    return getTileAt(x, y).slopes.self;
-}
 

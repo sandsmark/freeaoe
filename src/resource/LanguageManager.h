@@ -20,7 +20,7 @@ public:
     static const std::string &getString(unsigned int id);
 
 private:
-    LanguageManager();
+    LanguageManager() = default;
     void loadLangFile(const std::string &filename);
 
     std::vector<std::shared_ptr<genie::LangFile>> m_langFiles;
