@@ -33,8 +33,7 @@ To build
  - Clone with --recurse-submodules (e. g. `git clone --recurse-submodules https://github.com/sandsmark/freeaoe.git`)
  - `mkdir build && cd build`
  - `cmake .. && make`
- - `./freeaoe --game-path=~/.wine/drive_c/Program\ Files/Microsoft\ Games/Age\ of\ Empires\ II\ The\ Conquerors\ Expansion\ Trial/`
- - Adjust the path above (it should work with both the full games and trial edition)
+ - `./freeaoe`
 
 TODO (this is probably going to get outdated)
 ----
