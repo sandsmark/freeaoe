@@ -34,11 +34,11 @@ class Map;
 class UnitManager;
 
 struct Task {
-    Task(const genie::Task &t, uint16_t id) : data(&t), unitId(id) {}
+    Task(const genie::Task &t, int id) : data(&t), unitId(id) {}
     Task() = default;
 
     const genie::Task *data = nullptr;
-    uint16_t unitId = 0; // for task group swapping
+    int unitId = -1; // for task group swapping
 
     bool operator==(const Task &other) const {
         return unitId == other.unitId && (
