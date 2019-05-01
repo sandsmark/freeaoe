@@ -282,6 +282,10 @@ bool HomeScreen::handleMouseEvent(const sf::Event &event)
             }
         }
         switch (m_hoveredButton) {
+        case Button::Zone:
+            util::openUrl("https://www.voobly.com/", nullptr);
+            m_selectedButton = m_hoveredButton;
+            return false;
         case Button::Exit:
         case Button::History:
         case Button::Tutorial:
