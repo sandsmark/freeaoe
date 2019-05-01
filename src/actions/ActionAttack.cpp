@@ -8,8 +8,8 @@
 #include "mechanics/Civilization.h"
 #include <genie/dat/Unit.h>
 
-ActionAttack::ActionAttack(const Unit::Ptr &attacker, const Unit::Ptr &target) :
-    IAction(IAction::Type::Attack, attacker),
+ActionAttack::ActionAttack(const Unit::Ptr &attacker, const Unit::Ptr &target, const Task &task) :
+    IAction(IAction::Type::Attack, attacker, task),
     m_targetPosition(target->position()),
     m_targetUnit(target)
 {
@@ -18,8 +18,8 @@ ActionAttack::ActionAttack(const Unit::Ptr &attacker, const Unit::Ptr &target) :
     }
 }
 
-ActionAttack::ActionAttack(const Unit::Ptr &attacker, const MapPos &targetPos) :
-    IAction(IAction::Type::Attack, attacker),
+ActionAttack::ActionAttack(const Unit::Ptr &attacker, const MapPos &targetPos, const Task &task) :
+    IAction(IAction::Type::Attack, attacker, task),
     m_targetPosition(targetPos),
     m_attackGround(true)
 {
@@ -85,7 +85,7 @@ IAction::UpdateResult ActionAttack::update(Time time)
         float targetX = m_targetPosition.x + cos(angleToTarget + M_PI) * unit->data()->Combat.MaxRange * Constants::TILE_SIZE / 1.1;
         float targetY = m_targetPosition.y + sin(angleToTarget + M_PI) * unit->data()->Combat.MaxRange * Constants::TILE_SIZE / 1.1;
 
-        unit->prependAction(ActionMove::moveUnitTo(unit, MapPos(targetX, targetY)));
+        unit->prependAction(ActionMove::moveUnitTo(unit, MapPos(targetX, targetY), m_task));
         return IAction::UpdateResult::NotUpdated;
     }
     if (distance < unit->data()->Combat.MinRange) {
@@ -95,7 +95,7 @@ IAction::UpdateResult ActionAttack::update(Time time)
             float targetX = m_targetPosition.x + cos(angleToTarget + M_PI) * unit->data()->Combat.MinRange * Constants::TILE_SIZE * 1.1;
             float targetY = m_targetPosition.y + sin(angleToTarget + M_PI) * unit->data()->Combat.MinRange * Constants::TILE_SIZE * 1.1;
 
-            unit->prependAction(ActionMove::moveUnitTo(unit, MapPos(targetX, targetY)));
+            unit->prependAction(ActionMove::moveUnitTo(unit, MapPos(targetX, targetY), m_task));
             return IAction::UpdateResult::NotUpdated;
         }
 

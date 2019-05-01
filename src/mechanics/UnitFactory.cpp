@@ -19,7 +19,6 @@
 #include "UnitFactory.h"
 #include "resource/DataManager.h"
 #include "core/Constants.h"
-#include "actions/ActionMove.h"
 #include "Farm.h"
 #include "Civilization.h"
 #include "Building.h"
@@ -48,7 +47,7 @@ void UnitFactory::handleDefaultAction(const Unit::Ptr &unit, const genie::Task &
 {
     switch(task.ActionType) {
     case genie::Task::Fly:
-        unit->setCurrentAction(std::make_shared<ActionFly>(unit));
+        unit->setCurrentAction(std::make_shared<ActionFly>(unit, Task(task, unit->data()->ID)));
         break;
 
         //TODO

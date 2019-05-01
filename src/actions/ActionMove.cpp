@@ -65,8 +65,8 @@ template<> struct std::hash<PathPoint>
 
 static const float PATHFINDING_HEURISTIC_WEIGHT = 1.1;
 
-ActionMove::ActionMove(MapPos destination, const Unit::Ptr &unit) :
-    IAction(Type::Move, unit),
+ActionMove::ActionMove(MapPos destination, const Unit::Ptr &unit, const Task &task) :
+    IAction(Type::Move, unit, task),
     m_map(unit->map()),
     target_reached(false)
 {
@@ -288,14 +288,14 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
     return UpdateResult::Updated;
 }
 
-std::shared_ptr<ActionMove> ActionMove::moveUnitTo(const Unit::Ptr &unit, MapPos destination) noexcept
+std::shared_ptr<ActionMove> ActionMove::moveUnitTo(const Unit::Ptr &unit, MapPos destination, const Task &task) noexcept
 {
     if (!unit->data()->Speed) {
         DBG << "Handed unit that can't move" << unit->debugName;
         return nullptr;
     }
 
-    std::shared_ptr<ActionMove> action (new ActionMove(destination, unit));
+    std::shared_ptr<ActionMove> action (new ActionMove(destination, unit, task));
 
     return action;
 }

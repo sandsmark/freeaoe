@@ -5,7 +5,7 @@
 class ActionFly : public IAction
 {
 public:
-    ActionFly(const std::shared_ptr<Unit> &unit);
+    ActionFly(const std::shared_ptr<Unit> &unit, const Task &task);
 
     UpdateResult update(Time time) override;
     UnitState unitState() const override;

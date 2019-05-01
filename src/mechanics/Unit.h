@@ -33,21 +33,6 @@ class Civilization;
 struct Player;
 struct Building;
 
-struct Task {
-    Task(const genie::Task &t, uint16_t id) : data(&t), unitId(id) {}
-    Task() = default;
-
-    const genie::Task *data = nullptr;
-    uint16_t unitId = 0; // for task group swapping
-
-    bool operator==(const Task &other) const {
-        return unitId == other.unitId && (
-                (data && other.data && data->ID == other.data->ID) ||
-                (data == other.data)
-        );
-    }
-};
-
 namespace std {
 template<> struct hash<Task>
 {

@@ -432,8 +432,15 @@ std::unordered_set<Task> Unit::availableActions() noexcept
 
 Task Unit::findMatchingTask(const genie::Task::ActionTypes &type, int targetUnit) noexcept
 {
-    for (const Task &task : availableActions()) {
+    std::unordered_set<Task> available = availableActions();
+    for (const Task &task : available) {
         if (task.data->ActionType == type && task.data->UnitID == targetUnit) {
+            return task;
+        }
+    }
+
+    for (const Task &task : available) {
+        if (task.data->ActionType == type && task.data->UnitID == -1) { // less specific
             return task;
         }
     }

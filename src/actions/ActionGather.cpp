@@ -7,16 +7,15 @@
 #include <genie/dat/Unit.h>
 #include <limits>
 
-ActionGather::ActionGather(const Unit::Ptr &unit, const Unit::Ptr &target, const genie::Task *task) :
-    IAction(Type::Gather, unit),
-    m_target(target),
-    m_task(task)
+ActionGather::ActionGather(const Unit::Ptr &unit, const Unit::Ptr &target, const Task &task) :
+    IAction(Type::Gather, unit, task),
+    m_target(target)
 {
-    m_resourceType = genie::ResourceType(m_task->ResourceIn);
+    m_resourceType = genie::ResourceType(m_task.data->ResourceIn);
     DBG << unit->debugName << "gathering from" << target->debugName;
 
-    if (m_task->ResourceOut >= 0 && m_task->ResourceOut < int(genie::ResourceType::NumberOfTypes)) {
-        m_resourceType = genie::ResourceType(m_task->ResourceOut);
+    if (m_task.data->ResourceOut >= 0 && m_task.data->ResourceOut < int(genie::ResourceType::NumberOfTypes)) {
+        m_resourceType = genie::ResourceType(m_task.data->ResourceOut);
     }
 }
 
@@ -43,16 +42,16 @@ IAction::UpdateResult ActionGather::update(Time time)
         DBG << "moving to" << dropSite->position() << "to drop off, then returning to" << unit->position();
 
         // Bleh, will be fucked if there's more in the queue, but I'm lazy
-        unit->queueAction(ActionMove::moveUnitTo(unit, dropSite->position()));
+        unit->queueAction(ActionMove::moveUnitTo(unit, dropSite->position(), m_task));
         unit->queueAction(std::make_shared<ActionDropOff>(unit, dropSite, m_task));
-        unit->queueAction(ActionMove::moveUnitTo(unit, unit->position()));
+        unit->queueAction(ActionMove::moveUnitTo(unit, unit->position(), m_task));
 
         return UpdateResult::Completed;
     }
 
     if (target->healthLeft() > 0 && target->playerId != unit->playerId) {
         DBG << "Unit isn't dead, attacking first";
-        unit->prependAction(std::make_shared<ActionAttack>(unit, target));
+        unit->prependAction(std::make_shared<ActionAttack>(unit, target, m_task));
         return UpdateResult::NotUpdated;
     }
 
@@ -75,9 +74,9 @@ IAction::UpdateResult ActionGather::update(Time time)
         if (dropSite) {
             DBG << "moving to" << dropSite->position() << "to drop off, then returning to" << currentPos << "to continue gathering";
 
-            unit->queueAction(ActionMove::moveUnitTo(unit, dropSite->position()));
+            unit->queueAction(ActionMove::moveUnitTo(unit, dropSite->position(), m_task));
             unit->queueAction(std::make_shared<ActionDropOff>(unit, dropSite, m_task));
-            unit->queueAction(ActionMove::moveUnitTo(unit, currentPos));
+            unit->queueAction(ActionMove::moveUnitTo(unit, currentPos, m_task));
 
             if (target->resources[m_resourceType] > 0) {
                 unit->queueAction(std::make_shared<ActionGather>(unit, target, m_task));
@@ -90,15 +89,15 @@ IAction::UpdateResult ActionGather::update(Time time)
     }
 
 
-    float amount = unit->data()->Action.WorkRate * m_task->WorkValue1;
-    if (m_task->ResourceMultiplier >= 0) {
+    float amount = unit->data()->Action.WorkRate * m_task.data->WorkValue1;
+    if (m_task.data->ResourceMultiplier >= 0) {
         Player::Ptr player = unit->player.lock();
         if (!player) {
             WARN << "player gone";
             return UpdateResult::Completed;
         }
 
-        amount *= player->resourcesAvailable[genie::ResourceType(m_task->ResourceMultiplier)];
+        amount *= player->resourcesAvailable[genie::ResourceType(m_task.data->ResourceMultiplier)];
     }
 
     amount *= (time - m_prevTime) * 0.0015;
@@ -114,7 +113,7 @@ IAction::UpdateResult ActionGather::update(Time time)
 
 IAction::UnitState ActionGather::unitState() const
 {
-    if (m_task->ActionType == genie::Task::Hunt) {
+    if (m_task.data->ActionType == genie::Task::Hunt) {
         return UnitState::Working;
     } else {
         return UnitState::Proceeding;
@@ -149,16 +148,15 @@ Unit::Ptr ActionGather::findDropSite(const Unit::Ptr &unit)
 }
 
 
-ActionDropOff::ActionDropOff(const Unit::Ptr &unit, const Unit::Ptr &target, const genie::Task *task) :
-    IAction(Type::DropOff, unit),
-    m_target(target),
-    m_task(task)
+ActionDropOff::ActionDropOff(const Unit::Ptr &unit, const Unit::Ptr &target, const Task &task) :
+    IAction(Type::DropOff, unit, task),
+    m_target(target)
 {
-    m_resourceType = genie::ResourceType(m_task->ResourceIn);
+    m_resourceType = genie::ResourceType(m_task.data->ResourceIn);
     DBG << unit->debugName << "dropping off" << target->debugName;
 
-    if (m_task->ResourceOut >= 0 && m_task->ResourceOut < int(genie::ResourceType::NumberOfTypes)) {
-        m_resourceType = genie::ResourceType(m_task->ResourceOut);
+    if (m_task.data->ResourceOut >= 0 && m_task.data->ResourceOut < int(genie::ResourceType::NumberOfTypes)) {
+        m_resourceType = genie::ResourceType(m_task.data->ResourceOut);
     }
 }
 

@@ -33,6 +33,21 @@ struct Task;
 class Map;
 class UnitManager;
 
+struct Task {
+    Task(const genie::Task &t, uint16_t id) : data(&t), unitId(id) {}
+    Task() = default;
+
+    const genie::Task *data = nullptr;
+    uint16_t unitId = 0; // for task group swapping
+
+    bool operator==(const Task &other) const {
+        return unitId == other.unitId && (
+                (data && other.data && data->ID == other.data->ID) ||
+                (data == other.data)
+        );
+    }
+};
+
 
 
 class IAction
@@ -82,9 +97,11 @@ public:
     int requiredUnitID = -1;
 
 protected:
-    IAction(const Type type_, const std::shared_ptr<Unit> &unit);
+    IAction(const Type type_, const std::shared_ptr<Unit> &unit, const Task &task);
+//    IAction(const Type type_, const std::shared_ptr<Unit> &unit);
     std::weak_ptr<Unit> m_unit;
     Time m_prevTime = 0;
+    Task m_task;
 };
 
 inline LogPrinter operator <<(LogPrinter os, const IAction::UnitState unitState)

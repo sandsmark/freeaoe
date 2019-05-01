@@ -19,8 +19,6 @@
 #include "UnitManager.h"
 
 #include "actions/ActionMove.h"
-#include "actions/ActionGather.h"
-#include "actions/ActionBuild.h"
 #include "actions/ActionAttack.h"
 #include "render/SfmlRenderTarget.h"
 #include "resource/LanguageManager.h"
@@ -468,11 +466,13 @@ bool UnitManager::onLeftClick(const ScreenPos &screenPos, const CameraPtr &camer
                 continue;
             }
 
+
+
             std::shared_ptr<ActionAttack> action;
             if (targetUnit) {
-                action = std::make_shared<ActionAttack>(unit, targetUnit);
+                action = std::make_shared<ActionAttack>(unit, targetUnit, unit->findMatchingTask(genie::Task::Attack, targetUnit->data()->ID));
             } else {
-                action = std::make_shared<ActionAttack>(unit, targetPos);
+                action = std::make_shared<ActionAttack>(unit, targetPos, unit->findMatchingTask(genie::Task::Attack, -1));
             }
             unit->setCurrentAction(action);
         }
@@ -762,7 +762,7 @@ const Task UnitManager::defaultActionAt(const ScreenPos &pos, const CameraPtr &c
 void UnitManager::moveUnitTo(const Unit::Ptr &unit, const MapPos &targetPos)
 {
     AudioPlayer::instance().playSound(unit->data()->Action.MoveSound, unit->civilization->id());
-    unit->setCurrentAction(ActionMove::moveUnitTo(unit, targetPos));
+    unit->setCurrentAction(ActionMove::moveUnitTo(unit, targetPos, Task()));
 }
 
 void UnitManager::selectAttackTarget()
