@@ -73,6 +73,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=undefined")
 
 set(CORE_SRC
     src/core/Logger.cpp
+    src/core/Utility.cpp
     )
 
 set(GLOBAL_SRC

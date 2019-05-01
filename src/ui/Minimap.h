@@ -11,7 +11,7 @@ class Map;
 struct Unit;
 class UnitManager;
 class SfmlRenderTarget;
-class VisibilityMap;
+struct VisibilityMap;
 
 class Minimap : public IState
 {
