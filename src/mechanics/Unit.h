@@ -173,7 +173,7 @@ struct Unit : public Entity
         const float xDistance = std::abs(otherUnit->position().x - position().x);
         const float yDistance = std::abs(otherUnit->position().y - position().y);
 
-        return std::hypot(std::max(xDistance - xSize, 0.f), std::max(yDistance - ySize, 0.f));
+        return util::hypot(std::max(xDistance - xSize, 0.f), std::max(yDistance - ySize, 0.f));
     }
 
 protected:

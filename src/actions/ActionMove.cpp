@@ -206,13 +206,13 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
     float movement = elapsed * speed_ * 0.15;
 
 
-    float distanceLeft = std::hypot(m_path.back().x - unit->position().x, m_path.back().y - unit->position().y);
+    float distanceLeft = util::hypot(m_path.back().x - unit->position().x, m_path.back().y - unit->position().y);
     while (distanceLeft < movement && !m_path.empty()) {
         m_path.pop_back();
         if (m_path.empty()) {
             break;
         }
-        distanceLeft = std::hypot(m_path.back().x - unit->position().x, m_path.back().y - unit->position().y);
+        distanceLeft = util::hypot(m_path.back().x - unit->position().x, m_path.back().y - unit->position().y);
     }
 
     if (m_path.empty()) {
@@ -238,7 +238,7 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
 
     const float direction = std::atan2(nextPos.y - unit->position().y, nextPos.x - unit->position().x);
     MapPos newPos = unit->position();
-    if (std::hypot(nextPos.x - newPos.x, nextPos.y - newPos.y) < movement) {
+    if (util::hypot(nextPos.x - newPos.x, nextPos.y - newPos.y) < movement) {
         newPos = nextPos;
     } else {
         newPos.x += std::cos(direction) * movement;
@@ -248,14 +248,14 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
     // Try to wiggle past
     if (!isPassable(newPos.x, newPos.y)) {
         newPos = unit->position();
-        movement = std::min(movement, std::hypot(nextPos.x - newPos.x, nextPos.y - newPos.y));
+        movement = std::min(movement, util::hypot(nextPos.x - newPos.x, nextPos.y - newPos.y));
         newPos.x += std::cos(direction + M_PI_2/2) * movement;
         newPos.y += std::sin(direction + M_PI_2/2) * movement;
     }
     // Try to wiggle past, other direction
     if (!isPassable(newPos.x, newPos.y)) {
         newPos = unit->position();
-        movement = std::min(movement, std::hypot(nextPos.x - newPos.x, nextPos.y - newPos.y));
+        movement = std::min(movement, util::hypot(nextPos.x - newPos.x, nextPos.y - newPos.y));
         newPos.x += std::cos(direction - M_PI_2/2) * movement;
         newPos.y += std::sin(direction - M_PI_2/2) * movement;
     }
@@ -329,6 +329,10 @@ static std::vector<MapPos> simplifyAngles(const std::vector<MapPos> &path)
 
 static std::vector<MapPos> simplifyRdp(const std::vector<MapPos> &path, const float epsilon) noexcept
 {
+    if (path.empty()) {
+        return path;
+    }
+
     std::vector<MapPos> cleanedPath;
 
 
@@ -502,10 +506,10 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
                 }
 //                pathPoint.pathLength = parent.pathLength + 1.; // chebychev
 //                pathPoint.pathLength = parent.pathLength + std::abs(dx) + std::abs(dy); // manhattan
-//                pathPoint.pathLength = parent.pathLength + std::hypot(dx, dy); // euclidian
+//                pathPoint.pathLength = parent.pathLength + util::hypot(dx, dy); // euclidian
 
 //                pathPoint.distance = pathPoint.pathLength + (std::abs(nx - endX) + std::abs(ny - endY)) * PATHFINDING_HEURISTIC_WEIGHT; // manhattan
-                pathPoint.distance = pathPoint.pathLength + std::hypot(nx - endX, ny - endY) * PATHFINDING_HEURISTIC_WEIGHT * straightCost;
+                pathPoint.distance = pathPoint.pathLength + util::hypot(nx - endX, ny - endY) * PATHFINDING_HEURISTIC_WEIGHT * straightCost;
                 queue.insert(pathPoint);
 
                 cameFrom[pathPoint] = parent;
@@ -541,11 +545,11 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
     }
     DBG << "final path length" << path.size();
 
-//    return path;
+    return path;
 
 //    return simplifyRdp(simplifyAngles(path), coarseness);
 //    return simplifyAngles(path);
-    return simplifyRdp(path, coarseness*1.5);
+//    return simplifyRdp(path, coarseness*1.5);
 }
 
 bool ActionMove::isPassable(const int x, const int y) noexcept
@@ -636,7 +640,7 @@ void ActionMove::updatePath() noexcept
         dest_ = newDest;
     }
 
-    m_path = findPath(unit->position(), newDest, 2);
+    m_path = simplifyRdp(findPath(unit->position(), newDest, 2), 2 * 1.3);
 
     // Try coarser
     // Uglier, but hopefully faster
@@ -645,7 +649,7 @@ void ActionMove::updatePath() noexcept
             newDest = findClosestWalkableBorder(unit->position(), dest_, 5);
             dest_ = newDest;
         }
-        m_path = findPath(unit->position(), newDest, 5);
+        m_path = simplifyRdp(findPath(unit->position(), newDest, 5), 5 * 1.3);
     }
 
     if (m_path.empty()) {
@@ -653,7 +657,7 @@ void ActionMove::updatePath() noexcept
             newDest = findClosestWalkableBorder(unit->position(), dest_, 10);
             dest_ = newDest;
         }
-        m_path = findPath(unit->position(), newDest, 10);
+        m_path = simplifyRdp(findPath(unit->position(), newDest, 10), 10 * 1.3);
     }
 
     if (m_path.empty()) {

@@ -97,6 +97,13 @@ inline std::vector<std::string> stringSplit(const std::string &string, const cha
     return ret;
 }
 
+// STL is a garbage fire and shitshow
+// I blame boost
+inline float hypot(const float a, const float b)
+{
+    return std::sqrt(a * a + b * b);
+}
+
 inline bool floatsEquals(const float a, const float b)
 {
     return (std::abs(a - b) * 100000.f <= std::min(std::abs(a), std::abs(b)));
