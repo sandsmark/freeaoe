@@ -104,6 +104,11 @@ inline float hypot(const float a, const float b)
     return std::sqrt(a * a + b * b);
 }
 
+inline float hypot(const float a, const float b, const float c)
+{
+    return std::sqrt(a * a + b * b + c * c);
+}
+
 inline bool floatsEquals(const float a, const float b)
 {
     return (std::abs(a - b) * 100000.f <= std::min(std::abs(a), std::abs(b)));

@@ -420,7 +420,7 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
 
     // STL is a steaming pile of shit
     std::unordered_set<PathPoint> queue;
-    currentPosition.distance = std::sqrt((startX - endX) * (startX - endX) + (startY - endY) * (startY - endY));
+    currentPosition.distance = util::hypot(startX - endX, startY - endY);
     currentPosition.pathLength = 0;
     queue.insert(currentPosition);
 

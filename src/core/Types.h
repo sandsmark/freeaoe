@@ -171,14 +171,15 @@ struct MapPos {
     }
 
     float distance(const MapPos &other) const {
-        return std::sqrt((other.x - x) * (other.x - x) + (other.y - y) * (other.y - y) + (other.z - z) * (other.z - z));
+        return util::hypot(other.x - x, other.y - y, other.z - z);
     }
+
     float distanceToLine(const MapPos &lineP1, const MapPos &lineP2) const {
         const float deltaX = x - lineP2.x;
         const float deltaY = y - lineP2.y;
         float lineLengthX = lineP1.x - lineP2.x;
         float lineLengthY = lineP1.y - lineP2.y;
-        const float normLength = std::sqrt(lineLengthX * lineLengthX + lineLengthY * lineLengthY);
+        const float normLength = util::hypot(lineLengthX, lineLengthY);
         if (IS_UNLIKELY(!normLength)) {
             return 0;
         }
@@ -298,7 +299,7 @@ struct ScreenPos {
     }
 
     float distanceTo(const ScreenPos &other) const {
-        return std::sqrt((other.x - x) * (other.x - x) + (other.y - y) * (other.y - y));
+        return util::hypot(other.x - x, other.y - y);
     }
 
 
