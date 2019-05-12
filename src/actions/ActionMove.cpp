@@ -63,7 +63,7 @@ template<> struct std::hash<PathPoint>
     }
 };
 
-static const float PATHFINDING_HEURISTIC_WEIGHT = 1.1;
+static const float PATHFINDING_HEURISTIC_WEIGHT = 10;
 
 ActionMove::ActionMove(MapPos destination, const Unit::Ptr &unit, const Task &task) :
     IAction(Type::Move, unit, task),
@@ -493,11 +493,19 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
                 pathPoint.dx = dx;
                 pathPoint.dy = dx;
 
+                const int diagCost = 3;
+                const int straightCost = 2;
+                if (!dx || !dy) {
+                    pathPoint.pathLength = parent.pathLength + straightCost;
+                } else {
+                    pathPoint.pathLength = parent.pathLength + diagCost;
+                }
 //                pathPoint.pathLength = parent.pathLength + 1.; // chebychev
 //                pathPoint.pathLength = parent.pathLength + std::abs(dx) + std::abs(dy); // manhattan
-                pathPoint.pathLength = parent.pathLength + std::hypot(dx, dy); // euclidian
+//                pathPoint.pathLength = parent.pathLength + std::hypot(dx, dy); // euclidian
+
 //                pathPoint.distance = pathPoint.pathLength + (std::abs(nx - endX) + std::abs(ny - endY)) * PATHFINDING_HEURISTIC_WEIGHT; // manhattan
-                pathPoint.distance = pathPoint.pathLength + std::hypot(nx - endX, ny - endY) * PATHFINDING_HEURISTIC_WEIGHT;
+                pathPoint.distance = pathPoint.pathLength + std::hypot(nx - endX, ny - endY) * PATHFINDING_HEURISTIC_WEIGHT * straightCost;
                 queue.insert(pathPoint);
 
                 cameFrom[pathPoint] = parent;

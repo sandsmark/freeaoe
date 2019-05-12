@@ -351,7 +351,7 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
         circle.setPosition(pos.x, pos.y);
         circle.setRadius(2);
         int col = 128 * i / ActionMove::testedPoints.size() + 128;
-        circle.setFillColor(sf::Color(128 + col, 255 - col, 255, 64));
+        circle.setFillColor(sf::Color(128 + col, 255 - col, 255, 128));
         circle.setOutlineColor(sf::Color::Transparent);
         renderTarget->draw(circle);
     }
