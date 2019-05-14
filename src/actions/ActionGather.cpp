@@ -49,6 +49,7 @@ IAction::UpdateResult ActionGather::update(Time time)
         return UpdateResult::Completed;
     }
 
+
     if (target->healthLeft() > 0 && target->playerId != unit->playerId) {
         DBG << "Unit isn't dead, attacking first";
         unit->prependAction(std::make_shared<ActionAttack>(unit, target, m_task));
@@ -56,6 +57,10 @@ IAction::UpdateResult ActionGather::update(Time time)
     }
 
     if (!m_prevTime) {
+        ScreenPos screenPosition = unit->position().toScreen();
+        ScreenPos targetScreenPosition = target->position().toScreen();
+        unit->setAngle(screenPosition.angleTo(targetScreenPosition));
+
         m_prevTime = time;
         return UpdateResult::NotUpdated;
     }

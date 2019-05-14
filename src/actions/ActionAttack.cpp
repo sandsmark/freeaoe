@@ -51,6 +51,9 @@ IAction::UpdateResult ActionAttack::update(Time time)
         m_targetPosition = targetUnit->position();
     }
 
+    ScreenPos screenPosition = unit->position().toScreen();
+    ScreenPos targetScreenPosition = m_targetPosition.toScreen();
+    unit->setAngle(screenPosition.angleTo(targetScreenPosition));
 
     if (unitFiresMissiles(unit) && missilesUnitCanFire(unit) <= 0) {
         return IAction::UpdateResult::NotUpdated;
