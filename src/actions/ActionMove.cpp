@@ -90,12 +90,12 @@ static const float PATHFINDING_HEURISTIC_WEIGHT = 10;
 ActionMove::ActionMove(MapPos destination, const Unit::Ptr &unit, const Task &task) :
     IAction(Type::Move, unit, task),
     m_map(unit->map()),
-    target_reached(false)
+    m_targetReached(false)
 {
-    dest_ = destination;
+    m_destination = destination;
 
-    m_terrainMoveMultiplier = DataManager::Inst().getTerrainRestriction(unit->data()->TerrainRestriction).PassableBuildableDmgMultiplier;
-    speed_ = unit->data()->Speed;
+    m_terrainMoveMultipliers = DataManager::Inst().getTerrainRestriction(unit->data()->TerrainRestriction).PassableBuildableDmgMultiplier;
+    m_speed = unit->data()->Speed;
 }
 
 MapPos ActionMove::findClosestWalkableBorder(const MapPos &start, const MapPos &target, int coarseness) noexcept
@@ -192,7 +192,7 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
     }
 
     if (!m_prevTime) {
-        if (unit->position().distance(dest_) < 1) { // just in case
+        if (unit->position().distance(m_destination) < 1) { // just in case
             return UpdateResult::Completed;
         }
 
@@ -207,16 +207,16 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
         return UpdateResult::NotUpdated;
     }
 
-    if (target_reached) {
+    if (m_targetReached) {
         return UpdateResult::Completed;
     }
 
     if (m_path.empty()) {
-        target_reached = true;
+        m_targetReached = true;
 
-        if (unit->position().distance(dest_) < 1) {
-            if (isPassable(dest_.x, dest_.y)) {
-                unit->setPosition(dest_);
+        if (unit->position().distance(m_destination) < 1) {
+            if (isPassable(m_destination.x, m_destination.y)) {
+                unit->setPosition(m_destination);
                 return UpdateResult::Completed;
             }
         }
@@ -225,7 +225,7 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
     }
 
     float elapsed = time - m_prevTime;
-    float movement = elapsed * speed_ * 0.15;
+    float movement = elapsed * m_speed * 0.15;
 
 
     float distanceLeft = util::hypot(m_path.back().x - unit->position().x, m_path.back().y - unit->position().y);
@@ -238,8 +238,8 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
     }
 
     if (m_path.empty()) {
-        target_reached = true;
-        WARN << "path empty after loop, complete, distance left:" << unit->position().distance(dest_);
+        m_targetReached = true;
+        WARN << "path empty after loop, complete, distance left:" << unit->position().distance(m_destination);
         return UpdateResult::Completed;
     }
 
@@ -250,7 +250,7 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
 
         if (m_path.empty()) {
             WARN << "failed to find new target path";
-            target_reached = true;
+            m_targetReached = true;
             return UpdateResult::Failed;
         }
         WARN << "found new path";
@@ -288,7 +288,7 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
         std::vector<MapPos> partial = findPath(unit->position(), nextPos, 1);
         if (partial.size() < 2) {
             WARN << "failed to find intermediary path";
-            target_reached = true;
+            m_targetReached = true;
             return UpdateResult::Failed;
         } else {
             DBG << "found intermediary";
@@ -590,7 +590,7 @@ bool ActionMove::isPassable(const int x, const int y) noexcept
     m_passableCached[cacheIndex] = true;
 
     const MapTile &tile = m_map->getTileAt(tileX, tileY);
-    if (m_terrainMoveMultiplier[tile.terrainId] == 0) {
+    if (m_terrainMoveMultipliers[tile.terrainId] == 0) {
         m_passable[cacheIndex] = false;
         return false;
     }
@@ -650,12 +650,12 @@ void ActionMove::updatePath() noexcept
         return;
     }
 
-    DBG << "moving to" << dest_;
+    DBG << "moving to" << m_destination;
 
-    MapPos newDest = dest_;
-    if (!isPassable(dest_.x, dest_.y)) {
-        newDest = findClosestWalkableBorder(unit->position(), dest_, 2);
-        dest_ = newDest;
+    MapPos newDest = m_destination;
+    if (!isPassable(m_destination.x, m_destination.y)) {
+        newDest = findClosestWalkableBorder(unit->position(), m_destination, 2);
+        m_destination = newDest;
     }
 
     m_path = simplifyRdp(findPath(unit->position(), newDest, 2), 2 * 1.3);
@@ -663,17 +663,17 @@ void ActionMove::updatePath() noexcept
     // Try coarser
     // Uglier, but hopefully faster
     if (m_path.empty()) {
-        if (newDest != dest_) {
-            newDest = findClosestWalkableBorder(unit->position(), dest_, 5);
-            dest_ = newDest;
+        if (newDest != m_destination) {
+            newDest = findClosestWalkableBorder(unit->position(), m_destination, 5);
+            m_destination = newDest;
         }
         m_path = simplifyRdp(findPath(unit->position(), newDest, 5), 5 * 1.3);
     }
 
     if (m_path.empty()) {
-        if (newDest != dest_) {
-            newDest = findClosestWalkableBorder(unit->position(), dest_, 10);
-            dest_ = newDest;
+        if (newDest != m_destination) {
+            newDest = findClosestWalkableBorder(unit->position(), m_destination, 10);
+            m_destination = newDest;
         }
         m_path = simplifyRdp(findPath(unit->position(), newDest, 10), 10 * 1.3);
     }

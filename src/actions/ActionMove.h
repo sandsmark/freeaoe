@@ -54,13 +54,12 @@ private:
     void updatePath() noexcept;
 
     MapPtr m_map;
-    MapPos dest_;
+    MapPos m_destination;
     std::vector<MapPos> m_path;
-    MapPos m_currentTarget;
-    std::vector<float> m_terrainMoveMultiplier;
-    float speed_;
+    std::vector<float> m_terrainMoveMultipliers;
+    float m_speed;
 
-    bool target_reached;
+    bool m_targetReached;
     std::bitset<Constants::TILE_SIZE * Constants::TILE_SIZE * Constants::MAP_MAX_SIZE * Constants::MAP_MAX_SIZE> m_passable;
     std::bitset<Constants::TILE_SIZE * Constants::TILE_SIZE * Constants::MAP_MAX_SIZE * Constants::MAP_MAX_SIZE> m_passableCached;
     bool m_passableDirty = false;
