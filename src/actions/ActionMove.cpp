@@ -29,6 +29,16 @@
 std::vector<MapPos> ActionMove::testedPoints;
 #endif
 
+struct SimplePathPoint {
+    SimplePathPoint(const int x_, const int y_) : x(x_), y(y_) {}
+    int x = 0;
+    int y = 0;
+
+    bool operator==(const SimplePathPoint &other) const noexcept {
+        return x == other.x || y == other.y;
+    }
+};
+
 namespace { // anonymous namespace, don't export this
 struct PathPoint {
     PathPoint() = default;
@@ -38,8 +48,8 @@ struct PathPoint {
 
     PathPoint(int64_t _x, int64_t _y) : x(_x), y(_y) {}
 
-    int64_t x = 0;
-    int64_t y = 0;
+    int32_t x = 0;
+    int32_t y = 0;
     float pathLength = 0;
     float distance = 0;
 
@@ -52,12 +62,24 @@ struct PathPoint {
     bool operator<(const PathPoint &other) const noexcept {
         return other.distance < distance;
     }
+
+    inline operator SimplePathPoint () const {
+        return {x, y};
+    }
 };
 } //namespace
 
 template<> struct std::hash<PathPoint>
 {
     std::size_t operator()(const PathPoint& point) const noexcept
+    {
+        return point.y * 255 * 48 + point.x;
+    }
+};
+
+template<> struct std::hash<SimplePathPoint>
+{
+    std::size_t operator()(const SimplePathPoint& point) const noexcept
     {
         return point.y * 255 * 48 + point.x;
     }
@@ -419,25 +441,20 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
     std::unordered_map<PathPoint, PathPoint> cameFrom;
 
     // STL is a steaming pile of shit
-    std::unordered_set<PathPoint> queue;
+    std::priority_queue<PathPoint> queue;
     currentPosition.distance = util::hypot(startX - endX, startY - endY);
     currentPosition.pathLength = 0;
-    queue.insert(currentPosition);
+    queue.push(currentPosition);
 
-    std::unordered_set<PathPoint> visited;
+    std::unordered_set<SimplePathPoint> visited;
     visited.insert(currentPosition);
 
     PathPoint parent;
     size_t tried = 0;
     while (!queue.empty()) {
         tried++;
-        std::unordered_set<PathPoint>::iterator maxElement = std::max_element(queue.begin(), queue.end());
-        if (maxElement == queue.end()) {
-            WARN << "FAiled to find max";
-            break;
-        }
-        parent = *maxElement;
-        queue.erase(maxElement);
+        parent = queue.top();
+        queue.pop();
 
         if (parent.x == endX && parent.y == endY) {
             break;
@@ -477,16 +494,17 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
                 }
 
 
-                PathPoint pathPoint(nx, ny);
-
-                if (visited.find(pathPoint) != visited.end()) {
+                SimplePathPoint position(nx, ny);
+                if (visited.find(position) != visited.end()) {
                     continue;
                 }
 
                 if (!isPassable(nx * coarseness, ny * coarseness)) {
-                    visited.insert(pathPoint);
+                    visited.insert(position);
                     continue;
                 }
+                PathPoint pathPoint(nx, ny);
+
 
                 if (cameFrom.find(pathPoint) != cameFrom.end()) {
                     if ((cameFrom[pathPoint].pathLength < parent.pathLength)) {
@@ -510,7 +528,7 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
 
 //                pathPoint.distance = pathPoint.pathLength + (std::abs(nx - endX) + std::abs(ny - endY)) * PATHFINDING_HEURISTIC_WEIGHT; // manhattan
                 pathPoint.distance = pathPoint.pathLength + util::hypot(nx - endX, ny - endY) * PATHFINDING_HEURISTIC_WEIGHT * straightCost;
-                queue.insert(pathPoint);
+                queue.push(pathPoint);
 
                 cameFrom[pathPoint] = parent;
             }
@@ -563,7 +581,7 @@ bool ActionMove::isPassable(const int x, const int y) noexcept
         return false;
     }
 
-    const unsigned cacheIndex = x  + y * 255u;
+    const unsigned cacheIndex = x  + y * Constants::TILE_SIZE * Constants::MAP_MAX_SIZE;
     if (m_passableCached[cacheIndex]) {
         return m_passable[cacheIndex];
     }

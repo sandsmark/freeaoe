@@ -61,8 +61,8 @@ private:
     float speed_;
 
     bool target_reached;
-    std::bitset<Constants::TILE_SIZE * Map::Gigantic * Map::Gigantic> m_passable;
-    std::bitset<Constants::TILE_SIZE * Map::Gigantic * Map::Gigantic> m_passableCached;
+    std::bitset<Constants::TILE_SIZE * Constants::TILE_SIZE * Constants::MAP_MAX_SIZE * Constants::MAP_MAX_SIZE> m_passable;
+    std::bitset<Constants::TILE_SIZE * Constants::TILE_SIZE * Constants::MAP_MAX_SIZE * Constants::MAP_MAX_SIZE> m_passableCached;
     bool m_passableDirty = false;
 };
 
