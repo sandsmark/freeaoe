@@ -126,21 +126,15 @@ bool HomeScreen::init()
     m_todoText.setString("TODO");
     m_todoText.setPosition(ScreenPos(550, 65));
 
-    m_textButtons[TextButton::Campaign].text.setString("Campaign (todo lookup name)");
-    m_textButtons[TextButton::StandardGame].text.setString("Simple demo map");
+    m_textButtons[GameTypeChoice::Campaign].text = "Campaign (todo lookup name)";
+    m_textButtons[GameTypeChoice::StandardGame].text = "Simple demo map";
 
     int y = 85;
-    for (int i=0; i<TextButton::ButtonsCount; i++) {
+    for (int i=0; i<GameTypeChoice::GameTypeCount; i++) {
         m_textButtons[i].rect.x = 460;
         m_textButtons[i].rect.y = y;
         m_textButtons[i].rect.height = 40;
         m_textButtons[i].rect.width = 300;
-
-        m_textButtons[i].text.setCharacterSize(17);
-        m_textButtons[i].text.setFont(SfmlRenderTarget::defaultFont());
-        m_textButtons[i].text.setFillColor(m_textFillColor);
-        m_textButtons[i].text.setOutlineColor(m_textOutlineColor);
-        m_textButtons[i].text.setOutlineThickness(1);
         y += 65;
     }
 
@@ -197,45 +191,8 @@ void HomeScreen::render()
 
     switch (m_selectedButton) {
     case Button::Singleplayer: {
-        sf::RectangleShape rect;
-        rect.setFillColor(sf::Color(0, 0, 0, m_buttonOpacity * 255));
-
-        const ScreenPos borderOffset(1, 1);
-        const int borderWidth = 3;
-
-        sf::RectangleShape horizontalBorder;
-        horizontalBorder.setSize(Size(302, borderWidth));
-
-        sf::RectangleShape verticalBorder;
-        verticalBorder.setSize(Size(borderWidth, 42));
-
-        for (int i=0; i<TextButton::ButtonsCount; i++) {
-            TextButton &button = m_textButtons[i];
-
-            horizontalBorder.setFillColor(m_bevelColor1);
-            verticalBorder.setFillColor(m_bevelColor2);
-            verticalBorder.setPosition(button.rect.topLeft() - ScreenPos(1, 1));
-            m_renderWindow->draw(verticalBorder);
-            horizontalBorder.setPosition(button.rect.topLeft() - ScreenPos(1, 1));
-            m_renderWindow->draw(horizontalBorder);
-
-            horizontalBorder.setFillColor(m_bevelColor2);
-            horizontalBorder.setPosition(button.rect.bottomLeft() + ScreenPos(-1, 1 - borderWidth));
-            m_renderWindow->draw(horizontalBorder);
-            verticalBorder.setFillColor(m_bevelColor1);
-            verticalBorder.setPosition(button.rect.topRight() + ScreenPos(1 - borderWidth, -1));
-            m_renderWindow->draw(verticalBorder);
-
-            rect.setSize(button.rect.size());
-            rect.setPosition(button.rect.topLeft());
-            m_renderWindow->draw(rect);
-
-            ScreenPos pos = button.rect.center();
-            sf::FloatRect textRect = m_buttons[i].text.getLocalBounds();
-            pos.x -= textRect.width;
-            pos.y -= 3 * textRect.height / 4;
-            button.text.setPosition(pos);
-            m_renderWindow->draw(button.text);
+        for (int i=0; i<GameTypeChoice::GameTypeCount; i++) {
+            m_textButtons[i].render(this);
         }
         break;
     }
@@ -274,7 +231,7 @@ bool HomeScreen::handleMouseEvent(const sf::Event &event)
     if (event.type == sf::Event::MouseButtonPressed) {
         ScreenPos mousePos(event.mouseButton.x, event.mouseButton.y);
         if (m_selectedButton == Button::Singleplayer) {
-            for (int i=0; i<TextButton::ButtonsCount; i++) {
+            for (int i=0; i<GameTypeChoice::GameTypeCount; i++) {
                 if (m_textButtons[i].rect.contains(mousePos)) {
                     m_gameType = i;
                     return true;

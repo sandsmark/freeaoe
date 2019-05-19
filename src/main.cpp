@@ -137,7 +137,7 @@ int main(int argc, char **argv)
                 }
             } else if (button == HomeScreen::Button::Singleplayer) {
                 startGame = true;
-                if (home.getGameType() == HomeScreen::TextButton::Campaign) {
+                if (home.getGameType() == HomeScreen::GameTypeChoice::Campaign) {
                     try {
                         genie::CpxFile cpxFile;
                         cpxFile.setFileName(config.getValue("game-path") + "/Campaign/xcam3.cpx");

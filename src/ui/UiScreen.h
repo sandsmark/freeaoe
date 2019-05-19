@@ -43,6 +43,8 @@ public:
     virtual bool init();
 
 protected:
+    friend class TextButton;
+
     bool run();
 
     UiScreen(const char *uiFile);

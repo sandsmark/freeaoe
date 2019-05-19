@@ -149,6 +149,7 @@ set (UI_SRC
     src/ui/HomeScreen.cpp
     src/ui/HistoryScreen.cpp
     src/ui/UiScreen.cpp
+    src/ui/TextButton.cpp
     src/ui/Minimap.cpp
     )
 
