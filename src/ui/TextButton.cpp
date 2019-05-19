@@ -41,25 +41,38 @@ void TextButton::render(UiScreen *screen)
     background.setPosition(rect.topLeft());
     screen->m_renderWindow->draw(background);
 
+    sf::Color outer1 = screen->m_bevelColor1c;
+    sf::Color middle1 = screen->m_bevelColor1b;
+    sf::Color inner1 = screen->m_bevelColor1a;
+
+    sf::Color outer2 = screen->m_bevelColor2c;
+    sf::Color middle2 =screen->m_bevelColor2b;
+    sf::Color inner2 = screen->m_bevelColor2a;
+    if (pressed) {
+        std::swap(outer1, outer2);
+        std::swap(middle1, middle2);
+        std::swap(inner1, inner2);
+    }
+
     // top horizontal
-    drawLine({rect.topLeft() - ScreenPos(2, 2)}, {rect.topRight() - ScreenPos(-2, 2)}, screen->m_bevelColor1a, screen);
-    drawLine({rect.topLeft() - ScreenPos(1, 1)}, {rect.topRight() - ScreenPos(-1, 1)}, screen->m_bevelColor1b, screen);
-    drawLine({rect.topLeft() - ScreenPos(0, 0)}, {rect.topRight() - ScreenPos(-0, 0)}, screen->m_bevelColor1c, screen);
+    drawLine({rect.topLeft() - ScreenPos(2, 2)}, {rect.topRight() - ScreenPos(-2, 2)}, inner1, screen);
+    drawLine({rect.topLeft() - ScreenPos(1, 1)}, {rect.topRight() - ScreenPos(-1, 1)}, middle1, screen);
+    drawLine({rect.topLeft() - ScreenPos(0, 0)}, {rect.topRight() - ScreenPos(-0, 0)}, outer1, screen);
 
     // bottom horizontal
-    drawLine({rect.bottomLeft() + ScreenPos(-2, 2)}, {rect.bottomRight() + ScreenPos(2, 2)}, screen->m_bevelColor2a, screen);
-    drawLine({rect.bottomLeft() + ScreenPos(-1, 1)}, {rect.bottomRight() + ScreenPos(1, 1)}, screen->m_bevelColor2b, screen);
-    drawLine({rect.bottomLeft() + ScreenPos(-0, 0)}, {rect.bottomRight() + ScreenPos(0, 0)}, screen->m_bevelColor2c, screen);
+    drawLine({rect.bottomLeft() + ScreenPos(-2, 2)}, {rect.bottomRight() + ScreenPos(2, 2)}, inner2, screen);
+    drawLine({rect.bottomLeft() + ScreenPos(-1, 1)}, {rect.bottomRight() + ScreenPos(1, 1)}, middle2, screen);
+    drawLine({rect.bottomLeft() + ScreenPos(-0, 0)}, {rect.bottomRight() + ScreenPos(0, 0)}, outer2, screen);
 
     // left vertical
-    drawLine({rect.topLeft() - ScreenPos(2, 2)}, {rect.bottomLeft() - ScreenPos(2, -2)}, screen->m_bevelColor2a, screen);
-    drawLine({rect.topLeft() - ScreenPos(1, 1)}, {rect.bottomLeft() - ScreenPos(1, -1)}, screen->m_bevelColor2b, screen);
-    drawLine({rect.topLeft() - ScreenPos(0, 0)}, {rect.bottomLeft() - ScreenPos(0, -0)}, screen->m_bevelColor2c, screen);
+    drawLine({rect.topLeft() - ScreenPos(2, 2)}, {rect.bottomLeft() - ScreenPos(2, -2)}, inner2, screen);
+    drawLine({rect.topLeft() - ScreenPos(1, 1)}, {rect.bottomLeft() - ScreenPos(1, -1)}, middle2, screen);
+    drawLine({rect.topLeft() - ScreenPos(0, 0)}, {rect.bottomLeft() - ScreenPos(0, -0)}, outer2, screen);
 
     // right vertical
-    drawLine({rect.topRight() + ScreenPos(-1, -0)}, {rect.bottomRight() + ScreenPos(-1, 0)}, screen->m_bevelColor1c, screen);
-    drawLine({rect.topRight() + ScreenPos( 0, -1)}, {rect.bottomRight() + ScreenPos( 0, 1)}, screen->m_bevelColor1b, screen);
-    drawLine({rect.topRight() + ScreenPos( 1, -2)}, {rect.bottomRight() + ScreenPos( 1, 2)}, screen->m_bevelColor1a, screen);
+    drawLine({rect.topRight() + ScreenPos(-1, -0)}, {rect.bottomRight() + ScreenPos(-1, 0)}, outer1, screen);
+    drawLine({rect.topRight() + ScreenPos( 0, -1)}, {rect.bottomRight() + ScreenPos( 0, 1)}, middle1, screen);
+    drawLine({rect.topRight() + ScreenPos( 1, -2)}, {rect.bottomRight() + ScreenPos( 1, 2)}, inner1, screen);
 
     ///////////////
     /// Render text
