@@ -23,6 +23,8 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "ui/UiScreen.h"
+
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "resource/AssetManager.h"
 #include "resource/Resource.h"
@@ -38,6 +40,7 @@ void Engine::start()
 {
     DBG << "Starting engine.";
 
+    ScreenPos mousePos;
     // Start the game loop
     while (renderWindow_->isOpen()) {
         std::shared_ptr<GameState> state = state_manager_.getActiveState();
@@ -58,12 +61,14 @@ void Engine::start()
                 sf::Vector2f mappedPos = renderWindow_->mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
                 event.mouseButton.x = mappedPos.x;
                 event.mouseButton.y = mappedPos.y;
+                mousePos = ScreenPos(mappedPos);
             }
 
             if (event.type == sf::Event::MouseMoved) {
                 sf::Vector2f mappedPos = renderWindow_->mapPixelToCoords(sf::Vector2i(event.mouseMove.x, event.mouseMove.y));
                 event.mouseMove.x = mappedPos.x;
                 event.mouseMove.y = mappedPos.y;
+                mousePos = ScreenPos(mappedPos);
             }
 
             if (!handleEvent(event)) {
@@ -73,12 +78,20 @@ void Engine::start()
             updated = true;
         }
 
-        updated = state->update(GameClock.getElapsedTime().asMilliseconds()) || updated;
+        if (!m_currentDialog) {
+            updated = state->update(GameClock.getElapsedTime().asMilliseconds()) || updated;
+        } else {
+            state->cursor().sprite.setPosition(mousePos);
+        }
 
         if (updated) {
             // Clear screen
             renderWindow_->clear(sf::Color::Green);
             state->draw();
+            if (m_currentDialog) {
+                m_currentDialog->render(renderWindow_);
+            }
+
             drawButtons();
             const int renderTime = GameClock.getElapsedTime().asMilliseconds() - renderStart;
 
@@ -174,7 +187,22 @@ void Engine::drawButtons()
 
 bool Engine::handleEvent(sf::Event event)
 {
+    if (m_currentDialog) {
+        Dialog::Choice choice = m_currentDialog->handleEvent(event);
+        if (choice == Dialog::Cancel) {
+            m_currentDialog.reset();
+        } else if (choice == Dialog::Quit) {
+            renderWindow_->close();
+        }
+
+        return true;
+    }
+
     if (event.type == sf::Event::MouseButtonReleased) {
+        if (m_pressedButton == TopMenuButton::GameMenu) {
+            showMenu();
+        }
+
         if (m_pressedButton != TopMenuButton::Invalid) {
             m_pressedButton = TopMenuButton::Invalid;
             return true;
@@ -198,11 +226,19 @@ bool Engine::handleEvent(sf::Event event)
 }
 
 //------------------------------------------------------------------------------
+Engine::Engine()
+{
+    m_mainScreen = std::make_unique<UiScreen>("dlg_men.sin");
+}
+
 bool Engine::setup(const std::shared_ptr<genie::ScnFile> &scenario)
 {
     renderWindow_ = std::make_unique<sf::RenderWindow>(sf::VideoMode(1280, 1024), "freeaoe", sf::Style::None);
     renderWindow_->setMouseCursorVisible(false);
     renderWindow_->setFramerateLimit(60);
+
+    m_mainScreen->setRenderWindow(renderWindow_);
+    m_mainScreen->init();
 
     renderTarget_ = std::make_shared<SfmlRenderTarget>(*renderWindow_);
 
@@ -228,4 +264,103 @@ bool Engine::setup(const std::shared_ptr<genie::ScnFile> &scenario)
     loadTopButtons();
 
     return true;
+}
+
+void Engine::showMenu()
+{
+    genie::UIFilePtr uiFile = AssetManager::Inst()->getUIFile("dlg_men.sin");
+    if (!uiFile) {
+        WARN << "failed to load ui file for menu";
+        return;
+    }
+
+    genie::SlpFilePtr backgroundSlp = AssetManager::Inst()->getSlp(uiFile->backgroundSmall.fileId);
+    if (!backgroundSlp) {
+        WARN << "Failed to load menu background";
+        return;
+    }
+    sf::Image menuBg = Resource::convertFrameToImage(backgroundSlp->getFrame(0));
+
+    m_currentDialog = std::make_unique<Dialog>(m_mainScreen.get());
+    if (!m_currentDialog->background.loadFromImage(menuBg)) {
+        WARN << "Failed to load menu background";
+    }
+    DBG << "showing menu";
+
+}
+
+Dialog::Dialog(UiScreen *screen) :
+    m_screen(screen)
+{
+    m_buttons[Quit].text = "Quit";
+    m_buttons[Achievements].text = "Achivements (TODO)";
+    m_buttons[Save].text = "Save (TODO)";
+    m_buttons[Options].text = "Options (TODO)";
+    m_buttons[About].text = "About (TODO)";
+    m_buttons[Cancel].text = "Cancel";
+
+}
+
+void Dialog::render(std::shared_ptr<sf::RenderWindow> &renderTarget)
+{
+    Size windowSize = renderTarget->getSize();
+    Size textureSize(295, 300); //background.getSize(); can't use the actual size, because of the shadow...
+    const ScreenPos windowCenter(windowSize.width / 2, windowSize.height / 2);
+    ScreenPos position(windowCenter.x - textureSize.width/2, windowCenter.y - textureSize.height/2);
+    sf::Sprite sprite;
+    sprite.setPosition(position);
+    sprite.setTexture(background);
+    renderTarget->draw(sprite);
+
+    const int buttonWidth = textureSize.width - 80;
+    const int buttonHeight = 30;
+    const int buttonMargin = 10;
+
+    const int allButtonsHeight = ChoicesCount * (buttonHeight + buttonMargin);
+
+
+    const int x = windowCenter.x - buttonWidth/2;
+    int y = windowCenter.y - allButtonsHeight / 2;
+
+    for (int i=0; i<ChoicesCount; i++) {
+        m_buttons[i].rect.x = x;
+        m_buttons[i].rect.y = y;
+
+        m_buttons[i].rect.height = buttonHeight;
+        m_buttons[i].rect.width = buttonWidth;
+        y += buttonHeight + buttonMargin;
+
+        m_buttons[i].render(m_screen);
+    }
+}
+
+Dialog::Choice Dialog::handleEvent(const sf::Event &event)
+{
+    if (event.type == sf::Event::MouseButtonReleased) {
+        const ScreenPos mousePos(event.mouseButton.x, event.mouseButton.y);
+        Choice choice = Invalid;
+        for (int i=0; i<ChoicesCount; i++) {
+            m_buttons[i].pressed = false;
+
+            if (m_buttons[i].rect.contains(mousePos)) {
+                choice = Choice(i);
+            }
+        }
+
+        return choice;
+    }
+    if (event.type != sf::Event::MouseButtonPressed) {
+        return Invalid;
+    }
+    const ScreenPos mousePos(event.mouseButton.x, event.mouseButton.y);
+    for (int i=0; i<ChoicesCount; i++) {
+        if (m_buttons[i].rect.contains(mousePos)) {
+            m_pressedButton = Choice(i);
+            m_buttons[i].pressed = true;
+        } else {
+            m_buttons[i].pressed = false;
+        }
+    }
+
+    return Invalid;
 }

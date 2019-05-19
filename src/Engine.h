@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include "ui/TextButton.h"
+
 #include <SFML/System/Clock.hpp>
 #include <SFML/Graphics/Text.hpp>
 
@@ -28,16 +30,42 @@ namespace sf {
 class RenderWindow;
 }
 
+struct Dialog
+{
+    enum Choice {
+        Invalid = -1,
+        Quit,
+        Achievements,
+        Save,
+        Options,
+        About,
+        Cancel,
+        ChoicesCount
+    };
+
+    Dialog(UiScreen *screen);
+
+    void render(std::shared_ptr<sf::RenderWindow> &renderTarget);
+    Choice handleEvent(const sf::Event &event);
+
+    sf::Texture background;
+    UiScreen *m_screen;
+
+private:
+    std::array<TextButton, ChoicesCount> m_buttons;
+    Choice m_pressedButton = Invalid;
+};
+
 class Engine
 {
     struct TopMenuButton {
         enum Type {
             Invalid = -1,
-            Settings = 0,
-            TechTree = 1,
+            GameMenu = 0,
+            Diplo = 1,
             Chat = 2,
-            Diplo = 3,
-            GameMenu = 4,
+            TechTree = 3,
+            Settings = 4,
             ButtonsCount
         } type;
 
@@ -49,7 +77,7 @@ public:
 
     static const sf::Clock GameClock;
 
-    Engine() = default;
+    Engine();
     virtual ~Engine() = default;
 
     bool setup(const std::shared_ptr<genie::ScnFile> &scenario = nullptr);
@@ -60,9 +88,13 @@ private:
     void loadTopButtons();
     void drawButtons();
     bool handleEvent(sf::Event event);
+    void showMenu();
 
-    std::unique_ptr<sf::RenderWindow> renderWindow_;
+    std::shared_ptr<sf::RenderWindow> renderWindow_;
     std::shared_ptr<SfmlRenderTarget> renderTarget_;
+    std::unique_ptr<Dialog> m_currentDialog;
+
+    std::unique_ptr<UiScreen> m_mainScreen;
 
     StateManager state_manager_;
 

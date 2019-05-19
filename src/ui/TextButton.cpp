@@ -3,6 +3,8 @@
 #include "render/IRenderTarget.h"
 #include "render/SfmlRenderTarget.h"
 #include <SFML/Graphics/RectangleShape.hpp>
+
+#include "resource/AssetManager.h"
 #include "UiScreen.h"
 
 TextButton::TextButton()
@@ -10,6 +12,23 @@ TextButton::TextButton()
     m_text.setCharacterSize(17);
     m_text.setOutlineThickness(1);
     m_text.setFont(SfmlRenderTarget::defaultFont());
+
+}
+
+// SFML is fucking shit
+void TextButton::drawLine(const ScreenPos &from, const ScreenPos &to, const sf::Color &color, UiScreen *screen)
+{
+    sf::RectangleShape shape;
+    if (from.x != to.x) {
+        shape.setSize(Size(to.x - from.x, 1));
+    } else {
+        shape.setSize(Size(1, to.y - from.y));
+    }
+
+    shape.setPosition(from.x, from.y);
+
+    shape.setFillColor(color);
+    screen->m_renderWindow->draw(shape);
 }
 
 void TextButton::render(UiScreen *screen)
@@ -22,30 +41,25 @@ void TextButton::render(UiScreen *screen)
     background.setPosition(rect.topLeft());
     screen->m_renderWindow->draw(background);
 
-    const ScreenPos borderOffset(1, 1);
-    const int borderWidth = 3;
+    // top horizontal
+    drawLine({rect.topLeft() - ScreenPos(2, 2)}, {rect.topRight() - ScreenPos(-2, 2)}, screen->m_bevelColor1a, screen);
+    drawLine({rect.topLeft() - ScreenPos(1, 1)}, {rect.topRight() - ScreenPos(-1, 1)}, screen->m_bevelColor1b, screen);
+    drawLine({rect.topLeft() - ScreenPos(0, 0)}, {rect.topRight() - ScreenPos(-0, 0)}, screen->m_bevelColor1c, screen);
 
-    sf::RectangleShape horizontalBorder;
-    horizontalBorder.setSize(Size(302, borderWidth));
+    // bottom horizontal
+    drawLine({rect.bottomLeft() + ScreenPos(-2, 2)}, {rect.bottomRight() + ScreenPos(2, 2)}, screen->m_bevelColor2a, screen);
+    drawLine({rect.bottomLeft() + ScreenPos(-1, 1)}, {rect.bottomRight() + ScreenPos(1, 1)}, screen->m_bevelColor2b, screen);
+    drawLine({rect.bottomLeft() + ScreenPos(-0, 0)}, {rect.bottomRight() + ScreenPos(0, 0)}, screen->m_bevelColor2c, screen);
 
-    sf::RectangleShape verticalBorder;
-    verticalBorder.setSize(Size(borderWidth, 42));
+    // left vertical
+    drawLine({rect.topLeft() - ScreenPos(2, 2)}, {rect.bottomLeft() - ScreenPos(2, -2)}, screen->m_bevelColor2a, screen);
+    drawLine({rect.topLeft() - ScreenPos(1, 1)}, {rect.bottomLeft() - ScreenPos(1, -1)}, screen->m_bevelColor2b, screen);
+    drawLine({rect.topLeft() - ScreenPos(0, 0)}, {rect.bottomLeft() - ScreenPos(0, -0)}, screen->m_bevelColor2c, screen);
 
-    horizontalBorder.setFillColor(screen->m_bevelColor1);
-    verticalBorder.setFillColor(screen->m_bevelColor2);
-    verticalBorder.setPosition(rect.topLeft() - ScreenPos(1, 1));
-    screen->m_renderWindow->draw(verticalBorder);
-    horizontalBorder.setPosition(rect.topLeft() - ScreenPos(1, 1));
-    screen->m_renderWindow->draw(horizontalBorder);
-
-    horizontalBorder.setFillColor(screen->m_bevelColor2);
-    horizontalBorder.setPosition(rect.bottomLeft() + ScreenPos(-1, 1 - borderWidth));
-    screen->m_renderWindow->draw(horizontalBorder);
-    verticalBorder.setFillColor(screen->m_bevelColor1);
-    verticalBorder.setPosition(rect.topRight() + ScreenPos(1 - borderWidth, -1));
-    screen->m_renderWindow->draw(verticalBorder);
-
-
+    // right vertical
+    drawLine({rect.topRight() + ScreenPos(-1, -0)}, {rect.bottomRight() + ScreenPos(-1, 0)}, screen->m_bevelColor1c, screen);
+    drawLine({rect.topRight() + ScreenPos( 0, -1)}, {rect.bottomRight() + ScreenPos( 0, 1)}, screen->m_bevelColor1b, screen);
+    drawLine({rect.topRight() + ScreenPos( 1, -2)}, {rect.bottomRight() + ScreenPos( 1, 2)}, screen->m_bevelColor1a, screen);
 
     ///////////////
     /// Render text
@@ -57,6 +71,12 @@ void TextButton::render(UiScreen *screen)
     const sf::FloatRect textRect = m_text.getLocalBounds();
     textPosition.x -= textRect.width / 2;
     textPosition.y -= 3 * textRect.height / 4;
+
+    if (pressed) {
+        textPosition.x += screen->m_pressOffset;
+        textPosition.y += screen->m_pressOffset;
+    }
+
     m_text.setPosition(textPosition);
 
     screen->m_renderWindow->draw(m_text);

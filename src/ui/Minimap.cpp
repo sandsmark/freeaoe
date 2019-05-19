@@ -291,7 +291,14 @@ void Minimap::draw()
     m_renderTarget->draw(m_terrainTexture.getTexture(), m_rect.topLeft());
     m_renderTarget->draw(m_unitsTexture.getTexture(), m_rect.topLeft());
 
+    if (m_rect.isEmpty()) {
+        return;
+    }
+
     const ScreenRect cameraRect = m_cameraRect.intersected(m_rect);
+    if (cameraRect.isEmpty()) {
+        return;
+    }
 
     sf::RectangleShape rect;
     rect.setSize(cameraRect.size());

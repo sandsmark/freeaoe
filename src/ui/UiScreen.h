@@ -32,35 +32,48 @@ class Event;
 
 namespace genie {
 class SlpFile;
+class UIFile;
 }
 
 class UiScreen
 {
 public:
+    UiScreen(const char *uiFile);
     UiScreen() = delete;
     virtual ~UiScreen() {}
 
     virtual bool init();
+    bool run();
+
+    virtual void render() {}
+    virtual bool handleMouseEvent(const sf::Event &event) { (void)event; return false; }
+    virtual void handleKeyEvent(const sf::Event &) {}
+
+    void setRenderWindow(const std::shared_ptr<sf::RenderWindow> &renderWindow);
 
 protected:
     friend class TextButton;
 
-    bool run();
-
-    UiScreen(const char *uiFile);
-    virtual void render() = 0;
-    virtual bool handleMouseEvent(const sf::Event &event) = 0;
-    virtual void handleKeyEvent(const sf::Event &) {}
 
     sf::Color m_textFillColor;
     sf::Color m_textOutlineColor;
-    sf::Color m_bevelColor1;
-    sf::Color m_bevelColor2;
+
+    sf::Color m_bevelColor1a;
+    sf::Color m_bevelColor1b;
+    sf::Color m_bevelColor1c;
+
+    sf::Color m_bevelColor2a;
+    sf::Color m_bevelColor2b;
+    sf::Color m_bevelColor2c;
+
+    int m_pressOffset = 0;
+
     int m_paletteId = 0;
     float m_buttonOpacity = 1.f;
-    std::unique_ptr<sf::RenderWindow> m_renderWindow;
 
-private:
+    const char *m_uiFileName;
+    std::shared_ptr<genie::UIFile> m_uiFile;
+    std::shared_ptr<sf::RenderWindow> m_renderWindow;
     sf::Texture m_background;
-    const char *m_uiFile;
 };
+

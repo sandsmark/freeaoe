@@ -19,55 +19,86 @@
 #include "resource/LanguageManager.h"
 #include "render/SfmlRenderTarget.h"
 #include <genie/resource/UIFile.h>
+#include <genie/resource/PalFile.h>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Window/Event.hpp>
 
 UiScreen::UiScreen(const char *uiFile) :
-    m_uiFile(uiFile)
+    m_uiFileName(uiFile)
 {
 
 }
 
+static sf::Color convertColor(const genie::Color &color)
+{
+    return sf::Color(color.r, color.g, color.b);
+}
+
 bool UiScreen::init()
 {
-    genie::UIFilePtr uiFile = AssetManager::Inst()->getUIFile(m_uiFile);
-    if (!uiFile) {
+    m_uiFile = AssetManager::Inst()->getUIFile(m_uiFileName);
+    if (!m_uiFile) {
         WARN << "Unable to load ui file";
         return false;
     }
-    std::shared_ptr<genie::SlpFile> slpFile = AssetManager::Inst()->getSlp(uiFile->backgroundLarge.fileId, AssetManager::ResourceType::Interface);
-    if (!slpFile) {
-        WARN << "failed to load slp file for home screen";
-        return false;
-    }
 
-    m_paletteId = uiFile->paletteFile.id;
+    m_buttonOpacity = m_uiFile->shadePercent / 100.;
+
+    m_textFillColor = sf::Color(m_uiFile->textColor1.r, m_uiFile->textColor1.g, m_uiFile->textColor1.b);
+    m_textOutlineColor = sf::Color(m_uiFile->textColor2.r, m_uiFile->textColor2.g, m_uiFile->textColor2.b);
+
+//    m_bevelColor1 = sf::Color(m_uiFile->bevelColor1.r, m_uiFile->bevelColor1.g, m_uiFile->bevelColor1.b);
+//    m_bevelColor2 = sf::Color(m_uiFile->bevelColor2.r, m_uiFile->bevelColor2.g, m_uiFile->bevelColor2.b);
+
+    m_paletteId = m_uiFile->paletteFile.id;
     const genie::PalFile &palette = AssetManager::Inst()->getPalette(m_paletteId);
+    const std::vector<genie::Color> &colors = palette.getColors();
 
-    genie::SlpFramePtr backgroundFrame = slpFile->getFrame(0);
-    if (!backgroundFrame) {
-        WARN << "Failed to get frame";
-        return false;
+    m_bevelColor1a = convertColor(colors[m_uiFile->bevelColor1.r]);
+    m_bevelColor1b = convertColor(colors[m_uiFile->bevelColor1.g]);
+    m_bevelColor1c = convertColor(colors[m_uiFile->bevelColor1.b]);
+
+    m_bevelColor2a = convertColor(colors[m_uiFile->bevelColor2.r]);
+    m_bevelColor2b = convertColor(colors[m_uiFile->bevelColor2.g]);
+    m_bevelColor2c = convertColor(colors[m_uiFile->bevelColor2.b]);
+
+    m_pressOffset = m_uiFile->backgroundPosition;
+
+    genie::Color color = palette.getColors().at(m_uiFile->bevelColor1.r);
+
+
+    if (!m_renderWindow) {
+        std::shared_ptr<genie::SlpFile> slpFile = AssetManager::Inst()->getSlp(m_uiFile->backgroundLarge.fileId, AssetManager::ResourceType::Interface);
+        if (!slpFile) {
+            WARN << "failed to load slp file for home screen";
+            return false;
+        }
+
+
+        genie::SlpFramePtr backgroundFrame = slpFile->getFrame(0);
+        if (!backgroundFrame) {
+            WARN << "Failed to get frame";
+            return false;
+        }
+
+        const int width = backgroundFrame->getWidth();
+        const int height = backgroundFrame->getHeight();
+        m_renderWindow = std::make_shared<sf::RenderWindow>(sf::VideoMode(width, height), "freeaoe");
+        m_renderWindow->setSize(sf::Vector2u(width, height));
+        m_renderWindow->setView(sf::View(sf::FloatRect(0, 0, width, height)));
+
+        m_background.loadFromImage(Resource::convertFrameToImage(backgroundFrame, palette));
     }
 
-    const int width = backgroundFrame->getWidth();
-    const int height = backgroundFrame->getHeight();
-
-    m_renderWindow = std::make_unique<sf::RenderWindow>(sf::VideoMode(width, height), "freeaoe");
-    m_renderWindow->setSize(sf::Vector2u(width, height));
-    m_renderWindow->setView(sf::View(sf::FloatRect(0, 0, width, height)));
-
-    m_background.loadFromImage(Resource::convertFrameToImage(backgroundFrame, palette));
-
-    m_textFillColor = sf::Color(uiFile->textColor1.r, uiFile->textColor1.g, uiFile->textColor1.b);
-    m_textOutlineColor = sf::Color(uiFile->textColor2.r, uiFile->textColor2.g, uiFile->textColor2.b);
-    m_buttonOpacity = uiFile->shadePercent / 100.;
-    m_bevelColor1 = sf::Color(uiFile->bevelColor1.r, uiFile->bevelColor1.g, uiFile->bevelColor1.b);
-    m_bevelColor2 = sf::Color(uiFile->bevelColor2.r, uiFile->bevelColor2.g, uiFile->bevelColor2.b);
 
     return true;
+}
+
+void UiScreen::setRenderWindow(const std::shared_ptr<sf::RenderWindow> &renderWindow)
+{
+    m_renderWindow = renderWindow;
 }
 
 bool UiScreen::run()
