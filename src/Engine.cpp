@@ -347,7 +347,12 @@ Dialog::Choice Dialog::handleEvent(const sf::Event &event)
             }
         }
 
-        return choice;
+        if (choice != m_pressedButton) {
+            m_pressedButton = Invalid;
+
+        }
+
+        return m_pressedButton;
     }
     if (event.type != sf::Event::MouseButtonPressed) {
         return Invalid;
