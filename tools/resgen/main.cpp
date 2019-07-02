@@ -46,17 +46,30 @@ int main(int argc, char *argv[])
 
     // Generate .h
     hStream << "#pragma once" << std::endl << std::endl;
-    hStream << "extern \"C\" const char " << resname << "_data[];" << std::endl;
-    hStream << "static const size_t " << resname << "_size = " << std::filesystem::file_size(inFilepath) << ";" << std::endl;
+    hStream << "// Automatically generated from " << inFilename << std::endl << std::endl;
+    hStream << "#ifdef __cplusplus" << std::endl;
+    hStream << "extern \"C\"" << std::endl;
+    hStream << "#else//__cplusplus" << std::endl;
+    hStream << "extern" << std::endl;
+    hStream << "#endif//__cplusplus" << std::endl;
+    hStream << "const unsigned char " << resname << "_data[];" << std::endl << std::endl;
+
+    hStream << "static const unsigned long long " << resname << "_size = " << std::filesystem::file_size(inFilepath) << ";" << std::endl;
 
     // Generate .c
-    cStream << "const char " << resname << "_data[] = {" << std::endl;
+    cStream << "// Automatically generated from " << inFilename << std::endl << std::endl;
+    cStream << "#include \"" << hFilename << "\"" << std::endl << std::endl;
+    cStream << "const unsigned char " << resname << "_data[] = {" << std::endl;
     cStream << "    ";
 
     // Generate array
     cStream << std::hex;
     unsigned char c = inStream.get();
     while (inStream.good()) {
+        if (c < 16) {
+            cStream << " ";
+        }
+
         cStream << "0x" << int(c);
 
         c = inStream.get();
@@ -66,7 +79,7 @@ int main(int argc, char *argv[])
 
         cStream << ",";
 
-        if (inStream.tellg() % 10 == 0) {
+        if (inStream.tellg() % 10 == 1) {
             // Break lines
             cStream << std::endl;
             cStream << "    ";
