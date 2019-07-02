@@ -1,8 +1,35 @@
+if(${CMAKE_VERSION} VERSION_LESS "3.9.0")
  cmake_minimum_required(VERSION 2.6)
+ message("Please upgrade to cmake 3.9 to get more fancy stuff")
+else()
+ cmake_minimum_required(VERSION 3.9)
+endif()
 
 set (CMAKE_CXX_STANDARD 17)
 
 project(freeaoe)
+
+#############################
+## Compiler specific stuff ##
+#############################
+if (ENABLE_IPO)
+    include(CheckIPOSupported)
+    check_ipo_supported(RESULT IPO_AVAILABLE OUTPUT IPO_ERROR)
+    if (IPO_AVAILABLE)
+        set(CMAKE_INTERPROCEDURAL_OPTIMIZATION True)
+
+        if (CMAKE_COMPILER_IS_GNUCXX)
+            message(STATUS "Enabling all link time optimizations")
+            add_definitions(-fuse-linker-plugin)
+        else()
+            message(STATUS "Disabling linker plugin for link time optimization")
+        endif()
+    else()
+        message(STATUS "IPO/LTO not supported: <${IPO_ERROR}>")
+    endif()
+else()
+    message(STATUS "Not enabling IPO/LTO")
+endif()
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
     add_definitions(-DDEBUG)
@@ -20,6 +47,10 @@ if (CMAKE_BUILD_TYPE MATCHES Debug)
     endif()
 endif()
 
+
+##################
+## Dependencies ##
+##################
 
 if(WIN32)
     include_directories(extern/genieutils/extern/win-iconv/)

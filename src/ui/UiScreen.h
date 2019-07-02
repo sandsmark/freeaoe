@@ -52,7 +52,7 @@ public:
     void setRenderWindow(const std::shared_ptr<sf::RenderWindow> &renderWindow);
 
 protected:
-    friend class TextButton;
+    friend struct TextButton;
 
 
     sf::Color m_textFillColor;
