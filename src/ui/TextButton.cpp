@@ -55,24 +55,24 @@ void TextButton::render(UiScreen *screen)
     }
 
     // top horizontal
-    drawLine({rect.topLeft() - ScreenPos(2, 2)}, {rect.topRight() - ScreenPos(-2, 2)}, inner1, screen);
-    drawLine({rect.topLeft() - ScreenPos(1, 1)}, {rect.topRight() - ScreenPos(-1, 1)}, middle1, screen);
-    drawLine({rect.topLeft() - ScreenPos(0, 0)}, {rect.topRight() - ScreenPos(-0, 0)}, outer1, screen);
+    drawLine(rect.topLeft() - ScreenPos(2, 2), rect.topRight() - ScreenPos(-2, 2), inner1, screen);
+    drawLine(rect.topLeft() - ScreenPos(1, 1), rect.topRight() - ScreenPos(-1, 1), middle1, screen);
+    drawLine(rect.topLeft() - ScreenPos(0, 0), rect.topRight() - ScreenPos(-0, 0), outer1, screen);
 
     // bottom horizontal
-    drawLine({rect.bottomLeft() + ScreenPos(-2, 2)}, {rect.bottomRight() + ScreenPos(2, 2)}, inner2, screen);
-    drawLine({rect.bottomLeft() + ScreenPos(-1, 1)}, {rect.bottomRight() + ScreenPos(1, 1)}, middle2, screen);
-    drawLine({rect.bottomLeft() + ScreenPos(-0, 0)}, {rect.bottomRight() + ScreenPos(0, 0)}, outer2, screen);
+    drawLine(rect.bottomLeft() + ScreenPos(-2, 2), rect.bottomRight() + ScreenPos(2, 2), inner2, screen);
+    drawLine(rect.bottomLeft() + ScreenPos(-1, 1), rect.bottomRight() + ScreenPos(1, 1), middle2, screen);
+    drawLine(rect.bottomLeft() + ScreenPos(-0, 0), rect.bottomRight() + ScreenPos(0, 0), outer2, screen);
 
     // left vertical
-    drawLine({rect.topLeft() - ScreenPos(2, 2)}, {rect.bottomLeft() - ScreenPos(2, -2)}, inner2, screen);
-    drawLine({rect.topLeft() - ScreenPos(1, 1)}, {rect.bottomLeft() - ScreenPos(1, -1)}, middle2, screen);
-    drawLine({rect.topLeft() - ScreenPos(0, 0)}, {rect.bottomLeft() - ScreenPos(0, -0)}, outer2, screen);
+    drawLine(rect.topLeft() - ScreenPos(2, 2), rect.bottomLeft() - ScreenPos(2, -2), inner2, screen);
+    drawLine(rect.topLeft() - ScreenPos(1, 1), rect.bottomLeft() - ScreenPos(1, -1), middle2, screen);
+    drawLine(rect.topLeft() - ScreenPos(0, 0), rect.bottomLeft() - ScreenPos(0, -0), outer2, screen);
 
     // right vertical
-    drawLine({rect.topRight() + ScreenPos(-1, -0)}, {rect.bottomRight() + ScreenPos(-1, 0)}, outer1, screen);
-    drawLine({rect.topRight() + ScreenPos( 0, -1)}, {rect.bottomRight() + ScreenPos( 0, 1)}, middle1, screen);
-    drawLine({rect.topRight() + ScreenPos( 1, -2)}, {rect.bottomRight() + ScreenPos( 1, 2)}, inner1, screen);
+    drawLine(rect.topRight() + ScreenPos(-1, -0), rect.bottomRight() + ScreenPos(-1, 0), outer1, screen);
+    drawLine(rect.topRight() + ScreenPos( 0, -1), rect.bottomRight() + ScreenPos( 0, 1), middle1, screen);
+    drawLine(rect.topRight() + ScreenPos( 1, -2), rect.bottomRight() + ScreenPos( 1, 2), inner1, screen);
 
     ///////////////
     /// Render text
