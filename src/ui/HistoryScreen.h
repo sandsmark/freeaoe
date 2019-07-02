@@ -20,10 +20,12 @@
 
 class HistoryScreen : public UiScreen
 {
-    static const int s_numListEntries = 16;
+    static const int s_numListEntries = 18;
     static const int s_numVisibleTextLines = 11;
     static const int s_textWidth = 400; //height = 236
-    static const int s_textSize = 16;
+    static const int s_titlesTextSize = 13;
+    static const int s_buttonTextSize = 14;
+    static const int s_mainTextSize = 16;
 
     struct TextLine {
         bool italic = false;

@@ -190,9 +190,9 @@ set(DEBUG_SRC
     src/debug/SampleGameFactory.cpp
     )
 
-add_resource(FONT_RES
-    fonts/Alegreya-Bold.latin
-    )
+add_resource(FONT_ALEGREYA fonts/Alegreya/Alegreya-Bold.latin)
+add_resource(FONT_BERRYROTUNDA fonts/BerryRotunda/BerryRotunda.ttf)
+
 
 add_executable(freeaoe src/Engine.cpp src/main.cpp 
                ${CORE_SRC}
@@ -205,7 +205,8 @@ add_executable(freeaoe src/Engine.cpp src/main.cpp
 #               ${COMMUNICATION_SRC}
                ${UNSORTED_SRC}
                ${UI_SRC}
-               ${FONT_RES}
+               ${FONT_ALEGREYA}
+               ${FONT_BERRYROTUNDA}
                ${DEBUG_SRC}
                )
 

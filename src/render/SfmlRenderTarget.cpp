@@ -24,7 +24,8 @@
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 
-#include "fonts/Alegreya-Bold.latin.h"
+#include "fonts/Alegreya/Alegreya-Bold.latin.h"
+#include "fonts/BerryRotunda/BerryRotunda.ttf.h"
 #include "mechanics/Map.h"
 
 #define SCALE 1.
@@ -41,6 +42,21 @@ const sf::Font &SfmlRenderTarget::defaultFont()
     } fontLoader;
 
     return fontLoader.font;
+}
+
+const sf::Font &SfmlRenderTarget::stylishFont()
+{
+    // Ensure atomic creation
+    static struct Font {
+        Font() {
+            font.loadFromMemory(resource_BerryRotunda_ttf_data, resource_BerryRotunda_ttf_size);
+        }
+
+        sf::Font font;
+    } fontLoader;
+
+    return fontLoader.font;
+
 }
 
 SfmlRenderTarget::SfmlRenderTarget(sf::RenderTarget &render_target)

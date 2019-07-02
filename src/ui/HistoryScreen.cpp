@@ -164,18 +164,18 @@ bool HistoryScreen::init(const std::string &filesDir)
         return false;
     }
 
-    const sf::Font &font = SfmlRenderTarget::defaultFont();
+    const sf::Font &stylishFont = SfmlRenderTarget::stylishFont();
 
-    float posY = 22;
+    float posY = 30;
     for (int i=0; i<s_numListEntries; i++) {
-        m_visibleTitles[i].text.setFont(font);
-        m_visibleTitles[i].text.setCharacterSize(s_textSize);
+        m_visibleTitles[i].text.setFont(stylishFont);
+        m_visibleTitles[i].text.setCharacterSize(s_titlesTextSize);
         m_visibleTitles[i].text.setPosition(17, posY);
         m_visibleTitles[i].text.setFillColor(sf::Color::Black);
         m_visibleTitles[i].text.setOutlineThickness(1.5);
         m_visibleTitles[i].text.setOutlineColor(sf::Color::Transparent);
-        m_visibleTitles[i].rect = ScreenRect(17, posY, 195, font.getLineSpacing(s_textSize));
-        posY += font.getLineSpacing(s_textSize);
+        m_visibleTitles[i].rect = ScreenRect(17, posY, 195, stylishFont.getLineSpacing(s_titlesTextSize));
+        posY += stylishFont.getLineSpacing(s_titlesTextSize) * 1.2;
     }
 
     m_textRect.x = 317;
@@ -183,13 +183,14 @@ bool HistoryScreen::init(const std::string &filesDir)
     m_textRect.width = s_textWidth;
     m_textRect.height = 255;
 
+    const sf::Font &font = SfmlRenderTarget::defaultFont();
     posY = m_textRect.y;
     for (int i=0; i<s_numVisibleTextLines; i++) {
         m_visibleText[i].setFont(font);
-        m_visibleText[i].setCharacterSize(s_textSize);
+        m_visibleText[i].setCharacterSize(s_mainTextSize);
         m_visibleText[i].setPosition(m_textRect.x, posY);
         m_visibleText[i].setFillColor(sf::Color::Black);
-        posY += font.getLineSpacing(s_textSize);
+        posY += font.getLineSpacing(s_mainTextSize);
     }
 
     // Main screen button
@@ -200,12 +201,12 @@ bool HistoryScreen::init(const std::string &filesDir)
     const ScreenRect buttonRect(m_textRect.center().x - buttonBg->getWidth() / 2,  m_textRect.bottom(), buttonBg->getWidth(), buttonBg->getHeight());
     m_uiElements[MainScreenButton].rect = buttonRect;
 
-    m_mainScreenText.setFont(font);
+    m_mainScreenText.setFont(SfmlRenderTarget::stylishFont());
     m_mainScreenText.setString("Main Menu");
-    m_mainScreenText.setCharacterSize(s_textSize);
+    m_mainScreenText.setCharacterSize(s_buttonTextSize);
     m_mainScreenText.setFillColor(m_textFillColor);
     m_mainScreenText.setOutlineColor(m_textOutlineColor);
-    m_mainScreenText.setOutlineThickness(1.5);
+    m_mainScreenText.setOutlineThickness(1);
 
     loadFile(m_historyEntries[0].filename);
 
@@ -425,7 +426,7 @@ void HistoryScreen::loadFile(const std::string &filePath)
 
     std::string currentWord;
     float currentWordWidth= 0.f;
-    const float spaceWidth = font.getGlyph(' ', s_textSize, false).advance;
+    const float spaceWidth = font.getGlyph(' ', s_mainTextSize, false).advance;
     while (!file.eof()) {
         char character = file.get();
 
@@ -435,7 +436,7 @@ void HistoryScreen::loadFile(const std::string &filePath)
 
         if (character != ' ' && character != '\n') {
             currentWord += character;
-            currentWordWidth += font.getGlyph(character, s_textSize, false).advance;
+            currentWordWidth += font.getGlyph(character, s_mainTextSize, false).advance;
             continue;
         }
 
@@ -523,7 +524,7 @@ void HistoryScreen::updateVisibleTitles()
         const int index = i + m_titleScrollOffset;
 
         if (index == m_currentEntry) {
-            m_visibleTitles[i].text.setOutlineColor(sf::Color::Yellow);
+            m_visibleTitles[i].text.setOutlineColor(sf::Color(192, 192, 0));
         } else {
             m_visibleTitles[i].text.setOutlineColor(sf::Color::Transparent);
         }

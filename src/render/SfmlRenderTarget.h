@@ -34,6 +34,7 @@ class SfmlRenderTarget : public IRenderTarget
 
 public:
     static const sf::Font &defaultFont();
+    static const sf::Font &stylishFont();
 
     SfmlRenderTarget(sf::RenderTarget &render_target);
     virtual ~SfmlRenderTarget();
