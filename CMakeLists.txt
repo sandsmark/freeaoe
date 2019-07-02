@@ -101,11 +101,8 @@ include_directories(
 
 
 add_subdirectory(tools/resgen)
-
-# additional compiler flags 
-#add_definitions(-Wall -Wextra)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=undefined")
+add_resource(FONT_ALEGREYA fonts/Alegreya/Alegreya-Bold.latin)
+add_resource(FONT_BERRYROTUNDA fonts/BerryRotunda/BerryRotunda.ttf)
 
 set(CORE_SRC
     src/core/Logger.cpp
@@ -195,11 +192,7 @@ set(DEBUG_SRC
     src/debug/SampleGameFactory.cpp
     )
 
-add_resource(FONT_ALEGREYA fonts/Alegreya/Alegreya-Bold.latin)
-add_resource(FONT_BERRYROTUNDA fonts/BerryRotunda/BerryRotunda.ttf)
-
-
-add_executable(freeaoe src/Engine.cpp src/main.cpp 
+add_executable(freeaoe src/Engine.cpp src/main.cpp
                ${CORE_SRC}
                ${RESOURCE_SRC}
                ${GLOBAL_SRC}
