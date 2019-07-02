@@ -23,6 +23,7 @@
 #include <chrono>
 #include <filesystem>
 #include <cassert>
+#include <vector>
 
 struct LogPrinter
 {
