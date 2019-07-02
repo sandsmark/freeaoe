@@ -107,45 +107,6 @@ private:
     const int m_top = 0;
 };
 
-struct Cursor {
-    enum Type {
-        Normal = 0,
-        Busy,
-        Target,
-        Action,
-        Attack,
-        TargetPos,
-        WhatsThis,
-        Build,
-        Axe,
-        Protect,
-        Horn,
-        MoveTo,
-        Disabled,
-        Garrison,
-        Garrison2,
-        Disembark,
-        Embark,
-        TargetCircle,
-        Flag
-    };
-
-    void setCursor(const Type type) {
-        if (type == currentType) {
-            return;
-        }
-        texture.loadFromImage(Resource::convertFrameToImage(cursorsFile->getFrame(type)));
-        sprite.setTexture(texture, true);
-        currentType = type;
-    }
-
-    sf::Texture texture;
-    sf::Sprite sprite;
-    genie::SlpFilePtr cursorsFile;
-
-    Type currentType = Normal;
-};
-
 //------------------------------------------------------------------------------
 /// State where the game is processed
 //
@@ -170,8 +131,6 @@ public:
     Size uiSize() const;
 
     const std::shared_ptr<UnitManager> &unitManager() { return m_unitManager; }
-
-    Cursor &cursor() { return m_mouseCursor; }
 
 private:
     void setupScenario();
@@ -212,8 +171,6 @@ private:
 
     Player::Ptr m_humanPlayer;
     std::vector<Player::Ptr> m_players;
-
-    Cursor m_mouseCursor;
 
     Label m_woodLabel;
     Label m_foodLabel;

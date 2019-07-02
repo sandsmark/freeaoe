@@ -80,9 +80,23 @@ void Engine::start()
 
         if (!m_currentDialog) {
             updated = state->update(GameClock.getElapsedTime().asMilliseconds()) || updated;
+            if (state->unitManager()->state() == UnitManager::State::SelectingAttackTarget) {
+                m_mouseCursor.setCursor(Cursor::Normal);
+            } else {
+                const Task targetAction = state->unitManager()->defaultActionAt(mousePos, renderTarget_->camera());
+                if (!targetAction.data) {
+                    m_mouseCursor.setCursor(Cursor::Normal);
+                } else if (targetAction.data->ActionType == genie::Task::Combat) {
+                    m_mouseCursor.setCursor(Cursor::Attack);
+                } else {
+                    m_mouseCursor.setCursor(Cursor::Action);
+                }
+            }
         } else {
-            state->cursor().sprite.setPosition(mousePos);
+            m_mouseCursor.setCursor(Cursor::Normal);
         }
+
+        m_mouseCursor.sprite.setPosition(mousePos);
 
         if (updated) {
             // Clear screen
@@ -100,7 +114,7 @@ void Engine::start()
             }
 
             renderWindow_->draw(fps_label_);
-            renderWindow_->draw(state->cursor().sprite);
+            renderWindow_->draw(m_mouseCursor.sprite);
 
             // Update the window
             renderWindow_->display();
@@ -262,6 +276,14 @@ bool Engine::setup(const std::shared_ptr<genie::ScnFile> &scenario)
     fps_label_.setCharacterSize(15);
 
     loadTopButtons();
+
+    m_mouseCursor.cursorsFile = AssetManager::Inst()->getSlp(AssetManager::filenameID("mcursors.shp"));
+    if (m_mouseCursor.cursorsFile) {
+        m_mouseCursor.texture.loadFromImage(Resource::convertFrameToImage(m_mouseCursor.cursorsFile->getFrame(Cursor::Normal)));
+        m_mouseCursor.sprite.setTexture(m_mouseCursor.texture);
+    } else {
+        WARN << "Failed to get cursors";
+    }
 
     return true;
 }

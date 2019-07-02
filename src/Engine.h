@@ -30,6 +30,45 @@ namespace sf {
 class RenderWindow;
 }
 
+struct Cursor {
+    enum Type {
+        Normal = 0,
+        Busy,
+        Target,
+        Action,
+        Attack,
+        TargetPos,
+        WhatsThis,
+        Build,
+        Axe,
+        Protect,
+        Horn,
+        MoveTo,
+        Disabled,
+        Garrison,
+        Garrison2,
+        Disembark,
+        Embark,
+        TargetCircle,
+        Flag
+    };
+
+    void setCursor(const Type type) {
+        if (type == currentType) {
+            return;
+        }
+        texture.loadFromImage(Resource::convertFrameToImage(cursorsFile->getFrame(type)));
+        sprite.setTexture(texture, true);
+        currentType = type;
+    }
+
+    sf::Texture texture;
+    sf::Sprite sprite;
+    genie::SlpFilePtr cursorsFile;
+
+    Type currentType = Normal;
+};
+
 struct Dialog
 {
     enum Choice {
@@ -101,5 +140,7 @@ private:
     sf::Text fps_label_;
     std::vector<TopMenuButton> m_buttons;
     TopMenuButton::Type m_pressedButton = TopMenuButton::Invalid;
+
+    Cursor m_mouseCursor;
 };
 

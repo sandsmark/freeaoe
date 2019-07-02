@@ -178,14 +178,6 @@ bool GameState::init()
         }
     }
 
-    m_mouseCursor.cursorsFile = AssetManager::Inst()->getSlp(AssetManager::filenameID("mcursors.shp"));
-    if (m_mouseCursor.cursorsFile) {
-        m_mouseCursor.texture.loadFromImage(Resource::convertFrameToImage(m_mouseCursor.cursorsFile->getFrame(Cursor::Normal)));
-        m_mouseCursor.sprite.setTexture(m_mouseCursor.texture);
-    } else {
-        WARN << "Failed to get cursors";
-    }
-
     // graphic 2962
     m_waypointFlag = AssetManager::Inst()->getSlp(3404);
     if (!m_waypointFlag) {
@@ -361,7 +353,6 @@ bool GameState::handleEvent(sf::Event event)
                     :
                 ScreenPos(event.mouseButton.x, event.mouseButton.y);
 
-    m_mouseCursor.sprite.setPosition(mousePos);
     if (m_minimap->rect().contains(mousePos)) {
         if (m_minimap->handleEvent(event)) {
             return true;
@@ -394,20 +385,6 @@ bool GameState::handleEvent(sf::Event event)
             } else {
                 m_unitManager->onMouseMove(renderTarget_->camera()->absoluteMapPos(mousePos));
             }
-
-            if (m_unitManager->state() == UnitManager::State::SelectingAttackTarget) {
-                m_mouseCursor.setCursor(Cursor::Attack);
-            } else {
-                const Task targetAction = m_unitManager->defaultActionAt(mousePos, renderTarget_->camera());
-                if (!targetAction.data) {
-                    m_mouseCursor.setCursor(Cursor::Normal);
-                } else if (targetAction.data->ActionType == genie::Task::Combat) {
-                    m_mouseCursor.setCursor(Cursor::Attack);
-                } else {
-                    m_mouseCursor.setCursor(Cursor::Action);
-                }
-            }
-
         }
     }
 
