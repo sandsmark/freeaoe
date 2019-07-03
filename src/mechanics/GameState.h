@@ -68,8 +68,6 @@ public:
     bool update(Time time) override;
     void setBuildableIcons();
 
-    Size uiSize() const;
-
     const Player::Ptr &humanPlayer() { return m_humanPlayer; }
 
     const std::shared_ptr<UnitManager> &unitManager() { return m_unitManager; }
@@ -104,10 +102,6 @@ private:
     ScreenPos m_selectionCurr;
     ScreenRect m_selectionRect;
     bool m_selecting = false;
-
-    sf::Texture m_uiOverlay;
-    sf::Texture m_buttonBackground;
-
 
     genie::SlpFilePtr m_waypointFlag;
 

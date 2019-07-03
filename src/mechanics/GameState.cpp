@@ -113,38 +113,6 @@ bool GameState::init()
         return false;
     }
 
-    std::shared_ptr<genie::SlpFile> overlayFile = AssetManager::Inst()->getUiOverlay(AssetManager::Ui1280x1024, AssetManager::Viking);
-    if (overlayFile) {
-        m_uiOverlay.loadFromImage(Resource::convertFrameToImage(overlayFile->getFrame()));
-        DBG << "Loaded UI overlay with size" << Size(m_uiOverlay.getSize());
-    } else {
-        AssetManager::UiResolution attemptedResolution = AssetManager::Ui1280x1024;
-        AssetManager::UiCiv attemptedCiv = AssetManager::Briton;
-        do {
-            attemptedCiv = AssetManager::UiCiv(attemptedCiv + 1);
-            if (attemptedCiv > AssetManager::Korean) {
-                if (attemptedResolution == AssetManager::Ui1280x1024) {
-                    attemptedResolution = AssetManager::Ui1024x768;
-                } else if (attemptedResolution == AssetManager::Ui1024x768) {
-                    attemptedResolution = AssetManager::Ui800x600;
-                } else {
-                    m_uiOverlay = sf::Texture();
-                    break;
-                }
-
-                attemptedCiv = AssetManager::Briton;
-            }
-            overlayFile = AssetManager::Inst()->getUiOverlay(attemptedResolution, attemptedCiv);
-        } while (!overlayFile);
-
-        if (overlayFile) {
-            WARN << "Loaded fallback ui overlay res" << attemptedResolution << "for civ" << attemptedCiv;
-            m_uiOverlay.loadFromImage(Resource::convertFrameToImage(overlayFile->getFrame()));
-        } else {
-            WARN << "Failed to load ui overlay";
-        }
-    }
-
     // graphic 2962
     m_waypointFlag = AssetManager::Inst()->getSlp(3404);
     if (!m_waypointFlag) {
@@ -181,8 +149,6 @@ void GameState::draw()
     if (m_selecting) {
         renderTarget_->draw(m_selectionRect, sf::Color::Transparent, sf::Color::White);
     }
-
-    renderTarget_->draw(m_uiOverlay, ScreenPos(0, 0));
 }
 
 bool GameState::update(Time time)
@@ -203,16 +169,6 @@ bool GameState::update(Time time)
     //game_client_->update();
 
     return updated;
-}
-
-Size GameState::uiSize() const
-{
-    if (m_uiOverlay.getSize().x == 0 || m_uiOverlay.getSize().y == 0) {
-        WARN << "We don't have a valid UI overlay";
-        return Size(640, 480);
-    }
-
-    return m_uiOverlay.getSize();
 }
 
 void GameState::onSelectionFinished()

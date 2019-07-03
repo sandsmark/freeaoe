@@ -53,6 +53,7 @@ public:
 private:
     void showStartScreen();
     void loadTopButtons();
+    void loadUiOverlay();
     void drawUi();
     bool updateCamera(const std::shared_ptr<GameState> &state);
     bool handleEvent(const sf::Event &event, const std::shared_ptr<GameState> &state);
@@ -91,5 +92,7 @@ private:
     std::unique_ptr<ActionPanel> m_actionPanel;
     std::unique_ptr<UnitInfoPanel> m_unitInfoPanel;
     std::unique_ptr<MapRenderer> m_mapRenderer;
+
+    sf::Texture m_uiOverlay;
 };
 

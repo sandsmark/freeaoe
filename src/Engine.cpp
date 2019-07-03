@@ -183,8 +183,45 @@ void Engine::loadTopButtons()
     }
 }
 
+void Engine::loadUiOverlay()
+{
+    std::shared_ptr<genie::SlpFile> overlayFile = AssetManager::Inst()->getUiOverlay(AssetManager::Ui1280x1024, AssetManager::Viking);
+    if (overlayFile) {
+        m_uiOverlay.loadFromImage(Resource::convertFrameToImage(overlayFile->getFrame()));
+        DBG << "Loaded UI overlay with size" << Size(m_uiOverlay.getSize());
+    } else {
+        AssetManager::UiResolution attemptedResolution = AssetManager::Ui1280x1024;
+        AssetManager::UiCiv attemptedCiv = AssetManager::Briton;
+        do {
+            attemptedCiv = AssetManager::UiCiv(attemptedCiv + 1);
+            if (attemptedCiv > AssetManager::Korean) {
+                if (attemptedResolution == AssetManager::Ui1280x1024) {
+                    attemptedResolution = AssetManager::Ui1024x768;
+                } else if (attemptedResolution == AssetManager::Ui1024x768) {
+                    attemptedResolution = AssetManager::Ui800x600;
+                } else {
+                    m_uiOverlay = sf::Texture();
+                    break;
+                }
+
+                attemptedCiv = AssetManager::Briton;
+            }
+            overlayFile = AssetManager::Inst()->getUiOverlay(attemptedResolution, attemptedCiv);
+        } while (!overlayFile);
+
+        if (overlayFile) {
+            WARN << "Loaded fallback ui overlay res" << attemptedResolution << "for civ" << attemptedCiv;
+            m_uiOverlay.loadFromImage(Resource::convertFrameToImage(overlayFile->getFrame()));
+        } else {
+            WARN << "Failed to load ui overlay";
+        }
+    }
+}
+
 void Engine::drawUi()
 {
+    renderTarget_->draw(m_uiOverlay, ScreenPos(0, 0));
+
     for (const std::unique_ptr<IconButton> &button : m_buttons) {
         button->render();
     }
@@ -198,8 +235,6 @@ void Engine::drawUi()
     m_goldLabel->render();
     m_stoneLabel->render();
     m_populationLabel->render();
-
-
 
     renderWindow_->draw(fps_label_);
 
@@ -431,10 +466,18 @@ bool Engine::setup(const std::shared_ptr<genie::ScnFile> &scenario)
     m_mapRenderer = std::make_unique<MapRenderer>();
     m_mapRenderer->setRenderTarget(renderTarget_);
 
-    renderWindow_->setSize(gameState->uiSize());
-    renderTarget_->setSize(gameState->uiSize());
+    loadUiOverlay();
 
-    fps_label_.setPosition(sf::Vector2f(gameState->uiSize().width - 75, gameState->uiSize().height - 20));
+    Size uiSize = m_uiOverlay.getSize();
+    if (uiSize.width == 0 || uiSize.height == 0) {
+        WARN << "We don't have a valid UI overlay";
+        uiSize = Size(640, 480);
+    }
+
+    renderWindow_->setSize(uiSize);
+    renderTarget_->setSize(uiSize);
+
+    fps_label_.setPosition(sf::Vector2f(uiSize.width - 75, uiSize.height - 20));
     fps_label_.setFillColor(sf::Color::White);
     fps_label_.setFont(SfmlRenderTarget::defaultFont());
     fps_label_.setCharacterSize(15);
