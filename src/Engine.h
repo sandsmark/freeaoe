@@ -24,54 +24,14 @@
 #include "mechanics/StateManager.h"
 #include "ui/Dialog.h"
 #include "ui/NumberLabel.h"
+#include "ui/MouseCursor.h"
 
 #include <SFML/System/Clock.hpp>
 #include <SFML/Graphics/Text.hpp>
-#include <SFML/Graphics/Sprite.hpp>
 
 namespace sf {
 class RenderWindow;
 }
-
-
-struct Cursor {
-    enum Type {
-        Normal = 0,
-        Busy,
-        Target,
-        Action,
-        Attack,
-        TargetPos,
-        WhatsThis,
-        Build,
-        Axe,
-        Protect,
-        Horn,
-        MoveTo,
-        Disabled,
-        Garrison,
-        Garrison2,
-        Disembark,
-        Embark,
-        TargetCircle,
-        Flag
-    };
-
-    void setCursor(const Type type) {
-        if (type == currentType) {
-            return;
-        }
-        texture.loadFromImage(Resource::convertFrameToImage(cursorsFile->getFrame(type)));
-        sprite.setTexture(texture, true);
-        currentType = type;
-    }
-
-    sf::Texture texture;
-    sf::Sprite sprite;
-    genie::SlpFilePtr cursorsFile;
-
-    Type currentType = Normal;
-};
 
 class Engine
 {
@@ -126,6 +86,6 @@ private:
     NumberLabel m_stoneLabel;
     NumberLabel m_populationLabel;
 
-    Cursor m_mouseCursor;
+    MouseCursor m_mouseCursor;
 };
 
