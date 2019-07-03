@@ -55,58 +55,6 @@ namespace sf {
 class RenderTarget;
 }
 
-struct Label {
-    Label(const int right, const int top) :
-        m_right(right),
-        m_top(top)
-    {
-        text.setFont(SfmlRenderTarget::defaultFont());
-        text.setOutlineColor(sf::Color::Black);
-        text.setOutlineThickness(1);
-        text.setFillColor(sf::Color::White);
-        text.setCharacterSize(16);
-    }
-
-    void setValue(const int value) {
-        if (value == m_value) {
-            return;
-        }
-        m_value = value;
-        updateText();
-    }
-
-    void setMaxValue(const int maxValue) {
-        if (maxValue == m_maxValue) {
-            return;
-        }
-        m_maxValue = maxValue;
-        updateText();
-    }
-
-    sf::Text text;
-
-private:
-    void updatePosition() {
-        text.setPosition(sf::Vector2f(m_right - text.getLocalBounds().width, m_top));
-    }
-
-    void updateText() {
-        std::string string = std::to_string(m_value);
-        if (m_maxValue) {
-            string += '/';
-            string += std::to_string(m_maxValue);
-        }
-        text.setString(string);
-        updatePosition();
-    }
-
-    int m_maxValue = 0;
-    int m_value = 0;
-
-    const int m_right = 0;
-    const int m_top = 0;
-};
-
 //------------------------------------------------------------------------------
 /// State where the game is processed
 //
@@ -129,6 +77,8 @@ public:
     void setBuildableIcons();
 
     Size uiSize() const;
+
+    const Player::Ptr &humanPlayer() { return m_humanPlayer; }
 
     const std::shared_ptr<UnitManager> &unitManager() { return m_unitManager; }
 
@@ -172,11 +122,6 @@ private:
     Player::Ptr m_humanPlayer;
     std::vector<Player::Ptr> m_players;
 
-    Label m_woodLabel;
-    Label m_foodLabel;
-    Label m_goldLabel;
-    Label m_stoneLabel;
-    Label m_populationLabel;
     GameType m_gameType = GameType::Default;
 };
 

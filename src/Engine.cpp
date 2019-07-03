@@ -106,7 +106,8 @@ void Engine::start()
                 m_currentDialog->render(renderWindow_);
             }
 
-            drawButtons();
+            updateUi(state->humanPlayer());
+            drawUi();
             const int renderTime = GameClock.getElapsedTime().asMilliseconds() - renderStart;
 
             if (renderTime > 0) {
@@ -184,7 +185,7 @@ void Engine::loadTopButtons()
     }
 }
 
-void Engine::drawButtons()
+void Engine::drawUi()
 {
     for (const TopMenuButton &button : m_buttons) {
         sf::Sprite sprite;
@@ -197,6 +198,12 @@ void Engine::drawButtons()
         sprite.setPosition(button.rect.topLeft());
         renderWindow_->draw(sprite);
     }
+
+    renderTarget_->draw(m_woodLabel.text);
+    renderTarget_->draw(m_foodLabel.text);
+    renderTarget_->draw(m_goldLabel.text);
+    renderTarget_->draw(m_stoneLabel.text);
+    renderTarget_->draw(m_populationLabel.text);
 }
 
 bool Engine::handleEvent(sf::Event event)
@@ -240,7 +247,12 @@ bool Engine::handleEvent(sf::Event event)
 }
 
 //------------------------------------------------------------------------------
-Engine::Engine()
+Engine::Engine() :
+    m_woodLabel(75, 5),
+    m_foodLabel(153, 5),
+    m_goldLabel(230, 5),
+    m_stoneLabel(307, 5),
+    m_populationLabel(384, 5)
 {
     m_mainScreen = std::make_unique<UiScreen>("dlg_men.sin");
 }
@@ -274,6 +286,13 @@ bool Engine::setup(const std::shared_ptr<genie::ScnFile> &scenario)
     fps_label_.setFillColor(sf::Color::White);
     fps_label_.setFont(SfmlRenderTarget::defaultFont());
     fps_label_.setCharacterSize(15);
+
+    m_woodLabel.setValue(12345);
+    m_foodLabel.setValue(12345);
+    m_goldLabel.setValue(12345);
+    m_stoneLabel.setValue(12345);
+    m_populationLabel.setValue(125);
+    m_populationLabel.setMaxValue(125);
 
     loadTopButtons();
 
@@ -309,6 +328,17 @@ void Engine::showMenu()
     }
     DBG << "showing menu";
 
+}
+
+void Engine::updateUi(const Player::Ptr &humanPlayer)
+{
+    m_woodLabel.setValue(humanPlayer->resourcesAvailable[genie::ResourceType::WoodStorage]);
+    m_foodLabel.setValue(humanPlayer->resourcesAvailable[genie::ResourceType::FoodStorage]);
+    m_goldLabel.setValue(humanPlayer->resourcesAvailable[genie::ResourceType::GoldStorage]);
+    m_stoneLabel.setValue(humanPlayer->resourcesAvailable[genie::ResourceType::StoneStorage]);
+
+    m_populationLabel.setValue(humanPlayer->resourcesUsed[genie::ResourceType::PopulationHeadroom]);
+    m_populationLabel.setMaxValue(humanPlayer->resourcesAvailable[genie::ResourceType::PopulationHeadroom]);
 }
 
 Dialog::Dialog(UiScreen *screen) :

@@ -30,6 +30,59 @@ namespace sf {
 class RenderWindow;
 }
 
+struct Label {
+    Label(const int right, const int top) :
+        m_right(right),
+        m_top(top)
+    {
+        text.setFont(SfmlRenderTarget::defaultFont());
+        text.setOutlineColor(sf::Color::Black);
+        text.setOutlineThickness(1);
+        text.setFillColor(sf::Color::White);
+        text.setCharacterSize(16);
+    }
+
+    void setValue(const int value) {
+        if (value == m_value) {
+            return;
+        }
+        m_value = value;
+        updateText();
+    }
+
+    void setMaxValue(const int maxValue) {
+        if (maxValue == m_maxValue) {
+            return;
+        }
+        m_maxValue = maxValue;
+        updateText();
+    }
+
+    sf::Text text;
+
+private:
+    void updatePosition() {
+        text.setPosition(sf::Vector2f(m_right - text.getLocalBounds().width, m_top));
+    }
+
+    void updateText() {
+        std::string string = std::to_string(m_value);
+        if (m_maxValue) {
+            string += '/';
+            string += std::to_string(m_maxValue);
+        }
+        text.setString(string);
+        updatePosition();
+    }
+
+    int m_maxValue = 0;
+    int m_value = 0;
+
+    const int m_right = 0;
+    const int m_top = 0;
+};
+
+
 struct Cursor {
     enum Type {
         Normal = 0,
@@ -125,9 +178,10 @@ public:
 private:
     void showStartScreen();
     void loadTopButtons();
-    void drawButtons();
+    void drawUi();
     bool handleEvent(sf::Event event);
     void showMenu();
+    void updateUi(const Player::Ptr &humanPlayer);
 
     std::shared_ptr<sf::RenderWindow> renderWindow_;
     std::shared_ptr<SfmlRenderTarget> renderTarget_;
@@ -140,6 +194,12 @@ private:
     sf::Text fps_label_;
     std::vector<TopMenuButton> m_buttons;
     TopMenuButton::Type m_pressedButton = TopMenuButton::Invalid;
+
+    Label m_woodLabel;
+    Label m_foodLabel;
+    Label m_goldLabel;
+    Label m_stoneLabel;
+    Label m_populationLabel;
 
     Cursor m_mouseCursor;
 };

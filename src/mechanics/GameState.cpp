@@ -100,12 +100,7 @@ std::unordered_map<GameType, ResourceMap> GameState::defaultStartingResources = 
 GameState::GameState(const std::shared_ptr<SfmlRenderTarget> &renderTarget) :
     m_cameraDeltaX(0),
     m_cameraDeltaY(0),
-    m_lastUpdate(0),
-    m_woodLabel(75, 5),
-    m_foodLabel(153, 5),
-    m_goldLabel(230, 5),
-    m_stoneLabel(307, 5),
-    m_populationLabel(384, 5)
+    m_lastUpdate(0)
 {
     m_unitManager = std::make_shared<UnitManager>();
     renderTarget_ = renderTarget;
@@ -212,14 +207,6 @@ bool GameState::init()
     mapRenderer_.setRenderTarget(renderTarget_);
     mapRenderer_.setMap(map_);
 
-
-    m_woodLabel.setValue(12345);
-    m_foodLabel.setValue(12345);
-    m_goldLabel.setValue(12345);
-    m_stoneLabel.setValue(12345);
-    m_populationLabel.setValue(125);
-    m_populationLabel.setMaxValue(125);
-
     return true;
 }
 
@@ -243,12 +230,6 @@ void GameState::draw()
     m_actionPanel->draw();
     m_unitInfoPanel->draw();
     m_minimap->draw();
-
-    renderTarget_->draw(m_woodLabel.text);
-    renderTarget_->draw(m_foodLabel.text);
-    renderTarget_->draw(m_goldLabel.text);
-    renderTarget_->draw(m_stoneLabel.text);
-    renderTarget_->draw(m_populationLabel.text);
 }
 
 bool GameState::update(Time time)
@@ -260,14 +241,6 @@ bool GameState::update(Time time)
     updated = m_actionPanel->update(time) || updated;
     updated = m_unitInfoPanel->update(time) || updated;
     updated = m_minimap->update(time) || updated;
-
-    m_woodLabel.setValue(m_humanPlayer->resourcesAvailable[genie::ResourceType::WoodStorage]);
-    m_foodLabel.setValue(m_humanPlayer->resourcesAvailable[genie::ResourceType::FoodStorage]);
-    m_goldLabel.setValue(m_humanPlayer->resourcesAvailable[genie::ResourceType::GoldStorage]);
-    m_stoneLabel.setValue(m_humanPlayer->resourcesAvailable[genie::ResourceType::StoneStorage]);
-
-    m_populationLabel.setValue(m_humanPlayer->resourcesUsed[genie::ResourceType::PopulationHeadroom]);
-    m_populationLabel.setMaxValue(m_humanPlayer->resourcesAvailable[genie::ResourceType::PopulationHeadroom]);
 
     if (m_cameraDeltaX != 0 || m_cameraDeltaY != 0) {
         const int deltaTime = time - m_lastUpdate;
