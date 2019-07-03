@@ -19,10 +19,11 @@ struct MouseCursor
 {
     MouseCursor(const std::shared_ptr<IRenderTarget> &renderTarget);
 
-
     bool isValid() const;
 
-    void render(const ScreenPos &mousePos, const std::shared_ptr<UnitManager> &unitManager);
+    bool setPosition(const ScreenPos &position);
+    bool update(const std::shared_ptr<UnitManager> &unitManager);
+    void render();
 
 private:
     enum Type {
@@ -48,12 +49,13 @@ private:
         Flag
     };
 
-    void setCursor(const Type type);
+    bool setCursor(const Type type);
     Type m_currentType = Invalid;
 
     sf::Texture m_texture;
     sf::Sprite m_sprite;
     genie::SlpFilePtr m_cursorsFile;
+    ScreenPos m_position;
 
     std::shared_ptr<IRenderTarget> m_renderTarget;
 };

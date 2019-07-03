@@ -2,38 +2,50 @@
 
 #include "render/SfmlRenderTarget.h"
 
-NumberLabel::NumberLabel(const int right, const int top) :
-    m_right(right),
-    m_top(top)
+NumberLabel::NumberLabel(const std::shared_ptr<IRenderTarget> &renderTarget) :
+    m_renderTarget(renderTarget)
 {
-    text.setFont(SfmlRenderTarget::defaultFont());
-    text.setOutlineColor(sf::Color::Black);
-    text.setOutlineThickness(1);
-    text.setFillColor(sf::Color::White);
-    text.setCharacterSize(16);
+    m_text.setFont(SfmlRenderTarget::defaultFont());
+    m_text.setOutlineColor(sf::Color::Black);
+    m_text.setOutlineThickness(1);
+    m_text.setFillColor(sf::Color::White);
+    m_text.setCharacterSize(16);
 }
 
-void NumberLabel::setValue(const int value)
+bool NumberLabel::setValue(const int value)
 {
     if (value == m_value) {
-        return;
+        return false;
     }
     m_value = value;
     updateText();
+    return true;
 }
 
-void NumberLabel::setMaxValue(const int maxValue)
+bool NumberLabel::setMaxValue(const int maxValue)
 {
     if (maxValue == m_maxValue) {
-        return;
+        return false;
     }
     m_maxValue = maxValue;
     updateText();
+    return true;
+}
+
+void NumberLabel::setPosition(const ScreenPos &pos)
+{
+    m_top = pos.y;
+    m_right = pos.x;
+}
+
+void NumberLabel::render()
+{
+    m_renderTarget->draw(m_text);
 }
 
 void NumberLabel::updatePosition()
 {
-    text.setPosition(sf::Vector2f(m_right - text.getLocalBounds().width, m_top));
+    m_text.setPosition(sf::Vector2f(m_right - m_text.getLocalBounds().width, m_top));
 }
 
 void NumberLabel::updateText()
@@ -43,6 +55,6 @@ void NumberLabel::updateText()
         string += '/';
         string += std::to_string(m_maxValue);
     }
-    text.setString(string);
+    m_text.setString(string);
     updatePosition();
 }

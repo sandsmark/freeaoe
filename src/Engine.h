@@ -66,7 +66,7 @@ private:
     void drawUi();
     bool handleEvent(sf::Event event);
     void showMenu();
-    void updateUi(const Player::Ptr &humanPlayer);
+    bool updateUi(const std::shared_ptr<GameState> &state);
 
     std::shared_ptr<sf::RenderWindow> renderWindow_;
     std::shared_ptr<SfmlRenderTarget> renderTarget_;
@@ -80,11 +80,11 @@ private:
     std::vector<TopMenuButton> m_buttons;
     TopMenuButton::Type m_pressedButton = TopMenuButton::Invalid;
 
-    NumberLabel m_woodLabel;
-    NumberLabel m_foodLabel;
-    NumberLabel m_goldLabel;
-    NumberLabel m_stoneLabel;
-    NumberLabel m_populationLabel;
+    std::unique_ptr<NumberLabel> m_woodLabel;
+    std::unique_ptr<NumberLabel> m_foodLabel;
+    std::unique_ptr<NumberLabel> m_goldLabel;
+    std::unique_ptr<NumberLabel> m_stoneLabel;
+    std::unique_ptr<NumberLabel> m_populationLabel;
 
     std::unique_ptr<MouseCursor> m_mouseCursor;
 };

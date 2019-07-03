@@ -23,38 +23,52 @@ bool MouseCursor::isValid() const
     return m_currentType != Type::Invalid;
 }
 
-void MouseCursor::render(const ScreenPos &mousePos, const std::shared_ptr<UnitManager> &unitManager)
+bool MouseCursor::setPosition(const ScreenPos &position)
 {
-    const Task targetAction = unitManager->defaultActionAt(mousePos, m_renderTarget->camera());
-    if (!targetAction.data) {
-        setCursor(MouseCursor::Normal);
-    } else if (targetAction.data->ActionType == genie::Task::Combat) {
-        setCursor(MouseCursor::Attack);
-    } else {
-        setCursor(MouseCursor::Action);
+    if (position == m_position) {
+        return false;
     }
 
+    m_position = position;
+    m_sprite.setPosition(position);
+    return true;
+}
 
-    m_sprite.setPosition(mousePos);
+bool MouseCursor::update(const std::shared_ptr<UnitManager> &unitManager)
+{
+    const Task targetAction = unitManager->defaultActionAt(m_position, m_renderTarget->camera());
+    if (!targetAction.data) {
+        return setCursor(MouseCursor::Normal);
+    } else if (targetAction.data->ActionType == genie::Task::Combat) {
+        return setCursor(MouseCursor::Attack);
+    } else {
+        return setCursor(MouseCursor::Action);
+    }
+}
+
+void MouseCursor::render()
+{
     m_renderTarget->draw(m_sprite);
 }
 
-void MouseCursor::setCursor(const MouseCursor::Type type)
+bool MouseCursor::setCursor(const MouseCursor::Type type)
 {
     if (type == m_currentType) {
-        return;
+        return false;
     }
     if (!m_cursorsFile) {
         WARN << "No cursors file available!";
+        return false;
     }
 
     const genie::SlpFramePtr &newFrame = m_cursorsFile->getFrame(type);
     if (!newFrame) {
         WARN << "Failed to load new cursor SLP for type" << type;
-        return;
+        return false;
     }
 
     m_texture.loadFromImage(Resource::convertFrameToImage(newFrame));
     m_sprite.setTexture(m_texture, true);
     m_currentType = type;
+    return true;
 }

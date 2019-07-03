@@ -1,16 +1,22 @@
 #pragma once
 
+#include "core/Types.h"
+
 #include <SFML/Graphics/Text.hpp>
+
+#include <memory>
+
+class IRenderTarget;
 
 struct NumberLabel
 {
-    NumberLabel(const int right, const int top);
+    NumberLabel(const std::shared_ptr<IRenderTarget> &renderTarget);
 
-    void setValue(const int value);
+    bool setValue(const int value);
+    bool setMaxValue(const int maxValue);
+    void setPosition(const ScreenPos &pos);
 
-    void setMaxValue(const int maxValue);
-
-    sf::Text text;
+    void render();
 
 private:
     void updatePosition();
@@ -20,6 +26,9 @@ private:
     int m_maxValue = 0;
     int m_value = 0;
 
-    const int m_right = 0;
-    const int m_top = 0;
+    int m_right = 0;
+    int m_top = 0;
+    sf::Text m_text;
+
+    std::shared_ptr<IRenderTarget> m_renderTarget;
 };

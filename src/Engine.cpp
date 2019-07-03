@@ -83,6 +83,9 @@ void Engine::start()
             updated = state->update(GameClock.getElapsedTime().asMilliseconds()) || updated;
         }
 
+        updated = m_mouseCursor->setPosition(mousePos) || updated;
+        updated = updateUi(state) || updated;
+
         if (updated) {
             // Clear screen
             renderWindow_->clear(sf::Color::Green);
@@ -91,16 +94,12 @@ void Engine::start()
                 m_currentDialog->render(renderWindow_);
             }
 
-            updateUi(state->humanPlayer());
             drawUi();
             const int renderTime = GameClock.getElapsedTime().asMilliseconds() - renderStart;
 
             if (renderTime > 0) {
                 fps_label_.setString("fps: " + std::to_string(1000/renderTime));
             }
-
-            renderWindow_->draw(fps_label_);
-            m_mouseCursor->render(mousePos, state->unitManager());
 
             // Update the window
             renderWindow_->display();
@@ -184,11 +183,15 @@ void Engine::drawUi()
         renderWindow_->draw(sprite);
     }
 
-    renderTarget_->draw(m_woodLabel.text);
-    renderTarget_->draw(m_foodLabel.text);
-    renderTarget_->draw(m_goldLabel.text);
-    renderTarget_->draw(m_stoneLabel.text);
-    renderTarget_->draw(m_populationLabel.text);
+    m_woodLabel->render();
+    m_foodLabel->render();
+    m_goldLabel->render();
+    m_stoneLabel->render();
+    m_populationLabel->render();
+
+    renderWindow_->draw(fps_label_);
+
+    m_mouseCursor->render();
 }
 
 bool Engine::handleEvent(sf::Event event)
@@ -232,12 +235,7 @@ bool Engine::handleEvent(sf::Event event)
 }
 
 //------------------------------------------------------------------------------
-Engine::Engine() :
-    m_woodLabel(75, 5),
-    m_foodLabel(153, 5),
-    m_goldLabel(230, 5),
-    m_stoneLabel(307, 5),
-    m_populationLabel(384, 5)
+Engine::Engine()
 {
     m_mainScreen = std::make_unique<UiScreen>("dlg_men.sin");
 }
@@ -256,6 +254,18 @@ bool Engine::setup(const std::shared_ptr<genie::ScnFile> &scenario)
     if (m_mouseCursor->isValid()) {
         renderWindow_->setMouseCursorVisible(false);
     }
+
+    m_woodLabel = std::make_unique<NumberLabel>(renderTarget_);
+    m_foodLabel = std::make_unique<NumberLabel>(renderTarget_);
+    m_goldLabel = std::make_unique<NumberLabel>(renderTarget_);
+    m_stoneLabel = std::make_unique<NumberLabel>(renderTarget_);
+    m_populationLabel = std::make_unique<NumberLabel>(renderTarget_);
+
+    m_woodLabel->setPosition({75, 5});
+    m_foodLabel->setPosition({153, 5});
+    m_goldLabel->setPosition({230, 5});
+    m_stoneLabel->setPosition({307, 5});
+    m_populationLabel->setPosition({384, 5});
 
     showStartScreen();
 
@@ -276,12 +286,12 @@ bool Engine::setup(const std::shared_ptr<genie::ScnFile> &scenario)
     fps_label_.setFont(SfmlRenderTarget::defaultFont());
     fps_label_.setCharacterSize(15);
 
-    m_woodLabel.setValue(12345);
-    m_foodLabel.setValue(12345);
-    m_goldLabel.setValue(12345);
-    m_stoneLabel.setValue(12345);
-    m_populationLabel.setValue(125);
-    m_populationLabel.setMaxValue(125);
+    m_woodLabel->setValue(12345);
+    m_foodLabel->setValue(12345);
+    m_goldLabel->setValue(12345);
+    m_stoneLabel->setValue(12345);
+    m_populationLabel->setValue(125);
+    m_populationLabel->setMaxValue(125);
 
     loadTopButtons();
 
@@ -311,13 +321,21 @@ void Engine::showMenu()
 
 }
 
-void Engine::updateUi(const Player::Ptr &humanPlayer)
+bool Engine::updateUi(const std::shared_ptr<GameState> &state)
 {
-    m_woodLabel.setValue(humanPlayer->resourcesAvailable[genie::ResourceType::WoodStorage]);
-    m_foodLabel.setValue(humanPlayer->resourcesAvailable[genie::ResourceType::FoodStorage]);
-    m_goldLabel.setValue(humanPlayer->resourcesAvailable[genie::ResourceType::GoldStorage]);
-    m_stoneLabel.setValue(humanPlayer->resourcesAvailable[genie::ResourceType::StoneStorage]);
+    bool updated = false;
 
-    m_populationLabel.setValue(humanPlayer->resourcesUsed[genie::ResourceType::PopulationHeadroom]);
-    m_populationLabel.setMaxValue(humanPlayer->resourcesAvailable[genie::ResourceType::PopulationHeadroom]);
+    const Player::Ptr &humanPlayer = state->humanPlayer();
+    updated = m_woodLabel->setValue(humanPlayer->resourcesAvailable[genie::ResourceType::WoodStorage]) || updated;
+    updated = m_foodLabel->setValue(humanPlayer->resourcesAvailable[genie::ResourceType::FoodStorage]) || updated;
+    updated = m_goldLabel->setValue(humanPlayer->resourcesAvailable[genie::ResourceType::GoldStorage]) || updated;
+    updated = m_stoneLabel->setValue(humanPlayer->resourcesAvailable[genie::ResourceType::StoneStorage]) || updated;
+
+    updated = m_populationLabel->setValue(humanPlayer->resourcesUsed[genie::ResourceType::PopulationHeadroom] || updated);
+    updated = m_populationLabel->setMaxValue(humanPlayer->resourcesAvailable[genie::ResourceType::PopulationHeadroom]) || updated;
+
+
+    updated = m_mouseCursor->update(state->unitManager()) || updated;
+
+    return updated;
 }
