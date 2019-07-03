@@ -346,7 +346,8 @@ bool Engine::handleMouseRelease(const sf::Event &event, const std::shared_ptr<Ga
     if (event.mouseButton.button == sf::Mouse::Button::Right) {
         state->unitManager()->onRightClick(mousePos, renderTarget_->camera());
     }
-        return false;
+
+    return false;
 }
 
 //------------------------------------------------------------------------------
@@ -468,28 +469,7 @@ bool Engine::updateUi(const std::shared_ptr<GameState> &state)
 
     updated = m_mouseCursor->update(state->unitManager()) || updated;
 
-    if (m_cameraDeltaX != 0 || m_cameraDeltaY != 0) {
-        ScreenPos cameraScreenPos = renderTarget_->camera()->targetPosition().toScreen();
-        cameraScreenPos.x += m_cameraDeltaX * deltaTime * CAMERA_SPEED;
-        cameraScreenPos.y += m_cameraDeltaY * deltaTime * CAMERA_SPEED;
-
-        MapPos cameraMapPos = cameraScreenPos.toMap();
-        if (cameraMapPos.x < 0) { cameraMapPos.x = 0; }
-        if (cameraMapPos.y < 0) { cameraMapPos.y = 0; }
-        if (cameraMapPos.x > state->map()->width()) { cameraMapPos.x = state->map()->width(); }
-        if (cameraMapPos.y > state->map()->height()) { cameraMapPos.y = state->map()->height(); }
-        renderTarget_->camera()->setTargetPosition(cameraMapPos);
-
-
-        if (state->isSelecting()) {
-            ScreenPos delta;
-            delta.x -= m_cameraDeltaX * deltaTime * CAMERA_SPEED;
-            delta.y += m_cameraDeltaY * deltaTime * CAMERA_SPEED;
-            state->moveSelectionStartPosition(delta);
-        }
-
-        updated = true;
-    }
+    updated = updateCamera(state) || updated;
 
     updated = m_minimap->update(deltaTime) || updated;
     updated = m_actionPanel->update(deltaTime) || updated;
@@ -497,4 +477,34 @@ bool Engine::updateUi(const std::shared_ptr<GameState> &state)
 
     m_lastUpdate = GameClock.getElapsedTime().asMilliseconds();
     return updated;
+}
+
+bool Engine::updateCamera(const std::shared_ptr<GameState> &state)
+{
+    if (m_cameraDeltaX == 0 && m_cameraDeltaY == 0) {
+        return false;
+    }
+
+    ScreenPos cameraScreenPos = renderTarget_->camera()->targetPosition().toScreen();
+
+    const int deltaTime = GameClock.getElapsedTime().asMilliseconds() - m_lastUpdate;
+    cameraScreenPos.x += m_cameraDeltaX * deltaTime * CAMERA_SPEED;
+    cameraScreenPos.y += m_cameraDeltaY * deltaTime * CAMERA_SPEED;
+
+    MapPos cameraMapPos = cameraScreenPos.toMap();
+    if (cameraMapPos.x < 0) { cameraMapPos.x = 0; }
+    if (cameraMapPos.y < 0) { cameraMapPos.y = 0; }
+    if (cameraMapPos.x > state->map()->width()) { cameraMapPos.x = state->map()->width(); }
+    if (cameraMapPos.y > state->map()->height()) { cameraMapPos.y = state->map()->height(); }
+    renderTarget_->camera()->setTargetPosition(cameraMapPos);
+
+
+    if (state->isSelecting()) {
+        ScreenPos delta;
+        delta.x -= m_cameraDeltaX * deltaTime * CAMERA_SPEED;
+        delta.y += m_cameraDeltaY * deltaTime * CAMERA_SPEED;
+        state->moveSelectionStartPosition(delta);
+    }
+
+    return true;
 }

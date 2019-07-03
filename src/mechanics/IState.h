@@ -30,7 +30,7 @@ public:
     virtual bool init() = 0;
 
     //----------------------------------------------------------------------------
-    virtual bool handleEvent(sf::Event event) = 0;
+    virtual bool handleEvent(sf::Event /*event*/) { return false; }
 
     //----------------------------------------------------------------------------
     /// Update game state before drawin

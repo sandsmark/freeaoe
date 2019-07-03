@@ -53,6 +53,7 @@ private:
     void showStartScreen();
     void loadTopButtons();
     void drawUi();
+    bool updateCamera(const std::shared_ptr<GameState> &state);
     bool handleEvent(const sf::Event &event, const std::shared_ptr<GameState> &state);
     bool handleKeyEvent(const sf::Event &event, const std::shared_ptr<GameState> &state);
     bool handleMouseMove(const sf::Event &event, const std::shared_ptr<GameState> &state);

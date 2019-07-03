@@ -220,19 +220,6 @@ bool GameState::update(Time time)
     return updated;
 }
 
-bool GameState::handleEvent(sf::Event event)
-{
-    if (event.type == sf::Event::MouseButtonReleased) {
-        if (event.mouseButton.button == sf::Mouse::Button::Right) {
-            const ScreenPos mousePos = ScreenPos(event.mouseButton.x, event.mouseButton.y);
-            m_unitManager->onRightClick(mousePos, renderTarget_->camera());
-            return true;
-        }
-    }
-
-    return false;
-}
-
 Size GameState::uiSize() const
 {
     if (m_uiOverlay.getSize().x == 0 || m_uiOverlay.getSize().y == 0) {
