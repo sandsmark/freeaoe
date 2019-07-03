@@ -385,6 +385,17 @@ struct ScreenRect
         height = s.height;
     }
 
+    ScreenPos bounded(const ScreenPos &other) const {
+        ScreenPos ret = other;
+
+        if (ret.x < 0.f) ret.x = 0;
+        if (ret.y < 0.f) ret.y = 0;
+        if (ret.x > width) ret.x = width;
+        if (ret.y > height) ret.y = height;
+
+        return ret;
+    }
+
     ScreenPos topLeft() const {
         return ScreenPos(x, y);
     }
@@ -535,6 +546,17 @@ struct MapRect {
         height = std::abs(a.y - b.y);
 
         z = (a.z + b.z) / 2.f;
+    }
+
+    MapPos bounded(const MapPos &other) const {
+        MapPos ret = other;
+
+        if (ret.x < 0.f) ret.x = 0;
+        if (ret.y < 0.f) ret.y = 0;
+        if (ret.x > width) ret.x = width;
+        if (ret.y > height) ret.y = height;
+
+        return ret;
     }
 
     MapPos topLeft() const {

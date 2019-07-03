@@ -19,6 +19,10 @@ Minimap::Minimap(const std::shared_ptr<SfmlRenderTarget> &renderTarget) :
 
 void Minimap::setMap(const std::shared_ptr<Map> &map)
 {
+    if (map == m_map) {
+        return;
+    }
+
     if (!map) {
         WARN << "null map";
         return;
@@ -33,17 +37,31 @@ void Minimap::setMap(const std::shared_ptr<Map> &map)
     m_unitsUpdated = true;
 
     m_lastCameraPos = MapPos(-1, -1);
+    m_terrainUpdated = true;
 
 }
 
 void Minimap::setUnitManager(const std::shared_ptr<UnitManager> &unitManager)
 {
+    if (unitManager == m_unitManager) {
+        return;
+    }
+
     if (!unitManager) {
         WARN << "null unit manager";
     }
 
     m_unitManager = unitManager;
     m_unitsUpdated = true;
+}
+
+void Minimap::setVisibilityMap(const std::shared_ptr<VisibilityMap> &visibilityMap)
+{
+    if (visibilityMap == m_visibilityMap) {
+        return;
+    }
+
+    m_visibilityMap = visibilityMap;
 }
 
 void Minimap::updateUnits()
@@ -113,18 +131,22 @@ bool Minimap::handleEvent(sf::Event event)
 {
     ScreenPos pos;
     if (event.type == sf::Event::MouseButtonPressed || event.type == sf::Event::MouseButtonReleased) {
-        pos = ScreenPos (event.mouseButton.x, event.mouseButton.y);
+        pos = ScreenPos(event.mouseButton.x, event.mouseButton.y);
     } else if (event.type == sf::Event::MouseMoved && m_mousePressed) {
-        pos = ScreenPos (event.mouseMove.x, event.mouseMove.y);
+        pos = ScreenPos(event.mouseMove.x, event.mouseMove.y);
     } else {
         return false;
     }
 
-    if (event.type == sf::Event::MouseButtonPressed) {
+    if (event.type == sf::Event::MouseButtonPressed && m_rect.contains(pos)) {
         m_mousePressed = true;
-    } else if (event.type == sf::Event::MouseButtonReleased) {
+    } else if (event.type == sf::Event::MouseButtonReleased && m_mousePressed) {
         m_mousePressed = false;
         return true;
+    }
+
+    if (!m_rect.contains(pos)) {
+        return m_mousePressed;
     }
 
     // normalize to 0,0
@@ -133,12 +155,13 @@ bool Minimap::handleEvent(sf::Event event)
 
     pos.y = m_rect.height/2 - pos.y; // from the center
 
-    const MapRect mapDimensions(0, 0, m_map->getCols(), m_map->getRows());
-    const ScreenRect fullBoundingRect = MapRect(0, 0, mapDimensions.width * Constants::TILE_SIZE, mapDimensions.height * Constants::TILE_SIZE).boundingScreenRect();
+    const MapRect mapDimensions(0, 0, m_map->getCols() * Constants::TILE_SIZE, m_map->getRows() * Constants::TILE_SIZE);
+    const ScreenRect fullBoundingRect = mapDimensions.boundingScreenRect();
     pos.x = fullBoundingRect.width * pos.x / m_rect.width;
     pos.y = fullBoundingRect.height * pos.y / m_rect.height;
 
-    m_renderTarget->camera()->setTargetPosition(pos.toMap());
+    const MapPos mapPos = mapDimensions.bounded(pos.toMap());
+    m_renderTarget->camera()->setTargetPosition(mapPos);
 
     return true;
 }

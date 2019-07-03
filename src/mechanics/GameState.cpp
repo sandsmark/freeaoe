@@ -37,7 +37,6 @@
 #include "resource/DataManager.h"
 #include "ui/ActionPanel.h"
 #include "ui/UnitInfoPanel.h"
-#include "ui/Minimap.h"
 #include "core/Constants.h"
 #include "debug/SampleGameFactory.h"
 #include "mechanics/UnitManager.h"
@@ -101,8 +100,6 @@ GameState::GameState(const std::shared_ptr<SfmlRenderTarget> &renderTarget)
     renderTarget_ = renderTarget;
 
     m_actionPanel = std::make_unique<ActionPanel>(renderTarget_);
-    m_minimap = std::make_unique<Minimap>(renderTarget_);
-    m_minimap->setUnitManager(m_unitManager);
     m_actionPanel->setUnitManager(m_unitManager);
     m_unitInfoPanel = std::make_unique<UnitInfoPanel>(renderTarget_);
     m_unitInfoPanel->setUnitManager(m_unitManager);
@@ -129,10 +126,6 @@ bool GameState::init()
     }
 
     if (!m_unitInfoPanel->init()) {
-        return false;
-    }
-    if (!m_minimap->init()) {
-        WARN << "failed to init minimap";
         return false;
     }
 
@@ -185,7 +178,6 @@ bool GameState::init()
 
     map_ = std::make_shared<Map>();
     m_unitManager->setMap(map_);
-    m_minimap->setMap(map_);
 
     if (scenario_) {
         setupScenario();
@@ -196,7 +188,6 @@ bool GameState::init()
     m_actionPanel->setHumanPlayer(m_humanPlayer);
     m_unitManager->setHumanPlayer(m_humanPlayer);
     mapRenderer_.setVisibilityMap(m_humanPlayer->visibility);
-    m_minimap->setVisibilityMap(m_humanPlayer->visibility);
 
     map_->updateMapData();
     mapRenderer_.setRenderTarget(renderTarget_);
@@ -224,7 +215,6 @@ void GameState::draw()
     renderTarget_->draw(m_uiOverlay, ScreenPos(0, 0));
     m_actionPanel->draw();
     m_unitInfoPanel->draw();
-    m_minimap->draw();
 }
 
 bool GameState::update(Time time)
@@ -235,7 +225,6 @@ bool GameState::update(Time time)
     updated = m_unitManager->update(time) || updated;
     updated = m_actionPanel->update(time) || updated;
     updated = m_unitInfoPanel->update(time) || updated;
-    updated = m_minimap->update(time) || updated;
 
     if (m_selecting) {
         ScreenRect selectionRect(m_selectionStart, m_selectionCurr);
@@ -258,14 +247,6 @@ bool GameState::handleEvent(sf::Event event)
     }
 
     const ScreenPos mousePos = ScreenPos(event.mouseButton.x, event.mouseButton.y);
-
-    if (m_minimap->rect().contains(mousePos)) {
-        if (m_minimap->handleEvent(event)) {
-            return true;
-        }
-    } else {
-        m_minimap->mouseExited();
-    }
 
     if (event.type != sf::Event::MouseButtonPressed && event.type != sf::Event::MouseButtonReleased) {
         return false;

@@ -26,6 +26,7 @@
 #include "ui/Dialog.h"
 #include "ui/NumberLabel.h"
 #include "ui/MouseCursor.h"
+#include "ui/Minimap.h"
 
 #include <SFML/System/Clock.hpp>
 #include <SFML/Graphics/Text.hpp>
@@ -81,5 +82,7 @@ private:
     float m_cameraDeltaY = 0.f;
 
     Time m_lastUpdate = 0u;
+
+    std::unique_ptr<Minimap> m_minimap;
 };
 

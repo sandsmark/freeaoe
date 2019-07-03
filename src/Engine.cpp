@@ -33,6 +33,7 @@
 #include "global/Config.h"
 #include <genie/resource/SlpFile.h>
 #include <genie/resource/UIFile.h>
+#include "ui/Minimap.h"
 
 #define MOUSE_MOVE_EDGE_SIZE 10
 #define CAMERA_SPEED 1.
@@ -49,6 +50,10 @@ void Engine::start()
     // Start the game loop
     while (renderWindow_->isOpen()) {
         std::shared_ptr<GameState> state = state_manager_.getActiveState();
+
+        m_minimap->setUnitManager(state->unitManager());
+        m_minimap->setMap(state->map());
+        m_minimap->setVisibilityMap(state->humanPlayer()->visibility);
 
         const int renderStart = GameClock.getElapsedTime().asMilliseconds();
 
@@ -164,11 +169,13 @@ void Engine::drawUi()
         button->render();
     }
 
+    m_minimap->draw();
     m_woodLabel->render();
     m_foodLabel->render();
     m_goldLabel->render();
     m_stoneLabel->render();
     m_populationLabel->render();
+
 
     renderWindow_->draw(fps_label_);
 
@@ -185,6 +192,10 @@ bool Engine::handleEvent(const sf::Event &event, const std::shared_ptr<GameState
             renderWindow_->close();
         }
 
+        return true;
+    }
+
+    if (m_minimap->handleEvent(event)) {
         return true;
     }
 
@@ -318,7 +329,7 @@ bool Engine::handleMouseRelease(const sf::Event &event, const std::shared_ptr<Ga
         state->onSelectionFinished();
         return true;
     }
-    if (event.mouseButton.button == sf::Mouse::Button::Left ) {
+    if (event.mouseButton.button == sf::Mouse::Button::Right) {
         state->unitManager()->onRightClick(mousePos, renderTarget_->camera());
     }
         return false;
@@ -367,6 +378,10 @@ bool Engine::setup(const std::shared_ptr<genie::ScnFile> &scenario)
     if (!state_manager_.addActiveState(gameState)) {
         return false;
     }
+    m_minimap = std::make_unique<Minimap>(renderTarget_);
+    if (!m_minimap->init()) {
+        WARN << "failed to init minimap";
+    }
 
     renderWindow_->setSize(gameState->uiSize());
     renderTarget_->setSize(gameState->uiSize());
@@ -413,6 +428,8 @@ void Engine::showMenu()
 
 bool Engine::updateUi(const std::shared_ptr<GameState> &state)
 {
+    const int deltaTime = GameClock.getElapsedTime().asMilliseconds() - m_lastUpdate;
+
     bool updated = false;
 
     const Player::Ptr &humanPlayer = state->humanPlayer();
@@ -427,8 +444,6 @@ bool Engine::updateUi(const std::shared_ptr<GameState> &state)
     updated = m_mouseCursor->update(state->unitManager()) || updated;
 
     if (m_cameraDeltaX != 0 || m_cameraDeltaY != 0) {
-        const int deltaTime = GameClock.getElapsedTime().asMilliseconds() - m_lastUpdate;
-
         ScreenPos cameraScreenPos = renderTarget_->camera()->targetPosition().toScreen();
         cameraScreenPos.x += m_cameraDeltaX * deltaTime * CAMERA_SPEED;
         cameraScreenPos.y += m_cameraDeltaY * deltaTime * CAMERA_SPEED;
@@ -450,6 +465,8 @@ bool Engine::updateUi(const std::shared_ptr<GameState> &state)
 
         updated = true;
     }
+
+    updated = m_minimap->update(deltaTime) || updated;
 
     m_lastUpdate = GameClock.getElapsedTime().asMilliseconds();
     return updated;

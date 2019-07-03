@@ -33,7 +33,6 @@ class GameClient;
 class GameServer;
 class ActionPanel;
 class UnitInfoPanel;
-class Minimap;
 class UnitManager;
 
 enum class GameType {
@@ -101,7 +100,6 @@ private:
     std::shared_ptr<UnitManager> m_unitManager;
     std::unique_ptr<ActionPanel> m_actionPanel;
     std::unique_ptr<UnitInfoPanel> m_unitInfoPanel;
-    std::unique_ptr<Minimap> m_minimap;
 
     MapPtr map_;
     MapRenderer mapRenderer_;

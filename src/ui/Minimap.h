@@ -27,7 +27,7 @@ public:
 
     void setMap(const std::shared_ptr<Map> &map);
     void setUnitManager(const std::shared_ptr<UnitManager> &unitManager);
-    void setVisibilityMap(const std::shared_ptr<VisibilityMap> &visibilityMap) { m_visibilityMap = visibilityMap; }
+    void setVisibilityMap(const std::shared_ptr<VisibilityMap> &visibilityMap);
 
     bool init() override;
     bool handleEvent(sf::Event event) override;
