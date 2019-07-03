@@ -19,6 +19,7 @@
 #pragma once
 
 #include "ui/TextButton.h"
+#include "ui/IconButton.h"
 
 #include "core/Logger.h"
 #include "mechanics/StateManager.h"
@@ -35,21 +36,6 @@ class RenderWindow;
 
 class Engine
 {
-    struct TopMenuButton {
-        enum Type {
-            Invalid = -1,
-            GameMenu = 0,
-            Diplo = 1,
-            Chat = 2,
-            TechTree = 3,
-            Settings = 4,
-            ButtonsCount
-        } type;
-
-        ScreenRect rect;
-        sf::Texture texture;
-        sf::Texture pressedTexture;
-    };
 public:
 
     static const sf::Clock GameClock;
@@ -77,8 +63,7 @@ private:
     StateManager state_manager_;
 
     sf::Text fps_label_;
-    std::vector<TopMenuButton> m_buttons;
-    TopMenuButton::Type m_pressedButton = TopMenuButton::Invalid;
+    std::vector<std::unique_ptr<IconButton>> m_buttons;
 
     std::unique_ptr<NumberLabel> m_woodLabel;
     std::unique_ptr<NumberLabel> m_foodLabel;

@@ -187,6 +187,7 @@ set (UI_SRC
     src/ui/Dialog.cpp
     src/ui/NumberLabel.cpp
     src/ui/MouseCursor.cpp
+    src/ui/IconButton.cpp
     )
 
 set(DEBUG_SRC

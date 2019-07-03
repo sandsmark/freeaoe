@@ -59,5 +59,3 @@ private:
 
     std::shared_ptr<IRenderTarget> m_renderTarget;
 };
-
-

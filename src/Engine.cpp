@@ -141,29 +141,14 @@ void Engine::showStartScreen()
 
 void Engine::loadTopButtons()
 {
-    genie::SlpFilePtr buttonsFile = AssetManager::Inst()->getSlp("btngame2x.shp");
-    if (!buttonsFile) {
-        WARN << "Failed to load SLP for buttons";
-        return;
-    }
+    float x = renderWindow_->getSize().x - 5;
+    for (int i=0; i<IconButton::ButtonsCount; i++) {
+        std::unique_ptr<IconButton> button = std::make_unique<IconButton>(renderTarget_);
 
-    if (buttonsFile->getFrameCount() < TopMenuButton::ButtonsCount * 2) {
-        WARN << "Not enough buttons";
-    }
+        button->setType(IconButton::Type(i));
 
-    int x = renderWindow_->getSize().x - 5;
-    for (int i=0; i<TopMenuButton::ButtonsCount; i++) {
-        TopMenuButton button;
-        button.type = TopMenuButton::Type(i);
-
-        button.texture.loadFromImage(Resource::convertFrameToImage(buttonsFile->getFrame(i * 2)));
-        button.pressedTexture.loadFromImage(Resource::convertFrameToImage(buttonsFile->getFrame(i * 2 + 1)));
-
-        button.rect.setSize(button.texture.getSize());
-        x -= button.rect.width;
-
-        button.rect.x = x;
-        button.rect.y = 5;
+        x -= button->rect().width;
+        button->setPosition({x, 5});
 
         m_buttons.push_back(std::move(button));
     }
@@ -171,16 +156,8 @@ void Engine::loadTopButtons()
 
 void Engine::drawUi()
 {
-    for (const TopMenuButton &button : m_buttons) {
-        sf::Sprite sprite;
-        if (button.type == m_pressedButton) {
-            sprite.setTexture(button.pressedTexture);
-        } else {
-            sprite.setTexture(button.texture);
-        }
-
-        sprite.setPosition(button.rect.topLeft());
-        renderWindow_->draw(sprite);
+    for (const std::unique_ptr<IconButton> &button : m_buttons) {
+        button->render();
     }
 
     m_woodLabel->render();
@@ -207,28 +184,29 @@ bool Engine::handleEvent(sf::Event event)
         return true;
     }
 
-    if (event.type == sf::Event::MouseButtonReleased) {
-        if (m_pressedButton == TopMenuButton::GameMenu) {
+    if (event.type == sf::Event::MouseButtonPressed) {
+        const ScreenPos mousePos(event.mouseButton.x, event.mouseButton.y);
+        bool updated = false;
+        for (const std::unique_ptr<IconButton> &button : m_buttons) {
+            updated = button->onMousePressed(mousePos) || updated;
+        }
+        return updated;
+    } else if (event.type == sf::Event::MouseButtonReleased) {
+        const ScreenPos mousePos(event.mouseButton.x, event.mouseButton.y);
+
+        IconButton::Type clickedButton = IconButton::Invalid;
+        for (const std::unique_ptr<IconButton> &button : m_buttons) {
+            if (button->onMouseReleased(mousePos)) {
+                clickedButton = button->type();
+            }
+        }
+        if (clickedButton == IconButton::GameMenu) {
             showMenu();
         }
-
-        if (m_pressedButton != TopMenuButton::Invalid) {
-            m_pressedButton = TopMenuButton::Invalid;
+        if (clickedButton != IconButton::Invalid) {
             return true;
         }
-
         return false;
-    }
-
-    if (event.type != sf::Event::MouseButtonPressed) {
-        return false;
-    }
-    const ScreenPos mousePos(event.mouseButton.x, event.mouseButton.y);
-    for (const TopMenuButton &button : m_buttons) {
-        if (button.rect.contains(mousePos)) {
-            m_pressedButton = button.type;
-            return true;
-        }
     }
 
     return false;
@@ -333,7 +311,6 @@ bool Engine::updateUi(const std::shared_ptr<GameState> &state)
 
     updated = m_populationLabel->setValue(humanPlayer->resourcesUsed[genie::ResourceType::PopulationHeadroom] || updated);
     updated = m_populationLabel->setMaxValue(humanPlayer->resourcesAvailable[genie::ResourceType::PopulationHeadroom]) || updated;
-
 
     updated = m_mouseCursor->update(state->unitManager()) || updated;
 
