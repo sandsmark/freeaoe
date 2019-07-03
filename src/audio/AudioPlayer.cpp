@@ -2,6 +2,8 @@
 
 #include "resource/DataManager.h"
 #include "resource/AssetManager.h"
+#include "core/Utility.h"
+#include "global/Config.h"
 
 #include <random>
 
@@ -135,7 +137,11 @@ void AudioPlayer::playSample(const std::shared_ptr<uint8_t[]> &data, const float
     sample->data = data;
     sample->audiodata = data.get() + sizeof(WavHeader);
 
-    sts_mixer_play_sample(m_mixer.get(), sample, volume, 1., pan);
+    const float pitch = 1.f;
+    if (sts_mixer_play_sample(m_mixer.get(), sample, volume, pitch, pan) < 0) {
+        WARN << "unable to play sample, too many playing already";
+        delete sample;
+    }
 }
 
 void AudioPlayer::playSound(const int id, const int civilization, const float pan, const float volume)
