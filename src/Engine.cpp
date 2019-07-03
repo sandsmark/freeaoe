@@ -34,6 +34,10 @@
 #include <genie/resource/SlpFile.h>
 #include <genie/resource/UIFile.h>
 
+#define MOUSE_MOVE_EDGE_SIZE 10
+#define CAMERA_SPEED 1.
+
+
 const sf::Clock Engine::GameClock;
 
 //------------------------------------------------------------------------------
@@ -173,10 +177,6 @@ void Engine::drawUi()
 
 bool Engine::handleEvent(const sf::Event &event, const std::shared_ptr<GameState> &state)
 {
-    if (event.type == sf::Event::KeyPressed) {
-        return handleKeyEvent(event, state);
-    }
-
     if (m_currentDialog) {
         Dialog::Choice choice = m_currentDialog->handleEvent(event);
         if (choice == Dialog::Cancel) {
@@ -188,29 +188,17 @@ bool Engine::handleEvent(const sf::Event &event, const std::shared_ptr<GameState
         return true;
     }
 
-    if (event.type == sf::Event::MouseButtonPressed) {
-        const ScreenPos mousePos(event.mouseButton.x, event.mouseButton.y);
-        bool updated = false;
-        for (const std::unique_ptr<IconButton> &button : m_buttons) {
-            updated = button->onMousePressed(mousePos) || updated;
-        }
-        return updated;
-    } else if (event.type == sf::Event::MouseButtonReleased) {
-        const ScreenPos mousePos(event.mouseButton.x, event.mouseButton.y);
-
-        IconButton::Type clickedButton = IconButton::Invalid;
-        for (const std::unique_ptr<IconButton> &button : m_buttons) {
-            if (button->onMouseReleased(mousePos)) {
-                clickedButton = button->type();
-            }
-        }
-        if (clickedButton == IconButton::GameMenu) {
-            showMenu();
-        }
-        if (clickedButton != IconButton::Invalid) {
-            return true;
-        }
-        return false;
+    switch(event.type) {
+    case sf::Event::KeyPressed:
+        return handleKeyEvent(event, state);
+    case sf::Event::MouseButtonPressed:
+        return handleMousePress(event, state);
+    case sf::Event::MouseButtonReleased:
+        return handleMouseRelease(event, state);
+    case sf::Event::MouseMoved:
+        return handleMouseMove(event, state);
+    default:
+        break;
     }
 
     return false;
@@ -251,6 +239,89 @@ bool Engine::handleKeyEvent(const sf::Event &event, const std::shared_ptr<GameSt
 
     return true;
 
+}
+
+bool Engine::handleMouseMove(const sf::Event &event, const std::shared_ptr<GameState> &state)
+{
+    const ScreenPos mousePos = ScreenPos(event.mouseMove.x, event.mouseMove.y);
+    bool handled = false;
+
+    if (mousePos.x < MOUSE_MOVE_EDGE_SIZE) {
+        m_cameraDeltaX = -1;
+    } else if (mousePos.x > renderTarget_->getSize().width - MOUSE_MOVE_EDGE_SIZE) {
+        m_cameraDeltaX = 1;
+    } else {
+        m_cameraDeltaX = 0;
+    }
+
+    if (mousePos.y < MOUSE_MOVE_EDGE_SIZE) {
+        m_cameraDeltaY = 1;
+        handled = true;
+    } else if (mousePos.y > renderTarget_->getSize().height - MOUSE_MOVE_EDGE_SIZE) {
+        m_cameraDeltaY = -1;
+    } else {
+        m_cameraDeltaY = 0;
+    }
+
+    if (mousePos.y < 800) {
+        if (state->isSelecting()) {
+            state->setSelectionCurrentPosition(mousePos);
+            handled = true;
+        } else {
+            state->unitManager()->onMouseMove(renderTarget_->camera()->absoluteMapPos(mousePos));
+        }
+    }
+
+    return handled;
+}
+
+bool Engine::handleMousePress(const sf::Event &event, const std::shared_ptr<GameState> &state)
+{
+    const ScreenPos mousePos(event.mouseButton.x, event.mouseButton.y);
+    bool updated = false;
+    for (const std::unique_ptr<IconButton> &button : m_buttons) {
+        updated = button->onMousePressed(mousePos) || updated;
+    }
+    if (updated) {
+        return true;
+    }
+
+    if (mousePos.y < 800 && event.mouseButton.button == sf::Mouse::Button::Left) {
+        if (state->unitManager()->onLeftClick(ScreenPos(event.mouseButton.x, event.mouseButton.y), renderTarget_->camera())) {
+            return true;
+        }
+
+        state->setSelectionStartPosition(mousePos);
+        state->setSelectionCurrentPosition(mousePos + ScreenPos(1, 1));
+    }
+    return true;
+}
+
+bool Engine::handleMouseRelease(const sf::Event &event, const std::shared_ptr<GameState> &state)
+{
+    const ScreenPos mousePos(event.mouseButton.x, event.mouseButton.y);
+
+    IconButton::Type clickedButton = IconButton::Invalid;
+    for (const std::unique_ptr<IconButton> &button : m_buttons) {
+        if (button->onMouseReleased(mousePos)) {
+            clickedButton = button->type();
+        }
+    }
+    if (clickedButton == IconButton::GameMenu) {
+        showMenu();
+    }
+    if (clickedButton != IconButton::Invalid) {
+        return true;
+    }
+
+    if (event.mouseButton.button == sf::Mouse::Button::Left && state->isSelecting()) {
+        state->onSelectionFinished();
+        return true;
+    }
+    if (event.mouseButton.button == sf::Mouse::Button::Left ) {
+        state->unitManager()->onRightClick(mousePos, renderTarget_->camera());
+    }
+        return false;
 }
 
 //------------------------------------------------------------------------------
@@ -355,5 +426,31 @@ bool Engine::updateUi(const std::shared_ptr<GameState> &state)
 
     updated = m_mouseCursor->update(state->unitManager()) || updated;
 
+    if (m_cameraDeltaX != 0 || m_cameraDeltaY != 0) {
+        const int deltaTime = GameClock.getElapsedTime().asMilliseconds() - m_lastUpdate;
+
+        ScreenPos cameraScreenPos = renderTarget_->camera()->targetPosition().toScreen();
+        cameraScreenPos.x += m_cameraDeltaX * deltaTime * CAMERA_SPEED;
+        cameraScreenPos.y += m_cameraDeltaY * deltaTime * CAMERA_SPEED;
+
+        MapPos cameraMapPos = cameraScreenPos.toMap();
+        if (cameraMapPos.x < 0) { cameraMapPos.x = 0; }
+        if (cameraMapPos.y < 0) { cameraMapPos.y = 0; }
+        if (cameraMapPos.x > state->map()->width()) { cameraMapPos.x = state->map()->width(); }
+        if (cameraMapPos.y > state->map()->height()) { cameraMapPos.y = state->map()->height(); }
+        renderTarget_->camera()->setTargetPosition(cameraMapPos);
+
+
+        if (state->isSelecting()) {
+            ScreenPos delta;
+            delta.x -= m_cameraDeltaX * deltaTime * CAMERA_SPEED;
+            delta.y += m_cameraDeltaY * deltaTime * CAMERA_SPEED;
+            state->moveSelectionStartPosition(delta);
+        }
+
+        updated = true;
+    }
+
+    m_lastUpdate = GameClock.getElapsedTime().asMilliseconds();
     return updated;
 }

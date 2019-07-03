@@ -52,6 +52,9 @@ private:
     void drawUi();
     bool handleEvent(const sf::Event &event, const std::shared_ptr<GameState> &state);
     bool handleKeyEvent(const sf::Event &event, const std::shared_ptr<GameState> &state);
+    bool handleMouseMove(const sf::Event &event, const std::shared_ptr<GameState> &state);
+    bool handleMousePress(const sf::Event &event, const std::shared_ptr<GameState> &state);
+    bool handleMouseRelease(const sf::Event &event, const std::shared_ptr<GameState> &state);
     void showMenu();
     bool updateUi(const std::shared_ptr<GameState> &state);
 
@@ -73,5 +76,10 @@ private:
     std::unique_ptr<NumberLabel> m_populationLabel;
 
     std::unique_ptr<MouseCursor> m_mouseCursor;
+
+    float m_cameraDeltaX = 0.f;
+    float m_cameraDeltaY = 0.f;
+
+    Time m_lastUpdate = 0u;
 };
 

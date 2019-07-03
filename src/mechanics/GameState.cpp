@@ -44,9 +44,6 @@
 
 #include "resource/LanguageManager.h"
 
-#define MOUSE_MOVE_EDGE_SIZE 10
-#define CAMERA_SPEED 1.
-
 std::unordered_map<GameType, ResourceMap> GameState::defaultStartingResources = {
     {
         GameType::Default, {
@@ -98,10 +95,7 @@ std::unordered_map<GameType, ResourceMap> GameState::defaultStartingResources = 
     },
 };
 
-GameState::GameState(const std::shared_ptr<SfmlRenderTarget> &renderTarget) :
-    m_cameraDeltaX(0),
-    m_cameraDeltaY(0),
-    m_lastUpdate(0)
+GameState::GameState(const std::shared_ptr<SfmlRenderTarget> &renderTarget)
 {
     m_unitManager = std::make_shared<UnitManager>();
     renderTarget_ = renderTarget;
@@ -243,29 +237,6 @@ bool GameState::update(Time time)
     updated = m_unitInfoPanel->update(time) || updated;
     updated = m_minimap->update(time) || updated;
 
-    if (m_cameraDeltaX != 0 || m_cameraDeltaY != 0) {
-        const int deltaTime = time - m_lastUpdate;
-
-        ScreenPos cameraScreenPos = renderTarget_->camera()->targetPosition().toScreen();
-        cameraScreenPos.x += m_cameraDeltaX * deltaTime * CAMERA_SPEED;
-        cameraScreenPos.y += m_cameraDeltaY * deltaTime * CAMERA_SPEED;
-
-        MapPos cameraMapPos = cameraScreenPos.toMap();
-        if (cameraMapPos.x < 0) { cameraMapPos.x = 0; }
-        if (cameraMapPos.y < 0) { cameraMapPos.y = 0; }
-        if (cameraMapPos.x > map_->width()) { cameraMapPos.x = map_->width(); }
-        if (cameraMapPos.y > map_->height()) { cameraMapPos.y = map_->height(); }
-        renderTarget_->camera()->setTargetPosition(cameraMapPos);
-
-
-        if (m_selecting) {
-            m_selectionStart.x -= m_cameraDeltaX * deltaTime * CAMERA_SPEED;
-            m_selectionStart.y += m_cameraDeltaY * deltaTime * CAMERA_SPEED;
-        }
-
-        updated = true;
-    }
-
     if (m_selecting) {
         ScreenRect selectionRect(m_selectionStart, m_selectionCurr);
         if (selectionRect != m_selectionRect) {
@@ -273,8 +244,6 @@ bool GameState::update(Time time)
             updated = true;
         }
     }
-
-    m_lastUpdate = time;
 
     //game_server_->update();
     //game_client_->update();
@@ -284,14 +253,11 @@ bool GameState::update(Time time)
 
 bool GameState::handleEvent(sf::Event event)
 {
-    if (event.type != sf::Event::MouseButtonPressed && event.type != sf::Event::MouseButtonReleased && event.type != sf::Event::MouseMoved) {
+    if (event.type != sf::Event::MouseButtonPressed && event.type != sf::Event::MouseButtonReleased) {
         return false;
     }
 
-    const ScreenPos mousePos = event.type == sf::Event::MouseMoved ?
-                ScreenPos(event.mouseMove.x, event.mouseMove.y)
-                    :
-                ScreenPos(event.mouseButton.x, event.mouseButton.y);
+    const ScreenPos mousePos = ScreenPos(event.mouseButton.x, event.mouseButton.y);
 
     if (m_minimap->rect().contains(mousePos)) {
         if (m_minimap->handleEvent(event)) {
@@ -299,33 +265,6 @@ bool GameState::handleEvent(sf::Event event)
         }
     } else {
         m_minimap->mouseExited();
-    }
-
-    if (event.type == sf::Event::MouseMoved) {
-
-        if (event.mouseMove.x < MOUSE_MOVE_EDGE_SIZE) {
-            m_cameraDeltaX = -1;
-        } else if (event.mouseMove.x > renderTarget_->getSize().width - MOUSE_MOVE_EDGE_SIZE) {
-            m_cameraDeltaX = 1;
-        } else {
-            m_cameraDeltaX = 0;
-        }
-
-        if (event.mouseMove.y < MOUSE_MOVE_EDGE_SIZE) {
-            m_cameraDeltaY = 1;
-        } else if (event.mouseMove.y > renderTarget_->getSize().height - MOUSE_MOVE_EDGE_SIZE) {
-            m_cameraDeltaY = -1;
-        } else {
-            m_cameraDeltaY = 0;
-        }
-
-        if (mousePos.y < 800) {
-            if (m_selecting) {
-                m_selectionCurr = mousePos;
-            } else {
-                m_unitManager->onMouseMove(renderTarget_->camera()->absoluteMapPos(mousePos));
-            }
-        }
     }
 
     if (event.type != sf::Event::MouseButtonPressed && event.type != sf::Event::MouseButtonReleased) {
@@ -341,24 +280,8 @@ bool GameState::handleEvent(sf::Event event)
 
     m_actionPanel->releaseButtons();
 
-    if (event.type == sf::Event::MouseButtonPressed) {
-        if (event.mouseButton.button == sf::Mouse::Button::Left) {
-            if (m_unitManager->onLeftClick(ScreenPos(event.mouseButton.x, event.mouseButton.y), renderTarget_->camera())) {
-                return true;
-            }
-
-            m_selectionStart = ScreenPos(event.mouseButton.x, event.mouseButton.y);
-            m_selectionCurr = ScreenPos(event.mouseButton.x+1, event.mouseButton.y+1);
-            m_selectionRect = ScreenRect(m_selectionStart, m_selectionCurr);
-            m_selecting = true;
-        }
-    }
-
     if (event.type == sf::Event::MouseButtonReleased) {
         if (event.mouseButton.button == sf::Mouse::Button::Left && m_selecting) {
-            m_unitManager->selectUnits(m_selectionRect, renderTarget_->camera());
-            m_selectionRect = ScreenRect();
-            m_selecting = false;
         } else if (event.mouseButton.button == sf::Mouse::Button::Right) {
             m_unitManager->onRightClick(ScreenPos(event.mouseButton.x, event.mouseButton.y), renderTarget_->camera());
         }
@@ -375,6 +298,13 @@ Size GameState::uiSize() const
     }
 
     return m_uiOverlay.getSize();
+}
+
+void GameState::onSelectionFinished()
+{
+    m_unitManager->selectUnits(m_selectionRect, renderTarget_->camera());
+    m_selectionRect = ScreenRect();
+    m_selecting = false;
 }
 
 void GameState::setupScenario()
