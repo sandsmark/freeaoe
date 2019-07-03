@@ -104,6 +104,15 @@ void Engine::start()
         updated = m_mouseCursor->setPosition(mousePos) || updated;
         updated = updateUi(state) || updated;
 
+        if (m_selecting) {
+            ScreenRect selectionRect(m_selectionStart, m_selectionCurr);
+            if (selectionRect != m_selectionRect) {
+                m_selectionRect = selectionRect;
+                updated = true;
+            }
+        }
+
+
         if (updated) {
             // Clear screen
             renderWindow_->clear(sf::Color::Green);
@@ -220,6 +229,10 @@ void Engine::loadUiOverlay()
 
 void Engine::drawUi()
 {
+    if (m_selecting) {
+        renderTarget_->draw(m_selectionRect, sf::Color::Transparent, sf::Color::White);
+    }
+
     renderTarget_->draw(m_uiOverlay, ScreenPos(0, 0));
 
     for (const std::unique_ptr<IconButton> &button : m_buttons) {
@@ -343,8 +356,8 @@ bool Engine::handleMouseMove(const sf::Event &event, const std::shared_ptr<GameS
     }
 
     if (mousePos.y < 800) {
-        if (state->isSelecting()) {
-            state->setSelectionCurrentPosition(mousePos);
+        if (m_selecting) {
+            m_selectionCurr = mousePos;
             handled = true;
         } else {
             state->unitManager()->onMouseMove(renderTarget_->camera()->absoluteMapPos(mousePos));
@@ -370,8 +383,9 @@ bool Engine::handleMousePress(const sf::Event &event, const std::shared_ptr<Game
             return true;
         }
 
-        state->setSelectionStartPosition(mousePos);
-        state->setSelectionCurrentPosition(mousePos + ScreenPos(1, 1));
+        m_selectionStart = mousePos;
+        m_selectionCurr = mousePos + ScreenPos(1, 1);
+        m_selecting = true;
     }
     return true;
 }
@@ -393,8 +407,10 @@ bool Engine::handleMouseRelease(const sf::Event &event, const std::shared_ptr<Ga
         return true;
     }
 
-    if (event.mouseButton.button == sf::Mouse::Button::Left && state->isSelecting()) {
-        state->onSelectionFinished();
+    if (event.mouseButton.button == sf::Mouse::Button::Left && m_selecting) {
+        state->unitManager()->selectUnits(m_selectionRect, renderTarget_->camera());
+        m_selectionRect = ScreenRect();
+        m_selecting = false;
         return true;
     }
     if (event.mouseButton.button == sf::Mouse::Button::Right) {
@@ -566,11 +582,10 @@ bool Engine::updateCamera(const std::shared_ptr<GameState> &state)
     renderTarget_->camera()->setTargetPosition(cameraMapPos);
 
 
-    if (state->isSelecting()) {
-        ScreenPos delta;
-        delta.x -= m_cameraDeltaX * deltaTime * CAMERA_SPEED;
-        delta.y += m_cameraDeltaY * deltaTime * CAMERA_SPEED;
-        state->moveSelectionStartPosition(delta);
+    if (m_selecting) {
+        m_selectionStart.x -= m_cameraDeltaX * deltaTime * CAMERA_SPEED;
+        m_selectionStart.y += m_cameraDeltaY * deltaTime * CAMERA_SPEED;
+        m_selectionRect = ScreenRect(m_selectionStart, m_selectionCurr);
     }
 
     return true;

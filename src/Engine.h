@@ -94,5 +94,10 @@ private:
     std::unique_ptr<MapRenderer> m_mapRenderer;
 
     sf::Texture m_uiOverlay;
+
+    ScreenPos m_selectionStart;
+    ScreenPos m_selectionCurr;
+    ScreenRect m_selectionRect;
+    bool m_selecting = false;
 };
 

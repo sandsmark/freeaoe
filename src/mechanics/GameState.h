@@ -64,29 +64,16 @@ public:
 
     bool init() override;
 
-    void draw() override;
     bool update(Time time) override;
-    void setBuildableIcons();
 
     const Player::Ptr &humanPlayer() { return m_humanPlayer; }
 
     const std::shared_ptr<UnitManager> &unitManager() { return m_unitManager; }
     const MapPtr &map() const { return map_; }
 
-    bool isSelecting() const { return m_selecting; }
-    void setSelectionCurrentPosition(const ScreenPos &pos) { m_selectionCurr = pos;  onSelectionMouseMove(); }
-    void setSelectionStartPosition(const ScreenPos &pos) { m_selectionStart = pos; onSelectionMouseMove(); }
-    void moveSelectionStartPosition(const ScreenPos &delta) { m_selectionStart += delta; onSelectionMouseMove(); }
-    void onSelectionFinished();
-
 private:
     void setupScenario();
     void setupGame(const GameType gameType);
-
-    void onSelectionMouseMove() {
-        m_selectionRect = ScreenRect(m_selectionStart, m_selectionCurr);
-        m_selecting = true;
-    }
 
     GameState(const GameState &other) = delete;
 
@@ -97,11 +84,6 @@ private:
     MapPtr map_;
 
     std::shared_ptr<genie::ScnFile> scenario_;
-
-    ScreenPos m_selectionStart;
-    ScreenPos m_selectionCurr;
-    ScreenRect m_selectionRect;
-    bool m_selecting = false;
 
     genie::SlpFilePtr m_waypointFlag;
 

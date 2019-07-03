@@ -144,38 +144,16 @@ bool GameState::init()
     return true;
 }
 
-void GameState::draw()
-{
-    if (m_selecting) {
-        renderTarget_->draw(m_selectionRect, sf::Color::Transparent, sf::Color::White);
-    }
-}
-
 bool GameState::update(Time time)
 {
     bool updated = false;
 
     updated = m_unitManager->update(time) || updated;
 
-    if (m_selecting) {
-        ScreenRect selectionRect(m_selectionStart, m_selectionCurr);
-        if (selectionRect != m_selectionRect) {
-            m_selectionRect = selectionRect;
-            updated = true;
-        }
-    }
-
     //game_server_->update();
     //game_client_->update();
 
     return updated;
-}
-
-void GameState::onSelectionFinished()
-{
-    m_unitManager->selectUnits(m_selectionRect, renderTarget_->camera());
-    m_selectionRect = ScreenRect();
-    m_selecting = false;
 }
 
 void GameState::setupScenario()
