@@ -28,6 +28,7 @@
 #include "UnitManager.h"
 #include <genie/dat/Unit.h>
 #include "core/Utility.h"
+#include "global/EventManager.h"
 #include <limits>
 
 Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager) :
@@ -491,6 +492,8 @@ void Unit::setPosition(const MapPos &pos, const bool initial) noexcept
     if (data()->Type >= genie::Unit::CombatantType) {
         m_unitManager.onCombatantUnitsMoved();
     }
+
+    EventManager::unitMoved(this, pos);
 }
 
 void Unit::setUnitData(const genie::Unit &data_) noexcept

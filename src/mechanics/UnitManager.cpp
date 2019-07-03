@@ -29,6 +29,7 @@
 #include "Building.h"
 #include "Missile.h"
 #include "audio/AudioPlayer.h"
+#include "global/EventManager.h"
 
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
@@ -55,6 +56,8 @@ void UnitManager::add(const Unit::Ptr &unit)
     if (unit->hasAutoTargets()) {
         m_unitsWithActions.insert(unit);
     }
+
+    EventManager::unitCreated(unit.get());
 }
 
 bool UnitManager::init()
@@ -114,6 +117,8 @@ bool UnitManager::update(Time time)
         }
 
         if (unit->isDead()) {
+            EventManager::unitDying(unit.get());
+
             DecayingEntity::Ptr corpse = UnitFactory::Inst().createCorpseFor(unit);
             if (corpse) {
                 m_decayingEntities.insert(corpse);

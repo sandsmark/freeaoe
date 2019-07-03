@@ -24,6 +24,7 @@
 #include "mechanics/Player.h"
 #include "resource/DataManager.h"
 #include "audio/AudioPlayer.h"
+#include "global/EventManager.h"
 
 #include "ActionAttack.h"
 #include "ActionMove.h"
@@ -183,6 +184,9 @@ void IAction::assignTask(const Task &task, const std::shared_ptr<Unit> &unit, co
         return;
     }
 
+    if (target) {
+        EventManager::unitGotTarget(unit.get(), target.get());
+    }
 }
 
 IAction::~IAction()

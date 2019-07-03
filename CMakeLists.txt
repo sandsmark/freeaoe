@@ -111,6 +111,8 @@ set(CORE_SRC
 
 set(GLOBAL_SRC
     src/global/Config.cpp
+    src/global/EventManager.cpp
+    src/global/EventListener.cpp
     )
 
 set(RESOURCE_SRC
