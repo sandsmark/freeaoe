@@ -5,6 +5,8 @@
 #include <memory>
 #include <filesystem>
 
+#include <SFML/Graphics/RectangleShape.hpp>
+
 namespace sf {
 class RenderWindow;
 class Font;

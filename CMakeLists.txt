@@ -185,6 +185,7 @@ set (UI_SRC
     src/ui/TextButton.cpp
     src/ui/Minimap.cpp
     src/ui/Dialog.cpp
+    src/ui/NumberLabel.cpp
     )
 
 set(DEBUG_SRC

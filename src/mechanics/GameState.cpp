@@ -40,6 +40,7 @@
 #include "ui/Minimap.h"
 #include "core/Constants.h"
 #include "debug/SampleGameFactory.h"
+#include "mechanics/UnitManager.h"
 
 #include "resource/LanguageManager.h"
 

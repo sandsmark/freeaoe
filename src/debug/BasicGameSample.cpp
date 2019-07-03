@@ -19,6 +19,7 @@
 #include "BasicGameSample.h"
 
 #include "mechanics/UnitFactory.h"
+#include "mechanics/UnitManager.h"
 
 void BasicGameSample::setupMap()
 {

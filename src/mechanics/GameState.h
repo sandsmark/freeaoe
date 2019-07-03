@@ -23,12 +23,7 @@
 #include "core/Logger.h"
 
 #include "Map.h"
-#include "render/SfmlRenderTarget.h"
 #include "render/MapRenderer.h"
-#include "UnitManager.h"
-#include <SFML/Graphics/RectangleShape.hpp>
-#include <SFML/Graphics/Sprite.hpp>
-#include <SFML/Graphics/Text.hpp>
 
 #include "Civilization.h"
 
@@ -39,6 +34,7 @@ class GameServer;
 class ActionPanel;
 class UnitInfoPanel;
 class Minimap;
+class UnitManager;
 
 enum class GameType {
     Default,

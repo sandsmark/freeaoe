@@ -2,6 +2,7 @@
 #define DIALOG_H
 
 #include "TextButton.h"
+
 namespace sf {
 class Event;
 class RenderWindow;

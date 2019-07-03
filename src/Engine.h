@@ -20,68 +20,18 @@
 
 #include "ui/TextButton.h"
 
-#include <SFML/System/Clock.hpp>
-#include <SFML/Graphics/Text.hpp>
-
 #include "core/Logger.h"
 #include "mechanics/StateManager.h"
 #include "ui/Dialog.h"
+#include "ui/NumberLabel.h"
+
+#include <SFML/System/Clock.hpp>
+#include <SFML/Graphics/Text.hpp>
+#include <SFML/Graphics/Sprite.hpp>
 
 namespace sf {
 class RenderWindow;
 }
-
-struct Label {
-    Label(const int right, const int top) :
-        m_right(right),
-        m_top(top)
-    {
-        text.setFont(SfmlRenderTarget::defaultFont());
-        text.setOutlineColor(sf::Color::Black);
-        text.setOutlineThickness(1);
-        text.setFillColor(sf::Color::White);
-        text.setCharacterSize(16);
-    }
-
-    void setValue(const int value) {
-        if (value == m_value) {
-            return;
-        }
-        m_value = value;
-        updateText();
-    }
-
-    void setMaxValue(const int maxValue) {
-        if (maxValue == m_maxValue) {
-            return;
-        }
-        m_maxValue = maxValue;
-        updateText();
-    }
-
-    sf::Text text;
-
-private:
-    void updatePosition() {
-        text.setPosition(sf::Vector2f(m_right - text.getLocalBounds().width, m_top));
-    }
-
-    void updateText() {
-        std::string string = std::to_string(m_value);
-        if (m_maxValue) {
-            string += '/';
-            string += std::to_string(m_maxValue);
-        }
-        text.setString(string);
-        updatePosition();
-    }
-
-    int m_maxValue = 0;
-    int m_value = 0;
-
-    const int m_right = 0;
-    const int m_top = 0;
-};
 
 
 struct Cursor {
@@ -170,11 +120,11 @@ private:
     std::vector<TopMenuButton> m_buttons;
     TopMenuButton::Type m_pressedButton = TopMenuButton::Invalid;
 
-    Label m_woodLabel;
-    Label m_foodLabel;
-    Label m_goldLabel;
-    Label m_stoneLabel;
-    Label m_populationLabel;
+    NumberLabel m_woodLabel;
+    NumberLabel m_foodLabel;
+    NumberLabel m_goldLabel;
+    NumberLabel m_stoneLabel;
+    NumberLabel m_populationLabel;
 
     Cursor m_mouseCursor;
 };
