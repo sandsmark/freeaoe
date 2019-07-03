@@ -32,7 +32,6 @@
 #include <render/GraphicRender.h>
 #include "UnitFactory.h"
 #include <Engine.h>
-#include "render/MapRenderer.h"
 #include "render/SfmlRenderTarget.h"
 #include "resource/DataManager.h"
 #include "core/Constants.h"
@@ -171,27 +170,14 @@ bool GameState::init()
     }
 
     m_unitManager->setHumanPlayer(m_humanPlayer);
-    mapRenderer_.setVisibilityMap(m_humanPlayer->visibility);
 
     map_->updateMapData();
-    mapRenderer_.setRenderTarget(renderTarget_);
-    mapRenderer_.setMap(map_);
 
     return true;
 }
 
 void GameState::draw()
 {
-    mapRenderer_.display();
-
-    std::vector<std::weak_ptr<Entity>> visibleEntities;
-    visibleEntities = map_->entitiesBetween(mapRenderer_.firstVisibleColumn(),
-                                            mapRenderer_.firstVisibleRow(),
-                                            mapRenderer_.lastVisibleColumn(),
-                                            mapRenderer_.lastVisibleRow());
-
-    m_unitManager->render(renderTarget_, visibleEntities);
-
     if (m_selecting) {
         renderTarget_->draw(m_selectionRect, sf::Color::Transparent, sf::Color::White);
     }
@@ -202,7 +188,6 @@ void GameState::draw()
 bool GameState::update(Time time)
 {
     bool updated = false;
-    updated = mapRenderer_.update(time) || updated;
 
     updated = m_unitManager->update(time) || updated;
 

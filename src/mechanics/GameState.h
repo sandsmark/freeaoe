@@ -23,7 +23,6 @@
 #include "core/Logger.h"
 
 #include "Map.h"
-#include "render/MapRenderer.h"
 
 #include "Civilization.h"
 
@@ -47,6 +46,7 @@ enum class GameType {
 namespace sf {
 class RenderTarget;
 }
+class SfmlRenderTarget;
 
 //------------------------------------------------------------------------------
 /// State where the game is processed
@@ -97,7 +97,6 @@ private:
     std::shared_ptr<UnitManager> m_unitManager;
 
     MapPtr map_;
-    MapRenderer mapRenderer_;
 
     std::shared_ptr<genie::ScnFile> scenario_;
 

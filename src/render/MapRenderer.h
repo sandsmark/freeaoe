@@ -36,7 +36,7 @@ public:
     void display() override;
 
     void setMap(const MapPtr &map);
-    void setVisibilityMap(const std::shared_ptr<VisibilityMap> &visibilityMap) { m_visibilityMap = visibilityMap; }
+    void setVisibilityMap(const std::shared_ptr<VisibilityMap> &visibilityMap);
 
     int firstVisibleRow() { return m_rRowBegin; }
     int lastVisibleRow() { return m_rRowEnd; }

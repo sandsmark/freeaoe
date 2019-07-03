@@ -136,6 +136,10 @@ void MapRenderer::display()
 
 void MapRenderer::setMap(const MapPtr &map)
 {
+    if (map == m_map) {
+        return;
+    }
+
     m_map = map;
 
     m_rRowBegin = m_rColBegin = 0;
@@ -143,6 +147,15 @@ void MapRenderer::setMap(const MapPtr &map)
     m_rColEnd = m_map->getCols();
 
     m_camChanged = true;
+}
+
+void MapRenderer::setVisibilityMap(const std::shared_ptr<VisibilityMap> &visibilityMap)
+{
+    if (visibilityMap == m_visibilityMap) {
+        return;
+    }
+
+    m_visibilityMap = visibilityMap;
 }
 
 void MapRenderer::updateTexture()

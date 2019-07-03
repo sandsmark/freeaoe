@@ -45,19 +45,24 @@ const sf::Clock Engine::GameClock;
 void Engine::start()
 {
     DBG << "Starting engine.";
+    std::shared_ptr<GameState> state;
 
     ScreenPos mousePos;
     // Start the game loop
     while (renderWindow_->isOpen()) {
-        std::shared_ptr<GameState> state = state_manager_.getActiveState();
+        if (state != state_manager_.getActiveState()) {
+            state = state_manager_.getActiveState();
+            m_minimap->setUnitManager(state->unitManager());
+            m_minimap->setMap(state->map());
+            m_minimap->setVisibilityMap(state->humanPlayer()->visibility);
 
-        m_minimap->setUnitManager(state->unitManager());
-        m_minimap->setMap(state->map());
-        m_minimap->setVisibilityMap(state->humanPlayer()->visibility);
+            m_mapRenderer->setVisibilityMap(state->humanPlayer()->visibility);
+            m_mapRenderer->setMap(state->map());
 
-        m_actionPanel->setUnitManager(state->unitManager());
-        m_actionPanel->setHumanPlayer(state->humanPlayer());
-        m_unitInfoPanel->setUnitManager(state->unitManager());
+            m_actionPanel->setUnitManager(state->unitManager());
+            m_actionPanel->setHumanPlayer(state->humanPlayer());
+            m_unitInfoPanel->setUnitManager(state->unitManager());
+        }
 
         const int renderStart = GameClock.getElapsedTime().asMilliseconds();
 
@@ -86,7 +91,7 @@ void Engine::start()
             }
 
             if (!handleEvent(event, state)) {
-                state->handleEvent(event);
+//                state->handleEvent(event);
             }
 
             updated = true;
@@ -102,12 +107,23 @@ void Engine::start()
         if (updated) {
             // Clear screen
             renderWindow_->clear(sf::Color::Green);
+            m_mapRenderer->display();
+
+            std::vector<std::weak_ptr<Entity>> visibleEntities;
+            visibleEntities = state->map()->entitiesBetween(m_mapRenderer->firstVisibleColumn(),
+                                                            m_mapRenderer->firstVisibleRow(),
+                                                            m_mapRenderer->lastVisibleColumn(),
+                                                            m_mapRenderer->lastVisibleRow());
+
+            state->unitManager()->render(renderTarget_, visibleEntities);
+
             state->draw();
+            drawUi();
+
             if (m_currentDialog) {
                 m_currentDialog->render(renderWindow_);
             }
 
-            drawUi();
             const int renderTime = GameClock.getElapsedTime().asMilliseconds() - renderStart;
 
             if (renderTime > 0) {
@@ -273,8 +289,10 @@ bool Engine::handleMouseMove(const sf::Event &event, const std::shared_ptr<GameS
 
     if (mousePos.x < MOUSE_MOVE_EDGE_SIZE) {
         m_cameraDeltaX = -1;
+        handled = true;
     } else if (mousePos.x > renderTarget_->getSize().width - MOUSE_MOVE_EDGE_SIZE) {
         m_cameraDeltaX = 1;
+        handled = true;
     } else {
         m_cameraDeltaX = 0;
     }
@@ -284,6 +302,7 @@ bool Engine::handleMouseMove(const sf::Event &event, const std::shared_ptr<GameS
         handled = true;
     } else if (mousePos.y > renderTarget_->getSize().height - MOUSE_MOVE_EDGE_SIZE) {
         m_cameraDeltaY = -1;
+        handled = true;
     } else {
         m_cameraDeltaY = 0;
     }
@@ -409,6 +428,9 @@ bool Engine::setup(const std::shared_ptr<genie::ScnFile> &scenario)
         WARN << "failed to init info panel";
     }
 
+    m_mapRenderer = std::make_unique<MapRenderer>();
+    m_mapRenderer->setRenderTarget(renderTarget_);
+
     renderWindow_->setSize(gameState->uiSize());
     renderTarget_->setSize(gameState->uiSize());
 
@@ -474,6 +496,8 @@ bool Engine::updateUi(const std::shared_ptr<GameState> &state)
     updated = m_minimap->update(deltaTime) || updated;
     updated = m_actionPanel->update(deltaTime) || updated;
     updated = m_unitInfoPanel->update(deltaTime) || updated;
+
+    updated = m_mapRenderer->update(GameClock.getElapsedTime().asMilliseconds()) || updated;
 
     m_lastUpdate = GameClock.getElapsedTime().asMilliseconds();
     return updated;
