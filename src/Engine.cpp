@@ -550,13 +550,13 @@ bool Engine::updateUi(const std::shared_ptr<GameState> &state)
 
     updated = m_mouseCursor->update(state->unitManager()) || updated;
 
+    updated = m_mapRenderer->update(GameClock.getElapsedTime().asMilliseconds()) || updated;
+
     updated = updateCamera(state) || updated;
 
     updated = m_minimap->update(deltaTime) || updated;
     updated = m_actionPanel->update(deltaTime) || updated;
     updated = m_unitInfoPanel->update(deltaTime) || updated;
-
-    updated = m_mapRenderer->update(GameClock.getElapsedTime().asMilliseconds()) || updated;
 
     m_lastUpdate = GameClock.getElapsedTime().asMilliseconds();
     return updated;
