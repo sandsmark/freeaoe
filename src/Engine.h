@@ -27,6 +27,8 @@
 #include "ui/NumberLabel.h"
 #include "ui/MouseCursor.h"
 #include "ui/Minimap.h"
+#include "ui/ActionPanel.h"
+#include "ui/UnitInfoPanel.h"
 
 #include <SFML/System/Clock.hpp>
 #include <SFML/Graphics/Text.hpp>
@@ -84,5 +86,7 @@ private:
     Time m_lastUpdate = 0u;
 
     std::unique_ptr<Minimap> m_minimap;
+    std::unique_ptr<ActionPanel> m_actionPanel;
+    std::unique_ptr<UnitInfoPanel> m_unitInfoPanel;
 };
 

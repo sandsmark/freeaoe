@@ -41,11 +41,6 @@ void UnitInfoPanel::setUnitManager(const std::shared_ptr<UnitManager> &unitManag
 
 bool UnitInfoPanel::init()
 {
-    if (!m_unitManager.lock()) {
-        WARN << "no unit manager set!";
-        return false;
-    }
-
     // Stat icons
     genie::SlpFilePtr iconsSlp = AssetManager::Inst()->getSlp("itemicon.shp", AssetManager::ResourceType::Interface);
     if (iconsSlp->getFrameCount() < StatItem::TypeCount) {
@@ -154,6 +149,9 @@ bool UnitInfoPanel::handleEvent(sf::Event event)
     }
 
     ScreenPos mousePos(event.mouseButton.x, event.mouseButton.y);
+    if (!rect().contains(mousePos)) {
+        return false;
+    }
 
 
     int clickedButton = -1;

@@ -77,12 +77,17 @@ bool ActionPanel::init()
         m_commandIcons[Command::Garrison].loadFromImage(garrisonIcon);
     }
 
-    return m_unitManager != nullptr;
+    return true;
 }
 
 bool ActionPanel::handleEvent(sf::Event event)
 {
     if (event.type != sf::Event::MouseButtonPressed && event.type != sf::Event::MouseButtonReleased) {
+        return false;
+    }
+    ScreenPos mousePos(event.mouseButton.x, event.mouseButton.y);
+    if (!rect().contains(mousePos)) {
+        releaseButtons();
         return false;
     }
 
@@ -91,7 +96,7 @@ bool ActionPanel::handleEvent(sf::Event event)
             continue;
         }
 
-        if (!buttonRect(button.index).contains(ScreenPos(event.mouseButton.x, event.mouseButton.y))) {
+        if (!buttonRect(button.index).contains(mousePos)) {
             if (button.pressed) {
                 m_dirty = true;
             }
@@ -194,11 +199,18 @@ void ActionPanel::draw()
 
 void ActionPanel::setUnitManager(const std::shared_ptr<UnitManager> &unitManager)
 {
+    if (unitManager == m_unitManager) {
+        return;
+    }
     m_unitManager = unitManager;
 }
 
 void ActionPanel::setHumanPlayer(const Player::Ptr &player)
 {
+    if (player == m_humanPlayer) {
+        return;
+    }
+
     m_humanPlayer = player;
 }
 

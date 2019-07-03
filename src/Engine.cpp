@@ -55,6 +55,10 @@ void Engine::start()
         m_minimap->setMap(state->map());
         m_minimap->setVisibilityMap(state->humanPlayer()->visibility);
 
+        m_actionPanel->setUnitManager(state->unitManager());
+        m_actionPanel->setHumanPlayer(state->humanPlayer());
+        m_unitInfoPanel->setUnitManager(state->unitManager());
+
         const int renderStart = GameClock.getElapsedTime().asMilliseconds();
 
         bool updated = false;
@@ -170,11 +174,15 @@ void Engine::drawUi()
     }
 
     m_minimap->draw();
+    m_actionPanel->draw();
+    m_unitInfoPanel->draw();
+
     m_woodLabel->render();
     m_foodLabel->render();
     m_goldLabel->render();
     m_stoneLabel->render();
     m_populationLabel->render();
+
 
 
     renderWindow_->draw(fps_label_);
@@ -195,7 +203,13 @@ bool Engine::handleEvent(const sf::Event &event, const std::shared_ptr<GameState
         return true;
     }
 
+    if (m_actionPanel->handleEvent(event)) {
+        return true;
+    }
     if (m_minimap->handleEvent(event)) {
+        return true;
+    }
+    if (m_unitInfoPanel->handleEvent(event)) {
         return true;
     }
 
@@ -378,9 +392,20 @@ bool Engine::setup(const std::shared_ptr<genie::ScnFile> &scenario)
     if (!state_manager_.addActiveState(gameState)) {
         return false;
     }
+
     m_minimap = std::make_unique<Minimap>(renderTarget_);
     if (!m_minimap->init()) {
         WARN << "failed to init minimap";
+    }
+
+    m_actionPanel = std::make_unique<ActionPanel>(renderTarget_);
+    if (!m_actionPanel->init()) {
+        WARN << "failed to init action panel";
+    }
+
+    m_unitInfoPanel = std::make_unique<UnitInfoPanel>(renderTarget_);
+    if (!m_unitInfoPanel->init()) {
+        WARN << "failed to init info panel";
     }
 
     renderWindow_->setSize(gameState->uiSize());
@@ -467,6 +492,8 @@ bool Engine::updateUi(const std::shared_ptr<GameState> &state)
     }
 
     updated = m_minimap->update(deltaTime) || updated;
+    updated = m_actionPanel->update(deltaTime) || updated;
+    updated = m_unitInfoPanel->update(deltaTime) || updated;
 
     m_lastUpdate = GameClock.getElapsedTime().asMilliseconds();
     return updated;

@@ -31,8 +31,6 @@
 
 class GameClient;
 class GameServer;
-class ActionPanel;
-class UnitInfoPanel;
 class UnitManager;
 
 enum class GameType {
@@ -98,8 +96,6 @@ private:
     std::shared_ptr<SfmlRenderTarget> renderTarget_;
 
     std::shared_ptr<UnitManager> m_unitManager;
-    std::unique_ptr<ActionPanel> m_actionPanel;
-    std::unique_ptr<UnitInfoPanel> m_unitInfoPanel;
 
     MapPtr map_;
     MapRenderer mapRenderer_;

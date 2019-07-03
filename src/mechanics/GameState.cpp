@@ -35,8 +35,6 @@
 #include "render/MapRenderer.h"
 #include "render/SfmlRenderTarget.h"
 #include "resource/DataManager.h"
-#include "ui/ActionPanel.h"
-#include "ui/UnitInfoPanel.h"
 #include "core/Constants.h"
 #include "debug/SampleGameFactory.h"
 #include "mechanics/UnitManager.h"
@@ -98,11 +96,6 @@ GameState::GameState(const std::shared_ptr<SfmlRenderTarget> &renderTarget)
 {
     m_unitManager = std::make_shared<UnitManager>();
     renderTarget_ = renderTarget;
-
-    m_actionPanel = std::make_unique<ActionPanel>(renderTarget_);
-    m_actionPanel->setUnitManager(m_unitManager);
-    m_unitInfoPanel = std::make_unique<UnitInfoPanel>(renderTarget_);
-    m_unitInfoPanel->setUnitManager(m_unitManager);
 }
 
 GameState::~GameState()
@@ -118,14 +111,6 @@ bool GameState::init()
 {
     TIME_THIS;
     if (!m_unitManager->init()) {
-        return false;
-    }
-
-    if (!m_actionPanel->init()) {
-        return false;
-    }
-
-    if (!m_unitInfoPanel->init()) {
         return false;
     }
 
@@ -185,7 +170,6 @@ bool GameState::init()
         setupGame(GameType::Default);
     }
 
-    m_actionPanel->setHumanPlayer(m_humanPlayer);
     m_unitManager->setHumanPlayer(m_humanPlayer);
     mapRenderer_.setVisibilityMap(m_humanPlayer->visibility);
 
@@ -213,8 +197,6 @@ void GameState::draw()
     }
 
     renderTarget_->draw(m_uiOverlay, ScreenPos(0, 0));
-    m_actionPanel->draw();
-    m_unitInfoPanel->draw();
 }
 
 bool GameState::update(Time time)
@@ -223,8 +205,6 @@ bool GameState::update(Time time)
     updated = mapRenderer_.update(time) || updated;
 
     updated = m_unitManager->update(time) || updated;
-    updated = m_actionPanel->update(time) || updated;
-    updated = m_unitInfoPanel->update(time) || updated;
 
     if (m_selecting) {
         ScreenRect selectionRect(m_selectionStart, m_selectionCurr);
@@ -242,29 +222,11 @@ bool GameState::update(Time time)
 
 bool GameState::handleEvent(sf::Event event)
 {
-    if (event.type != sf::Event::MouseButtonPressed && event.type != sf::Event::MouseButtonReleased) {
-        return false;
-    }
-
-    const ScreenPos mousePos = ScreenPos(event.mouseButton.x, event.mouseButton.y);
-
-    if (event.type != sf::Event::MouseButtonPressed && event.type != sf::Event::MouseButtonReleased) {
-        return false;
-    }
-
-    if (m_actionPanel->rect().contains(mousePos)) {
-        return m_actionPanel->handleEvent(event);
-    }
-    if (m_unitInfoPanel->rect().contains(mousePos)) {
-        return m_unitInfoPanel->handleEvent(event);
-    }
-
-    m_actionPanel->releaseButtons();
-
     if (event.type == sf::Event::MouseButtonReleased) {
-        if (event.mouseButton.button == sf::Mouse::Button::Left && m_selecting) {
-        } else if (event.mouseButton.button == sf::Mouse::Button::Right) {
-            m_unitManager->onRightClick(ScreenPos(event.mouseButton.x, event.mouseButton.y), renderTarget_->camera());
+        if (event.mouseButton.button == sf::Mouse::Button::Right) {
+            const ScreenPos mousePos = ScreenPos(event.mouseButton.x, event.mouseButton.y);
+            m_unitManager->onRightClick(mousePos, renderTarget_->camera());
+            return true;
         }
     }
 
