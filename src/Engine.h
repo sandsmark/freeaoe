@@ -50,7 +50,8 @@ private:
     void showStartScreen();
     void loadTopButtons();
     void drawUi();
-    bool handleEvent(sf::Event event);
+    bool handleEvent(const sf::Event &event, const std::shared_ptr<GameState> &state);
+    bool handleKeyEvent(const sf::Event &event, const std::shared_ptr<GameState> &state);
     void showMenu();
     bool updateUi(const std::shared_ptr<GameState> &state);
 

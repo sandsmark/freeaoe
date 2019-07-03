@@ -77,6 +77,7 @@ public:
     const Player::Ptr &humanPlayer() { return m_humanPlayer; }
 
     const std::shared_ptr<UnitManager> &unitManager() { return m_unitManager; }
+    const MapPtr &map() const { return map_; }
 
 private:
     void setupScenario();

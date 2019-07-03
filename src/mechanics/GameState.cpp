@@ -284,40 +284,6 @@ bool GameState::update(Time time)
 
 bool GameState::handleEvent(sf::Event event)
 {
-    if (event.type == sf::Event::KeyPressed) {
-        ScreenPos cameraScreenPos = renderTarget_->camera()->targetPosition().toScreen();
-
-        switch(event.key.code) {
-        case sf::Keyboard::Left:
-            cameraScreenPos.x -= 20;
-            break;
-
-        case sf::Keyboard::Right:
-            cameraScreenPos.x += 20;
-            break;
-
-        case sf::Keyboard::Down:
-            cameraScreenPos.y -= 20;
-            break;
-
-        case sf::Keyboard::Up:
-            cameraScreenPos.y += 20;
-            break;
-
-        default:
-            return false;
-        }
-
-        MapPos cameraMapPos = cameraScreenPos.toMap();
-        if (cameraMapPos.x < 0) { cameraMapPos.x = 0; }
-        if (cameraMapPos.y < 0) { cameraMapPos.y = 0; }
-        if (cameraMapPos.x > map_->width()) { cameraMapPos.x = map_->width(); }
-        if (cameraMapPos.y > map_->height()) { cameraMapPos.y = map_->height(); }
-        renderTarget_->camera()->setTargetPosition(cameraMapPos);
-
-        return true;
-    }
-
     if (event.type != sf::Event::MouseButtonPressed && event.type != sf::Event::MouseButtonReleased && event.type != sf::Event::MouseMoved) {
         return false;
     }

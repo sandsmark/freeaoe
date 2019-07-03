@@ -72,7 +72,7 @@ void Engine::start()
                 mousePos = ScreenPos(mappedPos);
             }
 
-            if (!handleEvent(event)) {
+            if (!handleEvent(event, state)) {
                 state->handleEvent(event);
             }
 
@@ -171,8 +171,12 @@ void Engine::drawUi()
     m_mouseCursor->render();
 }
 
-bool Engine::handleEvent(sf::Event event)
+bool Engine::handleEvent(const sf::Event &event, const std::shared_ptr<GameState> &state)
 {
+    if (event.type == sf::Event::KeyPressed) {
+        return handleKeyEvent(event, state);
+    }
+
     if (m_currentDialog) {
         Dialog::Choice choice = m_currentDialog->handleEvent(event);
         if (choice == Dialog::Cancel) {
@@ -210,6 +214,43 @@ bool Engine::handleEvent(sf::Event event)
     }
 
     return false;
+}
+
+bool Engine::handleKeyEvent(const sf::Event &event, const std::shared_ptr<GameState> &state)
+{
+    ScreenPos cameraScreenPos = renderTarget_->camera()->targetPosition().toScreen();
+
+    switch(event.key.code) {
+    case sf::Keyboard::Left:
+        cameraScreenPos.x -= 20;
+        break;
+
+    case sf::Keyboard::Right:
+        cameraScreenPos.x += 20;
+        break;
+
+    case sf::Keyboard::Down:
+        cameraScreenPos.y -= 20;
+        break;
+
+    case sf::Keyboard::Up:
+        cameraScreenPos.y += 20;
+        break;
+
+    default:
+        return false;
+    }
+
+    MapPos cameraMapPos = cameraScreenPos.toMap();
+    if (cameraMapPos.x < 0) { cameraMapPos.x = 0; }
+    if (cameraMapPos.y < 0) { cameraMapPos.y = 0; }
+    if (cameraMapPos.x > state->map()->width()) { cameraMapPos.x = state->map()->width(); }
+    if (cameraMapPos.y > state->map()->height()) { cameraMapPos.y = state->map()->height(); }
+
+    renderTarget_->camera()->setTargetPosition(cameraMapPos);
+
+    return true;
+
 }
 
 //------------------------------------------------------------------------------
