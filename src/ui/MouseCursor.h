@@ -1,5 +1,7 @@
 #pragma once
 
+#include "core/Types.h"
+
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Texture.hpp>
 
@@ -10,9 +12,21 @@ class SlpFile;
 typedef std::shared_ptr<SlpFile> SlpFilePtr;
 }
 
+class UnitManager;
+class IRenderTarget;
+
 struct MouseCursor
 {
+    MouseCursor(const std::shared_ptr<IRenderTarget> &renderTarget);
+
+
+    bool isValid() const;
+
+    void render(const ScreenPos &mousePos, const std::shared_ptr<UnitManager> &unitManager);
+
+private:
     enum Type {
+        Invalid = -1,
         Normal = 0,
         Busy,
         Target,
@@ -35,12 +49,13 @@ struct MouseCursor
     };
 
     void setCursor(const Type type);
+    Type m_currentType = Invalid;
 
-    sf::Texture texture;
-    sf::Sprite sprite;
-    genie::SlpFilePtr cursorsFile;
+    sf::Texture m_texture;
+    sf::Sprite m_sprite;
+    genie::SlpFilePtr m_cursorsFile;
 
-    Type currentType = Normal;
+    std::shared_ptr<IRenderTarget> m_renderTarget;
 };
 
 

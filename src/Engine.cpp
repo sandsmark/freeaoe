@@ -81,23 +81,7 @@ void Engine::start()
 
         if (!m_currentDialog) {
             updated = state->update(GameClock.getElapsedTime().asMilliseconds()) || updated;
-            if (state->unitManager()->state() == UnitManager::State::SelectingAttackTarget) {
-                m_mouseCursor.setCursor(MouseCursor::Normal);
-            } else {
-                const Task targetAction = state->unitManager()->defaultActionAt(mousePos, renderTarget_->camera());
-                if (!targetAction.data) {
-                    m_mouseCursor.setCursor(MouseCursor::Normal);
-                } else if (targetAction.data->ActionType == genie::Task::Combat) {
-                    m_mouseCursor.setCursor(MouseCursor::Attack);
-                } else {
-                    m_mouseCursor.setCursor(MouseCursor::Action);
-                }
-            }
-        } else {
-            m_mouseCursor.setCursor(MouseCursor::Normal);
         }
-
-        m_mouseCursor.sprite.setPosition(mousePos);
 
         if (updated) {
             // Clear screen
@@ -116,7 +100,7 @@ void Engine::start()
             }
 
             renderWindow_->draw(fps_label_);
-            renderWindow_->draw(m_mouseCursor.sprite);
+            m_mouseCursor->render(mousePos, state->unitManager());
 
             // Update the window
             renderWindow_->display();
@@ -261,13 +245,17 @@ Engine::Engine() :
 bool Engine::setup(const std::shared_ptr<genie::ScnFile> &scenario)
 {
     renderWindow_ = std::make_unique<sf::RenderWindow>(sf::VideoMode(1280, 1024), "freeaoe", sf::Style::None);
-    renderWindow_->setMouseCursorVisible(false);
     renderWindow_->setFramerateLimit(60);
 
     m_mainScreen->setRenderWindow(renderWindow_);
     m_mainScreen->init();
 
     renderTarget_ = std::make_shared<SfmlRenderTarget>(*renderWindow_);
+
+    m_mouseCursor = std::make_unique<MouseCursor>(renderTarget_);
+    if (m_mouseCursor->isValid()) {
+        renderWindow_->setMouseCursorVisible(false);
+    }
 
     showStartScreen();
 
@@ -296,14 +284,6 @@ bool Engine::setup(const std::shared_ptr<genie::ScnFile> &scenario)
     m_populationLabel.setMaxValue(125);
 
     loadTopButtons();
-
-    m_mouseCursor.cursorsFile = AssetManager::Inst()->getSlp(AssetManager::filenameID("mcursors.shp"));
-    if (m_mouseCursor.cursorsFile) {
-        m_mouseCursor.texture.loadFromImage(Resource::convertFrameToImage(m_mouseCursor.cursorsFile->getFrame(MouseCursor::Normal)));
-        m_mouseCursor.sprite.setTexture(m_mouseCursor.texture);
-    } else {
-        WARN << "Failed to get cursors";
-    }
 
     return true;
 }

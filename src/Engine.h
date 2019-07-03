@@ -86,6 +86,6 @@ private:
     NumberLabel m_stoneLabel;
     NumberLabel m_populationLabel;
 
-    MouseCursor m_mouseCursor;
+    std::unique_ptr<MouseCursor> m_mouseCursor;
 };
 
