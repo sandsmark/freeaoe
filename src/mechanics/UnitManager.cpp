@@ -634,6 +634,8 @@ void UnitManager::setSelectedUnits(const UnitSet &units)
     }
 
     for (const Unit::Ptr &unit : m_selectedUnits) {
+        EventManager::unitSelected(unit.get());
+
         m_currentActions.merge(unit->availableActions());
     }
 
