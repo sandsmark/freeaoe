@@ -557,7 +557,7 @@ std::string AssetManager::findFile(const std::string &filename) const
         }
     }
 
-    return filename; // so the error message makes more sense
+    return "";
 }
 
 //------------------------------------------------------------------------------

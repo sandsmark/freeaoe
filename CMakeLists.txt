@@ -202,31 +202,35 @@ set(DEBUG_SRC
     src/debug/SampleGameFactory.cpp
     )
 
-add_executable(freeaoe src/Engine.cpp src/main.cpp
-               ${CORE_SRC}
-               ${RESOURCE_SRC}
-               ${GLOBAL_SRC}
-               ${MECHANICS_SRC}
-               ${ACTIONS_SRC}
-               ${RENDER_SRC}
-#               ${SERVER_SRC}
-#               ${COMMUNICATION_SRC}
-               ${UNSORTED_SRC}
-               ${UI_SRC}
-               ${FONT_ALEGREYA}
-               ${FONT_BERRYROTUNDA}
-               ${DEBUG_SRC}
-               )
+set(ENGINE_SRC
+    src/Engine.cpp
+    ${CORE_SRC}
+    ${RESOURCE_SRC}
+    ${GLOBAL_SRC}
+    ${MECHANICS_SRC}
+    ${ACTIONS_SRC}
+    ${RENDER_SRC}
+    ${UNSORTED_SRC}
+    ${UI_SRC}
+    ${FONT_ALEGREYA}
+    ${FONT_BERRYROTUNDA}
+    ${DEBUG_SRC}
+    )
 
-target_link_libraries(freeaoe
+set(ALL_LIBRARIES
     sfml-system
     sfml-window
     sfml-graphics
     ${EXTRA_LIBS}
     genieutils
-)
+    )
 
+add_executable(freeaoe src/main.cpp ${ENGINE_SRC})
+target_link_libraries(freeaoe ${ALL_LIBRARIES})
 install(TARGETS freeaoe DESTINATION bin)
+
+add_executable(test test/main.cpp ${ENGINE_SRC})
+target_link_libraries(test ${ALL_LIBRARIES})
 
 #if (CMAKE_BUILD_TYPE MATCHES Debug)
 #    if(CLANG_TIDY_EXE)
