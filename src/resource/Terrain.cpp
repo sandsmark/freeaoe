@@ -233,25 +233,29 @@ const sf::Texture &Terrain::texture(const MapTile &tile) noexcept
         }
     }
 
+#ifdef DEBUG
+    addOutline(pixels, width, filter.height);
+#endif
+
     sf::Image image;
     image.create(width, filter.height, pixelsBuf.data());
-
-#ifdef DEBUG
-    addOutline(image);
-#endif
 
     m_textures[tile].loadFromImage(image);
 
     return m_textures[tile];
 }
 
-void Terrain::addOutline(sf::Image &img) noexcept
+#define ALPHA_MASK 0xff000000
+
+void Terrain::addOutline(uint32_t *pixels, const int width, const int height) noexcept
 {
-    for (size_t x=2;x<img.getSize().x; x++) {
-        for (size_t y=0;y<img.getSize().y; y++) {
-            if (img.getPixel(x-1, y).a == 255 && (img.getPixel(x-2, y).a == 0 || (y == 0 && x%2))) {
-                img.setPixel(x, y, sf::Color::White);
-                continue;
+    for (size_t x=2;x<width; x++) {
+        for (size_t y=0;y<height; y++) {
+            const bool nonTransparentLeft = (pixels[y * width + x - 1] & ALPHA_MASK) != 0;
+            const bool transparentTwoLeft = (pixels[y * width + x - 2] & ALPHA_MASK) == 0;
+            if (nonTransparentLeft && (transparentTwoLeft || (y == 0 && x%2))) {
+                pixels[y * width + x] = 0xFFFFFFFF;
+
             }
         }
     }

@@ -61,7 +61,7 @@ public:
     const sf::Texture &texture(const MapTile &tile) noexcept;
 
 private:
-    void addOutline(sf::Image &img) noexcept;
+    void addOutline(uint32_t *pixels, const int width, const int height) noexcept;
 
     genie::Terrain m_data;
     genie::SlpFilePtr m_slp;
