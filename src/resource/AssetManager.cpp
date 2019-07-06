@@ -543,6 +543,16 @@ int AssetManager::filenameID(const std::string &filename)
     return idMap.at(filename);
 }
 
+size_t AssetManager::terrainCacheSize() const
+{
+    size_t ret = 0;
+    for (const std::pair<unsigned int, TerrainPtr> t : terrains_) {
+        ret += t.second->cacheSize();
+    }
+
+    return ret;
+}
+
 std::string AssetManager::findFile(const std::string &filename) const
 {
     if (std::filesystem::exists(m_dataPath + filename)) {

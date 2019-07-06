@@ -151,6 +151,8 @@ public:
 
     static int filenameID(const std::string &filename);
 
+    size_t terrainCacheSize() const;
+
 private:
     std::string findFile(const std::string &filename) const;
 

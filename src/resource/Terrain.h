@@ -60,15 +60,13 @@ public:
 
     const sf::Texture &texture(const MapTile &tile) noexcept;
 
+    size_t cacheSize() const { return m_textures.size(); }
+
 private:
     void addOutline(uint32_t *pixels, const int width, const int height) noexcept;
 
     genie::Terrain m_data;
     genie::SlpFilePtr m_slp;
-
-    std::unordered_map<int, sf::Texture> m_images; // TODO Frames?
-    std::unordered_map<Blend, sf::Texture> m_blendImages;
-    std::unordered_map<TileSlopes, sf::Texture> m_slopeImages;
 
     std::unordered_map<MapTile, sf::Texture> m_textures;
 

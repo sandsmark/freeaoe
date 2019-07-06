@@ -35,6 +35,7 @@ void testLoadTiles()
             }
         }
     }
+    DBG << "Cache size/rendered tiles" << AssetManager::Inst()->terrainCacheSize();
 
     DBG << "Timing fetching from cache (less than 10ms isn't printed)";
 

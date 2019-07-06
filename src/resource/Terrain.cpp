@@ -97,23 +97,22 @@ const sf::Texture &Terrain::texture(const MapTile &tile) noexcept
 {
     // The original graphics code in aoe was apparently hand-written assembly according to people on the internet,
     // and since I'm too lazy and too dumb to optimize this properly we just cache heavily instead
-    std::unordered_map<MapTile, sf::Texture>::const_iterator it = m_textures.find(tile);
+    const std::unordered_map<MapTile, sf::Texture>::const_iterator it = m_textures.find(tile);
     if (it != m_textures.end()) {
         return it->second;
     }
-
-    std::vector<uint8_t> data = m_slp->fileData();
 
     // This defines lightning textures (e. g. to darken edges)
     const genie::PatternMasksFile &patternmasksFile = AssetManager::Inst()->patternmasksFile();
 
     // We need to keep operating on indexed colors with the right palette until we've done all
     // the transformations and mapping and lighting
-    const std::vector<genie::Color> colors = AssetManager::Inst()->getPalette().getColors();
+    const std::vector<genie::Color> &colors = AssetManager::Inst()->getPalette().getColors();
 
     // This maps from RGB to indices in the palette
     const genie::IcmFile::InverseColorMap &icm = patternmasksFile.icmFile.maps[genie::IcmFile::AokNeutral];
 
+    // Precalculate the line widths
     uint8_t widths[49];
     uint8_t size = 1;
     for(int i = 0; i < 25; i++){
@@ -121,6 +120,11 @@ const sf::Texture &Terrain::texture(const MapTile &tile) noexcept
         widths[48-i] = size;
         size += 4;
     }
+
+    // Copy out the relevant frame data so that we can work on it
+    const int32_t baseOffset = m_slp->frameCommandsOffset(tile.frame, 0);
+    std::vector<uint8_t> sourceData(m_slp->fileData().begin() + baseOffset, m_slp->fileData().end());
+    uint8_t *data = sourceData.data();
 
     // We first need to blend it and "rewrite" the image data/commands, because the texture filtering works
     // by addressing the original commands in the image
@@ -145,7 +149,13 @@ const sf::Texture &Terrain::texture(const MapTile &tile) noexcept
 
         int alphaOffset = 0;
         for (int y=0; y<m_slp->frameHeight(tile.frame); y++) {
-            int srcOffset = m_slp->frameCommandsOffset(tile.frame, y);
+            int srcOffset = m_slp->frameCommandsOffset(tile.frame, y) - baseOffset;
+            assert(srcOffset >= 0);
+            if (srcOffset < 0) {
+                WARN << "invalid source offset" << srcOffset;
+                break;
+            }
+
             int blendOffset = blendTerrain->m_slp->frameCommandsOffset(tileBlend.frame, y);
 
             // We can assume that there aren't any fancy commands here (no player colors or shadows),
@@ -160,7 +170,7 @@ const sf::Texture &Terrain::texture(const MapTile &tile) noexcept
             }
 
             for (int x=0; x<widths[y]; x++) {
-                uint8_t alpha = alphamask[alphaOffset];
+                const uint8_t alpha = alphamask[alphaOffset];
 
                 // Alpha goes from 0-128
                 if (alpha == 0) {
@@ -196,9 +206,7 @@ const sf::Texture &Terrain::texture(const MapTile &tile) noexcept
     const genie::FiltermapFile::Filtermap &filter = filterFile.maps[tile.slopes.self.toGenie()];
 
 
-    const uint32_t baseOffset = m_slp->frameCommandsOffset(tile.frame, 0);
-    const uint8_t *rawData = data.data() + baseOffset;
-    const std::vector<genie::Pattern> slopePatterns = tile.slopePatterns();
+    const std::vector<genie::Pattern> &slopePatterns = tile.slopePatterns();
 
     const int width = m_slp->frameWidth(tile.frame);
     const int area = width * filter.height;
@@ -215,7 +223,7 @@ const sf::Texture &Terrain::texture(const MapTile &tile) noexcept
             // Each target pixel can blend several source pixels
             int r = 0, g = 0, b = 0;
             for (const genie::FiltermapFile::SourcePixel &source : cmd.sourcePixels) {
-                const uint8_t sourcePaletteIndex = rawData[source.sourceIndex];
+                const uint8_t sourcePaletteIndex = data[source.sourceIndex];
                 const genie::Color &sourceColor = colors[sourcePaletteIndex];
                 r += sourceColor.r * source.alpha;
                 g += sourceColor.g * source.alpha;
