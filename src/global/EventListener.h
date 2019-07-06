@@ -6,7 +6,7 @@
 #include "core/Types.h"
 
 struct Unit;
-class Player;
+struct Player;
 
 struct EventListener
 {

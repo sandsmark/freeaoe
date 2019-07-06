@@ -3,10 +3,12 @@
 
 #include <memory>
 #include <list>
+#include <functional>
+#include <array>
 
 #include "core/Types.h"
 
-class EventListener;
+struct EventListener;
 
 struct Unit;
 struct Player;
@@ -15,6 +17,14 @@ struct Player;
 class EventManager
 {
 public:
+    // Conditions used in tutorial scenario (that should be implemented first):
+    //  - OwnObjects (3)
+    //  - OwnFewerObjects (4)
+    //  - ObjectsInArea (5)
+    //  - DestroyObject (6)
+    //  - Timer (10)
+    //  - ObjectSelected (11)
+
     enum EventType {
         UnitCreated,
         UnitDestroyed,
