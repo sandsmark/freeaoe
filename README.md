@@ -37,8 +37,12 @@ To build
 
 TODO (this is probably going to get outdated)
 ----
- - Map analysis stuff (for RMS and AI).
  - Unit grouping/formations.
  - Patrolling.
+ - Garrisoning.
+ - Scenario triggers.
+ - AI Script parsing and execution (lot of overlap with scenarios).
+ - Map analysis stuff (for RMS and AI).
+ - Random map RMS script parsing and generating.
  - Performance (especially the path finding).
  - Various refactoring (move VisibilityMap out into separate file, rendering of units out from UnitManager, etc.)
