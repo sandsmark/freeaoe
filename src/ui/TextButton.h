@@ -35,6 +35,5 @@ struct TextButton
 
 private:
     static void drawLine(const ScreenPos &from, const ScreenPos &to, const sf::Color &color, UiScreen *screen);
-    int m_paletteId = -1;
     sf::Text m_text;
 };
