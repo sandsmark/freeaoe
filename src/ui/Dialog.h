@@ -2,13 +2,14 @@
 #define DIALOG_H
 
 #include "TextButton.h"
+#include <array>
 
 namespace sf {
 class Event;
 class RenderWindow;
 }
 
-struct UiScreen;
+class UiScreen;
 
 struct Dialog
 {
