@@ -284,16 +284,18 @@ bool Minimap::update(Time /*time*/)
             pos.x = pos.x * scaleX - size/2;
             pos.y = pos.y * scaleY + center.y - size/2;
 
+            // WARN: according to genieutils this is the inverted of what the game officially does,
+            // but squares on the minimap look soooo ugly
             if (mode == genie::Unit::MinimapBuilding) {
-                diamondSprite.setFillColor(unitColor(unit));
-                diamondSprite.setPosition(pos);
-                diamondSprite.setRadius(size);
-                m_unitsTexture.draw(diamondSprite);
-            } else if (mode == genie::Unit::MinimapUnit) {
                 rectangleSprite.setSize(sf::Vector2f(size, size));
                 rectangleSprite.setPosition(pos);
                 rectangleSprite.setFillColor(unitColor(unit));
                 m_unitsTexture.draw(rectangleSprite);
+            } else if (mode == genie::Unit::MinimapUnit) {
+                diamondSprite.setFillColor(unitColor(unit));
+                diamondSprite.setPosition(pos);
+                diamondSprite.setRadius(size);
+                m_unitsTexture.draw(diamondSprite);
             } else if (mode == genie::Unit::MinimapLargeTerrain) {
                 rectangleSprite.setSize(sf::Vector2f(size, size));
                 rectangleSprite.setPosition(pos);
