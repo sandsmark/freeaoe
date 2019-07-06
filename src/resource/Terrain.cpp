@@ -29,7 +29,14 @@
 
 #include <cmath>
 
+#ifdef __BYTE_ORDER__
+#if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+#error "I don't think big endian will work with SFML images"
+#endif
+#endif
 
+
+Terrain::~Terrain() { }
 
 bool Terrain::load() noexcept
 {
@@ -84,11 +91,7 @@ uint8_t Terrain::blendMode(const uint8_t ownMode, const uint8_t neighborMode) no
     return blendmodeTable[ownMode][neighborMode];
 }
 
-uint32_t Terrain::coordinatesToFrame(int x, int y) noexcept
-{
-    const int tileSquareCount = sqrt(m_slp->getFrameCount());
-    return (y % tileSquareCount) + (x % tileSquareCount) * tileSquareCount;
-}
+
 
 const sf::Texture &Terrain::texture(const MapTile &tile) noexcept
 {
@@ -165,9 +168,9 @@ const sf::Texture &Terrain::texture(const MapTile &tile) noexcept
                 } else if (alpha != 128) {
                     const genie::Color &col1 = colors[data[srcOffset]];
                     const genie::Color &col2 = colors[blendData[blendOffset]];
-                    int r = col1.r * alpha + col2.r * (128 - alpha);
-                    int g = col1.g * alpha + col2.g * (128 - alpha);
-                    int b = col1.b * alpha + col2.b * (128 - alpha);
+                    const int r = col1.r * alpha + col2.r * (128 - alpha);
+                    const int g = col1.g * alpha + col2.g * (128 - alpha);
+                    const int b = col1.b * alpha + col2.b * (128 - alpha);
 
                     // The top five bits are used to look up the palette index
                     // E. g. we have max 255 * 128 = 32640, if we shift that 10
@@ -192,8 +195,6 @@ const sf::Texture &Terrain::texture(const MapTile &tile) noexcept
     const genie::FiltermapFile &filterFile = AssetManager::Inst()->filtermapFile();
     const genie::FiltermapFile::Filtermap &filter = filterFile.maps[tile.slopes.self.toGenie()];
 
-    sf::Image image;
-//    image.create(m_slp->frameWidth(tile.frame), filter.height, sf::Color::Transparent);
 
     const uint32_t baseOffset = m_slp->frameCommandsOffset(tile.frame, 0);
     const uint8_t *rawData = data.data() + baseOffset;
@@ -202,7 +203,7 @@ const sf::Texture &Terrain::texture(const MapTile &tile) noexcept
     const int width = m_slp->frameWidth(tile.frame);
     const int area = width * filter.height;
     std::vector<Uint8> pixelsBuf(area * 4, 0);
-    Uint8 *pixels = pixelsBuf.data();
+    uint32_t *pixels = reinterpret_cast<uint32_t*>(pixelsBuf.data());
 
     for (uint32_t y=0; y<filter.height; y++) {
         int xPos = slpTemplate.left_edges_[y];
@@ -228,16 +229,12 @@ const sf::Texture &Terrain::texture(const MapTile &tile) noexcept
             const int pixelIndex = icm.paletteIndex(r >> 11, g >> 11, b >> 11);
 
             // And then finally we get the color for a single pixel
-            const genie::Color &newColor = colors[pixelIndex];
-            const size_t pixelPos = (y * width + xPos) * 4;
-            pixels[pixelPos    ] = newColor.r;
-            pixels[pixelPos + 1] = newColor.g;
-            pixels[pixelPos + 2] = newColor.b;
-            pixels[pixelPos + 3] = 255;
-//            image.setPixel(xPos, y, sf::Color(newColor.r, newColor.g, newColor.b));
+            pixels[y * width + xPos] = colors[pixelIndex].toUint32();
         }
     }
-    image.create(width, filter.height, pixels);
+
+    sf::Image image;
+    image.create(width, filter.height, pixelsBuf.data());
 
 #ifdef DEBUG
     addOutline(image);

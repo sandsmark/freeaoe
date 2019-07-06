@@ -42,7 +42,7 @@ public:
     /// @param Id resource id
     //
     Terrain(unsigned int id_) : id(id_) { }
-    virtual ~Terrain() = default;
+    virtual ~Terrain();
 
     bool load() noexcept;
 
@@ -53,7 +53,10 @@ public:
 
     const sf::Texture &slopedImage(const TileSlopes &slopes, const std::vector<genie::Pattern> &patterns, int tileX, int tileY) noexcept;
 
-    uint32_t coordinatesToFrame(int x, int y) noexcept;
+    inline uint32_t coordinatesToFrame(int x, int y) noexcept {
+        const int tileSquareCount = sqrt(m_slp->getFrameCount());
+        return (y % tileSquareCount) + (x % tileSquareCount) * tileSquareCount;
+    }
 
     const sf::Texture &texture(const MapTile &tile) noexcept;
 
