@@ -78,6 +78,10 @@ else()
     find_package(SFML COMPONENTS system window graphics REQUIRED)
 endif()
 
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    add_definitions(-Wno-nested-anon-types)
+endif()
+
 # TODO: proper find_packages
 if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/extern/mini_al/mini_al.h)
     message(STATUS "Using bundled mini_al")
