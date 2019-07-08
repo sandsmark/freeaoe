@@ -16,10 +16,19 @@ class ScnFile;
 class ScenarioController : public EventListener
 {
     struct Condition {
-        bool satisfied = false;
+        /// For boolean triggers just 0 or 1
+        int amountRequired = 0;
 
-        Condition(const genie::TriggerCondition &d) : data(d) {}
+        Condition(const genie::TriggerCondition &d) : data(d) {
+            if (data.amount > 0) {
+                amountRequired = data.amount;
+            } else {
+                amountRequired = 1;
+            }
+        }
         const genie::TriggerCondition &data;
+
+        bool checkUnitMatching(const Unit *unit) const;
     };
 
     struct Trigger {
@@ -32,8 +41,11 @@ class ScenarioController : public EventListener
         }
 
         bool isSatisfied() const {
+            if (!enabled) {
+                return false;
+            }
             for (const Condition &condition : conditions) {
-                if (!condition.satisfied) {
+                if (condition.amountRequired > 0) {
                     return false;
                 }
             }
@@ -50,13 +62,17 @@ public:
     ScenarioController();
 
     void setScenario(const std::shared_ptr<genie::ScnFile> &scenario);
+    bool update(Time time);
 
 private:
     void onUnitCreated(Unit *unit) override;
 
     std::vector<Trigger> m_triggers;
+    Time m_nextTimerTriggerTarget = -1;
 
 };
+
+// Just debug print support beneath this, don't bother reading on (and it should be moved into a separate header)
 
 inline void printGenieTriggerConditionType(LogPrinter &os, const genie::TriggerCondition::Type &type)
 {
@@ -87,9 +103,36 @@ inline void printGenieTriggerConditionType(LogPrinter &os, const genie::TriggerC
     case genie::TriggerCondition::SWGB_SelectedObjectsInArea: os << "SWGB_SelectedObjectsInArea"; break;
     case genie::TriggerCondition::SWGB_PoweredObjectsInArea: os << "SWGB_PoweredObjectsInArea"; break;
     case genie::TriggerCondition::SWGB_UnitsQueuedPastPopCap: os << "SWGB_UnitsQueuedPastPopCap"; break;
-    default: os << "Invalid (" << int32_t(type) << ")"; break;
+    default: os << "Invalid"; break;
     }
+    os << " (" << int32_t(type) << ")";
 }
+
+inline LogPrinter operator <<(LogPrinter os, const genie::TriggerCondition::ObjectType type) {
+    const char *separator = os.separator;
+    os.separator = "";
+
+    os << "genie::TriggerCondition::ObjectType::";
+
+    // same as genie::Unit
+    switch(type) {
+    case genie::TriggerCondition::Undefined: os << "Undefined"; break;
+    case genie::TriggerCondition::Other: os << "Other"; break;
+    case genie::TriggerCondition::Base: os << "Base"; break;
+    case genie::TriggerCondition::Building: os << "Building"; break;
+    case genie::TriggerCondition::Civilian: os << "Civilian"; break;
+    case genie::TriggerCondition::Military: os << "Military"; break;
+    default: os << "Invalid"; break;
+    }
+
+    os << " (" << int32_t(type) << ")";
+
+    os << separator;
+    os.separator = separator;
+
+    return os;
+}
+
 
 inline LogPrinter operator <<(LogPrinter os, const genie::TriggerCondition::Type &type) {
     const char *separator = os.separator;
@@ -133,7 +176,7 @@ inline LogPrinter operator <<(LogPrinter os, const genie::TriggerCondition &cond
     if (condition.timer >= 0) os << ", timer = " << condition.timer;
     if (condition.trigger >= 0) os << ", trigger = " << condition.trigger;
     if (condition.objectGroup >= 0) os << ", objectGroup = " << condition.objectGroup;
-    if (condition.objectType >= 0) os << ", objectType = " << condition.objectType;
+    if (condition.objectType >= 0) os << ", objectType = " << genie::TriggerCondition::ObjectType(condition.objectType);
     if (condition.aiSignal >= 0) os << ", aiSignal = " << condition.aiSignal;
 
     if (condition.areaFrom.x != -1 || condition.areaFrom.y != -1) os << ", areaFrom = " << condition.areaFrom.x << "," << condition.areaFrom.y;
@@ -192,8 +235,9 @@ inline void printGenieTriggerEffectType(LogPrinter &os, const genie::TriggerEffe
     case genie::TriggerEffect::HD_ChangeUnitStance: os << "HD_ChangeUnitStance = SWGB_FlashUnit"; break;
     case genie::TriggerEffect::SWGBCC_InputOff: os << "SWGBCC_InputOff"; break;
     case genie::TriggerEffect::SWGBCC_InputOn: os << "SWGBCC_InputOn"; break;
-    default: os << "Invalid (" << int32_t(type) << ")"; break;
+    default: os << "Invalid";break;// (" << int32_t(type) << ")"; break;
     }
+    os << " (" << int32_t(type) << ")";
 
 }
 
@@ -219,7 +263,6 @@ inline LogPrinter operator <<(LogPrinter os, const genie::MapPoint &pos)
     os.separator = separator;
     return os;
 }
-
 
 inline LogPrinter operator <<(LogPrinter os, const genie::TriggerEffect &effect)
 {
@@ -313,6 +356,7 @@ inline LogPrinter operator <<(LogPrinter os, const genie::Trigger &trigger)
         for (size_t i = 0; i<trigger.conditions.size(); i++) {
             os << "\n\t\t" << trigger.conditionDisplayOrder[i] << ": " << trigger.conditions[i];
         }
+        os << "\n\t}";
     }
 
     if (!trigger.effects.empty()) {
