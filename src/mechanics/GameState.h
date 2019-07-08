@@ -20,17 +20,18 @@
 
 #include "mechanics/IState.h"
 #include "mechanics/Player.h"
+#include "mechanics/ScenarioController.h"
 #include "core/Logger.h"
 
 #include "Map.h"
 
 #include "Civilization.h"
 
-#include "genie/script/ScnFile.h"
-
-class GameClient;
-class GameServer;
 class UnitManager;
+
+namespace genie {
+class ScnFile;
+}
 
 enum class GameType {
     Default,
@@ -93,5 +94,7 @@ private:
     std::vector<Player::Ptr> m_players;
 
     GameType m_gameType = GameType::Default;
+
+    std::unique_ptr<ScenarioController> m_scenarioController;
 };
 

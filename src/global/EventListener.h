@@ -14,6 +14,9 @@ public:
     EventListener();
     virtual ~EventListener();
 
+protected:
+    friend class EventManager;
+
     virtual void onUnitCreated(Unit *unit)
         { (void)unit; }
 

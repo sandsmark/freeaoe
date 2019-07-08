@@ -19,6 +19,7 @@
 #include "GameState.h"
 
 #include <genie/resource/Color.h>
+#include "genie/script/ScnFile.h"
 
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Window/Mouse.hpp>
@@ -161,6 +162,9 @@ void GameState::setupScenario()
     TIME_THIS;
     DBG << "Setting up scenario:" << scenario_->scenarioInstructions;
     map_->create(scenario_->map);
+
+    m_scenarioController = std::make_unique<ScenarioController>();
+    m_scenarioController->setScenario(scenario_);
 
     const genie::ScnMainPlayerData &playerData = scenario_->playerData;
     for (size_t playerNum = 0; playerNum < scenario_->enabledPlayerCount; playerNum++) {

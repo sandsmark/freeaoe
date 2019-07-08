@@ -142,6 +142,7 @@ set(MECHANICS_SRC
     src/mechanics/Missile.cpp
     src/mechanics/MapTile.cpp
     src/mechanics/Building.cpp
+    src/mechanics/ScenarioController.cpp
     )
 
 set(ACTIONS_SRC
