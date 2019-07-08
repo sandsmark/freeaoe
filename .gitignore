@@ -29,3 +29,5 @@ CMakeFiles
 Makefile
 cmake_install.cmake
 build-*/
+test/data/
+!test/data/.placeholder
