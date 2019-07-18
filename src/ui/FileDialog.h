@@ -42,7 +42,7 @@ struct ListView
     void handleEvent(const sf::Event &event);
     void render(sf::RenderWindow *window);
 
-    void setCurrentPath(std::filesystem::path path);
+    void setCurrentPath(std::string path);
 
     void setOffset(int offset);
 
@@ -65,7 +65,7 @@ private:
     std::unique_ptr<sf::RectangleShape> m_selectedOutline;
     std::unique_ptr<sf::RectangleShape> m_background;
     std::unique_ptr<sf::RectangleShape> m_scrollBar;
-    std::vector<std::filesystem::path> m_list;
+    std::vector<std::string> m_list;
 
     std::filesystem::path m_currentPath;
 

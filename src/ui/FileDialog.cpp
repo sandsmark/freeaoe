@@ -92,7 +92,7 @@ std::string FileDialog::getPath()
 #if defined(__linux__)
         if (m_goToWineButton) {
             if (m_goToWineButton->checkClick(event)) {
-                m_fileList->setCurrentPath(m_winePath);
+                m_fileList->setCurrentPath(std::filesystem::path(m_winePath));
             }
         }
 #endif
@@ -316,7 +316,7 @@ void ListView::render(sf::RenderWindow *window)
     window->draw(*m_scrollBar);
 }
 
-void ListView::setCurrentPath(std::filesystem::path path)
+void ListView::setCurrentPath(std::string path)
 {
     m_list.clear();
 
@@ -338,7 +338,7 @@ void ListView::setCurrentPath(std::filesystem::path path)
         path = m_currentPath;
     }
 
-    if (!path.parent_path().empty() && path != path.parent_path()) {
+    if (!std::filesystem::path(path).parent_path().empty() && path != std::filesystem::path(path).parent_path()) {
         std::filesystem::path dotdot = path;
         dotdot += "/..";
         m_list.push_back(dotdot);
@@ -367,7 +367,7 @@ void ListView::setCurrentPath(std::filesystem::path path)
 
     for (size_t i=0; i<m_texts.size(); i++) {
         if (i < m_list.size()) {
-            std::string filename = m_list[i].filename().string();
+            std::string filename = std::filesystem::path(m_list[i]).filename().string();
             if (filename.size() > 40) {
                 filename.resize(40);
                 filename += "...";
@@ -405,7 +405,7 @@ void ListView::setOffset(int offset)
 
     for (size_t i=0; i<m_texts.size(); i++) {
         if (i+m_offset < m_list.size()) {
-            std::string filename = m_list[i+m_offset].filename().string();
+            std::string filename = std::filesystem::path(m_list[i+m_offset]).filename().string();
             if (filename.size() > 40) {
                 filename.resize(40);
                 filename += "...";
