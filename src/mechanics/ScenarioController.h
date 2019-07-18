@@ -9,7 +9,7 @@
 
 
 
-class UnitManager;
+class GameState;
 
 namespace genie {
 class ScnFile;
@@ -72,7 +72,7 @@ public:
 
     void setScenario(const std::shared_ptr<genie::ScnFile> &scenario);
     bool update(Time time);
-    void setUnitManager(const std::shared_ptr<UnitManager> &unitManager);
+    void setGameState(GameState *gameState) { m_gameState = gameState; }
 
 private:
     void onUnitCreated(Unit *unit) override;
@@ -86,7 +86,8 @@ private:
 
     std::vector<Trigger> m_triggers;
     Time m_lastUpdateTime = 0;
-    std::weak_ptr<UnitManager> m_unitManager;
+
+    GameState *m_gameState = nullptr; // ugly raw pointer, but owned by gamestate, so sue me
 //    Time m_nextTimerTriggerTarget = -1;
 
 };

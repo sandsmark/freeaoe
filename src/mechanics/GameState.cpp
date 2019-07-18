@@ -160,6 +160,11 @@ bool GameState::update(Time time)
     return updated;
 }
 
+void GameState::moveCameraTo(const MapPos &newTarget)
+{
+    renderTarget_->camera()->setTargetPosition(newTarget);
+}
+
 void GameState::setupScenario()
 {
     TIME_THIS;
@@ -168,7 +173,7 @@ void GameState::setupScenario()
 
     m_scenarioController = std::make_unique<ScenarioController>();
     m_scenarioController->setScenario(scenario_);
-    m_scenarioController->setUnitManager(m_unitManager);
+    m_scenarioController->setGameState(this);
 
     const genie::ScnMainPlayerData &playerData = scenario_->playerData;
     for (size_t playerNum = 0; playerNum < scenario_->enabledPlayerCount; playerNum++) {

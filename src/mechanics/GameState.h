@@ -72,6 +72,8 @@ public:
     const std::shared_ptr<UnitManager> &unitManager() { return m_unitManager; }
     const MapPtr &map() const { return map_; }
 
+    void moveCameraTo(const MapPos &newTarget);
+
 private:
     void setupScenario();
     void setupGame(const GameType gameType);

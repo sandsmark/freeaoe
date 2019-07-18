@@ -5,6 +5,7 @@
 
 #include "mechanics/Unit.h"
 #include "mechanics/UnitManager.h"
+#include "mechanics/GameState.h"
 
 #include <set>
 
@@ -63,11 +64,15 @@ void ScenarioController::setScenario(const std::shared_ptr<genie::ScnFile> &scen
     for (const Trigger &trigger : m_triggers) {
         for (const genie::TriggerEffect &effect : trigger.data.effects) {
             switch(effect.type) {
+            case genie::TriggerEffect::DeactivateTrigger:
+                break;
             case genie::TriggerEffect::ActivateTrigger:
                 break;
             case genie::TriggerEffect::DisplayInstructions:
                 break;
             case genie::TriggerEffect::TaskObject:
+                break;
+            case genie::TriggerEffect::ChangeView:
                 break;
             default:
                 missingEffectTypes.insert(effect.type);
@@ -145,16 +150,20 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
         DBG << "TODO: implement on screen message stuff and sound";
         WARN << effect.message << effect.soundFile;
         break;
+    case genie::TriggerEffect::ChangeView:
+        DBG << "Moving camera" << effect;
+        m_gameState->moveCameraTo(MapPos(effect.location.y * Constants::TILE_SIZE, effect.location.x * Constants::TILE_SIZE));
+        break;
     case genie::TriggerEffect::TaskObject: {
-        std::shared_ptr<UnitManager> unitManager = m_unitManager.lock();
-        if (!unitManager) {
-            WARN << "unit manager unavailable";
-            return;
-        }
+//        std::shared_ptr<UnitManager> unitManager = m_unitManager.lock();
+//        if (!unitManager) {
+//            WARN << "unit manager unavailable";
+//            return;
+//        }
 
         // again with the wtf swap of x and y
         std::vector<std::weak_ptr<Entity>> entities;
-        entities = unitManager->map()->entitiesBetween(effect.areaFrom.y,
+        entities = m_gameState->map()->entitiesBetween(effect.areaFrom.y,
                                                               effect.areaFrom.x,
                                                               effect.areaTo.y,
                                                               effect.areaTo.x);
@@ -169,7 +178,9 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
                 WARN << "got invalid unit in area for effect";
                 continue;
             }
-            unitManager->moveUnitTo(unit, targetPos);
+            DBG << "supposed to move unit" << unit->debugName << "automatically" << targetPos << "?";
+            DBG << "is not in accordance with instructions in tutorial scenario, so don't do it for now";
+//            m_gameState->unitManager()->moveUnitTo(unit, targetPos);
         }
         break;
     }
@@ -177,11 +188,6 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
         WARN << "not implemented trigger effect" << effect;
         break;
     }
-}
-
-void ScenarioController::setUnitManager(const std::shared_ptr<UnitManager> &unitManager)
-{
-    m_unitManager = unitManager;
 }
 
 void ScenarioController::onUnitCreated(Unit *unit)
@@ -219,11 +225,15 @@ void ScenarioController::onUnitMoved(Unit *unit, const MapPos &oldTile, const Ma
 
         for (Condition &condition : trigger.conditions) {
             switch(condition.data.type) {
+            case genie::TriggerCondition::BringObjectToArea:
+                WARN << "TODO: move objects to area" << condition;
+                continue;
             case genie::TriggerCondition::ObjectsInArea:
                 break;
             default:
                 continue;
             }
+
             if (!condition.checkUnitMatching(unit)) {
                 continue;
             }
