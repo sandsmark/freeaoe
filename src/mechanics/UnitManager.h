@@ -73,6 +73,7 @@ public:
     virtual ~UnitManager();
 
     void add(const Unit::Ptr &unit);
+    void remove(const Unit::Ptr &unit);
 
     bool init();
     void setHumanPlayer(const std::shared_ptr<Player> &player) { m_humanPlayer = player; }
@@ -121,8 +122,8 @@ private:
 
     std::unordered_set<Missile::Ptr> m_missiles;
     std::unordered_set<DecayingEntity::Ptr> m_decayingEntities;
-    std::unordered_set<Unit::Ptr> m_units;
-    std::unordered_set<Unit::Ptr> m_unitsWithActions;
+    UnitSet m_units;
+    UnitSet m_unitsWithActions;
     std::unordered_set<Task> m_currentActions;
 
     UnitSet m_selectedUnits;

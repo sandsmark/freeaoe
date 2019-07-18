@@ -60,6 +60,21 @@ void UnitManager::add(const Unit::Ptr &unit)
     EventManager::unitCreated(unit.get());
 }
 
+void UnitManager::remove(const Unit::Ptr &unit)
+{
+    // Could just mark it as dead, but don't want a corpse, I think
+    if (m_selectedUnits.count(unit)) {
+        EventManager::unitDeselected(unit.get());
+        m_selectedUnits.erase(unit);
+    }
+    m_unitsWithActions.erase(unit);
+    if (m_units.count(unit)) {
+        EventManager::unitDying(unit.get()); // not sure about this, but whatever
+        m_units.erase(unit);
+    }
+    // TODO: EventManager::unitDisappeared(), we need to check the visibility maps
+}
+
 bool UnitManager::init()
 {
     m_moveTargetMarker = std::make_unique<MoveTargetMarker>();

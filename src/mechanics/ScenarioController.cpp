@@ -61,9 +61,8 @@ void ScenarioController::setScenario(const std::shared_ptr<genie::ScnFile> &scen
             case genie::TriggerEffect::TaskObject:
             case genie::TriggerEffect::ChangeView:
             case genie::TriggerEffect::ResearchTechnology:
-                break;
             case genie::TriggerEffect::CreateObject:
-                DBG << effect;
+            case genie::TriggerEffect::RemoveObject:
                 break;
             default:
                 missingEffectTypes.insert(effect.type);
@@ -165,6 +164,29 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
         MapPos location(effect.location.y * Constants::TILE_SIZE, effect.location.x * Constants::TILE_SIZE);
         Unit::Ptr unit = UnitFactory::Inst().createUnit(effect.object, location, player, *m_gameState->unitManager());
         m_gameState->unitManager()->add(unit);
+        break;
+    }
+    case genie::TriggerEffect::RemoveObject: {
+        DBG << "Removing" << effect;
+        std::vector<std::weak_ptr<Entity>> entities;
+        entities = m_gameState->map()->entitiesBetween(effect.areaFrom.y,
+                                                              effect.areaFrom.x,
+                                                              effect.areaTo.y,
+                                                              effect.areaTo.x);
+
+        // TODO, not sure if it is right to move to the middle of the tile, but whatevs
+        MapPos targetPos(effect.location.y + 0.5, effect.location.x + 0.5);
+        targetPos *= Constants::TILE_SIZE;
+
+        for (const std::weak_ptr<Entity> &entity : entities) {
+            Unit::Ptr unit = Entity::asUnit(entity);
+            if (!unit) {
+                WARN << "got invalid unit in area for effect";
+                continue;
+            }
+            m_gameState->unitManager()->remove(unit);
+        }
+        break;
         break;
     }
     case genie::TriggerEffect::TaskObject: {
