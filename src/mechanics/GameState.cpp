@@ -185,7 +185,7 @@ void GameState::setupScenario()
     m_scenarioController->setGameState(this);
 
     const genie::ScnMainPlayerData &playerData = scenario_->playerData;
-    for (size_t playerNum = 0; playerNum < scenario_->enabledPlayerCount; playerNum++) {
+    for (size_t playerNum = 0; playerNum < scenario_->enabledPlayerCount + 1; playerNum++) { // +1 for gaia
         Player::Ptr player;
 
         // player 0 is gaia
@@ -221,6 +221,7 @@ void GameState::setupScenario()
             }
         }
     }
+
     MapPos cameraPos;
     if (scenario_->playerData.player1CameraX >= 0 &&  scenario_->playerData.player1CameraX >= 0) {
         cameraPos = MapPos(scenario_->playerData.player1CameraX * Constants::TILE_SIZE, scenario_->playerData.player1CameraY * Constants::TILE_SIZE);
