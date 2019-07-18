@@ -41,6 +41,7 @@ typedef std::shared_ptr<Entity> EntityPtr;
 struct Entity: std::enable_shared_from_this<Entity>, SignalEmitter<Entity>
 {
     const size_t id;
+    int32_t spawnId = -1;
 
     Entity() = delete;
 

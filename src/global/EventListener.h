@@ -8,6 +8,10 @@
 struct Unit;
 struct Player;
 
+/**
+ * @brief For classes that want to monitor for events, e. g. for scenarios or AI
+ */
+
 struct EventListener
 {
 public:
@@ -26,14 +30,17 @@ protected:
     virtual void onUnitSelected(Unit *unit)
         { (void)unit; }
 
+    virtual void onUnitDeselected(const Unit *unit)
+        { (void)unit; }
+
     virtual void onUnitOwnerChanged(Unit *unit, int oldPlayerId, int newPlayerId)
         { (void)unit; (void)oldPlayerId; (void)newPlayerId; }
 
     virtual void onUnitCaptured(Unit *unit, int oldPlayerId, int newPlayerId)
         { (void)unit; (void)oldPlayerId; (void)newPlayerId; }
 
-    virtual void onUnitMoved(Unit *unit, const MapPos &newPosition)
-        { (void)unit; (void)newPosition; }
+    virtual void onUnitMoved(Unit *unit, const MapPos &oldTile, const MapPos &newTile)
+        { (void)unit; (void)oldTile; (void)newTile; }
 
     virtual void onUnitGarrisoned(Unit *unit, Unit *garrisonedIn)
         { (void)unit; (void)garrisonedIn; }

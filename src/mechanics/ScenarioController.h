@@ -35,6 +35,10 @@ class ScenarioController : public EventListener
         bool enabled = false;
 
         Trigger (const genie::Trigger &d) : data(d) {
+            if (d.startingState) {
+                enabled = true;
+            }
+
             for (const genie::TriggerCondition &cond : data.conditions) {
                 conditions.emplace_back(cond);
             }
@@ -66,6 +70,11 @@ public:
 
 private:
     void onUnitCreated(Unit *unit) override;
+    void onUnitMoved(Unit *unit, const MapPos &oldTile, const MapPos &newTile) override;
+    void onUnitSelected(Unit *unit) override;
+    void onUnitDeselected(const Unit *unit) override;
+
+    // Todo: put these in an std::array based on type, so we don't have to loop over all
 
     std::vector<Trigger> m_triggers;
     Time m_nextTimerTriggerTarget = -1;

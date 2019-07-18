@@ -29,6 +29,7 @@ public:
         UnitCreated,
         UnitDestroyed,
         UnitSelected,
+        UnitDeselected,
         UnitChangedOwner,
         UnitCaptured,
         UnitMoved,
@@ -54,9 +55,10 @@ public:
     static void unitCreated(Unit *unit);
     static void unitDying(Unit *unit);
     static void unitSelected(Unit *unit);
+    static void unitDeselected(const Unit *unit);
     static void unitOwnerChanged(Unit *unit, int oldPlayerId, int newPlayerId);
     static void unitCaptured(Unit *unit, int oldPlayerId, int newPlayerId);
-    static void unitMoved(Unit *unit, const MapPos &newPosition);
+    static void unitMoved(Unit *unit, const MapPos &oldtile, const MapPos &newTile);
     static void unitGarrisoned(Unit *unit, Unit *garrisonedIn);
     static void unitGotTarget(Unit *unit, Unit *targetUnit);
     static void unitDelivered(Unit *unit, Unit *deliveredUnit, Unit *targetUnit);

@@ -477,6 +477,10 @@ void Unit::setPosition(const MapPos &pos, const bool initial) noexcept
         });
     }
 
+    const MapPos oldTilePosition = position() / Constants::TILE_SIZE;
+    const MapPos newTilePosition = pos / Constants::TILE_SIZE;
+    EventManager::unitMoved(this, oldTilePosition, newTilePosition);
+
     Entity::setPosition(pos, initial);
 
     if (owner) {
@@ -492,8 +496,6 @@ void Unit::setPosition(const MapPos &pos, const bool initial) noexcept
     if (data()->Type >= genie::Unit::CombatantType) {
         m_unitManager.onCombatantUnitsMoved();
     }
-
-    EventManager::unitMoved(this, pos);
 }
 
 void Unit::setUnitData(const genie::Unit &data_) noexcept

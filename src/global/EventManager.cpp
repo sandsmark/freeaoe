@@ -45,6 +45,11 @@ void EventManager::unitSelected(Unit *unit)
     call(UnitSelected, [=](EventListener *l) { l->onUnitSelected(unit); });
 }
 
+void EventManager::unitDeselected(const Unit *unit)
+{
+    call(UnitSelected, [=](EventListener *l) { l->onUnitDeselected(unit); });
+}
+
 void EventManager::unitOwnerChanged(Unit *unit, int oldPlayerId, int newPlayerId)
 {
     call(UnitChangedOwner, [&](EventListener *l) { l->onUnitOwnerChanged(unit, oldPlayerId, newPlayerId); });
@@ -55,9 +60,9 @@ void EventManager::unitCaptured(Unit *unit, int oldPlayerId, int newPlayerId)
     call(UnitCaptured, [&](EventListener *l) { l->onUnitCaptured(unit, oldPlayerId, newPlayerId); });
 }
 
-void EventManager::unitMoved(Unit *unit, const MapPos &newPosition)
+void EventManager::unitMoved(Unit *unit, const MapPos &oldtile, const MapPos &newTile)
 {
-    call(UnitMoved, [=](EventListener *l) { l->onUnitMoved(unit, newPosition); });
+    call(UnitMoved, [=](EventListener *l) { l->onUnitMoved(unit, oldtile, newTile); });
 }
 
 void EventManager::unitGarrisoned(Unit *unit, Unit *garrisonedIn)

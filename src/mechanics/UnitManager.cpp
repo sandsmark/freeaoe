@@ -114,6 +114,7 @@ bool UnitManager::update(Time time)
         // Remove from selected if it is dying
         if (unit->isDead() || unit->isDying()) {
             m_selectedUnits.erase(unit);
+            EventManager::unitDeselected(unit.get());
         }
 
         if (unit->isDead()) {
@@ -564,7 +565,8 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
         return;
     }
 
-    m_selectedUnits.clear();
+    const UnitSet previouslySelected = std::move(m_selectedUnits);
+
     m_currentActions.clear();
 
     Player::Ptr humanPlayer = m_humanPlayer.lock();
@@ -605,13 +607,42 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
         newSelection.insert(unit);
     }
 
+    UnitSet newlySelected;
+    if (isClick) {
+        if (!newSelection.empty()) {
+            const Unit::Ptr mostVisibleUnit = *std::min_element(newSelection.begin(), newSelection.end(), MapPositionSorter());
+            if (!previouslySelected.count(mostVisibleUnit)) {
+                newlySelected.insert(mostVisibleUnit);
+            }
+        }
+    } else {
+        for (const Unit::Ptr &unit : newSelection) {
+            if (!previouslySelected.count(unit)) {
+                newlySelected.insert(unit);
+            }
+        }
+    }
+
+    for (const Unit::Ptr &unit : newlySelected) {
+        DBG << "Selected" << unit->debugName << unit->id;
+        EventManager::unitSelected(unit.get());
+    }
+
+    for (const Unit::Ptr &unit : previouslySelected) {
+        if (!newlySelected.count(unit)) {
+            DBG << "Deselected" << unit->debugName << unit->id;
+            EventManager::unitDeselected(unit.get());
+        }
+    }
+
     if (newSelection.empty()) {
         DBG << "Unable to find anything to select in " << selectionRect;
         return;
     }
 
+
     if (isClick) {
-        Unit::Ptr mostVisibleUnit = *std::min_element(newSelection.begin(), newSelection.end(), MapPositionSorter());
+        const Unit::Ptr mostVisibleUnit = *std::min_element(newSelection.begin(), newSelection.end(), MapPositionSorter());
         setSelectedUnits({mostVisibleUnit});
     } else {
         setSelectedUnits(newSelection);
@@ -634,8 +665,6 @@ void UnitManager::setSelectedUnits(const UnitSet &units)
     }
 
     for (const Unit::Ptr &unit : m_selectedUnits) {
-        EventManager::unitSelected(unit.get());
-
         m_currentActions.merge(unit->availableActions());
     }
 
