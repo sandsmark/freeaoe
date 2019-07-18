@@ -6,6 +6,7 @@
 #include "mechanics/Unit.h"
 #include "mechanics/UnitManager.h"
 #include "mechanics/GameState.h"
+#include "mechanics/UnitFactory.h"
 
 #include <set>
 
@@ -60,6 +61,9 @@ void ScenarioController::setScenario(const std::shared_ptr<genie::ScnFile> &scen
             case genie::TriggerEffect::TaskObject:
             case genie::TriggerEffect::ChangeView:
             case genie::TriggerEffect::ResearchTechnology:
+                break;
+            case genie::TriggerEffect::CreateObject:
+                DBG << effect;
                 break;
             default:
                 missingEffectTypes.insert(effect.type);
@@ -149,6 +153,18 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
             break;
         }
         player->applyResearch(effect.technology);
+        break;
+    }
+    case genie::TriggerEffect::CreateObject: {
+        DBG << "Creating" << effect;
+        Player::Ptr player = m_gameState->player(effect.sourcePlayer);
+        if (!player) {
+            WARN << "couldn't get player for effect";
+            break;
+        }
+        MapPos location(effect.location.y * Constants::TILE_SIZE, effect.location.x * Constants::TILE_SIZE);
+        Unit::Ptr unit = UnitFactory::Inst().createUnit(effect.object, location, player, *m_gameState->unitManager());
+        m_gameState->unitManager()->add(unit);
         break;
     }
     case genie::TriggerEffect::TaskObject: {
