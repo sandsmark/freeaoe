@@ -160,6 +160,15 @@ bool GameState::update(Time time)
     return updated;
 }
 
+Player::Ptr GameState::player(int id)
+{
+    if (id < 0 || id >= m_players.size()) {
+        WARN << "asked for invalid player id" << id << m_players.size();
+        return nullptr;
+    }
+    return m_players[id];
+}
+
 void GameState::moveCameraTo(const MapPos &newTarget)
 {
     renderTarget_->camera()->setTargetPosition(newTarget);

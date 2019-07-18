@@ -33,20 +33,10 @@ void ScenarioController::setScenario(const std::shared_ptr<genie::ScnFile> &scen
             case genie::TriggerCondition::OwnObjects:
             case genie::TriggerCondition::OwnFewerObjects:
             case genie::TriggerCondition::ObjectSelected:
-                isImplemented = true;
-                break;
             case genie::TriggerCondition::ObjectsInArea:
-                DBG << cond;
-                isImplemented = true;
-                break;
             case genie::TriggerCondition::Timer:
                 isImplemented = true;
-                if (trigger.startingState) {
-                    DBG << "start state" << trigger.startingState;
-                    DBG << "start time" << trigger.startingTime;
-                    DBG << "condition time" << cond.timer << cond.amount;
-                }
-                continue;
+                break;
             default:
                 WARN << "Not implemented condition" << genie::TriggerCondition::Type(cond.type);
                 continue;
@@ -65,14 +55,11 @@ void ScenarioController::setScenario(const std::shared_ptr<genie::ScnFile> &scen
         for (const genie::TriggerEffect &effect : trigger.data.effects) {
             switch(effect.type) {
             case genie::TriggerEffect::DeactivateTrigger:
-                break;
             case genie::TriggerEffect::ActivateTrigger:
-                break;
             case genie::TriggerEffect::DisplayInstructions:
-                break;
             case genie::TriggerEffect::TaskObject:
-                break;
             case genie::TriggerEffect::ChangeView:
+            case genie::TriggerEffect::ResearchTechnology:
                 break;
             default:
                 missingEffectTypes.insert(effect.type);
@@ -154,6 +141,16 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
         DBG << "Moving camera" << effect;
         m_gameState->moveCameraTo(MapPos(effect.location.y * Constants::TILE_SIZE, effect.location.x * Constants::TILE_SIZE));
         break;
+    case genie::TriggerEffect::ResearchTechnology: {
+        DBG << "Researching" << effect;
+        Player::Ptr player = m_gameState->player(effect.sourcePlayer);
+        if (!player) {
+            WARN << "couldn't get player for effect";
+            break;
+        }
+        player->applyResearch(effect.technology);
+        break;
+    }
     case genie::TriggerEffect::TaskObject: {
 //        std::shared_ptr<UnitManager> unitManager = m_unitManager.lock();
 //        if (!unitManager) {
@@ -226,7 +223,7 @@ void ScenarioController::onUnitMoved(Unit *unit, const MapPos &oldTile, const Ma
         for (Condition &condition : trigger.conditions) {
             switch(condition.data.type) {
             case genie::TriggerCondition::BringObjectToArea:
-                WARN << "TODO: move objects to area" << condition;
+                WARN << "TODO: move objects to area" << condition.data;
                 continue;
             case genie::TriggerCondition::ObjectsInArea:
                 break;

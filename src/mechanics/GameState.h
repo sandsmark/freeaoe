@@ -69,6 +69,8 @@ public:
 
     const Player::Ptr &humanPlayer() { return m_humanPlayer; }
 
+    Player::Ptr player(int id);
+
     const std::shared_ptr<UnitManager> &unitManager() { return m_unitManager; }
     const MapPtr &map() const { return map_; }
 
