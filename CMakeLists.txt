@@ -222,8 +222,8 @@ set(ALL_LIBRARIES
     sfml-system
     sfml-window
     sfml-graphics
-    ${EXTRA_LIBS}
     genieutils
+    ${EXTRA_LIBS}
     )
 
 add_executable(freeaoe src/main.cpp ${ENGINE_SRC})

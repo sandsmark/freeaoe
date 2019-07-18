@@ -322,13 +322,19 @@ void ListView::setCurrentPath(std::string path)
 
     hasDataFolder = false;
     try {
-        for (const std::filesystem::directory_entry &entry : std::filesystem::directory_iterator(path)) {
+        // avoid crashing
+        if (!std::filesystem::exists(path) || !std::filesystem::is_directory(path)) {
+            throw std::filesystem::filesystem_error("fuckings to boost which I blame for this shitty API", std::error_code());
+        }
+        std::filesystem::directory_iterator boostIsShit(path);
+        for (std::filesystem::directory_entry entry : boostIsShit) {
             if (entry.path().filename() == "Data" && entry.is_directory()) {
                 hasDataFolder = true;
             }
 
             m_list.push_back(entry.path());
         }
+
     } catch (const std::filesystem::filesystem_error &err) {
         WARN << "Err" << err.what();
         if (m_currentPath.empty()) {
