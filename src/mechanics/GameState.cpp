@@ -150,6 +150,9 @@ bool GameState::update(Time time)
     bool updated = false;
 
     updated = m_unitManager->update(time) || updated;
+    if (m_scenarioController) {
+        updated = m_scenarioController->update(time) || updated;
+    }
 
     //game_server_->update();
     //game_client_->update();

@@ -24,36 +24,94 @@ void ScenarioController::setScenario(const std::shared_ptr<genie::ScnFile> &scen
         return;
     }
     for (const genie::Trigger &trigger : scenario->triggers) {
-        bool isHandled = false;
+        bool isImplemented = false;
         for (const genie::TriggerCondition &cond : trigger.conditions) {
-            if (cond.type == genie::TriggerCondition::OwnObjects) {
-                isHandled = true;
+            switch(cond.type) {
+            case genie::TriggerCondition::OwnObjects:
+            case genie::TriggerCondition::ObjectsInArea:
+            case genie::TriggerCondition::ObjectSelected:
+                isImplemented = true;
+                break;
+                break;
+            case genie::TriggerCondition::Timer:
+                isImplemented = true;
+                if (trigger.startingState) {
+                    DBG << "start state" << trigger.startingState;
+                    DBG << "start time" << trigger.startingTime;
+                    DBG << "condition time" << cond.timer << cond.amount;
+                }
                 continue;
-            }
-            if (cond.type == genie::TriggerCondition::OwnObjects) {
-                isHandled = true;
-                continue;
-            }
-            if (cond.type == genie::TriggerCondition::ObjectsInArea) {
-                isHandled = true;
-                continue;
-            }
-            if (cond.type == genie::TriggerCondition::ObjectSelected) {
-                isHandled = true;
+            default:
                 continue;
             }
         }
 
-        if (isHandled) {
+        if (isImplemented) {
             m_triggers.emplace_back(trigger);
         } else {
 //            DBG << trigger;
         }
     }
 
-    for (const Trigger &trigger : m_triggers) {
-        DBG << trigger.data;
+//    for (const Trigger &trigger : m_triggers) {
+//        DBG << trigger.data;
+//    }
+}
+
+bool ScenarioController::update(Time time)
+{
+    bool updated = false;
+    const Time elapsed = time - m_lastUpdateTime;
+    m_lastUpdateTime = time;
+    for (Trigger &trigger : m_triggers) {
+        if (!trigger.enabled) {
+            continue;
+        }
+
+        bool conditionsSatisfied = true;
+        for (Condition &condition : trigger.conditions) {
+            if (condition.data.type == genie::TriggerCondition::Timer) {
+                condition.amountRequired -= elapsed;
+            }
+
+            if (condition.amountRequired > 0) {
+                conditionsSatisfied = false;
+            }
+        }
+
+        if (!conditionsSatisfied) {
+            continue;
+        }
+
+        updated = true;
+
+        if (!trigger.data.looping) {
+            trigger.enabled = false;
+        }
+
+        for (const genie::TriggerEffect &effect : trigger.data.effects) {
+            switch(effect.type) {
+            case genie::TriggerEffect::ActivateTrigger:
+                // TODO: display order or normal order?
+                if (effect.trigger < 0 || effect.trigger >= m_triggers.size()) {
+                    DBG << "can't activate invalid trigger";
+                    continue;
+                }
+                DBG << "enabling trigger" << m_triggers[effect.trigger].data.name;
+                m_triggers[effect.trigger].enabled = true;
+                break;
+            case genie::TriggerEffect::DisplayInstructions:
+                WARN << "implement on screen message stuff";
+                WARN << effect.message << effect.soundFile;
+                break;
+            default:
+                DBG << "not implemented trigger effect" << effect;
+                break;
+            }
+        }
     }
+
+    return updated;
 }
 
 void ScenarioController::onUnitCreated(Unit *unit)

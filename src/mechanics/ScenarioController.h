@@ -17,16 +17,19 @@ class ScenarioController : public EventListener
 {
     struct Condition {
         /// For boolean triggers just 0 or 1
+        /// For timers, milliseconds elapsed
         int amountRequired = 0;
 
         Condition(const genie::TriggerCondition &d) : data(d) {
-            if (data.amount > 0) {
+            if (d.type == genie::TriggerCondition::Timer) {
+                amountRequired = 1000 * data.timer; // it is in milliseconds
+            } else if (data.amount > 0) {
                 amountRequired = data.amount;
             } else {
                 amountRequired = 1;
             }
         }
-        const genie::TriggerCondition &data;
+        const genie::TriggerCondition data;
 
         bool checkUnitMatching(const Unit *unit) const;
     };
@@ -35,7 +38,7 @@ class ScenarioController : public EventListener
         bool enabled = false;
 
         Trigger (const genie::Trigger &d) : data(d) {
-            if (d.startingState) {
+            if (data.startingState) {
                 enabled = true;
             }
 
@@ -77,7 +80,8 @@ private:
     // Todo: put these in an std::array based on type, so we don't have to loop over all
 
     std::vector<Trigger> m_triggers;
-    Time m_nextTimerTriggerTarget = -1;
+    Time m_lastUpdateTime = 0;
+//    Time m_nextTimerTriggerTarget = -1;
 
 };
 

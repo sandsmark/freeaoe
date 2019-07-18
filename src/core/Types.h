@@ -655,7 +655,7 @@ inline MapRect operator +(const MapRect& rect, const MapPos& pos)
 }
 
 /// Time in milliseconds
-typedef unsigned int Time;
+typedef int64_t Time;
 
 inline MapRect ScreenRect::boundingMapRect() const
 {
