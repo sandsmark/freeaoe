@@ -6,6 +6,8 @@
 #include <genie/dat/TechageEffect.h>
 #include "resource/DataManager.h"
 
+#define CHEAT_VISIBILITY 1
+
 Player::Player(const int id, const std::shared_ptr<Civilization> &c, const ResourceMap &startingResources) :
     visibility(std::make_shared<VisibilityMap>()),
     playerId(id),
@@ -301,7 +303,11 @@ VisibilityMap::VisibilityMap()
         m_edgetileLut[edge] = m_edgetileLut[aliasEdge];
     }
 
+#ifdef CHEAT_VISIBILITY
+    m_visibility.fill(Visible);
+#else
     m_visibility.fill(Unexplored);
+#endif
 }
 
 int VisibilityMap::edgeTileNum(const int tileX, const int tileY, const Visibility type) const

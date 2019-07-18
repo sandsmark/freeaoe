@@ -477,9 +477,13 @@ void Unit::setPosition(const MapPos &pos, const bool initial) noexcept
         });
     }
 
-    const MapPos oldTilePosition = position() / Constants::TILE_SIZE;
-    const MapPos newTilePosition = pos / Constants::TILE_SIZE;
-    EventManager::unitMoved(this, oldTilePosition, newTilePosition);
+    MapPos oldTilePosition = position() / Constants::TILE_SIZE;
+    MapPos newTilePosition = pos / Constants::TILE_SIZE;
+    oldTilePosition.round();
+    newTilePosition.round();
+    if (oldTilePosition != newTilePosition) {
+        EventManager::unitMoved(this, oldTilePosition, newTilePosition);
+    }
 
     Entity::setPosition(pos, initial);
 

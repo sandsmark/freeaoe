@@ -168,6 +168,7 @@ void GameState::setupScenario()
 
     m_scenarioController = std::make_unique<ScenarioController>();
     m_scenarioController->setScenario(scenario_);
+    m_scenarioController->setUnitManager(m_unitManager);
 
     const genie::ScnMainPlayerData &playerData = scenario_->playerData;
     for (size_t playerNum = 0; playerNum < scenario_->enabledPlayerCount; playerNum++) {

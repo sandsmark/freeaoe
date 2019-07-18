@@ -9,6 +9,8 @@
 
 
 
+class UnitManager;
+
 namespace genie {
 class ScnFile;
 }
@@ -70,6 +72,7 @@ public:
 
     void setScenario(const std::shared_ptr<genie::ScnFile> &scenario);
     bool update(Time time);
+    void setUnitManager(const std::shared_ptr<UnitManager> &unitManager);
 
 private:
     void onUnitCreated(Unit *unit) override;
@@ -77,10 +80,13 @@ private:
     void onUnitSelected(Unit *unit) override;
     void onUnitDeselected(const Unit *unit) override;
 
+    void handleTriggerEffect(const genie::TriggerEffect &effect);
+
     // Todo: put these in an std::array based on type, so we don't have to loop over all
 
     std::vector<Trigger> m_triggers;
     Time m_lastUpdateTime = 0;
+    std::weak_ptr<UnitManager> m_unitManager;
 //    Time m_nextTimerTriggerTarget = -1;
 
 };

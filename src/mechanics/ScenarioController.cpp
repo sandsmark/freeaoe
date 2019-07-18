@@ -4,6 +4,7 @@
 #include <genie/script/ScnFile.h>
 
 #include "mechanics/Unit.h"
+#include "mechanics/UnitManager.h"
 
 #include <set>
 
@@ -23,15 +24,19 @@ void ScenarioController::setScenario(const std::shared_ptr<genie::ScnFile> &scen
         WARN << "set null scenario";
         return;
     }
+    std::unordered_set<int32_t> missingConditionTypes;
     for (const genie::Trigger &trigger : scenario->triggers) {
         bool isImplemented = false;
         for (const genie::TriggerCondition &cond : trigger.conditions) {
             switch(cond.type) {
             case genie::TriggerCondition::OwnObjects:
-            case genie::TriggerCondition::ObjectsInArea:
+            case genie::TriggerCondition::OwnFewerObjects:
             case genie::TriggerCondition::ObjectSelected:
                 isImplemented = true;
                 break;
+            case genie::TriggerCondition::ObjectsInArea:
+                DBG << cond;
+                isImplemented = true;
                 break;
             case genie::TriggerCondition::Timer:
                 isImplemented = true;
@@ -42,6 +47,7 @@ void ScenarioController::setScenario(const std::shared_ptr<genie::ScnFile> &scen
                 }
                 continue;
             default:
+                WARN << "Not implemented condition" << genie::TriggerCondition::Type(cond.type);
                 continue;
             }
         }
@@ -53,9 +59,26 @@ void ScenarioController::setScenario(const std::shared_ptr<genie::ScnFile> &scen
         }
     }
 
-//    for (const Trigger &trigger : m_triggers) {
-//        DBG << trigger.data;
-//    }
+    std::unordered_set<int32_t> missingEffectTypes;
+    for (const Trigger &trigger : m_triggers) {
+        for (const genie::TriggerEffect &effect : trigger.data.effects) {
+            switch(effect.type) {
+            case genie::TriggerEffect::ActivateTrigger:
+                break;
+            case genie::TriggerEffect::DisplayInstructions:
+                break;
+            case genie::TriggerEffect::TaskObject:
+                break;
+            default:
+                missingEffectTypes.insert(effect.type);
+                break;
+            }
+
+        }
+    }
+    for (const int32_t type : missingEffectTypes) {
+        WARN << "not implemented trigger effect" << genie::TriggerEffect::Type(type);
+    }
 }
 
 bool ScenarioController::update(Time time)
@@ -90,28 +113,75 @@ bool ScenarioController::update(Time time)
         }
 
         for (const genie::TriggerEffect &effect : trigger.data.effects) {
-            switch(effect.type) {
-            case genie::TriggerEffect::ActivateTrigger:
-                // TODO: display order or normal order?
-                if (effect.trigger < 0 || effect.trigger >= m_triggers.size()) {
-                    DBG << "can't activate invalid trigger";
-                    continue;
-                }
-                DBG << "enabling trigger" << m_triggers[effect.trigger].data.name;
-                m_triggers[effect.trigger].enabled = true;
-                break;
-            case genie::TriggerEffect::DisplayInstructions:
-                WARN << "implement on screen message stuff";
-                WARN << effect.message << effect.soundFile;
-                break;
-            default:
-                DBG << "not implemented trigger effect" << effect;
-                break;
-            }
+            handleTriggerEffect(effect);
         }
     }
 
     return updated;
+}
+
+void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
+{
+    switch(effect.type) {
+    case genie::TriggerEffect::ActivateTrigger:
+        // TODO: display order or normal order?
+        if (effect.trigger < 0 || effect.trigger >= m_triggers.size()) {
+            DBG << "can't activate invalid trigger";
+            return;
+        }
+        DBG << "enabling trigger" << m_triggers[effect.trigger].data.name;
+        m_triggers[effect.trigger].enabled = true;
+        break;
+    case genie::TriggerEffect::DeactivateTrigger:
+        // TODO: display order or normal order?
+        if (effect.trigger < 0 || effect.trigger >= m_triggers.size()) {
+            DBG << "can't deactivate invalid trigger";
+            return;
+        }
+        DBG << "disabling trigger" << m_triggers[effect.trigger].data.name;
+        m_triggers[effect.trigger].enabled = false;
+        break;
+    case genie::TriggerEffect::DisplayInstructions:
+        DBG << "TODO: implement on screen message stuff and sound";
+        WARN << effect.message << effect.soundFile;
+        break;
+    case genie::TriggerEffect::TaskObject: {
+        std::shared_ptr<UnitManager> unitManager = m_unitManager.lock();
+        if (!unitManager) {
+            WARN << "unit manager unavailable";
+            return;
+        }
+
+        // again with the wtf swap of x and y
+        std::vector<std::weak_ptr<Entity>> entities;
+        entities = unitManager->map()->entitiesBetween(effect.areaFrom.y,
+                                                              effect.areaFrom.x,
+                                                              effect.areaTo.y,
+                                                              effect.areaTo.x);
+
+        // TODO, not sure if it is right to move to the middle of the tile, but whatevs
+        MapPos targetPos(effect.location.y + 0.5, effect.location.x + 0.5);
+        targetPos *= Constants::TILE_SIZE;
+
+        for (const std::weak_ptr<Entity> &entity : entities) {
+            Unit::Ptr unit = Entity::asUnit(entity);
+            if (!unit) {
+                WARN << "got invalid unit in area for effect";
+                continue;
+            }
+            unitManager->moveUnitTo(unit, targetPos);
+        }
+        break;
+    }
+    default:
+        WARN << "not implemented trigger effect" << effect;
+        break;
+    }
+}
+
+void ScenarioController::setUnitManager(const std::shared_ptr<UnitManager> &unitManager)
+{
+    m_unitManager = unitManager;
 }
 
 void ScenarioController::onUnitCreated(Unit *unit)
@@ -158,18 +228,20 @@ void ScenarioController::onUnitMoved(Unit *unit, const MapPos &oldTile, const Ma
                 continue;
             }
 
-            const MapRect conditionRect(MapPos(condition.data.areaFrom.x, condition.data.areaFrom.y),
-                                        MapPos(condition.data.areaTo.x, condition.data.areaTo.y)
+            const MapRect conditionRect(MapPos(condition.data.areaFrom.y, condition.data.areaFrom.x),
+                                        MapPos(condition.data.areaTo.y, condition.data.areaTo.x)
                 );
 
             // Moved out of required area
             if (conditionRect.contains(oldTile) && !conditionRect.contains(newTile))  {
+                DBG << unit->debugName << "moved to" << newTile << "out of" << conditionRect;
                 condition.amountRequired++;
                 continue;
             }
 
             // Moved into area
             if (!conditionRect.contains(oldTile) && conditionRect.contains(newTile))  {
+                DBG << unit->debugName << "moved to" << newTile << "into" << conditionRect;
                 condition.amountRequired--;
                 continue;
             }
@@ -180,6 +252,7 @@ void ScenarioController::onUnitMoved(Unit *unit, const MapPos &oldTile, const Ma
 
 void ScenarioController::onUnitSelected(Unit *unit)
 {
+    // Don't check for trigger enabled here, the player might select before trigger is enabled
     for (Trigger &trigger : m_triggers) {
         for (Condition &condition : trigger.conditions) {
             switch(condition.data.type) {
@@ -198,6 +271,7 @@ void ScenarioController::onUnitSelected(Unit *unit)
 
 void ScenarioController::onUnitDeselected(const Unit *unit)
 {
+    // Don't check for trigger enabled here, the player might select before trigger is enabled
     for (Trigger &trigger : m_triggers) {
         for (Condition &condition : trigger.conditions) {
             switch(condition.data.type) {
