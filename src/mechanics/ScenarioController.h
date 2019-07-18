@@ -75,6 +75,8 @@ public:
     void setGameState(GameState *gameState) { m_gameState = gameState; }
 
 private:
+    bool checkUnitMatchingEffect(const std::shared_ptr<Unit> &unit, const genie::TriggerEffect &effect);
+
     void onUnitCreated(Unit *unit) override;
     void onUnitMoved(Unit *unit, const MapPos &oldTile, const MapPos &newTile) override;
     void onUnitSelected(Unit *unit) override;

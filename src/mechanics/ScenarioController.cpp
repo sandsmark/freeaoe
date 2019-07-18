@@ -155,7 +155,7 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
         break;
     }
     case genie::TriggerEffect::CreateObject: {
-        DBG << "Creating" << effect;
+        DBG << "Creating unit" << effect;
         Player::Ptr player = m_gameState->player(effect.sourcePlayer);
         if (!player) {
             WARN << "couldn't get player for effect";
@@ -163,11 +163,12 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
         }
         MapPos location(effect.location.y * Constants::TILE_SIZE, effect.location.x * Constants::TILE_SIZE);
         Unit::Ptr unit = UnitFactory::Inst().createUnit(effect.object, location, player, *m_gameState->unitManager());
+        DBG << "Created" << unit->debugName;
         m_gameState->unitManager()->add(unit);
         break;
     }
     case genie::TriggerEffect::RemoveObject: {
-        DBG << "Removing" << effect;
+        DBG << "Removing unit" << effect;
         std::vector<std::weak_ptr<Entity>> entities;
         entities = m_gameState->map()->entitiesBetween(effect.areaFrom.y,
                                                               effect.areaFrom.x,
@@ -184,18 +185,16 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
                 WARN << "got invalid unit in area for effect";
                 continue;
             }
+            if (!checkUnitMatchingEffect(unit, effect)) {
+                continue;
+            }
+
+            DBG << "Removing unit" << unit->debugName;
             m_gameState->unitManager()->remove(unit);
         }
         break;
-        break;
     }
     case genie::TriggerEffect::TaskObject: {
-//        std::shared_ptr<UnitManager> unitManager = m_unitManager.lock();
-//        if (!unitManager) {
-//            WARN << "unit manager unavailable";
-//            return;
-//        }
-
         // again with the wtf swap of x and y
         std::vector<std::weak_ptr<Entity>> entities;
         entities = m_gameState->map()->entitiesBetween(effect.areaFrom.y,
@@ -213,9 +212,11 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
                 WARN << "got invalid unit in area for effect";
                 continue;
             }
-            DBG << "supposed to move unit" << unit->debugName << "automatically" << targetPos << "?";
-            DBG << "is not in accordance with instructions in tutorial scenario, so don't do it for now";
-//            m_gameState->unitManager()->moveUnitTo(unit, targetPos);
+            if (!checkUnitMatchingEffect(unit, effect)) {
+                continue;
+            }
+
+            m_gameState->unitManager()->moveUnitTo(unit, targetPos);
         }
         break;
     }
@@ -360,4 +361,32 @@ bool ScenarioController::Condition::checkUnitMatching(const Unit *unit) const
 
 
     return true;
+}
+
+bool ScenarioController::checkUnitMatchingEffect(const std::shared_ptr<Unit> &unit, const genie::TriggerEffect &effect)
+{
+    if (!unit) {
+        WARN << "null unit";
+        return false;
+    }
+
+    if (effect.sourcePlayer > -1) {
+        if (unit->playerId != effect.sourcePlayer) {
+            return false;
+        }
+    }
+
+    if (effect.objectType > -1 && unit->data()->CombatLevel != effect.objectType) {
+        return false;
+    }
+
+    if (effect.object > -1 && unit->data()->ID != effect.object) {
+        return false;
+    }
+
+    // could check area, but we already check it above, so meh
+
+
+    return true;
+
 }
