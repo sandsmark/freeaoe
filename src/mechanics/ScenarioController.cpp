@@ -16,6 +16,7 @@ ScenarioController::ScenarioController()
     EventManager::registerListener(this, EventManager::UnitMoved);
     EventManager::registerListener(this, EventManager::UnitSelected);
     EventManager::registerListener(this, EventManager::UnitDeselected);
+    EventManager::registerListener(this, EventManager::UnitDestroyed);
 }
 
 void ScenarioController::setScenario(const std::shared_ptr<genie::ScnFile> &scenario)
@@ -36,10 +37,11 @@ void ScenarioController::setScenario(const std::shared_ptr<genie::ScnFile> &scen
             case genie::TriggerCondition::ObjectSelected:
             case genie::TriggerCondition::ObjectsInArea:
             case genie::TriggerCondition::Timer:
+            case genie::TriggerCondition::DestroyObject:
                 isImplemented = true;
                 break;
             default:
-                WARN << "Not implemented condition" << genie::TriggerCondition::Type(cond.type);
+                WARN << "Not implemented condition" << cond;
                 continue;
             }
         }
@@ -325,6 +327,29 @@ void ScenarioController::onUnitDeselected(const Unit *unit)
                 if (condition.checkUnitMatching(unit)) {
                     condition.amountRequired++;
                     DBG << "deselect condition match" << unit->spawnId << unit->debugName << unit->id << condition.data << condition.amountRequired;
+                }
+                break;
+            default:
+                continue;
+            }
+        }
+    }
+}
+
+void ScenarioController::onUnitDying(Unit *unit)
+{
+    DBG << "unit died" << unit->debugName << unit->spawnId;
+    for (Trigger &trigger : m_triggers) {
+        if (!trigger.enabled) {
+            continue;
+        }
+
+        for (Condition &condition : trigger.conditions) {
+            switch(condition.data.type) {
+            case genie::TriggerCondition::DestroyObject:
+                if (condition.checkUnitMatching(unit)) {
+                    condition.amountRequired--;
+                    DBG << "destroy condition match" << unit->spawnId << unit->debugName << unit->id << condition.data << condition.amountRequired;
                 }
                 break;
             default:

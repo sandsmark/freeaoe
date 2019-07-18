@@ -637,7 +637,7 @@ void Unit::updateGraphic()
         break;
     case IAction::Type::Attack:
         if (m_currentAction->unitState() == IAction::UnitState::Attacking) {
-            DBG << "Setting graphic";
+//            DBG << "Setting graphic";
             graphic = AssetManager::Inst()->getGraphic(data()->Combat.AttackGraphic);
             graphic->setRunOnce(true);
         }

@@ -77,6 +77,7 @@ public:
 private:
     bool checkUnitMatchingEffect(const std::shared_ptr<Unit> &unit, const genie::TriggerEffect &effect);
 
+    void onUnitDying(Unit *unit) override;
     void onUnitCreated(Unit *unit) override;
     void onUnitMoved(Unit *unit, const MapPos &oldTile, const MapPos &newTile) override;
     void onUnitSelected(Unit *unit) override;
