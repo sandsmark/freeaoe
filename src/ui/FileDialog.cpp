@@ -34,7 +34,7 @@ bool FileDialog::setup(int width, int height)
     const Size buttonSize(250, 50);
 
     m_fileList = std::make_unique<ListView>(SfmlRenderTarget::defaultFont(), ScreenRect(ScreenPos(width/2 - width*3/8, 55), Size(width*3/4, 550)));
-    m_fileList->setCurrentPath(std::filesystem::current_path());
+    m_fileList->setCurrentPath(std::string());
 
     m_okButton = std::make_unique<Button>("OK", SfmlRenderTarget::defaultFont(), ScreenRect(ScreenPos(m_fileList->rect().x, 700), buttonSize));
 
@@ -296,7 +296,7 @@ void ListView::handleEvent(const sf::Event &event)
     }
 
     if (std::filesystem::is_directory(m_list[m_currentItem])) {
-        setCurrentPath(std::filesystem::canonical(m_list[m_currentItem]));
+        setCurrentPath(std::filesystem::canonical(m_list[m_currentItem]).string());
     }
 }
 
@@ -332,7 +332,7 @@ void ListView::setCurrentPath(std::string path)
                 hasDataFolder = true;
             }
 
-            m_list.push_back(entry.path());
+            m_list.push_back(entry.path().string());
         }
 
     } catch (const std::filesystem::filesystem_error &err) {
@@ -341,13 +341,13 @@ void ListView::setCurrentPath(std::string path)
             return;
         }
 
-        path = m_currentPath;
+        path = m_currentPath.string();
     }
 
     if (!std::filesystem::path(path).parent_path().empty() && path != std::filesystem::path(path).parent_path()) {
         std::filesystem::path dotdot = path;
         dotdot += "/..";
-        m_list.push_back(dotdot);
+        m_list.push_back(dotdot.string());
     }
 
     std::sort(m_list.begin(), m_list.end(), [](const std::filesystem::path &a, const std::filesystem::path &b){
