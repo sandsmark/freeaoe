@@ -568,6 +568,11 @@ void ActionPanel::handleButtonClick(const ActionPanel::InterfaceButton &button)
                 unit->setCurrentAction(nullptr);
             }
             break;
+        case Command::Kill:
+            for (Unit::Ptr unit : m_unitManager->selected()) {
+                unit->kill();
+            }
+            break;
         case Command::AttackGround:
             m_unitManager->selectAttackTarget();
             break;
