@@ -176,11 +176,8 @@ void GameState::setupScenario()
     DBG << "Setting up scenario:" << scenario_->scenarioInstructions;
     map_->create(scenario_->map);
 
-    m_scenarioController = std::make_unique<ScenarioController>();
-    m_scenarioController->setScenario(scenario_);
-    m_scenarioController->setGameState(this);
-
     const genie::ScnMainPlayerData &playerData = scenario_->playerData;
+
     for (size_t playerNum = 0; playerNum < scenario_->enabledPlayerCount + 1; playerNum++) { // +1 for gaia
         Player::Ptr player;
 
@@ -202,6 +199,13 @@ void GameState::setupScenario()
         player->resourcesAvailable[genie::ResourceType::OreStorage] = resources.ore;
         player->resourcesAvailable[genie::ResourceType::TradeGoods] = resources.goods;
         player->resourcesAvailable[genie::ResourceType::PopulationHeadroom] = scenario_->playerResources[playerNum].popLimit;
+
+        if (scenario_->playerData.resourcesPlusPlayerInfo[playerNum].isHuman) {
+            if (m_humanPlayer) {
+                WARN << "multiple human players defined" << m_humanPlayer->playerId << playerNum;
+            }
+            m_humanPlayer = player;
+        }
 
         m_players.push_back(player);
         for (const genie::ScnUnit &scnunit : scenario_->playerUnits[playerNum].units) {
@@ -227,7 +231,14 @@ void GameState::setupScenario()
         cameraPos = MapPos (scenario_->players[1].initCameraX * Constants::TILE_SIZE, map_->height() - scenario_->players[1].initCameraY * Constants::TILE_SIZE);
     }
     renderTarget_->camera()->setTargetPosition(cameraPos);
-    m_humanPlayer = m_players[1];
+
+    if (!m_humanPlayer) {
+        WARN << "no human player defined, setting to 1. player";
+        m_humanPlayer = m_players[1];
+    }
+
+    m_scenarioController = std::make_unique<ScenarioController>(this);
+    m_scenarioController->setScenario(scenario_);
 }
 
 void GameState::setupGame(const GameType /*gameType*/)
