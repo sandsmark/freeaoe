@@ -534,6 +534,10 @@ void UnitManager::onRightClick(const ScreenPos &screenPos, const CameraPtr &came
             continue;
         }
 
+        if (task.data->ActionType == genie::Task::Combat) {
+            AudioPlayer::instance().playSound(unit->data()->Action.AttackSound, humanPlayer->civilization.id());
+        }
+
         unit->clearActionQueue();
         Unit::Ptr target = unitAt(screenPos, camera);
         IAction::assignTask(task, unit, target);
@@ -558,6 +562,8 @@ void UnitManager::onRightClick(const ScreenPos &screenPos, const CameraPtr &came
         unit->clearActionQueue();
         moveUnitTo(unit, mapPos);
         movedSomeone = true;
+
+        AudioPlayer::instance().playSound(unit->data()->Action.MoveSound, humanPlayer->civilization.id());
     }
 
     if (movedSomeone) {
@@ -810,12 +816,6 @@ const Task UnitManager::defaultActionAt(const ScreenPos &pos, const CameraPtr &c
 
 void UnitManager::moveUnitTo(const Unit::Ptr &unit, const MapPos &targetPos)
 {
-    Player::Ptr player = unit->player.lock();
-    if (player) {
-        AudioPlayer::instance().playSound(unit->data()->Action.MoveSound, player->civilization.id());
-    } else {
-        WARN << "Lost the player";
-    }
     unit->setCurrentAction(ActionMove::moveUnitTo(unit, targetPos));
 }
 
