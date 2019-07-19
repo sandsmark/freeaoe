@@ -127,11 +127,12 @@ void Engine::start()
             state->unitManager()->render(renderTarget_, visibleEntities);
 
             state->draw();
-            drawUi();
 
             if (m_currentDialog) {
                 m_currentDialog->render(renderWindow_);
             }
+
+            drawUi();
 
             const int renderTime = GameClock.getElapsedTime().asMilliseconds() - renderStart;
 
