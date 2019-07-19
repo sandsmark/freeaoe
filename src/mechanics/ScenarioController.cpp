@@ -10,7 +10,8 @@
 
 #include <set>
 
-ScenarioController::ScenarioController()
+ScenarioController::ScenarioController(GameState *gameState) :
+    m_gameState(gameState)
 {
     EventManager::registerListener(this, EventManager::UnitCreated);
     EventManager::registerListener(this, EventManager::UnitMoved);
@@ -18,6 +19,7 @@ ScenarioController::ScenarioController()
     EventManager::registerListener(this, EventManager::UnitDeselected);
     EventManager::registerListener(this, EventManager::UnitDestroyed);
     EventManager::registerListener(this, EventManager::PlayerDefeated);
+    EventManager::registerListener(this, EventManager::AttributeChanged);
 }
 
 void ScenarioController::setScenario(const std::shared_ptr<genie::ScnFile> &scenario)
@@ -56,7 +58,7 @@ void ScenarioController::setScenario(const std::shared_ptr<genie::ScnFile> &scen
 
     std::unordered_set<int32_t> missingEffectTypes;
     for (const Trigger &trigger : m_triggers) {
-        for (const genie::TriggerEffect &effect : trigger.data.effects) {
+        for (const genie::TriggerEffect &effect : trigger.effects) {
             switch(effect.type) {
             case genie::TriggerEffect::DeactivateTrigger:
             case genie::TriggerEffect::ActivateTrigger:
@@ -79,27 +81,167 @@ void ScenarioController::setScenario(const std::shared_ptr<genie::ScnFile> &scen
         WARN << "not implemented trigger effect" << genie::TriggerEffect::Type(type);
     }
 
-    DBG << "global victory type" << scenario->victoryType;
-    DBG << "main player victory type" << scenario->playerData.victoryConditions.victoryMode;
-    DBG << "relics required:" << scenario->playerData.victoryConditions.numRelicsRequired;
-    DBG << "conquest required:" << scenario->playerData.victoryConditions.conquestRequired;
-    DBG << "explored percentage required:" << scenario->playerData.victoryConditions.exploredPerCentRequired;
-    DBG << "all conditions required" << scenario->playerData.victoryConditions.allConditionsRequired;
-    DBG << "score required" << scenario->playerData.victoryConditions.scoreRequired;
-    DBG << "time required" << scenario->playerData.victoryConditions.timeForTimedGame;
+//    genie::Trigger mainVictoryTrigger;
+//    DBG << "global victory type" << scenario->victoryType;
+    const genie::ScnVictory &victoryConditions = scenario->playerData.victoryConditions;
 
-//    for (const genie::ScnMorePlayerData &player : scenario->players) {
-//        for (const genie::ScnPlayerVictoryCondition &victoryCondition : player.victoryConditions) {
-//            switch(victoryCondition.type) {
-//            case genie::ScnPlayerVictoryCondition::Attribute:
-//                DBG << "player" << player.playerName << "needs" << victoryCondition.count << "of" << genie::ResourceType(victoryCondition.number) << "to win";
-//                break;
-//            default:
-//                WARN << "unhandled victory condition type:" << victoryCondition.type;
-//                break;
-//            }
-//        }
-//    }
+    std::vector<genie::TriggerCondition> mainVictoryConditions;
+    std::vector<genie::TriggerCondition> conquestConditions;
+    if (victoryConditions.conquestRequired || victoryConditions.victoryMode == genie::ScnVictory::Conquest) {
+        for (size_t playerId = 0; playerId < scenario->players.size(); playerId++) {
+            if (!scenario->playerData.resourcesPlusPlayerInfo[playerId].enabled) {
+                continue;
+            }
+            if (scenario->playerData.resourcesPlusPlayerInfo[playerId].isHuman) {
+                continue;
+            }
+            genie::TriggerCondition condition;
+            condition.type = genie::TriggerCondition::PlayerDefeated;
+            condition.sourcePlayer = playerId;
+            conquestConditions.push_back(std::move(condition));
+        }
+    }
+    if (victoryConditions.conquestRequired) {
+        DBG << "conquest required to win";
+    }
+
+    switch(victoryConditions.victoryMode) {
+    case genie::ScnVictory::Standard:
+        WARN << "TODO handle standard game";
+        break;
+    case genie::ScnVictory::Conquest:
+        DBG << "conquest game (should be handled)";
+        mainVictoryConditions = conquestConditions;
+        break;
+    case genie::ScnVictory::Score:
+        WARN << "TODO handle score game";
+        if (victoryConditions.scoreRequired > 0) {
+            DBG << "requires" << victoryConditions.scoreRequired << "score to win";
+            // TODO: create a condition for all score resourcetypes
+        }
+        break;
+    case genie::ScnVictory::Timed:
+        WARN << "TODO handle timed game";
+        if (victoryConditions.timeForTimedGame > 0) {
+            DBG << "requires" << victoryConditions.timeForTimedGame << "time to win";
+            // TODO: create a timer condition
+        }
+        break;
+    case genie::ScnVictory::Custom:
+        WARN << "TODO: check if we handle custom game";
+        break;
+    default:
+        WARN << "Invalid victory mode" << victoryConditions.victoryMode;
+    }
+
+    // I think relics and explored might be for custom games?
+    if (victoryConditions.numRelicsRequired > 0) {
+        DBG << "requires" << victoryConditions.numRelicsRequired << "relics to win";
+        genie::TriggerCondition condition;
+        condition.type = genie::TriggerCondition::AccumulateAttribute;
+        condition.amount = victoryConditions.numRelicsRequired;
+        condition.resource = int32_t(genie::ResourceType::RelicsCaptured);
+
+        mainVictoryConditions.push_back(std::move(condition));
+    }
+
+    if (victoryConditions.exploredPerCentRequired > 0) {
+        DBG << "requires" << victoryConditions.exploredPerCentRequired << "of map explored to win";
+        genie::TriggerCondition condition;
+        condition.type = genie::TriggerCondition::AccumulateAttribute;
+        condition.amount = victoryConditions.exploredPerCentRequired;
+        condition.resource = int32_t(genie::ResourceType::PercentMapExplored);
+        mainVictoryConditions.push_back(std::move(condition));
+    }
+
+
+    genie::TriggerEffect humanWinsEffect;
+    humanWinsEffect.type = genie::TriggerEffect::DeclareVictory;
+    humanWinsEffect.sourcePlayer = m_gameState->humanPlayer()->playerId;
+    if (scenario->playerData.victoryConditions.allConditionsRequired) {
+        DBG << "all conditions required to win";
+        genie::Trigger mainVictoryTrigger;
+        mainVictoryTrigger.startingState = 1;
+        mainVictoryTrigger.conditions = mainVictoryConditions;
+
+        if (victoryConditions.conquestRequired && victoryConditions.victoryMode != genie::ScnVictory::Conquest) {
+            for (const genie::TriggerCondition &conquestCondition : conquestConditions) {
+                mainVictoryTrigger.conditions.push_back(conquestCondition);
+            }
+        }
+
+        mainVictoryTrigger.effects = { humanWinsEffect };
+        m_triggers.emplace_back(mainVictoryTrigger);
+    } else {
+        DBG << "any condition required to win";
+        for (const genie::TriggerCondition &victoryCondition : mainVictoryConditions) {
+            genie::Trigger mainVictoryTrigger;
+            mainVictoryTrigger.startingState = 1;
+            mainVictoryTrigger.conditions = { victoryCondition };
+
+            if (victoryConditions.conquestRequired && victoryConditions.victoryMode != genie::ScnVictory::Conquest) {
+                for (const genie::TriggerCondition &conquestCondition : conquestConditions) {
+                    mainVictoryTrigger.conditions.push_back(conquestCondition);
+                }
+            }
+
+            mainVictoryTrigger.effects = { humanWinsEffect };
+            m_triggers.emplace_back(mainVictoryTrigger);
+        }
+        if (victoryConditions.conquestRequired || victoryConditions.victoryMode == genie::ScnVictory::Conquest) {
+            genie::Trigger conquestTrigger;
+            conquestTrigger.startingState = 1;
+            conquestTrigger.conditions = conquestConditions;
+
+            for (const genie::TriggerCondition &conquestCondition : conquestConditions) {
+                conquestTrigger.conditions.push_back(conquestCondition);
+            }
+
+            conquestTrigger.effects = { humanWinsEffect };
+            m_triggers.emplace_back(conquestTrigger);
+        }
+    }
+
+    for (size_t playerId = 0; playerId < scenario->players.size(); playerId++) {
+        const genie::ScnMorePlayerData &player  = scenario->players[playerId];
+        genie::Trigger winTrigger;
+        winTrigger.startingState = 1;
+        winTrigger.name = player.playerName + " wins";
+
+        for (const genie::ScnPlayerVictoryCondition &victoryCondition : player.victoryConditions) {
+            switch(victoryCondition.type) {
+            case genie::ScnPlayerVictoryCondition::Attribute: {
+                DBG << "player" << player.playerName << "needs" << victoryCondition.count << "of" << genie::ResourceType(victoryCondition.number) << "to win";
+
+                genie::TriggerCondition condition;
+                condition.type = genie::TriggerCondition::AccumulateAttribute;
+                condition.amount = victoryCondition.count;
+                winTrigger.conditions = {condition};
+                winTrigger.conditions.push_back(std::move(condition));
+
+                break;
+            }
+            default:
+                WARN << "unhandled victory condition type:" << victoryCondition.type;
+                continue;
+            }
+        }
+        if (winTrigger.conditions.empty()) {
+            DBG << "no winning conditions for" << player.playerName;
+            continue;
+        }
+
+        genie::TriggerEffect effect;
+        effect.type = genie::TriggerEffect::DeclareVictory;
+        if  (player.playerID >= 0) {
+            effect.sourcePlayer = player.playerID;
+        } else {
+            effect.sourcePlayer = playerId;
+        }
+
+        winTrigger.effects = {effect};
+        m_triggers.emplace_back(winTrigger);
+    }
 }
 
 bool ScenarioController::update(Time time)
@@ -129,11 +271,11 @@ bool ScenarioController::update(Time time)
 
         updated = true;
 
-        if (!trigger.data.looping) {
+        if (!trigger.looping) {
             trigger.enabled = false;
         }
 
-        for (const genie::TriggerEffect &effect : trigger.data.effects) {
+        for (const genie::TriggerEffect &effect : trigger.effects) {
             handleTriggerEffect(effect);
         }
     }
@@ -150,7 +292,7 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
             DBG << "can't activate invalid trigger";
             return;
         }
-        DBG << "enabling trigger" << m_triggers[effect.trigger].data.name;
+        DBG << "enabling trigger" << m_triggers[effect.trigger].name;
         m_triggers[effect.trigger].enabled = true;
         break;
     case genie::TriggerEffect::DeactivateTrigger:
@@ -159,7 +301,7 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
             DBG << "can't deactivate invalid trigger";
             return;
         }
-        DBG << "disabling trigger" << m_triggers[effect.trigger].data.name;
+        DBG << "disabling trigger" << m_triggers[effect.trigger].name;
         m_triggers[effect.trigger].enabled = false;
         break;
     case genie::TriggerEffect::DisplayInstructions:
@@ -367,6 +509,11 @@ void ScenarioController::onUnitDeselected(const Unit *unit)
 void ScenarioController::onPlayerDefeated(Player *player)
 {
     // TODO
+}
+
+void ScenarioController::onAttributeChanged(Player *player, int attributeId, float newValue)
+{
+
 }
 
 void ScenarioController::onUnitDying(Unit *unit)

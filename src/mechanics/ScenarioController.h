@@ -39,12 +39,16 @@ class ScenarioController : public EventListener
     struct Trigger {
         bool enabled = false;
 
-        Trigger (const genie::Trigger &d) : data(d) {
-            if (data.startingState) {
+        Trigger (const genie::Trigger &d) :
+            effects(d.effects),
+            looping(d.looping),
+            name(d.name)
+        {
+            if (d.startingState) {
                 enabled = true;
             }
 
-            for (const genie::TriggerCondition &cond : data.conditions) {
+            for (const genie::TriggerCondition &cond : d.conditions) {
                 conditions.emplace_back(cond);
             }
         }
@@ -63,16 +67,18 @@ class ScenarioController : public EventListener
         }
 
         std::vector<Condition> conditions;
+        const std::vector<genie::TriggerEffect> effects;
 
-        const genie::Trigger data;
+
+        const bool looping = false;
+        const std::string name;
     };
 
 public:
-    ScenarioController();
+    ScenarioController(GameState *gameState);
 
     void setScenario(const std::shared_ptr<genie::ScnFile> &scenario);
     bool update(Time time);
-    void setGameState(GameState *gameState) { m_gameState = gameState; }
 
 private:
     bool checkUnitMatchingEffect(const std::shared_ptr<Unit> &unit, const genie::TriggerEffect &effect);
@@ -83,6 +89,7 @@ private:
     void onUnitSelected(Unit *unit) override;
     void onUnitDeselected(const Unit *unit) override;
     void onPlayerDefeated(Player *player) override;
+    void onAttributeChanged(Player *player, int attributeId, float newValue) override;
 
     void handleTriggerEffect(const genie::TriggerEffect &effect);
 
