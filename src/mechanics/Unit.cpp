@@ -375,9 +375,9 @@ void Unit::checkForAutoTargets() noexcept
     const int bottom = position().y / Constants::TILE_SIZE + los;
 
     float closestDistance = los * Constants::TILE_SIZE;
-
-    for (const std::weak_ptr<Entity> &weakEntity : map->entitiesBetween(left, top, right, bottom)) {
-        Unit::Ptr other = Entity::asUnit(weakEntity);
+    const std::vector<std::weak_ptr<Entity>> entities = map->entitiesBetween(left, top, right, bottom);
+    for (size_t i=0; i<entities.size(); i++) {
+        Unit::Ptr other = Entity::asUnit(entities[i]);
         if (!other) {
             continue;
         }

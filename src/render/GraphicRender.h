@@ -108,7 +108,13 @@ private:
     void maybePlaySound(const float pan, const float volume) noexcept;
 
     struct GraphicDelta {
-        bool validForAngle(const float angle) const noexcept;
+        inline bool validForAngle(const float angle) const noexcept {
+            if (angleToDrawOn < 0) {
+                return true;
+            }
+
+            return graphic->m_graphic->angleToOrientation(angle) == angleToDrawOn;
+        }
 
         GraphicRenderPtr graphic;
         ScreenPos offset;

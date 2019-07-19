@@ -52,7 +52,7 @@ void UnitManager::add(const Unit::Ptr &unit)
         return;
     }
     unit->setMap(m_map);
-    m_units.insert(unit);
+    m_units.push_back(unit);
     if (unit->hasAutoTargets()) {
         m_unitsWithActions.insert(unit);
     }
@@ -67,10 +67,13 @@ void UnitManager::remove(const Unit::Ptr &unit)
         EventManager::unitDeselected(unit.get());
         m_selectedUnits.erase(unit);
     }
+
     m_unitsWithActions.erase(unit);
-    if (m_units.count(unit)) {
+
+    UnitVector::iterator it = std::find(m_units.begin(), m_units.end(), unit);
+    if (it != m_units.end()) {
         EventManager::unitDying(unit.get()); // not sure about this, but whatever
-        m_units.erase(unit);
+        m_units.erase(it);
     }
     // TODO: EventManager::unitDisappeared(), we need to check the visibility maps
 }
@@ -111,7 +114,7 @@ bool UnitManager::update(Time time)
     // Update decaying entities (smoke stuff from siege, corpses, etc.)
     std::unordered_set<DecayingEntity::Ptr>::iterator decayingEntityIterator = m_decayingEntities.begin();
     while (decayingEntityIterator != m_decayingEntities.end()) {
-        DecayingEntity::Ptr entity = *decayingEntityIterator;
+        const DecayingEntity::Ptr &entity = *decayingEntityIterator;
         updated = entity->update(time) || updated;
         if (!entity->decaying()) {
             decayingEntityIterator = m_decayingEntities.erase(decayingEntityIterator);
@@ -122,17 +125,20 @@ bool UnitManager::update(Time time)
     }
 
     // Clean up dead units
-    std::unordered_set<Unit::Ptr>::iterator unitIterator = m_units.begin();
+    UnitVector::iterator unitIterator = m_units.begin();
     while (unitIterator != m_units.end()) {
-        Unit::Ptr unit = *unitIterator;
+        const Unit::Ptr &unit = *unitIterator;
+
+        const bool isDead = unit->isDead();
+        const bool isDying = unit->isDying();
 
         // Remove from selected if it is dying
-        if (unit->isDead() || unit->isDying()) {
+        if (isDead || isDying) {
             m_selectedUnits.erase(unit);
             EventManager::unitDeselected(unit.get());
         }
 
-        if (unit->isDead()) {
+        if (isDead) {
             EventManager::unitDying(unit.get());
 
             DecayingEntity::Ptr corpse = UnitFactory::Inst().createCorpseFor(unit);
@@ -664,9 +670,9 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
 
     if (isClick) {
         const Unit::Ptr mostVisibleUnit = *std::min_element(newSelection.begin(), newSelection.end(), MapPositionSorter());
-        setSelectedUnits({mostVisibleUnit});
+        setSelectedUnits({std::move(mostVisibleUnit)});
     } else {
-        setSelectedUnits(newSelection);
+        setSelectedUnits(std::move(newSelection));
     }
 }
 
@@ -733,7 +739,7 @@ void UnitManager::placeBuilding(const int unitId, const std::shared_ptr<Player> 
     m_state = State::PlacingBuilding;
 }
 
-void UnitManager::enqueueProduceUnit(const genie::Unit *unitData, const UnitSet producers)
+void UnitManager::enqueueProduceUnit(const genie::Unit *unitData, const UnitSet &producers)
 {
     if (producers.empty()) {
         WARN << "Handed no producers";
@@ -749,7 +755,7 @@ void UnitManager::enqueueProduceUnit(const genie::Unit *unitData, const UnitSet 
     producer->enqueueProduceUnit(unitData);
 }
 
-void UnitManager::enqueueResearch(const genie::Tech *techData, const UnitSet producers)
+void UnitManager::enqueueResearch(const genie::Tech *techData, const UnitSet &producers)
 {
     if (producers.empty()) {
         WARN << "Handed no producers";

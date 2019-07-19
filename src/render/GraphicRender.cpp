@@ -45,12 +45,12 @@ bool GraphicRender::update(Time time) noexcept
     m_frameChanged = false;
 
     bool updated = false;
-    for (GraphicDelta &delta : m_deltas) {
-        if (!delta.validForAngle(m_angle)) {
+    for (size_t i=0; i<m_deltas.size(); i++) {
+        if (!m_deltas[i].validForAngle(m_angle)) {
             continue;
         }
 
-        updated = delta.graphic->update(time) || updated;
+        updated = m_deltas[i].graphic->update(time) || updated;
     }
 
     if (m_damageOverlay) {
@@ -396,11 +396,4 @@ void GraphicRender::maybePlaySound(const float pan, const float volume) noexcept
     }
 }
 
-bool GraphicRender::GraphicDelta::validForAngle(const float angle) const noexcept
-{
-    if (angleToDrawOn < 0) {
-        return true;
-    }
 
-    return graphic->m_graphic->angleToOrientation(angle) == angleToDrawOn;
-}

@@ -53,6 +53,7 @@ struct MapPositionSorter
 //class CameraPtr;
 // IDEA: Class containing all entities, (adds, removes, updates them).
 // Base class (EntitySpace?)
+typedef std::vector<Unit::Ptr> UnitVector;
 typedef std::unordered_set<Unit::Ptr> UnitSet;
 
 class UnitManager
@@ -92,11 +93,11 @@ public:
     void setSelectedUnits(const UnitSet &units);
     const UnitSet &selected() const { return m_selectedUnits; }
 
-    const std::unordered_set<Unit::Ptr> &units() const { return m_units; }
+    const UnitVector &units() const { return m_units; }
 
     void placeBuilding(const int unitId, const std::shared_ptr<Player> &player);
-    void enqueueProduceUnit(const genie::Unit *unitData, const UnitSet producers);
-    void enqueueResearch(const genie::Tech *techData, const UnitSet producers);
+    void enqueueProduceUnit(const genie::Unit *unitData, const UnitSet &producers);
+    void enqueueResearch(const genie::Tech *techData, const UnitSet &producers);
 
     Unit::Ptr unitAt(const ScreenPos &pos, const CameraPtr &camera) const;
     Unit::Ptr clickedUnitAt(const ScreenPos &pos, const CameraPtr &camera);
@@ -122,7 +123,7 @@ private:
 
     std::unordered_set<Missile::Ptr> m_missiles;
     std::unordered_set<DecayingEntity::Ptr> m_decayingEntities;
-    UnitSet m_units;
+    UnitVector m_units;
     UnitSet m_unitsWithActions;
     std::unordered_set<Task> m_currentActions;
 

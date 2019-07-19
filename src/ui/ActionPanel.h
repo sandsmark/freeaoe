@@ -15,6 +15,7 @@ struct Entity;
 struct Unit;
 class SfmlRenderTarget;
 class UnitManager;
+typedef std::vector<std::shared_ptr<Unit>> UnitVector;
 typedef std::unordered_set<std::shared_ptr<Unit>> UnitSet;
 
 namespace genie {

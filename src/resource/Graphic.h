@@ -168,7 +168,13 @@ public:
     inline bool runOnce() const noexcept { return m_runOnce; }
     inline void setRunOnce(const bool once) noexcept { m_runOnce = once; }
 
-    int angleToOrientation(float angle) const noexcept;
+    inline int angleToOrientation(float angle) const noexcept {
+        // The graphics start pointing south, and goes clock-wise
+        angle = fmod(- angle - M_PI_2, 2*M_PI);
+        if (angle < 0) angle += 2*M_PI;
+        return int(std::round(m_data.AngleCount * angle / (2*M_PI))) % m_data.AngleCount;
+    }
+
     float orientationToAngle(float orientation) const noexcept;
 private:
     const genie::SlpFramePtr &getFrame(uint32_t frame_num, float angle) const noexcept;

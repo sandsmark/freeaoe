@@ -21,6 +21,7 @@
 
 #include <memory>
 #include <unordered_set>
+#include <set>
 #include <array>
 
 #include <mechanics/IState.h>
@@ -35,6 +36,7 @@ struct Unit;
 struct Building;
 class SfmlRenderTarget;
 class UnitManager;
+typedef std::vector<std::shared_ptr<Unit>> UnitVector;
 typedef std::unordered_set<std::shared_ptr<Unit>> UnitSet;
 
 class UnitInfoPanel : public IState

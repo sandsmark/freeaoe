@@ -325,14 +325,7 @@ const genie::GraphicAngleSound &Graphic::soundForAngle(float angle) const noexce
 
 //------------------------------------------------------------------------------
 
-int Graphic::angleToOrientation(float angle) const noexcept
-{
-    // The graphics start pointing south, and goes clock-wise
-    angle = fmod(- angle - M_PI_2, 2*M_PI);
-    if (angle < 0) angle += 2*M_PI;
 
-    return int(std::round(m_data.AngleCount * angle / (2*M_PI))) % m_data.AngleCount;
-}
 
 float Graphic::orientationToAngle(float orientation) const noexcept
 {
