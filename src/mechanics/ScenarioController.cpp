@@ -395,12 +395,20 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
             if (!checkUnitMatchingEffect(unit, effect)) {
                 continue;
             }
+            DBG << "Tasking object" << unit->debugName;
 
             m_gameState->unitManager()->moveUnitTo(unit, targetPos);
         }
         break;
     }
     case genie::TriggerEffect::DeclareVictory: {
+        if (m_engine) {
+            m_engine->addMessage("");
+            m_engine->addMessage("");
+            m_engine->addMessage("           ----");
+            m_engine->addMessage("u win prize congratilatons");
+            m_engine->addMessage("sorry, victory is not implemented");
+        }
         m_gameState->onPlayerWin(effect.sourcePlayer);
         break;
     }
@@ -542,6 +550,12 @@ void ScenarioController::onUnitDying(Unit *unit)
                 if (condition.checkUnitMatching(unit)) {
                     condition.amountRequired--;
                     DBG << "destroy condition match" << unit->spawnId << unit->debugName << unit->id << condition.data << condition.amountRequired;
+                }
+                break;
+            case genie::TriggerCondition::OwnFewerObjects:
+                if (condition.checkUnitMatching(unit)) {
+                    condition.amountRequired--;
+                    DBG << "fewer condition match" << unit->spawnId << unit->debugName << unit->id << condition.data << condition.amountRequired;
                 }
                 break;
             default:
