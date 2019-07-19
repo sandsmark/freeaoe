@@ -376,7 +376,7 @@ void GraphicRender::maybePlaySound(const float pan, const float volume) noexcept
         return;
     }
 
-    if (m_graphic->sound() != -1 && m_currentFrame == 0) {
+    if (m_graphic->sound() != -1 && m_currentFrame == 1) {
         AudioPlayer::instance().playSound(m_graphic->sound(), m_civId, pan, volume);
     }
 
