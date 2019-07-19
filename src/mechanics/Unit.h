@@ -134,7 +134,6 @@ struct Unit : public Entity
     int playerId;
     std::weak_ptr<Player> player;
     std::vector<Annex> annexes;
-    std::shared_ptr<Civilization> civilization;
 
     ResourceMap resources;
 

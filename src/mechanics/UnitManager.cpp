@@ -810,7 +810,12 @@ const Task UnitManager::defaultActionAt(const ScreenPos &pos, const CameraPtr &c
 
 void UnitManager::moveUnitTo(const Unit::Ptr &unit, const MapPos &targetPos)
 {
-    AudioPlayer::instance().playSound(unit->data()->Action.MoveSound, unit->civilization->id());
+    Player::Ptr player = unit->player.lock();
+    if (player) {
+        AudioPlayer::instance().playSound(unit->data()->Action.MoveSound, player->civilization.id());
+    } else {
+        WARN << "Lost the player";
+    }
     unit->setCurrentAction(ActionMove::moveUnitTo(unit, targetPos));
 }
 
@@ -827,7 +832,12 @@ void UnitManager::playSound(const Unit::Ptr &unit)
         return;
     }
 
-    AudioPlayer::instance().playSound(id, unit->civilization->id());
+    Player::Ptr player = unit->player.lock();
+    if (player) {
+        AudioPlayer::instance().playSound(id, player->civilization.id());
+    } else {
+        WARN << "Lost the player";
+    }
 }
 
 const Task UnitManager::taskForPosition(const Unit::Ptr &unit, const ScreenPos &pos, const CameraPtr &camera) const noexcept

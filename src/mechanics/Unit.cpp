@@ -35,11 +35,10 @@ Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, Uni
     Entity(Type::Unit, LanguageManager::getString(data_.LanguageDLLName) + " (" + std::to_string(data_.ID) + ")"),
     playerId(player_->playerId),
     player(player_),
-    civilization(player_->civ),
     m_unitManager(unitManager)
 {
     m_renderer.setPlayerId(playerId);
-    m_renderer.setCivId(civilization->id());
+    m_renderer.setCivId(player_->civilization.id());
 
     setUnitData(data_);
     m_creationProgress = m_data->Creatable.TrainTime;
@@ -51,7 +50,6 @@ Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, Uni
     Entity(type, LanguageManager::getString(data_.LanguageDLLName) + " (" + std::to_string(data_.ID) + ")"),
     playerId(player_->playerId),
     player(player_),
-    civilization(player_->civ),
     m_unitManager(unitManager)
 {
     m_renderer.setPlayerId(playerId);
@@ -158,7 +156,12 @@ const std::vector<const genie::Unit *> Unit::creatableUnits() noexcept
         return {};
     }
 
-    return civilization->creatableUnits(m_data->ID);
+    Player::Ptr owner = player.lock();
+    if (!owner) {
+        WARN << "Lost our player";
+        return {};
+    }
+    return owner->civilization.creatableUnits(m_data->ID);
 }
 
 std::shared_ptr<Building> Unit::asBuilding(const Unit::Ptr &unit) noexcept
@@ -262,7 +265,10 @@ void Unit::takeDamage(const genie::unit::AttackOrArmor &attack, const float dama
 
         DBG  << data()->DyingSound;
         if (data()->DyingSound != -1) {
-            AudioPlayer::instance().playSound(data()->DyingSound, civilization->id());
+            Player::Ptr owner = player.lock();
+            if (owner) {
+                AudioPlayer::instance().playSound(data()->DyingSound, owner->civilization.id());
+            }
         }
     } else {
         const int damagedPercent = 100 * m_damageTaken / data()->HitPoints;
@@ -424,7 +430,13 @@ std::unordered_set<Task> Unit::availableActions() noexcept
         return tasks;
     }
 
-    for (const genie::Unit *swappable : civilization->swappableUnits(m_data->Action.TaskSwapGroup)) {
+    Player::Ptr owner = player.lock();
+    if (!owner) {
+        WARN << "Lost our player";
+        return {};
+    }
+
+    for (const genie::Unit *swappable : owner->civilization.swappableUnits(m_data->Action.TaskSwapGroup)) {
         for (const genie::Task &task : DataManager::Inst().getTasks(swappable->ID)) {
             tasks.insert(Task(task, swappable->ID));
         }
@@ -677,8 +689,15 @@ void Unit::setCurrentAction(const ActionPtr &action) noexcept
 {
     m_currentAction = action;
 
+
+    Player::Ptr owner = player.lock();
+    if (!owner) {
+        WARN << "Lost our player";
+        return;
+    }
+
     if (action && action->requiredUnitID != -1 && action->requiredUnitID != m_data->ID) {
-        setUnitData(civilization->unitData(action->requiredUnitID));
+        setUnitData(owner->civilization.unitData(action->requiredUnitID));
     }
 
     updateGraphic();

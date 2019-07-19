@@ -8,13 +8,14 @@
 
 #define CHEAT_VISIBILITY 1
 
-Player::Player(const int id, const std::shared_ptr<Civilization> &c, const ResourceMap &startingResources) :
+Player::Player(const int id, const int civId, const ResourceMap &startingResources) :
     visibility(std::make_shared<VisibilityMap>()),
     playerId(id),
-    civ(c),
-    resourcesAvailable(civ->startingResources()),
+    civilization(civId),
+    resourcesAvailable(civilization.startingResources()),
     name("Player " + std::to_string(id))
 {
+    // Override
     for (const std::pair<const genie::ResourceType, float> &r : startingResources) {
         resourcesAvailable[r.first] = r.second;
     }
@@ -37,7 +38,7 @@ void Player::applyResearch(const int researchId)
         if (research.EffectID == -1) {
             continue;
         }
-        if (research.Civ != -1 && research.Civ != civ->id()) {
+        if (research.Civ != -1 && research.Civ != civilization.id()) {
             continue;
         }
         if (m_activeTechs.count(research.EffectID)) {
@@ -98,11 +99,11 @@ void Player::applyTechEffectCommand(const genie::EffectCommand &effect)
         break;
     }
     case genie::EffectCommand::EnableUnit:
-        civ->enableUnit(effect.TargetUnit);
+        civilization.enableUnit(effect.TargetUnit);
         break;
     case genie::EffectCommand::UpgradeUnit: {
         uint16_t fromUnitID = effect.TargetUnit;
-        const genie::Unit &toUnitData = civ->unitData(effect.UnitClassID);
+        const genie::Unit &toUnitData = civilization.unitData(effect.UnitClassID);
         if (toUnitData.Class == genie::Unit::InvalidClass) {
             return;
         }
@@ -119,7 +120,7 @@ void Player::applyTechEffectCommand(const genie::EffectCommand &effect)
     case genie::EffectCommand::AttributeMultiplier:
     case genie::EffectCommand::AbsoluteAttributeModifier:
     case genie::EffectCommand::RelativeAttributeModifier:
-        civ->applyUnitAttributeModifier(effect);
+        civilization.applyUnitAttributeModifier(effect);
         break;
     case genie::EffectCommand::ResourceMultiplier:
         resourcesAvailable[genie::ResourceType(effect.TargetUnit)] *= effect.Amount;
@@ -164,7 +165,7 @@ void Player::setAge(const Age age)
     }
 
     // TODO: need to recurse and research all dependencies
-    applyTechEffect(civ->startingResource(effectResourceType));
+    applyTechEffect(civilization.startingResource(effectResourceType));
 }
 
 void Player::addUnit(Unit *unit)

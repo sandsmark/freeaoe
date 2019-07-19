@@ -25,7 +25,7 @@ class ISampleGame
 public:
     virtual ~ISampleGame() {}
     virtual void setupMap() = 0;
-    virtual void setupActors(const std::vector<Civilization::Ptr> &civilizations, const ResourceMap &startingResources) = 0;
+    virtual void setupActors(const ResourceMap &startingResources) = 0;
     virtual Player::Ptr getGaiaPlayer() = 0;
     virtual Player::Ptr getHumanPlayer() = 0;
     virtual Player::Ptr getEnemyPlayer() = 0;

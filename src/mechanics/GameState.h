@@ -94,8 +94,6 @@ private:
 
     genie::SlpFilePtr m_waypointFlag;
 
-    std::vector<Civilization::Ptr> m_civilizations;
-
     Player::Ptr m_humanPlayer;
     std::vector<Player::Ptr> m_players;
 

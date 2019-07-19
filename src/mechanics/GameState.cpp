@@ -120,15 +120,6 @@ bool GameState::init()
         WARN << "Failed to load waypoint animation";
     }
 
-    const std::vector<genie::Civ> &civilizations = DataManager::Inst().civilizations();
-    for (size_t i=0; i<civilizations.size(); i++) {
-        m_civilizations.push_back(std::make_shared<Civilization>(i));
-    }
-    if (m_civilizations.empty()) {
-        WARN << "Failed to load any civilizations";
-        return false;
-    }
-
     map_ = std::make_shared<Map>();
     m_unitManager->setMap(map_);
 
@@ -195,10 +186,12 @@ void GameState::setupScenario()
 
         // player 0 is gaia
         if (playerNum != UnitManager::GaiaID) {
-            player = std::make_shared<Player>(playerNum, m_civilizations[playerData.resourcesPlusPlayerInfo[playerNum-1].civilizationID]);
+            player = std::make_shared<Player>(playerNum, playerData.resourcesPlusPlayerInfo[playerNum-1].civilizationID);
             player->name = playerData.playerNames[playerNum - 1];
         } else {
-            player = std::make_shared<Player>(playerNum, m_civilizations[UnitManager::GaiaID]); // gaia
+            // Gaia
+            player = std::make_shared<Player>(playerNum, UnitManager::GaiaID);
+            player->civilization.setGaiaOverrideCiv(playerData.resourcesPlusPlayerInfo[8].civilizationID);
         }
 
         const genie::ScnPlayerResources &resources = scenario_->playerResources[playerNum];
@@ -242,7 +235,7 @@ void GameState::setupGame(const GameType /*gameType*/)
    SampleGamePtr sampleGameSetup = SampleGameFactory::Inst().createGameSetup(map_, m_unitManager);
 
    sampleGameSetup->setupMap();
-   sampleGameSetup->setupActors(m_civilizations, defaultStartingResources[m_gameType]);
+   sampleGameSetup->setupActors(defaultStartingResources[m_gameType]);
 
     m_humanPlayer = sampleGameSetup->getHumanPlayer();
 

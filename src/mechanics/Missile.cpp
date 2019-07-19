@@ -120,7 +120,7 @@ bool Missile::update(Time time) noexcept
 //        DBG << (m_data.Moving.TrackingUnitDensity / 0.015) << time - m_previousSmokeTime ;
         m_previousSmokeTime = time;
         if (player) {
-            const genie::Unit &trailingData = player->civ->unitData(m_data.Moving.TrackingUnit);
+            const genie::Unit &trailingData = player->civilization.unitData(m_data.Moving.TrackingUnit);
             DecayingEntity::Ptr trailingUnit = std::make_shared<DecayingEntity>(trailingData.StandingGraphic.first, 0.f);
             trailingUnit->setMap(m_map.lock());
             trailingUnit->setPosition(position());
@@ -243,6 +243,6 @@ void Missile::die()
 
     Player::Ptr player = m_player.lock();
     if (player && m_data.DyingSound != -1) {
-        AudioPlayer::instance().playSound(m_data.DyingSound, player->civ->id());
+        AudioPlayer::instance().playSound(m_data.DyingSound, player->civilization.id());
     }
 }

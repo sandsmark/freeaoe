@@ -30,7 +30,7 @@ public:
         : map_(map),  unitManager_(unitManager) {}
 
     void setupMap() override;
-    void setupActors(const std::vector<Civilization::Ptr> &civilizations, const ResourceMap &startingResources) override;
+    void setupActors(const ResourceMap &startingResources) override;
 
     Player::Ptr getGaiaPlayer() override;
     Player::Ptr getHumanPlayer() override;

@@ -10,6 +10,7 @@
 #include <genie/dat/ResourceUsage.h>
 #include <genie/dat/Civ.h>
 #include "core/ResourceMap.h"
+#include "Civilization.h"
 
 class Civilization;
 struct Unit;
@@ -108,11 +109,13 @@ struct Player
         ImperialAge
     };
 
+    bool alive = true;
     std::shared_ptr<VisibilityMap> visibility;
 
-    Player(const int id, const std::shared_ptr<Civilization> &c, const ResourceMap &startingResources = {});
+    Player(const int id, const int civId, const ResourceMap &startingResources = {});
     const int playerId;
-    std::shared_ptr<Civilization> civ;
+
+    Civilization civilization;
 
     ResourceMap resourcesAvailable;
     ResourceMap resourcesUsed;
@@ -138,4 +141,3 @@ private:
     std::unordered_set<int> m_activeTechs;
     std::unordered_set<int> m_alliedPlayers;
 };
-

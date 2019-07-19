@@ -62,7 +62,7 @@ void UnitFactory::handleDefaultAction(const Unit::Ptr &unit, const genie::Task &
 
 Unit::Ptr UnitFactory::createUnit(const int ID, const MapPos &position, const Player::Ptr &owner, UnitManager &unitManager)
 {
-    const genie::Unit &gunit = owner->civ->unitData(ID);
+    const genie::Unit &gunit = owner->civilization.unitData(ID);
     owner->applyResearch(gunit.Building.TechID);
 
     Unit::Ptr unit;
@@ -84,7 +84,7 @@ Unit::Ptr UnitFactory::createUnit(const int ID, const MapPos &position, const Pl
     }
 
     if (gunit.Class == genie::Unit::Farm) {
-        unit->resources[genie::ResourceType::FoodStorage] = owner->civ->startingResource(genie::ResourceType::FarmFoodAmount);
+        unit->resources[genie::ResourceType::FoodStorage] = owner->civilization.startingResource(genie::ResourceType::FarmFoodAmount);
 
     }
 
@@ -92,7 +92,7 @@ Unit::Ptr UnitFactory::createUnit(const int ID, const MapPos &position, const Pl
         unit->snapPositionToGrid();
 
         if (gunit.Building.StackUnitID >= 0) {
-            const genie::Unit &stackData = owner->civ->unitData(gunit.Building.StackUnitID);
+            const genie::Unit &stackData = owner->civilization.unitData(gunit.Building.StackUnitID);
             owner->applyResearch(gunit.Building.TechID);
 
             Unit::Annex annex;
@@ -104,7 +104,7 @@ Unit::Ptr UnitFactory::createUnit(const int ID, const MapPos &position, const Pl
             if (annexData.UnitID < 0) {
                 continue;
             }
-            const genie::Unit &gunit = owner->civ->unitData(annexData.UnitID);
+            const genie::Unit &gunit = owner->civilization.unitData(annexData.UnitID);
             owner->applyResearch(gunit.Building.TechID);
 
             Unit::Annex annex;
@@ -152,7 +152,7 @@ DecayingEntity::Ptr UnitFactory::createCorpseFor(const Unit::Ptr &unit)
         return nullptr;
     }
 
-    const genie::Unit &corpseData = owner->civ->unitData(unit->data()->DeadUnitID);
+    const genie::Unit &corpseData = owner->civilization.unitData(unit->data()->DeadUnitID);
     float decayTime = corpseData.ResourceDecay * corpseData.ResourceCapacity;
 
     for (const genie::Unit::ResourceStorage &r : corpseData.ResourceStorages) {

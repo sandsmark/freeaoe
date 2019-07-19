@@ -144,7 +144,7 @@ void ActionAttack::spawnMissiles(const Unit::Ptr &source, const int unitId, cons
         WARN << "no owning player";
         return;
     }
-    const genie::Unit &gunit = owner->civ->unitData(unitId);
+    const genie::Unit &gunit = owner->civilization.unitData(unitId);
 
     float widthDispersion = 0.;
     if (source->data()->Creatable.TotalProjectiles > 1) {

@@ -234,7 +234,7 @@ void UnitInfoPanel::drawSingleUnit()
         drawConstructionInfo(building);
     } else {
         std::shared_ptr<Player> player = unit->player.lock();
-        m_civilizationName.setString(player->civ->name());
+        m_civilizationName.setString(player->civilization.name());
         m_playerName.setString(player->name);
 
         m_civilizationName.setPosition(rect().center() - ScreenPos(0, m_civilizationName.getLocalBounds().height + m_playerName.getLocalBounds().height + 10));

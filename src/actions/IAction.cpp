@@ -173,8 +173,14 @@ void IAction::assignTask(const Task &task, const std::shared_ptr<Unit> &unit, co
         if (target) {
             DBG << "attacking" << target->debugName;
         }
+        Player::Ptr player = unit->player.lock();
+        if (player) {
+            AudioPlayer::instance().playSound(unit->data()->Action.AttackSound, player->civilization.id());
+        } else  {
+            WARN << "Lost our player";
+        }
 
-        AudioPlayer::instance().playSound(unit->data()->Action.AttackSound, unit->civilization->id());
+
         ActionPtr combatAction = std::make_shared<ActionAttack>(unit, target, task);
         combatAction->requiredUnitID = task.unitId;
         unit->queueAction(combatAction);

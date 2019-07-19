@@ -296,7 +296,12 @@ void Building::finalizeUnit() noexcept
     Unit::Ptr unit = UnitFactory::Inst().createUnit(m_currentProduct->unit->ID, waypoint, owner, m_unitManager);
     m_unitManager.add(unit);
 
-    AudioPlayer::instance().playSound(unit->data()->TrainSound, unit->civilization->id());
+    Player::Ptr player = unit->player.lock();
+    if (player) {
+        AudioPlayer::instance().playSound(unit->data()->TrainSound, player->civilization.id());
+    } else {
+        WARN << "Lost our player";
+    }
 
     DBG << "Finalized" << unit->debugName;
 }

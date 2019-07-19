@@ -425,7 +425,7 @@ void ActionPanel::addResearchButtons(const std::shared_ptr<Unit> &unit)
         WARN << "Player-less unit";
         return;
     }
-    const std::vector<const genie::Tech *> techs = player->civ->researchAvailableAt(unit->data()->ID);
+    const std::vector<const genie::Tech *> techs = player->civilization.researchAvailableAt(unit->data()->ID);
     if (techs.empty()) {
         return;
     }
