@@ -6,7 +6,7 @@
 #include <genie/dat/TechageEffect.h>
 #include "resource/DataManager.h"
 
-#define CHEAT_VISIBILITY 1
+//#define CHEAT_VISIBILITY 1
 
 Player::Player(const int id, const int civId, const ResourceMap &startingResources) :
     visibility(std::make_shared<VisibilityMap>()),
