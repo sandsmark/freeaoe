@@ -200,7 +200,7 @@ void GameState::setupScenario()
         player->resourcesAvailable[genie::ResourceType::TradeGoods] = resources.goods;
         player->resourcesAvailable[genie::ResourceType::PopulationHeadroom] = scenario_->playerResources[playerNum].popLimit;
 
-        if (scenario_->playerData.resourcesPlusPlayerInfo[playerNum].isHuman) {
+        if (scenario_->playerData.resourcesPlusPlayerInfo[playerNum - 1].isHuman) {
             if (m_humanPlayer) {
                 WARN << "multiple human players defined" << m_humanPlayer->playerId << playerNum;
             }
