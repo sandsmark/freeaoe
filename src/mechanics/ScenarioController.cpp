@@ -27,6 +27,11 @@ void ScenarioController::setScenario(const std::shared_ptr<genie::ScnFile> &scen
     }
     std::unordered_set<int32_t> missingConditionTypes;
     for (const genie::Trigger &trigger : scenario->triggers) {
+        if (trigger.conditions.empty()) {
+            m_triggers.emplace_back(trigger);
+            continue;
+        }
+
         bool isImplemented = false;
         for (const genie::TriggerCondition &cond : trigger.conditions) {
             switch(cond.type) {
