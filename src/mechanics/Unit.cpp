@@ -392,8 +392,10 @@ void Unit::checkForAutoTargets() noexcept
         // TODO: should only prefer civilians (and I think only wolves? lions?)
         // should attack others as well
         // Maybe check combat level instead? but then suddenly we get wolves trying to find a path to ships
-        if (potentialTask.data->ActionType == genie::Task::Combat && data()->Type == genie::Unit::PredatorAnimal && other->data()->Type != genie::Unit::Civilian) {
-            continue;
+        if (potentialTask.data->ActionType == genie::Task::Combat && data()->Class == genie::Unit::PredatorAnimal) {
+            if (other->data()->Creatable.CreatableType != genie::unit::Creatable::VillagerType) {
+                continue;
+            }
         }
 
         if (potentialTask.data) {
