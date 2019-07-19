@@ -41,6 +41,7 @@ class RenderWindow;
 class Engine
 {
 public:
+    static const int s_numMessagesLines = 15;
 
     static const sf::Clock GameClock;
 
@@ -49,6 +50,8 @@ public:
 
     bool setup(const std::shared_ptr<genie::ScnFile> &scenario = nullptr);
     void start();
+
+    void addMessage(const std::string &message);
 
 private:
     void showStartScreen();
@@ -92,6 +95,8 @@ private:
     std::unique_ptr<ActionPanel> m_actionPanel;
     std::unique_ptr<UnitInfoPanel> m_unitInfoPanel;
     std::unique_ptr<MapRenderer> m_mapRenderer;
+
+    std::array<sf::Text, s_numMessagesLines> m_visibleText;
 
     sf::Texture m_uiOverlay;
 

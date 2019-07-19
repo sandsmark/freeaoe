@@ -49,6 +49,7 @@ public:
     };
 
     static void registerListener(EventListener *listener, const EventType type);
+    static void deregisterListener(EventListener *listener);
     static void deregisterListener(EventListener *listener, const EventType type);
     static void onListenerDestroyed(EventListener *listener);
 

@@ -18,11 +18,16 @@ void EventManager::registerListener(EventListener *listener, const EventManager:
     instance()->m_entityEventListeners[type].push_back(listener);
 }
 
-void EventManager::onListenerDestroyed(EventListener *listener)
+void EventManager::deregisterListener(EventListener *listener)
 {
     for (int type = 0; type<EventTypeCount; type++) {
         deregisterListener(listener, EventType(type));
     }
+}
+
+void EventManager::onListenerDestroyed(EventListener *listener)
+{
+    deregisterListener(listener);
 }
 
 void EventManager::deregisterListener(EventListener *listener, const EventManager::EventType type)

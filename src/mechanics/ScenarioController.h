@@ -10,6 +10,7 @@
 
 
 class GameState;
+class Engine;
 
 namespace genie {
 class ScnFile;
@@ -80,6 +81,9 @@ public:
     void setScenario(const std::shared_ptr<genie::ScnFile> &scenario);
     bool update(Time time);
 
+    // a bit ugly violation of blah blah composition, but w/e
+    void setEngine(Engine *engine) { m_engine = engine; }
+
 private:
     bool checkUnitMatchingEffect(const std::shared_ptr<Unit> &unit, const genie::TriggerEffect &effect);
 
@@ -99,6 +103,7 @@ private:
     Time m_lastUpdateTime = 0;
 
     GameState *m_gameState = nullptr; // ugly raw pointer, but owned by gamestate, so sue me
+    Engine *m_engine = nullptr; // samesies
 //    Time m_nextTimerTriggerTarget = -1;
 
 };

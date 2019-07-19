@@ -11,7 +11,6 @@
 
 Minimap::Minimap(const std::shared_ptr<SfmlRenderTarget> &renderTarget) :
     m_renderTarget(renderTarget),
-//    m_rect(0, 0, 400, 200)
     m_rect(865, 815, 400, 200)
 {
 

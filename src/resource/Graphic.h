@@ -162,7 +162,7 @@ public:
 
     bool isValid() const noexcept {
         // Coud be valid if it has deltas
-        return slp_ != nullptr || !m_data.Deltas.empty();;
+        return slp_ != nullptr || !m_data.Deltas.empty();
     }
 
     inline bool runOnce() const noexcept { return m_runOnce; }

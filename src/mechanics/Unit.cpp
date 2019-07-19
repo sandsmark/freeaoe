@@ -261,15 +261,7 @@ void Unit::takeDamage(const genie::unit::AttackOrArmor &attack, const float dama
     m_damageTaken += newDamage;
 
     if (hitpointsLeft() <= 0) {
-        m_renderer.setGraphic(m_data->DyingGraphic);
-
-        DBG  << data()->DyingSound;
-        if (data()->DyingSound != -1) {
-            Player::Ptr owner = player.lock();
-            if (owner) {
-                AudioPlayer::instance().playSound(data()->DyingSound, owner->civilization.id());
-            }
-        }
+        kill();
     } else {
         const int damagedPercent = 100 * m_damageTaken / data()->HitPoints;
         const genie::unit::DamageGraphic *graphic = nullptr;
@@ -297,6 +289,21 @@ void Unit::takeDamage(const genie::unit::AttackOrArmor &attack, const float dama
         }
     }
 
+}
+
+void Unit::kill() noexcept
+{
+    m_damageTaken = data()->HitPoints;
+
+    m_renderer.setPlaySounds(true);
+    m_renderer.setGraphic(m_data->DyingGraphic);
+
+    if (data()->DyingSound != -1) {
+        Player::Ptr owner = player.lock();
+        if (owner) {
+            AudioPlayer::instance().playSound(data()->DyingSound, owner->civilization.id());
+        }
+    }
 }
 
 bool Unit::isDying() const noexcept
@@ -610,12 +617,12 @@ int Unit::taskGraphicId(const genie::Task::ActionTypes taskType, const IAction::
 
 void Unit::updateGraphic()
 {
-    if (hitpointsLeft() <= 0) {
+    if (hitpointsLeft() <= 0 && !isDying()) {
         m_renderer.setGraphic(m_data->DyingGraphic);
         return;
     }
 
-    if (m_currentAction && m_currentAction->unitState() != IAction::Idle) {
+    if ((m_currentAction && m_currentAction->unitState() != IAction::Idle) || isDying()) {
         m_renderer.setPlaySounds(true);
     } else {
         m_renderer.setPlaySounds(false);

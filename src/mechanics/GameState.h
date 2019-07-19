@@ -77,6 +77,7 @@ public:
     void moveCameraTo(const MapPos &newTarget);
 
     void onPlayerWin(int playerId);
+    const std::unique_ptr<ScenarioController> &scenarioController() const { return m_scenarioController; }
 
 private:
     void setupScenario();

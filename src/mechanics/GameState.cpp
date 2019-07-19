@@ -96,6 +96,7 @@ GameState::GameState(const std::shared_ptr<SfmlRenderTarget> &renderTarget)
 {
     m_unitManager = std::make_shared<UnitManager>();
     renderTarget_ = renderTarget;
+    m_scenarioController = std::make_unique<ScenarioController>(this);
 }
 
 GameState::~GameState()
@@ -248,7 +249,6 @@ void GameState::setupScenario()
         m_humanPlayer = m_players[1];
     }
 
-    m_scenarioController = std::make_unique<ScenarioController>(this);
     m_scenarioController->setScenario(scenario_);
 }
 

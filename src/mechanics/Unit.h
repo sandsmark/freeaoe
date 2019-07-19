@@ -152,6 +152,7 @@ struct Unit : public Entity
     float hitpointsLeft() const noexcept;
     float healthLeft() const noexcept;
     void takeDamage(const genie::unit::AttackOrArmor &attack, const float damageMultiplier) noexcept;
+    void kill() noexcept;
     bool isDying() const noexcept;
     bool isDead() const noexcept;
 

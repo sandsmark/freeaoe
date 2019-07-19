@@ -38,6 +38,7 @@ struct Missile;
 typedef std::shared_ptr<Map> MapPtr;
 typedef std::shared_ptr<Entity> EntityPtr;
 
+/// The most basic class thing, has a position on a map and can be rendered
 struct Entity: std::enable_shared_from_this<Entity>, SignalEmitter<Entity>
 {
     const size_t id;

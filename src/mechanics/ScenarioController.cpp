@@ -7,19 +7,13 @@
 #include "mechanics/UnitManager.h"
 #include "mechanics/GameState.h"
 #include "mechanics/UnitFactory.h"
+#include "Engine.h"
 
 #include <set>
 
 ScenarioController::ScenarioController(GameState *gameState) :
     m_gameState(gameState)
 {
-    EventManager::registerListener(this, EventManager::UnitCreated);
-    EventManager::registerListener(this, EventManager::UnitMoved);
-    EventManager::registerListener(this, EventManager::UnitSelected);
-    EventManager::registerListener(this, EventManager::UnitDeselected);
-    EventManager::registerListener(this, EventManager::UnitDestroyed);
-    EventManager::registerListener(this, EventManager::PlayerDefeated);
-    EventManager::registerListener(this, EventManager::AttributeChanged);
 }
 
 void ScenarioController::setScenario(const std::shared_ptr<genie::ScnFile> &scenario)
@@ -27,6 +21,7 @@ void ScenarioController::setScenario(const std::shared_ptr<genie::ScnFile> &scen
     m_triggers.clear();
 
     if (!scenario) {
+        EventManager::deregisterListener(this);
         WARN << "set null scenario";
         return;
     }
@@ -242,6 +237,14 @@ void ScenarioController::setScenario(const std::shared_ptr<genie::ScnFile> &scen
         winTrigger.effects = {effect};
         m_triggers.emplace_back(winTrigger);
     }
+
+    EventManager::registerListener(this, EventManager::UnitCreated);
+    EventManager::registerListener(this, EventManager::UnitMoved);
+    EventManager::registerListener(this, EventManager::UnitSelected);
+    EventManager::registerListener(this, EventManager::UnitDeselected);
+    EventManager::registerListener(this, EventManager::UnitDestroyed);
+    EventManager::registerListener(this, EventManager::PlayerDefeated);
+    EventManager::registerListener(this, EventManager::AttributeChanged);
 }
 
 bool ScenarioController::update(Time time)
@@ -305,8 +308,12 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
         m_triggers[effect.trigger].enabled = false;
         break;
     case genie::TriggerEffect::DisplayInstructions:
-        DBG << "TODO: implement on screen message stuff and sound";
-        WARN << effect.message << effect.soundFile;
+        DBG << "TODO: implement sound for instructions";
+        if (m_engine) {
+            m_engine->addMessage(effect.message);
+        } else {
+            WARN << "missing engine" << effect.message << effect.soundFile;
+        }
         break;
     case genie::TriggerEffect::ChangeView:
         DBG << "Moving camera" << effect;

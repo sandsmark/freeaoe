@@ -44,8 +44,8 @@ class MapNode
 {
 public:
     unsigned int row, col;
-    sf::Int8 elevation;
-    sf::Int32 x_pos, y_pos, z_pos;
+    int8_t elevation;
+    int32_t x_pos, y_pos, z_pos;
 };
 
 class Map : public SignalEmitter<Map>
