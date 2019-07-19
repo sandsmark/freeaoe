@@ -116,7 +116,7 @@ const genie::Sound &DataManager::getSound(unsigned int id) const
 const std::vector<genie::Task> &DataManager::getTasks(unsigned int id) const
 {
     if (id >= dat_file_.UnitHeaders.size()) {
-        WARN << "Invalid unit id, can't give tasks" << id;
+//        WARN << "Invalid unit id, can't give tasks" << id;
         return nullTaskList;
     }
 

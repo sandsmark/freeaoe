@@ -108,16 +108,16 @@ public:
     /// @param id id of the slp file
     /// @return slp file
     //
-    genie::SlpFilePtr getSlp(unsigned int id, const ResourceType type = ResourceType::Undefined);
+    genie::SlpFilePtr getSlp(uint32_t id, const ResourceType type = ResourceType::Undefined);
     genie::SlpFilePtr getSlp(const std::string &name, const ResourceType type = ResourceType::Undefined);
 
     genie::SlpFilePtr getUiOverlay(const UiResolution res, const UiCiv civ);
 
-    genie::ScnFilePtr getScn(unsigned int id);
+    genie::ScnFilePtr getScn(uint32_t id);
 
     std::shared_ptr<genie::UIFile> getUIFile(const std::string &name);
 
-    std::shared_ptr<uint8_t[]> getWavPtr(unsigned int id);
+    std::shared_ptr<uint8_t[]> getWavPtr(uint32_t id);
 
     genie::SlpTemplateFilePtr getSlpTemplateFile() { return m_stemplatesFile; }
     const genie::FiltermapFile &filtermapFile() { return m_filtermapFile; }
@@ -129,7 +129,7 @@ public:
     /// @param id id of the resource
     /// @return ImagePtr pointing to the object
     //
-    GraphicPtr getGraphic(unsigned int id);
+    GraphicPtr getGraphic(uint32_t id);
 
     //----------------------------------------------------------------------------
     /// Get a Terrain resource object.
@@ -137,12 +137,12 @@ public:
     /// @param id id of the resource
     /// @return resource pointer to the object
     //
-    const TerrainPtr &getTerrain(unsigned int id);
+    const TerrainPtr &getTerrain(uint32_t id);
 
     const genie::PalFile &getPalette(const std::string &name);
-    const genie::PalFile &getPalette(unsigned int id = 50500);
+    const genie::PalFile &getPalette(uint32_t id = 50500);
 
-    const genie::BlendMode &getBlendmode(unsigned int id = 0);
+    const genie::BlendMode &getBlendmode(uint32_t id = 0);
 
     const genie::VisibilityMask &unexploredVisibilityMask(const genie::Slope slope, int edges) const;
     const genie::VisibilityMask &exploredVisibilityMask(const genie::Slope slope, int edges) const;
@@ -179,13 +179,13 @@ private:
     genie::BlkEdgeFile m_blkEdgeFile;
 
     //TODO: All resources into one map?
-    typedef std::unordered_map<unsigned int, GraphicPtr> GraphicMap;
+    typedef std::unordered_map<uint32_t, GraphicPtr> GraphicMap;
     GraphicMap graphics_;
 
-    typedef std::unordered_map<unsigned int, TerrainPtr> TerrainMap;
+    typedef std::unordered_map<uint32_t, TerrainPtr> TerrainMap;
     TerrainMap terrains_;
 
-    std::unordered_map<unsigned int, std::weak_ptr<uint8_t[]>> m_wavCache;
+    std::unordered_map<uint32_t, std::weak_ptr<uint8_t[]>> m_wavCache;
 
     genie::GameVersion m_gameVersion;
     std::string m_dataPath;

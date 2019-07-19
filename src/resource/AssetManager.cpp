@@ -55,7 +55,7 @@ genie::SlpFilePtr AssetManager::getUiOverlay(const AssetManager::UiResolution re
     return getSlp(uint32_t(res) + uint32_t(civ), ResourceType::Interface);
 }
 
-genie::ScnFilePtr AssetManager::getScn(unsigned int id)
+genie::ScnFilePtr AssetManager::getScn(uint32_t id)
 {
     for (const std::shared_ptr<genie::DrsFile> &drsFile : m_gamedataFiles) {
         genie::ScnFilePtr scnfile = drsFile->getScnFile(id);
@@ -75,7 +75,7 @@ std::shared_ptr<genie::UIFile> AssetManager::getUIFile(const std::string &name)
     return m_interfaceFile->getUIFile(filenameID(name));
 }
 
-std::shared_ptr<uint8_t[]> AssetManager::getWavPtr(unsigned int id)
+std::shared_ptr<uint8_t[]> AssetManager::getWavPtr(uint32_t id)
 {
     std::weak_ptr<uint8_t[]> weakPtr = m_wavCache[id];
     std::shared_ptr<uint8_t[]> wavPtr = weakPtr.lock();
@@ -97,7 +97,7 @@ std::shared_ptr<uint8_t[]> AssetManager::getWavPtr(unsigned int id)
 }
 
 //------------------------------------------------------------------------------
-genie::SlpFilePtr AssetManager::getSlp(sf::Uint32 id, const ResourceType type)
+genie::SlpFilePtr AssetManager::getSlp(uint32_t id, const ResourceType type)
 {
     genie::SlpFilePtr slp_ptr;
     if (m_nonExistentSlps.count(id)) {
@@ -144,7 +144,7 @@ genie::SlpFilePtr AssetManager::getSlp(sf::Uint32 id, const ResourceType type)
 }
 
 //------------------------------------------------------------------------------
-GraphicPtr AssetManager::getGraphic(Uint32 id)
+GraphicPtr AssetManager::getGraphic(uint32_t id)
 {
     GraphicPtr graph;
 
@@ -160,7 +160,7 @@ GraphicPtr AssetManager::getGraphic(Uint32 id)
 }
 
 //------------------------------------------------------------------------------
-const TerrainPtr &AssetManager::getTerrain(unsigned int id)
+const TerrainPtr &AssetManager::getTerrain(uint32_t id)
 {
     if (terrains_.find(id) != terrains_.end()) {
         return terrains_[id];
@@ -179,7 +179,7 @@ const genie::PalFile &AssetManager::getPalette(const std::string &name)
     return getPalette(filenameID(name));
 }
 
-const genie::BlendMode &AssetManager::getBlendmode(unsigned int id)
+const genie::BlendMode &AssetManager::getBlendmode(uint32_t id)
 {
     if (!blendomatic_file_) {
         WARN << "No blendomatic file loaded";
@@ -201,7 +201,7 @@ const genie::VisibilityMask &AssetManager::exploredVisibilityMask(const genie::S
 }
 
 //------------------------------------------------------------------------------
-const genie::PalFile &AssetManager::getPalette(sf::Uint32 id)
+const genie::PalFile &AssetManager::getPalette(uint32_t id)
 {
     const genie::PalFile &palette = m_interfaceFile->getPalFile(id);
     if (palette.isValid()) {
@@ -546,7 +546,7 @@ int AssetManager::filenameID(const std::string &filename)
 size_t AssetManager::terrainCacheSize() const
 {
     size_t ret = 0;
-    for (const std::pair<unsigned int, TerrainPtr> t : terrains_) {
+    for (const std::pair<uint32_t, TerrainPtr> t : terrains_) {
         ret += t.second->cacheSize();
     }
 
