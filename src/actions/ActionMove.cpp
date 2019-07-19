@@ -53,13 +53,13 @@ struct PathPoint {
     float pathLength = 0;
     float distance = 0;
 
-    bool operator==(const PathPoint &other) const noexcept {
+    bool operator==(const PathPoint &other) const noexcept DUMB_CLANG_IT_IS_USED {
         return x == other.x && y == other.y;
     }
     bool operator!=(const PathPoint &other) const noexcept {
         return x != other.x || y != other.y;
     }
-    bool operator<(const PathPoint &other) const noexcept {
+    bool operator<(const PathPoint &other) const noexcept DUMB_CLANG_IT_IS_USED {
         return other.distance < distance;
     }
 
@@ -68,10 +68,9 @@ struct PathPoint {
     }
 };
 } //namespace
-
 template<> struct std::hash<PathPoint>
 {
-    std::size_t operator()(const PathPoint& point) const noexcept
+    std::size_t operator()(const PathPoint& point) const noexcept DUMB_CLANG_IT_IS_USED
     {
         return point.y * 255 * 48 + point.x;
     }

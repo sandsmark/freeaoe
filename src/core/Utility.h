@@ -29,9 +29,11 @@
 #ifndef _MSC_VER
 #define IS_LIKELY(x)      __builtin_expect(!!(x), 1)
 #define IS_UNLIKELY(x)    __builtin_expect(!!(x), 0)
+#define DUMB_CLANG_IT_IS_USED __attribute__ ((unused))
 #else//_MSC_VER
 #define IS_LIKELY(x)      (x)
 #define IS_UNLIKELY(x)    (x)
+#define DUMB_CLANG_IT_IS_USED
 #endif // _MSC_VER
 
 namespace util {
