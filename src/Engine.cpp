@@ -49,6 +49,8 @@ void Engine::start()
 
     ScreenPos mousePos;
     // Start the game loop
+    size_t fpsSamples = 0;
+    double totalFps = 0;
     while (renderWindow_->isOpen()) {
         if (state != state_manager_.getActiveState()) {
             state = state_manager_.getActiveState();
@@ -137,6 +139,8 @@ void Engine::start()
             const int renderTime = GameClock.getElapsedTime().asMilliseconds() - renderStart;
 
             if (renderTime > 0) {
+                fpsSamples++;
+                totalFps += 1000. / renderTime;
                 fps_label_.setString("fps: " + std::to_string(1000/renderTime));
             }
 
@@ -147,6 +151,7 @@ void Engine::start()
         }
 
     }
+    DBG << "avg fps:" << (totalFps / fpsSamples);
 }
 
 void Engine::addMessage(const std::string &message)
