@@ -41,13 +41,18 @@ public:
 
     float startingResource(const genie::ResourceType type) const;
 
-    const genie::Unit &unitData(unsigned id);
+    const genie::Unit &unitData(unsigned id) const;
 
     void applyTechEffect(const genie::EffectCommand &effect);
     void enableUnit(const uint16_t id);
     void applyUnitAttributeModifier(const genie::EffectCommand &effect);
 
+    // This seems so wrong, but meh
+    void setGaiaOverrideCiv(const int civId);
+
 private:
+    void applyData(const genie::Civ &data);
+
     void applyUnitAttributeModifier(const genie::EffectCommand &effect, int unitId);
 
     std::unordered_map<int16_t, std::vector<const genie::Unit*>> m_creatableUnits;

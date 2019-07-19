@@ -14,47 +14,7 @@ Civilization::Civilization(const int civId) :
     m_civId(civId),
     m_data(DataManager::Inst().civilization(civId))
 {
-    m_unitsData = m_data.Units;
-
-    m_taskSwapUnits.resize(10);
-    for (const genie::Unit &unit : m_unitsData) {
-        if (unit.Enabled && unit.Creatable.TrainLocationID > 0) {
-            m_creatableUnits[unit.Creatable.TrainLocationID].push_back(&unit);
-        }
-
-        const uint8_t swapGroup = unit.Action.TaskSwapGroup;
-        if (swapGroup > 0) {
-            if (swapGroup >= m_taskSwapUnits.size()) {
-                m_taskSwapUnits.resize(swapGroup + 1);
-            }
-
-            m_taskSwapUnits[swapGroup].push_back(&unit);
-        }
-    }
-
-    const std::vector<genie::Tech> &techs = DataManager::Inst().allTechs();
-    for (size_t i=0; i<techs.size(); i++) {
-        const genie::Tech &tech = techs.at(i);
-        if (tech.ResearchLocation <= 0) {
-            continue;
-        }
-
-        if (tech.Civ != -1 && tech.Civ != m_civId) {
-            continue;
-        }
-
-        m_techs[i] = tech;
-        m_researchAvailable[tech.ResearchLocation].push_back(&m_techs.at(i));
-    }
-
-    for (size_t i=0; i<m_data.Resources.size(); i++) {
-        if (i >= int(genie::ResourceType::NumberOfTypes)) {
-            WARN << "Too many resources" << i;
-            break;
-        }
-
-        m_startingResources[genie::ResourceType(i)] = m_data.Resources[i];
-    }
+    applyData(m_data);
 }
 
 const std::vector<const genie::Unit *> &Civilization::creatableUnits(int16_t creator) const
@@ -116,7 +76,7 @@ float Civilization::startingResource(const genie::ResourceType type) const
     return m_data.Resources[int(type)];
 }
 
-const genie::Unit &Civilization::unitData(unsigned id)
+const genie::Unit &Civilization::unitData(unsigned id) const
 {
     if (id >= m_unitsData.size()) {
         WARN << "invalid unit id" << id;
@@ -171,6 +131,71 @@ void Civilization::applyUnitAttributeModifier(const genie::EffectCommand &effect
         }
     } else {
         WARN << "Can't apply effect with neither unit id or class id";
+    }
+}
+
+void Civilization::setGaiaOverrideCiv(const int civId)
+{
+    applyData(DataManager::Inst().civilization(civId));
+}
+
+void Civilization::applyData(const genie::Civ &data)
+{
+    DBG << "Applying for civ";
+
+    if (data.Units.size() > m_unitsData.size()) {
+        m_unitsData.resize(data.Units.size());
+    }
+
+    for (size_t i=0; i<data.Units.size(); i++) {
+        if (data.Units[i].ID == -1) {
+            continue;
+        }
+        m_unitsData[i] = data.Units[i];
+    }
+
+    m_taskSwapUnits.resize(10);
+    for (const genie::Unit &unit : m_unitsData) {
+        if (unit.Enabled && unit.Creatable.TrainLocationID > 0) {
+            m_creatableUnits[unit.Creatable.TrainLocationID].push_back(&unit);
+        }
+
+        const uint8_t swapGroup = unit.Action.TaskSwapGroup;
+        if (swapGroup > 0) {
+            if (swapGroup >= m_taskSwapUnits.size()) {
+                m_taskSwapUnits.resize(swapGroup + 1);
+            }
+            std::vector<const genie::Unit*> &group = m_taskSwapUnits[swapGroup];
+            if (std::find_if(group.begin(), group.end(), [&](const genie::Unit *existing) { return existing->ID == unit.ID; }) != group.end()) {
+                continue;
+            }
+
+            group.push_back(&unit);
+        }
+    }
+
+    const std::vector<genie::Tech> &techs = DataManager::Inst().allTechs();
+    for (size_t i=0; i<techs.size(); i++) {
+        const genie::Tech &tech = techs.at(i);
+        if (tech.ResearchLocation <= 0) {
+            continue;
+        }
+
+        if (tech.Civ != -1 && tech.Civ != m_civId) {
+            continue;
+        }
+
+        m_techs[i] = tech;
+        m_researchAvailable[tech.ResearchLocation].push_back(&m_techs.at(i));
+    }
+
+    for (size_t i=0; i<data.Resources.size(); i++) {
+        if (i >= int(genie::ResourceType::NumberOfTypes)) {
+            WARN << "Too many resources" << i;
+            break;
+        }
+
+        m_startingResources[genie::ResourceType(i)] = data.Resources[i];
     }
 }
 
