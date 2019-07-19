@@ -40,21 +40,24 @@ GraphicRender::~GraphicRender()
 {
 }
 
-bool GraphicRender::update(Time time) noexcept
+bool GraphicRender::update(Time time, const bool isVisible) noexcept
 {
     m_frameChanged = false;
 
     bool updated = false;
-    for (size_t i=0; i<m_deltas.size(); i++) {
-        if (!m_deltas[i].validForAngle(m_angle)) {
-            continue;
+
+    if (isVisible) {
+        for (size_t i=0; i<m_deltas.size(); i++) {
+            if (!m_deltas[i].validForAngle(m_angle)) {
+                continue;
+            }
+
+            updated = m_deltas[i].graphic->update(time, isVisible) || updated;
         }
 
-        updated = m_deltas[i].graphic->update(time) || updated;
-    }
-
-    if (m_damageOverlay) {
-        updated = m_damageOverlay->update(time) || updated;
+        if (m_damageOverlay) {
+            updated = m_damageOverlay->update(time, isVisible) || updated;
+        }
     }
 
     if (!m_graphic) {
@@ -64,7 +67,10 @@ bool GraphicRender::update(Time time) noexcept
         return updated;
     }
 
-    if (m_graphic->runOnce() && m_currentFrame >= m_graphic->frameCount() - 1) {
+    const bool isAtEnd = m_currentFrame >= m_graphic->frameCount() - 1;
+
+    // Just let it run out if we're not visible
+    if (isAtEnd && (m_graphic->runOnce() || !isVisible)) {
         return updated;
     }
 
@@ -72,7 +78,7 @@ bool GraphicRender::update(Time time) noexcept
 
     Time elapsed = time - m_lastFrameTime;
 
-    if (newFrame >= m_graphic->frameCount() - 1 && elapsed < m_graphic->replayDelay() / 0.0015) {
+    if (isAtEnd && elapsed < m_graphic->replayDelay() / 0.0015) {
         return updated;
     }
 

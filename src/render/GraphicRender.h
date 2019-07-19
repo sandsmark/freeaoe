@@ -76,7 +76,7 @@ public:
     GraphicRender();
     virtual ~GraphicRender();
 
-    bool update(Time time) noexcept;
+    bool update(Time time, const bool isVisible) noexcept;
     bool isValid() const noexcept { return m_graphic && m_graphic->isValid(); }
 
     virtual void render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType renderpass) noexcept;

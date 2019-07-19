@@ -48,7 +48,7 @@ bool Entity::update(Time time) noexcept
 {
     bool updated = false;
 
-    updated = (m_renderer.update(time) && isVisible) || updated;
+    updated = m_renderer.update(time, isVisible) || updated;
 
     return updated && isVisible;
 }
