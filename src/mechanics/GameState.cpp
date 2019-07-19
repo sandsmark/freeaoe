@@ -176,38 +176,47 @@ void GameState::setupScenario()
     DBG << "Setting up scenario:" << scenario_->scenarioInstructions;
     map_->create(scenario_->map);
 
-    const genie::ScnMainPlayerData &playerData = scenario_->playerData;
+    const genie::ScnMainPlayerData &playersData = scenario_->playerData;
 
+    int humanPlayerId = 1;
     for (size_t playerNum = 0; playerNum < scenario_->enabledPlayerCount + 1; playerNum++) { // +1 for gaia
         Player::Ptr player;
 
-        // player 0 is gaia
-        if (playerNum != UnitManager::GaiaID) {
-            player = std::make_shared<Player>(playerNum, playerData.resourcesPlusPlayerInfo[playerNum-1].civilizationID);
-            player->name = playerData.playerNames[playerNum - 1];
-        } else {
-            // Gaia
+        int realPlayerNum = 0;
+
+        // player 0 is gaia, but the layout in the scn files is extremely confusing, so some data is at index 8
+        if (playerNum == UnitManager::GaiaID) {
+            realPlayerNum = 8;
+
             player = std::make_shared<Player>(playerNum, UnitManager::GaiaID);
-            player->civilization.setGaiaOverrideCiv(playerData.resourcesPlusPlayerInfo[8].civilizationID);
+            player->civilization.setGaiaOverrideCiv(playersData.resourcesPlusPlayerInfo[realPlayerNum].civilizationID);
+            player->name = "Gaia";
+        } else {
+            realPlayerNum = playerNum - 1;
+
+            player = std::make_shared<Player>(playerNum, playersData.resourcesPlusPlayerInfo[realPlayerNum].civilizationID);
+            player->name = playersData.playerNames[realPlayerNum];
         }
 
-        const genie::ScnPlayerResources &resources = scenario_->playerResources[playerNum];
+        const genie::ScnPlayerResources &resources = scenario_->playerResources[realPlayerNum];
         player->resourcesAvailable[genie::ResourceType::GoldStorage] = resources.gold;
         player->resourcesAvailable[genie::ResourceType::FoodStorage] = resources.food;
         player->resourcesAvailable[genie::ResourceType::WoodStorage] = resources.wood;
         player->resourcesAvailable[genie::ResourceType::StoneStorage] = resources.stone;
         player->resourcesAvailable[genie::ResourceType::OreStorage] = resources.ore;
         player->resourcesAvailable[genie::ResourceType::TradeGoods] = resources.goods;
-        player->resourcesAvailable[genie::ResourceType::PopulationHeadroom] = scenario_->playerResources[playerNum].popLimit;
+        player->resourcesAvailable[genie::ResourceType::PopulationHeadroom] = resources.popLimit;
 
-        if (scenario_->playerData.resourcesPlusPlayerInfo[playerNum - 1].isHuman) {
+        if (playersData.resourcesPlusPlayerInfo[realPlayerNum].isHuman) {
             if (m_humanPlayer) {
-                WARN << "multiple human players defined" << m_humanPlayer->playerId << playerNum;
+                WARN << "multiple human players defined" << m_humanPlayer->playerId << realPlayerNum;
             }
             m_humanPlayer = player;
+            humanPlayerId = playerNum;
         }
 
         m_players.push_back(player);
+
         for (const genie::ScnUnit &scnunit : scenario_->playerUnits[playerNum].units) {
             MapPos unitPos((scnunit.positionY) * Constants::TILE_SIZE, (scnunit.positionX) * Constants::TILE_SIZE, scnunit.positionZ * DataManager::Inst().terrainBlock().ElevHeight);
             Unit::Ptr unit = UnitFactory::Inst().createUnit(scnunit.objectID, unitPos, player, *m_unitManager);
@@ -228,7 +237,7 @@ void GameState::setupScenario()
     if (scenario_->playerData.player1CameraX >= 0 &&  scenario_->playerData.player1CameraX >= 0) {
         cameraPos = MapPos(scenario_->playerData.player1CameraX * Constants::TILE_SIZE, scenario_->playerData.player1CameraY * Constants::TILE_SIZE);
     } else {
-        cameraPos = MapPos (scenario_->players[1].initCameraX * Constants::TILE_SIZE, map_->height() - scenario_->players[1].initCameraY * Constants::TILE_SIZE);
+        cameraPos = MapPos (scenario_->players[humanPlayerId].initCameraX * Constants::TILE_SIZE, map_->height() - scenario_->players[humanPlayerId].initCameraY * Constants::TILE_SIZE);
     }
     renderTarget_->camera()->setTargetPosition(cameraPos);
 
