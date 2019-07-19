@@ -82,6 +82,7 @@ private:
     void onUnitMoved(Unit *unit, const MapPos &oldTile, const MapPos &newTile) override;
     void onUnitSelected(Unit *unit) override;
     void onUnitDeselected(const Unit *unit) override;
+    void onPlayerDefeated(Player *player) override;
 
     void handleTriggerEffect(const genie::TriggerEffect &effect);
 

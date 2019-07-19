@@ -17,6 +17,7 @@ ScenarioController::ScenarioController()
     EventManager::registerListener(this, EventManager::UnitSelected);
     EventManager::registerListener(this, EventManager::UnitDeselected);
     EventManager::registerListener(this, EventManager::UnitDestroyed);
+    EventManager::registerListener(this, EventManager::PlayerDefeated);
 }
 
 void ScenarioController::setScenario(const std::shared_ptr<genie::ScnFile> &scenario)
@@ -65,6 +66,7 @@ void ScenarioController::setScenario(const std::shared_ptr<genie::ScnFile> &scen
             case genie::TriggerEffect::ResearchTechnology:
             case genie::TriggerEffect::CreateObject:
             case genie::TriggerEffect::RemoveObject:
+            case genie::TriggerEffect::DeclareVictory:
                 break;
             default:
                 missingEffectTypes.insert(effect.type);
@@ -76,6 +78,28 @@ void ScenarioController::setScenario(const std::shared_ptr<genie::ScnFile> &scen
     for (const int32_t type : missingEffectTypes) {
         WARN << "not implemented trigger effect" << genie::TriggerEffect::Type(type);
     }
+
+    DBG << "global victory type" << scenario->victoryType;
+    DBG << "main player victory type" << scenario->playerData.victoryConditions.victoryMode;
+    DBG << "relics required:" << scenario->playerData.victoryConditions.numRelicsRequired;
+    DBG << "conquest required:" << scenario->playerData.victoryConditions.conquestRequired;
+    DBG << "explored percentage required:" << scenario->playerData.victoryConditions.exploredPerCentRequired;
+    DBG << "all conditions required" << scenario->playerData.victoryConditions.allConditionsRequired;
+    DBG << "score required" << scenario->playerData.victoryConditions.scoreRequired;
+    DBG << "time required" << scenario->playerData.victoryConditions.timeForTimedGame;
+
+//    for (const genie::ScnMorePlayerData &player : scenario->players) {
+//        for (const genie::ScnPlayerVictoryCondition &victoryCondition : player.victoryConditions) {
+//            switch(victoryCondition.type) {
+//            case genie::ScnPlayerVictoryCondition::Attribute:
+//                DBG << "player" << player.playerName << "needs" << victoryCondition.count << "of" << genie::ResourceType(victoryCondition.number) << "to win";
+//                break;
+//            default:
+//                WARN << "unhandled victory condition type:" << victoryCondition.type;
+//                break;
+//            }
+//        }
+//    }
 }
 
 bool ScenarioController::update(Time time)
@@ -222,6 +246,10 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
         }
         break;
     }
+    case genie::TriggerEffect::DeclareVictory: {
+        m_gameState->onPlayerWin(effect.sourcePlayer);
+        break;
+    }
     default:
         WARN << "not implemented trigger effect" << effect;
         break;
@@ -334,6 +362,11 @@ void ScenarioController::onUnitDeselected(const Unit *unit)
             }
         }
     }
+}
+
+void ScenarioController::onPlayerDefeated(Player *player)
+{
+    // TODO
 }
 
 void ScenarioController::onUnitDying(Unit *unit)

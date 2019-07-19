@@ -76,6 +76,8 @@ public:
 
     void moveCameraTo(const MapPos &newTarget);
 
+    void onPlayerWin(int playerId);
+
 private:
     void setupScenario();
     void setupGame(const GameType gameType);

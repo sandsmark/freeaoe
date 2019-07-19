@@ -174,6 +174,11 @@ void GameState::moveCameraTo(const MapPos &newTarget)
     renderTarget_->camera()->setTargetPosition(newTarget);
 }
 
+void GameState::onPlayerWin(int playerId)
+{
+    DBG << "TODO: winner winner chicken dinner" << playerId;
+}
+
 void GameState::setupScenario()
 {
     TIME_THIS;
