@@ -114,6 +114,7 @@ struct Player
 
     Player(const int id, const int civId, const ResourceMap &startingResources = {});
     const int playerId;
+    int playerColor = 0;
 
     Civilization civilization;
 

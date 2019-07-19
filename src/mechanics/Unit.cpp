@@ -37,7 +37,7 @@ Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, Uni
     player(player_),
     m_unitManager(unitManager)
 {
-    m_renderer.setPlayerId(playerId);
+    m_renderer.setPlayerColor(player_->playerColor);
     m_renderer.setCivId(player_->civilization.id());
 
     setUnitData(data_);
@@ -52,7 +52,7 @@ Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, Uni
     player(player_),
     m_unitManager(unitManager)
 {
-    m_renderer.setPlayerId(playerId);
+    m_renderer.setPlayerColor(player_->playerColor);
 
     setUnitData(data_);
     m_creationProgress = m_data->Creatable.TrainTime;

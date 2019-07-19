@@ -32,7 +32,7 @@ sf::Image Resource::convertFrameToImage(const genie::SlpFramePtr &frame)
 
 //------------------------------------------------------------------------------
 sf::Image Resource::convertFrameToImage(const genie::SlpFramePtr &frame,
-                                         const genie::PalFile &palette, const int playerId)
+                                         const genie::PalFile &palette, const int playerColor)
 {
     if (!frame) {
         sf::Image img;
@@ -67,8 +67,8 @@ sf::Image Resource::convertFrameToImage(const genie::SlpFramePtr &frame,
     }
 
     pixels = pixelsBuf.data();
-    if (playerId >= 0) {
-        genie::PlayerColour pc = DataManager::Inst().getPlayerColor(playerId);
+    if (playerColor >= 0) {
+        const genie::PlayerColour &pc = DataManager::Inst().getPlayerColor(playerColor);
         for (const genie::PlayerColorXY mask : frameData.player_color_mask) {
             const genie::Color &color = palette[mask.index + pc.PlayerColorBase];
 

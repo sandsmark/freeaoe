@@ -59,14 +59,14 @@ inline LogPrinter &operator <<(LogPrinter &os, const ImageType &type) {
 struct GraphicState {
     uint32_t frame = 0;
     int angle = 0;
-    uint8_t playerId = 0;
+    int8_t playerColor = 0;
     ImageType type = ImageType::Base;
     bool flipped = false;
 
     bool operator==(const GraphicState &other) const noexcept {
         return frame == other.frame &&
                angle == other.angle &&
-               playerId == other.playerId &&
+               playerColor == other.playerColor &&
                type == other.type &&
                flipped == other.flipped;
     }
@@ -78,7 +78,7 @@ template<> struct hash<GraphicState>
     size_t operator()(const GraphicState b) const noexcept {
         return hash<uint32_t>()(b.frame) ^
                hash<int>()(b.angle) ^
-               hash<uint8_t>()(b.playerId) ^
+               hash<uint8_t>()(b.playerColor) ^
                hash<int>()(int(b.type)) ^
                hash<bool>()(b.flipped);
 
@@ -107,7 +107,7 @@ public:
     Graphic(const genie::Graphic &m_data, const int id);
     virtual ~Graphic() = default;
 
-    static sf::Image slpFrameToImage(const genie::SlpFramePtr &frame, uint8_t playerId, const ImageType imageType) noexcept;
+    static sf::Image slpFrameToImage(const genie::SlpFramePtr &frame, int8_t playerId, const ImageType imageType) noexcept;
 
     //----------------------------------------------------------------------------
     /// Returns the image of the graphic.
@@ -119,7 +119,7 @@ public:
 //    const sf::Texture &getImage(uint32_t frame_num = 0, float angle = 0, uint8_t playerId = 0, const ImageType type = ImageType::Base);
 //    const sf::Texture &overlayImage(uint32_t frame_num, float angle, uint8_t playerId);
 
-    const sf::Texture &texture(uint32_t frameNum = 0, float angleRadians = 0, uint8_t playerId = 0, const ImageType imageType = ImageType::Base) noexcept;
+    const sf::Texture &texture(uint32_t frameNum = 0, float angleRadians = 0, int8_t playerColor = 0, const ImageType imageType = ImageType::Base) noexcept;
 
     Size size(uint32_t frame_num, float angle) const noexcept;
     ScreenRect rect(uint32_t frame_num, float angle) const noexcept;

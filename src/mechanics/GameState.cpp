@@ -191,11 +191,13 @@ void GameState::setupScenario()
             player = std::make_shared<Player>(playerNum, UnitManager::GaiaID);
             player->civilization.setGaiaOverrideCiv(playersData.resourcesPlusPlayerInfo[realPlayerNum].civilizationID);
             player->name = "Gaia";
+            player->playerColor = -1;
         } else {
             realPlayerNum = playerNum - 1;
 
             player = std::make_shared<Player>(playerNum, playersData.resourcesPlusPlayerInfo[realPlayerNum].civilizationID);
             player->name = playersData.playerNames[realPlayerNum];
+            player->playerColor = scenario_->players[realPlayerNum].playerColor;
         }
 
         const genie::ScnPlayerResources &resources = scenario_->playerResources[realPlayerNum];

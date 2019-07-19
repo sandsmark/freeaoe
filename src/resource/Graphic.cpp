@@ -47,7 +47,7 @@ Graphic::Graphic(const genie::Graphic &data, const int id) :
     }
 }
 
-sf::Image Graphic::slpFrameToImage(const genie::SlpFramePtr &frame, uint8_t playerId, const ImageType imageType) noexcept
+sf::Image Graphic::slpFrameToImage(const genie::SlpFramePtr &frame, int8_t playerColor, const ImageType imageType) noexcept
 {
     const genie::PalFile &palette = AssetManager::Inst()->getPalette(50500);
     const genie::SlpFrameData &frameData = frame->img_data;
@@ -62,7 +62,7 @@ sf::Image Graphic::slpFrameToImage(const genie::SlpFramePtr &frame, uint8_t play
 
     switch(imageType) {
     case ImageType::Base:
-        img = Resource::convertFrameToImage(frame, palette, playerId);
+        img = Resource::convertFrameToImage(frame, palette, playerColor);
         break;
     case ImageType::Shadow: {
         img.create(width, height, sf::Color::Transparent);
@@ -75,9 +75,13 @@ sf::Image Graphic::slpFrameToImage(const genie::SlpFramePtr &frame, uint8_t play
         break;
     }
     case ImageType::Outline: {
+        if (playerColor < 0) {
+            img.create(1, 1, sf::Color::Transparent);
+            return img;
+        }
         img.create(width, height, sf::Color::Transparent);
 
-        const genie::PlayerColour pc = DataManager::Inst().getPlayerColor(playerId);
+        const genie::PlayerColour pc = DataManager::Inst().getPlayerColor(playerColor);
         const genie::PalFile &palette = AssetManager::Inst()->getPalette(50500);
         genie::Color outlineColor = palette[pc.UnitOutlineColor];
         const sf::Color outline(outlineColor.r, outlineColor.g, outlineColor.b);
@@ -179,7 +183,7 @@ sf::Image Graphic::slpFrameToImage(const genie::SlpFramePtr &frame, uint8_t play
     return img;
 }
 
-const sf::Texture &Graphic::texture(uint32_t frameNum, float angleRadians, uint8_t playerId, const ImageType imageType) noexcept
+const sf::Texture &Graphic::texture(uint32_t frameNum, float angleRadians, int8_t playerColor, const ImageType imageType) noexcept
 {
     if (!slp_) {
         return nullImage;
@@ -187,7 +191,7 @@ const sf::Texture &Graphic::texture(uint32_t frameNum, float angleRadians, uint8
 
     GraphicState state;
     state.frame = frameNum;
-    state.playerId = playerId;
+    state.playerColor = playerColor;
     state.type = imageType;
 
     const FrameInfo frameInfo = calcFrameInfo(frameNum, angleRadians);
@@ -203,7 +207,7 @@ const sf::Texture &Graphic::texture(uint32_t frameNum, float angleRadians, uint8
         state.frame = 0;
     }
 
-    sf::Image img = slpFrameToImage(slp_->getFrame(state.frame), playerId, imageType);
+    sf::Image img = slpFrameToImage(slp_->getFrame(state.frame), playerColor, imageType);
 
     if (state.flipped) {
         img.flipHorizontally();

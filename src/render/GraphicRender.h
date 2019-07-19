@@ -81,7 +81,7 @@ public:
 
     virtual void render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType renderpass) noexcept;
 
-    void setPlayerId(int playerId) noexcept;
+    void setPlayerColor(int playerColor) noexcept;
     void setCivId(int civId) noexcept { m_civId = civId; }
 
     void setDamageOverlay(const int graphicId) noexcept;
@@ -118,7 +118,7 @@ private:
     Time m_lastFrameTime;
     std::vector<GraphicDelta> m_deltas;
 
-    int m_playerId = 0;
+    int m_playerColor = 0;
     int m_civId = 0;
 
     int m_currentFrame;

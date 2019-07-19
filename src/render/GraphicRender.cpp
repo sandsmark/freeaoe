@@ -129,16 +129,16 @@ void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos scree
 
         switch(renderpass) {
         case RenderType::Base:
-            sprite.setTexture(m_graphic->texture(m_currentFrame, m_angle, m_playerId, ImageType::Base));
+            sprite.setTexture(m_graphic->texture(m_currentFrame, m_angle, m_playerColor, ImageType::Base));
             break;
         case RenderType::BuildingAlpha:
-            sprite.setTexture(m_graphic->texture(m_currentFrame, m_angle, m_playerId, ImageType::Base));
+            sprite.setTexture(m_graphic->texture(m_currentFrame, m_angle, m_playerColor, ImageType::Base));
             blendMode = sf::BlendAdd;
             blendMode.colorSrcFactor = sf::BlendMode::Zero;
             blendMode.colorDstFactor = sf::BlendMode::Zero;
             break;
         case RenderType::Outline:
-            sprite.setTexture(m_graphic->texture(m_currentFrame, m_angle, m_playerId, ImageType::Outline));
+            sprite.setTexture(m_graphic->texture(m_currentFrame, m_angle, m_playerColor, ImageType::Outline));
             blendMode.alphaSrcFactor = sf::BlendMode::Zero;
             blendMode.alphaEquation = sf::BlendMode::Add;
             blendMode.alphaDstFactor = sf::BlendMode::DstAlpha;
@@ -148,16 +148,16 @@ void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos scree
             blendMode.colorDstFactor = sf::BlendMode::Zero;
             break;
         case RenderType::ConstructAvailable:
-            sprite.setTexture(m_graphic->texture(m_currentFrame, m_angle, m_playerId, ImageType::Construction));
+            sprite.setTexture(m_graphic->texture(m_currentFrame, m_angle, m_playerColor, ImageType::Construction));
             break;
         case RenderType::Shadow:
-            sprite.setTexture(m_graphic->texture(m_currentFrame, m_angle, m_playerId, ImageType::Shadow));
+            sprite.setTexture(m_graphic->texture(m_currentFrame, m_angle, m_playerColor, ImageType::Shadow));
             break;
         case RenderType::ConstructUnavailable:
-            sprite.setTexture(m_graphic->texture(m_currentFrame, m_angle, m_playerId, ImageType::ConstructionUnavailable));
+            sprite.setTexture(m_graphic->texture(m_currentFrame, m_angle, m_playerColor, ImageType::ConstructionUnavailable));
             break;
         case RenderType::InTheShadows:
-            sprite.setTexture(m_graphic->texture(m_currentFrame, m_angle, m_playerId, ImageType::InTheShadows));
+            sprite.setTexture(m_graphic->texture(m_currentFrame, m_angle, m_playerColor, ImageType::InTheShadows));
             break;
         }
 
@@ -171,16 +171,16 @@ void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos scree
     }
 }
 
-void GraphicRender::setPlayerId(int playerId) noexcept
+void GraphicRender::setPlayerColor(int playerColor) noexcept
 {
-    m_playerId = playerId;
+    m_playerColor = playerColor;
 
     for (const GraphicDelta &delta : m_deltas) {
-        delta.graphic->setPlayerId(playerId);
+        delta.graphic->setPlayerColor(playerColor);
     }
 
     if (m_damageOverlay) {
-        m_damageOverlay->setPlayerId(playerId);
+        m_damageOverlay->setPlayerColor(playerColor);
     }
 }
 
@@ -210,7 +210,7 @@ void GraphicRender::setDamageOverlay(const int graphicId) noexcept
         m_damageOverlay = std::make_unique<GraphicRender>();
     }
 
-    m_damageOverlay->setPlayerId(m_playerId);
+    m_damageOverlay->setPlayerColor(m_playerColor);
     m_damageOverlay->setCivId(m_civId);
     m_damageOverlay->setAngle(m_angle);
     m_damageOverlay->setGraphic(graphic);
@@ -247,7 +247,7 @@ bool GraphicRender::setGraphic(const GraphicPtr &graphic) noexcept
 
         GraphicDelta delta;
         delta.graphic = std::make_shared<GraphicRender>();
-        delta.graphic->setPlayerId(m_playerId);
+        delta.graphic->setPlayerColor(m_playerColor);
         delta.graphic->setCivId(m_civId);
         delta.graphic->setAngle(m_angle);
 
