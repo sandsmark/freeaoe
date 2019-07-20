@@ -37,7 +37,7 @@ To build
 
 TODO (this is probably going to get outdated)
 ----
- - Scenario triggers.
+ - ~~Scenario triggers.~~
  - Unit grouping/formations.
  - Patrolling.
  - Garrisoning.
