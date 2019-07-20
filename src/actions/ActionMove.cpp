@@ -308,6 +308,9 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
 
         if (unitPosition.distance(m_destination) < 1) {
             if (isPassable(m_destination.x, m_destination.y)) {
+                m_destination.z = m_map->elevationAt(m_destination);
+
+
                 unit->setPosition(m_destination);
                 return UpdateResult::Completed;
             }
@@ -325,6 +328,7 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
     while (movement > distanceLeft && !m_path.empty() && isPassable(m_path.back().x, m_path.back().y)) {
         movement -= distanceLeft;
         unitPosition = m_path.back();
+        unitPosition.z = m_map->elevationAt(unitPosition);
         m_path.pop_back();
         if (m_path.empty()) {
             break;
@@ -340,6 +344,7 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
         }
 
         m_prevTime = time;
+        unitPosition.z = m_map->elevationAt(unitPosition);
         unit->setPosition(unitPosition);
         return UpdateResult::Completed;
     }
@@ -352,6 +357,7 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
 
         if (m_destination.rounded() == unit->position().rounded()) {
             DBG << "already in place";
+            unitPosition.z = m_map->elevationAt(unitPosition);
             unit->setPosition(m_destination);
             return UpdateResult::Completed;
         }
@@ -368,6 +374,7 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
         }
 
         m_prevTime = time;
+        unitPosition.z = m_map->elevationAt(unitPosition);
         unit->setPosition(unitPosition);
         return UpdateResult::NotUpdated;
     }
@@ -413,6 +420,7 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
                 WARN << "ended up in unpassable land";
                 return UpdateResult::Failed;
             }
+            unitPosition.z = m_map->elevationAt(unitPosition);
             unit->setPosition(unitPosition);
             return UpdateResult::Failed;
         } else {
@@ -424,6 +432,7 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
                 WARN << "ended up in unpassable land";
                 return UpdateResult::Failed;
             }
+            unitPosition.z = m_map->elevationAt(unitPosition);
             unit->setPosition(unitPosition);
             return UpdateResult::Updated;
         }
@@ -737,9 +746,9 @@ bool ActionMove::isPassable(const float x, const float y) noexcept
         return false;
     }
 
-    const MapPos mapPos(x, y);
+    const double z = m_map->elevationAt(MapPos(x, y));
     const Unit::Ptr unit = m_unit.lock();
-    const Size size = unit->clearanceSize();
+    const genie::XYZF size = unit->data()->Size;
 
     for (int dx = tileX-1; dx<=tileX+1; dx++) {
         for (int dy = tileY-1; dy<=tileY+1; dy++) {
@@ -766,10 +775,11 @@ bool ActionMove::isPassable(const float x, const float y) noexcept
                     continue;
                 }
 
-                const Size otherSize = otherUnit->clearanceSize();
+                const genie::XYZF &otherSize = otherUnit->data()->Size;
+                const MapPos &otherPos = otherUnit->position();
 
-                const double centreDistance = mapPos.distance(otherUnit->position());
-                const double clearance = std::max(util::hypot(size.width, size.height), util::hypot(otherSize.width, otherSize.height));
+                const double centreDistance = util::hypot(x - otherPos.x, y - otherPos.y, z - otherPos.z);
+                const double clearance = std::max(util::hypot(size.x, size.y, size.z), util::hypot(otherSize.x, otherSize.y, otherSize.z));
                 if (centreDistance < clearance) {
                     m_passable[cacheIndex] = false;
                     return false;
