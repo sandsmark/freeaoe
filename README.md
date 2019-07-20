@@ -3,12 +3,16 @@ freeaoe
 
 ![screenshot](/doc/screenshot.png)
 
-Freeaoe is a project to write a free engine capable of running Age of Empires 2
-(and other Genie games).
+freeaoe is a project to write a free engine capable of running Age of Empires 2
+(and other Genie games like SW:GB eventually).
+
+This is mostly a single-person pet project, so if you want a more serious project,
+try [openage](https://openage.sft.mx/).
 
 The project is still in early development, but we can load basically all the
-original data, and you can build, move around, load scenarios, show the
-civilization history and stuff.
+original data, and you can build, move around, load and play scenarios, show
+the history screen and stuff. There are some screenshots in the [doc/](doc/)
+folder.
 
 It (obviously) needs the original data files, but it should work with the data
 files from the trial version (it's available e. g. from Archive.org).
