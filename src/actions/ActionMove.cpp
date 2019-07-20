@@ -21,6 +21,7 @@
 
 #include <unordered_set>
 #include <queue>
+#include <limits>
 #include <stack>
 #include "resource/DataManager.h"
 #include "core/Utility.h"
@@ -189,9 +190,10 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
         m_passable.reset();
         m_passableCached.reset();
     }
+    MapPos unitPosition = unit->position();
 
     if (!m_prevTime) {
-        if (unit->position().distance(m_destination) < 1) { // just in case
+        if (unitPosition.distance(m_destination) < 1) { // just in case
             return UpdateResult::Completed;
         }
 
@@ -200,9 +202,9 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
         if (m_path.empty()) {
             return UpdateResult::Failed;
         }
-        if (m_path.back() != unit->position()) {
-            unit->setPosition(m_path.back()); // Just in case we had to do a coarse check
-        }
+//        if (m_path.back() != nextPosition) {
+//            unit->setPosition(m_path.back()); // Just in case we had to do a coarse check
+//        }
         return UpdateResult::NotUpdated;
     }
 
@@ -213,7 +215,7 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
     if (m_path.empty()) {
         m_targetReached = true;
 
-        if (unit->position().distance(m_destination) < 1) {
+        if (unitPosition.distance(m_destination) < 1) {
             if (isPassable(m_destination.x, m_destination.y)) {
                 unit->setPosition(m_destination);
                 return UpdateResult::Completed;
@@ -227,18 +229,22 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
     float movement = elapsed * m_speed * 0.15;
 
 
-    float distanceLeft = util::hypot(m_path.back().x - unit->position().x, m_path.back().y - unit->position().y);
-    while (distanceLeft < movement && !m_path.empty()) {
+    float distanceLeft = util::hypot(m_path.back().x - unitPosition.x, m_path.back().y - unitPosition.y);
+    while (movement > distanceLeft && !m_path.empty()) {
+        movement -= distanceLeft;
+        unitPosition = m_path.back();
         m_path.pop_back();
         if (m_path.empty()) {
             break;
         }
-        distanceLeft = util::hypot(m_path.back().x - unit->position().x, m_path.back().y - unit->position().y);
+        distanceLeft = util::hypot(m_path.back().x - unitPosition.x, m_path.back().y - unitPosition.y);
     }
 
     if (m_path.empty()) {
         m_targetReached = true;
-        WARN << "path empty after loop, complete, distance left:" << unit->position().distance(m_destination);
+        WARN << "path empty after loop, complete, distance left:" << unitPosition.distance(m_destination);
+
+        unit->setPosition(unitPosition);
         return UpdateResult::Completed;
     }
 
@@ -254,11 +260,12 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
         }
         WARN << "found new path";
 
+        unit->setPosition(unitPosition);
         return UpdateResult::NotUpdated;
     }
 
-    const float direction = std::atan2(nextPos.y - unit->position().y, nextPos.x - unit->position().x);
-    MapPos newPos = unit->position();
+    const float direction = std::atan2(nextPos.y - unitPosition.y, nextPos.x - unitPosition.x);
+    MapPos newPos = unitPosition;
     if (util::hypot(nextPos.x - newPos.x, nextPos.y - newPos.y) < movement) {
         newPos = nextPos;
     } else {
@@ -268,14 +275,14 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
 
     // Try to wiggle past
     if (!isPassable(newPos.x, newPos.y)) {
-        newPos = unit->position();
+        newPos = unitPosition;
         movement = std::min(movement, util::hypot(nextPos.x - newPos.x, nextPos.y - newPos.y));
         newPos.x += std::cos(direction + M_PI_2/2) * movement;
         newPos.y += std::sin(direction + M_PI_2/2) * movement;
     }
     // Try to wiggle past, other direction
     if (!isPassable(newPos.x, newPos.y)) {
-        newPos = unit->position();
+        newPos = unitPosition;
         movement = std::min(movement, util::hypot(nextPos.x - newPos.x, nextPos.y - newPos.y));
         newPos.x += std::cos(direction - M_PI_2/2) * movement;
         newPos.y += std::sin(direction - M_PI_2/2) * movement;
@@ -284,20 +291,22 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
     if (!isPassable(newPos.x, newPos.y)) {
         WARN << "can't move forward, repathing";
 
-        std::vector<MapPos> partial = findPath(unit->position(), nextPos, 1);
+        std::vector<MapPos> partial = findPath(unitPosition, nextPos, 1);
         if (partial.size() < 2) {
             WARN << "failed to find intermediary path";
             m_targetReached = true;
+            unit->setPosition(unitPosition);
             return UpdateResult::Failed;
         } else {
             DBG << "found intermediary";
             m_path.insert(m_path.begin(), ++partial.begin(), partial.end());
+            unit->setPosition(unitPosition);
             return UpdateResult::Updated;
         }
     }
 
 
-    ScreenPos sourceScreen = unit->position().toScreen();
+    ScreenPos sourceScreen = unitPosition.toScreen();
     ScreenPos targetScreen = newPos.toScreen();
     unit->setAngle(sourceScreen.angleTo(targetScreen));
     newPos.z = m_map->elevationAt(newPos);
@@ -399,9 +408,9 @@ static std::vector<MapPos> simplifyRdp(const std::vector<MapPos> &path, const fl
 
 std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarseness) noexcept
 {
-#ifdef DEBUG
-    testedPoints.clear();
-#endif
+//#ifdef DEBUG
+//    testedPoints.clear();
+//#endif
 
     sf::Clock clock;
 
@@ -596,6 +605,9 @@ bool ActionMove::isPassable(const int x, const int y) noexcept
 
     const MapPos mapPos(x, y);
     Unit::Ptr unit = m_unit.lock();
+//    const float xSize = unit->data()->Size.x * Constants::TILE_SIZE;
+//    const float ySize = unit->data()->Size.y * Constants::TILE_SIZE;
+//    const float radius = util::hypot(xSize, ySize);
 
     for (int dx = tileX-1; dx<=tileX+1; dx++) {
         for (int dy = tileY-1; dy<=tileY+1; dy++) {
@@ -622,13 +634,15 @@ bool ActionMove::isPassable(const int x, const int y) noexcept
                     continue;
                 }
 
-                const float xSize = (otherUnit->data()->Size.x + unit->data()->Size.x) * Constants::TILE_SIZE;
-                const float ySize = (otherUnit->data()->Size.y + unit->data()->Size.y) * Constants::TILE_SIZE;
-                const float xDistance = std::abs(otherUnit->position().x - mapPos.x);
-                const float yDistance = std::abs(otherUnit->position().y - mapPos.y);
+//                const float otherXSize = (otherUnit->data()->Size.x + unit->data()->Size.x) * Constants::TILE_SIZE;
+//                const float otherYSize = (otherUnit->data()->Size.y + unit->data()->Size.y) * Constants::TILE_SIZE;
+//                const float xDistance = std::abs(otherUnit->position().x - mapPos.x);
+//                const float yDistance = std::abs(otherUnit->position().y - mapPos.y);
 
 //                if (IS_UNLIKELY(xDistance < xSize && yDistance < ySize)) {
-                if (IS_UNLIKELY(xDistance * xDistance + yDistance * yDistance < xSize * ySize)) {
+//                if (IS_UNLIKELY(xDistance * xDistance + yDistance * yDistance < xSize * ySize)) {
+                if (otherUnit->distanceTo(unit) <= 0.) {
+//                    DBG << unit->debugName << otherUnit->debugName << otherUnit->distanceTo(unit);
                     m_passable[cacheIndex] = false;
                     return false;
                 }
@@ -642,11 +656,92 @@ bool ActionMove::isPassable(const int x, const int y) noexcept
 
 void ActionMove::updatePath() noexcept
 {
+
     m_path.clear();
     std::shared_ptr<Unit> unit = m_unit.lock();
     if (!unit) {
         WARN << "Lost our unit";
         return;
+    }
+
+    std::shared_ptr<Unit> targetUnit;
+    const float xSize = unit->data()->Size.x * Constants::TILE_SIZE;
+    const float ySize = unit->data()->Size.y * Constants::TILE_SIZE;
+    const float radius = util::hypot(xSize, ySize);
+    DBG << "our radius:" << radius;
+
+    const int tileX = m_destination.x / Constants::TILE_SIZE;
+    const int tileY = m_destination.y / Constants::TILE_SIZE;
+    for (int dx = tileX-1; dx<=tileX+1 && !targetUnit; dx++) {
+        for (int dy = tileY-1; dy<=tileY+1 && !targetUnit; dy++) {
+            if (IS_UNLIKELY(dx < 0 || dy < 0 || dx >= m_map->getCols() || dy >= m_map->getRows())) {
+                continue;
+            }
+            const std::vector<std::weak_ptr<Entity>> &entities = m_map->entitiesAt(dx, dy);
+
+            if (entities.empty()) {
+                continue;
+            }
+
+            for (const std::weak_ptr<Entity> &entity : entities) {
+                Unit::Ptr otherUnit = Entity::asUnit(entity);
+                if (IS_UNLIKELY(!otherUnit)) {
+                    continue;
+                }
+
+                if (IS_UNLIKELY(otherUnit->id == unit->id)) {
+                    continue;
+                }
+
+                if (otherUnit->data()->Size.z == 0) {
+                    continue;
+                }
+
+                if (otherUnit->distanceTo(m_destination) < radius) {
+                    targetUnit = std::move(otherUnit);
+                    break;
+                }
+            }
+        }
+    }
+
+    if (targetUnit) {
+#ifdef DEBUG
+        testedPoints.clear();
+#endif
+        const  MapPos origin = unit->position();
+
+        const MapPos targetPos = targetUnit->position();
+
+//        const float targetXSize = targetUnit->data()->Size.x * Constants::TILE_SIZE;
+//        const float targetYSize = targetUnit->data()->Size.y * Constants::TILE_SIZE;
+        const Size targetSize = targetUnit->clearanceSize();
+        const float targetRadius = util::hypot(targetSize.width, targetSize.height);
+        const float clearanceLength = std::max(targetRadius, radius);
+
+        testedPoints.push_back(targetPos);
+
+        DBG << "another unit at target" << targetUnit->debugName << "at" << targetPos << "with radius" << targetRadius;
+        DBG << "clearance size" << clearanceLength;
+
+        const float stepSize = M_PI / radius;
+        DBG << "step size" << stepSize;
+
+        float lowestDistance = std::numeric_limits<float>::max();
+
+        for (float angleOffset = 0; angleOffset < M_PI*2.; angleOffset += stepSize) {
+            MapPos potential(cos(angleOffset), sin(angleOffset));
+            potential = potential * clearanceLength + targetPos;
+            DBG << "potential" << potential;
+            testedPoints.push_back(potential);
+
+            const float distance = origin.distance(potential);
+            if (distance < lowestDistance) {
+                m_destination = potential;
+                lowestDistance = distance;
+            }
+        }
+        DBG << "found new" << m_destination << isPassable(m_destination.x, m_destination.y);
     }
 
     DBG << "moving to" << m_destination;
@@ -657,7 +752,9 @@ void ActionMove::updatePath() noexcept
         m_destination = newDest;
     }
 
-    m_path = simplifyRdp(findPath(unit->position(), newDest, 2), 2 * 1.3);
+
+    m_path = findPath(unit->position(), newDest, 2);
+//    m_path = simplifyRdp(findPath(unit->position(), newDest, 2), 2 * 1.3);
 
     // Try coarser
     // Uglier, but hopefully faster
@@ -666,7 +763,8 @@ void ActionMove::updatePath() noexcept
             newDest = findClosestWalkableBorder(unit->position(), m_destination, 5);
             m_destination = newDest;
         }
-        m_path = simplifyRdp(findPath(unit->position(), newDest, 5), 5 * 1.3);
+        m_path = findPath(unit->position(), newDest, 5);
+//        m_path = simplifyRdp(findPath(unit->position(), newDest, 5), 5 * 1.3);
     }
 
     if (m_path.empty()) {
@@ -674,7 +772,8 @@ void ActionMove::updatePath() noexcept
             newDest = findClosestWalkableBorder(unit->position(), m_destination, 10);
             m_destination = newDest;
         }
-        m_path = simplifyRdp(findPath(unit->position(), newDest, 10), 10 * 1.3);
+//        m_path = simplifyRdp(findPath(unit->position(), newDest, 10), 10 * 1.3);
+        m_path = findPath(unit->position(), newDest, 10);
     }
 
     if (m_path.empty()) {

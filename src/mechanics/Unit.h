@@ -166,14 +166,38 @@ struct Unit : public Entity
 
     UnitManager &unitManager() const noexcept { return m_unitManager; }
 
-    float distanceTo(const Unit::Ptr &otherUnit) const noexcept
+    MapPos center() const noexcept {
+        return position() + clearanceSize() / 2.;
+    }
+
+    float distanceTo(const MapPos &pos) const noexcept
     {
-        const float xSize = (otherUnit->data()->Size.x + data()->Size.x) * Constants::TILE_SIZE;
-        const float ySize = (otherUnit->data()->Size.y + data()->Size.y) * Constants::TILE_SIZE;
-        const float xDistance = std::abs(otherUnit->position().x - position().x);
-        const float yDistance = std::abs(otherUnit->position().y - position().y);
+        const float xSize = data()->Size.x * Constants::TILE_SIZE;
+        const float ySize = data()->Size.y * Constants::TILE_SIZE;
+        const float xDistance = std::abs(pos.x - position().x);
+        const float yDistance = std::abs(pos.y - position().y);
 
         return util::hypot(std::max(xDistance - xSize, 0.f), std::max(yDistance - ySize, 0.f));
+    }
+
+    Size clearanceSize() const noexcept {
+        return Size(data()->Size.x * Constants::TILE_SIZE, data()->Size.y * Constants::TILE_SIZE);
+    }
+
+    float distanceTo(const Unit::Ptr &otherUnit) const noexcept
+    {
+//        const float xSize = (otherUnit->data()->Size.x + data()->Size.x) * Constants::TILE_SIZE;
+//        const float ySize = (otherUnit->data()->Size.y + data()->Size.y) * Constants::TILE_SIZE;
+//        const float xDistance = std::abs(otherUnit->position().x - position().x);
+//        const float yDistance = std::abs(otherUnit->position().y - position().y);
+        const float centreDistance = center().distance(otherUnit->center());
+        const Size otherSize = otherUnit->clearanceSize();
+        const Size size = clearanceSize();
+//        const float combinedSize = util::hypot(size.width, size.height) + util::hypot(otherSize.width, otherSize.height);
+        const float clearance = std::max(util::hypot(size.width, size.height), util::hypot(otherSize.width, otherSize.height));
+        return centreDistance - clearance;
+
+//        return util::hypot(std::max(xDistance - xSize, 0.f), std::max(yDistance - ySize, 0.f));
     }
 
 protected:
