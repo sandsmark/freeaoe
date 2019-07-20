@@ -276,9 +276,14 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
     MapPos unitPosition = unit->position();
     if (!isPassable(unitPosition.x, unitPosition.y)) {
         WARN << "we got stuck!" << unit->debugName;
-        unit->setPosition(findClosestWalkableBorder(m_destination, unitPosition, 1));
+        unitPosition = findClosestWalkableBorder(m_destination, unitPosition, 1);
+        if (isPassable(unitPosition.x, unitPosition.y)) {
+            unitPosition.z = m_map->elevationAt(unitPosition);
+            unit->setPosition(unitPosition);
+            updatePath();
+            return UpdateResult::Updated;
+        }
 
-        updatePath();
         return UpdateResult::Failed;
     }
 
