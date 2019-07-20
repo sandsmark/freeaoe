@@ -49,7 +49,7 @@ private:
     MapPos findClosestWalkableBorder(const MapPos &start, const MapPos &target, int coarseness) noexcept;
 
     std::vector<MapPos> findPath(MapPos start, MapPos end, int coarseness) noexcept;
-    bool isPassable(const int x, const int y) noexcept;
+    bool isPassable(const float x, const float y) noexcept;
 
     void updatePath() noexcept;
 

@@ -170,7 +170,7 @@ struct MapPos {
         return *this;
     }
 
-    float distance(const MapPos &other) const {
+    float distance(const MapPos &other) const noexcept {
         return util::hypot(other.x - x, other.y - y, other.z - z);
     }
 
@@ -196,6 +196,10 @@ struct MapPos {
 
     float angleTo(const MapPos &other) const {
         return atan2(other.y - y, other.x - x);
+    }
+
+    inline MapPos rounded() const noexcept {
+        return MapPos(std::round(x), std::round(y), std::round(z));
     }
 
     inline void round() {
