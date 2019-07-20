@@ -13,9 +13,11 @@ civilization history and stuff.
 It (obviously) needs the original data files, but it should work with the data
 files from the trial version (it's available e. g. from Archive.org).
 
-It uses the same library as [AGE (Advanced Genie Editor)](https://github.com/Tapsa/AGE), so it should be able
-to handle anything that can be edited by that (and therefore basically all
-community content created for AoE2).
+It uses the same [library](https://github.com/sandsmark/genieutils) as [AGE
+(Advanced Genie Editor)](https://github.com/Tapsa/AGE), so it should be able to
+handle anything that can be edited by that (and therefore basically all
+community content created for AoE2). Because of this it doesn't need to unpack
+or convert anything, all data files are used as is.
 
 Windows
 -------
@@ -68,12 +70,14 @@ To build
 
 TODO (this is probably going to get outdated)
 ----
- - ~~Scenario triggers.~~
+ - Proper victory screen.
  - Unit grouping/formations.
  - Patrolling.
  - Garrisoning.
- - AI Script execution (lot of overlap with scenarios).
- - Wall building.
+ - AI Script execution (lot of overlap with scenario triggers).
+ - (Proper) wall building.
+ - Campaign cinematics (mainly just parse the .mm files).
+ - Streaming sound (music, scenario voices, etc.).
  - Map analysis stuff (for RMS and AI).
  - Random map RMS script parsing and generating.
  - Performance (especially the path finding).
@@ -85,6 +89,10 @@ Not exhaustive list, mostly in addition to "normal" RTS things, or things not av
 
 Compared to other reimplementations as much as possible is fetched from the data files as well, and I try to avoid hardcoding anything, though some is hardcoded in the original game.
 
+ * Scenarios:
+    * Loading and parsing old and new scenario files (.scn and .scx)
+    * Loading and parsing old and new campaign files (.cpn and .cpx)
+    * All scenario trigger conditions and effects necessary to play the William Wallace tutorial scenario.
  * Villagers:
     * Automatic switching between builders, lumberjacks, etc.
     * Carrying resource tracking.
