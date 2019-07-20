@@ -21,7 +21,38 @@ Windows
 -------
 Automated windows builds can be [downloaded from AppVeyor](https://ci.appveyor.com/project/sandsmark/freeaoe/build/artifacts).
 
-In theory it should be able to automatically find the data files if AoE2 is installed, but I don't have windows so I haven't tested this.
+There is no installation, it's just a zip file with a standalone .exe that you
+run.
+
+NB: If Appveyor says there's no artifact available it's probably because it's
+building the latest version, just give it a few moments (or click around in
+AppVeyor to find the older versions).
+
+
+Caveat emptor; I don't have any Windows installation to test with, but it
+works fine in Wine.
+
+Running
+-------
+
+If you have AoE2 installed it should automatically detect where it is installed
+and load the data files automatically (looking up in the Windows registry). If
+that doesn't work for some reason it will pop up a dialog where you can point
+it to the files manually.
+
+If you don't have it installed there's a nice button in that dialog which opens
+[an URL](https://archive.org/details/AgeOfEmpiresIiTheConquerorsDemo) where you
+can download the trial version of AoC. It doesn't have the higher resolution
+graphics e. g. for the UI, though, so I highly recommend getting an original CD
+with the full version.
+
+
+
+On Linux it parses the Wine registry file to try to find the installation,
+otherwise you get the same dialog (but with a handy button to go directly to
+the .wine folder). Be aware that it respects WINEPREFIX, so make sure that is
+set correctly if you use it.
+
 
 Dependencies
 ------------
