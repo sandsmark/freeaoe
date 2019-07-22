@@ -2,9 +2,13 @@
 
 #include "IAction.h"
 
+#include "core/Constants.h"
+
 class ActionFly : public IAction
 {
 public:
+    static constexpr float wantedHeight = 3 * Constants::TILE_SIZE_HEIGHT;
+
     ActionFly(const std::shared_ptr<Unit> &unit, const Task &task);
 
     UpdateResult update(Time time) override;

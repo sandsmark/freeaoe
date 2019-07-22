@@ -46,9 +46,17 @@ UnitFactory::~UnitFactory()
 void UnitFactory::handleDefaultAction(const Unit::Ptr &unit, const genie::Task &task)
 {
     switch(task.ActionType) {
-    case genie::Task::Fly:
+    case genie::Task::Fly: {
+        MapPos flyingPosition = unit->position();
+        DBG << "Flying unit at" << flyingPosition;
+        // Castles are 4 high, so set 5.5 just to be safe that we fly above everything
+        if (flyingPosition.z < 10) {
+            flyingPosition.z = 10;
+            unit->setPosition(flyingPosition);
+        }
         unit->setCurrentAction(std::make_shared<ActionFly>(unit, Task(task, unit->data()->ID)));
         break;
+    }
 
         //TODO
     case genie::Task::Graze:

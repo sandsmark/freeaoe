@@ -36,7 +36,7 @@ IAction::UpdateResult ActionFly::update(Time time)
         }
     }
 
-    const int inStateTime = m_currentState == Moving ? 500 : 5000;
+    const int inStateTime = m_currentState == Moving ? 500 : 30000;
     if (time - m_lastStateChangeTime > inStateTime && rand() % 100 > 95 && unit->renderer().currentFrame() == 0) {
         m_lastStateChangeTime = time;
 
@@ -49,9 +49,20 @@ IAction::UpdateResult ActionFly::update(Time time)
 
     const float movement = elapsed * unit->data()->Speed * 0.15;
 
+
     // Need to convert to screen, because I'm dumb and the angles are screen relative
     const ScreenPos screenMovement(cos(unit->angle()), sin(unit->angle()));
     MapPos pos = unit->position() + screenMovement.toMap() * movement;
+
+    const float terrainHeight = unit->map()->elevationAt(pos);
+    const float targetHeight = terrainHeight + wantedHeight;
+    if (!util::floatsEquals(targetHeight, pos.z)) {
+        if (pos.z > targetHeight) {
+            pos.z = std::max(pos.z - movement / 2, targetHeight);
+        } else {
+            pos.z = std::min(pos.z + movement, targetHeight);
+        }
+    }
 
     if (pos.x < 0) {
         pos.x = unit->map()->width() - 1;
