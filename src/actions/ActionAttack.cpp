@@ -83,6 +83,11 @@ IAction::UpdateResult ActionAttack::update(Time time)
     }
 
     if (!inRange && distance > unit->data()->Combat.MaxRange) {
+        if (!unit->data()->Speed) {
+            DBG << "this unit can't move...";
+            return IAction::UpdateResult::Failed;
+        }
+
         const float angleToTarget = unit->position().angleTo(m_targetPosition);
 
         float targetX = m_targetPosition.x + cos(angleToTarget + M_PI) * unit->data()->Combat.MaxRange * Constants::TILE_SIZE / 1.1;
@@ -92,6 +97,11 @@ IAction::UpdateResult ActionAttack::update(Time time)
         return IAction::UpdateResult::NotUpdated;
     }
     if (distance < unit->data()->Combat.MinRange) {
+        if (!unit->data()->Speed) {
+            DBG << "this unit can't move...";
+            return IAction::UpdateResult::Failed;
+        }
+
         if (unit->findMatchingTask(genie::Task::RetreatToShootingRage, -1).data) {
             const float angleToTarget = unit->position().angleTo(m_targetPosition);
 
