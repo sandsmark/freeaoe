@@ -51,14 +51,13 @@ void yyerror(const char* s);
 %token UnitArbalest UnitArcher UnitCavalryArcher UnitCrossbowman UnitEliteSkirmisher UnitHandCannoneer UnitHeavyCavalryArcher UnitSkirmisher UnitChampion UnitEagleWarrior UnitEliteEagleWarrior UnitHalberdier UnitLongSwordsman UnitManAtArms UnitMilitiaman UnitPikeman UnitSpearman UnitTwoHandedSwordsman UnitBerserk UnitCataphract UnitChuKoNu UnitConquistador UnitEliteBerserk UnitEliteCataphract UnitEliteChuKoNu UnitEliteConquistador UnitEliteHuskarl UnitEliteJaguarWarrior UnitEliteJanissary UnitEliteLongbowman UnitEliteMameluke UnitEliteMangudai UnitElitePlumedArcher UnitEliteSamurai UnitEliteTarkan UnitEliteTeutonicKnight UnitEliteThrowingAxeman UnitEliteWarElephant UnitEliteWarWagon UnitEliteWoadRaider UnitHuskarl UnitJaguarWarrior UnitJanissary UnitLongbowman UnitMameluke UnitMangudai UnitPetard UnitPlumedArcher UnitSamurai UnitTarkan UnitTeutonicKnight UnitThrowingAxeman UnitTrebuchet UnitWarElephant UnitWarWagon UnitWoadRaider UnitCannonGalleon UnitDemolitionShip UnitEliteCannonGalleon UnitEliteLongboat UnitEliteTurtleShip UnitFastFireShip UnitFireShip UnitFishingShip UnitGalleon UnitGalley UnitHeavyDemolitionShip UnitLongboat UnitTradeCog UnitTransportShip UnitTurtleShip UnitWarGalley UnitTradeCart UnitMissionary UnitMonk UnitBatteringRam UnitBombardCannon UnitCappedRam UnitHeavyScorpion UnitMangonel UnitOnager UnitScorpion UnitSiegeOnager UnitSiegeRam UnitCamel UnitCavalier UnitHeavyCamel UnitHussar UnitKnight UnitLightCavalry UnitPaladin UnitScoutCavalry UnitVillager UnitArcherLine UnitCavalryArcherLine UnitSkirmisherLine UnitEagleWarriorLine UnitMilitiamanLine UnitSpearmanLine UnitBerserkLine UnitCataphractLine UnitChuKoNuLine UnitConquistadorLine UnitHuskarlLine UnitJaguarWarriorLine UnitJanissaryLine UnitLongbowmanLine UnitMamelukeLine UnitMangudaiLine UnitPlumedArcherLine UnitSamuraiLine UnitTarkanLine UnitTeutonicKnightLine UnitThrowingAxemanLine UnitWarElephantLine UnitWarWagonLine UnitWoadRaiderLine UnitCannonGalleonLine UnitDemolitionShipLine UnitFireShipLine UnitGalleyLine UnitLongboatLine UnitTurtleShipLine UnitBatteringRamLine UnitMangonelLine UnitScorpionLine UnitCamelLine UnitKnightLine UnitScoutCavalryLine
 %token VictoryConditionStandard VictoryConditionConquest VictoryConditionTimeLimit VictoryConditionScore VictoryConditionCustom
 %token WallTypeFortifiedWall WallTypePalisadeWall WallTypeStoneWall WallTypeStoneWallLine
-%token Resign
-%token SetStrategicNumber
-%token Spy
-%token Taunt
-%token TauntUsingRange
-%token Train
-%token TributeToPlayer
-%token EnableTimer
+%token ConstantMyPlayerNumber
+%token ConstantMyCiv
+%token ConstantMyUniqueUnit
+%token ConstantMyUniqueUnitUpgrade
+%token ConstantMyUniqueUnitLine
+%token ConstantMyEliteUniqueUnit
+%token ConstantMyUniqueResearch
 %token True
 %token False
 %token AttackSoldierCount
@@ -166,7 +165,60 @@ void yyerror(const char* s);
 %token WallInvisiblePercentage
 %token WarboatCount
 %token WoodAmount
+%token DoNothing
+%token AcknowledgeEvent
+%token AcknowledgeTaunt
+%token AttackNow
+%token Build
+%token BuildForward
+%token BuildGate
+%token BuildWall
+%token BuyCommodity
+%token CcAddResource
+%token ChatLocal
+%token ChatLocalUsingId
+%token ChatLocalUsingRange
+%token ChatLocalToSelf
+%token ChatToAll
+%token ChatToAllUsingId
+%token ChatToAllUsingRange
+%token ChatToAllies
+%token ChatToAlliesUsingId
+%token ChatToAlliesUsingRange
+%token ChatToEnemies
+%token ChatToEnemiesUsingId
+%token ChatToEnemiesUsingRange
+%token ChatToPlayer
+%token ChatToPlayerUsingId
+%token ChatToPlayerUsingRange
+%token ChatTrace
+%token ClearTributeMemory
+%token DeleteBuilding
+%token DeleteUnit
 %token DisableSelf
+%token DisableTimer
+%token EnableTimer
+%token EnableWallPlacement
+%token GenerateRandomNumber
+%token Log
+%token LogTrace
+%token ReleaseEscrow
+%token Research
+%token Resign
+%token SellCommodity
+%token SetDifficultyParameter
+%token SetDoctrine
+%token SetEscrowPercentage
+%token SetGoal
+%token SetSharedGoal
+%token SetSignal
+%token SetStance
+%token SetStrategicNumber
+%token Spy
+%token Taunt
+%token TauntUsingRange
+%token Train
+%token TributeToPlayer
 
 %%
 
@@ -370,7 +422,8 @@ playernumber:
 //  | comparisonNotEqual  {}// static_cast<Condition*>(aiRule)->type = RelOp::NotEqual; } 
 
 researchitem:
-    ResearchItemRiArbalest  {}// static_cast<Condition*>(aiRule)->type = ResearchItem::RiArbalest; } 
+    age
+  | ResearchItemRiArbalest  {}// static_cast<Condition*>(aiRule)->type = ResearchItem::RiArbalest; } 
   | ResearchItemRiCrossbow  {}// static_cast<Condition*>(aiRule)->type = ResearchItem::RiCrossbow; } 
   | ResearchItemRiEliteSkirmisher  {}// static_cast<Condition*>(aiRule)->type = ResearchItem::RiEliteSkirmisher; } 
   | ResearchItemRiHandCannon  {}// static_cast<Condition*>(aiRule)->type = ResearchItem::RiHandCannon; } 
@@ -485,6 +538,8 @@ researchitem:
   | ResearchItemRiMurderHoles  {}// static_cast<Condition*>(aiRule)->type = ResearchItem::RiMurderHoles; } 
   | ResearchItemRiSiegeEngineers  {}// static_cast<Condition*>(aiRule)->type = ResearchItem::RiSiegeEngineers; } 
   | ResearchItemRiStonecutting  {}// static_cast<Condition*>(aiRule)->type = ResearchItem::RiStonecutting; } 
+  | ConstantMyUniqueUnitUpgrade {}
+  | ConstantMyUniqueResearch {}
 
 startingresources:
     StartingResourcesLowResources  {}// static_cast<Condition*>(aiRule)->type = StartingResources::LowResources; } 
@@ -755,6 +810,9 @@ unit:
   | UnitCamelLine  {}// static_cast<Condition*>(aiRule)->type = Unit::CamelLine; } 
   | UnitKnightLine  {}// static_cast<Condition*>(aiRule)->type = Unit::KnightLine; } 
   | UnitScoutCavalryLine  {}// static_cast<Condition*>(aiRule)->type = Unit::ScoutCavalryLine; } 
+  | ConstantMyUniqueUnit
+  | ConstantMyUniqueUnitLine
+  | ConstantMyEliteUniqueUnit
 
 victoryconditiontype:
     VictoryConditionStandard  {}// static_cast<Condition*>(aiRule)->type = VictoryCondition::Standard; } 
@@ -784,8 +842,181 @@ symbolname:
     | unit { printf("got unit"); }
     | walltype { printf("got walltype"); }
 
+systemconstant:
+      ConstantMyPlayerNumber
+    | ConstantMyCiv
+    | ConstantMyUniqueUnit
+    | ConstantMyUniqueUnitUpgrade
+    | ConstantMyUniqueUnitLine
+    | ConstantMyEliteUniqueUnit
+    | ConstantMyUniqueResearch
+
+donothing:
+    DoNothing
+
+acknowledgeevent:
+    AcknowledgeEvent eventtype Number
+
+acknowledgetaunt:
+    AcknowledgeTaunt playernumber Number
+
+attacknow:
+    AttackNow
+
+build:
+    Build building
+
+buildforward:
+    BuildForward building
+
+buildgate:
+    BuildGate Number
+
+buildwall:
+    BuildWall Number walltype
+
+buycommodity:
+    BuyCommodity commodity
+
+ccaddresource:
+    CcAddResource commodity Number
+
+chatlocal:
+    ChatLocal String
+
+chatlocalusingid:
+    ChatLocalUsingId Number
+
+chatlocalusingrange:
+    ChatLocalUsingRange Number Number
+
+chatlocaltoself:
+    ChatLocalToSelf String
+
+chattoall:
+    ChatToAll String
+
+chattoallusingid:
+    ChatToAllUsingId Number
+
+chattoallusingrange:
+    ChatToAllUsingRange Number Number
+
+chattoallies:
+    ChatToAllies String
+
 setstrategicnumber:
     SetStrategicNumber strategicnumber Number
+
+tributetoplayer:
+    TributeToPlayer playernumber commodity Number
+
+//enabletimer:
+//    EnableTimer Number Number
+
+//actiontype:
+//    setstrategicnumber  | Spy  | taunt  | tauntusingrange  | train  | tributetoplayer | DisableSelf | Resign | enabletimer
+
+actiontype:
+    donothing  | acknowledgeevent  | acknowledgetaunt  | attacknow  | build  | buildforward  | buildgate  | buildwall  | buycommodity  | ccaddresource  | chatlocal  | chatlocalusingid  | chatlocalusingrange  | chatlocaltoself  | chattoall  | chattoallusingid  | chattoallusingrange  | chattoallies  | setstrategicnumber  | spy  | taunt  | tauntusingrange  | train  | tributetoplayer  | chattoalliesusingid  | chattoalliesusingrange  | chattoenemies  | chattoenemiesusingid  | chattoenemiesusingrange  | chattoplayer  | chattoplayerusingid  | chattoplayerusingrange  | chattrace  | cleartributememory  | deletebuilding  | deleteunit  | disableself  | disabletimer  | enabletimer  | enablewallplacement  | generaterandomnumber  | log  | logtrace  | releaseescrow  | research  | resign  | sellcommodity  | setdifficultyparameter  | setdoctrine  | setescrowpercentage  | setgoal  | setsharedgoal  | setsignal  | setstance
+
+chattoalliesusingid:
+    ChatToAlliesUsingId Number
+
+chattoalliesusingrange:
+    ChatToAlliesUsingRange Number Number
+
+chattoenemies:
+    ChatToEnemies String
+
+chattoenemiesusingid:
+    ChatToEnemiesUsingId Number
+
+chattoenemiesusingrange:
+    ChatToEnemiesUsingRange Number Number
+
+chattoplayer:
+    ChatToPlayer playernumber String
+
+chattoplayerusingid:
+    ChatToPlayerUsingId playernumber Number
+
+chattoplayerusingrange:
+    ChatToPlayerUsingRange playernumber Number Number
+
+chattrace:
+    ChatTrace Number
+
+cleartributememory:
+    ClearTributeMemory playernumber commodity
+
+deletebuilding:
+    DeleteBuilding building
+
+deleteunit:
+    DeleteUnit unit
+
+disableself:
+    DisableSelf
+
+disabletimer:
+    DisableTimer Number
+
+enabletimer:
+    EnableTimer Number
+    | EnableTimer Number Number
+
+enablewallplacement:
+    EnableWallPlacement Number
+
+generaterandomnumber:
+    GenerateRandomNumber Number
+
+log:
+    Log String
+
+logtrace:
+    LogTrace Number
+
+releaseescrow:
+    ReleaseEscrow commodity
+
+research:
+    Research researchitem
+    | Research age
+
+resign:
+    Resign
+
+sellcommodity:
+    SellCommodity commodity
+
+setdifficultyparameter:
+    SetDifficultyParameter difficultyparameter Number
+
+setdoctrine:
+    SetDoctrine Number
+
+setescrowpercentage:
+    SetEscrowPercentage commodity Number
+
+setgoal:
+    SetGoal Number Number
+
+setsharedgoal:
+    SetSharedGoal Number Number
+
+setsignal:
+    SetSignal Number
+
+setstance:
+    SetStance playernumber diplomaticstance
+
+setstrategicnumber:
+    SetStrategicNumber strategicnumber Number
+
+spy:
+    Spy
 
 taunt:
     Taunt Number
@@ -795,15 +1026,6 @@ tauntusingrange:
 
 train:
     Train unit
-
-tributetoplayer:
-    TributeToPlayer playernumber commodity Number
-
-enabletimer:
-    EnableTimer Number Number
-
-actiontype:
-    setstrategicnumber  | Spy  | taunt  | tauntusingrange  | train  | tributetoplayer | DisableSelf | Resign | enabletimer
 
 true:
     True
@@ -1119,7 +1341,7 @@ woodamount:
     WoodAmount comparison Number
 
 fact:
-    true  | false  | attacksoldiercount  | attackwarboatcount  | buildingavailable  | buildingcount  | buildingcounttotal  | buildingtypecount  | buildingtypecounttotal  | canaffordbuilding  | canaffordcompletewall  | canaffordresearch  | canaffordunit  | canbuild  | canbuildgate  | canbuildgatewithescrow  | canbuildwall  | canbuildwallwithescrow  | canbuildwithescrow  | canbuycommodity  | canresearch  | canresearchwithescrow  | cansellcommodity  | canspy  | canspywithescrow  | cantrain  | cantrainwithescrow  | ccplayersbuildingcount  | ccplayersbuildingtypecount  | ccplayersunitcount  | ccplayersunittypecount  | cheatsenabled  | civselected  | civilianpopulation  | commoditybuyingprice  | commoditysellingprice  | currentage  | currentagetime  | currentscore  | deathmatchgame  | defendsoldiercount  | defendwarboatcount  | difficulty | difficultycomp | doctrine  | dropsitemindistance  | enemybuildingsintown  | enemycapturedrelics  | escrowamount  | eventdetected  | foodamount  | gametime  | goal  | goldamount  | housingheadroom  | idlefarmcount  | mapsize  | maptype  | militarypopulation  | playercomputer  | playerhuman  | playeringame  | playernumber  | playerresigned  | playervalid  | playersbuildingcount  | playersbuildingtypecount  | playersciv  | playerscivilianpopulation  | playerscurrentage  | playerscurrentagetime  | playersmilitarypopulation  | playerspopulation  | playersscore  | playersstance  | playerstribute  | playerstributememory  | playersunitcount  | playersunittypecount  | population  | populationcap  | populationheadroom  | randomnumber  | regicidegame  | researchavailable  | researchcompleted  | resourcefound  | sharedgoal  | sheepandforagetoofar  | soldiercount  | stancetoward  | startingage  | startingresources | startingresourcescomp  | stoneamount | strategicnumber | strategicnumbercomp  | tauntdetected  | timertriggered  | townunderattack  | unitavailable  | unitcount  | unitcounttotal  | unittypecount  | unittypecounttotal  | victorycondition  | wallcompletedpercentage  | wallinvisiblepercentage  | warboatcount  | woodamount
+    true  | false  | attacksoldiercount  | attackwarboatcount  | buildingavailable  | buildingcount  | buildingcounttotal  | buildingtypecount  | buildingtypecounttotal  | canaffordbuilding  | canaffordcompletewall  | canaffordresearch  | canaffordunit  | canbuild  | canbuildgate  | canbuildgatewithescrow  | canbuildwall  | canbuildwallwithescrow  | canbuildwithescrow  | canbuycommodity  | canresearch  | canresearchwithescrow  | cansellcommodity  | canspy  | canspywithescrow  | cantrain  | cantrainwithescrow  | ccplayersbuildingcount  | ccplayersbuildingtypecount  | ccplayersunitcount  | ccplayersunittypecount  | cheatsenabled  | civselected  | civilianpopulation  | commoditybuyingprice  | commoditysellingprice  | currentage  | currentagetime  | currentscore  | deathmatchgame  | defendsoldiercount  | defendwarboatcount  | difficulty | difficultycomp | doctrine  | dropsitemindistance  | enemybuildingsintown  | enemycapturedrelics  | escrowamount  | eventdetected  | foodamount  | gametime  | goal  | goldamount  | housingheadroom  | idlefarmcount  | mapsize  | maptype  | militarypopulation  | playercomputer  | playerhuman  | playeringame  | playernumber  | playerresigned  | playervalid  | playersbuildingcount  | playersbuildingtypecount  | playersciv  | playerscivilianpopulation  | playerscurrentage  | playerscurrentagetime  | playersmilitarypopulation  | playerspopulation  | playersscore  | playersstance  | playerstribute  | playerstributememory  | playersunitcount  | playersunittypecount  | population  | populationcap  | populationheadroom  | randomnumber  | regicidegame  | researchavailable  | researchcompleted  | resourcefound  | sharedgoal  | sheepandforagetoofar  | soldiercount  | stancetoward  | startingage  | startingresources | startingresourcescomp  | stoneamount | strategicnumber | strategicnumbercomp  | tauntdetected  | timertriggered  | townunderattack  | unitavailable  | unitcount  | unitcounttotal  | unittypecount  | unittypecounttotal  | victorycondition  | wallcompletedpercentage  | wallinvisiblepercentage  | warboatcount  | woodamount | systemconstant
 
 %%
 
