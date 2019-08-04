@@ -26,47 +26,31 @@ void yyerror(const char* s);
 %token OpenParen CloseParen
 %token RuleStart ConditionActionSeparator
 
-%token LessThan LessOrEqual GreaterThan GreaterOrEqual Equal Not Or
+//%token LessThan LessOrEqual GreaterThan GreaterOrEqual Equal Not Or
+%token Not Or
 
 %token LoadIfDefined Else EndIf
 
 %token Space NewLine
 
 %start aiscript
+%token AcknowledgeEvent
+%token AcknowledgeTaunt
 %token AgeDarkAge AgeFeudalAge AgeCastleAge AgeImperialAge AgePostImperialAge
-%token BuildingArcheryRange BuildingBarracks BuildingBlacksmith BuildingBombardTower BuildingCastle BuildingDock BuildingFarm BuildingFishTrap BuildingGuardTower BuildingHouse BuildingKeep BuildingLumberCamp BuildingMarket BuildingMill BuildingMiningCamp BuildingMonastery BuildingOutpost BuildingSiegeWorkshop BuildingStable BuildingTownCenter BuildingUniversity BuildingWatchTower BuildingWonder BuildingWatchTowerLine
-%token CivBriton CivByzantine CivCeltic CivChinese CivFrankish CivGothic CivJapanese CivMongol CivPersian CivSaracen CivTeutonic CivTurkish CivViking
-%token CommodityFood CommodityStone CommodityWood CommodityGold
-%token DifficultyEasiest DifficultyEasy DifficultyModerate DifficultyHard DifficultyHardest
-%token DifficultyParameterAbilityToDodgeMissiles DifficultyParameterAbilityToMaintainDistance
-%token DiplomaticStanceAlly DiplomaticStanceNeutral DiplomaticStanceEnemy
-%token EventTypeTrigger
-%token MapSizeTiny MapSizeSmall MapSizeMedium MapSizeNormal MapSizeLarge MapSizeGiant
-%token MapTypeArabia MapTypeArchipelago MapTypeBaltic MapTypeBlackForest MapTypeCoastal MapTypeContinental MapTypeCraterLake MapTypeFortress MapTypeGoldRush MapTypeHighland MapTypeIslands MapTypeMediterranean MapTypeMigration MapTypeRivers MapTypeTeamIslands MapTypeScenarioMap
-%token PlayerNumberAnyAlly PlayerNumberAnyComputer PlayerNumberAnyComputerAlly PlayerNumberAnyComputerEnemy PlayerNumberAnyComputerNeutral PlayerNumberAnyEnemy PlayerNumberAnyHuman PlayerNumberAnyHumanAlly PlayerNumberAnyHumanEnemy PlayerNumberAnyHumanNeutral PlayerNumberAnyNeutral PlayerNumberEveryAlly PlayerNumberEveryComputer PlayerNumberEveryEnemy PlayerNumberEveryHuman PlayerNumberEveryNeutral
-%token RelOpLessThan RelOpLessOrEqual RelOpGreaterThan RelOpGreaterOrEqual RelOpEqual RelOpNotEqual
-%token ResearchItemRiArbalest ResearchItemRiCrossbow ResearchItemRiEliteSkirmisher ResearchItemRiHandCannon ResearchItemRiHeavyCavalryArcher ResearchItemRiChampion ResearchItemRiEliteEagleWarrior ResearchItemRiHalberdier ResearchItemRiLongSwordsman ResearchItemRiManAtArms ResearchItemRiParthianTactics ResearchItemRiPikeman ResearchItemRiSquires ResearchItemRiThumbRing ResearchItemRiTracking ResearchItemRiTwoHandedSwordsman ResearchItemRiBlastFurnace ResearchItemRiBodkinArrow ResearchItemRiBracer ResearchItemRiChainBarding ResearchItemRiChainMail ResearchItemRiFletching ResearchItemRiForging ResearchItemRiIronCasting ResearchItemRiLeatherArcherArmor ResearchItemRiPaddedArcherArmor ResearchItemRiPlateBarding ResearchItemRiPlateMail ResearchItemRiRingArcherArmor ResearchItemRiScaleBarding ResearchItemRiScaleMail ResearchItemRiConscription ResearchItemRiHoardings ResearchItemRiSappers ResearchItemRiEliteBerserk ResearchItemRiEliteCataphract ResearchItemRiEliteChuKoNu ResearchItemRiEliteHuskarl ResearchItemRiEliteJanissary ResearchItemRiEliteLongbowman ResearchItemRiEliteMameluke ResearchItemRiEliteMangudai ResearchItemRiEliteSamurai ResearchItemRiEliteTeutonicKnight ResearchItemRiEliteThrowingAxeman ResearchItemRiEliteWarElephant ResearchItemRiEliteWoadRaider ResearchItemRiMyUniqueEliteUnit ResearchItemRiMyUniqueResearch ResearchItemRiCannonGalleon ResearchItemRiCareening ResearchItemRiDeckGuns ResearchItemRiDryDock ResearchItemRiEliteLongboat ResearchItemRiFastFireShip ResearchItemRiGalleon ResearchItemRiHeavyDemolitionShip ResearchItemRiShipwright ResearchItemRiWarGalley ResearchItemRiBowSaw ResearchItemRiDoubleBitAxe ResearchItemRiTwoManSaw ResearchItemRiBanking ResearchItemRiCaravan ResearchItemRiCartography ResearchItemRiCoinage ResearchItemRiGuilds ResearchItemRiCropRotation ResearchItemRiHeavyPlow ResearchItemRiHorseCollar ResearchItemRiGoldMining ResearchItemRiGoldShaftMining ResearchItemRiStoneMining ResearchItemRiStoneShaftMining ResearchItemRiAtonement ResearchItemRiBlockPrinting ResearchItemRiFaith ResearchItemRiFervor ResearchItemRiHerbalMedicine ResearchItemRiHeresy ResearchItemRiIllumination ResearchItemRiRedemption ResearchItemRiSanctity ResearchItemRiTheocracy ResearchItemRiBombardCannon ResearchItemRiCappedRam ResearchItemRiHeavyScorpion ResearchItemRiOnager ResearchItemRiScorpion ResearchItemRiSiegeOnager ResearchItemRiSiegeRam ResearchItemRiBloodlines ResearchItemRiCavalier ResearchItemRiHeavyCamel ResearchItemRiHusbandry ResearchItemRiHussar ResearchItemRiLightCavalry ResearchItemRiPaladin ResearchItemRiHandCart ResearchItemRiLoom ResearchItemRiTownPatrol ResearchItemRiTownWatch ResearchItemRiWheelBarrow ResearchItemRiArchitecture ResearchItemRiBallistics ResearchItemRiBombardTower ResearchItemRiChemistry ResearchItemRiFortifiedWall ResearchItemRiGuardTower ResearchItemRiHeatedShot ResearchItemRiKeep ResearchItemRiMasonry ResearchItemRiMurderHoles ResearchItemRiSiegeEngineers ResearchItemRiStonecutting
-%token StartingResourcesLowResources StartingResourcesMediumResources StartingResourcesHighResources
-%token StrategicNumberSnPercentCivilianExplorers StrategicNumberSnPercentCivilianBuilders StrategicNumberSnPercentCivilianGatherers StrategicNumberSnCapCivilianExplorers StrategicNumberSnCapCivilianBuilders StrategicNumberSnCapCivilianGatherers StrategicNumberSnMinimumAttackGroupSize StrategicNumberSnTotalNumberExplorers StrategicNumberSnPercentEnemySightedResponse StrategicNumberSnEnemySightedResponseDistance StrategicNumberSnSentryDistance StrategicNumberSnRelicReturnDistance StrategicNumberSnMinimumDefendGroupSize StrategicNumberSnMaximumAttackGroupSize StrategicNumberSnMaximumDefendGroupSize StrategicNumberSnMinimumPeaceLikeLevel StrategicNumberSnPercentExplorationRequired StrategicNumberSnZeroPriorityDistance StrategicNumberSnMinimumCivilianExplorers StrategicNumberSnNumberAttackGroups StrategicNumberSnNumberDefendGroups StrategicNumberSnAttackGroupGatherSpacing StrategicNumberSnNumberExploreGroups StrategicNumberSnMinimumExploreGroupSize StrategicNumberSnMaximumExploreGroupSize StrategicNumberSnGoldDefendPriority StrategicNumberSnStoneDefendPriority StrategicNumberSnForageDefendPriority StrategicNumberSnRelicDefendPriority StrategicNumberSnTownDefendPriority StrategicNumberSnDefenseDistance StrategicNumberSnNumberBoatAttackGroups StrategicNumberSnMinimumBoatAttackGroupSize StrategicNumberSnMaximumBoatAttackGroupSize StrategicNumberSnNumberBoatExploreGroups StrategicNumberSnMinimumBoatExploreGroupSize StrategicNumberSnMaximumBoatExploreGroupSize StrategicNumberSnNumberBoatDefendGroups StrategicNumberSnMinimumBoatDefendGroupSize StrategicNumberSnMaximumBoatDefendGroupSize StrategicNumberSnDockDefendPriority StrategicNumberSnSentryDistanceVariation StrategicNumberSnMinimumTownSize StrategicNumberSnMaximumTownSize StrategicNumberSnGroupCommanderSelectionMethod StrategicNumberSnConsecutiveIdleUnitLimit StrategicNumberSnTargetEvaluationDistance StrategicNumberSnTargetEvaluationHitpoints StrategicNumberSnTargetEvaluationDamageCapability StrategicNumberSnTargetEvaluationKills StrategicNumberSnTargetEvaluationAllyProximity StrategicNumberSnTargetEvaluationRof StrategicNumberSnTargetEvaluationRandomness StrategicNumberSnCampMaxDistance StrategicNumberSnMillMaxDistance StrategicNumberSnTargetEvaluationAttackAttempts StrategicNumberSnTargetEvaluationRange StrategicNumberSnDefendOverlapDistance StrategicNumberSnScaleMinimumAttackGroupSize StrategicNumberSnScaleMaximumAttackGroupSize StrategicNumberSnAttackGroupSizeRandomness StrategicNumberSnScalingFrequency StrategicNumberSnMaximumGaiaAttackResponse StrategicNumberSnBuildFrequency StrategicNumberSnAttackSeparationTimeRandomness StrategicNumberSnAttackIntelligence StrategicNumberSnInitialAttackDelay StrategicNumberSnSaveScenarioInformation StrategicNumberSnSpecialAttackType1 StrategicNumberSnSpecialAttackInfluence1 StrategicNumberSnMinimumWaterBodySizeForDock StrategicNumberSnNumberBuildAttemptsBeforeSkip StrategicNumberSnMaxSkipsPerAttempt StrategicNumberSnFoodGathererPercentage StrategicNumberSnGoldGathererPercentage StrategicNumberSnStoneGathererPercentage StrategicNumberSnWoodGathererPercentage StrategicNumberSnTargetEvaluationContinent StrategicNumberSnTargetEvaluationSiegeWeapon StrategicNumberSnGroupLeaderDefenseDistance StrategicNumberSnInitialAttackDelayType StrategicNumberSnBlotExplorationMap StrategicNumberSnBlotSize StrategicNumberSnIntelligentGathering StrategicNumberSnTaskUngroupedSoldiers StrategicNumberSnTargetEvaluationBoat StrategicNumberSnNumberEnemyObjectsRequired StrategicNumberSnNumberMaxSkipCycles StrategicNumberSnRetaskGatherAmount StrategicNumberSnMaxRetaskGatherAmount StrategicNumberSnMaxBuildPlanGathererPercentage StrategicNumberSnFoodDropsiteDistance StrategicNumberSnWoodDropsiteDistance StrategicNumberSnStoneDropsiteDistance StrategicNumberSnGoldDropsiteDistance StrategicNumberSnInitialExplorationRequired StrategicNumberSnRandomPlacementFactor StrategicNumberSnRequiredForestTiles StrategicNumberSnAttackDiplomacyImpact StrategicNumberSnPercentHalfExploration StrategicNumberSnTargetEvaluationTimeKillRatio StrategicNumberSnTargetEvaluationInProgress StrategicNumberSnAttackWinningPlayer StrategicNumberSnCoopShareInformation StrategicNumberSnAttackWinningPlayerFactor StrategicNumberSnCoopShareAttacking StrategicNumberSnCoopShareAttackingInterval StrategicNumberSnPercentageExploreExterminators StrategicNumberSnTrackPlayerHistory StrategicNumberSnMinimumDropsiteBuffer StrategicNumberSnUseByTypeMaxGathering StrategicNumberSnMinimumBoarHuntGroupSize StrategicNumberSnMinimumAmountForTrading StrategicNumberSnEasiestReactionPercentage StrategicNumberSnEasierReactionPercentage StrategicNumberSnHitsBeforeAllianceChange StrategicNumberSnAllowCivilianDefense StrategicNumberSnNumberForwardBuilders StrategicNumberSnPercentAttackSoldiers StrategicNumberSnPercentAttackBoats StrategicNumberSnDoNotScaleForDifficultyLevel StrategicNumberSnGroupFormDistance StrategicNumberSnIgnoreAttackGroupUnderAttack StrategicNumberSnGatherDefenseUnits StrategicNumberSnMaximumWoodDropDistance StrategicNumberSnMaximumFoodDropDistance StrategicNumberSnMaximumHuntDropDistance StrategicNumberSnMaximumFishBoatDropDistance StrategicNumberSnMaximumGoldDropDistance StrategicNumberSnMaximumStoneDropDistance StrategicNumberSnGatherIdleSoldiersAtCenter StrategicNumberSnGarrisonRams
-%token UnitArbalest UnitArcher UnitCavalryArcher UnitCrossbowman UnitEliteSkirmisher UnitHandCannoneer UnitHeavyCavalryArcher UnitSkirmisher UnitChampion UnitEagleWarrior UnitEliteEagleWarrior UnitHalberdier UnitLongSwordsman UnitManAtArms UnitMilitiaman UnitPikeman UnitSpearman UnitTwoHandedSwordsman UnitBerserk UnitCataphract UnitChuKoNu UnitConquistador UnitEliteBerserk UnitEliteCataphract UnitEliteChuKoNu UnitEliteConquistador UnitEliteHuskarl UnitEliteJaguarWarrior UnitEliteJanissary UnitEliteLongbowman UnitEliteMameluke UnitEliteMangudai UnitElitePlumedArcher UnitEliteSamurai UnitEliteTarkan UnitEliteTeutonicKnight UnitEliteThrowingAxeman UnitEliteWarElephant UnitEliteWarWagon UnitEliteWoadRaider UnitHuskarl UnitJaguarWarrior UnitJanissary UnitLongbowman UnitMameluke UnitMangudai UnitPetard UnitPlumedArcher UnitSamurai UnitTarkan UnitTeutonicKnight UnitThrowingAxeman UnitTrebuchet UnitWarElephant UnitWarWagon UnitWoadRaider UnitCannonGalleon UnitDemolitionShip UnitEliteCannonGalleon UnitEliteLongboat UnitEliteTurtleShip UnitFastFireShip UnitFireShip UnitFishingShip UnitGalleon UnitGalley UnitHeavyDemolitionShip UnitLongboat UnitTradeCog UnitTransportShip UnitTurtleShip UnitWarGalley UnitTradeCart UnitMissionary UnitMonk UnitBatteringRam UnitBombardCannon UnitCappedRam UnitHeavyScorpion UnitMangonel UnitOnager UnitScorpion UnitSiegeOnager UnitSiegeRam UnitCamel UnitCavalier UnitHeavyCamel UnitHussar UnitKnight UnitLightCavalry UnitPaladin UnitScoutCavalry UnitVillager UnitArcherLine UnitCavalryArcherLine UnitSkirmisherLine UnitEagleWarriorLine UnitMilitiamanLine UnitSpearmanLine UnitBerserkLine UnitCataphractLine UnitChuKoNuLine UnitConquistadorLine UnitHuskarlLine UnitJaguarWarriorLine UnitJanissaryLine UnitLongbowmanLine UnitMamelukeLine UnitMangudaiLine UnitPlumedArcherLine UnitSamuraiLine UnitTarkanLine UnitTeutonicKnightLine UnitThrowingAxemanLine UnitWarElephantLine UnitWarWagonLine UnitWoadRaiderLine UnitCannonGalleonLine UnitDemolitionShipLine UnitFireShipLine UnitGalleyLine UnitLongboatLine UnitTurtleShipLine UnitBatteringRamLine UnitMangonelLine UnitScorpionLine UnitCamelLine UnitKnightLine UnitScoutCavalryLine
-%token VictoryConditionStandard VictoryConditionConquest VictoryConditionTimeLimit VictoryConditionScore VictoryConditionCustom
-%token WallTypeFortifiedWall WallTypePalisadeWall WallTypeStoneWall WallTypeStoneWallLine
-%token ConstantMyPlayerNumber
-%token ConstantMyCiv
-%token ConstantMyUniqueUnit
-%token ConstantMyUniqueUnitUpgrade
-%token ConstantMyUniqueUnitLine
-%token ConstantMyEliteUniqueUnit
-%token ConstantMyUniqueResearch
-%token True
-%token False
+%token AttackNow
 %token AttackSoldierCount
 %token AttackWarboatCount
+%token Build
+%token BuildForward
+%token BuildGate
+%token BuildingArcheryRange BuildingBarracks BuildingBlacksmith BuildingBombardTower BuildingCastle BuildingDock BuildingFarm BuildingFishTrap BuildingGuardTower BuildingHouse BuildingKeep BuildingLumberCamp BuildingMarket BuildingMill BuildingMiningCamp BuildingMonastery BuildingOutpost BuildingSiegeWorkshop BuildingStable BuildingTownCenter BuildingUniversity BuildingWatchTower BuildingWonder BuildingWatchTowerLine
 %token BuildingAvailable
 %token BuildingCount
 %token BuildingCountTotal
 %token BuildingTypeCount
 %token BuildingTypeCountTotal
+%token BuildWall
+%token BuyCommodity
 %token CanAffordBuilding
 %token CanAffordCompleteWall
 %token CanAffordResearch
@@ -85,14 +69,35 @@ void yyerror(const char* s);
 %token CanSpyWithEscrow
 %token CanTrain
 %token CanTrainWithEscrow
+%token CcAddResource
 %token CcPlayersBuildingCount
 %token CcPlayersBuildingTypeCount
 %token CcPlayersUnitCount
 %token CcPlayersUnitTypeCount
+%token ChatLocal
+%token ChatLocalToSelf
+%token ChatLocalUsingId
+%token ChatLocalUsingRange
+%token ChatToAll
+%token ChatToAllies
+%token ChatToAlliesUsingId
+%token ChatToAlliesUsingRange
+%token ChatToAllUsingId
+%token ChatToAllUsingRange
+%token ChatToEnemies
+%token ChatToEnemiesUsingId
+%token ChatToEnemiesUsingRange
+%token ChatToPlayer
+%token ChatToPlayerUsingId
+%token ChatToPlayerUsingRange
+%token ChatTrace
 %token CheatsEnabled
-%token CivSelected
+%token CivBriton CivByzantine CivCeltic CivChinese CivFrankish CivGothic CivJapanese CivMongol CivPersian CivSaracen CivTeutonic CivTurkish CivViking CivMyCiv
 %token CivilianPopulation
+%token CivSelected
+%token ClearTributeMemory
 %token CommodityBuyingPrice
+%token CommodityFood CommodityStone CommodityWood CommodityGold
 %token CommoditySellingPrice
 %token CurrentAge
 %token CurrentAgeTime
@@ -100,28 +105,44 @@ void yyerror(const char* s);
 %token DeathMatchGame
 %token DefendSoldierCount
 %token DefendWarboatCount
+%token DeleteBuilding
+%token DeleteUnit
 %token Difficulty
+%token DifficultyLevelEasiest DifficultyLevelEasy DifficultyLevelModerate DifficultyLevelHard DifficultyLevelHardest
+%token DifficultyParameterAbilityToDodgeMissiles DifficultyParameterAbilityToMaintainDistance
+%token DiplomaticStanceAlly DiplomaticStanceNeutral DiplomaticStanceEnemy
+%token DisableSelf
+%token DisableTimer
 %token Doctrine
+%token DoNothing
 %token DropsiteMinDistance
+%token EnableTimer
+%token EnableWallPlacement
 %token EnemyBuildingsInTown
 %token EnemyCapturedRelics
 %token EscrowAmount
 %token EventDetected
+%token False
 %token FoodAmount
 %token GameTime
+%token GenerateRandomNumber
 %token Goal
 %token GoldAmount
 %token HousingHeadroom
 %token IdleFarmCount
+%token Log
+%token LogTrace
 %token MapSize
+%token MapSizeTypeTiny MapSizeTypeSmall MapSizeTypeMedium MapSizeTypeNormal MapSizeTypeLarge MapSizeTypeGiant
 %token MapType
+%token MapTypeNameArabia MapTypeNameArchipelago MapTypeNameBaltic MapTypeNameBlackForest MapTypeNameCoastal MapTypeNameContinental MapTypeNameCraterLake MapTypeNameFortress MapTypeNameGoldRush MapTypeNameHighland MapTypeNameIslands MapTypeNameMediterranean MapTypeNameMigration MapTypeNameRivers MapTypeNameTeamIslands MapTypeNameScenarioMap
 %token MilitaryPopulation
 %token PlayerComputer
 %token PlayerHuman
 %token PlayerInGame
 %token PlayerNumber
+%token PlayerNumberTypeAnyAlly PlayerNumberTypeAnyComputer PlayerNumberTypeAnyComputerAlly PlayerNumberTypeAnyComputerEnemy PlayerNumberTypeAnyComputerNeutral PlayerNumberTypeAnyEnemy PlayerNumberTypeAnyHuman PlayerNumberTypeAnyHumanAlly PlayerNumberTypeAnyHumanEnemy PlayerNumberTypeAnyHumanNeutral PlayerNumberTypeAnyNeutral PlayerNumberTypeEveryAlly PlayerNumberTypeEveryComputer PlayerNumberTypeEveryEnemy PlayerNumberTypeEveryHuman PlayerNumberTypeEveryNeutral PlayerNumberTypeMyPlayerNumber
 %token PlayerResigned
-%token PlayerValid
 %token PlayersBuildingCount
 %token PlayersBuildingTypeCount
 %token PlayersCiv
@@ -136,75 +157,20 @@ void yyerror(const char* s);
 %token PlayersTributeMemory
 %token PlayersUnitCount
 %token PlayersUnitTypeCount
+%token PlayerValid
 %token Population
 %token PopulationCap
 %token PopulationHeadroom
 %token RandomNumber
 %token RegicideGame
+%token ReleaseEscrow
+%token RelOpLessThan RelOpLessOrEqual RelOpGreaterThan RelOpGreaterOrEqual RelOpEqual RelOpNotEqual
+%token Research
 %token ResearchAvailable
 %token ResearchCompleted
-%token ResourceFound
-%token SharedGoal
-%token SheepAndForageTooFar
-%token SoldierCount
-%token StanceToward
-%token StartingAge
-%token StartingResources
-%token StoneAmount
-%token StrategicNumber
-%token TauntDetected
-%token TimerTriggered
-%token TownUnderAttack
-%token UnitAvailable
-%token UnitCount
-%token UnitCountTotal
-%token UnitTypeCount
-%token UnitTypeCountTotal
-%token VictoryCondition
-%token WallCompletedPercentage
-%token WallInvisiblePercentage
-%token WarboatCount
-%token WoodAmount
-%token DoNothing
-%token AcknowledgeEvent
-%token AcknowledgeTaunt
-%token AttackNow
-%token Build
-%token BuildForward
-%token BuildGate
-%token BuildWall
-%token BuyCommodity
-%token CcAddResource
-%token ChatLocal
-%token ChatLocalUsingId
-%token ChatLocalUsingRange
-%token ChatLocalToSelf
-%token ChatToAll
-%token ChatToAllUsingId
-%token ChatToAllUsingRange
-%token ChatToAllies
-%token ChatToAlliesUsingId
-%token ChatToAlliesUsingRange
-%token ChatToEnemies
-%token ChatToEnemiesUsingId
-%token ChatToEnemiesUsingRange
-%token ChatToPlayer
-%token ChatToPlayerUsingId
-%token ChatToPlayerUsingRange
-%token ChatTrace
-%token ClearTributeMemory
-%token DeleteBuilding
-%token DeleteUnit
-%token DisableSelf
-%token DisableTimer
-%token EnableTimer
-%token EnableWallPlacement
-%token GenerateRandomNumber
-%token Log
-%token LogTrace
-%token ReleaseEscrow
-%token Research
+%token ResearchItemRiArbalest ResearchItemRiCrossbow ResearchItemRiEliteSkirmisher ResearchItemRiHandCannon ResearchItemRiHeavyCavalryArcher ResearchItemRiChampion ResearchItemRiEliteEagleWarrior ResearchItemRiHalberdier ResearchItemRiLongSwordsman ResearchItemRiManAtArms ResearchItemRiParthianTactics ResearchItemRiPikeman ResearchItemRiSquires ResearchItemRiThumbRing ResearchItemRiTracking ResearchItemRiTwoHandedSwordsman ResearchItemRiBlastFurnace ResearchItemRiBodkinArrow ResearchItemRiBracer ResearchItemRiChainBarding ResearchItemRiChainMail ResearchItemRiFletching ResearchItemRiForging ResearchItemRiIronCasting ResearchItemRiLeatherArcherArmor ResearchItemRiPaddedArcherArmor ResearchItemRiPlateBarding ResearchItemRiPlateMail ResearchItemRiRingArcherArmor ResearchItemRiScaleBarding ResearchItemRiScaleMail ResearchItemRiConscription ResearchItemRiHoardings ResearchItemRiSappers ResearchItemRiEliteBerserk ResearchItemRiEliteCataphract ResearchItemRiEliteChuKoNu ResearchItemRiEliteHuskarl ResearchItemRiEliteJanissary ResearchItemRiEliteLongbowman ResearchItemRiEliteMameluke ResearchItemRiEliteMangudai ResearchItemRiEliteSamurai ResearchItemRiEliteTeutonicKnight ResearchItemRiEliteThrowingAxeman ResearchItemRiEliteWarElephant ResearchItemRiEliteWoadRaider ResearchItemRiMyUniqueEliteUnit ResearchItemRiMyUniqueResearch ResearchItemRiCannonGalleon ResearchItemRiCareening ResearchItemRiDeckGuns ResearchItemRiDryDock ResearchItemRiEliteLongboat ResearchItemRiFastFireShip ResearchItemRiGalleon ResearchItemRiHeavyDemolitionShip ResearchItemRiShipwright ResearchItemRiWarGalley ResearchItemRiBowSaw ResearchItemRiDoubleBitAxe ResearchItemRiTwoManSaw ResearchItemRiBanking ResearchItemRiCaravan ResearchItemRiCartography ResearchItemRiCoinage ResearchItemRiGuilds ResearchItemRiCropRotation ResearchItemRiHeavyPlow ResearchItemRiHorseCollar ResearchItemRiGoldMining ResearchItemRiGoldShaftMining ResearchItemRiStoneMining ResearchItemRiStoneShaftMining ResearchItemRiAtonement ResearchItemRiBlockPrinting ResearchItemRiFaith ResearchItemRiFervor ResearchItemRiHerbalMedicine ResearchItemRiHeresy ResearchItemRiIllumination ResearchItemRiRedemption ResearchItemRiSanctity ResearchItemRiTheocracy ResearchItemRiBombardCannon ResearchItemRiCappedRam ResearchItemRiHeavyScorpion ResearchItemRiOnager ResearchItemRiScorpion ResearchItemRiSiegeOnager ResearchItemRiSiegeRam ResearchItemRiBloodlines ResearchItemRiCavalier ResearchItemRiHeavyCamel ResearchItemRiHusbandry ResearchItemRiHussar ResearchItemRiLightCavalry ResearchItemRiPaladin ResearchItemRiHandCart ResearchItemRiLoom ResearchItemRiTownPatrol ResearchItemRiTownWatch ResearchItemRiWheelBarrow ResearchItemRiArchitecture ResearchItemRiBallistics ResearchItemRiBombardTower ResearchItemRiChemistry ResearchItemRiFortifiedWall ResearchItemRiGuardTower ResearchItemRiHeatedShot ResearchItemRiKeep ResearchItemRiMasonry ResearchItemRiMurderHoles ResearchItemRiSiegeEngineers ResearchItemRiStonecutting ResearchItemMyUniqueUnitUpgrade ResearchItemMyUniqueResearch
 %token Resign
+%token ResourceFound
 %token SellCommodity
 %token SetDifficultyParameter
 %token SetDoctrine
@@ -214,12 +180,38 @@ void yyerror(const char* s);
 %token SetSignal
 %token SetStance
 %token SetStrategicNumber
+%token SharedGoal
+%token SheepAndForageTooFar
+%token SoldierCount
 %token Spy
+%token StanceToward
+%token StartingAge
+%token StartingResources
+%token StartingResourcesTypeLowResources StartingResourcesTypeMediumResources StartingResourcesTypeHighResources
+%token StoneAmount
+%token StrategicNumber
+%token StrategicNumberNameSnPercentCivilianExplorers StrategicNumberNameSnPercentCivilianBuilders StrategicNumberNameSnPercentCivilianGatherers StrategicNumberNameSnCapCivilianExplorers StrategicNumberNameSnCapCivilianBuilders StrategicNumberNameSnCapCivilianGatherers StrategicNumberNameSnMinimumAttackGroupSize StrategicNumberNameSnTotalNumberExplorers StrategicNumberNameSnPercentEnemySightedResponse StrategicNumberNameSnEnemySightedResponseDistance StrategicNumberNameSnSentryDistance StrategicNumberNameSnRelicReturnDistance StrategicNumberNameSnMinimumDefendGroupSize StrategicNumberNameSnMaximumAttackGroupSize StrategicNumberNameSnMaximumDefendGroupSize StrategicNumberNameSnMinimumPeaceLikeLevel StrategicNumberNameSnPercentExplorationRequired StrategicNumberNameSnZeroPriorityDistance StrategicNumberNameSnMinimumCivilianExplorers StrategicNumberNameSnNumberAttackGroups StrategicNumberNameSnNumberDefendGroups StrategicNumberNameSnAttackGroupGatherSpacing StrategicNumberNameSnNumberExploreGroups StrategicNumberNameSnMinimumExploreGroupSize StrategicNumberNameSnMaximumExploreGroupSize StrategicNumberNameSnGoldDefendPriority StrategicNumberNameSnStoneDefendPriority StrategicNumberNameSnForageDefendPriority StrategicNumberNameSnRelicDefendPriority StrategicNumberNameSnTownDefendPriority StrategicNumberNameSnDefenseDistance StrategicNumberNameSnNumberBoatAttackGroups StrategicNumberNameSnMinimumBoatAttackGroupSize StrategicNumberNameSnMaximumBoatAttackGroupSize StrategicNumberNameSnNumberBoatExploreGroups StrategicNumberNameSnMinimumBoatExploreGroupSize StrategicNumberNameSnMaximumBoatExploreGroupSize StrategicNumberNameSnNumberBoatDefendGroups StrategicNumberNameSnMinimumBoatDefendGroupSize StrategicNumberNameSnMaximumBoatDefendGroupSize StrategicNumberNameSnDockDefendPriority StrategicNumberNameSnSentryDistanceVariation StrategicNumberNameSnMinimumTownSize StrategicNumberNameSnMaximumTownSize StrategicNumberNameSnGroupCommanderSelectionMethod StrategicNumberNameSnConsecutiveIdleUnitLimit StrategicNumberNameSnTargetEvaluationDistance StrategicNumberNameSnTargetEvaluationHitpoints StrategicNumberNameSnTargetEvaluationDamageCapability StrategicNumberNameSnTargetEvaluationKills StrategicNumberNameSnTargetEvaluationAllyProximity StrategicNumberNameSnTargetEvaluationRof StrategicNumberNameSnTargetEvaluationRandomness StrategicNumberNameSnCampMaxDistance StrategicNumberNameSnMillMaxDistance StrategicNumberNameSnTargetEvaluationAttackAttempts StrategicNumberNameSnTargetEvaluationRange StrategicNumberNameSnDefendOverlapDistance StrategicNumberNameSnScaleMinimumAttackGroupSize StrategicNumberNameSnScaleMaximumAttackGroupSize StrategicNumberNameSnAttackGroupSizeRandomness StrategicNumberNameSnScalingFrequency StrategicNumberNameSnMaximumGaiaAttackResponse StrategicNumberNameSnBuildFrequency StrategicNumberNameSnAttackSeparationTimeRandomness StrategicNumberNameSnAttackIntelligence StrategicNumberNameSnInitialAttackDelay StrategicNumberNameSnSaveScenarioInformation StrategicNumberNameSnSpecialAttackType1 StrategicNumberNameSnSpecialAttackInfluence1 StrategicNumberNameSnMinimumWaterBodySizeForDock StrategicNumberNameSnNumberBuildAttemptsBeforeSkip StrategicNumberNameSnMaxSkipsPerAttempt StrategicNumberNameSnFoodGathererPercentage StrategicNumberNameSnGoldGathererPercentage StrategicNumberNameSnStoneGathererPercentage StrategicNumberNameSnWoodGathererPercentage StrategicNumberNameSnTargetEvaluationContinent StrategicNumberNameSnTargetEvaluationSiegeWeapon StrategicNumberNameSnGroupLeaderDefenseDistance StrategicNumberNameSnInitialAttackDelayType StrategicNumberNameSnBlotExplorationMap StrategicNumberNameSnBlotSize StrategicNumberNameSnIntelligentGathering StrategicNumberNameSnTaskUngroupedSoldiers StrategicNumberNameSnTargetEvaluationBoat StrategicNumberNameSnNumberEnemyObjectsRequired StrategicNumberNameSnNumberMaxSkipCycles StrategicNumberNameSnRetaskGatherAmount StrategicNumberNameSnMaxRetaskGatherAmount StrategicNumberNameSnMaxBuildPlanGathererPercentage StrategicNumberNameSnFoodDropsiteDistance StrategicNumberNameSnWoodDropsiteDistance StrategicNumberNameSnStoneDropsiteDistance StrategicNumberNameSnGoldDropsiteDistance StrategicNumberNameSnInitialExplorationRequired StrategicNumberNameSnRandomPlacementFactor StrategicNumberNameSnRequiredForestTiles StrategicNumberNameSnAttackDiplomacyImpact StrategicNumberNameSnPercentHalfExploration StrategicNumberNameSnTargetEvaluationTimeKillRatio StrategicNumberNameSnTargetEvaluationInProgress StrategicNumberNameSnAttackWinningPlayer StrategicNumberNameSnCoopShareInformation StrategicNumberNameSnAttackWinningPlayerFactor StrategicNumberNameSnCoopShareAttacking StrategicNumberNameSnCoopShareAttackingInterval StrategicNumberNameSnPercentageExploreExterminators StrategicNumberNameSnTrackPlayerHistory StrategicNumberNameSnMinimumDropsiteBuffer StrategicNumberNameSnUseByTypeMaxGathering StrategicNumberNameSnMinimumBoarHuntGroupSize StrategicNumberNameSnMinimumAmountForTrading StrategicNumberNameSnEasiestReactionPercentage StrategicNumberNameSnEasierReactionPercentage StrategicNumberNameSnHitsBeforeAllianceChange StrategicNumberNameSnAllowCivilianDefense StrategicNumberNameSnNumberForwardBuilders StrategicNumberNameSnPercentAttackSoldiers StrategicNumberNameSnPercentAttackBoats StrategicNumberNameSnDoNotScaleForDifficultyLevel StrategicNumberNameSnGroupFormDistance StrategicNumberNameSnIgnoreAttackGroupUnderAttack StrategicNumberNameSnGatherDefenseUnits StrategicNumberNameSnMaximumWoodDropDistance StrategicNumberNameSnMaximumFoodDropDistance StrategicNumberNameSnMaximumHuntDropDistance StrategicNumberNameSnMaximumFishBoatDropDistance StrategicNumberNameSnMaximumGoldDropDistance StrategicNumberNameSnMaximumStoneDropDistance StrategicNumberNameSnGatherIdleSoldiersAtCenter StrategicNumberNameSnGarrisonRams
 %token Taunt
+%token TauntDetected
 %token TauntUsingRange
+%token TimerTriggered
+%token TownUnderAttack
 %token Train
 %token TributeToPlayer
-
+%token True
+%token UnitArbalest UnitArcher UnitCavalryArcher UnitCrossbowman UnitEliteSkirmisher UnitHandCannoneer UnitHeavyCavalryArcher UnitSkirmisher UnitChampion UnitEagleWarrior UnitEliteEagleWarrior UnitHalberdier UnitLongSwordsman UnitManAtArms UnitMilitiaman UnitPikeman UnitSpearman UnitTwoHandedSwordsman UnitBerserk UnitCataphract UnitChuKoNu UnitConquistador UnitEliteBerserk UnitEliteCataphract UnitEliteChuKoNu UnitEliteConquistador UnitEliteHuskarl UnitEliteJaguarWarrior UnitEliteJanissary UnitEliteLongbowman UnitEliteMameluke UnitEliteMangudai UnitElitePlumedArcher UnitEliteSamurai UnitEliteTarkan UnitEliteTeutonicKnight UnitEliteThrowingAxeman UnitEliteWarElephant UnitEliteWarWagon UnitEliteWoadRaider UnitHuskarl UnitJaguarWarrior UnitJanissary UnitLongbowman UnitMameluke UnitMangudai UnitPetard UnitPlumedArcher UnitSamurai UnitTarkan UnitTeutonicKnight UnitThrowingAxeman UnitTrebuchet UnitWarElephant UnitWarWagon UnitWoadRaider UnitCannonGalleon UnitDemolitionShip UnitEliteCannonGalleon UnitEliteLongboat UnitEliteTurtleShip UnitFastFireShip UnitFireShip UnitFishingShip UnitGalleon UnitGalley UnitHeavyDemolitionShip UnitLongboat UnitTradeCog UnitTransportShip UnitTurtleShip UnitWarGalley UnitTradeCart UnitMissionary UnitMonk UnitBatteringRam UnitBombardCannon UnitCappedRam UnitHeavyScorpion UnitMangonel UnitOnager UnitScorpion UnitSiegeOnager UnitSiegeRam UnitCamel UnitCavalier UnitHeavyCamel UnitHussar UnitKnight UnitLightCavalry UnitPaladin UnitScoutCavalry UnitVillager UnitArcherLine UnitCavalryArcherLine UnitSkirmisherLine UnitEagleWarriorLine UnitMilitiamanLine UnitSpearmanLine UnitBerserkLine UnitCataphractLine UnitChuKoNuLine UnitConquistadorLine UnitHuskarlLine UnitJaguarWarriorLine UnitJanissaryLine UnitLongbowmanLine UnitMamelukeLine UnitMangudaiLine UnitPlumedArcherLine UnitSamuraiLine UnitTarkanLine UnitTeutonicKnightLine UnitThrowingAxemanLine UnitWarElephantLine UnitWarWagonLine UnitWoadRaiderLine UnitCannonGalleonLine UnitDemolitionShipLine UnitFireShipLine UnitGalleyLine UnitLongboatLine UnitTurtleShipLine UnitBatteringRamLine UnitMangonelLine UnitScorpionLine UnitCamelLine UnitKnightLine UnitScoutCavalryLine UnitMyEliteUniqueUnit UnitMyUniqueUnit UnitMyUniqueUnitLine
+%token UnitAvailable
+%token UnitCount
+%token UnitCountTotal
+%token UnitTypeCount
+%token UnitTypeCountTotal
+%token VictoryCondition
+%token VictoryConditionNameStandard VictoryConditionNameConquest VictoryConditionNameTimeLimit VictoryConditionNameScore VictoryConditionNameCustom
+%token WallCompletedPercentage
+%token WallInvisiblePercentage
+%token WallTypeFortifiedWall WallTypePalisadeWall WallTypeStoneWall WallTypeStoneWallLine
+%token WarboatCount
+%token WoodAmount
 %%
 
 aiscript:
@@ -246,21 +238,21 @@ conditiontype:
     | Or conditions { printf("got multiple or conditions\n"); }
     | fact { printf("got fact\n"); }
 
-//conditiontype:
-//    Not condition { printf("got negated condition\n"); }
-//    | Or conditions { printf("got multiple or conditions\n"); }
-//    | symbolname { printf("got condition with symbol\n"); }
-//    | symbolname Number {  printf("got condition with symbol and number\n"); }
-//    | symbolname Number Number { printf("got condition with symbol and numbers\n"); }
-//    | symbolname symbolname {  printf("got condition with two symbols \n"); }
-//    | symbolname symbolname symbolname { printf("got condition with three symbols\n"); }
-//    | symbolname comparison age { printf("got condition with comparison\n"); }
-//    | symbolname comparison Number { printf("got condition with comparison\n"); }
-//    | symbolname comparison symbolname { printf("got condition with comparison\n"); }
-//    | symbolname symbolname comparison symbolname { printf("got condition with comparison\n"); }
-//    | symbolname symbolname comparison Number { printf("got condition with comparison\n"); }
-//    | symbolname symbolname symbolname comparison Number { printf("got condition with comparison\n"); }
 
+//condition:
+//    OpenParen Not condition CloseParen {}//  printf("got negated condition\n"); }
+//    | OpenParen Or conditions CloseParen { }// printf("got multiple or conditions\n"); }
+//    | OpenParen symbolname CloseParen {}//  printf("got condition with symbol '%s'\n", $2); }
+//    | OpenParen symbolname Number CloseParen {}//  printf("got condition with symbol '%s' and number %d\n", $2, $3); }
+//    | OpenParen symbolname Number Number CloseParen {}//  printf("got condition with symbol '%s' and numbers %d %d\n", $2, $3, $4); }
+//    | OpenParen symbolname symbolname CloseParen {}//  printf("got condition with two symbols '%s' %s\n", $2, $3); }
+//    | OpenParen symbolname symbolname symbolname CloseParen {}//  printf("got condition with three symbols %s %s %s\n", $2, $3, $4); }
+//    | OpenParen symbolname relop Number CloseParen {}//  printf("got condition with comparison %s %d\n", $2, $4); }
+//    | OpenParen symbolname relop symbolname CloseParen {}//  printf("got condition with comparison %s %s\n", $2, $4); }
+//    | OpenParen symbolname symbolname relop symbolname CloseParen {}//  printf("got condition with comparison %s %s %s\n", $2, $3, $5); }
+//    | OpenParen symbolname symbolname relop Number CloseParen {}//  printf("got condition with comparison %s %s %d\n", $2, $3, $5); }
+//    | OpenParen symbolname symbolname symbolname relop Number CloseParen {}//  printf("got condition with comparison %s %s %s %d\n", $2, $3, $4, $6); }
+//
 //condition:
 //    OpenParen Not condition CloseParen {  printf("got negated condition\n"); }
 //    | OpenParen Or conditions CloseParen {  printf("got multiple or conditions\n"); }
@@ -274,41 +266,48 @@ conditiontype:
 //    | OpenParen SymbolName SymbolName comparison SymbolName CloseParen {  printf("got condition with comparison %s %s %s\n", $2, $3, $5); }
 //    | OpenParen SymbolName SymbolName comparison Number CloseParen {  printf("got condition with comparison %s %s %d\n", $2, $3, $5); }
 //    | OpenParen SymbolName SymbolName SymbolName comparison Number CloseParen {  printf("got condition with comparison %s %s %s %d\n", $2, $3, $4, $6); }
-//    | OpenParen actiontype String CloseParen {}//  printf("got action %s with string %s\n", $2, $3); }
 
 
-comparison:
-    RelOpLessThan {  printf("got lessthan\n"); }
-    | RelOpLessOrEqual {  printf("got lessorequal\n"); }
-    | RelOpGreaterThan {  printf("got greaterthan\n"); }
-    | RelOpGreaterOrEqual {  printf("got greaterorequal\n"); }
-    | RelOpEqual {  printf("got equals\n"); }
-    | LessThan {  printf("got lessthan\n"); }
-    | LessOrEqual {  printf("got lessorequal\n"); }
-    | GreaterThan {  printf("got greaterthan\n"); }
-    | GreaterOrEqual {  printf("got greaterorequal\n"); }
-    | Equal {  printf("got equals\n"); }
+//comparison:
+//    RelOpLessThan {  printf("got lessthan\n"); }
+//    | RelOpLessOrEqual {  printf("got lessorequal\n"); }
+//    | RelOpGreaterThan {  printf("got greaterthan\n"); }
+//    | RelOpGreaterOrEqual {  printf("got greaterorequal\n"); }
+//    | RelOpEqual {  printf("got equals\n"); }
+
+//actions:
+//    OpenParen singleaction CloseParen {  printf("got single action\n"); }
+//    | singleaction actions {  printf("got multiple actions\n"); }
 
 actions:
-    action {  printf("got single action\n"); }
-    | action actions {  printf("got multiple actions\n"); }
+    singleaction {  printf("got single action\n"); }
+    | singleaction actions {  printf("got multiple actions\n"); }
 
-action:
-      OpenParen actiontype CloseParen { printf("got action without arguments\n"); }
+singleaction:
+      OpenParen action CloseParen { printf("got action without arguments\n"); }
 
+//action:
+//    OpenParen SymbolName CloseParen { printf("got action %s without arguments\n", $2); }
+//    | OpenParen SymbolName String CloseParen {  printf("got action %s with string %s\n", $2, $3); }
+//    | OpenParen SymbolName SymbolName Number CloseParen {  printf("got action %s with symbol %s and number %d\n", $2, $3, $4); }
+//    | OpenParen SymbolName SymbolName CloseParen {  printf("got action %s with symbol %s\n", $2, $3); }
+//    | OpenParen SymbolName Number CloseParen {  printf("got action %s with number %d\n", $2, $3); }
+//    | OpenParen SymbolName Number Number CloseParen {  printf("got action %s with numbers %d %d\n", $2, $3, $4); }
+//
 age:
-    AgeDarkAge  { printf("got darkage\n"); }// static_cast<Condition*>(aiRule)->type = Age::DarkAge; } 
-  | AgeFeudalAge  { printf("got feudalage\n"); }// static_cast<Condition*>(aiRule)->type = Age::FeudalAge; } 
-  | AgeCastleAge  { printf("got castleage\n"); }// static_cast<Condition*>(aiRule)->type = Age::CastleAge; } 
-  | AgeImperialAge  { printf("got imperial\n"); }// static_cast<Condition*>(aiRule)->type = Age::ImperialAge; } 
-  | AgePostImperialAge  { printf("got postimperialage\n"); }// static_cast<Condition*>(aiRule)->type = Age::PostImperialAge; } 
+    AgeDarkAge  {}// static_cast<Condition*>(aiRule)->type = Age::DarkAge; } 
+  | AgeFeudalAge  {}// static_cast<Condition*>(aiRule)->type = Age::FeudalAge; } 
+  | AgeCastleAge  {}// static_cast<Condition*>(aiRule)->type = Age::CastleAge; } 
+  | AgeImperialAge  {}// static_cast<Condition*>(aiRule)->type = Age::ImperialAge; } 
+  | AgePostImperialAge  {}// static_cast<Condition*>(aiRule)->type = Age::PostImperialAge; } 
+| BuildingCastle 
 
 building:
     BuildingArcheryRange  {}// static_cast<Condition*>(aiRule)->type = Building::ArcheryRange; } 
   | BuildingBarracks  {}// static_cast<Condition*>(aiRule)->type = Building::Barracks; } 
   | BuildingBlacksmith  {}// static_cast<Condition*>(aiRule)->type = Building::Blacksmith; } 
   | BuildingBombardTower  {}// static_cast<Condition*>(aiRule)->type = Building::BombardTower; } 
-  | BuildingCastle  { printf("got castle building"); }// static_cast<Condition*>(aiRule)->type = Building::Castle; } 
+  | BuildingCastle  {}// static_cast<Condition*>(aiRule)->type = Building::Castle; } 
   | BuildingDock  {}// static_cast<Condition*>(aiRule)->type = Building::Dock; } 
   | BuildingFarm  {}// static_cast<Condition*>(aiRule)->type = Building::Farm; } 
   | BuildingFishTrap  {}// static_cast<Condition*>(aiRule)->type = Building::FishTrap; } 
@@ -343,6 +342,7 @@ civ:
   | CivTeutonic  {}// static_cast<Condition*>(aiRule)->type = Civ::Teutonic; } 
   | CivTurkish  {}// static_cast<Condition*>(aiRule)->type = Civ::Turkish; } 
   | CivViking  {}// static_cast<Condition*>(aiRule)->type = Civ::Viking; } 
+  | CivMyCiv  {}// static_cast<Condition*>(aiRule)->type = Civ::MyCiv; } 
 
 commodity:
     CommodityFood  {}// static_cast<Condition*>(aiRule)->type = Commodity::Food; } 
@@ -350,12 +350,12 @@ commodity:
   | CommodityWood  {}// static_cast<Condition*>(aiRule)->type = Commodity::Wood; } 
   | CommodityGold  {}// static_cast<Condition*>(aiRule)->type = Commodity::Gold; } 
 
-difficulty:
-    DifficultyEasiest  {}// static_cast<Condition*>(aiRule)->type = Difficulty::Easiest; } 
-  | DifficultyEasy  {}// static_cast<Condition*>(aiRule)->type = Difficulty::Easy; } 
-  | DifficultyModerate  {}// static_cast<Condition*>(aiRule)->type = Difficulty::Moderate; } 
-  | DifficultyHard  {}// static_cast<Condition*>(aiRule)->type = Difficulty::Hard; } 
-  | DifficultyHardest  {}// static_cast<Condition*>(aiRule)->type = Difficulty::Hardest; } 
+difficultylevel:
+    DifficultyLevelEasiest  {}// static_cast<Condition*>(aiRule)->type = DifficultyLevel::Easiest; } 
+  | DifficultyLevelEasy  {}// static_cast<Condition*>(aiRule)->type = DifficultyLevel::Easy; } 
+  | DifficultyLevelModerate  {}// static_cast<Condition*>(aiRule)->type = DifficultyLevel::Moderate; } 
+  | DifficultyLevelHard  {}// static_cast<Condition*>(aiRule)->type = DifficultyLevel::Hard; } 
+  | DifficultyLevelHardest  {}// static_cast<Condition*>(aiRule)->type = DifficultyLevel::Hardest; } 
 
 difficultyparameter:
     DifficultyParameterAbilityToDodgeMissiles  {}// static_cast<Condition*>(aiRule)->type = DifficultyParameter::AbilityToDodgeMissiles; } 
@@ -366,64 +366,61 @@ diplomaticstance:
   | DiplomaticStanceNeutral  {}// static_cast<Condition*>(aiRule)->type = DiplomaticStance::Neutral; } 
   | DiplomaticStanceEnemy  {}// static_cast<Condition*>(aiRule)->type = DiplomaticStance::Enemy; } 
 
-eventtype:
-    EventTypeTrigger  {}// static_cast<Condition*>(aiRule)->type = EventType::Trigger; } 
+mapsizetype:
+    MapSizeTypeTiny  {}// static_cast<Condition*>(aiRule)->type = MapSizeType::Tiny; } 
+  | MapSizeTypeSmall  {}// static_cast<Condition*>(aiRule)->type = MapSizeType::Small; } 
+  | MapSizeTypeMedium  {}// static_cast<Condition*>(aiRule)->type = MapSizeType::Medium; } 
+  | MapSizeTypeNormal  {}// static_cast<Condition*>(aiRule)->type = MapSizeType::Normal; } 
+  | MapSizeTypeLarge  {}// static_cast<Condition*>(aiRule)->type = MapSizeType::Large; } 
+  | MapSizeTypeGiant  {}// static_cast<Condition*>(aiRule)->type = MapSizeType::Giant; } 
 
-mapsize:
-    MapSizeTiny  {}// static_cast<Condition*>(aiRule)->type = MapSize::Tiny; } 
-  | MapSizeSmall  {}// static_cast<Condition*>(aiRule)->type = MapSize::Small; } 
-  | MapSizeMedium  {}// static_cast<Condition*>(aiRule)->type = MapSize::Medium; } 
-  | MapSizeNormal  {}// static_cast<Condition*>(aiRule)->type = MapSize::Normal; } 
-  | MapSizeLarge  {}// static_cast<Condition*>(aiRule)->type = MapSize::Large; } 
-  | MapSizeGiant  {}// static_cast<Condition*>(aiRule)->type = MapSize::Giant; } 
+maptypename:
+    MapTypeNameArabia  {}// static_cast<Condition*>(aiRule)->type = MapTypeName::Arabia; } 
+  | MapTypeNameArchipelago  {}// static_cast<Condition*>(aiRule)->type = MapTypeName::Archipelago; } 
+  | MapTypeNameBaltic  {}// static_cast<Condition*>(aiRule)->type = MapTypeName::Baltic; } 
+  | MapTypeNameBlackForest  {}// static_cast<Condition*>(aiRule)->type = MapTypeName::BlackForest; } 
+  | MapTypeNameCoastal  {}// static_cast<Condition*>(aiRule)->type = MapTypeName::Coastal; } 
+  | MapTypeNameContinental  {}// static_cast<Condition*>(aiRule)->type = MapTypeName::Continental; } 
+  | MapTypeNameCraterLake  {}// static_cast<Condition*>(aiRule)->type = MapTypeName::CraterLake; } 
+  | MapTypeNameFortress  {}// static_cast<Condition*>(aiRule)->type = MapTypeName::Fortress; } 
+  | MapTypeNameGoldRush  {}// static_cast<Condition*>(aiRule)->type = MapTypeName::GoldRush; } 
+  | MapTypeNameHighland  {}// static_cast<Condition*>(aiRule)->type = MapTypeName::Highland; } 
+  | MapTypeNameIslands  {}// static_cast<Condition*>(aiRule)->type = MapTypeName::Islands; } 
+  | MapTypeNameMediterranean  {}// static_cast<Condition*>(aiRule)->type = MapTypeName::Mediterranean; } 
+  | MapTypeNameMigration  {}// static_cast<Condition*>(aiRule)->type = MapTypeName::Migration; } 
+  | MapTypeNameRivers  {}// static_cast<Condition*>(aiRule)->type = MapTypeName::Rivers; } 
+  | MapTypeNameTeamIslands  {}// static_cast<Condition*>(aiRule)->type = MapTypeName::TeamIslands; } 
+  | MapTypeNameScenarioMap  {}// static_cast<Condition*>(aiRule)->type = MapTypeName::ScenarioMap; } 
 
-maptype:
-    MapTypeArabia  {}// static_cast<Condition*>(aiRule)->type = MapType::Arabia; } 
-  | MapTypeArchipelago  {}// static_cast<Condition*>(aiRule)->type = MapType::Archipelago; } 
-  | MapTypeBaltic  {}// static_cast<Condition*>(aiRule)->type = MapType::Baltic; } 
-  | MapTypeBlackForest  {}// static_cast<Condition*>(aiRule)->type = MapType::BlackForest; } 
-  | MapTypeCoastal  {}// static_cast<Condition*>(aiRule)->type = MapType::Coastal; } 
-  | MapTypeContinental  {}// static_cast<Condition*>(aiRule)->type = MapType::Continental; } 
-  | MapTypeCraterLake  {}// static_cast<Condition*>(aiRule)->type = MapType::CraterLake; } 
-  | MapTypeFortress  {}// static_cast<Condition*>(aiRule)->type = MapType::Fortress; } 
-  | MapTypeGoldRush  {}// static_cast<Condition*>(aiRule)->type = MapType::GoldRush; } 
-  | MapTypeHighland  {}// static_cast<Condition*>(aiRule)->type = MapType::Highland; } 
-  | MapTypeIslands  {}// static_cast<Condition*>(aiRule)->type = MapType::Islands; } 
-  | MapTypeMediterranean  {}// static_cast<Condition*>(aiRule)->type = MapType::Mediterranean; } 
-  | MapTypeMigration  {}// static_cast<Condition*>(aiRule)->type = MapType::Migration; } 
-  | MapTypeRivers  {}// static_cast<Condition*>(aiRule)->type = MapType::Rivers; } 
-  | MapTypeTeamIslands  {}// static_cast<Condition*>(aiRule)->type = MapType::TeamIslands; } 
-  | MapTypeScenarioMap  {}// static_cast<Condition*>(aiRule)->type = MapType::ScenarioMap; } 
+playernumbertype:
+    PlayerNumberTypeAnyAlly  {}// static_cast<Condition*>(aiRule)->type = PlayerNumberType::AnyAlly; } 
+  | PlayerNumberTypeAnyComputer  {}// static_cast<Condition*>(aiRule)->type = PlayerNumberType::AnyComputer; } 
+  | PlayerNumberTypeAnyComputerAlly  {}// static_cast<Condition*>(aiRule)->type = PlayerNumberType::AnyComputerAlly; } 
+  | PlayerNumberTypeAnyComputerEnemy  {}// static_cast<Condition*>(aiRule)->type = PlayerNumberType::AnyComputerEnemy; } 
+  | PlayerNumberTypeAnyComputerNeutral  {}// static_cast<Condition*>(aiRule)->type = PlayerNumberType::AnyComputerNeutral; } 
+  | PlayerNumberTypeAnyEnemy  {}// static_cast<Condition*>(aiRule)->type = PlayerNumberType::AnyEnemy; } 
+  | PlayerNumberTypeAnyHuman  {}// static_cast<Condition*>(aiRule)->type = PlayerNumberType::AnyHuman; } 
+  | PlayerNumberTypeAnyHumanAlly  {}// static_cast<Condition*>(aiRule)->type = PlayerNumberType::AnyHumanAlly; } 
+  | PlayerNumberTypeAnyHumanEnemy  {}// static_cast<Condition*>(aiRule)->type = PlayerNumberType::AnyHumanEnemy; } 
+  | PlayerNumberTypeAnyHumanNeutral  {}// static_cast<Condition*>(aiRule)->type = PlayerNumberType::AnyHumanNeutral; } 
+  | PlayerNumberTypeAnyNeutral  {}// static_cast<Condition*>(aiRule)->type = PlayerNumberType::AnyNeutral; } 
+  | PlayerNumberTypeEveryAlly  {}// static_cast<Condition*>(aiRule)->type = PlayerNumberType::EveryAlly; } 
+  | PlayerNumberTypeEveryComputer  {}// static_cast<Condition*>(aiRule)->type = PlayerNumberType::EveryComputer; } 
+  | PlayerNumberTypeEveryEnemy  {}// static_cast<Condition*>(aiRule)->type = PlayerNumberType::EveryEnemy; } 
+  | PlayerNumberTypeEveryHuman  {}// static_cast<Condition*>(aiRule)->type = PlayerNumberType::EveryHuman; } 
+  | PlayerNumberTypeEveryNeutral  {}// static_cast<Condition*>(aiRule)->type = PlayerNumberType::EveryNeutral; } 
+  | PlayerNumberTypeMyPlayerNumber  {}// static_cast<Condition*>(aiRule)->type = PlayerNumberType::MyPlayerNumber; } 
 
-playernumber:
-    PlayerNumberAnyAlly  {}// static_cast<Condition*>(aiRule)->type = PlayerNumber::AnyAlly; } 
-  | PlayerNumberAnyComputer  {}// static_cast<Condition*>(aiRule)->type = PlayerNumber::AnyComputer; } 
-  | PlayerNumberAnyComputerAlly  {}// static_cast<Condition*>(aiRule)->type = PlayerNumber::AnyComputerAlly; } 
-  | PlayerNumberAnyComputerEnemy  {}// static_cast<Condition*>(aiRule)->type = PlayerNumber::AnyComputerEnemy; } 
-  | PlayerNumberAnyComputerNeutral  {}// static_cast<Condition*>(aiRule)->type = PlayerNumber::AnyComputerNeutral; } 
-  | PlayerNumberAnyEnemy  {}// static_cast<Condition*>(aiRule)->type = PlayerNumber::AnyEnemy; } 
-  | PlayerNumberAnyHuman  {}// static_cast<Condition*>(aiRule)->type = PlayerNumber::AnyHuman; } 
-  | PlayerNumberAnyHumanAlly  {}// static_cast<Condition*>(aiRule)->type = PlayerNumber::AnyHumanAlly; } 
-  | PlayerNumberAnyHumanEnemy  {}// static_cast<Condition*>(aiRule)->type = PlayerNumber::AnyHumanEnemy; } 
-  | PlayerNumberAnyHumanNeutral  {}// static_cast<Condition*>(aiRule)->type = PlayerNumber::AnyHumanNeutral; } 
-  | PlayerNumberAnyNeutral  {}// static_cast<Condition*>(aiRule)->type = PlayerNumber::AnyNeutral; } 
-  | PlayerNumberEveryAlly  {}// static_cast<Condition*>(aiRule)->type = PlayerNumber::EveryAlly; } 
-  | PlayerNumberEveryComputer  {}// static_cast<Condition*>(aiRule)->type = PlayerNumber::EveryComputer; } 
-  | PlayerNumberEveryEnemy  {}// static_cast<Condition*>(aiRule)->type = PlayerNumber::EveryEnemy; } 
-  | PlayerNumberEveryHuman  {}// static_cast<Condition*>(aiRule)->type = PlayerNumber::EveryHuman; } 
-  | PlayerNumberEveryNeutral  {}// static_cast<Condition*>(aiRule)->type = PlayerNumber::EveryNeutral; } 
-
-//comparison:
-//    comparisonLessThan  {}// static_cast<Condition*>(aiRule)->type = RelOp::LessThan; } 
-//  | comparisonLessOrEqual  {}// static_cast<Condition*>(aiRule)->type = RelOp::LessOrEqual; } 
-//  | comparisonGreaterThan  {}// static_cast<Condition*>(aiRule)->type = RelOp::GreaterThan; } 
-//  | comparisonGreaterOrEqual  {}// static_cast<Condition*>(aiRule)->type = RelOp::GreaterOrEqual; } 
-//  | comparisonEqual  {}// static_cast<Condition*>(aiRule)->type = RelOp::Equal; } 
-//  | comparisonNotEqual  {}// static_cast<Condition*>(aiRule)->type = RelOp::NotEqual; } 
+relop:
+    RelOpLessThan  {}// static_cast<Condition*>(aiRule)->type = RelOp::LessThan; } 
+  | RelOpLessOrEqual  {}// static_cast<Condition*>(aiRule)->type = RelOp::LessOrEqual; } 
+  | RelOpGreaterThan  {}// static_cast<Condition*>(aiRule)->type = RelOp::GreaterThan; } 
+  | RelOpGreaterOrEqual  {}// static_cast<Condition*>(aiRule)->type = RelOp::GreaterOrEqual; } 
+  | RelOpEqual  {}// static_cast<Condition*>(aiRule)->type = RelOp::Equal; } 
+  | RelOpNotEqual  {}// static_cast<Condition*>(aiRule)->type = RelOp::NotEqual; } 
 
 researchitem:
-    age
-  | ResearchItemRiArbalest  {}// static_cast<Condition*>(aiRule)->type = ResearchItem::RiArbalest; } 
+    ResearchItemRiArbalest  {}// static_cast<Condition*>(aiRule)->type = ResearchItem::RiArbalest; } 
   | ResearchItemRiCrossbow  {}// static_cast<Condition*>(aiRule)->type = ResearchItem::RiCrossbow; } 
   | ResearchItemRiEliteSkirmisher  {}// static_cast<Condition*>(aiRule)->type = ResearchItem::RiEliteSkirmisher; } 
   | ResearchItemRiHandCannon  {}// static_cast<Condition*>(aiRule)->type = ResearchItem::RiHandCannon; } 
@@ -538,147 +535,147 @@ researchitem:
   | ResearchItemRiMurderHoles  {}// static_cast<Condition*>(aiRule)->type = ResearchItem::RiMurderHoles; } 
   | ResearchItemRiSiegeEngineers  {}// static_cast<Condition*>(aiRule)->type = ResearchItem::RiSiegeEngineers; } 
   | ResearchItemRiStonecutting  {}// static_cast<Condition*>(aiRule)->type = ResearchItem::RiStonecutting; } 
-  | ConstantMyUniqueUnitUpgrade {}
-  | ConstantMyUniqueResearch {}
+  | ResearchItemMyUniqueUnitUpgrade  {}// static_cast<Condition*>(aiRule)->type = ResearchItem::MyUniqueUnitUpgrade; } 
+  | ResearchItemMyUniqueResearch  {}// static_cast<Condition*>(aiRule)->type = ResearchItem::MyUniqueResearch; } 
 
-startingresources:
-    StartingResourcesLowResources  {}// static_cast<Condition*>(aiRule)->type = StartingResources::LowResources; } 
-  | StartingResourcesMediumResources  {}// static_cast<Condition*>(aiRule)->type = StartingResources::MediumResources; } 
-  | StartingResourcesHighResources  {}// static_cast<Condition*>(aiRule)->type = StartingResources::HighResources; } 
+startingresourcestype:
+    StartingResourcesTypeLowResources  {}// static_cast<Condition*>(aiRule)->type = StartingResourcesType::LowResources; } 
+  | StartingResourcesTypeMediumResources  {}// static_cast<Condition*>(aiRule)->type = StartingResourcesType::MediumResources; } 
+  | StartingResourcesTypeHighResources  {}// static_cast<Condition*>(aiRule)->type = StartingResourcesType::HighResources; } 
 
-strategicnumber:
-    StrategicNumberSnPercentCivilianExplorers  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnPercentCivilianExplorers; } 
-  | StrategicNumberSnPercentCivilianBuilders  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnPercentCivilianBuilders; } 
-  | StrategicNumberSnPercentCivilianGatherers  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnPercentCivilianGatherers; } 
-  | StrategicNumberSnCapCivilianExplorers  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnCapCivilianExplorers; } 
-  | StrategicNumberSnCapCivilianBuilders  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnCapCivilianBuilders; } 
-  | StrategicNumberSnCapCivilianGatherers  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnCapCivilianGatherers; } 
-  | StrategicNumberSnMinimumAttackGroupSize  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnMinimumAttackGroupSize; } 
-  | StrategicNumberSnTotalNumberExplorers  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnTotalNumberExplorers; } 
-  | StrategicNumberSnPercentEnemySightedResponse  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnPercentEnemySightedResponse; } 
-  | StrategicNumberSnEnemySightedResponseDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnEnemySightedResponseDistance; } 
-  | StrategicNumberSnSentryDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnSentryDistance; } 
-  | StrategicNumberSnRelicReturnDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnRelicReturnDistance; } 
-  | StrategicNumberSnMinimumDefendGroupSize  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnMinimumDefendGroupSize; } 
-  | StrategicNumberSnMaximumAttackGroupSize  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnMaximumAttackGroupSize; } 
-  | StrategicNumberSnMaximumDefendGroupSize  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnMaximumDefendGroupSize; } 
-  | StrategicNumberSnMinimumPeaceLikeLevel  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnMinimumPeaceLikeLevel; } 
-  | StrategicNumberSnPercentExplorationRequired  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnPercentExplorationRequired; } 
-  | StrategicNumberSnZeroPriorityDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnZeroPriorityDistance; } 
-  | StrategicNumberSnMinimumCivilianExplorers  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnMinimumCivilianExplorers; } 
-  | StrategicNumberSnNumberAttackGroups  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnNumberAttackGroups; } 
-  | StrategicNumberSnNumberDefendGroups  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnNumberDefendGroups; } 
-  | StrategicNumberSnAttackGroupGatherSpacing  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnAttackGroupGatherSpacing; } 
-  | StrategicNumberSnNumberExploreGroups  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnNumberExploreGroups; } 
-  | StrategicNumberSnMinimumExploreGroupSize  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnMinimumExploreGroupSize; } 
-  | StrategicNumberSnMaximumExploreGroupSize  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnMaximumExploreGroupSize; } 
-  | StrategicNumberSnGoldDefendPriority  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnGoldDefendPriority; } 
-  | StrategicNumberSnStoneDefendPriority  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnStoneDefendPriority; } 
-  | StrategicNumberSnForageDefendPriority  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnForageDefendPriority; } 
-  | StrategicNumberSnRelicDefendPriority  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnRelicDefendPriority; } 
-  | StrategicNumberSnTownDefendPriority  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnTownDefendPriority; } 
-  | StrategicNumberSnDefenseDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnDefenseDistance; } 
-  | StrategicNumberSnNumberBoatAttackGroups  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnNumberBoatAttackGroups; } 
-  | StrategicNumberSnMinimumBoatAttackGroupSize  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnMinimumBoatAttackGroupSize; } 
-  | StrategicNumberSnMaximumBoatAttackGroupSize  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnMaximumBoatAttackGroupSize; } 
-  | StrategicNumberSnNumberBoatExploreGroups  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnNumberBoatExploreGroups; } 
-  | StrategicNumberSnMinimumBoatExploreGroupSize  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnMinimumBoatExploreGroupSize; } 
-  | StrategicNumberSnMaximumBoatExploreGroupSize  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnMaximumBoatExploreGroupSize; } 
-  | StrategicNumberSnNumberBoatDefendGroups  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnNumberBoatDefendGroups; } 
-  | StrategicNumberSnMinimumBoatDefendGroupSize  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnMinimumBoatDefendGroupSize; } 
-  | StrategicNumberSnMaximumBoatDefendGroupSize  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnMaximumBoatDefendGroupSize; } 
-  | StrategicNumberSnDockDefendPriority  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnDockDefendPriority; } 
-  | StrategicNumberSnSentryDistanceVariation  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnSentryDistanceVariation; } 
-  | StrategicNumberSnMinimumTownSize  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnMinimumTownSize; } 
-  | StrategicNumberSnMaximumTownSize  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnMaximumTownSize; } 
-  | StrategicNumberSnGroupCommanderSelectionMethod  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnGroupCommanderSelectionMethod; } 
-  | StrategicNumberSnConsecutiveIdleUnitLimit  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnConsecutiveIdleUnitLimit; } 
-  | StrategicNumberSnTargetEvaluationDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnTargetEvaluationDistance; } 
-  | StrategicNumberSnTargetEvaluationHitpoints  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnTargetEvaluationHitpoints; } 
-  | StrategicNumberSnTargetEvaluationDamageCapability  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnTargetEvaluationDamageCapability; } 
-  | StrategicNumberSnTargetEvaluationKills  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnTargetEvaluationKills; } 
-  | StrategicNumberSnTargetEvaluationAllyProximity  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnTargetEvaluationAllyProximity; } 
-  | StrategicNumberSnTargetEvaluationRof  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnTargetEvaluationRof; } 
-  | StrategicNumberSnTargetEvaluationRandomness  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnTargetEvaluationRandomness; } 
-  | StrategicNumberSnCampMaxDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnCampMaxDistance; } 
-  | StrategicNumberSnMillMaxDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnMillMaxDistance; } 
-  | StrategicNumberSnTargetEvaluationAttackAttempts  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnTargetEvaluationAttackAttempts; } 
-  | StrategicNumberSnTargetEvaluationRange  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnTargetEvaluationRange; } 
-  | StrategicNumberSnDefendOverlapDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnDefendOverlapDistance; } 
-  | StrategicNumberSnScaleMinimumAttackGroupSize  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnScaleMinimumAttackGroupSize; } 
-  | StrategicNumberSnScaleMaximumAttackGroupSize  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnScaleMaximumAttackGroupSize; } 
-  | StrategicNumberSnAttackGroupSizeRandomness  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnAttackGroupSizeRandomness; } 
-  | StrategicNumberSnScalingFrequency  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnScalingFrequency; } 
-  | StrategicNumberSnMaximumGaiaAttackResponse  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnMaximumGaiaAttackResponse; } 
-  | StrategicNumberSnBuildFrequency  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnBuildFrequency; } 
-  | StrategicNumberSnAttackSeparationTimeRandomness  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnAttackSeparationTimeRandomness; } 
-  | StrategicNumberSnAttackIntelligence  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnAttackIntelligence; } 
-  | StrategicNumberSnInitialAttackDelay  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnInitialAttackDelay; } 
-  | StrategicNumberSnSaveScenarioInformation  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnSaveScenarioInformation; } 
-  | StrategicNumberSnSpecialAttackType1  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnSpecialAttackType1; } 
-  | StrategicNumberSnSpecialAttackInfluence1  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnSpecialAttackInfluence1; } 
-  | StrategicNumberSnMinimumWaterBodySizeForDock  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnMinimumWaterBodySizeForDock; } 
-  | StrategicNumberSnNumberBuildAttemptsBeforeSkip  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnNumberBuildAttemptsBeforeSkip; } 
-  | StrategicNumberSnMaxSkipsPerAttempt  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnMaxSkipsPerAttempt; } 
-  | StrategicNumberSnFoodGathererPercentage  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnFoodGathererPercentage; } 
-  | StrategicNumberSnGoldGathererPercentage  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnGoldGathererPercentage; } 
-  | StrategicNumberSnStoneGathererPercentage  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnStoneGathererPercentage; } 
-  | StrategicNumberSnWoodGathererPercentage  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnWoodGathererPercentage; } 
-  | StrategicNumberSnTargetEvaluationContinent  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnTargetEvaluationContinent; } 
-  | StrategicNumberSnTargetEvaluationSiegeWeapon  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnTargetEvaluationSiegeWeapon; } 
-  | StrategicNumberSnGroupLeaderDefenseDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnGroupLeaderDefenseDistance; } 
-  | StrategicNumberSnInitialAttackDelayType  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnInitialAttackDelayType; } 
-  | StrategicNumberSnBlotExplorationMap  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnBlotExplorationMap; } 
-  | StrategicNumberSnBlotSize  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnBlotSize; } 
-  | StrategicNumberSnIntelligentGathering  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnIntelligentGathering; } 
-  | StrategicNumberSnTaskUngroupedSoldiers  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnTaskUngroupedSoldiers; } 
-  | StrategicNumberSnTargetEvaluationBoat  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnTargetEvaluationBoat; } 
-  | StrategicNumberSnNumberEnemyObjectsRequired  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnNumberEnemyObjectsRequired; } 
-  | StrategicNumberSnNumberMaxSkipCycles  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnNumberMaxSkipCycles; } 
-  | StrategicNumberSnRetaskGatherAmount  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnRetaskGatherAmount; } 
-  | StrategicNumberSnMaxRetaskGatherAmount  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnMaxRetaskGatherAmount; } 
-  | StrategicNumberSnMaxBuildPlanGathererPercentage  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnMaxBuildPlanGathererPercentage; } 
-  | StrategicNumberSnFoodDropsiteDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnFoodDropsiteDistance; } 
-  | StrategicNumberSnWoodDropsiteDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnWoodDropsiteDistance; } 
-  | StrategicNumberSnStoneDropsiteDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnStoneDropsiteDistance; } 
-  | StrategicNumberSnGoldDropsiteDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnGoldDropsiteDistance; } 
-  | StrategicNumberSnInitialExplorationRequired  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnInitialExplorationRequired; } 
-  | StrategicNumberSnRandomPlacementFactor  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnRandomPlacementFactor; } 
-  | StrategicNumberSnRequiredForestTiles  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnRequiredForestTiles; } 
-  | StrategicNumberSnAttackDiplomacyImpact  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnAttackDiplomacyImpact; } 
-  | StrategicNumberSnPercentHalfExploration  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnPercentHalfExploration; } 
-  | StrategicNumberSnTargetEvaluationTimeKillRatio  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnTargetEvaluationTimeKillRatio; } 
-  | StrategicNumberSnTargetEvaluationInProgress  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnTargetEvaluationInProgress; } 
-  | StrategicNumberSnAttackWinningPlayer  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnAttackWinningPlayer; } 
-  | StrategicNumberSnCoopShareInformation  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnCoopShareInformation; } 
-  | StrategicNumberSnAttackWinningPlayerFactor  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnAttackWinningPlayerFactor; } 
-  | StrategicNumberSnCoopShareAttacking  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnCoopShareAttacking; } 
-  | StrategicNumberSnCoopShareAttackingInterval  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnCoopShareAttackingInterval; } 
-  | StrategicNumberSnPercentageExploreExterminators  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnPercentageExploreExterminators; } 
-  | StrategicNumberSnTrackPlayerHistory  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnTrackPlayerHistory; } 
-  | StrategicNumberSnMinimumDropsiteBuffer  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnMinimumDropsiteBuffer; } 
-  | StrategicNumberSnUseByTypeMaxGathering  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnUseByTypeMaxGathering; } 
-  | StrategicNumberSnMinimumBoarHuntGroupSize  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnMinimumBoarHuntGroupSize; } 
-  | StrategicNumberSnMinimumAmountForTrading  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnMinimumAmountForTrading; } 
-  | StrategicNumberSnEasiestReactionPercentage  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnEasiestReactionPercentage; } 
-  | StrategicNumberSnEasierReactionPercentage  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnEasierReactionPercentage; } 
-  | StrategicNumberSnHitsBeforeAllianceChange  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnHitsBeforeAllianceChange; } 
-  | StrategicNumberSnAllowCivilianDefense  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnAllowCivilianDefense; } 
-  | StrategicNumberSnNumberForwardBuilders  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnNumberForwardBuilders; } 
-  | StrategicNumberSnPercentAttackSoldiers  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnPercentAttackSoldiers; } 
-  | StrategicNumberSnPercentAttackBoats  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnPercentAttackBoats; } 
-  | StrategicNumberSnDoNotScaleForDifficultyLevel  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnDoNotScaleForDifficultyLevel; } 
-  | StrategicNumberSnGroupFormDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnGroupFormDistance; } 
-  | StrategicNumberSnIgnoreAttackGroupUnderAttack  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnIgnoreAttackGroupUnderAttack; } 
-  | StrategicNumberSnGatherDefenseUnits  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnGatherDefenseUnits; } 
-  | StrategicNumberSnMaximumWoodDropDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnMaximumWoodDropDistance; } 
-  | StrategicNumberSnMaximumFoodDropDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnMaximumFoodDropDistance; } 
-  | StrategicNumberSnMaximumHuntDropDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnMaximumHuntDropDistance; } 
-  | StrategicNumberSnMaximumFishBoatDropDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnMaximumFishBoatDropDistance; } 
-  | StrategicNumberSnMaximumGoldDropDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnMaximumGoldDropDistance; } 
-  | StrategicNumberSnMaximumStoneDropDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnMaximumStoneDropDistance; } 
-  | StrategicNumberSnGatherIdleSoldiersAtCenter  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnGatherIdleSoldiersAtCenter; } 
-  | StrategicNumberSnGarrisonRams  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnGarrisonRams; } 
+strategicnumbername:
+    StrategicNumberNameSnPercentCivilianExplorers  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnPercentCivilianExplorers; } 
+  | StrategicNumberNameSnPercentCivilianBuilders  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnPercentCivilianBuilders; } 
+  | StrategicNumberNameSnPercentCivilianGatherers  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnPercentCivilianGatherers; } 
+  | StrategicNumberNameSnCapCivilianExplorers  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnCapCivilianExplorers; } 
+  | StrategicNumberNameSnCapCivilianBuilders  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnCapCivilianBuilders; } 
+  | StrategicNumberNameSnCapCivilianGatherers  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnCapCivilianGatherers; } 
+  | StrategicNumberNameSnMinimumAttackGroupSize  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnMinimumAttackGroupSize; } 
+  | StrategicNumberNameSnTotalNumberExplorers  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnTotalNumberExplorers; } 
+  | StrategicNumberNameSnPercentEnemySightedResponse  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnPercentEnemySightedResponse; } 
+  | StrategicNumberNameSnEnemySightedResponseDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnEnemySightedResponseDistance; } 
+  | StrategicNumberNameSnSentryDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnSentryDistance; } 
+  | StrategicNumberNameSnRelicReturnDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnRelicReturnDistance; } 
+  | StrategicNumberNameSnMinimumDefendGroupSize  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnMinimumDefendGroupSize; } 
+  | StrategicNumberNameSnMaximumAttackGroupSize  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnMaximumAttackGroupSize; } 
+  | StrategicNumberNameSnMaximumDefendGroupSize  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnMaximumDefendGroupSize; } 
+  | StrategicNumberNameSnMinimumPeaceLikeLevel  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnMinimumPeaceLikeLevel; } 
+  | StrategicNumberNameSnPercentExplorationRequired  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnPercentExplorationRequired; } 
+  | StrategicNumberNameSnZeroPriorityDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnZeroPriorityDistance; } 
+  | StrategicNumberNameSnMinimumCivilianExplorers  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnMinimumCivilianExplorers; } 
+  | StrategicNumberNameSnNumberAttackGroups  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnNumberAttackGroups; } 
+  | StrategicNumberNameSnNumberDefendGroups  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnNumberDefendGroups; } 
+  | StrategicNumberNameSnAttackGroupGatherSpacing  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnAttackGroupGatherSpacing; } 
+  | StrategicNumberNameSnNumberExploreGroups  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnNumberExploreGroups; } 
+  | StrategicNumberNameSnMinimumExploreGroupSize  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnMinimumExploreGroupSize; } 
+  | StrategicNumberNameSnMaximumExploreGroupSize  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnMaximumExploreGroupSize; } 
+  | StrategicNumberNameSnGoldDefendPriority  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnGoldDefendPriority; } 
+  | StrategicNumberNameSnStoneDefendPriority  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnStoneDefendPriority; } 
+  | StrategicNumberNameSnForageDefendPriority  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnForageDefendPriority; } 
+  | StrategicNumberNameSnRelicDefendPriority  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnRelicDefendPriority; } 
+  | StrategicNumberNameSnTownDefendPriority  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnTownDefendPriority; } 
+  | StrategicNumberNameSnDefenseDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnDefenseDistance; } 
+  | StrategicNumberNameSnNumberBoatAttackGroups  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnNumberBoatAttackGroups; } 
+  | StrategicNumberNameSnMinimumBoatAttackGroupSize  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnMinimumBoatAttackGroupSize; } 
+  | StrategicNumberNameSnMaximumBoatAttackGroupSize  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnMaximumBoatAttackGroupSize; } 
+  | StrategicNumberNameSnNumberBoatExploreGroups  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnNumberBoatExploreGroups; } 
+  | StrategicNumberNameSnMinimumBoatExploreGroupSize  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnMinimumBoatExploreGroupSize; } 
+  | StrategicNumberNameSnMaximumBoatExploreGroupSize  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnMaximumBoatExploreGroupSize; } 
+  | StrategicNumberNameSnNumberBoatDefendGroups  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnNumberBoatDefendGroups; } 
+  | StrategicNumberNameSnMinimumBoatDefendGroupSize  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnMinimumBoatDefendGroupSize; } 
+  | StrategicNumberNameSnMaximumBoatDefendGroupSize  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnMaximumBoatDefendGroupSize; } 
+  | StrategicNumberNameSnDockDefendPriority  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnDockDefendPriority; } 
+  | StrategicNumberNameSnSentryDistanceVariation  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnSentryDistanceVariation; } 
+  | StrategicNumberNameSnMinimumTownSize  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnMinimumTownSize; } 
+  | StrategicNumberNameSnMaximumTownSize  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnMaximumTownSize; } 
+  | StrategicNumberNameSnGroupCommanderSelectionMethod  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnGroupCommanderSelectionMethod; } 
+  | StrategicNumberNameSnConsecutiveIdleUnitLimit  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnConsecutiveIdleUnitLimit; } 
+  | StrategicNumberNameSnTargetEvaluationDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnTargetEvaluationDistance; } 
+  | StrategicNumberNameSnTargetEvaluationHitpoints  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnTargetEvaluationHitpoints; } 
+  | StrategicNumberNameSnTargetEvaluationDamageCapability  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnTargetEvaluationDamageCapability; } 
+  | StrategicNumberNameSnTargetEvaluationKills  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnTargetEvaluationKills; } 
+  | StrategicNumberNameSnTargetEvaluationAllyProximity  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnTargetEvaluationAllyProximity; } 
+  | StrategicNumberNameSnTargetEvaluationRof  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnTargetEvaluationRof; } 
+  | StrategicNumberNameSnTargetEvaluationRandomness  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnTargetEvaluationRandomness; } 
+  | StrategicNumberNameSnCampMaxDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnCampMaxDistance; } 
+  | StrategicNumberNameSnMillMaxDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnMillMaxDistance; } 
+  | StrategicNumberNameSnTargetEvaluationAttackAttempts  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnTargetEvaluationAttackAttempts; } 
+  | StrategicNumberNameSnTargetEvaluationRange  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnTargetEvaluationRange; } 
+  | StrategicNumberNameSnDefendOverlapDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnDefendOverlapDistance; } 
+  | StrategicNumberNameSnScaleMinimumAttackGroupSize  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnScaleMinimumAttackGroupSize; } 
+  | StrategicNumberNameSnScaleMaximumAttackGroupSize  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnScaleMaximumAttackGroupSize; } 
+  | StrategicNumberNameSnAttackGroupSizeRandomness  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnAttackGroupSizeRandomness; } 
+  | StrategicNumberNameSnScalingFrequency  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnScalingFrequency; } 
+  | StrategicNumberNameSnMaximumGaiaAttackResponse  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnMaximumGaiaAttackResponse; } 
+  | StrategicNumberNameSnBuildFrequency  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnBuildFrequency; } 
+  | StrategicNumberNameSnAttackSeparationTimeRandomness  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnAttackSeparationTimeRandomness; } 
+  | StrategicNumberNameSnAttackIntelligence  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnAttackIntelligence; } 
+  | StrategicNumberNameSnInitialAttackDelay  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnInitialAttackDelay; } 
+  | StrategicNumberNameSnSaveScenarioInformation  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnSaveScenarioInformation; } 
+  | StrategicNumberNameSnSpecialAttackType1  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnSpecialAttackType1; } 
+  | StrategicNumberNameSnSpecialAttackInfluence1  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnSpecialAttackInfluence1; } 
+  | StrategicNumberNameSnMinimumWaterBodySizeForDock  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnMinimumWaterBodySizeForDock; } 
+  | StrategicNumberNameSnNumberBuildAttemptsBeforeSkip  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnNumberBuildAttemptsBeforeSkip; } 
+  | StrategicNumberNameSnMaxSkipsPerAttempt  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnMaxSkipsPerAttempt; } 
+  | StrategicNumberNameSnFoodGathererPercentage  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnFoodGathererPercentage; } 
+  | StrategicNumberNameSnGoldGathererPercentage  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnGoldGathererPercentage; } 
+  | StrategicNumberNameSnStoneGathererPercentage  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnStoneGathererPercentage; } 
+  | StrategicNumberNameSnWoodGathererPercentage  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnWoodGathererPercentage; } 
+  | StrategicNumberNameSnTargetEvaluationContinent  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnTargetEvaluationContinent; } 
+  | StrategicNumberNameSnTargetEvaluationSiegeWeapon  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnTargetEvaluationSiegeWeapon; } 
+  | StrategicNumberNameSnGroupLeaderDefenseDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnGroupLeaderDefenseDistance; } 
+  | StrategicNumberNameSnInitialAttackDelayType  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnInitialAttackDelayType; } 
+  | StrategicNumberNameSnBlotExplorationMap  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnBlotExplorationMap; } 
+  | StrategicNumberNameSnBlotSize  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnBlotSize; } 
+  | StrategicNumberNameSnIntelligentGathering  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnIntelligentGathering; } 
+  | StrategicNumberNameSnTaskUngroupedSoldiers  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnTaskUngroupedSoldiers; } 
+  | StrategicNumberNameSnTargetEvaluationBoat  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnTargetEvaluationBoat; } 
+  | StrategicNumberNameSnNumberEnemyObjectsRequired  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnNumberEnemyObjectsRequired; } 
+  | StrategicNumberNameSnNumberMaxSkipCycles  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnNumberMaxSkipCycles; } 
+  | StrategicNumberNameSnRetaskGatherAmount  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnRetaskGatherAmount; } 
+  | StrategicNumberNameSnMaxRetaskGatherAmount  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnMaxRetaskGatherAmount; } 
+  | StrategicNumberNameSnMaxBuildPlanGathererPercentage  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnMaxBuildPlanGathererPercentage; } 
+  | StrategicNumberNameSnFoodDropsiteDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnFoodDropsiteDistance; } 
+  | StrategicNumberNameSnWoodDropsiteDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnWoodDropsiteDistance; } 
+  | StrategicNumberNameSnStoneDropsiteDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnStoneDropsiteDistance; } 
+  | StrategicNumberNameSnGoldDropsiteDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnGoldDropsiteDistance; } 
+  | StrategicNumberNameSnInitialExplorationRequired  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnInitialExplorationRequired; } 
+  | StrategicNumberNameSnRandomPlacementFactor  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnRandomPlacementFactor; } 
+  | StrategicNumberNameSnRequiredForestTiles  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnRequiredForestTiles; } 
+  | StrategicNumberNameSnAttackDiplomacyImpact  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnAttackDiplomacyImpact; } 
+  | StrategicNumberNameSnPercentHalfExploration  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnPercentHalfExploration; } 
+  | StrategicNumberNameSnTargetEvaluationTimeKillRatio  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnTargetEvaluationTimeKillRatio; } 
+  | StrategicNumberNameSnTargetEvaluationInProgress  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnTargetEvaluationInProgress; } 
+  | StrategicNumberNameSnAttackWinningPlayer  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnAttackWinningPlayer; } 
+  | StrategicNumberNameSnCoopShareInformation  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnCoopShareInformation; } 
+  | StrategicNumberNameSnAttackWinningPlayerFactor  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnAttackWinningPlayerFactor; } 
+  | StrategicNumberNameSnCoopShareAttacking  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnCoopShareAttacking; } 
+  | StrategicNumberNameSnCoopShareAttackingInterval  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnCoopShareAttackingInterval; } 
+  | StrategicNumberNameSnPercentageExploreExterminators  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnPercentageExploreExterminators; } 
+  | StrategicNumberNameSnTrackPlayerHistory  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnTrackPlayerHistory; } 
+  | StrategicNumberNameSnMinimumDropsiteBuffer  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnMinimumDropsiteBuffer; } 
+  | StrategicNumberNameSnUseByTypeMaxGathering  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnUseByTypeMaxGathering; } 
+  | StrategicNumberNameSnMinimumBoarHuntGroupSize  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnMinimumBoarHuntGroupSize; } 
+  | StrategicNumberNameSnMinimumAmountForTrading  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnMinimumAmountForTrading; } 
+  | StrategicNumberNameSnEasiestReactionPercentage  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnEasiestReactionPercentage; } 
+  | StrategicNumberNameSnEasierReactionPercentage  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnEasierReactionPercentage; } 
+  | StrategicNumberNameSnHitsBeforeAllianceChange  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnHitsBeforeAllianceChange; } 
+  | StrategicNumberNameSnAllowCivilianDefense  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnAllowCivilianDefense; } 
+  | StrategicNumberNameSnNumberForwardBuilders  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnNumberForwardBuilders; } 
+  | StrategicNumberNameSnPercentAttackSoldiers  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnPercentAttackSoldiers; } 
+  | StrategicNumberNameSnPercentAttackBoats  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnPercentAttackBoats; } 
+  | StrategicNumberNameSnDoNotScaleForDifficultyLevel  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnDoNotScaleForDifficultyLevel; } 
+  | StrategicNumberNameSnGroupFormDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnGroupFormDistance; } 
+  | StrategicNumberNameSnIgnoreAttackGroupUnderAttack  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnIgnoreAttackGroupUnderAttack; } 
+  | StrategicNumberNameSnGatherDefenseUnits  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnGatherDefenseUnits; } 
+  | StrategicNumberNameSnMaximumWoodDropDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnMaximumWoodDropDistance; } 
+  | StrategicNumberNameSnMaximumFoodDropDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnMaximumFoodDropDistance; } 
+  | StrategicNumberNameSnMaximumHuntDropDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnMaximumHuntDropDistance; } 
+  | StrategicNumberNameSnMaximumFishBoatDropDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnMaximumFishBoatDropDistance; } 
+  | StrategicNumberNameSnMaximumGoldDropDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnMaximumGoldDropDistance; } 
+  | StrategicNumberNameSnMaximumStoneDropDistance  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnMaximumStoneDropDistance; } 
+  | StrategicNumberNameSnGatherIdleSoldiersAtCenter  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnGatherIdleSoldiersAtCenter; } 
+  | StrategicNumberNameSnGarrisonRams  {}// static_cast<Condition*>(aiRule)->type = StrategicNumberName::SnGarrisonRams; } 
 
 unit:
     UnitArbalest  {}// static_cast<Condition*>(aiRule)->type = Unit::Arbalest; } 
@@ -810,16 +807,16 @@ unit:
   | UnitCamelLine  {}// static_cast<Condition*>(aiRule)->type = Unit::CamelLine; } 
   | UnitKnightLine  {}// static_cast<Condition*>(aiRule)->type = Unit::KnightLine; } 
   | UnitScoutCavalryLine  {}// static_cast<Condition*>(aiRule)->type = Unit::ScoutCavalryLine; } 
-  | ConstantMyUniqueUnit
-  | ConstantMyUniqueUnitLine
-  | ConstantMyEliteUniqueUnit
+  | UnitMyEliteUniqueUnit  {}// static_cast<Condition*>(aiRule)->type = Unit::MyEliteUniqueUnit; } 
+  | UnitMyUniqueUnit  {}// static_cast<Condition*>(aiRule)->type = Unit::MyUniqueUnit; } 
+  | UnitMyUniqueUnitLine  {}// static_cast<Condition*>(aiRule)->type = Unit::MyUniqueUnitLine; } 
 
-victoryconditiontype:
-    VictoryConditionStandard  {}// static_cast<Condition*>(aiRule)->type = VictoryCondition::Standard; } 
-  | VictoryConditionConquest  {}// static_cast<Condition*>(aiRule)->type = VictoryCondition::Conquest; } 
-  | VictoryConditionTimeLimit  {}// static_cast<Condition*>(aiRule)->type = VictoryCondition::TimeLimit; } 
-  | VictoryConditionScore  {}// static_cast<Condition*>(aiRule)->type = VictoryCondition::Score; } 
-  | VictoryConditionCustom  {}// static_cast<Condition*>(aiRule)->type = VictoryCondition::Custom; } 
+victoryconditionname:
+    VictoryConditionNameStandard  {}// static_cast<Condition*>(aiRule)->type = VictoryConditionName::Standard; } 
+  | VictoryConditionNameConquest  {}// static_cast<Condition*>(aiRule)->type = VictoryConditionName::Conquest; } 
+  | VictoryConditionNameTimeLimit  {}// static_cast<Condition*>(aiRule)->type = VictoryConditionName::TimeLimit; } 
+  | VictoryConditionNameScore  {}// static_cast<Condition*>(aiRule)->type = VictoryConditionName::Score; } 
+  | VictoryConditionNameCustom  {}// static_cast<Condition*>(aiRule)->type = VictoryConditionName::Custom; } 
 
 walltype:
     WallTypeFortifiedWall  {}// static_cast<Condition*>(aiRule)->type = WallType::FortifiedWall; } 
@@ -829,203 +826,120 @@ walltype:
 
 
 symbolname:
-    Number { printf("got number"); }
-    | fact { printf("got fact"); }
-    | age { printf("got age"); }
-    | building { printf("got building"); }
-    | civ { printf("got civ"); }
-    | commodity { printf("got commodity"); }
-    | difficultyparameter { printf("got difficultiypar"); }
-    | diplomaticstance { printf("got diplo stance"); }
-    | eventtype { printf("got event type"); }
-    | researchitem { printf("got research item"); }
-    | unit { printf("got unit"); }
-    | walltype { printf("got walltype"); }
-
-systemconstant:
-      ConstantMyPlayerNumber
-    | ConstantMyCiv
-    | ConstantMyUniqueUnit
-    | ConstantMyUniqueUnitUpgrade
-    | ConstantMyUniqueUnitLine
-    | ConstantMyEliteUniqueUnit
-    | ConstantMyUniqueResearch
-
-donothing:
-    DoNothing
+fact   | age  | building  | civ  | commodity  | difficultylevel  | difficultyparameter  | diplomaticstance  | mapsizetype  | maptypename  | playernumbertype  | relop  | researchitem  | startingresourcestype  | strategicnumbername  | unit  | victoryconditionname  | walltype
 
 acknowledgeevent:
-    AcknowledgeEvent eventtype Number
-
+    AcknowledgeEvent Number Number
 acknowledgetaunt:
     AcknowledgeTaunt playernumber Number
-
 attacknow:
     AttackNow
-
 build:
     Build building
-
 buildforward:
     BuildForward building
-
 buildgate:
     BuildGate Number
-
 buildwall:
     BuildWall Number walltype
-
 buycommodity:
     BuyCommodity commodity
-
 ccaddresource:
     CcAddResource commodity Number
-
 chatlocal:
     ChatLocal String
-
-chatlocalusingid:
-    ChatLocalUsingId Number
-
-chatlocalusingrange:
-    ChatLocalUsingRange Number Number
-
 chatlocaltoself:
     ChatLocalToSelf String
-
+chatlocalusingid:
+    ChatLocalUsingId Number
+chatlocalusingrange:
+    ChatLocalUsingRange Number Number
 chattoall:
     ChatToAll String
-
 chattoallusingid:
     ChatToAllUsingId Number
-
 chattoallusingrange:
     ChatToAllUsingRange Number Number
-
 chattoallies:
     ChatToAllies String
-
+chattoalliesusingid:
+    ChatToAlliesUsingId Number
+chattoalliesusingrange:
+    ChatToAlliesUsingRange Number Number
+chattoenemies:
+    ChatToEnemies String
+chattoenemiesusingid:
+    ChatToEnemiesUsingId Number
+chattoenemiesusingrange:
+    ChatToEnemiesUsingRange Number Number
+chattoplayer:
+    ChatToPlayer playernumber String
+chattoplayerusingid:
+    ChatToPlayerUsingId playernumber Number
+chattoplayerusingrange:
+    ChatToPlayerUsingRange playernumber Number Number
+chattrace:
+    ChatTrace Number
+cleartributememory:
+    ClearTributeMemory playernumber commodity
+deletebuilding:
+    DeleteBuilding building
+deleteunit:
+    DeleteUnit unit
+disableself:
+    DisableSelf
+disabletimer:
+    DisableTimer Number
+donothing:
+    DoNothing
+enabletimer:
+    EnableTimer Number Number
+enablewallplacement:
+    EnableWallPlacement Number
+generaterandomnumber:
+    GenerateRandomNumber Number
+log:
+    Log String
+logtrace:
+    LogTrace Number
+releaseescrow:
+    ReleaseEscrow commodity
+research:
+    Research age
+    |  Research researchitem
+resign:
+    Resign
+sellcommodity:
+    SellCommodity commodity
+setdifficultyparameter:
+    SetDifficultyParameter difficultyparameter Number
+setdoctrine:
+    SetDoctrine Number
+setescrowpercentage:
+    SetEscrowPercentage commodity Number
+setgoal:
+    SetGoal Number Number
+setsharedgoal:
+    SetSharedGoal Number Number
+setsignal:
+    SetSignal Number
+setstance:
+    SetStance playernumber diplomaticstance
 setstrategicnumber:
-    SetStrategicNumber strategicnumber Number
-
+    SetStrategicNumber strategicnumbername Number
+spy:
+    Spy
+taunt:
+    Taunt Number
+tauntusingrange:
+    TauntUsingRange Number Number
+train:
+    Train unit
 tributetoplayer:
     TributeToPlayer playernumber commodity Number
 
-//enabletimer:
-//    EnableTimer Number Number
-
-//actiontype:
-//    setstrategicnumber  | Spy  | taunt  | tauntusingrange  | train  | tributetoplayer | DisableSelf | Resign | enabletimer
-
-actiontype:
-    donothing  | acknowledgeevent  | acknowledgetaunt  | attacknow  | build  | buildforward  | buildgate  | buildwall  | buycommodity  | ccaddresource  | chatlocal  | chatlocalusingid  | chatlocalusingrange  | chatlocaltoself  | chattoall  | chattoallusingid  | chattoallusingrange  | chattoallies  | setstrategicnumber  | spy  | taunt  | tauntusingrange  | train  | tributetoplayer  | chattoalliesusingid  | chattoalliesusingrange  | chattoenemies  | chattoenemiesusingid  | chattoenemiesusingrange  | chattoplayer  | chattoplayerusingid  | chattoplayerusingrange  | chattrace  | cleartributememory  | deletebuilding  | deleteunit  | disableself  | disabletimer  | enabletimer  | enablewallplacement  | generaterandomnumber  | log  | logtrace  | releaseescrow  | research  | resign  | sellcommodity  | setdifficultyparameter  | setdoctrine  | setescrowpercentage  | setgoal  | setsharedgoal  | setsignal  | setstance
-
-chattoalliesusingid:
-    ChatToAlliesUsingId Number
-
-chattoalliesusingrange:
-    ChatToAlliesUsingRange Number Number
-
-chattoenemies:
-    ChatToEnemies String
-
-chattoenemiesusingid:
-    ChatToEnemiesUsingId Number
-
-chattoenemiesusingrange:
-    ChatToEnemiesUsingRange Number Number
-
-chattoplayer:
-    ChatToPlayer playernumber String
-
-chattoplayerusingid:
-    ChatToPlayerUsingId playernumber Number
-
-chattoplayerusingrange:
-    ChatToPlayerUsingRange playernumber Number Number
-
-chattrace:
-    ChatTrace Number
-
-cleartributememory:
-    ClearTributeMemory playernumber commodity
-
-deletebuilding:
-    DeleteBuilding building
-
-deleteunit:
-    DeleteUnit unit
-
-disableself:
-    DisableSelf
-
-disabletimer:
-    DisableTimer Number
-
-enabletimer:
-    EnableTimer Number
-    | EnableTimer Number Number
-
-enablewallplacement:
-    EnableWallPlacement Number
-
-generaterandomnumber:
-    GenerateRandomNumber Number
-
-log:
-    Log String
-
-logtrace:
-    LogTrace Number
-
-releaseescrow:
-    ReleaseEscrow commodity
-
-research:
-    Research researchitem
-    | Research age
-
-resign:
-    Resign
-
-sellcommodity:
-    SellCommodity commodity
-
-setdifficultyparameter:
-    SetDifficultyParameter difficultyparameter Number
-
-setdoctrine:
-    SetDoctrine Number
-
-setescrowpercentage:
-    SetEscrowPercentage commodity Number
-
-setgoal:
-    SetGoal Number Number
-
-setsharedgoal:
-    SetSharedGoal Number Number
-
-setsignal:
-    SetSignal Number
-
-setstance:
-    SetStance playernumber diplomaticstance
-
-setstrategicnumber:
-    SetStrategicNumber strategicnumber Number
-
-spy:
-    Spy
-
-taunt:
-    Taunt Number
-
-tauntusingrange:
-    TauntUsingRange Number Number
-
-train:
-    Train unit
+action:
+    acknowledgeevent  | acknowledgetaunt  | attacknow  | build  | buildforward  | buildgate  | buildwall  | buycommodity  | ccaddresource  | chatlocal  | chatlocaltoself  | chatlocalusingid  | chatlocalusingrange  | chattoall  | chattoallusingid  | chattoallusingrange  | chattoallies  | chattoalliesusingid  | chattoalliesusingrange  | chattoenemies  | chattoenemiesusingid  | chattoenemiesusingrange  | chattoplayer  | chattoplayerusingid  | chattoplayerusingrange  | chattrace  | cleartributememory  | deletebuilding  | deleteunit  | disableself  | disabletimer  | donothing  | enabletimer  | enablewallplacement  | generaterandomnumber  | log  | logtrace  | releaseescrow  | research  | resign  | sellcommodity  | setdifficultyparameter  | setdoctrine  | setescrowpercentage  | setgoal  | setsharedgoal  | setsignal  | setstance  | setstrategicnumber  | spy  | taunt  | tauntusingrange  | train  | tributetoplayer
 
 true:
     True
@@ -1034,25 +948,25 @@ false:
     False
 
 attacksoldiercount:
-    AttackSoldierCount comparison Number
+    AttackSoldierCount relop Number
 
 attackwarboatcount:
-    AttackWarboatCount comparison Number
+    AttackWarboatCount relop Number
 
 buildingavailable:
     BuildingAvailable building
 
 buildingcount:
-    BuildingCount comparison Number
+    BuildingCount relop Number
 
 buildingcounttotal:
-    BuildingCountTotal comparison Number
+    BuildingCountTotal relop Number
 
 buildingtypecount:
-    BuildingTypeCount building comparison Number
+    BuildingTypeCount building relop Number
 
 buildingtypecounttotal:
-    BuildingTypeCountTotal building comparison Number
+    BuildingTypeCountTotal building relop Number
 
 canaffordbuilding:
     CanAffordBuilding building
@@ -1090,8 +1004,12 @@ canbuycommodity:
 canresearch:
     CanResearch researchitem
 
+| CanResearch age
+
 canresearchwithescrow:
     CanResearchWithEscrow researchitem
+
+| CanResearchWithEscrow age
 
 cansellcommodity:
     CanSellCommodity commodity
@@ -1109,16 +1027,16 @@ cantrainwithescrow:
     CanTrainWithEscrow unit
 
 ccplayersbuildingcount:
-    CcPlayersBuildingCount playernumber comparison Number
+    CcPlayersBuildingCount playernumbertype relop Number
 
 ccplayersbuildingtypecount:
-    CcPlayersBuildingTypeCount playernumber building comparison Number
+    CcPlayersBuildingTypeCount playernumbertype building relop Number
 
 ccplayersunitcount:
-    CcPlayersUnitCount playernumber comparison Number
+    CcPlayersUnitCount playernumbertype relop Number
 
 ccplayersunittypecount:
-    CcPlayersUnitTypeCount playernumber unit comparison Number
+    CcPlayersUnitTypeCount playernumbertype unit relop Number
 
 cheatsenabled:
     CheatsEnabled
@@ -1127,41 +1045,40 @@ civselected:
     CivSelected civ
 
 civilianpopulation:
-    CivilianPopulation comparison Number
+    CivilianPopulation relop Number
 
 commoditybuyingprice:
-    CommodityBuyingPrice commodity comparison Number
+    CommodityBuyingPrice commodity relop Number
 
 commoditysellingprice:
-    CommoditySellingPrice commodity comparison Number
+    CommoditySellingPrice commodity relop Number
 
 currentage:
-    CurrentAge comparison age
-    | CurrentAge comparison BuildingCastle
+    CurrentAge relop age
 
 currentagetime:
-    CurrentAgeTime comparison Number
+    CurrentAgeTime relop Number
 
 currentscore:
-    CurrentScore comparison Number
+    CurrentScore relop Number
 
 deathmatchgame:
     DeathMatchGame
 
 defendsoldiercount:
-    DefendSoldierCount comparison Number
+    DefendSoldierCount relop Number
 
 defendwarboatcount:
-    DefendWarboatCount comparison Number
+    DefendWarboatCount relop Number
 
-difficultycomp:
-    Difficulty comparison difficulty
+difficulty:
+    Difficulty relop difficultylevel
 
 doctrine:
     Doctrine Number
 
 dropsitemindistance:
-    DropsiteMinDistance commodity comparison Number
+    DropsiteMinDistance commodity relop Number
 
 enemybuildingsintown:
     EnemyBuildingsInTown
@@ -1170,100 +1087,109 @@ enemycapturedrelics:
     EnemyCapturedRelics
 
 escrowamount:
-    EscrowAmount commodity comparison Number
+    EscrowAmount commodity relop Number
 
 eventdetected:
-    EventDetected eventtype Number
+    EventDetected Number Number
 
 foodamount:
-    FoodAmount comparison Number
+    FoodAmount relop Number
 
 gametime:
-    GameTime comparison Number
+    GameTime relop Number
 
 goal:
     Goal Number Number
 
 goldamount:
-    GoldAmount comparison Number
+    GoldAmount relop Number
 
 housingheadroom:
-    HousingHeadroom comparison Number
+    HousingHeadroom relop Number
 
 idlefarmcount:
-    IdleFarmCount comparison Number
+    IdleFarmCount relop Number
+
+mapsize:
+    MapSize mapsizetype
+
+maptype:
+    MapType maptypename
 
 militarypopulation:
-    MilitaryPopulation comparison Number
+    MilitaryPopulation relop Number
 
 playercomputer:
-    PlayerComputer playernumber
+    PlayerComputer playernumbertype
 
 playerhuman:
-    PlayerHuman playernumber
+    PlayerHuman playernumbertype
 
 playeringame:
-    PlayerInGame playernumber
+    PlayerInGame playernumbertype
+
+playernumber:
+    PlayerNumber playernumbertype
 
 playerresigned:
-    PlayerResigned playernumber
+    PlayerResigned playernumbertype
 
 playervalid:
-    PlayerValid playernumber
+    PlayerValid playernumbertype
 
 playersbuildingcount:
-    PlayersBuildingCount playernumber comparison Number
+    PlayersBuildingCount playernumbertype relop Number
 
 playersbuildingtypecount:
-    PlayersBuildingTypeCount playernumber building comparison Number
+    PlayersBuildingTypeCount playernumbertype building relop Number
 
 playersciv:
-    PlayersCiv playernumber civ
+    PlayersCiv playernumbertype civ
 
 playerscivilianpopulation:
-    PlayersCivilianPopulation playernumber comparison Number
+    PlayersCivilianPopulation playernumbertype relop Number
 
 playerscurrentage:
-    PlayersCurrentAge playernumber comparison age
+    PlayersCurrentAge playernumbertype relop age
 
 playerscurrentagetime:
-    PlayersCurrentAgeTime playernumber comparison Number
+    PlayersCurrentAgeTime playernumbertype relop Number
 
 playersmilitarypopulation:
-    PlayersMilitaryPopulation playernumber comparison Number
+    PlayersMilitaryPopulation playernumbertype relop Number
 
 playerspopulation:
-    PlayersPopulation playernumber comparison Number
+    PlayersPopulation playernumbertype relop Number
 
 playersscore:
-    PlayersScore playernumber comparison Number
+    PlayersScore playernumbertype relop Number
 
 playersstance:
-    PlayersStance playernumber diplomaticstance
+    PlayersStance playernumbertype diplomaticstance
 
 playerstribute:
-    PlayersTribute playernumber commodity comparison Number
+    PlayersTribute playernumbertype commodity relop Number
 
 playerstributememory:
-    PlayersTributeMemory playernumber commodity comparison Number
+    PlayersTributeMemory playernumbertype commodity relop Number
 
 playersunitcount:
-    PlayersUnitCount playernumber comparison Number
+    PlayersUnitCount playernumbertype relop Number
 
 playersunittypecount:
-    PlayersUnitTypeCount playernumber unit comparison Number
+    PlayersUnitTypeCount playernumbertype unit relop Number
 
 population:
-    Population comparison Number
+    Population relop Number
 
 populationcap:
-    PopulationCap comparison Number
+    PopulationCap relop Number
 
 populationheadroom:
-    PopulationHeadroom comparison Number
+    PopulationHeadroom relop Number
 
 randomnumber:
-    RandomNumber comparison Number
+    RandomNumber relop Number
 
 regicidegame:
     RegicideGame
@@ -1284,25 +1210,25 @@ sheepandforagetoofar:
     SheepAndForageTooFar
 
 soldiercount:
-    SoldierCount comparison Number
+    SoldierCount relop Number
 
 stancetoward:
-    StanceToward playernumber diplomaticstance
+    StanceToward playernumbertype diplomaticstance
 
 startingage:
-    StartingAge comparison age
+    StartingAge relop age
 
-startingresourcescomp:
-    StartingResources comparison startingresources
+startingresources:
+    StartingResources relop startingresourcestype
 
 stoneamount:
-    StoneAmount comparison Number
+    StoneAmount relop Number
 
-strategicnumbercomp:
-    StrategicNumber strategicnumber comparison Number
+strategicnumber:
+    StrategicNumber strategicnumbername relop Number
 
 tauntdetected:
-    TauntDetected playernumber Number
+    TauntDetected playernumbertype Number
 
 timertriggered:
     TimerTriggered Number
@@ -1314,34 +1240,34 @@ unitavailable:
     UnitAvailable unit
 
 unitcount:
-    UnitCount comparison Number
+    UnitCount relop Number
 
 unitcounttotal:
-    UnitCountTotal comparison Number
+    UnitCountTotal relop Number
 
 unittypecount:
-    UnitTypeCount unit comparison Number
+    UnitTypeCount unit relop Number
 
 unittypecounttotal:
-    UnitTypeCountTotal unit comparison Number
+    UnitTypeCountTotal unit relop Number
 
 victorycondition:
-    VictoryCondition victoryconditiontype
+    VictoryCondition victoryconditionname
 
 wallcompletedpercentage:
-    WallCompletedPercentage Number comparison Number
+    WallCompletedPercentage Number relop Number
 
 wallinvisiblepercentage:
-    WallInvisiblePercentage Number comparison Number
+    WallInvisiblePercentage Number relop Number
 
 warboatcount:
-    WarboatCount comparison Number
+    WarboatCount relop Number
 
 woodamount:
-    WoodAmount comparison Number
+    WoodAmount relop Number
 
 fact:
-    true  | false  | attacksoldiercount  | attackwarboatcount  | buildingavailable  | buildingcount  | buildingcounttotal  | buildingtypecount  | buildingtypecounttotal  | canaffordbuilding  | canaffordcompletewall  | canaffordresearch  | canaffordunit  | canbuild  | canbuildgate  | canbuildgatewithescrow  | canbuildwall  | canbuildwallwithescrow  | canbuildwithescrow  | canbuycommodity  | canresearch  | canresearchwithescrow  | cansellcommodity  | canspy  | canspywithescrow  | cantrain  | cantrainwithescrow  | ccplayersbuildingcount  | ccplayersbuildingtypecount  | ccplayersunitcount  | ccplayersunittypecount  | cheatsenabled  | civselected  | civilianpopulation  | commoditybuyingprice  | commoditysellingprice  | currentage  | currentagetime  | currentscore  | deathmatchgame  | defendsoldiercount  | defendwarboatcount  | difficulty | difficultycomp | doctrine  | dropsitemindistance  | enemybuildingsintown  | enemycapturedrelics  | escrowamount  | eventdetected  | foodamount  | gametime  | goal  | goldamount  | housingheadroom  | idlefarmcount  | mapsize  | maptype  | militarypopulation  | playercomputer  | playerhuman  | playeringame  | playernumber  | playerresigned  | playervalid  | playersbuildingcount  | playersbuildingtypecount  | playersciv  | playerscivilianpopulation  | playerscurrentage  | playerscurrentagetime  | playersmilitarypopulation  | playerspopulation  | playersscore  | playersstance  | playerstribute  | playerstributememory  | playersunitcount  | playersunittypecount  | population  | populationcap  | populationheadroom  | randomnumber  | regicidegame  | researchavailable  | researchcompleted  | resourcefound  | sharedgoal  | sheepandforagetoofar  | soldiercount  | stancetoward  | startingage  | startingresources | startingresourcescomp  | stoneamount | strategicnumber | strategicnumbercomp  | tauntdetected  | timertriggered  | townunderattack  | unitavailable  | unitcount  | unitcounttotal  | unittypecount  | unittypecounttotal  | victorycondition  | wallcompletedpercentage  | wallinvisiblepercentage  | warboatcount  | woodamount | systemconstant
+    true  | false  | attacksoldiercount  | attackwarboatcount  | buildingavailable  | buildingcount  | buildingcounttotal  | buildingtypecount  | buildingtypecounttotal  | canaffordbuilding  | canaffordcompletewall  | canaffordresearch  | canaffordunit  | canbuild  | canbuildgate  | canbuildgatewithescrow  | canbuildwall  | canbuildwallwithescrow  | canbuildwithescrow  | canbuycommodity  | canresearch  | canresearchwithescrow  | cansellcommodity  | canspy  | canspywithescrow  | cantrain  | cantrainwithescrow  | ccplayersbuildingcount  | ccplayersbuildingtypecount  | ccplayersunitcount  | ccplayersunittypecount  | cheatsenabled  | civselected  | civilianpopulation  | commoditybuyingprice  | commoditysellingprice  | currentage  | currentagetime  | currentscore  | deathmatchgame  | defendsoldiercount  | defendwarboatcount  | difficulty  | doctrine  | dropsitemindistance  | enemybuildingsintown  | enemycapturedrelics  | escrowamount  | eventdetected  | foodamount  | gametime  | goal  | goldamount  | housingheadroom  | idlefarmcount  | mapsize  | maptype  | militarypopulation  | playercomputer  | playerhuman  | playeringame  | playernumber  | playerresigned  | playervalid  | playersbuildingcount  | playersbuildingtypecount  | playersciv  | playerscivilianpopulation  | playerscurrentage  | playerscurrentagetime  | playersmilitarypopulation  | playerspopulation  | playersscore  | playersstance  | playerstribute  | playerstributememory  | playersunitcount  | playersunittypecount  | population  | populationcap  | populationheadroom  | randomnumber  | regicidegame  | researchavailable  | researchcompleted  | resourcefound  | sharedgoal  | sheepandforagetoofar  | soldiercount  | stancetoward  | startingage  | startingresources  | stoneamount  | strategicnumber  | tauntdetected  | timertriggered  | townunderattack  | unitavailable  | unitcount  | unitcounttotal  | unittypecount  | unittypecounttotal  | victorycondition  | wallcompletedpercentage  | wallinvisiblepercentage  | warboatcount  | woodamount
 
 %%
 

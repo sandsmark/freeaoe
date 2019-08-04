@@ -1,108 +1,109 @@
 true
 false
-attack-soldier-count <rel-op> <value>
-attack-warboat-count <rel-op> <value>
+attack-soldier-count <rel-op> <Number>
+attack-warboat-count <rel-op> <Number>
 building-available <building>
-building-count <rel-op> <value>
-building-count-total <rel-op> <value>
-building-type-count <building> <rel-op> <value>
-building-type-count-total <building> <rel-op> <value>
+building-count <rel-op> <Number>
+building-count-total <rel-op> <Number>
+building-type-count <building> <rel-op> <Number>
+building-type-count-total <building> <rel-op> <Number>
 can-afford-building <building>
-can-afford-complete-wall <perimeter> <wall-type>
+can-afford-complete-wall <Number> <wall-type>
 can-afford-research <research-item>
 can-afford-unit <unit>
 can-build <building>
-can-build-gate <perimeter>
-can-build-gate-with-escrow <perimeter>
-can-build-wall <perimeter> <wall-type>
-can-build-wall-with-escrow <perimeter> <wall-type>
+can-build-gate <Number>
+can-build-gate-with-escrow <Number>
+can-build-wall <Number> <wall-type>
+can-build-wall-with-escrow <Number> <wall-type>
 can-build-with-escrow <building>
 can-buy-commodity <commodity>
 can-research <research-item>
+can-research <age>
 can-research-with-escrow <research-item>
+can-research-with-escrow <age>
 can-sell-commodity <commodity>
 can-spy
 can-spy-with-escrow
 can-train <unit>
 can-train-with-escrow <unit>
-cc-players-building-count <player-number> <rel-op> <value>
-cc-players-building-type-count <player-number> <building> <rel-op> <value>
-cc-players-unit-count <player-number> <rel-op> <value>
-cc-players-unit-type-count <player-number> <unit> <rel-op> <value>
+cc-players-building-count <player-number-type> <rel-op> <Number>
+cc-players-building-type-count <player-number-type> <building> <rel-op> <Number>
+cc-players-unit-count <player-number-type> <rel-op> <Number>
+cc-players-unit-type-count <player-number-type> <unit> <rel-op> <Number>
 cheats-enabled
 civ-selected <civ>
-civilian-population <rel-op> <value>
-commodity-buying-price <commodity> <rel-op> <value>
-commodity-selling-price <commodity> <rel-op> <value>
+civilian-population <rel-op> <Number>
+commodity-buying-price <commodity> <rel-op> <Number>
+commodity-selling-price <commodity> <rel-op> <Number>
 current-age <rel-op> <age>
-current-age-time <rel-op> <value>
-current-score <rel-op> <value>
+current-age-time <rel-op> <Number>
+current-score <rel-op> <Number>
 death-match-game
-defend-soldier-count <rel-op> <value>
-defend-warboat-count <rel-op> <value>
-difficulty <rel-op> <difficulty>
-doctrine <value>
-dropsite-min-distance <commodity> <rel-op> <value>
+defend-soldier-count <rel-op> <Number>
+defend-warboat-count <rel-op> <Number>
+difficulty <rel-op> <difficulty-level>
+doctrine <Number>
+dropsite-min-distance <commodity> <rel-op> <Number>
 enemy-buildings-in-town
 enemy-captured-relics
-escrow-amount <commodity> <rel-op> <value>
-event-detected <event-type> <event-id>
-food-amount <rel-op> <value>
-game-time <rel-op> <value>
-goal <goal-id> <value>
-gold-amount <rel-op> <value>
-housing-headroom <rel-op> <value>
-idle-farm-count <rel-op> <value>
-map-size <map-size>
-map-type <map-type>
-military-population <rel-op> <value>
-player-computer <player-number>
-player-human <player-number>
-player-in-game <player-number>
-player-number <player-number>
-player-resigned <player-number>
-player-valid <player-number>
-players-building-count <player-number> <rel-op> <value>
-players-building-type-count <player-number> <building> <rel-op> <value>
-players-civ <player-number> <civ>
-players-civilian-population <player-number> <rel-op> <value>
-players-current-age <player-number> <rel-op> <age>
-players-current-age-time <player-number> <rel-op> <value>
-players-military-population <player-number> <rel-op> <value>
-players-population <player-number> <rel-op> <value>
-players-score <player-number> <rel-op> <score>
-players-stance <player-number> <diplomatic-stance>
-players-tribute <player-number> <commodity> <rel-op> <value>
-players-tribute-memory <player-number> <commodity> <rel-op> <value>
-players-unit-count <player-number> <rel-op> <value>
-players-unit-type-count <player-number> <unit> <rel-op> <value>
-population <rel-op> <value>
-population-cap <rel-op> <value>
-population-headroom <rel-op> <value>
-random-number <rel-op> <value>
+escrow-amount <commodity> <rel-op> <Number>
+event-detected <Number> <Number>
+food-amount <rel-op> <Number>
+game-time <rel-op> <Number>
+goal <Number> <Number>
+gold-amount <rel-op> <Number>
+housing-headroom <rel-op> <Number>
+idle-farm-count <rel-op> <Number>
+map-size <map-size-type>
+map-type <map-type-name>
+military-population <rel-op> <Number>
+player-computer <player-number-type>
+player-human <player-number-type>
+player-in-game <player-number-type>
+player-number <player-number-type>
+player-resigned <player-number-type>
+player-valid <player-number-type>
+players-building-count <player-number-type> <rel-op> <Number>
+players-building-type-count <player-number-type> <building> <rel-op> <Number>
+players-civ <player-number-type> <civ>
+players-civilian-population <player-number-type> <rel-op> <Number>
+players-current-age <player-number-type> <rel-op> <age>
+players-current-age-time <player-number-type> <rel-op> <Number>
+players-military-population <player-number-type> <rel-op> <Number>
+players-population <player-number-type> <rel-op> <Number>
+players-score <player-number-type> <rel-op> <Number>
+players-stance <player-number-type> <diplomatic-stance>
+players-tribute <player-number-type> <commodity> <rel-op> <Number>
+players-tribute-memory <player-number-type> <commodity> <rel-op> <Number>
+players-unit-count <player-number-type> <rel-op> <Number>
+players-unit-type-count <player-number-type> <unit> <rel-op> <Number>
+population <rel-op> <Number>
+population-cap <rel-op> <Number>
+population-headroom <rel-op> <Number>
+random-number <rel-op> <Number>
 regicide-game
 research-available <research-item>
 research-completed <research-item>
 resource-found <commodity>
-shared-goal <shared-goal-id> <value>
+shared-goal <Number> <Number>
 sheep-and-forage-too-far
-soldier-count <rel-op> <value>
-stance-toward <player-number> <diplomatic-stance>
+soldier-count <rel-op> <Number>
+stance-toward <player-number-type> <diplomatic-stance>
 starting-age <rel-op> <age>
-starting-resources <rel-op> <starting-resources>
-stone-amount <rel-op> <value>
-strategic-number <strategic-number> <rel-op> <value>
-taunt-detected <player-number> <taunt-id>
-timer-triggered <timer-id>
+starting-resources <rel-op> <starting-resources-type>
+stone-amount <rel-op> <Number>
+strategic-number <strategic-number-name> <rel-op> <Number>
+taunt-detected <player-number-type> <Number>
+timer-triggered <Number>
 town-under-attack
 unit-available <unit>
-unit-count <rel-op> <value>
-unit-count-total <rel-op> <value>
-unit-type-count <unit> <rel-op> <value>
-unit-type-count-total <unit> <rel-op> <value>
-victory-condition <victory-condition>
-wall-completed-percentage <perimeter> <rel-op> <value>
-wall-invisible-percentage <perimeter> <rel-op> <value>
-warboat-count <rel-op> <value>
-wood-amount <rel-op> <value>
-
+unit-count <rel-op> <Number>
+unit-count-total <rel-op> <Number>
+unit-type-count <unit> <rel-op> <Number>
+unit-type-count-total <unit> <rel-op> <Number>
+victory-condition <victory-condition-name>
+wall-completed-percentage <Number> <rel-op> <Number>
+wall-invisible-percentage <Number> <rel-op> <Number>
+warboat-count <rel-op> <Number>
+wood-amount <rel-op> <Number>

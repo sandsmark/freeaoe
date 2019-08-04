@@ -1,62 +1,55 @@
-do-nothing
-acknowledge-event  <event-type> <event-id>
-acknowledge-taunt  <player-number> <taunt-id>
+acknowledge-event <Number> <Number>
+acknowledge-taunt <player-number> <Number>
 attack-now
-build  <building>
-build-forward  <building>
-build-gate  <perimeter>
-build-wall  <perimeter> <wall-type>
-buy-commodity  <commodity>
-cc-add-resource <resource-type> <amount>
+build <building>
+build-forward <building>
+build-gate <Number>
+build-wall <Number> <wall-type>
+buy-commodity <commodity>
+cc-add-resource <commodity> <Number>
 chat-local <string>
-chat-local-using-id <string-id>
-chat-local-using-range <string-id-start> <string-id-range>
 chat-local-to-self <string>
+chat-local-using-id <Number>
+chat-local-using-range <Number> <Number>
 chat-to-all <string>
-chat-to-all-using-id <string-id>
-chat-to-all-using-range <string-id-start> <string-id-range>
+chat-to-all-using-id <Number>
+chat-to-all-using-range <Number> <Number>
 chat-to-allies <string>
-set-strategic-number <strategic-number> <value>
-spy
-disable-self
-taunt <value>
-taunt-using-range <taunt-start> <taunt-range>
-train <unit>
-tribute-to-player <player-number> <commodity> <value>
-chat-to-allies-using-id <string-id>
-chat-to-allies-using-range <string-id-start> <string-id-range>
+chat-to-allies-using-id <Number>
+chat-to-allies-using-range <Number> <Number>
 chat-to-enemies <string>
-chat-to-enemies-using-id <string-id>
-chat-to-enemies-using-range <string-id-start> <string-id-range>
+chat-to-enemies-using-id <Number>
+chat-to-enemies-using-range <Number> <Number>
 chat-to-player <player-number> <string>
-chat-to-player-using-id <player-number> <string-id>
-chat-to-player-using-range <player-number> <string-id-start> <string-id-range>
-chat-trace  <value>
-clear-tribute-memory  <player-number> <resource-type>
-delete-building  <building>
-delete-unit  <unit>
+chat-to-player-using-id <player-number> <Number>
+chat-to-player-using-range <player-number> <Number> <Number>
+chat-trace <Number>
+clear-tribute-memory <player-number> <commodity>
+delete-building <building>
+delete-unit <unit>
 disable-self
-disable-timer  <timer-id>
-enable-timer  <timer-id>
-enable-wall-placement  <perimeter>
-generate-random-number <value>
+disable-timer <Number>
+do-nothing
+enable-timer <Number> <Number>
+enable-wall-placement <Number>
+generate-random-number <Number>
 log <string>
-log-trace  <value>
-release-escrow  <resource-type>
-research  <research-item>
-research  <age>
+log-trace <Number>
+release-escrow <commodity>
+research <age>
+research <research-item>
 resign
-sell-commodity  <commodity>
-set-difficulty-parameter <difficulty-parameter> <value>
-set-doctrine <value>
-set-escrow-percentage  <resource-type>  <value>
-set-goal <goal-id> <value>
-set-shared-goal <shared-goal-id> <value>
-set-signal <signal-id>
+sell-commodity <commodity>
+set-difficulty-parameter <difficulty-parameter> <Number>
+set-doctrine <Number>
+set-escrow-percentage <commodity> <Number>
+set-goal <Number> <Number>
+set-shared-goal <Number> <Number>
+set-signal <Number>
 set-stance <player-number> <diplomatic-stance>
-set-strategic-number <strategic-number>  <value>
+set-strategic-number <strategic-number-name> <Number>
 spy
-taunt  <value>
-taunt-using-range  <taunt-start>  <taunt-range>
+taunt <Number>
+taunt-using-range <Number> <Number>
 train <unit>
-tribute-to-player <player-number>  <resource-type>  <value>
+tribute-to-player <player-number> <commodity> <Number>
