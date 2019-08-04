@@ -49,6 +49,11 @@ void UnitFactory::handleDefaultAction(const Unit::Ptr &unit, const genie::Task &
     case genie::Task::Fly: {
         MapPos flyingPosition = unit->position();
         DBG << "Flying unit at" << flyingPosition;
+
+        // The below comment will stay just to illustrate what one of my professors once told me
+        // about commenting in source code; don't do it, comments always get outdated
+        // and confuse more than clarify.
+
         // Castles are 4 high, so set 5.5 just to be safe that we fly above everything
         if (flyingPosition.z < 10) {
             flyingPosition.z = 10;
@@ -63,7 +68,7 @@ void UnitFactory::handleDefaultAction(const Unit::Ptr &unit, const genie::Task &
     case genie::Task::GetAutoConverted:
         break;
     default:
-        WARN << "unhandled default action" << task.actionTypeName();
+        WARN << "unhandled default action" << task.actionTypeName() << "for" << unit->debugName;
     }
 
 }
