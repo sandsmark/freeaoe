@@ -42,10 +42,10 @@ defend-soldier-count <rel-op> <value>
 defend-warboat-count <rel-op> <value>
 difficulty <rel-op> <difficulty>
 doctrine <value>
-dropsite-min-distance <resource-type> <rel-op> <value>
+dropsite-min-distance <commodity> <rel-op> <value>
 enemy-buildings-in-town
 enemy-captured-relics
-escrow-amount <resource-type> <rel-op> <value>
+escrow-amount <commodity> <rel-op> <value>
 event-detected <event-type> <event-id>
 food-amount <rel-op> <value>
 game-time <rel-op> <value>
@@ -72,8 +72,8 @@ players-military-population <player-number> <rel-op> <value>
 players-population <player-number> <rel-op> <value>
 players-score <player-number> <rel-op> <score>
 players-stance <player-number> <diplomatic-stance>
-players-tribute <player-number> <resource-type> <rel-op> <value>
-players-tribute-memory <player-number> <resource-type> <rel-op> <value>
+players-tribute <player-number> <commodity> <rel-op> <value>
+players-tribute-memory <player-number> <commodity> <rel-op> <value>
 players-unit-count <player-number> <rel-op> <value>
 players-unit-type-count <player-number> <unit> <rel-op> <value>
 population <rel-op> <value>
@@ -83,7 +83,7 @@ random-number <rel-op> <value>
 regicide-game
 research-available <research-item>
 research-completed <research-item>
-resource-found <resource-type>
+resource-found <commodity>
 shared-goal <shared-goal-id> <value>
 sheep-and-forage-too-far
 soldier-count <rel-op> <value>

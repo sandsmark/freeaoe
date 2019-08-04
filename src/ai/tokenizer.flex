@@ -3,7 +3,6 @@
 
 %{
 #include <stdio.h>
-/*[ \t\f]+            { return Space; }*/
 
 #define YY_DECL int yylex()
 
@@ -49,8 +48,8 @@ comment     ;.*
 
 [\r\n]+
 
-{symbolname}        { printf(" - symbol name %s\n", yytext); yylval.string = strdup(yytext); return SymbolName; }
-{string}            { printf(" - string %s\n", yytext); yylval.string = strdup(yytext); return String; }
+{symbolname}        { printf(" - symbol name %s\n", yytext); yylval.string = yytext; return SymbolName; }
+{string}            { printf(" - string %s\n", yytext); yylval.string = yytext; return String; }
 {number}            { printf(" - number %s\n", yytext); yylval.number = atoi(yytext); return Number; }
 
 %%

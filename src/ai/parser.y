@@ -1,9 +1,10 @@
 %{
 
-#include <string>
+#include <string.h>
+#include <stdio.h>
 
-extern int yylex();
-extern int yyparse();
+extern int yylex(void);
+extern int yyparse(void);
 extern FILE* yyin;
 
 void yyerror(const char* s);
@@ -11,10 +12,10 @@ void yyerror(const char* s);
 
 %union {
 	int number;
-	char *string;
+	const char *string;
 }
 
-%destructor { delete $$; $$ = nullptr; } String SymbolName;
+%destructor { /*free($$); $$ = NULL;*/ } String SymbolName;
 
 
 %token<number> Number
@@ -41,7 +42,7 @@ aiscript:
 
 rules:
     rule { printf("got single rule\n"); }
-    | rule rules { printf("got multiple rules\n"); }
+    | rule rules { /*printf("got multiple rules\n")*/; }
 
 rule:
     OpenParen RuleStart conditions ConditionActionSeparator actions CloseParen { printf("got rule\n====\n\n"); }

@@ -2,6 +2,7 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 extern int yylex(void);
 extern int yyparse(void);
@@ -50,60 +51,123 @@ void yyerror(const char* s);
 %token UnitArbalest UnitArcher UnitCavalryArcher UnitCrossbowman UnitEliteSkirmisher UnitHandCannoneer UnitHeavyCavalryArcher UnitSkirmisher UnitChampion UnitEagleWarrior UnitEliteEagleWarrior UnitHalberdier UnitLongSwordsman UnitManAtArms UnitMilitiaman UnitPikeman UnitSpearman UnitTwoHandedSwordsman UnitBerserk UnitCataphract UnitChuKoNu UnitConquistador UnitEliteBerserk UnitEliteCataphract UnitEliteChuKoNu UnitEliteConquistador UnitEliteHuskarl UnitEliteJaguarWarrior UnitEliteJanissary UnitEliteLongbowman UnitEliteMameluke UnitEliteMangudai UnitElitePlumedArcher UnitEliteSamurai UnitEliteTarkan UnitEliteTeutonicKnight UnitEliteThrowingAxeman UnitEliteWarElephant UnitEliteWarWagon UnitEliteWoadRaider UnitHuskarl UnitJaguarWarrior UnitJanissary UnitLongbowman UnitMameluke UnitMangudai UnitPetard UnitPlumedArcher UnitSamurai UnitTarkan UnitTeutonicKnight UnitThrowingAxeman UnitTrebuchet UnitWarElephant UnitWarWagon UnitWoadRaider UnitCannonGalleon UnitDemolitionShip UnitEliteCannonGalleon UnitEliteLongboat UnitEliteTurtleShip UnitFastFireShip UnitFireShip UnitFishingShip UnitGalleon UnitGalley UnitHeavyDemolitionShip UnitLongboat UnitTradeCog UnitTransportShip UnitTurtleShip UnitWarGalley UnitTradeCart UnitMissionary UnitMonk UnitBatteringRam UnitBombardCannon UnitCappedRam UnitHeavyScorpion UnitMangonel UnitOnager UnitScorpion UnitSiegeOnager UnitSiegeRam UnitCamel UnitCavalier UnitHeavyCamel UnitHussar UnitKnight UnitLightCavalry UnitPaladin UnitScoutCavalry UnitVillager UnitArcherLine UnitCavalryArcherLine UnitSkirmisherLine UnitEagleWarriorLine UnitMilitiamanLine UnitSpearmanLine UnitBerserkLine UnitCataphractLine UnitChuKoNuLine UnitConquistadorLine UnitHuskarlLine UnitJaguarWarriorLine UnitJanissaryLine UnitLongbowmanLine UnitMamelukeLine UnitMangudaiLine UnitPlumedArcherLine UnitSamuraiLine UnitTarkanLine UnitTeutonicKnightLine UnitThrowingAxemanLine UnitWarElephantLine UnitWarWagonLine UnitWoadRaiderLine UnitCannonGalleonLine UnitDemolitionShipLine UnitFireShipLine UnitGalleyLine UnitLongboatLine UnitTurtleShipLine UnitBatteringRamLine UnitMangonelLine UnitScorpionLine UnitCamelLine UnitKnightLine UnitScoutCavalryLine
 %token VictoryConditionStandard VictoryConditionConquest VictoryConditionTimeLimit VictoryConditionScore VictoryConditionCustom
 %token WallTypeFortifiedWall WallTypePalisadeWall WallTypeStoneWall WallTypeStoneWallLine
-%token DoNothing
-%token AcknowledgeEvent
-%token AcknowledgeTaunt
-%token AttackNow
-%token Build
-%token BuildForward
-%token BuildGate
-%token BuildWall
-%token BuyCommodity
-%token CcAddResource
-%token ChatLocal
-%token ChatLocalUsingId
-%token ChatLocalUsingRange
-%token ChatLocalToSelf
-%token ChatToAll
-%token ChatToAllUsingId
-%token ChatToAllUsingRange
-%token ChatToAllies
-%token ChatToAlliesUsingId
-%token ChatToAlliesUsingRange
-%token ChatToEnemies
-%token ChatToEnemiesUsingId
-%token ChatToEnemiesUsingRange
-%token ChatToPlayer
-%token ChatToPlayerUsingId
-%token ChatToPlayerUsingRange
-%token ChatTrace
-%token ClearTributeMemory
-%token DeleteBuilding
-%token DeleteUnit
-%token DisableSelf
-%token DisableTimer
-%token EnableTimer
-%token EnableWallPlacement
-%token GenerateRandomNumber
-%token Log
-%token LogTrace
-%token ReleaseEscrow
-%token Research
 %token Resign
-%token SellCommodity
-%token SetDifficultyParameter
-%token SetDoctrine
-%token SetEscrowPercentage
-%token SetGoal
-%token SetSharedGoal
-%token SetSignal
-%token SetStance
 %token SetStrategicNumber
 %token Spy
 %token Taunt
 %token TauntUsingRange
 %token Train
 %token TributeToPlayer
+%token EnableTimer
+%token True
+%token False
+%token AttackSoldierCount
+%token AttackWarboatCount
+%token BuildingAvailable
+%token BuildingCount
+%token BuildingCountTotal
+%token BuildingTypeCount
+%token BuildingTypeCountTotal
+%token CanAffordBuilding
+%token CanAffordCompleteWall
+%token CanAffordResearch
+%token CanAffordUnit
+%token CanBuild
+%token CanBuildGate
+%token CanBuildGateWithEscrow
+%token CanBuildWall
+%token CanBuildWallWithEscrow
+%token CanBuildWithEscrow
+%token CanBuyCommodity
+%token CanResearch
+%token CanResearchWithEscrow
+%token CanSellCommodity
+%token CanSpy
+%token CanSpyWithEscrow
+%token CanTrain
+%token CanTrainWithEscrow
+%token CcPlayersBuildingCount
+%token CcPlayersBuildingTypeCount
+%token CcPlayersUnitCount
+%token CcPlayersUnitTypeCount
+%token CheatsEnabled
+%token CivSelected
+%token CivilianPopulation
+%token CommodityBuyingPrice
+%token CommoditySellingPrice
+%token CurrentAge
+%token CurrentAgeTime
+%token CurrentScore
+%token DeathMatchGame
+%token DefendSoldierCount
+%token DefendWarboatCount
+%token Difficulty
+%token Doctrine
+%token DropsiteMinDistance
+%token EnemyBuildingsInTown
+%token EnemyCapturedRelics
+%token EscrowAmount
+%token EventDetected
+%token FoodAmount
+%token GameTime
+%token Goal
+%token GoldAmount
+%token HousingHeadroom
+%token IdleFarmCount
+%token MapSize
+%token MapType
+%token MilitaryPopulation
+%token PlayerComputer
+%token PlayerHuman
+%token PlayerInGame
+%token PlayerNumber
+%token PlayerResigned
+%token PlayerValid
+%token PlayersBuildingCount
+%token PlayersBuildingTypeCount
+%token PlayersCiv
+%token PlayersCivilianPopulation
+%token PlayersCurrentAge
+%token PlayersCurrentAgeTime
+%token PlayersMilitaryPopulation
+%token PlayersPopulation
+%token PlayersScore
+%token PlayersStance
+%token PlayersTribute
+%token PlayersTributeMemory
+%token PlayersUnitCount
+%token PlayersUnitTypeCount
+%token Population
+%token PopulationCap
+%token PopulationHeadroom
+%token RandomNumber
+%token RegicideGame
+%token ResearchAvailable
+%token ResearchCompleted
+%token ResourceFound
+%token SharedGoal
+%token SheepAndForageTooFar
+%token SoldierCount
+%token StanceToward
+%token StartingAge
+%token StartingResources
+%token StoneAmount
+%token StrategicNumber
+%token TauntDetected
+%token TimerTriggered
+%token TownUnderAttack
+%token UnitAvailable
+%token UnitCount
+%token UnitCountTotal
+%token UnitTypeCount
+%token UnitTypeCountTotal
+%token VictoryCondition
+%token WallCompletedPercentage
+%token WallInvisiblePercentage
+%token WarboatCount
+%token WoodAmount
+%token DisableSelf
+
 %%
 
 aiscript:
@@ -123,18 +187,28 @@ conditions:
     | condition conditions {  printf("got multiple conditions\n"); }
 
 condition:
-    OpenParen Not condition CloseParen {}//  printf("got negated condition\n"); }
-    | OpenParen Or conditions CloseParen { }// printf("got multiple or conditions\n"); }
-    | OpenParen symbolname CloseParen {}//  printf("got condition with symbol '%s'\n", $2); }
-    | OpenParen symbolname Number CloseParen {}//  printf("got condition with symbol '%s' and number %d\n", $2, $3); }
-    | OpenParen symbolname Number Number CloseParen {}//  printf("got condition with symbol '%s' and numbers %d %d\n", $2, $3, $4); }
-    | OpenParen symbolname symbolname CloseParen {}//  printf("got condition with two symbols '%s' %s\n", $2, $3); }
-    | OpenParen symbolname symbolname symbolname CloseParen {}//  printf("got condition with three symbols %s %s %s\n", $2, $3, $4); }
-    | OpenParen symbolname comparison Number CloseParen {}//  printf("got condition with comparison %s %d\n", $2, $4); }
-    | OpenParen symbolname comparison symbolname CloseParen {}//  printf("got condition with comparison %s %s\n", $2, $4); }
-    | OpenParen symbolname symbolname comparison symbolname CloseParen {}//  printf("got condition with comparison %s %s %s\n", $2, $3, $5); }
-    | OpenParen symbolname symbolname comparison Number CloseParen {}//  printf("got condition with comparison %s %s %d\n", $2, $3, $5); }
-    | OpenParen symbolname symbolname symbolname comparison Number CloseParen {}//  printf("got condition with comparison %s %s %s %d\n", $2, $3, $4, $6); }
+    OpenParen conditiontype CloseParen { printf("condition\n"); }
+
+conditiontype:
+    Not condition { printf("got negated condition\n"); }
+    | Or conditions { printf("got multiple or conditions\n"); }
+    | fact { printf("got fact\n"); }
+
+//conditiontype:
+//    Not condition { printf("got negated condition\n"); }
+//    | Or conditions { printf("got multiple or conditions\n"); }
+//    | symbolname { printf("got condition with symbol\n"); }
+//    | symbolname Number {  printf("got condition with symbol and number\n"); }
+//    | symbolname Number Number { printf("got condition with symbol and numbers\n"); }
+//    | symbolname symbolname {  printf("got condition with two symbols \n"); }
+//    | symbolname symbolname symbolname { printf("got condition with three symbols\n"); }
+//    | symbolname comparison age { printf("got condition with comparison\n"); }
+//    | symbolname comparison Number { printf("got condition with comparison\n"); }
+//    | symbolname comparison symbolname { printf("got condition with comparison\n"); }
+//    | symbolname symbolname comparison symbolname { printf("got condition with comparison\n"); }
+//    | symbolname symbolname comparison Number { printf("got condition with comparison\n"); }
+//    | symbolname symbolname symbolname comparison Number { printf("got condition with comparison\n"); }
+
 //condition:
 //    OpenParen Not condition CloseParen {  printf("got negated condition\n"); }
 //    | OpenParen Or conditions CloseParen {  printf("got multiple or conditions\n"); }
@@ -148,6 +222,7 @@ condition:
 //    | OpenParen SymbolName SymbolName comparison SymbolName CloseParen {  printf("got condition with comparison %s %s %s\n", $2, $3, $5); }
 //    | OpenParen SymbolName SymbolName comparison Number CloseParen {  printf("got condition with comparison %s %s %d\n", $2, $3, $5); }
 //    | OpenParen SymbolName SymbolName SymbolName comparison Number CloseParen {  printf("got condition with comparison %s %s %s %d\n", $2, $3, $4, $6); }
+//    | OpenParen actiontype String CloseParen {}//  printf("got action %s with string %s\n", $2, $3); }
 
 
 comparison:
@@ -156,32 +231,32 @@ comparison:
     | RelOpGreaterThan {  printf("got greaterthan\n"); }
     | RelOpGreaterOrEqual {  printf("got greaterorequal\n"); }
     | RelOpEqual {  printf("got equals\n"); }
+    | LessThan {  printf("got lessthan\n"); }
+    | LessOrEqual {  printf("got lessorequal\n"); }
+    | GreaterThan {  printf("got greaterthan\n"); }
+    | GreaterOrEqual {  printf("got greaterorequal\n"); }
+    | Equal {  printf("got equals\n"); }
 
 actions:
-    OpenParen action CloseParen {  printf("got single action\n"); }
+    action {  printf("got single action\n"); }
     | action actions {  printf("got multiple actions\n"); }
 
-//action:
-//    OpenParen SymbolName CloseParen { printf("got action %s without arguments\n", $2); }
-//    | OpenParen SymbolName String CloseParen {  printf("got action %s with string %s\n", $2, $3); }
-//    | OpenParen SymbolName SymbolName Number CloseParen {  printf("got action %s with symbol %s and number %d\n", $2, $3, $4); }
-//    | OpenParen SymbolName SymbolName CloseParen {  printf("got action %s with symbol %s\n", $2, $3); }
-//    | OpenParen SymbolName Number CloseParen {  printf("got action %s with number %d\n", $2, $3); }
-//    | OpenParen SymbolName Number Number CloseParen {  printf("got action %s with numbers %d %d\n", $2, $3, $4); }
-//
+action:
+      OpenParen actiontype CloseParen { printf("got action without arguments\n"); }
+
 age:
-    AgeDarkAge  {}// static_cast<Condition*>(aiRule)->type = Age::DarkAge; } 
-  | AgeFeudalAge  {}// static_cast<Condition*>(aiRule)->type = Age::FeudalAge; } 
-  | AgeCastleAge  {}// static_cast<Condition*>(aiRule)->type = Age::CastleAge; } 
-  | AgeImperialAge  {}// static_cast<Condition*>(aiRule)->type = Age::ImperialAge; } 
-  | AgePostImperialAge  {}// static_cast<Condition*>(aiRule)->type = Age::PostImperialAge; } 
+    AgeDarkAge  { printf("got darkage\n"); }// static_cast<Condition*>(aiRule)->type = Age::DarkAge; } 
+  | AgeFeudalAge  { printf("got feudalage\n"); }// static_cast<Condition*>(aiRule)->type = Age::FeudalAge; } 
+  | AgeCastleAge  { printf("got castleage\n"); }// static_cast<Condition*>(aiRule)->type = Age::CastleAge; } 
+  | AgeImperialAge  { printf("got imperial\n"); }// static_cast<Condition*>(aiRule)->type = Age::ImperialAge; } 
+  | AgePostImperialAge  { printf("got postimperialage\n"); }// static_cast<Condition*>(aiRule)->type = Age::PostImperialAge; } 
 
 building:
     BuildingArcheryRange  {}// static_cast<Condition*>(aiRule)->type = Building::ArcheryRange; } 
   | BuildingBarracks  {}// static_cast<Condition*>(aiRule)->type = Building::Barracks; } 
   | BuildingBlacksmith  {}// static_cast<Condition*>(aiRule)->type = Building::Blacksmith; } 
   | BuildingBombardTower  {}// static_cast<Condition*>(aiRule)->type = Building::BombardTower; } 
-  | BuildingCastle  {}// static_cast<Condition*>(aiRule)->type = Building::Castle; } 
+  | BuildingCastle  { printf("got castle building"); }// static_cast<Condition*>(aiRule)->type = Building::Castle; } 
   | BuildingDock  {}// static_cast<Condition*>(aiRule)->type = Building::Dock; } 
   | BuildingFarm  {}// static_cast<Condition*>(aiRule)->type = Building::Farm; } 
   | BuildingFishTrap  {}// static_cast<Condition*>(aiRule)->type = Building::FishTrap; } 
@@ -239,13 +314,9 @@ diplomaticstance:
   | DiplomaticStanceNeutral  {}// static_cast<Condition*>(aiRule)->type = DiplomaticStance::Neutral; } 
   | DiplomaticStanceEnemy  {}// static_cast<Condition*>(aiRule)->type = DiplomaticStance::Enemy; } 
 
-eventid:
-    Number
 eventtype:
     EventTypeTrigger  {}// static_cast<Condition*>(aiRule)->type = EventType::Trigger; } 
 
-goalid:
-    Number
 mapsize:
     MapSizeTiny  {}// static_cast<Condition*>(aiRule)->type = MapSize::Tiny; } 
   | MapSizeSmall  {}// static_cast<Condition*>(aiRule)->type = MapSize::Small; } 
@@ -272,8 +343,6 @@ maptype:
   | MapTypeTeamIslands  {}// static_cast<Condition*>(aiRule)->type = MapType::TeamIslands; } 
   | MapTypeScenarioMap  {}// static_cast<Condition*>(aiRule)->type = MapType::ScenarioMap; } 
 
-perimeter:
-    Number
 playernumber:
     PlayerNumberAnyAlly  {}// static_cast<Condition*>(aiRule)->type = PlayerNumber::AnyAlly; } 
   | PlayerNumberAnyComputer  {}// static_cast<Condition*>(aiRule)->type = PlayerNumber::AnyComputer; } 
@@ -292,13 +361,13 @@ playernumber:
   | PlayerNumberEveryHuman  {}// static_cast<Condition*>(aiRule)->type = PlayerNumber::EveryHuman; } 
   | PlayerNumberEveryNeutral  {}// static_cast<Condition*>(aiRule)->type = PlayerNumber::EveryNeutral; } 
 
-relop:
-    RelOpLessThan  {}// static_cast<Condition*>(aiRule)->type = RelOp::LessThan; } 
-  | RelOpLessOrEqual  {}// static_cast<Condition*>(aiRule)->type = RelOp::LessOrEqual; } 
-  | RelOpGreaterThan  {}// static_cast<Condition*>(aiRule)->type = RelOp::GreaterThan; } 
-  | RelOpGreaterOrEqual  {}// static_cast<Condition*>(aiRule)->type = RelOp::GreaterOrEqual; } 
-  | RelOpEqual  {}// static_cast<Condition*>(aiRule)->type = RelOp::Equal; } 
-  | RelOpNotEqual  {}// static_cast<Condition*>(aiRule)->type = RelOp::NotEqual; } 
+//comparison:
+//    comparisonLessThan  {}// static_cast<Condition*>(aiRule)->type = RelOp::LessThan; } 
+//  | comparisonLessOrEqual  {}// static_cast<Condition*>(aiRule)->type = RelOp::LessOrEqual; } 
+//  | comparisonGreaterThan  {}// static_cast<Condition*>(aiRule)->type = RelOp::GreaterThan; } 
+//  | comparisonGreaterOrEqual  {}// static_cast<Condition*>(aiRule)->type = RelOp::GreaterOrEqual; } 
+//  | comparisonEqual  {}// static_cast<Condition*>(aiRule)->type = RelOp::Equal; } 
+//  | comparisonNotEqual  {}// static_cast<Condition*>(aiRule)->type = RelOp::NotEqual; } 
 
 researchitem:
     ResearchItemRiArbalest  {}// static_cast<Condition*>(aiRule)->type = ResearchItem::RiArbalest; } 
@@ -417,10 +486,6 @@ researchitem:
   | ResearchItemRiSiegeEngineers  {}// static_cast<Condition*>(aiRule)->type = ResearchItem::RiSiegeEngineers; } 
   | ResearchItemRiStonecutting  {}// static_cast<Condition*>(aiRule)->type = ResearchItem::RiStonecutting; } 
 
-sharedgoalid:
-    Number
-signalid:
-    Number
 startingresources:
     StartingResourcesLowResources  {}// static_cast<Condition*>(aiRule)->type = StartingResources::LowResources; } 
   | StartingResourcesMediumResources  {}// static_cast<Condition*>(aiRule)->type = StartingResources::MediumResources; } 
@@ -560,20 +625,6 @@ strategicnumber:
   | StrategicNumberSnGatherIdleSoldiersAtCenter  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnGatherIdleSoldiersAtCenter; } 
   | StrategicNumberSnGarrisonRams  {}// static_cast<Condition*>(aiRule)->type = StrategicNumber::SnGarrisonRams; } 
 
-stringid:
-    Number
-stringidrange:
-    Number
-stringidstart:
-    Number
-tauntid:
-    Number
-tauntrange:
-    Number
-tauntstart:
-    Number
-timerid:
-    Number
 unit:
     UnitArbalest  {}// static_cast<Condition*>(aiRule)->type = Unit::Arbalest; } 
   | UnitArcher  {}// static_cast<Condition*>(aiRule)->type = Unit::Archer; } 
@@ -705,9 +756,7 @@ unit:
   | UnitKnightLine  {}// static_cast<Condition*>(aiRule)->type = Unit::KnightLine; } 
   | UnitScoutCavalryLine  {}// static_cast<Condition*>(aiRule)->type = Unit::ScoutCavalryLine; } 
 
-value:
-    Number
-victorycondition:
+victoryconditiontype:
     VictoryConditionStandard  {}// static_cast<Condition*>(aiRule)->type = VictoryCondition::Standard; } 
   | VictoryConditionConquest  {}// static_cast<Condition*>(aiRule)->type = VictoryCondition::Conquest; } 
   | VictoryConditionTimeLimit  {}// static_cast<Condition*>(aiRule)->type = VictoryCondition::TimeLimit; } 
@@ -722,145 +771,355 @@ walltype:
 
 
 symbolname:
-    age  | building  | civ  | commodity  | difficulty  | difficultyparameter  | diplomaticstance  | eventid  | eventtype  | goalid  | mapsize  | maptype  | perimeter  | playernumber  | relop  | researchitem  | sharedgoalid  | signalid  | startingresources  | strategicnumber  | stringid  | stringidrange  | stringidstart  | tauntid  | tauntrange  | tauntstart  | timerid  | unit  | value  | victorycondition  | walltype
-
-donothing:
-    DoNothing
-
-acknowledgeevent:
-    AcknowledgeEvent eventtype eventid
-
-acknowledgetaunt:
-    AcknowledgeTaunt playernumber tauntid
-
-attacknow:
-    AttackNow
-
-build:
-    Build building
-
-buildforward:
-    BuildForward building
-
-buildgate:
-    BuildGate perimeter
-
-buildwall:
-    BuildWall perimeter walltype
-
-buycommodity:
-    BuyCommodity commodity
-
-ccaddresource:
-    CcAddResource commodity value
-
-chattoallusingid:
-    ChatToAllUsingId stringid
-
-chattoallusingrange:
-    ChatToAllUsingRange stringidstart stringidrange
-
-chattoalliesusingid:
-    ChatToAlliesUsingId stringid
-
-chattoalliesusingrange:
-    ChatToAlliesUsingRange stringidstart stringidrange
-
-chattoenemiesusingid:
-    ChatToEnemiesUsingId stringid
-
-chattoenemiesusingrange:
-    ChatToEnemiesUsingRange stringidstart stringidrange
-
-chattoplayerusingid:
-    ChatToPlayerUsingId playernumber stringid
-
-chattoplayerusingrange:
-    ChatToPlayerUsingRange playernumber stringidstart stringidrange
-
-chattrace:
-    ChatTrace value
-
-cleartributememory:
-    ClearTributeMemory playernumber commodity
-
-deletebuilding:
-    DeleteBuilding building
-
-deleteunit:
-    DeleteUnit unit
-
-disableself:
-    DisableSelf
-
-disabletimer:
-    DisableTimer timerid
-
-enabletimer:
-    EnableTimer timerid
-
-enablewallplacement:
-    EnableWallPlacement perimeter
-
-generaterandomnumber:
-    GenerateRandomNumber value
-
-logtrace:
-    LogTrace value
-
-releaseescrow:
-    ReleaseEscrow commodity
-
-research:
-    Research researchitem
-
-resign:
-    Resign
-
-sellcommodity:
-    SellCommodity commodity
-
-setdifficultyparameter:
-    SetDifficultyParameter difficultyparameter value
-
-setdoctrine:
-    SetDoctrine value
-
-setescrowpercentage:
-    SetEscrowPercentage commodity value
-
-setgoal:
-    SetGoal goalid value
-
-setsharedgoal:
-    SetSharedGoal sharedgoalid value
-
-setsignal:
-    SetSignal signalid
-
-setstance:
-    SetStance playernumber diplomaticstance
+    Number { printf("got number"); }
+    | fact { printf("got fact"); }
+    | age { printf("got age"); }
+    | building { printf("got building"); }
+    | civ { printf("got civ"); }
+    | commodity { printf("got commodity"); }
+    | difficultyparameter { printf("got difficultiypar"); }
+    | diplomaticstance { printf("got diplo stance"); }
+    | eventtype { printf("got event type"); }
+    | researchitem { printf("got research item"); }
+    | unit { printf("got unit"); }
+    | walltype { printf("got walltype"); }
 
 setstrategicnumber:
-    SetStrategicNumber strategicnumber value
-
-spy:
-    Spy
+    SetStrategicNumber strategicnumber Number
 
 taunt:
-    Taunt value
+    Taunt Number
 
 tauntusingrange:
-    TauntUsingRange tauntstart tauntrange
+    TauntUsingRange Number Number
 
 train:
     Train unit
 
 tributetoplayer:
-    TributeToPlayer playernumber commodity value
+    TributeToPlayer playernumber commodity Number
 
-action:
-    donothing  | acknowledgeevent  | acknowledgetaunt  | attacknow  | build  | buildforward  | buildgate  | buildwall  | buycommodity  | ccaddresource  | chattoallusingid  | chattoallusingrange  | chattoalliesusingid  | chattoalliesusingrange  | chattoenemiesusingid  | chattoenemiesusingrange  | chattoplayerusingid  | chattoplayerusingrange  | chattrace  | cleartributememory  | deletebuilding  | deleteunit  | disableself  | disabletimer  | enabletimer  | enablewallplacement  | generaterandomnumber  | logtrace  | releaseescrow  | research  | research  | resign  | sellcommodity  | setdifficultyparameter  | setdoctrine  | setescrowpercentage  | setgoal  | setsharedgoal  | setsignal  | setstance  | setstrategicnumber  | spy  | taunt  | tauntusingrange  | train  | tributetoplayer
+enabletimer:
+    EnableTimer Number Number
+
+actiontype:
+    setstrategicnumber  | Spy  | taunt  | tauntusingrange  | train  | tributetoplayer | DisableSelf | Resign | enabletimer
+
+true:
+    True
+
+false:
+    False
+
+attacksoldiercount:
+    AttackSoldierCount comparison Number
+
+attackwarboatcount:
+    AttackWarboatCount comparison Number
+
+buildingavailable:
+    BuildingAvailable building
+
+buildingcount:
+    BuildingCount comparison Number
+
+buildingcounttotal:
+    BuildingCountTotal comparison Number
+
+buildingtypecount:
+    BuildingTypeCount building comparison Number
+
+buildingtypecounttotal:
+    BuildingTypeCountTotal building comparison Number
+
+canaffordbuilding:
+    CanAffordBuilding building
+
+canaffordcompletewall:
+    CanAffordCompleteWall Number walltype
+
+canaffordresearch:
+    CanAffordResearch researchitem
+
+canaffordunit:
+    CanAffordUnit unit
+
+canbuild:
+    CanBuild building
+
+canbuildgate:
+    CanBuildGate Number
+
+canbuildgatewithescrow:
+    CanBuildGateWithEscrow Number
+
+canbuildwall:
+    CanBuildWall Number walltype
+
+canbuildwallwithescrow:
+    CanBuildWallWithEscrow Number walltype
+
+canbuildwithescrow:
+    CanBuildWithEscrow building
+
+canbuycommodity:
+    CanBuyCommodity commodity
+
+canresearch:
+    CanResearch researchitem
+
+canresearchwithescrow:
+    CanResearchWithEscrow researchitem
+
+cansellcommodity:
+    CanSellCommodity commodity
+
+canspy:
+    CanSpy
+
+canspywithescrow:
+    CanSpyWithEscrow
+
+cantrain:
+    CanTrain unit
+
+cantrainwithescrow:
+    CanTrainWithEscrow unit
+
+ccplayersbuildingcount:
+    CcPlayersBuildingCount playernumber comparison Number
+
+ccplayersbuildingtypecount:
+    CcPlayersBuildingTypeCount playernumber building comparison Number
+
+ccplayersunitcount:
+    CcPlayersUnitCount playernumber comparison Number
+
+ccplayersunittypecount:
+    CcPlayersUnitTypeCount playernumber unit comparison Number
+
+cheatsenabled:
+    CheatsEnabled
+
+civselected:
+    CivSelected civ
+
+civilianpopulation:
+    CivilianPopulation comparison Number
+
+commoditybuyingprice:
+    CommodityBuyingPrice commodity comparison Number
+
+commoditysellingprice:
+    CommoditySellingPrice commodity comparison Number
+
+currentage:
+    CurrentAge comparison age
+    | CurrentAge comparison BuildingCastle
+
+currentagetime:
+    CurrentAgeTime comparison Number
+
+currentscore:
+    CurrentScore comparison Number
+
+deathmatchgame:
+    DeathMatchGame
+
+defendsoldiercount:
+    DefendSoldierCount comparison Number
+
+defendwarboatcount:
+    DefendWarboatCount comparison Number
+
+difficultycomp:
+    Difficulty comparison difficulty
+
+doctrine:
+    Doctrine Number
+
+dropsitemindistance:
+    DropsiteMinDistance commodity comparison Number
+
+enemybuildingsintown:
+    EnemyBuildingsInTown
+
+enemycapturedrelics:
+    EnemyCapturedRelics
+
+escrowamount:
+    EscrowAmount commodity comparison Number
+
+eventdetected:
+    EventDetected eventtype Number
+
+foodamount:
+    FoodAmount comparison Number
+
+gametime:
+    GameTime comparison Number
+
+goal:
+    Goal Number Number
+
+goldamount:
+    GoldAmount comparison Number
+
+housingheadroom:
+    HousingHeadroom comparison Number
+
+idlefarmcount:
+    IdleFarmCount comparison Number
+
+militarypopulation:
+    MilitaryPopulation comparison Number
+
+playercomputer:
+    PlayerComputer playernumber
+
+playerhuman:
+    PlayerHuman playernumber
+
+playeringame:
+    PlayerInGame playernumber
+
+playerresigned:
+    PlayerResigned playernumber
+
+playervalid:
+    PlayerValid playernumber
+
+playersbuildingcount:
+    PlayersBuildingCount playernumber comparison Number
+
+playersbuildingtypecount:
+    PlayersBuildingTypeCount playernumber building comparison Number
+
+playersciv:
+    PlayersCiv playernumber civ
+
+playerscivilianpopulation:
+    PlayersCivilianPopulation playernumber comparison Number
+
+playerscurrentage:
+    PlayersCurrentAge playernumber comparison age
+
+playerscurrentagetime:
+    PlayersCurrentAgeTime playernumber comparison Number
+
+playersmilitarypopulation:
+    PlayersMilitaryPopulation playernumber comparison Number
+
+playerspopulation:
+    PlayersPopulation playernumber comparison Number
+
+playersscore:
+    PlayersScore playernumber comparison Number
+
+playersstance:
+    PlayersStance playernumber diplomaticstance
+
+playerstribute:
+    PlayersTribute playernumber commodity comparison Number
+
+playerstributememory:
+    PlayersTributeMemory playernumber commodity comparison Number
+
+playersunitcount:
+    PlayersUnitCount playernumber comparison Number
+
+playersunittypecount:
+    PlayersUnitTypeCount playernumber unit comparison Number
+
+population:
+    Population comparison Number
+
+populationcap:
+    PopulationCap comparison Number
+
+populationheadroom:
+    PopulationHeadroom comparison Number
+
+randomnumber:
+    RandomNumber comparison Number
+
+regicidegame:
+    RegicideGame
+
+researchavailable:
+    ResearchAvailable researchitem
+
+researchcompleted:
+    ResearchCompleted researchitem
+
+resourcefound:
+    ResourceFound commodity
+
+sharedgoal:
+    SharedGoal Number Number
+
+sheepandforagetoofar:
+    SheepAndForageTooFar
+
+soldiercount:
+    SoldierCount comparison Number
+
+stancetoward:
+    StanceToward playernumber diplomaticstance
+
+startingage:
+    StartingAge comparison age
+
+startingresourcescomp:
+    StartingResources comparison startingresources
+
+stoneamount:
+    StoneAmount comparison Number
+
+strategicnumbercomp:
+    StrategicNumber strategicnumber comparison Number
+
+tauntdetected:
+    TauntDetected playernumber Number
+
+timertriggered:
+    TimerTriggered Number
+
+townunderattack:
+    TownUnderAttack
+
+unitavailable:
+    UnitAvailable unit
+
+unitcount:
+    UnitCount comparison Number
+
+unitcounttotal:
+    UnitCountTotal comparison Number
+
+unittypecount:
+    UnitTypeCount unit comparison Number
+
+unittypecounttotal:
+    UnitTypeCountTotal unit comparison Number
+
+victorycondition:
+    VictoryCondition victoryconditiontype
+
+wallcompletedpercentage:
+    WallCompletedPercentage Number comparison Number
+
+wallinvisiblepercentage:
+    WallInvisiblePercentage Number comparison Number
+
+warboatcount:
+    WarboatCount comparison Number
+
+woodamount:
+    WoodAmount comparison Number
+
+fact:
+    true  | false  | attacksoldiercount  | attackwarboatcount  | buildingavailable  | buildingcount  | buildingcounttotal  | buildingtypecount  | buildingtypecounttotal  | canaffordbuilding  | canaffordcompletewall  | canaffordresearch  | canaffordunit  | canbuild  | canbuildgate  | canbuildgatewithescrow  | canbuildwall  | canbuildwallwithescrow  | canbuildwithescrow  | canbuycommodity  | canresearch  | canresearchwithescrow  | cansellcommodity  | canspy  | canspywithescrow  | cantrain  | cantrainwithescrow  | ccplayersbuildingcount  | ccplayersbuildingtypecount  | ccplayersunitcount  | ccplayersunittypecount  | cheatsenabled  | civselected  | civilianpopulation  | commoditybuyingprice  | commoditysellingprice  | currentage  | currentagetime  | currentscore  | deathmatchgame  | defendsoldiercount  | defendwarboatcount  | difficulty | difficultycomp | doctrine  | dropsitemindistance  | enemybuildingsintown  | enemycapturedrelics  | escrowamount  | eventdetected  | foodamount  | gametime  | goal  | goldamount  | housingheadroom  | idlefarmcount  | mapsize  | maptype  | militarypopulation  | playercomputer  | playerhuman  | playeringame  | playernumber  | playerresigned  | playervalid  | playersbuildingcount  | playersbuildingtypecount  | playersciv  | playerscivilianpopulation  | playerscurrentage  | playerscurrentagetime  | playersmilitarypopulation  | playerspopulation  | playersscore  | playersstance  | playerstribute  | playerstributememory  | playersunitcount  | playersunittypecount  | population  | populationcap  | populationheadroom  | randomnumber  | regicidegame  | researchavailable  | researchcompleted  | resourcefound  | sharedgoal  | sheepandforagetoofar  | soldiercount  | stancetoward  | startingage  | startingresources | startingresourcescomp  | stoneamount | strategicnumber | strategicnumbercomp  | tauntdetected  | timertriggered  | townunderattack  | unitavailable  | unitcount  | unitcounttotal  | unittypecount  | unittypecounttotal  | victorycondition  | wallcompletedpercentage  | wallinvisiblepercentage  | warboatcount  | woodamount
 
 %%
 
