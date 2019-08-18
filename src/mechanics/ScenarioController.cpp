@@ -34,13 +34,14 @@ void ScenarioController::setScenario(const std::shared_ptr<genie::ScnFile> &scen
 
         bool isImplemented = false;
         for (const genie::TriggerCondition &cond : trigger.conditions) {
-            switch(cond.type) {
+            switch(cond.type) { // Add here as they are implemented
             case genie::TriggerCondition::OwnObjects:
             case genie::TriggerCondition::OwnFewerObjects:
             case genie::TriggerCondition::ObjectSelected:
             case genie::TriggerCondition::ObjectsInArea:
             case genie::TriggerCondition::Timer:
             case genie::TriggerCondition::DestroyObject:
+            case genie::TriggerCondition::AccumulateAttribute:
                 isImplemented = true;
                 break;
             default:
@@ -59,7 +60,7 @@ void ScenarioController::setScenario(const std::shared_ptr<genie::ScnFile> &scen
     std::unordered_set<int32_t> missingEffectTypes;
     for (const Trigger &trigger : m_triggers) {
         for (const genie::TriggerEffect &effect : trigger.effects) {
-            switch(effect.type) {
+            switch(effect.type) { // Add here as they are implemented
             case genie::TriggerEffect::DeactivateTrigger:
             case genie::TriggerEffect::ActivateTrigger:
             case genie::TriggerEffect::DisplayInstructions:
@@ -528,12 +529,31 @@ void ScenarioController::onUnitDeselected(const Unit *unit)
 
 void ScenarioController::onPlayerDefeated(Player *player)
 {
+    (void)player;
     // TODO
 }
 
 void ScenarioController::onAttributeChanged(Player *player, int attributeId, float newValue)
 {
+    for (Trigger &trigger : m_triggers) {
+        if (!trigger.enabled) {
+            continue;
+        }
 
+        for (Condition &condition : trigger.conditions) {
+            if (condition.data.type != genie::TriggerCondition::AccumulateAttribute) {
+                continue;
+            }
+            if (condition.data.resource != attributeId) {
+                continue;
+            }
+            if (condition.data.sourcePlayer != -1 && condition.data.sourcePlayer != player->playerId) {
+                continue;
+            }
+
+            condition.amountRequired += newValue;
+        }
+    }
 }
 
 void ScenarioController::onUnitDying(Unit *unit)

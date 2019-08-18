@@ -21,7 +21,7 @@ class ScenarioController : public EventListener
     struct Condition {
         /// For boolean triggers just 0 or 1
         /// For timers, milliseconds elapsed
-        int amountRequired = 0;
+        float amountRequired = 0;
 
         Condition(const genie::TriggerCondition &d) : data(d) {
             if (d.type == genie::TriggerCondition::Timer) {
