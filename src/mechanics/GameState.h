@@ -55,6 +55,12 @@ class SfmlRenderTarget;
 class GameState : public IState
 {
 public:
+    enum class Result {
+        Won,
+        Lost,
+        Running // meh names
+    } result = Result::Running;
+
     static std::unordered_map<GameType, ResourceMap> defaultStartingResources;
 
     GameState(const std::shared_ptr<SfmlRenderTarget> &renderTarget);

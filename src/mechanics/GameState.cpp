@@ -169,6 +169,11 @@ void GameState::moveCameraTo(const MapPos &newTarget)
 void GameState::onPlayerWin(int playerId)
 {
     DBG << "TODO: winner winner chicken dinner" << playerId;
+    if (playerId == m_humanPlayer->playerId) {
+        result = Result::Won;
+    } else {
+        result = Result::Lost;
+    }
 }
 
 void GameState::setupScenario()

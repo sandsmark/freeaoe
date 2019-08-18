@@ -75,6 +75,8 @@ private:
 
     StateManager state_manager_;
 
+    sf::Text m_resultOverlay;
+
     sf::Text fps_label_;
     std::vector<std::unique_ptr<IconButton>> m_buttons;
 

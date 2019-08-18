@@ -99,12 +99,25 @@ void Engine::start()
             updated = true;
         }
 
-        if (!m_currentDialog) {
+        if (!m_currentDialog && state->result == GameState::Result::Running) {
             updated = state->update(GameClock.getElapsedTime().asMilliseconds()) || updated;
+
+            if (state->result != GameState::Result::Running) {
+                if (state->result == GameState::Result::Won) {
+                    m_resultOverlay.setString("You won.");
+                } else {
+                    m_resultOverlay.setString("You were defeated."); // TODO: don't remember the exact text
+                }
+                const ScreenRect labelRect = m_resultOverlay.getLocalBounds();
+                const Size windowSize = renderWindow_->getSize();
+
+                m_resultOverlay.setPosition(windowSize.width / 2 - labelRect.width / 2, windowSize.height / 2 - labelRect.height / 2);
+            }
         }
 
         updated = m_mouseCursor->setPosition(mousePos) || updated;
         updated = updateUi(state) || updated;
+
 
         if (m_selecting) {
             ScreenRect selectionRect(m_selectionStart, m_selectionCurr);
@@ -132,6 +145,10 @@ void Engine::start()
 
             if (m_currentDialog) {
                 m_currentDialog->render(renderWindow_);
+            }
+
+            if (state->result != GameState::Result::Running) {
+                renderTarget_->draw(m_resultOverlay);
             }
 
             drawUi();
@@ -511,6 +528,12 @@ bool Engine::setup(const std::shared_ptr<genie::ScnFile> &scenario)
 
     renderWindow_->setSize(uiSize);
     renderTarget_->setSize(uiSize);
+
+    m_resultOverlay.setFillColor(sf::Color::White);
+    m_resultOverlay.setFont(SfmlRenderTarget::defaultFont());
+    m_resultOverlay.setCharacterSize(25);
+    m_resultOverlay.setOutlineColor(sf::Color::Black);
+    m_resultOverlay.setOutlineThickness(3);
 
     fps_label_.setPosition(sf::Vector2f(uiSize.width - 75, uiSize.height - 20));
     fps_label_.setFillColor(sf::Color::White);
