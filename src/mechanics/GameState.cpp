@@ -201,7 +201,7 @@ void GameState::setupScenario()
             player->playerColor = scenario_->players[realPlayerNum].playerColor;
         }
 
-        const genie::ScnPlayerResources &resources = scenario_->playerResources[realPlayerNum];
+        const genie::ScnPlayerResources &resources = scenario_->playerResources[playerNum];
         player->resourcesAvailable[genie::ResourceType::GoldStorage] = resources.gold;
         player->resourcesAvailable[genie::ResourceType::FoodStorage] = resources.food;
         player->resourcesAvailable[genie::ResourceType::WoodStorage] = resources.wood;
