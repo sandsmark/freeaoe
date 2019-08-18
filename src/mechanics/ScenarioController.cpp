@@ -356,10 +356,6 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
                                                               effect.areaTo.y,
                                                               effect.areaTo.x);
 
-        // TODO, not sure if it is right to move to the middle of the tile, but whatevs
-        MapPos targetPos(effect.location.y + 0.5, effect.location.x + 0.5);
-        targetPos *= Constants::TILE_SIZE;
-
         for (const std::weak_ptr<Entity> &entity : entities) {
             Unit::Ptr unit = Entity::asUnit(entity);
             if (!unit) {
