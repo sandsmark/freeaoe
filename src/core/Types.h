@@ -368,6 +368,10 @@ struct ScreenRect
 
     ScreenRect() = default;
 
+    ScreenRect(const sf::FloatRect &r) :
+        x(r.left), y(r.top), width(r.width), height(r.height)
+    {}
+
     ScreenRect(const float x_, const float y_, const float w_, const float h_) :
         x(x_), y(y_), width(w_), height(h_)
     {}
