@@ -27,8 +27,7 @@ void Player::applyResearch(const int researchId)
         return;
     }
 
-    const genie::Tech &research = DataManager::Inst().getTech(researchId);
-    applyTechEffect(research.EffectID);
+    applyTechEffect(DataManager::Inst().getTech(researchId).EffectID);
 
     // Apply all implicit research
     for (const genie::Tech &research : DataManager::Inst().allTechs()) {
@@ -210,7 +209,6 @@ void Player::removeUnit(Unit *unit)
             break;
         }
     }
-    m_units.insert(unit);
     m_units.erase(unit);
 }
 

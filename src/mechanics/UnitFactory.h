@@ -30,8 +30,8 @@ public:
     DecayingEntity::Ptr createCorpseFor(const Unit::Ptr &unit);
 
 private:
-    UnitFactory();
-    virtual ~UnitFactory();
+    UnitFactory() = default;
+
     void handleDefaultAction(const Unit::Ptr &unit, const genie::Task &task);
 };
 

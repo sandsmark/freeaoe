@@ -73,8 +73,7 @@ class GraphicRender
     static const sf::Texture nullImage;
 
 public:
-    GraphicRender();
-    virtual ~GraphicRender();
+    virtual ~GraphicRender() = default;
 
     bool update(Time time, const bool isVisible) noexcept;
     bool isValid() const noexcept { return m_graphic && m_graphic->isValid(); }
@@ -121,13 +120,13 @@ private:
         int angleToDrawOn = -1;
     };
 
-    Time m_lastFrameTime;
+    Time m_lastFrameTime = 0;
     std::vector<GraphicDelta> m_deltas;
 
     int m_playerColor = 0;
     int m_civId = 0;
 
-    int m_currentFrame;
+    int m_currentFrame = 0;
     float m_angle = 0;
     GraphicPtr m_graphic;
 

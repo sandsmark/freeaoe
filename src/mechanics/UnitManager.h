@@ -139,7 +139,7 @@ private:
     MoveTargetMarker::Ptr m_moveTargetMarker;
 
     Building::Ptr m_buildingToPlace;
-    bool m_canPlaceBuilding;
+    bool m_canPlaceBuilding = false;
 
     bool m_unitsMoved = true;
 

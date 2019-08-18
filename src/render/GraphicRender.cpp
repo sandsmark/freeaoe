@@ -30,16 +30,6 @@
 
 const sf::Texture GraphicRender::nullImage;
 
-GraphicRender::GraphicRender()
-{
-    m_currentFrame = 0;
-    m_lastFrameTime = 0;
-}
-
-GraphicRender::~GraphicRender()
-{
-}
-
 bool GraphicRender::update(Time time, const bool isVisible) noexcept
 {
     m_frameChanged = false;

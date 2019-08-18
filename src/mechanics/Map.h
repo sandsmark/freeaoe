@@ -158,7 +158,7 @@ private:
     }
 
     // cols_ = x, rows_ = y
-    int rows_, cols_;
+    int rows_ = 0, cols_ = 0;
 
     typedef std::vector<MapTile> MapTileArray;
     MapTileArray tiles_;

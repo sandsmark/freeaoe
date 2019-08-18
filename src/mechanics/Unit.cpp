@@ -64,11 +64,9 @@ Unit::~Unit()
 {
     Player::Ptr owner = player.lock();
     if (owner) {
-        if (owner) {
-            forEachVisibleTile([&](const int tileX, const int tileY) {
-                owner->visibility->removeUnitLookingAt(tileX, tileY);
-            });
-        }
+        forEachVisibleTile([&](const int tileX, const int tileY) {
+            owner->visibility->removeUnitLookingAt(tileX, tileY);
+        });
 
         owner->removeUnit(this);
     }

@@ -82,7 +82,6 @@ sf::Image Graphic::slpFrameToImage(const genie::SlpFramePtr &frame, int8_t playe
         img.create(width, height, sf::Color::Transparent);
 
         const genie::PlayerColour pc = DataManager::Inst().getPlayerColor(playerColor);
-        const genie::PalFile &palette = AssetManager::Inst()->getPalette(50500);
         genie::Color outlineColor = palette[pc.UnitOutlineColor];
         const sf::Color outline(outlineColor.r, outlineColor.g, outlineColor.b);
 

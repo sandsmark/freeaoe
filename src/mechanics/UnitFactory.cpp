@@ -35,14 +35,6 @@ UnitFactory &UnitFactory::Inst()
     return inst;
 }
 
-UnitFactory::UnitFactory()
-{
-}
-
-UnitFactory::~UnitFactory()
-{
-}
-
 void UnitFactory::handleDefaultAction(const Unit::Ptr &unit, const genie::Task &task)
 {
     switch(task.ActionType) {
@@ -51,7 +43,7 @@ void UnitFactory::handleDefaultAction(const Unit::Ptr &unit, const genie::Task &
         DBG << "Flying unit at" << flyingPosition;
 
         // The below comment will stay just to illustrate what one of my professors once told me
-        // about commenting in source code; don't do it, comments always get outdated
+        // about commenting in source code; don't, comments always get outdated
         // and confuse more than clarify.
 
         // Castles are 4 high, so set 5.5 just to be safe that we fly above everything
@@ -79,7 +71,7 @@ Unit::Ptr UnitFactory::createUnit(const int ID, const MapPos &position, const Pl
     owner->applyResearch(gunit.Building.TechID);
 
     Unit::Ptr unit;
-    if (ID == Unit::Farm) {
+    if (ID == Unit::Farm) { // Farms are very special (shortbus special), so better to just use a special class
         unit = std::make_shared<Farm>(gunit, owner, unitManager);
     } else if (gunit.Type == genie::Unit::BuildingType) {
         unit = std::make_shared<Building>(gunit, owner, unitManager);

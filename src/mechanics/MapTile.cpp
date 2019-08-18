@@ -374,7 +374,7 @@ std::vector<genie::Pattern> MapTile::slopePatterns() const noexcept
             patterns.push_back(genie::Pattern29);
         }
 
-        if (slopes.east == Slope::EastUp || slopes.east == Slope::NorthEastUp || slopes.east == Slope::NorthEastUp) {
+        if (slopes.east == Slope::EastUp || slopes.east == Slope::NorthEastUp || slopes.east == Slope::SouthEastUp) {
             patterns.push_back(genie::Pattern28);
         }
 
