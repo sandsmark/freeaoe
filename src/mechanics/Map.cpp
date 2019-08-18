@@ -111,7 +111,7 @@ void Map::setupAllunitsMap() noexcept
     }
 
     // creates hill
-    auto elevate = [&] (int x, int y, int cols, int rows) {
+    std::function<void(int, int, int, int)> elevate = [&] (int x, int y, int cols, int rows) {
         for (int i = x - 1; i < x + cols + 1; i++) {
             getTileAt(i, y - 1).elevation = 1;
             getTileAt(i, y - 1).terrainId = 0;
