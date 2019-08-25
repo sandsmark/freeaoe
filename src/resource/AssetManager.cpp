@@ -42,6 +42,20 @@ AssetManager *AssetManager::Inst()
 
 genie::SlpFilePtr AssetManager::getSlp(const std::string &name, const ResourceType type)
 {
+    if (m_isHd) {
+        std::string filePath = findHdFile(name);
+        if (!filePath.empty()) {
+            genie::SlpFilePtr slp_ptr;
+            slp_ptr = std::make_shared<genie::SlpFile>(std::filesystem::file_size(filePath));
+            slp_ptr->load(filePath);
+            return slp_ptr;
+        }
+
+        DBG << "No slp file with name" << name << "found, trying id";
+        // Falling back to looking up ID
+    }
+
+    DBG << "finding" << name << filenameID(name);
     return getSlp(filenameID(name), type);
 }
 
@@ -72,6 +86,18 @@ genie::ScnFilePtr AssetManager::getScn(uint32_t id)
 
 std::shared_ptr<genie::UIFile> AssetManager::getUIFile(const std::string &name)
 {
+    if (m_isHd) {
+        std::string filePath = findHdFile(name);
+        if (filePath.empty()) {
+            WARN << "Failed to find UI file" << name;
+//            filePath =
+            return {};
+        }
+        std::shared_ptr<genie::UIFile> file = std::make_shared<genie::UIFile>();
+        file->load(filePath);
+        return file;
+    }
+
     return m_interfaceFile->getUIFile(filenameID(name));
 }
 
@@ -101,6 +127,19 @@ genie::SlpFilePtr AssetManager::getSlp(uint32_t id, const ResourceType type)
 {
     genie::SlpFilePtr slp_ptr;
     if (m_nonExistentSlps.count(id)) {
+        return slp_ptr;
+    }
+
+    if (m_isHd) {
+        std::string filePath = findHdFile(std::to_string(id) + ".slp");
+        if (filePath.empty()) {
+            m_nonExistentSlps.insert(id);
+            DBG << "No slp file with id" << id << "found!";
+            return slp_ptr;
+        }
+
+        slp_ptr = std::make_shared<genie::SlpFile>(std::filesystem::file_size(filePath));
+        slp_ptr->load(filePath);
         return slp_ptr;
     }
 
@@ -203,6 +242,20 @@ const genie::VisibilityMask &AssetManager::exploredVisibilityMask(const genie::S
 //------------------------------------------------------------------------------
 const genie::PalFile &AssetManager::getPalette(uint32_t id)
 {
+    if (m_isHd) {
+        if (m_hdPalFiles.count(id)) {
+            return m_hdPalFiles[id];
+        }
+        std::string filepath = findHdFile(std::to_string(id) + ".bina");
+        if (!filepath.empty()) {
+            m_hdPalFiles[id].load(filepath);
+        } else {
+            WARN << "Failed to find palette" << id;
+        }
+        return m_hdPalFiles[id];
+    }
+
+
     const genie::PalFile &palette = m_interfaceFile->getPalFile(id);
     if (palette.isValid()) {
         return palette;
@@ -245,12 +298,40 @@ std::string AssetManager::uiFilename(const AssetManager::UiResolution resolution
 }
 
 //------------------------------------------------------------------------------
-bool AssetManager::initialize(const std::string &dataPath, const genie::GameVersion gameVersion)
+bool AssetManager::initialize(const std::string &gamePath, const genie::GameVersion gameVersion)
 {
     DBG << "Initializing AssetManager";
+    m_isHd = DataManager::Inst().isHd();
+
+    std::string dataPath;
+    if (m_isHd) {
+        dataPath = gamePath + "/resources/_common/dat/";
+        m_hdAssetPath = gamePath + "/resources/_common/";
+    } else {
+        dataPath = gamePath + "/Data/";
+    }
 
     m_dataPath = dataPath;
     m_gameVersion = gameVersion;
+
+    blendomatic_file_ = std::make_unique<genie::BlendomaticFile>();
+    std::string blendomaticPath = dataPath + (m_isHd ? "blendomatic_x1.dat" : "blendomatic.dat");
+    blendomatic_file_->load(blendomaticPath);
+
+
+    m_stemplatesFile = std::make_unique<genie::SlpTemplateFile>();
+    m_stemplatesFile->load(dataPath + "STemplet.dat");
+    m_filtermapFile.load(dataPath + "FilterMaps.dat");
+    m_patternmasksFile.load(dataPath + "PatternMasks.dat");
+    m_patternmasksFile.icmFile.load(dataPath + "view_icm.dat");
+    m_patternmasksFile.lightmapFile.load(dataPath + "lightMaps.dat");
+    m_blkEdgeFile.load(findFile("blkedge.dat"));
+    m_tileEdgeFile.load(findFile("tileedge.dat"));
+
+    if (m_isHd) {
+        DBG << "Is HD, not loading DRS files";
+        return true;
+    }
 
     const std::vector<std::string> gamedataFiles({
                                                      { "gamedata.drs" },
@@ -293,20 +374,6 @@ bool AssetManager::initialize(const std::string &dataPath, const genie::GameVers
         WARN << "Failed to find any sound files in" << dataPath;
         return false;
     }
-
-    blendomatic_file_ = std::make_unique<genie::BlendomaticFile>();
-    std::string blendomaticPath = dataPath + "blendomatic.dat";
-    blendomatic_file_->load(blendomaticPath);
-
-
-    m_stemplatesFile = std::make_unique<genie::SlpTemplateFile>();
-    m_stemplatesFile->load(dataPath + "STemplet.dat");
-    m_filtermapFile.load(dataPath + "FilterMaps.dat");
-    m_patternmasksFile.load(dataPath + "PatternMasks.dat");
-    m_patternmasksFile.icmFile.load(dataPath + "view_icm.dat");
-    m_patternmasksFile.lightmapFile.load(dataPath + "lightMaps.dat");
-    m_blkEdgeFile.load(findFile("blkedge.dat"));
-    m_tileEdgeFile.load(findFile("tileedge.dat"));
 
     DBG << "Loaded" << m_allFiles.size() << "files";
 
@@ -565,6 +632,40 @@ std::string AssetManager::findFile(const std::string &filename) const
         if (candidate == compareFilename) {
             return entry.path().string();
         }
+    }
+
+    return "";
+}
+
+std::string AssetManager::findHdFile(const std::string &filename) const
+{
+    // TODO: store all filenames in all folders, automatically walk folders
+    // when less lazy
+
+    std::string filePath = m_hdAssetPath + "/drs/graphics/" + filename; // most files seems to be in this
+    if (std::filesystem::exists(filePath)) {
+        return filePath;
+    }
+    filePath = m_hdAssetPath + "/drs/gamedata_x2/" + filename; // second most files seems to be in this
+    if (std::filesystem::exists(filePath)) {
+        return filePath;
+    }
+    filePath = m_hdAssetPath + "/drs/gamedata_x1/" + filename;
+    if (std::filesystem::exists(filePath)) {
+        return filePath;
+    }
+    filePath = m_hdAssetPath + "/drs/interface/" + filename;
+    if (std::filesystem::exists(filePath)) {
+        return filePath;
+    }
+    filePath = m_hdAssetPath + "/drs/sounds/" + filename;
+    if (std::filesystem::exists(filePath)) {
+        return filePath;
+    }
+
+    filePath = m_hdAssetPath + "/slp/" + filename;
+    if (std::filesystem::exists(filePath)) {
+        return filePath;
     }
 
     return "";

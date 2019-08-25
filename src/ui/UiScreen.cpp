@@ -40,7 +40,11 @@ bool UiScreen::init()
 {
     m_uiFile = AssetManager::Inst()->getUIFile(m_uiFileName);
     if (!m_uiFile) {
-        WARN << "Unable to load ui file";
+        WARN << "Unable to load ui file" << m_uiFileName;
+        m_uiFile = AssetManager::Inst()->getUIFile("x" + m_uiFileName);
+    }
+    if (!m_uiFile) {
+        WARN << "Unable to load ui file" << m_uiFileName;
         return false;
     }
 
@@ -72,7 +76,18 @@ bool UiScreen::init()
     if (!m_renderWindow) {
         std::shared_ptr<genie::SlpFile> slpFile = AssetManager::Inst()->getSlp(m_uiFile->backgroundLarge.fileId, AssetManager::ResourceType::Interface);
         if (!slpFile) {
-            WARN << "failed to load slp file for home screen";
+            DBG << "failed to load slp file for UI screen by ID, trying name";
+
+            std::string backgroundName;
+            if (m_uiFile->backgroundLarge.filename != "none") {
+                backgroundName = m_uiFile->backgroundLarge.filename;
+            } else {
+                backgroundName = m_uiFile->backgroundSmall.filename;
+            }
+            slpFile = AssetManager::Inst()->getSlp(backgroundName + ".slp", AssetManager::ResourceType::Interface);
+        }
+        if (!slpFile) {
+            WARN << "failed to load slp file for UI screen";
             return false;
         }
 
@@ -89,6 +104,7 @@ bool UiScreen::init()
         m_renderWindow->setSize(sf::Vector2u(width, height));
         m_renderWindow->setView(sf::View(sf::FloatRect(0, 0, width, height)));
 
+        DBG << backgroundFrame->getWidth() << backgroundFrame->getHeight();
         m_background.loadFromImage(Resource::convertFrameToImage(backgroundFrame, palette));
     }
 

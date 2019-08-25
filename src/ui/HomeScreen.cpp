@@ -27,7 +27,7 @@
 #include <SFML/Window/Event.hpp>
 
 HomeScreen::HomeScreen() :
-    UiScreen("xmain.sin")
+    UiScreen("main.sin")
 {
 
 }
@@ -82,7 +82,7 @@ bool HomeScreen::init()
         Button &b = m_buttons[i];
 
         int frameNum = 10 + i * 4;
-        if (i == Button::Banner) {
+        if (i == Button::Banner && !DataManager::Inst().isHd()) {
             frameNum = 49;
         }
 

@@ -60,23 +60,24 @@ int main(int argc, char **argv)
                 throw std::runtime_error("No data path set");
             }
 
-            if (!LanguageManager::Inst()->initialize(config.getValue("game-path") + "/")) {
-                throw std::runtime_error("Failed to load language.dll");
-            }
-
-            dataPath = config.getValue("game-path") + "/Data/";
-
-            if (!DataManager::Inst().initialize(config.getValue("game-path"))) {
-                throw std::runtime_error("Failed to load game data");
-            }
-
+            dataPath = config.getValue("game-path");
             if (!std::filesystem::exists(dataPath)) {
                 throw std::runtime_error("Data path does not exist");
             }
 
+            if (!LanguageManager::Inst()->initialize(config.getValue("game-path") + "/")) {
+                throw std::runtime_error("Failed to load language.dll");
+            }
+
+            if (!DataManager::Inst().initialize(config.getValue("game-path"))) {
+                throw std::runtime_error("Failed to load game data");
+            }
+            DBG << "Loaded game data";
+
             if (!AssetManager::Inst()->initialize(dataPath, DataManager::Inst().gameVersion())) {
                 throw std::runtime_error("Failed to load game assets");
             }
+
         } catch(const std::exception &e) {
             dataPath = "";
 

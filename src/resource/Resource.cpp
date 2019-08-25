@@ -55,32 +55,44 @@ sf::Image Resource::convertFrameToImage(const genie::SlpFramePtr &frame,
     std::vector<Uint8> pixelsBuf(area * 4);
     Uint8 *pixels = pixelsBuf.data();
 
-    const std::vector<genie::Color> &colors = palette.colors_;
-    const std::vector<uint8_t> &pixelindexes = frameData.pixel_indexes;
-    const std::vector<uint8_t> &alphachannel = frameData.alpha_channel;
-    for (int i=0; i<area; i++) {
-        const genie::Color &col = colors[pixelindexes[i]];
-        *pixels++ = col.r;
-        *pixels++ = col.g;
-        *pixels++ = col.b;
-        *pixels++ = alphachannel[i];
-    }
+    if (frame->is32bit()) {
+        const std::vector<uint32_t> &bgraSrc = frameData.bgra_channels;
+        assert(area <= bgraSrc.size());
+        for (int i=0; i<area; i++) {
+            const int bgra = bgraSrc[i];
+            *pixels++ = (bgra >> 16) & 0xFF; // r
+            *pixels++ = (bgra >> 8) & 0xFF; // g
+            *pixels++ = bgra & 0xFF; // b
+            *pixels++ = (bgra >> 24) & 0xFF; //a
+        }
+    } else {
+        const std::vector<genie::Color> &colors = palette.colors_;
+        const std::vector<uint8_t> &pixelindexes = frameData.pixel_indexes;
+        const std::vector<uint8_t> &alphachannel = frameData.alpha_channel;
+        for (int i=0; i<area; i++) {
+            const genie::Color &col = colors[pixelindexes[i]];
+            *pixels++ = col.r;
+            *pixels++ = col.g;
+            *pixels++ = col.b;
+            *pixels++ = alphachannel[i];
+        }
 
-    pixels = pixelsBuf.data();
-    if (playerColor >= 0) {
-        const genie::PlayerColour &pc = DataManager::Inst().getPlayerColor(playerColor);
-        for (const genie::PlayerColorXY mask : frameData.player_color_mask) {
-            const genie::Color &color = palette[mask.index + pc.PlayerColorBase];
+        pixels = pixelsBuf.data();
+        if (playerColor >= 0) {
+            const genie::PlayerColour &pc = DataManager::Inst().getPlayerColor(playerColor);
+            for (const genie::PlayerColorXY mask : frameData.player_color_mask) {
+                const genie::Color &color = palette[mask.index + pc.PlayerColorBase];
 
-            const size_t pixelPos = (mask.y * width + mask.x) * 4;
-            pixels[pixelPos    ] = color.r;
-            pixels[pixelPos + 1] = color.g;
-            pixels[pixelPos + 2] = color.b;
+                const size_t pixelPos = (mask.y * width + mask.x) * 4;
+                pixels[pixelPos    ] = color.r;
+                pixels[pixelPos + 1] = color.g;
+                pixels[pixelPos + 2] = color.b;
+            }
         }
     }
 
     sf::Image img;
-    img.create(width, height, pixels);
+    img.create(width, height, pixelsBuf.data());
 
     return img;
 }

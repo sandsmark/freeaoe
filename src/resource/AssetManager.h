@@ -147,7 +147,7 @@ public:
     const genie::VisibilityMask &unexploredVisibilityMask(const genie::Slope slope, int edges) const;
     const genie::VisibilityMask &exploredVisibilityMask(const genie::Slope slope, int edges) const;
 
-    bool initialize(const std::string &dataPath, const genie::GameVersion gameVersion);
+    bool initialize(const std::string &gamePath, const genie::GameVersion gameVersion);
 
     static int filenameID(const std::string &filename);
 
@@ -155,6 +155,7 @@ public:
 
 private:
     std::string findFile(const std::string &filename) const;
+    std::string findHdFile(const std::string &filename) const;
 
     typedef std::vector<std::shared_ptr<genie::DrsFile>> DrsFileVector;
     DrsFileVector loadDrs(const std::vector<std::string> &filenames);
@@ -166,6 +167,8 @@ private:
     std::shared_ptr<genie::DrsFile> m_interfaceFile;
     std::shared_ptr<genie::DrsFile> m_graphicsFile;
     std::shared_ptr<genie::DrsFile> m_terrainFile;
+
+    std::unordered_map<int, genie::PalFile> m_hdPalFiles;
 
     DrsFileVector m_allFiles;
 
@@ -190,5 +193,9 @@ private:
     genie::GameVersion m_gameVersion;
     std::string m_dataPath;
     std::unordered_set<uint32_t> m_nonExistentSlps;
+
+    // TODO don't duplicate with datamanager, but I'm lazy
+    bool m_isHd = false;
+    std::string m_hdAssetPath;
 };
 

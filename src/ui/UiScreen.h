@@ -71,7 +71,7 @@ protected:
     int m_paletteId = 0;
     float m_buttonOpacity = 1.f;
 
-    const char *m_uiFileName;
+    std::string m_uiFileName;
     std::shared_ptr<genie::UIFile> m_uiFile;
     std::shared_ptr<sf::RenderWindow> m_renderWindow;
     sf::Texture m_background;
