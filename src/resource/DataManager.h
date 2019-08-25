@@ -35,7 +35,7 @@
 class DataManager
 {
 public:
-    bool initialize(const std::string &dataPath);
+    bool initialize(const std::string &gamePath);
 
     DataManager(const DataManager &) = delete;
     DataManager &operator=(const DataManager &) = delete;
@@ -54,6 +54,7 @@ public:
     const std::vector<genie::Tech> &allTechs() const { return dat_file_.Techs; }
     const genie::TerrainBlock &terrainBlock() const { return dat_file_.TerrainBlock; }
 
+    bool isHd() const { return m_isHd; }
     genie::GameVersion gameVersion() const;
     static std::string gameName(const genie::GameVersion version);
     static std::string genieVersionString(const genie::GameVersion version);
@@ -78,6 +79,7 @@ private:
     virtual ~DataManager() = default;
 
     genie::DatFile dat_file_;
+    bool m_isHd = false;
 };
 
 inline LogPrinter operator <<(LogPrinter os, const genie::GameVersion version) {

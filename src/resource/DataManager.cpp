@@ -206,16 +206,29 @@ const genie::Civ &DataManager::civilization(unsigned int id) const
     return dat_file_.Civs[id];
 }
 
-bool DataManager::initialize(const std::string &dataPath)
+bool DataManager::initialize(const std::string &gamePath)
 {
-
     std::vector<std::pair<std::string, genie::GameVersion>> datFilenames({
+//        {"empires2_x2_p1.dat", genie::GV_TC  }, // forgotten kingdoms, TODO
         {"empires2_x1_p1.dat", genie::GV_TC  }, // the conquerors, patch 1
         {"empires2_x1.dat",    genie::GV_TC  }, // the conquerors
         {"empires2.dat",       genie::GV_AoK }, // age of kings
         {"empires_x1.dat",     genie::GV_RoR },
         {"Empires.dat",        genie::GV_AoE },
     });
+
+    std::string dataPath = gamePath + "/Data/";
+    if (!std::filesystem::exists(dataPath)) {
+        DBG << dataPath << "doesn't exist, trying HD";
+        dataPath = gamePath + "/resources/_common/dat/";
+        m_isHd = true;
+    }
+
+    if (!std::filesystem::exists(dataPath)) {
+        WARN << "Failed to find neither normal or HD data folder";
+        return false;
+    }
+    DBG << "Loading from" << dataPath;
 
     std::string filePath;
     for (const std::pair<std::string, genie::GameVersion> &datfile : datFilenames) {

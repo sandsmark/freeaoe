@@ -50,6 +50,7 @@ struct LogPrinter
         m_linenum(linenum),
         m_refs(new int)
     {
+        separator = " ";
         *m_refs = 1;
 
 #ifndef _MSC_VER
@@ -84,7 +85,7 @@ struct LogPrinter
         (*m_refs)++;
     }
 
-    inline LogPrinter &operator<<(const char *text) { std::cout << text << separator; return *this; }
+    inline LogPrinter &operator<<(const char *text) { std::cout << (text ? text : "") << separator; return *this; }
     inline LogPrinter &operator<<(const char c) { std::cout << c << separator; return *this; }
     inline LogPrinter &operator<<(const uint8_t num) { std::cout << int(num) << separator; return *this; }
     inline LogPrinter &operator<<(const int8_t num) { std::cout << int(num) << separator; return *this; }
