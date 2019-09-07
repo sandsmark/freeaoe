@@ -94,9 +94,9 @@ template<> struct hash<GraphicState>
 //
 class Graphic
 {
+public:
     static const sf::Texture nullImage;
 
-public:
     const int graphicId = -1;
 
     //----------------------------------------------------------------------------

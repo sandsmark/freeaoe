@@ -50,6 +50,7 @@ public:
     //----------------------------------------------------------------------------
     /// TODO: Remove sf:: from api
     virtual void draw(const sf::Drawable &shape) = 0;
+    virtual void draw(const sf::Sprite &sprite) = 0;
 
     virtual void draw(const ScreenRect &rect, const sf::Color &fillColor, const sf::Color &outlineColor = sf::Color::Transparent, const float outlineSize = 1.) = 0;
 

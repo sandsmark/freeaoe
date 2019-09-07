@@ -90,8 +90,12 @@ std::shared_ptr<genie::UIFile> AssetManager::getUIFile(const std::string &name)
         std::string filePath = findHdFile(name);
         if (filePath.empty()) {
             WARN << "Failed to find UI file" << name;
-//            filePath =
-            return {};
+            filePath = findHdFile(std::to_string(filenameID(name)) + ".bina");
+            if (filePath.empty()) {
+                WARN << "Not even with fallback";
+                return {};
+            }
+            DBG << "Found with falling back to ID";
         }
         std::shared_ptr<genie::UIFile> file = std::make_shared<genie::UIFile>();
         file->load(filePath);
@@ -325,8 +329,8 @@ bool AssetManager::initialize(const std::string &gamePath, const genie::GameVers
     m_patternmasksFile.load(dataPath + "PatternMasks.dat");
     m_patternmasksFile.icmFile.load(dataPath + "view_icm.dat");
     m_patternmasksFile.lightmapFile.load(dataPath + "lightMaps.dat");
-    m_blkEdgeFile.load(findFile("blkedge.dat"));
-    m_tileEdgeFile.load(findFile("tileedge.dat"));
+    m_blkEdgeFile.load(findFile("blkedge.dat", m_dataPath));
+    m_tileEdgeFile.load(findFile("tileedge.dat", m_dataPath));
 
     if (m_isHd) {
         DBG << "Is HD, not loading DRS files";
@@ -620,14 +624,14 @@ size_t AssetManager::terrainCacheSize() const
     return ret;
 }
 
-std::string AssetManager::findFile(const std::string &filename) const
+std::string AssetManager::findFile(const std::string &filename, const std::string &folder)
 {
-    if (std::filesystem::exists(m_dataPath + filename)) {
-        return m_dataPath + filename;
+    if (std::filesystem::exists(folder + filename)) {
+        return folder + filename;
     }
 
     std::string compareFilename = util::toLowercase(filename);
-    for (const std::filesystem::directory_entry &entry : std::filesystem::directory_iterator(m_dataPath)) {
+    for (const std::filesystem::directory_entry &entry : std::filesystem::directory_iterator(folder)) {
         std::string candidate = util::toLowercase(entry.path().filename().string());
         if (candidate == compareFilename) {
             return entry.path().string();
@@ -635,6 +639,15 @@ std::string AssetManager::findFile(const std::string &filename) const
     }
 
     return "";
+}
+
+const std::string &AssetManager::assetsPath() const
+{
+    if (m_isHd) {
+        return m_hdAssetPath;
+    } else {
+        return m_dataPath;
+    }
 }
 
 std::string AssetManager::findHdFile(const std::string &filename) const
@@ -689,7 +702,7 @@ AssetManager::DrsFileVector AssetManager::loadDrs(const std::vector<std::string>
 
 std::shared_ptr<genie::DrsFile> AssetManager::loadDrs(const std::string &filename)
 {
-    std::string filePath = findFile(filename);
+    std::string filePath = findFile(filename, m_dataPath);
 
     if (filePath.empty()) {
         return nullptr;

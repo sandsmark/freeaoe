@@ -131,7 +131,11 @@ int main(int argc, char **argv)
                 startGame = true;
                 try {
                     genie::CpxFile cpxFile;
-                    cpxFile.setFileName(config.getValue("game-path") + "/Campaign/cam8.cpn");
+                    if (DataManager::Inst().isHd()){
+                        cpxFile.setFileName(config.getValue("game-path") + "/resources/_common/drs/retail-campaigns/dlc0/kings/cam8.cpn");
+                    } else {
+                        cpxFile.setFileName(config.getValue("game-path") + "/Campaign/cam8.cpn");
+                    }
                     cpxFile.load();
 
                     scenarioFile = cpxFile.getScnFile(0);
@@ -143,7 +147,11 @@ int main(int argc, char **argv)
                 if (home.getGameType() == HomeScreen::GameTypeChoice::Campaign) {
                     try {
                         genie::CpxFile cpxFile;
-                        cpxFile.setFileName(config.getValue("game-path") + "/Campaign/xcam3.cpx");
+                        if (DataManager::Inst().isHd()){
+                            cpxFile.setFileName(config.getValue("game-path") + "/resources/_common/drs/retail-campaigns/dlc0/conquerors/xcam3.cpn");
+                        } else {
+                            cpxFile.setFileName(config.getValue("game-path") + "/Campaign/xcam3.cpx");
+                        }
                         cpxFile.load();
 
                         scenarioFile = cpxFile.getScnFile(0);

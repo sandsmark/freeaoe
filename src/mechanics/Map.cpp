@@ -651,6 +651,9 @@ void Map::updateTileBlend(int tileX, int tileY) noexcept
         blends.blendMode = Terrain::blendMode(tileData.BlendType, neighbor.BlendType);
         blends.terrainId = id;
         blends.frame = AssetManager::Inst()->getTerrain(id)->coordinatesToFrame(tileX, tileY);
+        if (IS_UNLIKELY(blends.frame == -1)) {
+            continue;
+        }
 
         tile.blends.push_back(blends);
     }

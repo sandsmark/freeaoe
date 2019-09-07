@@ -220,13 +220,18 @@ void MapRenderer::updateTexture()
 
             TerrainPtr terrain = AssetManager::Inst()->getTerrain(mapTile.terrainId);
 
-            if (!terrain) {
+            if (!terrain || !terrain->isValid()) {
                 invalidIndicator.setPosition(spos);
                 m_textureTarget.draw(invalidIndicator);
                 continue;
             }
 
-            m_textureTarget.draw(terrain->texture(mapTile), spos);
+            sf::Sprite sprite = terrain->sprite(mapTile);
+            sprite.move(spos);
+            m_textureTarget.draw(sprite);
+//                invalidIndicator.setPosition(spos);
+//                m_textureTarget.draw(invalidIndicator);
+//            m_textureTarget.draw(terrain->texture(mapTile), spos);
 
             // TODO actually load the blkedge and tileedge
             if (m_visibilityMap->visibilityAt(col, row) == VisibilityMap::Explored) {

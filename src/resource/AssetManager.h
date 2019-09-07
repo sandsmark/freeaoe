@@ -153,8 +153,11 @@ public:
 
     size_t terrainCacheSize() const;
 
+    static std::string findFile(const std::string &filename, const std::string &folder);
+
+    const std::string &assetsPath() const;
+
 private:
-    std::string findFile(const std::string &filename) const;
     std::string findHdFile(const std::string &filename) const;
 
     typedef std::vector<std::shared_ptr<genie::DrsFile>> DrsFileVector;

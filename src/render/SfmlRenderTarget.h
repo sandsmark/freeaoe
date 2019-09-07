@@ -51,6 +51,7 @@ public:
 
     //----------------------------------------------------------------------------
     void draw(const sf::Drawable &shape) override;
+    void draw(const sf::Sprite &sprite) override;
 
     void draw(const ScreenRect &rect, const sf::Color &fillColor, const sf::Color &outlineColor = sf::Color::Transparent, const float outlineSize = 1.) override;
 

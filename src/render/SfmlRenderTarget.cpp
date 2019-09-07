@@ -110,6 +110,29 @@ void SfmlRenderTarget::draw(const sf::Drawable &shape)
     renderTarget_->draw(shape);
 }
 
+void SfmlRenderTarget::draw(const sf::Sprite &sprite)
+{
+    if (sprite.getTransform() == sf::Transform::Identity) {
+        renderTarget_->draw(sprite);
+        return;
+    }
+    // SFML is shit
+    // Need this to draw the HD terrain textures,
+    // otherwise the rotation and scaling gets fucked up
+    // because SFML is dumb
+    sf::Sprite toDraw = sprite;
+    toDraw.setScale(1, 1);
+    toDraw.setPosition(0, 0);
+//    toDraw.setOrigin(toDraw.getLocalBounds().width/2, toDraw.getLocalBounds().height/2);
+//    toDraw.setRotation(0);
+    sf::Transform transform;
+    transform.translate(sprite.getPosition().x, sprite.getPosition().y);
+    transform.scale(sprite.getScale());
+//    transform.rotate(sprite.getRotation());//.scale(sprite.getScale());
+
+    renderTarget_->draw(toDraw, transform);
+}
+
 void SfmlRenderTarget::draw(const ScreenRect &rect, const sf::Color &fillColor, const sf::Color &outlineColor, const float outlineSize)
 {
     sf::RectangleShape shape;

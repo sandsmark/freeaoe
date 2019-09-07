@@ -40,26 +40,44 @@ Terrain::~Terrain() { }
 
 bool Terrain::load() noexcept
 {
-    if (!m_isLoaded) {
-        m_isLoaded = true;
+    if (m_isLoaded) {
+        return true;
+    }
 
-        m_data = DataManager::Inst().getTerrain(id);
+    m_isLoaded = true;
 
-        if (!m_slp) {
-            if (m_data.TerrainToDraw != -1) {
-                const int replacementSlp = DataManager::Inst().getTerrain(m_data.TerrainToDraw).SLP;
-                m_slp = AssetManager::Inst()->getSlp(replacementSlp);
-            } else {
-                m_slp = AssetManager::Inst()->getSlp(m_data.SLP);
-            }
-        }
+    m_data = DataManager::Inst().getTerrain(id).TerrainToDraw != -1 ?
+                DataManager::Inst().getTerrain(m_data.TerrainToDraw) :
+                DataManager::Inst().getTerrain(id);
 
-        if (!m_slp) {
-            WARN << "Failed to get slp for" << m_data.SLP;
-            m_slp = AssetManager::Inst()->getSlp(15000); // TODO Loading grass if -1
 
+    m_slp = AssetManager::Inst()->getSlp(m_data.SLP);
+    if (!m_slp) {
+        DBG << m_data.Name2;
+        const std::string pngFolder = AssetManager::Inst()->assetsPath() + "/terrain/textures/";
+
+        // Resolves case because windows is retard case insensitive
+        m_pngPath = AssetManager::findFile(m_data.Name2 + "_00_color.png", pngFolder);
+        if (m_pngPath.empty()) {
+            DBG << "failed to find terrain SLP by ID and failed to find PNG texture" << m_data.Name << m_data.Name << m_data.Enabled;
             return false;
         }
+        DBG << "Found PNG file" << m_pngPath;
+        m_isPng = true;
+        DBG << m_data.TerrainDimensions.first << m_data.TerrainDimensions.second;
+    }
+//    if (m_data.TerrainToDraw != -1) {
+//        const int replacementSlp = DataManager::Inst().getTerrain(m_data.TerrainToDraw).SLP;
+//        m_slp = AssetManager::Inst()->getSlp(replacementSlp);
+//    } else {
+//        m_slp = AssetManager::Inst()->getSlp(m_data.SLP);
+//    }
+
+    if (!m_slp) {
+        WARN << "Failed to get slp for" << m_data.SLP;
+        m_slp = AssetManager::Inst()->getSlp(15000); // TODO Loading grass if -1
+
+        return false;
     }
 
     return true;
@@ -101,6 +119,9 @@ const sf::Texture &Terrain::texture(const MapTile &tile) noexcept
     if (it != m_textures.end()) {
         return it->second;
     }
+    if (IS_UNLIKELY(!m_slp)) {
+        return Graphic::nullImage;
+    }
 
     // This defines lightning textures (e. g. to darken edges)
     const genie::PatternMasksFile &patternmasksFile = AssetManager::Inst()->patternmasksFile();
@@ -110,7 +131,7 @@ const sf::Texture &Terrain::texture(const MapTile &tile) noexcept
     const std::vector<genie::Color> &colors = AssetManager::Inst()->getPalette().getColors();
 
     // This maps from RGB to indices in the palette
-    const genie::IcmFile::InverseColorMap &icm = patternmasksFile.icmFile.maps[genie::IcmFile::AokNeutral];
+    const genie::IcmFile::InverseColorMap &defaultIcm = patternmasksFile.icmFile.maps[genie::IcmFile::AokNeutral];
 
     // Precalculate the line widths
     uint8_t widths[49];
@@ -185,7 +206,7 @@ const sf::Texture &Terrain::texture(const MapTile &tile) noexcept
                     // The top five bits are used to look up the palette index
                     // E. g. we have max 255 * 128 = 32640, if we shift that 10
                     // we get 31 (there are 32 values for r, g and b in the ICMs)
-                    data[srcOffset] = icm.paletteIndex(r >> 10, g >> 10, b >> 10);
+                    data[srcOffset] = defaultIcm.paletteIndex(r >> 10, g >> 10, b >> 10);
                 }
 
                 srcOffset++;
@@ -251,6 +272,49 @@ const sf::Texture &Terrain::texture(const MapTile &tile) noexcept
     m_textures[tile].loadFromImage(image);
 
     return m_textures[tile];
+}
+
+sf::Sprite Terrain::sprite(const MapTile &tile) noexcept
+{
+    if (!m_isPng) {
+        return sf::Sprite(texture(tile));
+    }
+
+    const std::unordered_map<MapTile, sf::Texture>::const_iterator it = m_textures.find(tile);
+    if (it == m_textures.end()) {
+        m_textures[tile].loadFromFile(m_pngPath);
+    }
+
+     sf::Texture &texture = m_textures[tile];
+     const int cols = texture.getSize().x / 64;
+     const int rows = texture.getSize().y / 64;
+
+    sf::IntRect subRect;
+    subRect.width = 68;
+    subRect.height = 68;
+    subRect.left = (tile.frame % cols) * 64;
+    subRect.top = (tile.frame / cols) * 64;
+    DBG << subRect.left << subRect.top << cols << rows << texture.getSize();
+
+    sf::Sprite sprite(texture, subRect);
+//    sprite.setOrigin(subRect.left + subRect.width/2, subRect.top + subRect.height/2);
+    sprite.rotate(45);
+    sprite.scale(1, 0.5);
+    sprite.move(48.5, 0);
+    return sprite;
+}
+
+bool Terrain::isValid() const noexcept
+{
+    if (!m_data.Enabled) {
+        return false;
+    }
+
+    if (m_isPng) {
+        return !m_pngPath.empty();
+    }
+
+    return m_slp != nullptr && m_data.Enabled;
 }
 
 #define ALPHA_MASK 0xff000000

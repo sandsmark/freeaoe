@@ -23,6 +23,7 @@
 #include "core/Logger.h"
 
 #include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/Sprite.hpp>
 #include <genie/dat/Terrain.h>
 
 #include <genie/resource/SlpFile.h>
@@ -49,16 +50,24 @@ public:
     const genie::Terrain &data() noexcept;
 
     static uint8_t blendMode(const uint8_t ownMode, const uint8_t neighborMode) noexcept;
-    const sf::Texture &blendImage(const Blend blends, int tileX, int tileY) noexcept;
 
-    const sf::Texture &slopedImage(const TileSlopes &slopes, const std::vector<genie::Pattern> &patterns, int tileX, int tileY) noexcept;
-
-    inline uint32_t coordinatesToFrame(int x, int y) noexcept {
-        const int tileSquareCount = sqrt(m_slp->getFrameCount());
-        return (y % tileSquareCount) + (x % tileSquareCount) * tileSquareCount;
+    inline int coordinatesToFrame(int x, int y) noexcept {
+        if (IS_UNLIKELY(!m_slp && !m_isPng)) {
+            return -1;
+        }
+        if (m_isPng) {
+            const int tileSquareCount = sqrt(4 * 4); // IDK, HD is fucked anyways
+            return (y % tileSquareCount) + (x % tileSquareCount) * tileSquareCount;
+        } else {
+            const int tileSquareCount = sqrt(m_slp->getFrameCount());
+            return (y % tileSquareCount) + (x % tileSquareCount) * tileSquareCount;
+        }
     }
 
     const sf::Texture &texture(const MapTile &tile) noexcept;
+    sf::Sprite sprite(const MapTile &tile) noexcept;
+
+    bool isValid() const noexcept;
 
     size_t cacheSize() const { return m_textures.size(); }
 
@@ -71,5 +80,8 @@ private:
     std::unordered_map<MapTile, sf::Texture> m_textures;
 
     bool m_isLoaded = false;
+
+    bool m_isPng = false;
+    std::string m_pngPath;
 };
 
