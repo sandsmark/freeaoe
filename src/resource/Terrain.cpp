@@ -282,22 +282,68 @@ sf::Sprite Terrain::sprite(const MapTile &tile) noexcept
 
     const std::unordered_map<MapTile, sf::Texture>::const_iterator it = m_textures.find(tile);
     if (it == m_textures.end()) {
-        m_textures[tile].loadFromFile(m_pngPath);
+        sf::Image sourceImage;
+        sourceImage.loadFromFile(m_pngPath);
+
+
+        const int cols = sourceImage.getSize().x / 64;
+
+        sf::IntRect subRect;
+        subRect.width = 68;
+        subRect.height = 68;
+        subRect.left = (tile.frame % cols) * 64;
+        subRect.top = (tile.frame / cols) * 64;
+
+//        sf::Image image;
+//        image.create(subRect.width, subRect.height);
+//        image.copy(sourceImage, 0, 0, subRect);
+//        DBG << sourceImage.getSize() << image.getSize() << subRect.left << subRect.top;
+
+        // First generate an alpha mask that we use to blend the two frames below
+        std::vector<uint8_t> alphamask(subRect.width * subRect.height, 255);
+        for (const Blend &tileBlend : tile.blends) {
+            const genie::BlendMode &blendMode = AssetManager::Inst()->getBlendmode(tileBlend.blendMode);
+            if (blendMode.pixelCount >= alphamask.size()) {
+                WARN << "Invalid alphamask";
+                break;
+            }
+
+            for (unsigned i=0; i < Blend::BlendTileCount; i++) {
+                if ((tileBlend.bits & (1u << i)) == 0) {
+                    continue;
+                }
+
+                for (size_t j=0; j<blendMode.alphaValues[i].size(); j++) {
+                    alphamask[j] = std::min(alphamask[j], blendMode.alphaValues[i][j]);
+                }
+            }
+        }
+        std::vector<Uint8> pixelsBuf(subRect.width * subRect.height * 4, 0);
+        uint8_t *pixels = reinterpret_cast<uint8_t*>(pixelsBuf.data());
+        const sf::Uint8 *sourcePixels = sourceImage.getPixelsPtr();
+
+        for (int x=0; x<subRect.width; x++) {
+            for (int y=0; y<subRect.height; y++) {
+                const int index = (y * subRect.width + x) * 4;
+                const int sourceIndex = ((y + subRect.top) * sourceImage.getSize().x + (x + subRect.left)) * 4;
+
+                // Not in the mood for bitfiddling
+                pixels[index + 0] = sourcePixels[sourceIndex + 0];
+                pixels[index + 1] = sourcePixels[sourceIndex + 1];
+                pixels[index + 2] = sourcePixels[sourceIndex + 2];
+                pixels[index + 3] = alphamask[y * subRect.width + x];
+            }
+        }
+        sf::Image image;
+        image.create(subRect.width, subRect.height, pixels);
+
+//        m_textures[tile].loadFromMemory(pixels, pixelsBuf.size());
+        m_textures[tile].loadFromImage(image);
     }
 
      sf::Texture &texture = m_textures[tile];
-     const int cols = texture.getSize().x / 64;
-     const int rows = texture.getSize().y / 64;
 
-    sf::IntRect subRect;
-    subRect.width = 68;
-    subRect.height = 68;
-    subRect.left = (tile.frame % cols) * 64;
-    subRect.top = (tile.frame / cols) * 64;
-    DBG << subRect.left << subRect.top << cols << rows << texture.getSize();
-
-    sf::Sprite sprite(texture, subRect);
-//    sprite.setOrigin(subRect.left + subRect.width/2, subRect.top + subRect.height/2);
+    sf::Sprite sprite(texture);
     sprite.rotate(45);
     sprite.scale(1, 0.5);
     sprite.move(48.5, 0);
