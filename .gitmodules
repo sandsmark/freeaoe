@@ -7,6 +7,3 @@
 [submodule "extern/mini_al"]
 	path = extern/mini_al
 	url = https://github.com/dr-soft/mini_al.git
-[submodule "extern/wololokingdoms-resources"]
-	path = extern/wololokingdoms-resources
-	url = https://github.com/sandsmark/wololokingdoms-resources.git
