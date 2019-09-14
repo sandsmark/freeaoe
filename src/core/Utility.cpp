@@ -59,7 +59,7 @@ static std::string wintendoExePath()
         }
     } while(ret >= pathBuf.size());
 
-    return std::string(pathBuf, ret);
+    return std::string(pathBuf.data(), ret);
 //    return std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}.to_bytes(std::wstring(pathBuf, ret));
 }
 #else
@@ -87,7 +87,7 @@ std::string util::executablePath()
 #endif
     if (path.empty()) {
         WARN << "Failed to resolve executable path";
-        path = std::filesystem::current_path();
+        path = std::filesystem::current_path().string();
     }
 
     return path;
