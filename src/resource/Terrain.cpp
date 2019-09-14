@@ -289,8 +289,10 @@ sf::Sprite Terrain::sprite(const MapTile &tile) noexcept
         const int cols = sourceImage.getSize().x / 64;
 
         sf::IntRect subRect;
-        subRect.width = 68;
-        subRect.height = 68;
+        subRect.width = Constants::TILE_SIZE_HORIZONTAL;
+        subRect.height = Constants::TILE_SIZE_VERTICAL;
+//        subRect.width = 68;
+//        subRect.height = 68;
         subRect.left = (tile.frame % cols) * 64;
         subRect.top = (tile.frame / cols) * 64;
 
@@ -322,18 +324,98 @@ sf::Sprite Terrain::sprite(const MapTile &tile) noexcept
         uint8_t *pixels = reinterpret_cast<uint8_t*>(pixelsBuf.data());
         const sf::Uint8 *sourcePixels = sourceImage.getPixelsPtr();
 
-        for (int x=0; x<subRect.width; x++) {
-            for (int y=0; y<subRect.height; y++) {
-                const int index = (y * subRect.width + x) * 4;
-                const int sourceIndex = ((y + subRect.top) * sourceImage.getSize().x + (x + subRect.left)) * 4;
+        static bool debug = true;
+        if (debug){
+            uint8_t widths[49];
+            uint8_t size = 1;
+            uint8_t leftEdge[49];
+            for(int i = 0; i < 25; i++){
+                widths[i] = size;
+                widths[48-i] = size;
+                leftEdge[i] = Constants::TILE_SIZE_HORIZONTAL - size + 1;
+                leftEdge[48 - i] = Constants::TILE_SIZE_HORIZONTAL - size + 1;
+                size += 4;
+            }
+            for (int y=0; y<Constants::TILE_SIZE_VERTICAL; y++) {
+                DBG << (MapPos(0, y).toScreen() + ScreenPos(widths[y]/2, 0));
+//                for (int x=leftEdge[y]; x<48; x++) {
+//                    WARN << (ScreenPos(x+5, y+5).toMap());
 
-                // Not in the mood for bitfiddling
-                pixels[index + 0] = sourcePixels[sourceIndex + 0];
-                pixels[index + 1] = sourcePixels[sourceIndex + 1];
-                pixels[index + 2] = sourcePixels[sourceIndex + 2];
-                pixels[index + 3] = alphamask[y * subRect.width + x];
+//                }
+//                DBG << "\n";
             }
         }
+
+//        if (debug) {
+            uint8_t widths[49];
+            uint8_t size = 1;
+            uint8_t leftEdge[49];
+            for(int i = 0; i < 25; i++){
+                widths[i] = size;
+                widths[48-i] = size;
+                leftEdge[i] = Constants::TILE_SIZE_HORIZONTAL - size + 1;
+                leftEdge[48 - i] = Constants::TILE_SIZE_HORIZONTAL - size + 1;
+                size += 4;
+            }
+
+            for (int y = 0; y<Constants::TILE_SIZE_VERTICAL; y++) {
+                if (debug) {
+//                    DBG << y << leftEdge[y] << widths[y];
+                }
+                for (int x = leftEdge[y]; x<widths[y]; x++) {
+//                    {
+//                        ScreenPos pos(x,y);
+//                        ScreenPos camCenter;
+//                        camCenter.x = subRect.width / 2.0;
+//                        camCenter.y = subRect.height / 2.0;
+
+//                        pos.y = subRect.height - pos.y;
+
+//                        // relative map positions (from center)
+//                        MapPos nullCenterMp = camCenter.toMap();
+
+//                        MapPos nullPos = pos.toMap();
+
+//                        MapPos relPos;
+//                        relPos.x = nullPos.x - nullCenterMp.x;
+//                        relPos.y = nullPos.y - nullCenterMp.y;
+
+//                        MapPos absMapPos = m_target + (nullPos - nullCenterMp);
+
+//                    }
+                    const int index = (y * Constants::TILE_SIZE_HORIZONTAL + x) * 4;
+                    MapPos sourcePos = MapPos(x, y) + MapPos(subRect.left, subRect.top);
+//                    MapPos sourcePos = (ScreenPos(widths[y]/2, -y).toMap() + MapPos(-24, 24)) + MapPos(subRect.left, subRect.top);
+//                    MapPos sourcePos = ScreenPos(x, y).toMap() + MapPos(24, 48) + MapPos(subRect.left, subRect.top);
+                    const int sourceIndex = (sourcePos.y * sourceImage.getSize().x + sourcePos.x) * 4;
+                    if (debug && x == leftEdge[y]) {
+//                        WARN << (MapPos(x + 48, y + 24).toScreen());// + ScreenPos(-48, 48)) << sourceIndex;
+                        WARN << ScreenPos(widths[y]/2, -y).toMap() + MapPos(-24, 24) << sourceIndex;
+                    }
+                    pixels[index + 0] = sourcePixels[sourceIndex + 0];
+                    pixels[index + 1] = sourcePixels[sourceIndex + 1];
+                    pixels[index + 2] = sourcePixels[sourceIndex + 2];
+//                    pixels[index + 3] = alphamask[y * subRect.width + x];
+//                    pixels[index] = y*3 + 100;
+//                    pixels[index + 1] = x * 2;
+                    pixels[index + 3] = 255;
+                }
+            }
+//        }
+
+//        for (int x=0; x<subRect.width; x++) {
+//            for (int y=0; y<subRect.height; y++) {
+//                const int index = (y * subRect.width + x) * 4;
+//                const int sourceIndex = ((y + subRect.top) * sourceImage.getSize().x + (x + subRect.left)) * 4;
+
+//                // Not in the mood for bitfiddling
+//                pixels[index + 0] = sourcePixels[sourceIndex + 0];
+//                pixels[index + 1] = sourcePixels[sourceIndex + 1];
+//                pixels[index + 2] = sourcePixels[sourceIndex + 2];
+//                pixels[index + 3] = alphamask[y * subRect.width + x];
+//            }
+//        }
+        debug = false;
         sf::Image image;
         image.create(subRect.width, subRect.height, pixels);
 
@@ -344,9 +426,9 @@ sf::Sprite Terrain::sprite(const MapTile &tile) noexcept
      sf::Texture &texture = m_textures[tile];
 
     sf::Sprite sprite(texture);
-    sprite.rotate(45);
-    sprite.scale(1, 0.5);
-    sprite.move(48.5, 0);
+//    sprite.rotate(45);
+//    sprite.scale(1, 0.5);
+//    sprite.move(48.5, 0);
     return sprite;
 }
 
