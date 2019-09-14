@@ -38,11 +38,12 @@ static sf::Color convertColor(const genie::Color &color)
 
 bool UiScreen::init()
 {
-    m_uiFile = AssetManager::Inst()->getUIFile(m_uiFileName);
+    m_uiFile = AssetManager::Inst()->getUIFile("x" + m_uiFileName);
     if (!m_uiFile) {
-        WARN << "Unable to load ui file" << m_uiFileName;
-        m_uiFile = AssetManager::Inst()->getUIFile("x" + m_uiFileName);
+        WARN << "Unable to load x ui file" << m_uiFileName;
+        m_uiFile = AssetManager::Inst()->getUIFile(m_uiFileName);
     }
+
     if (!m_uiFile) {
         WARN << "Unable to load ui file" << m_uiFileName;
         return false;

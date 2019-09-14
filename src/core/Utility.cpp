@@ -60,7 +60,6 @@ static std::string wintendoExePath()
     } while(ret >= pathBuf.size());
 
     return std::string(pathBuf.data(), ret);
-//    return std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}.to_bytes(std::wstring(pathBuf, ret));
 }
 #else
 static std::string procExePath()
