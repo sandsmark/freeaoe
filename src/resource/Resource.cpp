@@ -65,6 +65,12 @@ sf::Image Resource::convertFrameToImage(const genie::SlpFramePtr &frame,
             *pixels++ = bgra & 0xFF; // b
             *pixels++ = (bgra >> 24) & 0xFF; //a
         }
+        pixels = pixelsBuf.data();
+        for (const genie::XY mask : frameData.transparency_mask) {
+            const size_t pixelPos = (mask.y * width + mask.x) * 4;
+            pixels[pixelPos + 3] = 0;
+
+        }
     } else {
         const std::vector<genie::Color> &colors = palette.colors_;
         const std::vector<uint8_t> &pixelindexes = frameData.pixel_indexes;

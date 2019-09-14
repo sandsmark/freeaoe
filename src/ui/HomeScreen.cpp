@@ -27,7 +27,7 @@
 #include <SFML/Window/Event.hpp>
 
 HomeScreen::HomeScreen() :
-    UiScreen("main.sin")
+    UiScreen(DataManager::Inst().isHd() ? "main.sin" : "xmain.sin")
 {
 
 }
@@ -38,14 +38,27 @@ bool HomeScreen::init()
         return false;
     }
 
-    std::shared_ptr<genie::SlpFile> slpFile = AssetManager::Inst()->getSlp("xmain.slp", AssetManager::ResourceType::Interface);
+    const bool isHd = DataManager::Inst().isHd();
+
+    DBG << m_uiFile->buttonFile.filename << m_uiFile->buttonFile.id;
+    DBG << m_uiFile->cursorFile.filename << m_uiFile->cursorFile.id;
+    DBG << m_uiFile->popupDialogFile.filename << m_uiFile->popupDialogFile.id;
+
+//    std::shared_ptr<genie::SlpFile> slpFile = AssetManager::Inst()->getSlp("xmainbtn.slp", AssetManager::ResourceType::Interface);
+    std::shared_ptr<genie::SlpFile> slpFile = AssetManager::Inst()->getSlp(isHd ? "main_32.slp" : "xmain.slp");
+    DBG << slpFile->getFrameCount();
     if (!slpFile) {
         WARN << "failed to load slp file for home screen";
         return false;
     }
 
     const genie::PalFile &palette = AssetManager::Inst()->getPalette(m_paletteId);
-    m_descriptionRect = ScreenRect(390, 506, 393, 94);
+
+    if (isHd) {
+        m_descriptionRect = ScreenRect(675, 666, 475, 100);
+    } else {
+        m_descriptionRect = ScreenRect(390, 506, 393, 94);
+    }
     m_description.setPosition(m_descriptionRect.topLeft());
     m_description.setCharacterSize(10);
     m_description.setFillColor(m_textFillColor);
@@ -53,26 +66,50 @@ bool HomeScreen::init()
     m_description.setOutlineThickness(1);
     m_description.setFont(SfmlRenderTarget::defaultFont());
 
-    // These are fun to figure out
-    m_buttons[Button::Singleplayer].rect = { 309,  12, 120, 189 };
-    m_buttons[Button::Multiplayer].rect =  { 263, 217,  97, 131 };
-    m_buttons[Button::Zone].rect =         { 271, 367,  67,  64 };
-    m_buttons[Button::Tutorial].rect =     {   0,   6, 125, 187 };
-    m_buttons[Button::MapEditor].rect =    { 197, 273,  70,  67 };
-    m_buttons[Button::History].rect =      { 103, 164, 102,  97 };
-    m_buttons[Button::Options].rect =      { 101, 347,  95, 100 };
-    m_buttons[Button::Banner].rect =       {   0,   0, 427, 170 };
-    m_buttons[Button::Exit].rect =         {   5, 535, 153,  65 };
+    if (isHd) {
+        // Gotten from the main-menu.json (easier to just massage the contents and copy than implementing a json parser..)
+        m_buttons[Button::Singleplayer].rect = { 532,   9, 192, 258 };
+        m_buttons[Button::Multiplayer].rect =  { 495, 265, 161, 188 };
+        m_buttons[Button::Zone].rect =         { 500, 482, 159, 129 };
+        m_buttons[Button::Tutorial].rect =     { 135,   2, 218, 254 };
+        m_buttons[Button::MapEditor].rect =    { 410, 344, 123,  97 };
+        m_buttons[Button::History].rect =      { 290, 198, 160, 147 };
+        m_buttons[Button::Options].rect =      { 295, 439, 137, 139 };
+        m_buttons[Button::Banner].rect =       { 128,   1, 585, 202 };
+        m_buttons[Button::Exit].rect =         { 174, 631, 230, 137 };
 
-    // These are fun to figure out x2
-    m_buttons[Button::Singleplayer].textRect = { 277,  21, 180,  18 };
-    m_buttons[Button::Multiplayer].textRect =  { 222, 222, 180,  18 };
-    m_buttons[Button::Zone].textRect =         { 213, 369, 180,  18 };
-    m_buttons[Button::Tutorial].textRect =     {   0,  16, 120,  18 };
-    m_buttons[Button::MapEditor].textRect =    { 142, 276, 180,  18 };
-    m_buttons[Button::History].textRect =      {  64, 169, 180,  18 };
-    m_buttons[Button::Options].textRect =      {  56, 351, 180,  18 };
-    m_buttons[Button::Exit].textRect =         {   0, 562, 160,  18 };
+        m_buttons[Button::Singleplayer].textRect = { 542,  20, 178,  38 };
+        m_buttons[Button::Multiplayer].textRect =  { 502, 284, 145,  24 };
+        m_buttons[Button::Zone].textRect =         { 500, 482, 159,  41 };
+        m_buttons[Button::Tutorial].textRect =     { 150,  13, 188,  40 };
+        m_buttons[Button::MapEditor].textRect =    { 420, 355, 107,  18 };
+        m_buttons[Button::History].textRect =      { 304, 213, 128,  32 };
+        m_buttons[Button::Options].textRect =      { 304, 450, 117,  24 };
+        m_buttons[Button::Exit].textRect =         { 200, 704, 160,  26 };
+
+    } else {
+        // These are fun to figure out
+        m_buttons[Button::Singleplayer].rect = { 309,  12, 120, 189 };
+        m_buttons[Button::Multiplayer].rect =  { 263, 217,  97, 131 };
+        m_buttons[Button::Zone].rect =         { 271, 367,  67,  64 };
+        m_buttons[Button::Tutorial].rect =     {   0,   6, 125, 187 };
+        m_buttons[Button::MapEditor].rect =    { 197, 273,  70,  67 };
+        m_buttons[Button::History].rect =      { 103, 164, 102,  97 };
+        m_buttons[Button::Options].rect =      { 101, 347,  95, 100 };
+        m_buttons[Button::Banner].rect =       {   0,   0, 427, 170 };
+        m_buttons[Button::Exit].rect =         {   5, 535, 153,  65 };
+
+        // These are fun to figure out x2
+        m_buttons[Button::Singleplayer].textRect = { 277,  21, 180,  18 };
+        m_buttons[Button::Multiplayer].textRect =  { 222, 222, 180,  18 };
+        m_buttons[Button::Zone].textRect =         { 213, 369, 180,  18 };
+        m_buttons[Button::Tutorial].textRect =     {   0,  16, 120,  18 };
+        m_buttons[Button::MapEditor].textRect =    { 142, 276, 180,  18 };
+        m_buttons[Button::History].textRect =      {  64, 169, 180,  18 };
+        m_buttons[Button::Options].textRect =      {  56, 351, 180,  18 };
+        m_buttons[Button::Exit].textRect =         {   0, 562, 160,  18 };
+    }
+
 
     for (int i=0; i<Button::TypeCount; i++) {
         if (i == Button::About) {
@@ -82,8 +119,12 @@ bool HomeScreen::init()
         Button &b = m_buttons[i];
 
         int frameNum = 10 + i * 4;
-        if (i == Button::Banner && !DataManager::Inst().isHd()) {
-            frameNum = 49;
+        if (i == Button::Banner) {
+            if (isHd) {
+                frameNum = 50;
+            } else {
+                frameNum = 49;
+            }
         }
 
         const genie::SlpFramePtr &frame = slpFile->getFrame(frameNum);
@@ -116,7 +157,11 @@ bool HomeScreen::init()
     m_versionText.setOutlineColor(m_textOutlineColor);
     m_versionText.setOutlineThickness(2);
     m_versionText.setString("freeaoe");
-    m_versionText.setPosition(ScreenPos(560, 10));
+    if (isHd) {
+        m_versionText.setPosition(ScreenPos(900, 15));
+    } else {
+        m_versionText.setPosition(ScreenPos(560, 10));
+    }
 
     m_todoText.setCharacterSize(50);
     m_todoText.setFont(SfmlRenderTarget::defaultFont());
@@ -124,14 +169,25 @@ bool HomeScreen::init()
     m_todoText.setOutlineColor(m_textOutlineColor);
     m_todoText.setOutlineThickness(5);
     m_todoText.setString("TODO");
-    m_todoText.setPosition(ScreenPos(550, 65));
+    if (isHd) {
+        m_todoText.setPosition(ScreenPos(875, 160));
+    } else {
+        m_todoText.setPosition(ScreenPos(550, 65));
+    }
 
     m_textButtons[GameTypeChoice::Campaign].text = "Campaign (todo lookup name)";
     m_textButtons[GameTypeChoice::StandardGame].text = "Simple demo map";
 
     int y = 85;
+    if (isHd) {
+        y += 80;
+    }
     for (int i=0; i<GameTypeChoice::GameTypeCount; i++) {
-        m_textButtons[i].rect.x = 460;
+        if (isHd) {
+            m_textButtons[i].rect.x = 800;
+        } else {
+            m_textButtons[i].rect.x = 460;
+        }
         m_textButtons[i].rect.y = y;
         m_textButtons[i].rect.height = 40;
         m_textButtons[i].rect.width = 300;
