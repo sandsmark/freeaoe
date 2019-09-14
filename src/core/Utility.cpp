@@ -46,7 +46,7 @@ bool util::openUrl(const std::string &url, std::string *error)
 #if defined(WIN32) || defined(__WIN32) || defined(__WIN32__)
 static std::string wintendoExePath()
 {
-    std::vector<wchar_t> pathBuf;
+    std::vector<CHAR> pathBuf;
     DWORD ret;
     do {
         pathBuf.resize(pathBuf.size() + MAX_PATH);
@@ -59,7 +59,8 @@ static std::string wintendoExePath()
         }
     } while(ret >= pathBuf.size());
 
-    return std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}.to_bytes(std::wstring(pathBuf, ret));
+    return std::string(pathBuf, ret);
+//    return std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}.to_bytes(std::wstring(pathBuf, ret));
 }
 #else
 static std::string procExePath()
