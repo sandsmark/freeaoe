@@ -663,6 +663,10 @@ std::string AssetManager::findHdFile(const std::string &filename) const
     if (std::filesystem::exists(filePath)) {
         return filePath;
     }
+    filePath = m_hdAssetPath + "/drs/terrain/" + filename;
+    if (std::filesystem::exists(filePath)) {
+        return filePath;
+    }
     filePath = m_hdAssetPath + "/drs/gamedata_x1/" + filename;
     if (std::filesystem::exists(filePath)) {
         return filePath;
