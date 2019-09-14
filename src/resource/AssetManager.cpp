@@ -650,6 +650,15 @@ const std::string &AssetManager::assetsPath() const
     }
 }
 
+bool AssetManager::missingData() const
+{
+    if (!m_isHd) {
+        return false;
+    }
+
+    return !std::filesystem::exists(m_hdAssetPath + "/drs/terrain/");
+}
+
 std::string AssetManager::findHdFile(const std::string &filename) const
 {
     // TODO: store all filenames in all folders, automatically walk folders

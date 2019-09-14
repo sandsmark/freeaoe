@@ -157,6 +157,8 @@ public:
 
     const std::string &assetsPath() const;
 
+     bool missingData() const;
+
 private:
     std::string findHdFile(const std::string &filename) const;
 

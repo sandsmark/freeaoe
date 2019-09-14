@@ -40,13 +40,7 @@ bool HomeScreen::init()
 
     const bool isHd = DataManager::Inst().isHd();
 
-    DBG << m_uiFile->buttonFile.filename << m_uiFile->buttonFile.id;
-    DBG << m_uiFile->cursorFile.filename << m_uiFile->cursorFile.id;
-    DBG << m_uiFile->popupDialogFile.filename << m_uiFile->popupDialogFile.id;
-
-//    std::shared_ptr<genie::SlpFile> slpFile = AssetManager::Inst()->getSlp("xmainbtn.slp", AssetManager::ResourceType::Interface);
     std::shared_ptr<genie::SlpFile> slpFile = AssetManager::Inst()->getSlp(isHd ? "main_32.slp" : "xmain.slp");
-    DBG << slpFile->getFrameCount();
     if (!slpFile) {
         WARN << "failed to load slp file for home screen";
         return false;
@@ -55,16 +49,23 @@ bool HomeScreen::init()
     const genie::PalFile &palette = AssetManager::Inst()->getPalette(m_paletteId);
 
     if (isHd) {
-        m_descriptionRect = ScreenRect(675, 666, 475, 100);
+        m_descriptionRect = ScreenRect(675, 650, 475, 100);
     } else {
         m_descriptionRect = ScreenRect(390, 506, 393, 94);
     }
     m_description.setPosition(m_descriptionRect.topLeft());
-    m_description.setCharacterSize(10);
-    m_description.setFillColor(m_textFillColor);
     m_description.setOutlineColor(m_textOutlineColor);
+    m_description.setFillColor(m_textFillColor);
     m_description.setOutlineThickness(1);
     m_description.setFont(SfmlRenderTarget::defaultFont());
+    if (AssetManager::Inst()->missingData()) {
+        m_description.setCharacterSize(19);
+        m_description.setString("WARNING: Terrain graphics are missing,\ncommon reason is using data from Rise of the Rajas.\nIf using Steam, opt into beta and select 'patch43 - Patch 4.3'.\nOtherwise things look crap.");
+        m_description.setFillColor(sf::Color::White);
+        m_description.setOutlineColor(sf::Color(255, 128, 128));
+    } else {
+        m_description.setCharacterSize(10);
+    }
 
     if (isHd) {
         // Gotten from the main-menu.json (easier to just massage the contents and copy than implementing a json parser..)
@@ -265,6 +266,7 @@ void HomeScreen::render()
 
 bool HomeScreen::handleMouseEvent(const sf::Event &event)
 {
+    const bool missingData = AssetManager::Inst()->missingData();
     if (event.type == sf::Event::MouseMoved) {
         ScreenPos mousePos(event.mouseMove.x, event.mouseMove.y);
         m_hoveredButton = -1;
@@ -272,12 +274,14 @@ bool HomeScreen::handleMouseEvent(const sf::Event &event)
         for (int i=0; i<Button::TypeCount; i++) {
             if (m_buttons[i].rect.contains(mousePos)) {
                 m_hoveredButton = i;
-                m_description.setString(m_buttons[i].description);
+                if (!missingData) {
+                    m_description.setString(m_buttons[i].description);
+                }
                 break;
             }
         }
 
-        if (m_hoveredButton == -1) {
+        if (m_hoveredButton == -1 && !missingData) {
             m_description.setString("");
         }
 
