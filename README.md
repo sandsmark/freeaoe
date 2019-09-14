@@ -86,6 +86,7 @@ TODO (this is probably going to get outdated)
  - Random map RMS script parsing and generating.
  - Performance (especially the path finding).
  - Various refactoring (move VisibilityMap out into separate file, rendering of units out from UnitManager, etc.)
+ - Proper support for new terrain graphics (Rise of the Rajas stopped shipping the old ones).
 
 Done
 ----
@@ -93,6 +94,7 @@ Not exhaustive list, mostly in addition to "normal" RTS things, or things not av
 
 Compared to other reimplementations as much as possible is fetched from the data files as well, and I try to avoid hardcoding anything, though some is hardcoded in the original game.
 
+ * HD Support.
  * Scenarios:
     * Loading and parsing old and new scenario files (.scn and .scx)
     * Loading and parsing old and new campaign files (.cpn and .cpx)
