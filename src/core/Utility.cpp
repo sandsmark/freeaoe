@@ -1,5 +1,7 @@
 #include "Utility.h"
 
+#include "Logger.h"
+
 #if defined(WIN32) || defined(__WIN32) || defined(__WIN32__)
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -39,4 +41,54 @@ bool util::openUrl(const std::string &url, std::string *error)
     }
 #endif
     return true;
+}
+
+#if defined(WIN32) || defined(__WIN32) || defined(__WIN32__)
+static std::string wintendoExePath()
+{
+    std::wstring pathBuf(1, '\0');// start with just the null terminator, each loop adds MAX_PATH
+    DWORD ret;
+    do {
+        pathBuf.resize(pathBuf.size() + MAX_PATH);
+        ret = GetModuleFileName(NULL, pathBuf.data(), DWORD(pathBuf.size()));
+
+        // Windows APIs are a special kind of retarded, 0 means it failed
+        if (ret == 0) {
+            WARN << "Failed to query wintendo exe path";
+            return {};
+        }
+    } while(ret >= pathBuf.size());
+    pathBuf.resize(ret);
+
+    return std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}.to_bytes(pathBuf);
+}
+#else
+static std::string procExePath()
+{
+    const std::string path = "/proc/" + std::to_string(getpid()) + "/exe";
+    if (!std::filesystem::is_symlink(path)) {
+        WARN << path << "is not a valid symlink";
+        return {};
+    }
+
+    return std::filesystem::read_symlink(path);
+}
+#endif
+
+
+
+std::string util::executablePath()
+{
+    std::string path;
+#if defined(WIN32) || defined(__WIN32) || defined(__WIN32__)
+    path = wintendoExePath();
+#else
+    path = procExePath();
+#endif
+    if (path.empty()) {
+        WARN << "Failed to resolve executable path";
+        path = std::filesystem::current_path();
+    }
+
+    return path;
 }

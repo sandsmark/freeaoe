@@ -119,5 +119,7 @@ inline bool floatsEquals(const double a, const double b)
 /// The escaping can be escaped if you really try to, so don't use with user input
 bool openUrl(const std::string &url, std::string *error);
 
+std::string executablePath();
+
 }
 

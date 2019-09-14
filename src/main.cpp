@@ -42,6 +42,8 @@
 // TODO: Bad_alloc
 int main(int argc, char **argv)
 {
+    DBG << "executable path" << util::executablePath();
+
     Config config("freeaoe");
     config.setAllowedOptions({
             {"game-path", "Path to AoE installation with data files", Config::Stored },
