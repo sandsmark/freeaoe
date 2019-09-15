@@ -54,16 +54,6 @@ IAction::UpdateResult ActionFly::update(Time time)
     const ScreenPos screenMovement(cos(unit->angle()), sin(unit->angle()));
     MapPos pos = unit->position() + screenMovement.toMap() * movement;
 
-    const float terrainHeight = unit->map()->elevationAt(pos);
-    const float targetHeight = terrainHeight + wantedHeight;
-    if (!util::floatsEquals(targetHeight, pos.z)) {
-        if (pos.z > targetHeight) {
-            pos.z = std::max(pos.z - movement / 2, targetHeight);
-        } else {
-            pos.z = std::min(pos.z + movement, targetHeight);
-        }
-    }
-
     if (pos.x < 0) {
         pos.x = unit->map()->width() - 1;
     }
@@ -76,6 +66,17 @@ IAction::UpdateResult ActionFly::update(Time time)
     if (pos.y >= unit->map()->height()) {
         pos.y = 0;
     }
+
+    const float terrainHeight = unit->map()->elevationAt(pos);
+    const float targetHeight = terrainHeight + wantedHeight;
+    if (!util::floatsEquals(targetHeight, pos.z)) {
+        if (pos.z > targetHeight) {
+            pos.z = std::max(pos.z - movement / 2, targetHeight);
+        } else {
+            pos.z = std::min(pos.z + movement, targetHeight);
+        }
+    }
+
 
     unit->setPosition(pos);
 
