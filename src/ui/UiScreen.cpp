@@ -17,6 +17,7 @@
 #include "UiScreen.h"
 #include "resource/AssetManager.h"
 #include "resource/LanguageManager.h"
+#include "resource/Resource.h"
 #include "render/SfmlRenderTarget.h"
 #include <genie/resource/UIFile.h>
 #include <genie/resource/PalFile.h>

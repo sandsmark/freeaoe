@@ -20,12 +20,16 @@
 
 #include "core/Constants.h"
 #include "actions/IAction.h"
-#include "mechanics/Unit.h"
-#include "mechanics/Map.h"
 
 #include <genie/dat/TerrainRestriction.h>
 
 #include <bitset>
+
+struct Unit;
+using UnitPtr = std::shared_ptr<Unit>;
+class Map;
+using MapPtr = std::shared_ptr<Map>;
+
 
 class ActionMove : public IAction
 {
@@ -38,13 +42,13 @@ public:
 
     UpdateResult update(Time time) noexcept override;
 
-    static std::shared_ptr<ActionMove> moveUnitTo(const Unit::Ptr &unit, MapPos destination, const Task &task) noexcept;
-    static std::shared_ptr<ActionMove> moveUnitTo(const Unit::Ptr &unit, MapPos destination) noexcept;
+    static std::shared_ptr<ActionMove> moveUnitTo(const UnitPtr &unit, MapPos destination, const Task &task) noexcept;
+    static std::shared_ptr<ActionMove> moveUnitTo(const UnitPtr &unit, MapPos destination) noexcept;
     const std::vector<MapPos> &path() const noexcept { return m_path; }
     genie::Task::ActionTypes taskType() const noexcept override { return genie::Task::MoveTo; }
 
 private:
-    ActionMove(MapPos destination, const Unit::Ptr &unit, const Task &task);
+    ActionMove(MapPos destination, const UnitPtr &unit, const Task &task);
 
     MapPos findClosestWalkableBorder(const MapPos &start, const MapPos &target, int coarseness) noexcept;
 

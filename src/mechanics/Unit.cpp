@@ -25,6 +25,7 @@
 #include "mechanics/Building.h"
 #include "core/Constants.h"
 #include "resource/DataManager.h"
+#include "resource/Graphic.h"
 #include "resource/AssetManager.h"
 #include "UnitManager.h"
 #include <genie/dat/Unit.h>

@@ -27,6 +27,7 @@
 #include "debug/SampleGameFactory.h"
 #include "debug/ISampleGame.h"
 #include "mechanics/UnitManager.h"
+#include "mechanics/Player.h"
 
 #include "resource/LanguageManager.h"
 

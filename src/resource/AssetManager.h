@@ -25,7 +25,6 @@
 #include <unordered_set>
 #include <fstream>
 #include <sstream>
-#include "Graphic.h"
 
 #include <genie/resource/PalFile.h>
 #include <genie/resource/Slope.h>
@@ -35,6 +34,10 @@ class BinaFile;
 
 class TerrainSprite;
 typedef std::shared_ptr<TerrainSprite> TerrainPtr;
+
+class Graphic;
+using GraphicPtr = std::shared_ptr<Graphic>;
+
 
 namespace genie {
 class DrsFile;

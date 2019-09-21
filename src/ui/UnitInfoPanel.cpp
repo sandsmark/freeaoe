@@ -21,6 +21,7 @@
 #include "render/SfmlRenderTarget.h"
 #include "resource/LanguageManager.h"
 #include "resource/AssetManager.h"
+#include "resource/Resource.h"
 #include "mechanics/Player.h"
 #include "mechanics/Civilization.h"
 #include "mechanics/Building.h"

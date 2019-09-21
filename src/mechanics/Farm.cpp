@@ -4,6 +4,7 @@
 #include "mechanics/Player.h"
 #include "core/Utility.h"
 #include "resource/AssetManager.h"
+#include "resource/Graphic.h"
 
 #include <genie/dat/Unit.h>
 #include <genie/resource/SlpFile.h>

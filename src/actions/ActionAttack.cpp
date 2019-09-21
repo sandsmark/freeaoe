@@ -3,6 +3,7 @@
 #include "ActionGather.h"
 #include "audio/AudioPlayer.h"
 #include "mechanics/UnitManager.h"
+#include "mechanics/Missile.h"
 #include "core/Constants.h"
 #include "mechanics/Player.h"
 #include "mechanics/Civilization.h"

@@ -18,6 +18,7 @@
 
 #include "Graphic.h"
 #include <resource/DataManager.h>
+#include <resource/Resource.h>
 #include "AssetManager.h"
 #include <core/Utility.h>
 

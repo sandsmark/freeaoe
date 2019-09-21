@@ -18,8 +18,6 @@
 
 #pragma once
 
-#include "Resource.h"
-
 #include "core/Types.h"
 #include "core/Logger.h"
 
@@ -31,6 +29,8 @@
 namespace genie {
 class SlpFile;
 using SlpFilePtr = std::shared_ptr<SlpFile>;
+class SlpFrame;
+using SlpFramePtr = std::shared_ptr<SlpFrame>;
 }
 
 enum class ImageType {

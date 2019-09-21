@@ -19,6 +19,7 @@
 #include "AssetManager.h"
 #include "DataManager.h"
 #include "TerrainSprite.h"
+#include "Graphic.h"
 
 #include <fstream>
 #include <iostream>

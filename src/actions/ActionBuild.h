@@ -1,13 +1,15 @@
 #pragma once
 
 #include "actions/IAction.h"
-#include "mechanics/Unit.h"
+
+struct Building;
+struct Unit;
+using UnitPtr = std::shared_ptr<Unit>;
 
 class ActionBuild : public IAction
 {
-
 public:
-    ActionBuild(const Unit::Ptr &builder, const Unit::Ptr &building, const Task &task);
+    ActionBuild(const UnitPtr &builder, const UnitPtr &building, const Task &task);
     ~ActionBuild();
 
     UpdateResult update(Time time) override;

@@ -20,6 +20,7 @@
 
 #include "audio/AudioPlayer.h"
 #include <resource/AssetManager.h>
+#include <resource/Graphic.h>
 #include <resource/DataManager.h>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
@@ -98,6 +99,11 @@ bool GraphicRender::update(Time time, const bool isVisible) noexcept
     m_currentFrame = newFrame;
 
     return updated || m_frameChanged;
+}
+
+inline bool GraphicRender::isValid() const noexcept
+{
+    return m_graphic && m_graphic->isValid();
 }
 
 void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType renderpass) noexcept
@@ -351,6 +357,11 @@ void GraphicRender::setAngle(float angle) noexcept
     }
 }
 
+int GraphicRender::frameCount() const noexcept
+{
+    return m_graphic ? m_graphic->frameCount() : 0;
+}
+
 void GraphicRender::setCurrentFrame(int frame) noexcept
 {
     if (frame == m_currentFrame) {
@@ -394,3 +405,12 @@ void GraphicRender::maybePlaySound(const float pan, const float volume) noexcept
 }
 
 
+
+bool GraphicRender::GraphicDelta::validForAngle(const float angle) const noexcept
+{
+    if (angleToDrawOn < 0) {
+        return true;
+    }
+
+    return graphic->m_graphic->angleToOrientation(angle) == angleToDrawOn;
+}

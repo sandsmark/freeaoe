@@ -11,6 +11,7 @@
 #include "resource/LanguageManager.h"
 #include "resource/AssetManager.h"
 #include "mechanics/UnitFactory.h"
+#include "mechanics/Player.h"
 #include "mechanics/Civilization.h"
 
 ActionPanel::ActionPanel(const std::shared_ptr<SfmlRenderTarget> &renderTarget) :

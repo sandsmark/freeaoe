@@ -18,10 +18,15 @@
 
 #pragma once
 
-#include "resource/Graphic.h"
+#include "core/Types.h"
+
 #include <SFML/Graphics/Texture.hpp>
 
+#include <memory>
+
 struct Entity;
+class Graphic;
+using GraphicPtr = std::shared_ptr<Graphic>;
 
 class GraphicRender;
 
@@ -75,7 +80,7 @@ public:
     virtual ~GraphicRender() = default;
 
     bool update(Time time, const bool isVisible) noexcept;
-    bool isValid() const noexcept { return m_graphic && m_graphic->isValid(); }
+    inline bool isValid() const noexcept;
 
     virtual void render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType renderpass) noexcept;
 
@@ -95,7 +100,7 @@ public:
     void setAngle(float angle) noexcept;
     float angle() const { return m_angle; }
 
-    int frameCount() const noexcept { return m_graphic ? m_graphic->frameCount() : 0; }
+    int frameCount() const noexcept;
 
     inline int currentFrame() const noexcept { return m_currentFrame; }
     void setCurrentFrame(int frame) noexcept;
@@ -106,13 +111,7 @@ private:
     void maybePlaySound(const float pan, const float volume) noexcept;
 
     struct GraphicDelta {
-        inline bool validForAngle(const float angle) const noexcept {
-            if (angleToDrawOn < 0) {
-                return true;
-            }
-
-            return graphic->m_graphic->angleToOrientation(angle) == angleToDrawOn;
-        }
+        inline bool validForAngle(const float angle) const noexcept;
 
         GraphicRenderPtr graphic;
         ScreenPos offset;

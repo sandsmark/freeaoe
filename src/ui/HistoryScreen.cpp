@@ -17,6 +17,7 @@
 #include "HistoryScreen.h"
 #include "resource/LanguageManager.h"
 #include "resource/AssetManager.h"
+#include "resource/Resource.h"
 #include "render/SfmlRenderTarget.h"
 #include <genie/resource/SlpFile.h>
 #include <SFML/Graphics/Sprite.hpp>

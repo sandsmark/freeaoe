@@ -31,6 +31,7 @@
 #include "render/GraphicRender.h"
 #include "mechanics/UnitManager.h"
 #include "mechanics/GameState.h"
+#include "mechanics/Player.h"
 #include "global/Config.h"
 #include <genie/resource/SlpFile.h>
 #include <genie/resource/UIFile.h>

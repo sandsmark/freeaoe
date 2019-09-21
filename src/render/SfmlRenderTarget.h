@@ -18,15 +18,12 @@
 
 #pragma once
 
-#include "mechanics/Entity.h"
 #include "IRenderTarget.h"
-
-#include <resource/Graphic.h>
-#include <SFML/Graphics/Texture.hpp>
 
 namespace sf {
 class RenderTarget;
 class Font;
+class Texture;
 }
 
 class SfmlRenderTarget : public IRenderTarget

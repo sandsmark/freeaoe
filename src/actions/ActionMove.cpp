@@ -25,6 +25,8 @@
 #include <stack>
 #include "resource/DataManager.h"
 #include "core/Utility.h"
+#include "mechanics/Map.h"
+#include "mechanics/Unit.h"
 
 #ifdef DEBUG
 std::vector<MapPos> ActionMove::testedPoints;

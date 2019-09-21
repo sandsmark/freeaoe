@@ -20,6 +20,7 @@
 
 #include "mechanics/UnitFactory.h"
 #include "mechanics/UnitManager.h"
+#include "mechanics/Map.h"
 #include "mechanics/Player.h"
 
 void AllunitsGameSample::setupMap()

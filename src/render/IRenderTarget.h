@@ -18,9 +18,8 @@
 
 #pragma once
 
-#include "mechanics/Entity.h"
-#include "resource/Graphic.h"
 #include "render/Camera.h"
+#include <SFML/Graphics/Color.hpp>
 
 namespace sf {
 class Sprite;

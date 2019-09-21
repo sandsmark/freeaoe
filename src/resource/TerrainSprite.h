@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "Resource.h"
 #include "mechanics/MapTile.h"
 #include "core/Logger.h"
 

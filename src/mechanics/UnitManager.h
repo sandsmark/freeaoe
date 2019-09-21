@@ -19,19 +19,25 @@
 #pragma once
 #include <unordered_set>
 #include "Unit.h"
-#include "Missile.h"
-#include "Building.h"
-
 
 #include <SFML/Graphics/RenderTexture.hpp>
 
-#include "Map.h"
 class SfmlRenderTarget;
+
+struct Player;
+struct Building;
+struct Missile;
 
 struct Camera;
 typedef std::shared_ptr<Camera> CameraPtr;
 
-struct Player;
+class Map;
+using MapPtr = std::shared_ptr<Map>;
+
+
+namespace genie {
+class Tech;
+}
 
 struct MapPositionSorter
 {
@@ -62,8 +68,8 @@ struct MapPositionSorter
 //class CameraPtr;
 // IDEA: Class containing all entities, (adds, removes, updates them).
 // Base class (EntitySpace?)
-typedef std::vector<Unit::Ptr> UnitVector;
-typedef std::unordered_set<Unit::Ptr> UnitSet;
+typedef std::vector<std::shared_ptr<Unit>> UnitVector;
+typedef std::unordered_set<std::shared_ptr<Unit>> UnitSet;
 
 class UnitManager
 {
@@ -119,7 +125,7 @@ public:
 
     State state() const { return m_state; }
 
-    void addMissile(const Missile::Ptr &missile) { m_missiles.insert(missile); }
+    void addMissile(const std::shared_ptr<Missile> &missile) { m_missiles.insert(missile); }
     void addDecayingEntity(const DecayingEntity::Ptr &entity) { m_decayingEntities.insert(entity); }
 
     void onCombatantUnitsMoved() { m_unitsMoved = true; }
@@ -130,7 +136,7 @@ private:
     void playSound(const Unit::Ptr &unit);
     const Task taskForPosition(const Unit::Ptr &unit, const ScreenPos &pos, const CameraPtr &camera) const noexcept;
 
-    std::unordered_set<Missile::Ptr> m_missiles;
+    std::unordered_set<std::shared_ptr<Missile>> m_missiles;
     std::unordered_set<DecayingEntity::Ptr> m_decayingEntities;
     UnitVector m_units;
     UnitSet m_unitsWithActions;
@@ -141,7 +147,7 @@ private:
     sf::RenderTexture m_outlineOverlay;
     MoveTargetMarker::Ptr m_moveTargetMarker;
 
-    Building::Ptr m_buildingToPlace;
+    std::shared_ptr<Building> m_buildingToPlace;
     bool m_canPlaceBuilding = false;
 
     bool m_unitsMoved = true;

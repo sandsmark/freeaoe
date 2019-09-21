@@ -2,10 +2,9 @@
 
 #include "core/Types.h"
 
-#include <mechanics/IState.h>
-#include <mechanics/Unit.h>
-#include <mechanics/Player.h>
+#include "mechanics/IState.h"
 #include <SFML/Graphics/Texture.hpp>
+#include <genie/dat/Unit.h>
 
 #include <memory>
 #include <unordered_map>
@@ -13,6 +12,10 @@
 
 struct Entity;
 struct Unit;
+
+struct Player;
+using PlayerPtr = std::shared_ptr<Player>;
+
 class SfmlRenderTarget;
 class UnitManager;
 typedef std::vector<std::shared_ptr<Unit>> UnitVector;
@@ -228,12 +231,12 @@ public:
     void draw() override;
 
     void setUnitManager(const std::shared_ptr<UnitManager> &unitManager);
-    void setHumanPlayer(const Player::Ptr &player);
+    void setHumanPlayer(const PlayerPtr &player);
 
     ScreenRect rect() const;
 
     void releaseButtons();
-    void setAttackStance(const Unit::Stance stance) const;
+//    void setAttackStance(const Unit::Stance stance) const;
 
     static const std::string &helpTextId(const Command icon);
 
@@ -276,7 +279,7 @@ private:
 
     std::shared_ptr<SfmlRenderTarget> m_renderTarget;
     std::shared_ptr<UnitManager> m_unitManager;
-    Player::Ptr m_humanPlayer;
+    PlayerPtr m_humanPlayer;
     ScreenRect m_rect;
 
     std::unordered_map<Command, sf::Texture> m_commandIcons;
