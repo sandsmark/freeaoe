@@ -16,13 +16,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "Terrain.h"
+#include "TerrainSprite.h"
 
 #include "DataManager.h"
 #include "AssetManager.h"
 
 #include <genie/resource/SlpFrame.h>
 #include <genie/resource/Color.h>
+#include <genie/resource/BlendomaticFile.h>
 
 #include "core/Constants.h"
 #include "core/Utility.h"
@@ -36,9 +37,9 @@
 #endif
 
 
-Terrain::~Terrain() { }
+TerrainSprite::~TerrainSprite() { }
 
-bool Terrain::load() noexcept
+bool TerrainSprite::load() noexcept
 {
     if (m_isLoaded) {
         return true;
@@ -83,12 +84,12 @@ bool Terrain::load() noexcept
     return true;
 }
 
-const genie::Terrain &Terrain::data() noexcept
+const genie::Terrain &TerrainSprite::data() noexcept
 {
     return m_data;
 }
 
-uint8_t Terrain::blendMode(const uint8_t ownMode, const uint8_t neighborMode) noexcept
+uint8_t TerrainSprite::blendMode(const uint8_t ownMode, const uint8_t neighborMode) noexcept
 {
     const std::array<std::array<uint8_t, 8>, 8> blendmodeTable = {{
         {{ 2, 3, 2, 1, 1, 6, 5, 4 }},
@@ -111,7 +112,7 @@ uint8_t Terrain::blendMode(const uint8_t ownMode, const uint8_t neighborMode) no
 
 
 
-const sf::Texture &Terrain::texture(const MapTile &tile) noexcept
+const sf::Texture &TerrainSprite::texture(const MapTile &tile) noexcept
 {
     // The original graphics code in aoe was apparently hand-written assembly according to people on the internet,
     // and since I'm too lazy and too dumb to optimize this properly we just cache heavily instead
@@ -274,7 +275,7 @@ const sf::Texture &Terrain::texture(const MapTile &tile) noexcept
     return m_textures[tile];
 }
 
-sf::Sprite Terrain::sprite(const MapTile &tile) noexcept
+sf::Sprite TerrainSprite::sprite(const MapTile &tile) noexcept
 {
     if (!m_isPng) {
         return sf::Sprite(texture(tile));
@@ -353,7 +354,7 @@ sf::Sprite Terrain::sprite(const MapTile &tile) noexcept
     return sprite;
 }
 
-bool Terrain::isValid() const noexcept
+bool TerrainSprite::isValid() const noexcept
 {
     if (!m_data.Enabled) {
         return false;
@@ -368,7 +369,7 @@ bool Terrain::isValid() const noexcept
 
 #define ALPHA_MASK 0xff000000
 
-void Terrain::addOutline(uint32_t *pixels, const int width, const int height) noexcept
+void TerrainSprite::addOutline(uint32_t *pixels, const int width, const int height) noexcept
 {
     for (size_t x=2;x<width; x++) {
         for (size_t y=0;y<height; y++) {

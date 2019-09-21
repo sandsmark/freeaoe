@@ -22,6 +22,8 @@
 #include "mechanics/Map.h"
 #include "render/SfmlRenderTarget.h"
 
+#include <SFML/Graphics/RenderTexture.hpp>
+
 struct VisibilityMap;
 
 class MapRenderer : public IRenderer

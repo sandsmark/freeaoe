@@ -67,9 +67,6 @@ bool UiScreen::init()
 
     m_pressOffset = m_uiFile->backgroundPosition;
 
-    genie::Color color = palette.getColors().at(m_uiFile->bevelColor1.r);
-
-
     if (!m_renderWindow) {
         std::shared_ptr<genie::SlpFile> slpFile = AssetManager::Inst()->getSlp(m_uiFile->backgroundLarge.fileId, AssetManager::ResourceType::Interface);
         if (!slpFile) {

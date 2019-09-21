@@ -27,15 +27,19 @@
 
 #include <filesystem>
 
-const genie::Unit DataManager::nullUnit;
-const genie::Tech DataManager::nullTech;
-const genie::Civ DataManager::nullCiv;
-const genie::Effect DataManager::nullEffect;
-const genie::TerrainRestriction DataManager::nullTerrainRestriction;
-const genie::PlayerColour DataManager::nullPlayerColor;
-const genie::Terrain DataManager::nullTerrain;
-const genie::Sound DataManager::nullSound;
-const std::vector<genie::Task> DataManager::nullTaskList;
+
+namespace {
+    // Because I like to return const refs, and also do error checking
+    static const genie::Unit nullUnit;
+    static const genie::Tech nullTech;
+    static const genie::Civ nullCiv;
+    static const genie::Effect nullEffect;
+    static const genie::TerrainRestriction nullTerrainRestriction;
+    static const genie::PlayerColour nullPlayerColor;
+    static const genie::Terrain nullTerrain;
+    static const genie::Sound nullSound;
+    static const std::vector<genie::Task> nullTaskList;
+}
 
 DataManager &DataManager::Inst()
 {

@@ -20,8 +20,11 @@
 #include "IRenderTarget.h"
 #include "core/Constants.h"
 #include "mechanics/Player.h" // for visibilitymap
-#include <resource/AssetManager.h>
-#include <resource/DataManager.h>
+
+#include "resource/AssetManager.h"
+#include "resource/DataManager.h"
+#include "resource/TerrainSprite.h"
+
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Text.hpp>

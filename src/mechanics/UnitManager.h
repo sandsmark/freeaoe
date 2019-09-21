@@ -22,6 +22,9 @@
 #include "Missile.h"
 #include "Building.h"
 
+
+#include <SFML/Graphics/RenderTexture.hpp>
+
 #include "Map.h"
 class SfmlRenderTarget;
 

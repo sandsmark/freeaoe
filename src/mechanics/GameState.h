@@ -19,7 +19,6 @@
 #pragma once
 
 #include "mechanics/IState.h"
-#include "mechanics/Player.h"
 #include "mechanics/ScenarioController.h"
 #include "core/Logger.h"
 
@@ -31,7 +30,11 @@ class UnitManager;
 
 namespace genie {
 class ScnFile;
+class SlpFile;
 }
+
+struct Player;
+using PlayerPtr = std::shared_ptr<Player>;
 
 enum class GameType {
     Default,
@@ -73,9 +76,9 @@ public:
 
     bool update(Time time) override;
 
-    const Player::Ptr &humanPlayer() { return m_humanPlayer; }
+    const PlayerPtr &humanPlayer() { return m_humanPlayer; }
 
-    Player::Ptr player(int id);
+    PlayerPtr player(int id);
 
     const std::shared_ptr<UnitManager> &unitManager() { return m_unitManager; }
     const MapPtr &map() const { return map_; }
@@ -99,10 +102,10 @@ private:
 
     std::shared_ptr<genie::ScnFile> scenario_;
 
-    genie::SlpFilePtr m_waypointFlag;
+    std::shared_ptr<genie::SlpFile> m_waypointFlag;
 
-    Player::Ptr m_humanPlayer;
-    std::vector<Player::Ptr> m_players;
+    PlayerPtr m_humanPlayer;
+    std::vector<PlayerPtr> m_players;
 
     GameType m_gameType = GameType::Default;
 

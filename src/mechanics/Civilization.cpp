@@ -55,7 +55,8 @@ const genie::Tech &Civilization::tech(const uint16_t id) const
 {
     if (m_techs.find(id) == m_techs.end()) {
         WARN << "invalid tech" << id;
-        return DataManager::nullTech;
+        static const genie::Tech nullTech;
+        return nullTech;
     }
 
     return m_techs.at(id);
@@ -80,7 +81,8 @@ const genie::Unit &Civilization::unitData(unsigned id) const
 {
     if (id >= m_unitsData.size()) {
         WARN << "invalid unit id" << id;
-        return DataManager::nullUnit;
+        static const genie::Unit nullUnit;
+        return nullUnit;
     }
 
     return m_unitsData[id];

@@ -3,6 +3,7 @@
 #include "resource/DataManager.h"
 #include "resource/AssetManager.h"
 #include "resource/LanguageManager.h"
+#include "resource/TerrainSprite.h"
 
 #include "mechanics/Map.h"
 

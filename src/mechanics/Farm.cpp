@@ -8,6 +8,7 @@
 #include <genie/resource/SlpFile.h>
 
 #include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/RenderTarget.hpp>
 
 Farm::Farm(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager) :
     Building(data_, player_, unitManager),

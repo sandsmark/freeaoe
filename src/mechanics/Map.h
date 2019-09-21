@@ -21,16 +21,9 @@
 #include "core/Logger.h"
 #include "core/Types.h"
 #include "core/Constants.h"
-#include "mechanics/Entity.h"
 
-#include <genie/dat/Terrain.h>
-#include <SFML/Config.hpp>
-#include <SFML/Graphics/RenderTarget.hpp>
 #include <vector>
 #include <map>
-#include <SFML/Graphics/Image.hpp>
-#include <SFML/Graphics/RenderTexture.hpp>
-#include <resource/Terrain.h>
 #include <genie/script/scn/MapDescription.h>
 
 #include "MapTile.h"
@@ -39,6 +32,9 @@
 namespace sf {
 class Shape;
 }
+
+struct Entity;
+using EntityPtr = std::shared_ptr<Entity>;
 
 class MapNode
 {
@@ -79,7 +75,7 @@ public:
     void setupBasic() noexcept;
     void setupAllunitsMap() noexcept;
 
-    void create(genie::ScnMap mapDescription) noexcept;
+    void create(const genie::ScnMap &mapDescription) noexcept;
 
     inline int getRows() const noexcept { return rows_; }
     inline int getCols() const noexcept { return cols_; }

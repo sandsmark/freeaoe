@@ -19,21 +19,14 @@
 #include "Map.h"
 #include "core/Constants.h"
 #include "core/Utility.h"
-
-#include <SFML/Graphics/Texture.hpp>
-#include <SFML/Graphics/Sprite.hpp>
-#include <resource/AssetManager.h>
-#include <resource/Resource.h>
-#include <mechanics/Unit.h>
-
-#include <genie/resource/SlpFrame.h>
-
-#include <SFML/Graphics/Shape.hpp>
+#include "resource/TerrainSprite.h"
+#include "resource/AssetManager.h"
+#include "mechanics/Unit.h"
+#include "resource/DataManager.h"
 
 #include <ctime>
 #include <cstdlib>
 #include <stdexcept>
-#include <resource/DataManager.h>
 #include <unordered_set>
 
 Map::Map() //: map_txt_(0)
@@ -142,7 +135,7 @@ void Map::setupAllunitsMap() noexcept
     elevate(5, 14, 1, 1);
 }
 
-void Map::create(genie::ScnMap mapDescription) noexcept
+void Map::create(const genie::ScnMap &mapDescription) noexcept
 {
     DBG << "tile count:" << mapDescription.tiles.size();
     DBG << "size:" << mapDescription.width << "x" << mapDescription.height;
@@ -648,7 +641,7 @@ void Map::updateTileBlend(int tileX, int tileY) noexcept
 
         const genie::Terrain &neighbor = DataManager::Inst().getTerrain(id); //neighborTerrains[id];
 
-        blends.blendMode = Terrain::blendMode(tileData.BlendType, neighbor.BlendType);
+        blends.blendMode = TerrainSprite::blendMode(tileData.BlendType, neighbor.BlendType);
         blends.terrainId = id;
         blends.frame = AssetManager::Inst()->getTerrain(id)->coordinatesToFrame(tileX, tileY);
         if (IS_UNLIKELY(blends.frame == -1)) {

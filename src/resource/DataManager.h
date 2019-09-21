@@ -19,15 +19,15 @@
 #pragma once
 
 #include "core/Logger.h"
+
 #include <genie/dat/DatFile.h>
-#include <genie/dat/Unit.h>
-#include <genie/dat/Graphic.h>
-#include <genie/dat/Terrain.h>
-#include <genie/dat/Civ.h>
+//#include <genie/dat/Unit.h>
+//#include <genie/dat/Graphic.h>
+//#include <genie/dat/Terrain.h>
+//#include <genie/dat/Civ.h>
 
 #include <map>
 #include <unordered_map>
-#include <SFML/Config.hpp>
 
 //------------------------------------------------------------------------------
 /// Class for receiving and managing data files (.dat)
@@ -62,17 +62,6 @@ public:
     const std::vector<genie::Civ> &civilizations() const;
 
     const genie::Civ &civilization(unsigned int id) const;
-
-    // Because I like to return const refs, and also do error checking
-    static const genie::Unit nullUnit;
-    static const genie::Tech nullTech;
-    static const genie::Civ nullCiv;
-    static const genie::Effect nullEffect;
-    static const genie::TerrainRestriction nullTerrainRestriction;
-    static const genie::PlayerColour nullPlayerColor;
-    static const genie::Terrain nullTerrain;
-    static const genie::Sound nullSound;
-    static const std::vector<genie::Task> nullTaskList;
 
 private:
     DataManager() = default;

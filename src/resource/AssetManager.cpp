@@ -18,6 +18,7 @@
 
 #include "AssetManager.h"
 #include "DataManager.h"
+#include "TerrainSprite.h"
 
 #include <fstream>
 #include <iostream>
@@ -27,6 +28,7 @@
 
 #include <genie/resource/DrsFile.h>
 #include <genie/resource/UIFile.h>
+#include <genie/resource/BlendomaticFile.h>
 #include <core/Utility.h>
 
 #include <filesystem>
@@ -209,7 +211,7 @@ const TerrainPtr &AssetManager::getTerrain(uint32_t id)
         return terrains_[id];
     }
 
-    TerrainPtr terrain = std::make_shared<Terrain>(id);
+    TerrainPtr terrain = std::make_shared<TerrainSprite>(id);
     terrain->load();
 
     terrains_[id] = terrain;

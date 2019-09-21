@@ -34,6 +34,7 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/RenderTarget.hpp>
 
 #include <iostream>
 

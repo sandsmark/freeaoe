@@ -1,5 +1,4 @@
 #include "MapTile.h"
-#include "resource/Terrain.h"
 
 MapTile MapTile::null;
 

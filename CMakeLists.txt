@@ -125,7 +125,7 @@ set(RESOURCE_SRC
     src/resource/LanguageManager.cpp
     src/resource/Resource.cpp
     src/resource/AssetManager.cpp
-    src/resource/Terrain.cpp
+    src/resource/TerrainSprite.cpp
     )
 
 set(MECHANICS_SRC

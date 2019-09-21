@@ -26,21 +26,30 @@
 #include <fstream>
 #include <sstream>
 #include "Graphic.h"
-#include "Terrain.h"
 
 #include <genie/resource/PalFile.h>
-#include <genie/resource/SlpFile.h>
 #include <genie/resource/SlpTemplate.h>
-#include <genie/resource/BlendomaticFile.h>
 #include <genie/resource/EdgeFiles.h>
-#include <genie/script/ScnFile.h>
 
 class ColorPalette;
 class BinaFile;
 
+class TerrainSprite;
+typedef std::shared_ptr<TerrainSprite> TerrainPtr;
+
 namespace genie {
 class DrsFile;
 class UIFile;
+class SlpFile;
+typedef std::shared_ptr<SlpFile> SlpFilePtr;
+
+struct BlendMode;
+class BlendomaticFile;
+typedef std::shared_ptr<BlendomaticFile> BlendomaticFilePtr;
+
+class ScnFile;
+typedef std::shared_ptr<ScnFile> ScnFilePtr;
+
 }
 
 //------------------------------------------------------------------------------

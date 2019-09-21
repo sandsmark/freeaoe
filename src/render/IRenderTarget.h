@@ -22,8 +22,13 @@
 #include "resource/Graphic.h"
 #include "render/Camera.h"
 
-#include <SFML/Graphics/Texture.hpp>
-#include <SFML/Graphics/Shape.hpp>
+namespace sf {
+class Sprite;
+class Drawable;
+class Texture;
+class Shape;
+class Image;
+}
 
 class IRenderTarget
 {

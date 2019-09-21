@@ -21,14 +21,12 @@
 #include "core/Types.h"
 #include "core/Logger.h"
 
-#include <genie/dat/Terrain.h>
 #include <genie/resource/MaskPattern.h>
 #include <genie/resource/Slope.h>
-#include <SFML/Graphics/Texture.hpp>
 #include <memory>
 
-class Terrain;
-typedef std::shared_ptr<Terrain> TerrainPtr;
+class TerrainSprite;
+typedef std::shared_ptr<TerrainSprite> TerrainPtr;
 struct Entity;
 
 struct Slope {

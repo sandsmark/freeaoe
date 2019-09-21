@@ -32,18 +32,18 @@
 
 class SlpFile;
 
-class Terrain;
-typedef std::shared_ptr<Terrain> TerrainPtr;
+class TerrainSprite;
+typedef std::shared_ptr<TerrainSprite> TerrainPtr;
 
-class Terrain
+class TerrainSprite
 {
 public:
     const int32_t id;
     //----------------------------------------------------------------------------
     /// @param Id resource id
     //
-    Terrain(unsigned int id_) : id(id_) { }
-    virtual ~Terrain();
+    TerrainSprite(unsigned int id_) : id(id_) { }
+    virtual ~TerrainSprite();
 
     bool load() noexcept;
 

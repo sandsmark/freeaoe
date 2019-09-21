@@ -23,6 +23,7 @@
 #include <resource/DataManager.h>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/RenderTarget.hpp>
 #include "IRenderTarget.h"
 
 #include "MapRenderer.h"
