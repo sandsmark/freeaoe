@@ -28,7 +28,6 @@ class Unit;
 }
 
 class Map;
-class GraphicRender;
 
 struct Unit;
 struct Entity;

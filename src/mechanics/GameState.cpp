@@ -18,28 +18,26 @@
 
 #include "GameState.h"
 
+#include "UnitFactory.h"
+#include <Engine.h>
+#include "render/SfmlRenderTarget.h"
+#include "resource/DataManager.h"
+#include "resource/AssetManager.h"
+#include "core/Constants.h"
+#include "debug/SampleGameFactory.h"
+#include "debug/ISampleGame.h"
+#include "mechanics/UnitManager.h"
+
+#include "resource/LanguageManager.h"
+
 #include <genie/resource/Color.h>
 #include "genie/script/ScnFile.h"
 
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Window/Mouse.hpp>
-#include <communication/commands/CommandSpawn.h>
-#include <server/GameServer.h>
-#include <client/GameClient.h>
-#include <communication/tunnels/LocalTunnelToServer.h>
-#include <communication/tunnels/LocalTunnelToClient.h>
 
 #include <iostream>
 #include <render/GraphicRender.h>
-#include "UnitFactory.h"
-#include <Engine.h>
-#include "render/SfmlRenderTarget.h"
-#include "resource/DataManager.h"
-#include "core/Constants.h"
-#include "debug/SampleGameFactory.h"
-#include "mechanics/UnitManager.h"
-
-#include "resource/LanguageManager.h"
 
 std::unordered_map<GameType, ResourceMap> GameState::defaultStartingResources = {
     {

@@ -3,8 +3,10 @@
 #include <functional>
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <genie/resource/Color.h>
 #include "render/SfmlRenderTarget.h"
 #include "resource/DataManager.h"
+#include "resource/AssetManager.h"
 #include "core/Constants.h"
 #include "mechanics/UnitManager.h"
 #include "mechanics/Player.h"

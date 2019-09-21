@@ -22,8 +22,6 @@
 #include <unordered_map>
 #include <vector>
 
-#include <genie/Types.h>
-
 //
 class Config
 {

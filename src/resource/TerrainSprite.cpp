@@ -125,14 +125,14 @@ const sf::Texture &TerrainSprite::texture(const MapTile &tile) noexcept
     }
 
     // This defines lightning textures (e. g. to darken edges)
-    const genie::PatternMasksFile &patternmasksFile = AssetManager::Inst()->patternmasksFile();
+    std::shared_ptr<genie::PatternMasksFile> patternmasksFile = AssetManager::Inst()->patternmasksFile();
 
     // We need to keep operating on indexed colors with the right palette until we've done all
     // the transformations and mapping and lighting
     const std::vector<genie::Color> &colors = AssetManager::Inst()->getPalette().getColors();
 
     // This maps from RGB to indices in the palette
-    const genie::IcmFile::InverseColorMap &defaultIcm = patternmasksFile.icmFile.maps[genie::IcmFile::AokNeutral];
+    const genie::IcmFile::InverseColorMap &defaultIcm = patternmasksFile->icmFile.maps[genie::IcmFile::AokNeutral];
 
     // Precalculate the line widths
     uint8_t widths[49];
@@ -224,9 +224,7 @@ const sf::Texture &TerrainSprite::texture(const MapTile &tile) noexcept
     const genie::SlpTemplateFile::SlpTemplate &slpTemplate = AssetManager::Inst()->getSlpTemplateFile()->templates[tile.slopes.self.toGenie()];
 
     // This defines the texture mapping for slopes (what pixels from the original SLP should go where)
-    const genie::FiltermapFile &filterFile = AssetManager::Inst()->filtermapFile();
-    const genie::FiltermapFile::Filtermap &filter = filterFile.maps[tile.slopes.self.toGenie()];
-
+    const genie::FiltermapFile::Filtermap &filter = AssetManager::Inst()->filtermapFile()->maps[tile.slopes.self.toGenie()];
 
     const std::vector<genie::Pattern> &slopePatterns = tile.slopePatterns();
 
@@ -255,7 +253,7 @@ const sf::Texture &TerrainSprite::texture(const MapTile &tile) noexcept
             // Get the appropriate lightning from the pattern masks file
             // There are several lightning textures used for each tile, so here we blend them
             // together to get the inverse color map with the appropriate darkness for this pixel
-            const genie::IcmFile::InverseColorMap &icm = patternmasksFile.getIcm(cmd.lightIndex, slopePatterns);
+            const genie::IcmFile::InverseColorMap &icm = patternmasksFile->getIcm(cmd.lightIndex, slopePatterns);
             const int pixelIndex = icm.paletteIndex(r >> 11, g >> 11, b >> 11);
 
             // And then finally we get the color for a single pixel

@@ -20,6 +20,7 @@
 
 #include "mechanics/UnitFactory.h"
 #include "mechanics/UnitManager.h"
+#include "mechanics/Player.h"
 
 void AllunitsGameSample::setupMap()
 {
@@ -38,17 +39,17 @@ void AllunitsGameSample::setupActors(const ResourceMap &startingResources)
     addEnemyUnits();
 }
 
-Player::Ptr AllunitsGameSample::getGaiaPlayer()
+std::shared_ptr<Player> AllunitsGameSample::getGaiaPlayer()
 {
     return m_gaiaPlayer;
 }
 
-Player::Ptr AllunitsGameSample::getHumanPlayer()
+std::shared_ptr<Player> AllunitsGameSample::getHumanPlayer()
 {
     return m_humanPlayer;
 }
 
-Player::Ptr AllunitsGameSample::getEnemyPlayer()
+std::shared_ptr<Player> AllunitsGameSample::getEnemyPlayer()
 {
     return m_enemyPlayer;
 }

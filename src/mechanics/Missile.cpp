@@ -2,6 +2,7 @@
 
 #include "audio/AudioPlayer.h"
 #include "resource/LanguageManager.h"
+#include "resource/AssetManager.h"
 #include "mechanics/UnitManager.h"
 #include "mechanics/Map.h"
 #include "mechanics/Player.h"

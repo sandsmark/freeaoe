@@ -2,12 +2,10 @@
 #define SCENARIOCONTROLLER_H
 
 #include "global/EventListener.h"
-#include "resource/LanguageManager.h"
 
-#include <memory>
 #include <genie/script/scn/Trigger.h>
 
-
+#include <memory>
 
 class GameState;
 class Engine;

@@ -18,8 +18,7 @@
 
 #pragma once
 
-#include <resource/Graphic.h>
-#include <resource/AssetManager.h>
+#include "resource/Graphic.h"
 #include <SFML/Graphics/Texture.hpp>
 
 struct Entity;

@@ -18,20 +18,30 @@
 
 #pragma once
 
-#include "Unit.h"
-#include "Player.h"
+#include "core/Types.h"
+
+#include <memory>
+
+struct Player;
+struct Unit;
+struct DecayingEntity;
+class UnitManager;
+
+namespace genie {
+class Task;
+}
 
 class UnitFactory
 {
 public:
     static UnitFactory &Inst();
 
-    Unit::Ptr createUnit(const int ID, const MapPos &position, const Player::Ptr &owner, UnitManager &unitManager);
-    DecayingEntity::Ptr createCorpseFor(const Unit::Ptr &unit);
+    std::shared_ptr<Unit> createUnit(const int ID, const MapPos &position, const std::shared_ptr<Player> &owner, UnitManager &unitManager);
+    std::shared_ptr<DecayingEntity> createCorpseFor(const std::shared_ptr<Unit> &unit);
 
 private:
     UnitFactory() = default;
 
-    void handleDefaultAction(const Unit::Ptr &unit, const genie::Task &task);
+    void handleDefaultAction(const std::shared_ptr<Unit> &unit, const genie::Task &task);
 };
 

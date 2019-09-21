@@ -24,6 +24,8 @@
 #include "DataManager.h"
 
 #include <genie/resource/Color.h>
+#include <genie/resource/SlpFrame.h>
+#include <genie/resource/PalFile.h>
 
 sf::Image Resource::convertFrameToImage(const genie::SlpFramePtr &frame)
 {

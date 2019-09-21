@@ -21,6 +21,8 @@
 #include "resource/DataManager.h"
 #include "render/SfmlRenderTarget.h"
 #include <genie/resource/UIFile.h>
+#include <genie/resource/SlpFile.h>
+
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>

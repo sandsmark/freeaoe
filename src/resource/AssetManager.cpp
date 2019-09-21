@@ -29,6 +29,8 @@
 #include <genie/resource/DrsFile.h>
 #include <genie/resource/UIFile.h>
 #include <genie/resource/BlendomaticFile.h>
+#include <genie/resource/SlpTemplate.h>
+#include <genie/resource/EdgeFiles.h>
 #include <core/Utility.h>
 
 #include <filesystem>
@@ -236,12 +238,12 @@ const genie::BlendMode &AssetManager::getBlendmode(uint32_t id)
 
 const genie::VisibilityMask &AssetManager::unexploredVisibilityMask(const genie::Slope slope, int edges) const
 {
-    return m_blkEdgeFile.visibilityMask(slope, edges);
+    return m_blkEdgeFile->visibilityMask(slope, edges);
 }
 
 const genie::VisibilityMask &AssetManager::exploredVisibilityMask(const genie::Slope slope, int edges) const
 {
-    return m_tileEdgeFile.visibilityMask(slope, edges);
+    return m_tileEdgeFile->visibilityMask(slope, edges);
 
 }
 
@@ -327,12 +329,20 @@ bool AssetManager::initialize(const std::string &gamePath, const genie::GameVers
 
     m_stemplatesFile = std::make_unique<genie::SlpTemplateFile>();
     m_stemplatesFile->load(dataPath + "STemplet.dat");
-    m_filtermapFile.load(dataPath + "FilterMaps.dat");
-    m_patternmasksFile.load(dataPath + "PatternMasks.dat");
-    m_patternmasksFile.icmFile.load(dataPath + "view_icm.dat");
-    m_patternmasksFile.lightmapFile.load(dataPath + "lightMaps.dat");
-    m_blkEdgeFile.load(findFile("blkedge.dat", m_dataPath));
-    m_tileEdgeFile.load(findFile("tileedge.dat", m_dataPath));
+
+    m_filtermapFile = std::make_shared<genie::FiltermapFile>();
+    m_filtermapFile->load(dataPath + "FilterMaps.dat");
+
+    m_patternmasksFile = std::make_shared<genie::PatternMasksFile>();
+    m_patternmasksFile->load(dataPath + "PatternMasks.dat");
+    m_patternmasksFile->icmFile.load(dataPath + "view_icm.dat");
+    m_patternmasksFile->lightmapFile.load(dataPath + "lightMaps.dat");
+
+    m_blkEdgeFile = std::make_shared<genie::BlkEdgeFile>();
+    m_blkEdgeFile->load(findFile("blkedge.dat", m_dataPath));
+
+    m_tileEdgeFile = std::make_shared<genie::TileEdgeFile>();
+    m_tileEdgeFile->load(findFile("tileedge.dat", m_dataPath));
 
     if (m_isHd) {
         DBG << "Is HD, not loading DRS files";

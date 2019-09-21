@@ -34,6 +34,10 @@
 #include <SFML/System/Clock.hpp>
 #include <SFML/Graphics/Text.hpp>
 
+namespace genie {
+class ScnFile;
+}
+
 namespace sf {
 class RenderWindow;
 }

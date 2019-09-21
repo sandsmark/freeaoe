@@ -22,7 +22,6 @@
 #include "Farm.h"
 #include "Civilization.h"
 #include "Building.h"
-#include "UnitManager.h"
 #include "Player.h"
 #include "actions/ActionFly.h"
 

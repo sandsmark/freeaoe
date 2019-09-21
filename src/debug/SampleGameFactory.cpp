@@ -26,7 +26,7 @@ SampleGameFactory &SampleGameFactory::Inst()
     return inst;
 }
 
-SampleGamePtr SampleGameFactory::createGameSetup(const MapPtr &map, const std::shared_ptr<UnitManager> &unitManager)
+SampleGamePtr SampleGameFactory::createGameSetup(const std::shared_ptr<Map> &map, const std::shared_ptr<UnitManager> &unitManager)
 {
     switch (gameSampleId) {
         case GameSampleId::AllUnitsGameSample:

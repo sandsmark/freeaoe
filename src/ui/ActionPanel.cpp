@@ -9,6 +9,7 @@
 #include "resource/DataManager.h"
 #include "resource/Resource.h"
 #include "resource/LanguageManager.h"
+#include "resource/AssetManager.h"
 #include "mechanics/UnitFactory.h"
 #include "mechanics/Civilization.h"
 

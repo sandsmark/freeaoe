@@ -7,6 +7,9 @@
 #include "mechanics/UnitManager.h"
 #include "mechanics/GameState.h"
 #include "mechanics/UnitFactory.h"
+
+#include "resource/LanguageManager.h"
+
 #include "Engine.h"
 
 #include <set>

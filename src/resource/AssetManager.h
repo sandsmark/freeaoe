@@ -28,8 +28,7 @@
 #include "Graphic.h"
 
 #include <genie/resource/PalFile.h>
-#include <genie/resource/SlpTemplate.h>
-#include <genie/resource/EdgeFiles.h>
+#include <genie/resource/Slope.h>
 
 class ColorPalette;
 class BinaFile;
@@ -41,7 +40,18 @@ namespace genie {
 class DrsFile;
 class UIFile;
 class SlpFile;
+
+class FiltermapFile ;
+using FiltermapFilePtr = std::shared_ptr<FiltermapFile>;
+
+class PatternMasksFile;
+using PatternMasksFilePtr = std::shared_ptr<PatternMasksFile>;
+
+class LightmapFile;
 typedef std::shared_ptr<SlpFile> SlpFilePtr;
+
+class IcmFile;
+typedef std::shared_ptr<IcmFile> IcmFilePtr;
 
 struct BlendMode;
 class BlendomaticFile;
@@ -50,6 +60,18 @@ typedef std::shared_ptr<BlendomaticFile> BlendomaticFilePtr;
 class ScnFile;
 typedef std::shared_ptr<ScnFile> ScnFilePtr;
 
+class SlpTemplateFile;
+using SlpTemplateFilePtr = std::shared_ptr<SlpTemplateFile>;
+
+
+template<int EdgeCount> class EdgeFile;
+
+using TileEdgeFile =  EdgeFile<94>;
+using TileEdgeFilePtr = std::shared_ptr<TileEdgeFile>;
+using BlkEdgeFile = EdgeFile<47>;
+using BlkEdgeFilePtr = std::shared_ptr<BlkEdgeFile>;
+
+class VisibilityMask;
 }
 
 //------------------------------------------------------------------------------
@@ -128,9 +150,9 @@ public:
 
     std::shared_ptr<uint8_t[]> getWavPtr(uint32_t id);
 
-    genie::SlpTemplateFilePtr getSlpTemplateFile() { return m_stemplatesFile; }
-    const genie::FiltermapFile &filtermapFile() { return m_filtermapFile; }
-    const genie::PatternMasksFile &patternmasksFile() { return m_patternmasksFile; }
+    const genie::SlpTemplateFilePtr &getSlpTemplateFile() { return m_stemplatesFile; }
+    const genie::FiltermapFilePtr &filtermapFile() { return m_filtermapFile; }
+    const genie::PatternMasksFilePtr &patternmasksFile() { return m_patternmasksFile; }
 
     //----------------------------------------------------------------------------
     /// Get a Graphic resource object.
@@ -188,12 +210,10 @@ private:
 
     genie::BlendomaticFilePtr blendomatic_file_;
     genie::SlpTemplateFilePtr m_stemplatesFile;
-    genie::FiltermapFile m_filtermapFile;
-    genie::PatternMasksFile m_patternmasksFile;
-    genie::LightmapFile m_lightmapFile;
-    genie::IcmFile m_icmFile;
-    genie::TileEdgeFile m_tileEdgeFile;
-    genie::BlkEdgeFile m_blkEdgeFile;
+    genie::FiltermapFilePtr m_filtermapFile;
+    genie::PatternMasksFilePtr m_patternmasksFile;
+    genie::TileEdgeFilePtr m_tileEdgeFile;
+    genie::BlkEdgeFilePtr m_blkEdgeFile;
 
     //TODO: All resources into one map?
     typedef std::unordered_map<uint32_t, GraphicPtr> GraphicMap;

@@ -2,10 +2,10 @@
 #define MISSILE_H
 
 #include "Entity.h"
-#include "Unit.h"
 #include "genie/dat/unit/AttackOrArmor.h"
 
 class UnitManager;
+struct Unit;
 struct Player;
 
 struct Missile : public Entity
@@ -24,7 +24,7 @@ public:
 
     typedef std::shared_ptr<Missile> Ptr;
 
-    Missile(const genie::Unit &data, const Unit::Ptr &sourceUnit, const MapPos &target, const Unit::Ptr &targetUnit);
+    Missile(const genie::Unit &data, const std::shared_ptr<Unit> &sourceUnit, const MapPos &target, const std::shared_ptr<Unit> &targetUnit);
 
     void setBlastType(const BlastType type, const float radius) noexcept;
 

@@ -18,14 +18,14 @@
 
 #pragma once
 
-#include "mechanics/IState.h"
-#include "mechanics/Player.h"
-#include "mechanics/GameState.h"
-#include "ISampleGame.h"
-
 #include <iostream>
+#include <memory>
 
-typedef std::shared_ptr<ISampleGame> SampleGamePtr;
+class ISampleGame;
+
+using SampleGamePtr= std::shared_ptr<ISampleGame>;
+class Map;
+class UnitManager;
 
 enum class GameSampleId {
     AllUnitsGameSample,
@@ -37,7 +37,7 @@ class SampleGameFactory
 public:
     static SampleGameFactory &Inst();
 
-    SampleGamePtr createGameSetup(const MapPtr &map, const std::shared_ptr<UnitManager> &unitManager);
+    SampleGamePtr createGameSetup(const std::shared_ptr<Map> &map, const std::shared_ptr<UnitManager> &unitManager);
     void setSampleFromAlias(const std::string &alias);
 private:
     SampleGameFactory() {}

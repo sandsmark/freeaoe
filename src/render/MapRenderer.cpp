@@ -25,6 +25,8 @@
 #include "resource/DataManager.h"
 #include "resource/TerrainSprite.h"
 
+#include <genie/resource/EdgeFiles.h>
+
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Text.hpp>

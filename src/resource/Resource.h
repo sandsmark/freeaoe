@@ -17,10 +17,16 @@
 */
 
 #pragma once
-#include <SFML/Config.hpp>
+
 #include <SFML/Graphics/Image.hpp>
-#include <genie/resource/PalFile.h>
-#include <genie/resource/SlpFrame.h>
+
+#include <memory>
+
+namespace genie {
+class PalFile;
+class SlpFrame;
+using SlpFramePtr = std::shared_ptr<SlpFrame>;
+}
 
 //------------------------------------------------------------------------------
 /// Resource is the basic class of resources managed by the AssetManager.

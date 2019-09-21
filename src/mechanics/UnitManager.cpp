@@ -30,6 +30,7 @@
 #include "Missile.h"
 #include "audio/AudioPlayer.h"
 #include "global/EventManager.h"
+#include "mechanics/Player.h"
 
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/CircleShape.hpp>

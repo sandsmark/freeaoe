@@ -24,12 +24,15 @@
 #include "core/Logger.h"
 
 #include <genie/dat/Graphic.h>
-#include <genie/resource/SlpFile.h>
 #include <SFML/Graphics/Texture.hpp>
 
 #include <unordered_map>
 
+namespace genie {
 class SlpFile;
+using SlpFilePtr = std::shared_ptr<SlpFile>;
+}
+
 enum class ImageType {
     Base,
     Outline,

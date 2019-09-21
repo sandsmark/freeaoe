@@ -18,7 +18,9 @@
 
 #pragma once
 
-#include "GameState.h"
+#include <memory>
+
+class GameState;
 
 class StateManager
 {

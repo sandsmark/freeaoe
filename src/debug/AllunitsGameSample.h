@@ -18,23 +18,25 @@
 
 #pragma once
 
-#include "mechanics/IState.h"
-#include "mechanics/Player.h"
-#include "mechanics/GameState.h"
+#include "core/ResourceMap.h"
 #include "ISampleGame.h"
+
+struct Player;
+class UnitManager;
+class Map;
 
 class AllunitsGameSample : public ISampleGame
 {
 public:
-    AllunitsGameSample(const MapPtr &map, const std::shared_ptr<UnitManager> &unitManager)
+    AllunitsGameSample(const std::shared_ptr<Map> &map, const std::shared_ptr<UnitManager> &unitManager)
         : map_(map),  unitManager_(unitManager) {}
 
     void setupMap() override;
     void setupActors(const ResourceMap &startingResources) override;
 
-    Player::Ptr getGaiaPlayer() override;
-    Player::Ptr getHumanPlayer() override;
-    Player::Ptr getEnemyPlayer() override;
+    std::shared_ptr<Player> getGaiaPlayer() override;
+    std::shared_ptr<Player> getHumanPlayer() override;
+    std::shared_ptr<Player> getEnemyPlayer() override;
 
 private:
     void addHumanTownCenter();
@@ -43,9 +45,9 @@ private:
     void addEnemyUnits();
     void addEnemyBuildings();
 
-    MapPtr map_;
+    std::shared_ptr<Map> map_;
     std::shared_ptr<UnitManager> unitManager_;
-    Player::Ptr m_gaiaPlayer;
-    Player::Ptr m_humanPlayer;
-    Player::Ptr m_enemyPlayer;
+    std::shared_ptr<Player> m_gaiaPlayer;
+    std::shared_ptr<Player> m_humanPlayer;
+    std::shared_ptr<Player> m_enemyPlayer;
 };
