@@ -114,6 +114,11 @@ bool HomeScreen::init()
         m_buttons[Button::Exit].textRect =         {   0, 562, 160,  18 };
     }
 
+    // Indicate which aren't implemented yet
+    m_buttons[Button::MapEditor].text.setStyle(sf::Text::StrikeThrough);
+    m_buttons[Button::Multiplayer].text.setStyle(sf::Text::StrikeThrough);
+    m_buttons[Button::Options].text.setStyle(sf::Text::StrikeThrough);
+
 
     for (int i=0; i<Button::TypeCount; i++) {
         if (i == Button::About) {

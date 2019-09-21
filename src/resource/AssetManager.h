@@ -74,7 +74,7 @@ using TileEdgeFilePtr = std::shared_ptr<TileEdgeFile>;
 using BlkEdgeFile = EdgeFile<47>;
 using BlkEdgeFilePtr = std::shared_ptr<BlkEdgeFile>;
 
-class VisibilityMask;
+struct VisibilityMask;
 }
 
 //------------------------------------------------------------------------------
