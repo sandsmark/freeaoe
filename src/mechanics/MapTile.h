@@ -22,7 +22,8 @@
 #include "core/Logger.h"
 
 #include <genie/dat/Terrain.h>
-#include <genie/resource/SlpTemplate.h>
+#include <genie/resource/MaskPattern.h>
+#include <genie/resource/Slope.h>
 #include <SFML/Graphics/Texture.hpp>
 #include <memory>
 
