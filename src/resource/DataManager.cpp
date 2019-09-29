@@ -18,9 +18,22 @@
 
 #include "DataManager.h"
 
-#include "global/Config.h"
-#include "genie/dat/Graphic.h"
+#include <genie/dat/PlayerColour.h>
+#include <genie/dat/Research.h>
+#include <genie/dat/Sound.h>
+#include <genie/dat/Techage.h>
+#include <genie/dat/TerrainBlock.h>
+#include <genie/dat/TerrainRestriction.h>
+#include <genie/dat/Unit.h>
+#include <genie/dat/unit/../UnitCommand.h>
+#include <filesystem>
+#include <map>
+#include <memory>
+#include <unordered_map>
+#include <utility>
+
 #include "genie/dat/Civ.h"
+#include "genie/dat/Graphic.h"
 #include "genie/dat/Terrain.h"
 
 #include "LanguageManager.h"

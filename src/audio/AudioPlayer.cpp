@@ -1,16 +1,20 @@
 #include "AudioPlayer.h"
 
-#include "resource/DataManager.h"
-#include "resource/AssetManager.h"
-#include "core/Utility.h"
-#include "global/Config.h"
-
+#include <algorithm>
+#include <cstdint>
 #include <random>
+#include <vector>
 
+#include "core/Logger.h"
+#include "resource/AssetManager.h"
+#include "resource/DataManager.h"
 #include "sts_mixer.h"
 
 #define DR_MP3_IMPLEMENTATION
+#include <genie/dat/Sound.h>
+#include <genie/dat/SoundItem.h>
 #include <mini_al/extras/dr_mp3.h>
+#include <stddef.h>
 
 #define MINI_AL_IMPLEMENTATION
 #define MAL_NO_DECODING

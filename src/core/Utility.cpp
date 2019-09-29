@@ -1,11 +1,15 @@
 #include "Utility.h"
 
+#include <errno.h>
+#include <stdlib.h>
+#include <filesystem>
+
 #include "Logger.h"
 
 #if defined(WIN32) || defined(__WIN32) || defined(__WIN32__)
 #define WIN32_LEAN_AND_MEAN
-#include <windows.h>
 #include <shellapi.h>
+#include <windows.h>
 #else
 extern "C" {
 #include <unistd.h>

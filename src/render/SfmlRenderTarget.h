@@ -20,9 +20,13 @@
 
 #include "IRenderTarget.h"
 
+
 namespace sf {
-class RenderTarget;
+class Drawable;
 class Font;
+class Image;
+class RenderTarget;
+class Sprite;
 class Texture;
 }
 

@@ -1,6 +1,20 @@
 #pragma once
 
+#include <SFML/Graphics/Texture.hpp>
+#include <memory>
+
 #include "Building.h"
+#include "core/Types.h"
+#include "render/GraphicRender.h"
+
+class UnitManager;
+namespace genie {
+class Unit;
+}  // namespace genie
+namespace sf {
+class RenderTarget;
+}  // namespace sf
+struct Player;
 
 class FarmRender : public GraphicRender
 {

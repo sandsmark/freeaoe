@@ -18,19 +18,25 @@
 
 #pragma once
 
+#include "core/Utility.h"
 #include "mechanics/MapTile.h"
-#include "core/Logger.h"
 
-#include <SFML/Graphics/Texture.hpp>
-#include <SFML/Graphics/Sprite.hpp>
 #include <genie/dat/Terrain.h>
-
 #include <genie/resource/SlpFile.h>
 
+#include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/Texture.hpp>
+#include <memory>
+#include <string>
 #include <unordered_map>
 
-class SlpFile;
+#include <math.h>
+#include <stddef.h>
+#include <stdint.h>
 
+namespace sf {
+class Texture;
+}  // namespace sf
 class TerrainSprite;
 typedef std::shared_ptr<TerrainSprite> TerrainPtr;
 

@@ -2,7 +2,13 @@
 #define DIALOG_H
 
 #include "TextButton.h"
+
+#include <SFML/Graphics/Texture.hpp>
+
 #include <array>
+#include <memory>
+
+struct TextButton;
 
 namespace sf {
 class Event;

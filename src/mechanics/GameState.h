@@ -18,19 +18,25 @@
 
 #pragma once
 
-#include "mechanics/IState.h"
-#include "mechanics/ScenarioController.h"
-#include "core/Logger.h"
+#include "IState.h"
 
-#include "Map.h"
+#include "core/ResourceMap.h"
+#include "ScenarioController.h"
 
-#include "Civilization.h"
+#include <memory>
+#include <vector>
+#include <unordered_map>
 
+struct Player;
+class Map;
 class UnitManager;
+
+typedef std::shared_ptr<Map> MapPtr;
 
 namespace genie {
 class ScnFile;
 class SlpFile;
+typedef std::shared_ptr<SlpFile> SlpFilePtr;
 }
 
 struct Player;
@@ -76,9 +82,9 @@ public:
 
     bool update(Time time) override;
 
-    const PlayerPtr &humanPlayer() { return m_humanPlayer; }
+    const std::shared_ptr<Player> &humanPlayer() { return m_humanPlayer; }
 
-    PlayerPtr player(int id);
+    std::shared_ptr<Player> player(int id);
 
     const std::shared_ptr<UnitManager> &unitManager() { return m_unitManager; }
     const MapPtr &map() const { return map_; }
@@ -104,8 +110,8 @@ private:
 
     std::shared_ptr<genie::SlpFile> m_waypointFlag;
 
-    PlayerPtr m_humanPlayer;
-    std::vector<PlayerPtr> m_players;
+    std::shared_ptr<Player> m_humanPlayer;
+    std::vector<std::shared_ptr<Player>> m_players;
 
     GameType m_gameType = GameType::Default;
 

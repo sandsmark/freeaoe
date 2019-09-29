@@ -1,6 +1,13 @@
 #include "NumberLabel.h"
 
+#include "render/IRenderTarget.h"
 #include "render/SfmlRenderTarget.h"
+
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/Rect.hpp>
+#include <SFML/System/Vector2.hpp>
+
+#include <string>
 
 NumberLabel::NumberLabel(const std::shared_ptr<IRenderTarget> &renderTarget) :
     m_renderTarget(renderTarget)

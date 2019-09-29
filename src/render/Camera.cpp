@@ -18,8 +18,6 @@
 
 #include "Camera.h"
 
-#include <iostream>
-
 bool Camera::isVisible(const MapRect &rect)
 {
     return m_visibleArea.contains(absoluteScreenPos(rect.topLeft())) ||

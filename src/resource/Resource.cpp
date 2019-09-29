@@ -18,14 +18,20 @@
 
 #include "Resource.h"
 
-#include "core/Types.h"
-#include "core/Utility.h"
+#include <SFML/Config.hpp>
+#include <SFML/Graphics/Color.hpp>
+#include <assert.h>
+#include <genie/dat/PlayerColour.h>
+#include <genie/resource/Color.h>
+#include <genie/resource/PalFile.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <memory>
+#include <vector>
+
 #include "AssetManager.h"
 #include "DataManager.h"
-
-#include <genie/resource/Color.h>
-#include <genie/resource/SlpFrame.h>
-#include <genie/resource/PalFile.h>
+#include "core/Types.h"
 
 sf::Image Resource::convertFrameToImage(const genie::SlpFramePtr &frame)
 {

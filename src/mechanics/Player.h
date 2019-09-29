@@ -1,18 +1,18 @@
 #pragma once
 
-#include "core/Types.h"
-#include "core/Constants.h"
-
+#include <stddef.h>
+#include <array>
+#include <limits>
 #include <memory>
-
-#include <unordered_map>
+#include <string>
 #include <unordered_set>
-#include <genie/dat/ResourceUsage.h>
-#include <genie/dat/Civ.h>
-#include "core/ResourceMap.h"
-#include "Civilization.h"
 
-class Civilization;
+#include "core/Constants.h"
+#include "core/ResourceMap.h"
+#include "core/Types.h"
+#include "core/Utility.h"
+#include "mechanics/Civilization.h"
+
 struct Unit;
 
 namespace genie {

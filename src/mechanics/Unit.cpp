@@ -17,21 +17,38 @@
 */
 
 #include "Unit.h"
-#include "audio/AudioPlayer.h"
-#include "resource/LanguageManager.h"
-#include "mechanics/Civilization.h"
-#include "mechanics/Map.h"
-#include "mechanics/Player.h"
-#include "mechanics/Building.h"
-#include "core/Constants.h"
-#include "resource/DataManager.h"
-#include "resource/Graphic.h"
-#include "resource/AssetManager.h"
-#include "UnitManager.h"
+
+#include <ext/alloc_traits.h>
 #include <genie/dat/Unit.h>
+#include <genie/dat/ResourceUsage.h>
+#include <genie/dat/UnitCommand.h>
+#include <genie/dat/unit/Action.h>
+#include <genie/dat/unit/AttackOrArmor.h>
+#include <genie/dat/unit/Building.h>
+#include <genie/dat/unit/Combat.h>
+#include <genie/dat/unit/Creatable.h>
+#include <genie/dat/unit/DamageGraphic.h>
+#include <genie/dat/unit/Moving.h>
+#include <math.h>
+#include <stddef.h>
+#include <iterator>
+#include <map>
+#include <string>
+#include <utility>
+
+#include "Civilization.h"
+#include "Map.h"
+#include "Building.h"
+#include "UnitManager.h"
+#include "audio/AudioPlayer.h"
+#include "core/Constants.h"
+#include "core/Logger.h"
 #include "core/Utility.h"
 #include "global/EventManager.h"
-#include <limits>
+#include "mechanics/Player.h"
+#include "resource/AssetManager.h"
+#include "resource/DataManager.h"
+#include "resource/LanguageManager.h"
 
 Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager) :
     Entity(Type::Unit, LanguageManager::getString(data_.LanguageDLLName) + " (" + std::to_string(data_.ID) + ")"),

@@ -1,11 +1,18 @@
 #include "ActionGather.h"
+
+#include "IAction.h"
 #include "ActionAttack.h"
-#include "mechanics/Entity.h"
-#include "mechanics/Player.h"
 #include "ActionMove.h"
+#include "core/Logger.h"
+#include "core/ResourceMap.h"
+#include "mechanics/Player.h"
 #include "mechanics/UnitManager.h"
+
 #include <genie/dat/Unit.h>
+#include <genie/dat/unit/Action.h>
+#include <algorithm>
 #include <limits>
+#include <utility>
 
 ActionGather::ActionGather(const Unit::Ptr &unit, const Unit::Ptr &target, const Task &task) :
     IAction(Type::Gather, unit, task),

@@ -21,15 +21,30 @@
 #include "Graphic.h"
 #include "DataManager.h"
 #include "AssetManager.h"
+#include "DataManager.h"
+#include "Graphic.h"
+#include "core/Constants.h"
+#include "core/Logger.h"
+#include "core/Types.h"
+#include "core/Utility.h"
 
-#include <genie/resource/SlpFrame.h>
+#include <genie/resource/BlendomaticFile.h>
 #include <genie/resource/Color.h>
 #include <genie/resource/BlendomaticFile.h>
 
-#include "core/Constants.h"
-#include "core/Utility.h"
+#include <SFML/Config.hpp>
+#include <SFML/Graphics/Image.hpp>
+#include <SFML/Graphics/Rect.hpp>
+#include <SFML/Graphics/Texture.hpp>
+#include <SFML/System/Vector2.hpp>
 
-#include <cmath>
+#include <assert.h>
+#include <algorithm>
+#include <array>
+#include <utility>
+#include <vector>
+
+#include <cstdint>
 
 #ifdef __BYTE_ORDER__
 #if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__

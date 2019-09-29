@@ -18,11 +18,13 @@
 
 #pragma once
 
-#include <string>
-#include <iostream>
+#include <stddef.h>
+#include <stdint.h>
+#include <cassert>
 #include <chrono>
 #include <filesystem>
-#include <cassert>
+#include <iostream>
+#include <string>
 #include <vector>
 
 struct LogPrinter

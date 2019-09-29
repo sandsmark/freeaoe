@@ -17,20 +17,28 @@
 */
 
 #include "MapRenderer.h"
+
+#include <SFML/Graphics/CircleShape.hpp>
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/Texture.hpp>
+#include <SFML/System/Vector2.hpp>
+#include <genie/dat/TerrainBlock.h>
+#include <genie/resource/EdgeFiles.h>
+#include <mechanics/MapTile.h>
+#include <resource/AssetManager.h>
+#include <resource/DataManager.h>
+#include <algorithm>
+#include <cstdint>
+#include <vector>
+
 #include "IRenderTarget.h"
 #include "core/Constants.h"
+#include "core/Logger.h"
+#include "core/Utility.h"
 #include "mechanics/Player.h" // for visibilitymap
-
-#include "resource/AssetManager.h"
-#include "resource/DataManager.h"
+#include "render/Camera.h"
 #include "resource/TerrainSprite.h"
-
-#include <genie/resource/EdgeFiles.h>
-
-#include <SFML/Graphics/Sprite.hpp>
-#include <SFML/Graphics/CircleShape.hpp>
-#include <SFML/Graphics/Text.hpp>
-#include <mechanics/MapTile.h>
 
 MapRenderer::MapRenderer() :
     m_camChanged(true),

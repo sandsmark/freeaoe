@@ -17,8 +17,11 @@
 */
 
 #include "SampleGameFactory.h"
+
 #include "AllunitsGameSample.h"
 #include "BasicGameSample.h"
+
+class UnitManager;
 
 SampleGameFactory &SampleGameFactory::Inst()
 {

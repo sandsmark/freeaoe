@@ -1,12 +1,11 @@
 #pragma once
 
-#include "core/Types.h"
-
+#include <stdint.h>
 #include <memory>
 #include <mutex>
 
-struct sts_mixer_t;
 struct mal_device;
+struct sts_mixer_t;
 
 class AudioPlayer
 {

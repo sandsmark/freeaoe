@@ -18,23 +18,20 @@
 
 #include "core/Types.h"
 
-#include <memory>
-#include <array>
-
-#include <SFML/Graphics/Texture.hpp>
-#include <SFML/Graphics/Text.hpp>
-
-
-#include "UiScreen.h"
 #include "TextButton.h"
+#include "UiScreen.h"
+
+#include <SFML/Graphics/Text.hpp>
+#include <SFML/Graphics/Texture.hpp>
+
+#include <array>
+#include <string>
+
+
+struct TextButton;
 
 namespace sf {
-class RenderWindow;
 class Event;
-}
-
-namespace genie {
-class SlpFile;
 }
 
 class HomeScreen : public UiScreen

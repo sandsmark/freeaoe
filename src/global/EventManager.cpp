@@ -1,5 +1,10 @@
 #include "EventManager.h"
+
 #include "EventListener.h"
+
+#include "core/Types.h"
+
+struct MapPos;
 
 EventManager::EventManager()
 {

@@ -18,16 +18,26 @@
 
 #pragma once
 
+#include <genie/Types.h>
+#include <genie/dat/DatFile.h>
+#include <string>
+#include <vector>
+
 #include "core/Logger.h"
 
-#include <genie/dat/DatFile.h>
-//#include <genie/dat/Unit.h>
-//#include <genie/dat/Graphic.h>
-//#include <genie/dat/Terrain.h>
-//#include <genie/dat/Civ.h>
-
-#include <map>
-#include <unordered_map>
+namespace genie {
+class Civ;
+class Effect;
+class Graphic;
+class PlayerColour;
+class Sound;
+class Task;
+class Tech;
+class Terrain;
+class TerrainBlock;
+class TerrainRestriction;
+class Unit;
+}  // namespace genie
 
 //------------------------------------------------------------------------------
 /// Class for receiving and managing data files (.dat)

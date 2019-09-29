@@ -16,22 +16,17 @@
 */
 #pragma once
 
-#include "core/Types.h"
-
-#include <memory>
-#include <array>
-
+#include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/Texture.hpp>
-#include <SFML/Graphics/Text.hpp>
-#include <SFML/Graphics/RenderWindow.hpp>
+#include <memory>
+#include <string>
 
 namespace sf {
-class RenderWindow;
 class Event;
+class RenderWindow;
 }
 
 namespace genie {
-class SlpFile;
 class UIFile;
 }
 

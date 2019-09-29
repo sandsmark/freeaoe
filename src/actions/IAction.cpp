@@ -17,19 +17,22 @@
 */
 
 #include "IAction.h"
-#include "mechanics/Entity.h"
-#include "mechanics/Unit.h"
-#include "mechanics/UnitManager.h"
-#include "mechanics/Civilization.h"
-#include "mechanics/Player.h"
-#include "resource/DataManager.h"
-#include "audio/AudioPlayer.h"
-#include "global/EventManager.h"
+
+#include <genie/dat/Unit.h>
+#include <genie/dat/unit/../UnitCommand.h>
+#include <memory>
+#include <unordered_set>
 
 #include "ActionAttack.h"
-#include "ActionMove.h"
 #include "ActionBuild.h"
 #include "ActionGather.h"
+#include "ActionMove.h"
+#include "actions/IAction.h"
+#include "core/Logger.h"
+#include "global/EventManager.h"
+#include "mechanics/Player.h"
+#include "mechanics/Unit.h"
+#include "mechanics/UnitManager.h"
 
 IAction::IAction(const Type type_, const std::shared_ptr<Unit> &unit, const Task &task) :
     type(type_),

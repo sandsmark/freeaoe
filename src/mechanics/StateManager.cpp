@@ -18,7 +18,7 @@
 
 #include "StateManager.h"
 
-#include "mechanics/GameState.h"
+#include "GameState.h"
 
 StateManager::StateManager() :
     active_state_(nullptr)

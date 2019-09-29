@@ -1,7 +1,18 @@
 #include "ScenarioController.h"
-#include "global/EventManager.h"
 
+#include <genie/dat/Unit.h>
+#include <genie/dat/ResourceUsage.h>
 #include <genie/script/ScnFile.h>
+#include <genie/script/scn/ScnPlayerData.h>
+#include <genie/script/scn/Trigger.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <algorithm>
+#include <memory>
+#include <string>
+#include <unordered_set>
+#include <utility>
+#include <vector>
 
 #include "mechanics/Unit.h"
 #include "mechanics/UnitManager.h"
@@ -12,8 +23,19 @@
 #include "resource/LanguageManager.h"
 
 #include "Engine.h"
-
-#include <set>
+#include "Entity.h"
+#include "GameState.h"
+#include "Player.h"
+#include "Unit.h"
+#include "core/Constants.h"
+#include "core/Logger.h"
+#include "core/ResourceMap.h"
+#include "core/Types.h"
+#include "global/EventManager.h"
+#include "mechanics/Map.h"
+#include "mechanics/ScenarioController.h"
+#include "mechanics/UnitFactory.h"
+#include "mechanics/UnitManager.h"
 
 ScenarioController::ScenarioController(GameState *gameState) :
     m_gameState(gameState)

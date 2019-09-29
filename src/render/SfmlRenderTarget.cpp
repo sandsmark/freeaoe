@@ -17,16 +17,28 @@
 */
 
 #include "SfmlRenderTarget.h"
-#include <SFML/Graphics/Texture.hpp>
-#include <SFML/Graphics/Sprite.hpp>
-#include "GraphicRender.h"
-#include <SFML/Graphics/RenderTarget.hpp>
-#include <SFML/Graphics/Font.hpp>
-#include <SFML/Graphics/RectangleShape.hpp>
+
+#include "render/Camera.h"
 
 #include "fonts/Alegreya/Alegreya-Bold.latin.h"
 #include "fonts/BerryRotunda/BerryRotunda.ttf.h"
-#include "mechanics/Map.h"
+
+#include <SFML/Graphics/Font.hpp>
+#include <SFML/Graphics/Rect.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/Transform.hpp>
+#include <SFML/Graphics/View.hpp>
+#include <SFML/System/Vector2.hpp>
+
+#include <memory>
+
+namespace sf {
+class Drawable;
+class Image;
+}  // namespace sf
 
 #define SCALE 1.
 

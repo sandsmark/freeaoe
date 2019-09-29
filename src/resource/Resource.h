@@ -28,6 +28,10 @@ class SlpFrame;
 using SlpFramePtr = std::shared_ptr<SlpFrame>;
 }
 
+namespace genie {
+class PalFile;
+}  // namespace genie
+
 //------------------------------------------------------------------------------
 /// Resource is the basic class of resources managed by the AssetManager.
 //

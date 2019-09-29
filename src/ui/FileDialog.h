@@ -1,18 +1,18 @@
 #pragma once
 
+#include <SFML/Graphics/Font.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/Text.hpp>
+#include <filesystem>
+#include <memory>
+#include <string>
+#include <vector>
+
 #include "core/Types.h"
 
-#include <memory>
-#include <filesystem>
-
-#include <SFML/Graphics/RectangleShape.hpp>
-
 namespace sf {
-class RenderWindow;
-class Font;
-class Text;
 class Event;
-class RectangleShape;
 }
 
 struct Button

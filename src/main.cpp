@@ -16,28 +16,29 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <iostream>
-
+#include <bits/exception.h>
+#include <errno.h>
+#include <genie/script/ScnFile.h>
+#include <string.h>
 #include <filesystem>
+#include <memory>
+#include <stdexcept>
+#include <string>
 
 #include "Engine.h"
-#include "resource/DataManager.h"
-#include "resource/AssetManager.h"
-#include "resource/LanguageManager.h"
-
-#include "mechanics/UnitFactory.h"
-#include "global/Config.h"
-#include "render/GraphicRender.h"
-#include <SFML/Graphics/RenderWindow.hpp>
-#include <SFML/Graphics/Sprite.hpp>
-#include <SFML/Graphics/Shape.hpp>
-#include "ui/FileDialog.h"
 #include "audio/AudioPlayer.h"
-#include "ui/HomeScreen.h"
+#include "core/Logger.h"
+#include "core/Utility.h"
+#include "debug/SampleGameFactory.h"
+#include "global/Config.h"
+#include "resource/AssetManager.h"
+#include "resource/DataManager.h"
+#include "resource/LanguageManager.h"
+#include "ui/FileDialog.h"
 #include "ui/HistoryScreen.h"
 #include "debug/SampleGameFactory.h"
 
-#include <genie/script/ScnFile.h>
+#include "ui/HomeScreen.h"
 
 // TODO: Bad_alloc
 int main(int argc, char **argv)

@@ -17,25 +17,27 @@
 #ifndef UNITINFOPANEL_H
 #define UNITINFOPANEL_H
 
-#include "core/Types.h"
-
-#include <memory>
-#include <unordered_set>
-#include <set>
-#include <array>
-
-#include <mechanics/IState.h>
-
-#include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/Text.hpp>
+#include <SFML/Graphics/Texture.hpp>
+#include <mechanics/IState.h>
+#include <algorithm>
+#include <array>
+#include <memory>
+#include <unordered_set>
+#include <vector>
 
-class UnitManager;
+#include "core/Types.h"
 
-struct Unit;
-struct Building;
 class SfmlRenderTarget;
 class UnitManager;
+namespace sf {
+class Event;
+}  // namespace sf
+struct Building;
+struct Unit;
+
 typedef std::vector<std::shared_ptr<Unit>> UnitVector;
 typedef std::unordered_set<std::shared_ptr<Unit>> UnitSet;
 

@@ -1,17 +1,14 @@
 #ifndef EVENTMANAGER_H
 #define EVENTMANAGER_H
 
-#include <memory>
-#include <list>
-#include <functional>
 #include <array>
-
-#include "core/Types.h"
+#include <functional>
+#include <list>
 
 struct EventListener;
-
-struct Unit;
+struct MapPos;
 struct Player;
+struct Unit;
 
 // Not scalable at all, so sue me
 class EventManager

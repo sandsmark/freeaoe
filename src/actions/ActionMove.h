@@ -18,12 +18,15 @@
 
 #pragma once
 
-#include "core/Constants.h"
 #include "actions/IAction.h"
 
-#include <genie/dat/TerrainRestriction.h>
+#include "core/Constants.h"
+
+#include <genie/dat/UnitCommand.h>
 
 #include <bitset>
+#include <memory>
+#include <vector>
 
 struct Unit;
 using UnitPtr = std::shared_ptr<Unit>;

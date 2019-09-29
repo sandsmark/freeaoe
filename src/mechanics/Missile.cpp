@@ -1,15 +1,27 @@
 #include "Missile.h"
 
+#include <genie/Types.h>
+#include <genie/dat/Unit.h>
+#include <genie/dat/unit/Combat.h>
+#include <genie/dat/unit/Missile.h>
+#include <genie/dat/unit/Moving.h>
+#include <math.h>
+#include <stdlib.h>
+#include <algorithm>
+#include <limits>
+#include <string>
+#include <utility>
+
 #include "audio/AudioPlayer.h"
 #include "resource/LanguageManager.h"
 #include "resource/AssetManager.h"
 #include "mechanics/UnitManager.h"
 #include "mechanics/Map.h"
 #include "mechanics/Player.h"
-#include "mechanics/Civilization.h"
-#include "core/Constants.h"
-
-#include <genie/dat/Unit.h>
+#include "mechanics/UnitManager.h"
+#include "resource/AssetManager.h"
+#include "resource/Graphic.h"
+#include "resource/LanguageManager.h"
 
 Missile::Missile(const genie::Unit &data, const Unit::Ptr &sourceUnit, const MapPos &target, const Unit::Ptr &targetUnit) :
     Entity(Type::Missile, LanguageManager::getString(data.LanguageDLLName) + " (" + std::to_string(data.ID) + ")"),

@@ -18,6 +18,11 @@
 
 #include "AllunitsGameSample.h"
 
+#include <vector>
+
+#include "core/Logger.h"
+#include "core/Types.h"
+#include "mechanics/Unit.h"
 #include "mechanics/UnitFactory.h"
 #include "mechanics/UnitManager.h"
 #include "mechanics/Map.h"

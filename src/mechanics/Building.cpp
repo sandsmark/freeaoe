@@ -1,15 +1,26 @@
 #include "Building.h"
-#include "Player.h"
-#include <genie/dat/Unit.h>
+
+#include <genie/Types.h>
 #include <genie/dat/Research.h>
-#include "resource/LanguageManager.h"
+#include <genie/dat/TerrainRestriction.h>
+#include <genie/dat/Unit.h>
+#include <genie/dat/unit/../ResourceUsage.h>
+#include <genie/dat/unit/Creatable.h>
+#include <stdint.h>
+#include <algorithm>
+#include <utility>
+
+#include "Map.h"
+#include "MapTile.h"
+#include "Player.h"
+#include "UnitFactory.h"
+#include "audio/AudioPlayer.h"
+#include "core/Constants.h"
+#include "core/Logger.h"
 #include "mechanics/Civilization.h"
 #include "mechanics/UnitManager.h"
-#include "Map.h"
-#include "UnitFactory.h"
-#include "core/Constants.h"
 #include "resource/DataManager.h"
-#include "audio/AudioPlayer.h"
+#include "resource/LanguageManager.h"
 
 Building::Building(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager) :
     Unit(data_, player_, unitManager, Entity::Type::Building)

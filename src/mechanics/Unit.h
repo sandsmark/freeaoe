@@ -17,21 +17,35 @@
 
 #pragma once
 
-#include "mechanics/Entity.h"
-#include "core/ResourceMap.h"
-#include "core/Constants.h"
-#include "actions/IAction.h"
-
-#include <deque>
-#include <map>
-
+#include <genie/Types.h>
 #include <genie/dat/Unit.h>
 #include <genie/dat/UnitCommand.h>
-#include <genie/dat/unit/AttackOrArmor.h>
+#include <algorithm>
+#include <cstdint>
+#include <deque>
+#include <functional>
+#include <iosfwd>
+#include <memory>
+#include <system_error>
+#include <unordered_set>
+#include <vector>
 
-class Civilization;
-struct Player;
+#include "Entity.h"
+#include "actions/IAction.h"
+#include "core/Constants.h"
+#include "core/ResourceMap.h"
+#include "core/Types.h"
+#include "render/GraphicRender.h"
+#include "resource/Graphic.h"
+
+class UnitManager;
+namespace genie {
+namespace unit {
+class AttackOrArmor;
+}  // namespace unit
+}  // namespace genie
 struct Building;
+struct Player;
 
 namespace std {
 template<> struct hash<Task>

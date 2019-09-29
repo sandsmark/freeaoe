@@ -18,13 +18,13 @@
 
 #pragma once
 
-#include <cstring>
-#include <string>
 #include <algorithm>
-#include <cmath>
-#include <vector>
-#include <sstream>
 #include <cctype>
+#include <cmath>
+#include <cstring>
+#include <sstream>
+#include <string>
+#include <vector>
 
 #ifndef _MSC_VER
 #define IS_LIKELY(x)      __builtin_expect(!!(x), 1)

@@ -18,28 +18,41 @@
 
 #include "UnitManager.h"
 
-#include "actions/ActionMove.h"
-#include "actions/ActionAttack.h"
-#include "render/SfmlRenderTarget.h"
-#include "resource/LanguageManager.h"
-#include "core/Constants.h"
-#include "resource/DataManager.h"
-#include "Civilization.h"
-#include "UnitFactory.h"
 #include "Building.h"
+#include "Civilization.h"
 #include "Missile.h"
+#include "Player.h"
+#include "UnitFactory.h"
+#include "actions/ActionAttack.h"
+#include "actions/ActionMove.h"
 #include "audio/AudioPlayer.h"
+#include "core/Constants.h"
+#include "core/Logger.h"
+#include "core/Utility.h"
 #include "global/EventManager.h"
 #include "mechanics/Player.h"
+#include "render/SfmlRenderTarget.h"
 #include "Map.h"
 
+#include <genie/Types.h>
+#include <genie/dat/Unit.h>
+#include <genie/dat/UnitCommand.h>
+#include <genie/dat/unit/Action.h>
 
-#include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/BlendMode.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
-#include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+#include <SFML/System/Vector2.hpp>
 
-#include <iostream>
+#include <algorithm>
+#include <utility>
+
+namespace genie {
+class Tech;
+}  // namespace genie
 
 UnitManager::UnitManager()
 {

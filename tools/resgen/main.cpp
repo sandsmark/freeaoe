@@ -1,8 +1,10 @@
-#include <iostream>
-#include <fstream>
-#include <algorithm>
-#include <regex>
 #include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <regex>
+#include <sstream>
+#include <string>
+#include <vector>
 
 int main(int argc, char *argv[])
 {

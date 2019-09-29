@@ -1,12 +1,22 @@
 #include "Civilization.h"
 
-#include "resource/DataManager.h"
-#include "resource/LanguageManager.h"
-
-#include <genie/dat/DatFile.h>
+#include <ext/alloc_traits.h>
+#include <genie/Types.h>
 #include <genie/dat/Civ.h>
+#include <genie/dat/Research.h>
 #include <genie/dat/Unit.h>
-#include <genie/dat/DatFile.h>
+#include <genie/dat/unit/Action.h>
+#include <genie/dat/unit/AttackOrArmor.h>
+#include <genie/dat/unit/Building.h>
+#include <genie/dat/unit/Combat.h>
+#include <genie/dat/unit/Creatable.h>
+#include <genie/dat/unit/Missile.h>
+#include <genie/dat/unit/Moving.h>
+#include <stddef.h>
+#include <algorithm>
+#include <cstdint>
+
+#include "resource/DataManager.h"
 
 const genie::Unit Civilization::nullUnit;
 

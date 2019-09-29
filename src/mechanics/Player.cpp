@@ -1,9 +1,17 @@
 #include "Player.h"
+
+#include <genie/dat/Research.h>
+#include <genie/dat/Techage.h>
+#include <genie/dat/TechageEffect.h>
+#include <genie/dat/Unit.h>
+#include <genie/dat/unit/../ResourceUsage.h>
+#include <stdint.h>
+#include <utility>
+#include <vector>
+
+#include "core/Logger.h"
 #include "mechanics/Civilization.h"
 #include "mechanics/Unit.h"
-#include "core/Logger.h"
-
-#include <genie/dat/TechageEffect.h>
 #include "resource/DataManager.h"
 
 //#define CHEAT_VISIBILITY 1

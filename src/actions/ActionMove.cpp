@@ -17,16 +17,35 @@
 */
 
 #include "ActionMove.h"
-#include <Engine.h>
 
-#include <unordered_set>
-#include <queue>
-#include <limits>
-#include <stack>
-#include "resource/DataManager.h"
+#include "core/Logger.h"
 #include "core/Utility.h"
-#include "mechanics/Map.h"
 #include "mechanics/Unit.h"
+#include "mechanics/MapTile.h"
+#include "mechanics/Map.h"
+#include "resource/DataManager.h"
+
+#include <genie/Types.h>
+#include <genie/dat/TerrainRestriction.h>
+#include <genie/dat/Unit.h>
+
+#include <SFML/System/Clock.hpp>
+#include <SFML/System/Time.hpp>
+
+#include <algorithm>
+#include <iosfwd>
+#include <limits>
+#include <queue>
+#include <stack>
+
+#include <system_error>
+#include <unordered_map>
+#include <unordered_set>
+#include <utility>
+
+#include <math.h>
+#include <stdint.h>
+#include <stdlib.h>
 
 #ifdef DEBUG
 std::vector<MapPos> ActionMove::testedPoints;

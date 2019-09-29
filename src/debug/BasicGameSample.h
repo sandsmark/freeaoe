@@ -18,10 +18,14 @@
 
 #pragma once
 
-#include "mechanics/IState.h"
-#include "mechanics/Player.h"
-#include "mechanics/GameState.h"
+#include <memory>
+
 #include "ISampleGame.h"
+#include "core/ResourceMap.h"
+#include "mechanics/Map.h"
+#include "mechanics/Player.h"
+
+class UnitManager;
 
 class BasicGameSample : public ISampleGame
 {

@@ -17,17 +17,10 @@
 */
 
 #include "AssetManager.h"
-#include "DataManager.h"
-#include "TerrainSprite.h"
-#include "Graphic.h"
 
-#include <fstream>
-#include <iostream>
-#include <memory>
-
-#include <global/Config.h>
-
+#include <core/Utility.h>
 #include <genie/resource/DrsFile.h>
+#include <genie/resource/PalFile.h>
 #include <genie/resource/UIFile.h>
 #include <genie/resource/BlendomaticFile.h>
 #include <genie/resource/SlpTemplate.h>
@@ -35,8 +28,15 @@
 #include <core/Utility.h>
 
 #include <filesystem>
-
+#include <fstream>
+#include <memory>
 #include <unordered_map>
+#include <utility>
+
+#include "DataManager.h"
+#include "core/Logger.h"
+#include "TerrainSprite.h"
+#include "Graphic.h"
 
 //------------------------------------------------------------------------------
 AssetManager *AssetManager::Inst()

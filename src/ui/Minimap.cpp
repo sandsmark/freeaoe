@@ -1,15 +1,34 @@
 #include "Minimap.h"
+
+#include "core/Constants.h"
+#include "core/Logger.h"
+#include "core/Utility.h"
 #include "mechanics/Map.h"
-#include <functional>
+#include "mechanics/MapTile.h"
+#include "mechanics/Player.h"
+#include "mechanics/Unit.h"
+#include "mechanics/UnitManager.h"
+#include "render/Camera.h"
+#include "render/SfmlRenderTarget.h"
+#include "resource/AssetManager.h"
+#include "resource/DataManager.h"
+
+#include <genie/Types.h>
+#include <genie/dat/Terrain.h>
+#include <genie/dat/Unit.h>
+#include <genie/resource/Color.h>
+#include <genie/resource/PalFile.h>
+
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
-#include <genie/resource/Color.h>
-#include "render/SfmlRenderTarget.h"
-#include "resource/DataManager.h"
-#include "resource/AssetManager.h"
-#include "core/Constants.h"
-#include "mechanics/UnitManager.h"
-#include "mechanics/Player.h"
+#include <SFML/System/Vector2.hpp>
+#include <SFML/Window/Event.hpp>
+
+#include <algorithm>
+#include <functional>
+#include <vector>
+
+#include <assert.h>
 
 Minimap::Minimap(const std::shared_ptr<SfmlRenderTarget> &renderTarget) :
     m_renderTarget(renderTarget),

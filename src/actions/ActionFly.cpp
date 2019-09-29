@@ -1,7 +1,18 @@
 #include "ActionFly.h"
-#include "mechanics/Unit.h"
-#include <genie/dat/Unit.h>
+
+#include "core/Logger.h"
+#include "core/Utility.h"
+#include "mechanics/Entity.h"
 #include "mechanics/Map.h"
+#include "mechanics/Unit.h"
+#include "render/GraphicRender.h"
+
+#include <genie/dat/Unit.h>
+
+#include <algorithm>
+
+#include <math.h>
+#include <stdlib.h>
 
 ActionFly::ActionFly(const std::shared_ptr<Unit> &unit, const Task &task) :
     IAction(IAction::Type::Fly, unit, task)

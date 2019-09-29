@@ -1,9 +1,14 @@
 #include "LanguageManager.h"
 
-#include "global/Config.h"
-#include "core/Utility.h"
-
+#include <bits/exception.h>
+#include <ctype.h>
 #include <genie/lang/LangFile.h>
+#include <algorithm>
+#include <filesystem>
+#include <istream>
+
+#include "core/Logger.h"
+#include "core/Utility.h"
 
 LanguageManager *LanguageManager::Inst()
 {

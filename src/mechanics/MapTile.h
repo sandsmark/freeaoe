@@ -18,12 +18,10 @@
 
 #pragma once
 
-#include "core/Types.h"
 #include "core/Logger.h"
 
-#include <genie/resource/MaskPattern.h>
 #include <genie/resource/Slope.h>
-#include <memory>
+#include <genie/resource/SlpTemplate.h>
 
 class TerrainSprite;
 typedef std::shared_ptr<TerrainSprite> TerrainPtr;

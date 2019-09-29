@@ -19,23 +19,48 @@
 
 #include "Engine.h"
 
-#include <sstream>
-
-#include <SFML/Graphics.hpp>
-
-#include "ui/UiScreen.h"
-
-#include <SFML/Graphics/RenderWindow.hpp>
+#include "core/Logger.h"
+#include "core/ResourceMap.h"
+#include "mechanics/GameState.h"
+#include "mechanics/Map.h"
+#include "mechanics/Player.h"
+#include "mechanics/ScenarioController.h"
+#include "mechanics/UnitManager.h"
+#include "render/Camera.h"
+#include "render/SfmlRenderTarget.h"
 #include "resource/AssetManager.h"
 #include "resource/Resource.h"
-#include "render/GraphicRender.h"
-#include "mechanics/UnitManager.h"
-#include "mechanics/GameState.h"
-#include "mechanics/Player.h"
-#include "global/Config.h"
+#include "ui/Minimap.h"
+#include "ui/UiScreen.h"
+
+#include <genie/dat/ResourceUsage.h>
 #include <genie/resource/SlpFile.h>
 #include <genie/resource/UIFile.h>
-#include "ui/Minimap.h"
+
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/Font.hpp>
+#include <SFML/Graphics/Image.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+#include <SFML/System/Clock.hpp>
+#include <SFML/System/Sleep.hpp>
+#include <SFML/System/Time.hpp>
+#include <SFML/System/Vector2.hpp>
+#include <SFML/Window/Event.hpp>
+#include <SFML/Window/Keyboard.hpp>
+#include <SFML/Window/Mouse.hpp>
+#include <SFML/Window/VideoMode.hpp>
+#include <SFML/Window/WindowStyle.hpp>
+
+#include <algorithm>
+#include <utility>
+
+#include <stddef.h>
+
+namespace genie {
+class ScnFile;
+}  // namespace genie
+struct Entity;
 
 #define MOUSE_MOVE_EDGE_SIZE 10
 #define CAMERA_SPEED 1.

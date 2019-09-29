@@ -3,6 +3,12 @@
 
 #include "Entity.h"
 #include "genie/dat/unit/AttackOrArmor.h"
+#include "mechanics/Entity.h"
+#include "render/GraphicRender.h"
+
+namespace genie {
+class Unit;
+}  // namespace genie
 
 class UnitManager;
 struct Unit;

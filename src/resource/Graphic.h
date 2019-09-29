@@ -18,13 +18,28 @@
 
 #pragma once
 
-#include "core/Types.h"
 #include "core/Logger.h"
+#include "core/Types.h"
 
 #include <genie/dat/Graphic.h>
 #include <SFML/Graphics/Texture.hpp>
 
+#include <math.h>
+#include <cstdint>
+#include <iosfwd>
+#include <memory>
+#include <system_error>
 #include <unordered_map>
+#include <vector>
+
+namespace genie {
+class GraphicAngleSound;
+class GraphicDelta;
+}  // namespace genie
+
+namespace sf {
+class Texture;
+}  // namespace sf
 
 namespace genie {
 class SlpFile;

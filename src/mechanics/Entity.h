@@ -18,10 +18,11 @@
 
 #pragma once
 
-#include "core/Types.h"
-
-#include "render/GraphicRender.h"
 #include "core/SignalEmitter.h"
+#include "core/Types.h"
+#include "render/GraphicRender.h"
+
+#include <memory>
 
 namespace genie {
 class Unit;
@@ -38,7 +39,7 @@ typedef std::shared_ptr<Map> MapPtr;
 typedef std::shared_ptr<Entity> EntityPtr;
 
 /// The most basic class thing, has a position on a map and can be rendered
-struct Entity: std::enable_shared_from_this<Entity>, SignalEmitter<Entity>
+struct Entity : std::enable_shared_from_this<Entity>, SignalEmitter<Entity>
 {
     const size_t id;
     int32_t spawnId = -1;

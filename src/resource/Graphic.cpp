@@ -17,14 +17,29 @@
 */
 
 #include "Graphic.h"
-#include <resource/DataManager.h>
-#include <resource/Resource.h>
-#include "AssetManager.h"
-#include <core/Utility.h>
 
+#include <SFML/Config.hpp>
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/Texture.hpp>
+#include <SFML/System/Vector2.hpp>
+#include <assert.h>
+#include <genie/Types.h>
+#include <genie/dat/PlayerColour.h>
+#include <genie/resource/Color.h>
+#include <genie/resource/PalFile.h>
 #include <genie/resource/SlpFile.h>
 #include <genie/resource/SlpFrame.h>
-#include <genie/resource/Color.h>
+#include <resource/DataManager.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <algorithm>
+
+#include "AssetManager.h"
+#include "Resource.h"
+
+namespace genie {
+class GraphicAngleSound;
+}  // namespace genie
 
 const sf::Texture Graphic::nullImage;
 

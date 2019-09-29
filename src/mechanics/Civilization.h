@@ -1,21 +1,19 @@
 #pragma once
 
-#include "core/Types.h"
-#include "core/ResourceMap.h"
-
 #include <genie/dat/Civ.h>
-#include <genie/dat/Research.h>
 #include <genie/dat/TechageEffect.h>
+#include <genie/dat/Research.h>
+#include <genie/dat/Unit.h>
+#include <genie/dat/ResourceUsage.h>
 
+#include <stdint.h>
+#include <memory>
+#include <string>
 #include <unordered_map>
 #include <vector>
-#include <memory>
 
-namespace genie {
-class Tech;
-class Unit;
-class DatFile;
-}
+#include "core/Logger.h"
+#include "core/ResourceMap.h"
 
 class Civilization
 {

@@ -16,12 +16,15 @@
 */
 #pragma once
 
+#include <SFML/Graphics/Text.hpp>
+#include <string>
+
 #include "core/Types.h"
 
-#include <SFML/Graphics/Text.hpp>
-
-class IRenderTarget;
 class UiScreen;
+namespace sf {
+class Color;
+}  // namespace sf
 
 struct TextButton
 {

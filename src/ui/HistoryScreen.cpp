@@ -15,17 +15,35 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "HistoryScreen.h"
-#include "resource/LanguageManager.h"
-#include "resource/AssetManager.h"
-#include "resource/Resource.h"
-#include "render/SfmlRenderTarget.h"
-#include <genie/resource/SlpFile.h>
-#include <SFML/Graphics/Sprite.hpp>
-#include <SFML/Graphics/RectangleShape.hpp>
-#include <SFML/Window/Event.hpp>
-#include "core/Utility.h"
 
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/Font.hpp>
+#include <SFML/Graphics/Glyph.hpp>
+#include <SFML/Graphics/Rect.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+#include <SFML/System/Vector2.hpp>
+#include <SFML/Window/Event.hpp>
+#include <SFML/Window/Keyboard.hpp>
+#include <genie/resource/SlpFile.h>
+#include <genie/resource/SlpFrame.h>
+#include <algorithm>
+#include <filesystem>
 #include <fstream>
+#include <memory>
+#include <unordered_set>
+#include <utility>
+
+#include "core/Logger.h"
+#include "core/Utility.h"
+#include "render/SfmlRenderTarget.h"
+#include "resource/AssetManager.h"
+#include "resource/LanguageManager.h"
+#include "resource/Resource.h"
+
+namespace genie {
+class PalFile;
+}  // namespace genie
 
 HistoryScreen::HistoryScreen() :
     UiScreen("scr_hist.sin")

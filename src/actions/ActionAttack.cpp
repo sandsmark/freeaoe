@@ -1,13 +1,28 @@
 #include "ActionAttack.h"
+
 #include "ActionMove.h"
-#include "ActionGather.h"
-#include "audio/AudioPlayer.h"
-#include "mechanics/UnitManager.h"
-#include "mechanics/Missile.h"
 #include "core/Constants.h"
-#include "mechanics/Player.h"
+#include "core/Logger.h"
 #include "mechanics/Civilization.h"
+#include "mechanics/Missile.h"
+#include "mechanics/Player.h"
+#include "mechanics/UnitManager.h"
+
+#include <genie/Types.h>
 #include <genie/dat/Unit.h>
+#include <genie/dat/unit/Combat.h>
+#include <genie/dat/unit/Creatable.h>
+
+#include <math.h>
+#include <stdlib.h>
+#include <algorithm>
+#include <vector>
+
+namespace genie {
+namespace unit {
+class AttackOrArmor;
+}  // namespace unit
+}  // namespace genie
 
 ActionAttack::ActionAttack(const Unit::Ptr &attacker, const Unit::Ptr &target, const Task &task) :
     IAction(IAction::Type::Attack, attacker, task),

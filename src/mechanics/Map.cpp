@@ -17,6 +17,7 @@
 */
 
 #include "Map.h"
+
 #include "core/Constants.h"
 #include "core/Utility.h"
 #include "resource/TerrainSprite.h"
@@ -28,6 +29,12 @@
 #include <cstdlib>
 #include <stdexcept>
 #include <unordered_set>
+
+#include "core/Constants.h"
+#include "core/Logger.h"
+#include "core/Types.h"
+#include "core/Utility.h"
+#include "resource/TerrainSprite.h"
 
 Map::Map() //: map_txt_(0)
 {

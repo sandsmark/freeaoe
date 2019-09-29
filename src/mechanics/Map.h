@@ -18,20 +18,22 @@
 
 #pragma once
 
-#include "core/Logger.h"
-#include "core/Types.h"
-#include "core/Constants.h"
-
+#include <assert.h>
+#include <stdint.h>
+#include <algorithm>
+#include <memory>
 #include <vector>
-#include <map>
-#include <genie/script/scn/MapDescription.h>
 
 #include "MapTile.h"
+#include "core/Constants.h"
 #include "core/SignalEmitter.h"
+#include "core/Utility.h"
+#include "mechanics/Entity.h"
 
-namespace sf {
-class Shape;
-}
+namespace genie {
+class ScnMap;
+}  // namespace genie
+struct MapPos;
 
 struct Entity;
 using EntityPtr = std::shared_ptr<Entity>;

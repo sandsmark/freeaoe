@@ -16,13 +16,20 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "core/Constants.h"
 #include "Entity.h"
-#include "render/GraphicRender.h"
+#include "Unit.h"
+#include "Missile.h"
+#include "Building.h"
+#include "core/Constants.h"
+#include "core/Types.h"
+#include "mechanics/Entity.h"
 #include "mechanics/Map.h"
-#include "mechanics/Unit.h"
-#include "mechanics/Missile.h"
-#include "genie/dat/Unit.h"
+#include "render/GraphicRender.h"
+
+#include <stddef.h>
+#include <cmath>
+#include <memory>
+#include <string>
 
 static size_t s_entityCount = 0;
 

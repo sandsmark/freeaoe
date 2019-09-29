@@ -15,17 +15,27 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "UiScreen.h"
+
+#include "core/Logger.h"
+#include "core/Types.h"
 #include "resource/AssetManager.h"
-#include "resource/LanguageManager.h"
 #include "resource/Resource.h"
-#include "render/SfmlRenderTarget.h"
-#include <genie/resource/UIFile.h>
+
+#include <genie/resource/Color.h>
 #include <genie/resource/PalFile.h>
 #include <genie/resource/SlpFile.h>
+#include <genie/resource/SlpFrame.h>
+#include <genie/resource/UIFile.h>
+
+#include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Sprite.hpp>
-#include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/View.hpp>
+#include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Event.hpp>
+#include <SFML/Window/VideoMode.hpp>
+
+#include <vector>
 
 UiScreen::UiScreen(const char *uiFile) :
     m_uiFileName(uiFile)

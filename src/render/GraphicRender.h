@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include "core/Logger.h"
 #include "core/Types.h"
 
 #include <SFML/Graphics/Texture.hpp>
@@ -29,6 +30,9 @@ class Graphic;
 using GraphicPtr = std::shared_ptr<Graphic>;
 
 class GraphicRender;
+
+class Graphic;
+typedef std::shared_ptr<Graphic> GraphicPtr;
 
 enum class RenderType {
     Shadow,

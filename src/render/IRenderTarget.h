@@ -29,6 +29,10 @@ class Shape;
 class Image;
 }
 
+namespace sf {
+class Sprite;
+}
+
 class IRenderTarget
 {
 public:

@@ -7,8 +7,13 @@
 #include <genie/dat/Unit.h>
 
 #include <memory>
+#include <ostream>
+#include <string>
 #include <unordered_map>
 #include <unordered_set>
+#include <vector>
+
+#include "core/Types.h"
 
 struct Entity;
 struct Unit;
@@ -18,6 +23,14 @@ using PlayerPtr = std::shared_ptr<Player>;
 
 class SfmlRenderTarget;
 class UnitManager;
+namespace genie {
+class Unit;
+}  // namespace genie
+namespace sf {
+class Event;
+class Texture;
+}  // namespace sf
+
 typedef std::vector<std::shared_ptr<Unit>> UnitVector;
 typedef std::unordered_set<std::shared_ptr<Unit>> UnitSet;
 

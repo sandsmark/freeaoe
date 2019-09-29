@@ -18,9 +18,18 @@
 
 #pragma once
 
-#include "core/Types.h"
-
+#include <genie/Types.h>
+#include <genie/resource/BlendomaticFile.h>
+#include <genie/resource/EdgeFiles.h>
+#include <genie/resource/Slope.h>
+#include <genie/resource/SlpFile.h>
+#include <genie/resource/SlpTemplate.h>
+#include <genie/script/ScnFile.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <algorithm>
 #include <memory>
+#include <string>
 #include <unordered_map>
 #include <unordered_set>
 #include <fstream>
@@ -41,6 +50,7 @@ using GraphicPtr = std::shared_ptr<Graphic>;
 
 namespace genie {
 class DrsFile;
+class PalFile;
 class UIFile;
 class SlpFile;
 

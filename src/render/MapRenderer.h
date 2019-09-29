@@ -18,12 +18,20 @@
 
 #pragma once
 
+#include <SFML/Graphics/Image.hpp>
+#include <SFML/Graphics/RenderTexture.hpp>
+#include <genie/resource/Slope.h>
+#include <memory>
+#include <unordered_map>
+
 #include "IRenderer.h"
+#include "core/Types.h"
 #include "mechanics/Map.h"
 #include "render/SfmlRenderTarget.h"
 
-#include <SFML/Graphics/RenderTexture.hpp>
-
+namespace sf {
+class Texture;
+}  // namespace sf
 struct VisibilityMap;
 
 class MapRenderer : public IRenderer

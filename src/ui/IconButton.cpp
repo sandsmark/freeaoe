@@ -1,9 +1,12 @@
 #include "IconButton.h"
 
+#include <genie/resource/SlpFile.h>
+#include <genie/resource/SlpFrame.h>
+
+#include "core/Logger.h"
 #include "render/IRenderTarget.h"
 #include "resource/AssetManager.h"
 #include "resource/Resource.h"
-#include <genie/resource/SlpFile.h>
 
 IconButton::IconButton(const std::shared_ptr<IRenderTarget> &renderTarget) :
     m_renderTarget(renderTarget)

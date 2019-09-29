@@ -18,8 +18,13 @@
 
 #include "BasicGameSample.h"
 
+#include <functional>
+
+#include "core/Types.h"
+#include "mechanics/Unit.h"
 #include "mechanics/UnitFactory.h"
 #include "mechanics/UnitManager.h"
+#include "render/GraphicRender.h"
 #include "resource/Graphic.h"
 
 void BasicGameSample::setupMap()

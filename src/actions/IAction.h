@@ -19,14 +19,10 @@
 #pragma once
 
 #include "core/Types.h"
-#include <genie/dat/UnitCommand.h>
 
-#include <memory>
+#include <genie/dat/unit/Action.h>
+
 #include <unordered_set>
-
-namespace genie {
-class Task;
-}
 
 struct Unit;
 struct Task;

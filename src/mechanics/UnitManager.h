@@ -17,7 +17,10 @@
 */
 
 #pragma once
+#include <SFML/Graphics/RenderTexture.hpp>
+#include <memory>
 #include <unordered_set>
+
 #include "Unit.h"
 
 #include <SFML/Graphics/RenderTexture.hpp>
@@ -27,8 +30,8 @@ class SfmlRenderTarget;
 struct Player;
 struct Building;
 struct Missile;
-
 struct Camera;
+
 typedef std::shared_ptr<Camera> CameraPtr;
 
 class Map;

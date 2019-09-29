@@ -1,13 +1,15 @@
 #ifndef ICONBUTTON_H
 #define ICONBUTTON_H
 
-#include "core/Types.h"
-
-#include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/Texture.hpp>
+#include <memory>
+
+#include "core/Types.h"
 
 namespace genie {
 class SlpFile;
+
 typedef std::shared_ptr<SlpFile> SlpFilePtr;
 }
 

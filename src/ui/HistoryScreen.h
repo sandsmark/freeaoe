@@ -16,7 +16,18 @@
 */
 #pragma once
 
+#include <SFML/Graphics/Text.hpp>
+#include <SFML/Graphics/Texture.hpp>
+#include <array>
+#include <string>
+#include <vector>
+
 #include "UiScreen.h"
+#include "core/Types.h"
+
+namespace sf {
+class Event;
+}  // namespace sf
 
 class HistoryScreen : public UiScreen
 {

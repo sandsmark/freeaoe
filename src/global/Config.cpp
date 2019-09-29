@@ -17,16 +17,18 @@
 */
 
 #include "Config.h"
+
 #include "core/Logger.h"
 #include "core/Utility.h"
 
-#include <cassert>
-#include <fstream>
-#include <iostream>
-#include <iomanip>
-#include <unordered_set>
-
 #include <filesystem>
+#include <iomanip>
+#include <iostream>
+#include <type_traits>
+#include <utility>
+#include <fstream>
+
+#include <stdlib.h>
 
 static const char *s_registryGroupAoK = R"(SOFTWARE\Microsoft\Microsoft Games\Age of Empires\2.0)";
 static const char *s_registryGroupTC = R"(SOFTWARE\Microsoft\Microsoft Games\Age of Empires II: The Conquerors Expansion\1.0)";
@@ -35,9 +37,9 @@ static const char *s_registryKey = "InstallationDirectory";
 #if defined(WIN32) || defined(__WIN32) || defined(__WIN32__)
 #define WINAPI_FAMILY_PARTITION
 #include <atlbase.h>
+#include <knownfolders.h>
 #include <shlobj.h>
 #include <codecvt>
-#include <knownfolders.h>
 
 
 static std::string getRegistryString(const char *regGroup, const char *key)

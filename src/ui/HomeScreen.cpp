@@ -16,18 +16,27 @@
 */
 #include "HomeScreen.h"
 
-#include "resource/AssetManager.h"
-#include "resource/LanguageManager.h"
-#include "resource/DataManager.h"
-#include "resource/Resource.h"
-#include "render/SfmlRenderTarget.h"
-#include <genie/resource/UIFile.h>
-#include <genie/resource/SlpFile.h>
-
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Sprite.hpp>
-#include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Window/Event.hpp>
+#include <genie/resource/SlpFile.h>
+#include <genie/resource/SlpFrame.h>
+#include <memory>
+
+#include "TextButton.h"
+#include "core/Logger.h"
+#include "core/Utility.h"
+#include "render/SfmlRenderTarget.h"
+#include "resource/AssetManager.h"
+#include "resource/DataManager.h"
+#include "resource/LanguageManager.h"
+#include "resource/Resource.h"
+
+namespace genie {
+class PalFile;
+}  // namespace genie
 
 HomeScreen::HomeScreen() :
     UiScreen(DataManager::Inst().isHd() ? "main.sin" : "xmain.sin")

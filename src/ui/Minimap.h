@@ -1,16 +1,20 @@
 #ifndef MINIMAP_H
 #define MINIMAP_H
 
-#include "core/Types.h"
-
-#include <memory>
-#include "mechanics/IState.h"
+#include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RenderTexture.hpp>
+#include <memory>
+
+#include "core/Types.h"
+#include "mechanics/IState.h"
 
 class Map;
-struct Unit;
-class UnitManager;
 class SfmlRenderTarget;
+class UnitManager;
+namespace sf {
+class Event;
+}  // namespace sf
+struct Unit;
 struct VisibilityMap;
 
 class Minimap : public IState

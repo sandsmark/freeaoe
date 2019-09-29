@@ -1,12 +1,9 @@
 #ifndef EVENTLISTENER_H
 #define EVENTLISTENER_H
 
-#include <cstddef>
-
-#include "core/Types.h"
-
-struct Unit;
+struct MapPos;
 struct Player;
+struct Unit;
 
 /**
  * @brief For classes that want to monitor for events, e. g. for scenarios or AI

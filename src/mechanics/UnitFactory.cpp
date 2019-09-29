@@ -17,15 +17,32 @@
 */
 
 #include "UnitFactory.h"
-#include "resource/DataManager.h"
-#include "core/Constants.h"
-#include "Farm.h"
-#include "Civilization.h"
-#include "Building.h"
-#include "Player.h"
-#include "actions/ActionFly.h"
 
 #include <genie/dat/Unit.h>
+#include <genie/dat/ResourceUsage.h>
+#include <genie/dat/UnitCommand.h>
+#include <genie/dat/unit/Action.h>
+#include <genie/dat/unit/Building.h>
+#include <algorithm>
+#include <limits>
+#include <memory>
+#include <utility>
+#include <vector>
+
+#include "Building.h"
+#include "Civilization.h"
+#include "Farm.h"
+#include "Player.h"
+#include "actions/ActionFly.h"
+#include "actions/IAction.h"
+#include "core/Logger.h"
+#include "core/ResourceMap.h"
+#include "core/Types.h"
+#include "core/Utility.h"
+#include "render/GraphicRender.h"
+#include "resource/DataManager.h"
+
+class UnitManager;
 
 
 UnitFactory &UnitFactory::Inst()

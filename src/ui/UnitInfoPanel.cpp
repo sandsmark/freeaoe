@@ -16,18 +16,31 @@
 */
 #include "UnitInfoPanel.h"
 
-#include "mechanics/UnitManager.h"
-#include "mechanics/Entity.h"
-#include "render/SfmlRenderTarget.h"
-#include "resource/LanguageManager.h"
-#include "resource/AssetManager.h"
-#include "resource/Resource.h"
-#include "mechanics/Player.h"
-#include "mechanics/Civilization.h"
-#include "mechanics/Building.h"
-
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/Rect.hpp>
+#include <SFML/System/Vector2.hpp>
+#include <SFML/Window/Event.hpp>
 #include <genie/dat/Unit.h>
+#include <genie/dat/ResourceUsage.h>
+#include <genie/dat/unit/AttackOrArmor.h>
+#include <genie/dat/unit/Combat.h>
 #include <genie/resource/SlpFile.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <string>
+#include <utility>
+
+#include "core/Logger.h"
+#include "core/ResourceMap.h"
+#include "mechanics/Building.h"
+#include "mechanics/Civilization.h"
+#include "mechanics/Player.h"
+#include "mechanics/Unit.h"
+#include "mechanics/UnitManager.h"
+#include "render/SfmlRenderTarget.h"
+#include "resource/AssetManager.h"
+#include "resource/LanguageManager.h"
+#include "resource/Resource.h"
 
 UnitInfoPanel::UnitInfoPanel(const std::shared_ptr<SfmlRenderTarget> &renderTarget) :
     m_renderTarget(renderTarget)

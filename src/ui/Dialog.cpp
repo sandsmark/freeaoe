@@ -1,8 +1,12 @@
 #include "Dialog.h"
 
-#include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Window/Event.hpp>
+#include <string>
+
+#include "TextButton.h"
+#include "core/Types.h"
 
 Dialog::Dialog(UiScreen *screen) :
     m_screen(screen)

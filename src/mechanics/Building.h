@@ -1,11 +1,22 @@
 #ifndef BUILDING_H
 #define BUILDING_H
 
-#include "Unit.h"
+#include <stddef.h>
+#include <memory>
+#include <string>
 #include <vector>
+
+#include "Entity.h"
+#include "Unit.h"
+#include "core/ResourceMap.h"
+#include "core/Types.h"
+
+class UnitManager;
+struct Player;
 
 namespace genie {
 class Tech;
+class Unit;
 }
 
 struct Building : public Unit

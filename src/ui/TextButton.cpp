@@ -1,11 +1,14 @@
 #include "TextButton.h"
 
-#include "render/IRenderTarget.h"
-#include "render/SfmlRenderTarget.h"
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <memory>
+#include <utility>
 
-#include "resource/AssetManager.h"
 #include "UiScreen.h"
+#include "render/SfmlRenderTarget.h"
 
 TextButton::TextButton()
 {

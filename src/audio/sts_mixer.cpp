@@ -29,7 +29,6 @@
 */
 
 #include "sts_mixer.h"
-#include "core/Logger.h"
 
 enum {
   STS_MIXER_VOICE_STOPPED,

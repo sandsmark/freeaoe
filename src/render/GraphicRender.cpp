@@ -18,17 +18,23 @@
 
 #include "GraphicRender.h"
 
-#include "audio/AudioPlayer.h"
-#include <resource/AssetManager.h>
-#include <resource/Graphic.h>
-#include <resource/DataManager.h>
-#include <SFML/Graphics/Sprite.hpp>
-#include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/BlendMode.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
-#include "IRenderTarget.h"
+#include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/Texture.hpp>
+#include <SFML/System/Vector2.hpp>
+#include <genie/dat/GraphicAttackSound.h>
+#include <genie/dat/GraphicDelta.h>
+#include <resource/AssetManager.h>
+#include <algorithm>
+#include <memory>
+#include <vector>
 
-#include "MapRenderer.h"
-#include "mechanics/Entity.h"
+#include "audio/AudioPlayer.h"
+#include "core/Logger.h"
+#include "core/Types.h"
+#include "render/GraphicRender.h"
+#include "resource/Graphic.h"
 
 const sf::Texture GraphicRender::nullImage;
 

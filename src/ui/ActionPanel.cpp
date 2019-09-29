@@ -1,18 +1,30 @@
 #include "ActionPanel.h"
-#include "mechanics/UnitManager.h"
-#include "render/SfmlRenderTarget.h"
-#include <iostream>
+
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/Image.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
-#include <genie/resource/SlpFile.h>
+#include <SFML/Graphics/Texture.hpp>
+#include <SFML/Window/Event.hpp>
+#include <genie/dat/Research.h>
 #include <genie/dat/Unit.h>
 #include <genie/dat/UnitCommand.h>
-#include "resource/DataManager.h"
-#include "resource/Resource.h"
-#include "resource/LanguageManager.h"
-#include "resource/AssetManager.h"
-#include "mechanics/UnitFactory.h"
-#include "mechanics/Player.h"
+
+#include <genie/dat/unit/Creatable.h>
+#include <genie/resource/SlpFile.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <algorithm>
+
+#include "actions/IAction.h"
+#include "core/Logger.h"
 #include "mechanics/Civilization.h"
+#include "mechanics/Player.h"
+#include "mechanics/Unit.h"
+#include "mechanics/UnitManager.h"
+#include "render/SfmlRenderTarget.h"
+#include "resource/AssetManager.h"
+#include "resource/LanguageManager.h"
+#include "resource/Resource.h"
 
 ActionPanel::ActionPanel(const std::shared_ptr<SfmlRenderTarget> &renderTarget) :
     m_renderTarget(renderTarget)

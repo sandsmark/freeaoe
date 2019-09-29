@@ -1,10 +1,13 @@
 #pragma once
 
-#include "IAction.h"
+#include "actions/IAction.h"
+#include "core/Types.h"
 #include "mechanics/Unit.h"
 
-struct Player;
-class UnitManager;
+#include <genie/dat/ResourceUsage.h>
+#include <genie/dat/UnitCommand.h>
+
+#include <memory>
 
 class ActionDropOff : public IAction
 {

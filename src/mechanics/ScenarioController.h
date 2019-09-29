@@ -2,13 +2,14 @@
 #define SCENARIOCONTROLLER_H
 
 #include "global/EventListener.h"
+#include "core/Logger.h"
+#include "core/Types.h"
 
 #include <genie/script/scn/Trigger.h>
 
-#include <memory>
-
 class GameState;
 class Engine;
+struct Unit;
 
 namespace genie {
 class ScnFile;

@@ -1,16 +1,26 @@
 #include "Farm.h"
-#include "core/Constants.h"
+
+#include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+#include <genie/Types.h>
+#include <genie/dat/Unit.h>
+#include <genie/dat/unit/../ResourceUsage.h>
+#include <genie/dat/unit/Creatable.h>
+#include <genie/resource/SlpFile.h>
+#include <genie/resource/SlpFrame.h>
+#include <algorithm>
+
 #include "Map.h"
-#include "mechanics/Player.h"
+#include "Unit.h"
+#include "core/Constants.h"
+#include "core/Logger.h"
+#include "core/ResourceMap.h"
 #include "core/Utility.h"
 #include "resource/AssetManager.h"
 #include "resource/Graphic.h"
 
-#include <genie/dat/Unit.h>
-#include <genie/resource/SlpFile.h>
-
-#include <SFML/Graphics/Sprite.hpp>
-#include <SFML/Graphics/RenderTarget.hpp>
+class UnitManager;
+struct Player;
 
 Farm::Farm(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager) :
     Building(data_, player_, unitManager),

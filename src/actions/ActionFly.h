@@ -1,8 +1,14 @@
 #pragma once
 
-#include "IAction.h"
-
+#include "actions/IAction.h"
 #include "core/Constants.h"
+#include "core/Types.h"
+
+#include <genie/dat/UnitCommand.h>
+
+#include <memory>
+
+struct Unit;
 
 class ActionFly : public IAction
 {

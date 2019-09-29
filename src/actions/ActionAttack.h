@@ -5,6 +5,10 @@
 struct Unit;
 using UnitPtr = std::shared_ptr<Unit>;
 
+#include <genie/dat/UnitCommand.h>
+
+#include <memory>
+
 class ActionAttack : public IAction
 {
 public:
