@@ -258,25 +258,43 @@ bool Building::update(Time time) noexcept
     return updated;
 }
 
-bool Building::canPlace(const MapPtr &map) noexcept
+void Building::setPosition(const MapPos &pos, const bool initial) noexcept
+{
+    Unit::setPosition(Unit::snapPositionToGrid(pos, m_map.lock(), data()), initial);
+}
+
+bool Building::canPlace(const MapPos &position, const MapPtr &map, const genie::Unit *data) noexcept
 {
     if (!map) {
         WARN << "No map available";
         return false;
     }
+    if (!data) {
+        WARN << "no data!";
+        return false;
+    }
 
-    std::vector<float> passable = DataManager::Inst().getTerrainRestriction(data()->TerrainRestriction).PassableBuildableDmgMultiplier;
+    std::vector<float> passable = DataManager::Inst().getTerrainRestriction(data->TerrainRestriction).PassableBuildableDmgMultiplier;
 
-    const int tileX = position().x / Constants::TILE_SIZE;
-    const int tileY = position().y / Constants::TILE_SIZE;
+    const int tileX = position.x / Constants::TILE_SIZE;
+    const int tileY = position.y / Constants::TILE_SIZE;
 
-    const int valid1 = data()->PlacementTerrain.first;
-    const int valid2 = data()->PlacementTerrain.first;
+    const int valid1 = data->PlacementTerrain.first;
+    const int valid2 = data->PlacementTerrain.first;
 
-    const int width = data()->ClearanceSize.x + data()->Size.x;
-    const int height = data()->ClearanceSize.x + data()->Size.x;
-    for (int dx = 0; dx < data()->ClearanceSize.x + data()->Size.x; dx++) {
-        for (int dy = 0; dy < data()->ClearanceSize.y + data()->Size.y; dy++) {
+    const int width = data->ClearanceSize.x + data->Size.x;
+    const int height = data->ClearanceSize.x + data->Size.x;
+
+    if (!map->isValidTile(tileX - width/2, tileY - width/2)) {
+        return false;
+    }
+
+    if (!map->isValidTile(tileX + width/2, tileY + height/2)) {
+        return false;
+    }
+
+    for (int dx = 0; dx < width; dx++) {
+        for (int dy = 0; dy < width; dy++) {
             const int terrainId = map->getTileAt(tileX + dx - width/2, tileY + dy - height/2).terrainId;
             if (valid1 != -1 && terrainId != valid1) {
                 return false;

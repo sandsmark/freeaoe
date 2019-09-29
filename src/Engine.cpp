@@ -449,12 +449,19 @@ bool Engine::handleMousePress(const sf::Event &event, const std::shared_ptr<Game
         m_selectionCurr = mousePos + ScreenPos(1, 1);
         m_selecting = true;
     }
+
     return true;
 }
 
 bool Engine::handleMouseRelease(const sf::Event &event, const std::shared_ptr<GameState> &state)
 {
     const ScreenPos mousePos(event.mouseButton.x, event.mouseButton.y);
+
+    if (mousePos.y < 800 && event.mouseButton.button == sf::Mouse::Button::Left) {
+        if (state->unitManager()->onMouseRelease()) {
+            return true;
+        }
+    }
 
     IconButton::Type clickedButton = IconButton::Invalid;
     for (const std::unique_ptr<IconButton> &button : m_buttons) {

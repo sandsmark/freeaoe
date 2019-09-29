@@ -142,6 +142,9 @@ public:
             return true;
         }
     }
+    inline bool isValidPosition(const MapPos &position) {
+        return position.x >= 0 && position.y >= 0 && position.x < width() && position.y < height();
+    }
 
 private:
     void updateTileBlend(int tileX, int tileY) noexcept;

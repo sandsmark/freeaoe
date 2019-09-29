@@ -41,9 +41,11 @@ struct Building : public Unit
 
     bool update(Time time) noexcept override;
 
+    void setPosition(const MapPos &pos, const bool initial = false) noexcept override;
+
     MapPos waypoint;
 
-    bool canPlace(const MapPtr &map) noexcept;
+    static bool canPlace(const MapPos &pos, const MapPtr &map, const genie::Unit *data) noexcept;
 
 private:
     void finalizeUnit() noexcept;

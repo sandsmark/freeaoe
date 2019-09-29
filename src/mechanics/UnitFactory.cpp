@@ -33,6 +33,7 @@
 #include "Civilization.h"
 #include "Farm.h"
 #include "Player.h"
+#include "UnitManager.h"
 #include "actions/ActionFly.h"
 #include "actions/IAction.h"
 #include "core/Logger.h"
@@ -49,6 +50,21 @@ UnitFactory &UnitFactory::Inst()
 {
     static UnitFactory inst;
     return inst;
+}
+
+Unit::Ptr UnitFactory::duplicateUnit(const Unit::Ptr &other)
+{
+    if (!other) {
+        WARN << "can't duplicate null unit";
+        return nullptr;
+    }
+    Player::Ptr owner = other->player.lock();
+    if (!owner) {
+        WARN << "can't duplicate unit without owner";
+        return nullptr;
+    }
+
+    return createUnit(other->data()->ID, other->position(), owner, other->unitManager());
 }
 
 void UnitFactory::handleDefaultAction(const Unit::Ptr &unit, const genie::Task &task)
@@ -110,8 +126,6 @@ Unit::Ptr UnitFactory::createUnit(const int ID, const MapPos &position, const Pl
     }
 
     if (gunit.Type >= genie::Unit::BuildingType) {
-        unit->snapPositionToGrid();
-
         if (gunit.Building.StackUnitID >= 0) {
             const genie::Unit &stackData = owner->civilization.unitData(gunit.Building.StackUnitID);
             owner->applyResearch(gunit.Building.TechID);

@@ -22,6 +22,7 @@
 #include "Civilization.h"
 #include "Missile.h"
 #include "Player.h"
+#include "Farm.h"
 #include "UnitFactory.h"
 #include "actions/ActionAttack.h"
 #include "actions/ActionMove.h"
@@ -417,37 +418,39 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
     for (const Missile::Ptr &missile : visibleMissiles) {
         missile->renderer().render(*renderTarget->renderTarget_, renderTarget->camera()->absoluteScreenPos(missile->position()), RenderType::Base);
     }
-    if (m_state == State::PlacingBuilding) {
-        if (!m_buildingToPlace) {
-            WARN << "No building to place";
-            m_state = State::Default;
-            return;
+
+    if (m_state == State::PlacingBuilding || m_state == State::PlacingWall) {
+//        DBG << "placing buildings" << m_buildingsToPlace.size();
+
+        if (m_buildingsToPlace.size() == 1) {
+            const double width = m_buildingsToPlace[0].data->OutlineSize.x * Constants::TILE_SIZE_HORIZONTAL + 1;
+            const double height =  m_buildingsToPlace[0].data->OutlineSize.y * Constants::TILE_SIZE_VERTICAL + 1;
+
+            sf::CircleShape circle;
+            circle.setFillColor(sf::Color::Transparent);
+            circle.setOutlineThickness(1);
+            circle.setRadius(width);
+            circle.setPointCount(4);
+            circle.setScale(1, height / width);
+
+            ScreenPos pos = camera->absoluteScreenPos(m_buildingsToPlace[0].position);
+
+
+            circle.setPosition(pos.x - width, pos.y - height + 1);
+            circle.setOutlineColor(sf::Color::Black);
+            renderTarget->draw(circle);
+
+            circle.setPosition(pos.x - width, pos.y - height);
+            circle.setOutlineColor(sf::Color::White);
+            renderTarget->draw(circle);
         }
 
-        const double width = m_buildingToPlace->data()->OutlineSize.x * Constants::TILE_SIZE_HORIZONTAL + 1;
-        const double height =  m_buildingToPlace->data()->OutlineSize.y * Constants::TILE_SIZE_VERTICAL + 1;
+        for (const UnplacedBuilding &building : m_buildingsToPlace) {
+            building.graphic->render(*renderTarget->renderTarget_,
+                                        renderTarget->camera()->absoluteScreenPos(building.position),
+                                        m_canPlaceBuilding ? RenderType::ConstructAvailable : RenderType::ConstructUnavailable);
 
-        sf::CircleShape circle;
-        circle.setFillColor(sf::Color::Transparent);
-        circle.setOutlineThickness(1);
-        circle.setRadius(width);
-        circle.setPointCount(4);
-        circle.setScale(1, height / width);
-
-        ScreenPos pos = camera->absoluteScreenPos(m_buildingToPlace->position());
-
-
-        circle.setPosition(pos.x - width, pos.y - height + 1);
-        circle.setOutlineColor(sf::Color::Black);
-        renderTarget->draw(circle);
-
-        circle.setPosition(pos.x - width, pos.y - height);
-        circle.setOutlineColor(sf::Color::White);
-        renderTarget->draw(circle);
-
-        m_buildingToPlace->renderer().render(*renderTarget->renderTarget_,
-                                             renderTarget->camera()->absoluteScreenPos(m_buildingToPlace->position()),
-                                             m_canPlaceBuilding ? RenderType::ConstructAvailable : RenderType::ConstructUnavailable);
+        }
     }
 }
 
@@ -461,42 +464,26 @@ bool UnitManager::onLeftClick(const ScreenPos &screenPos, const CameraPtr &camer
 
     switch (m_state) {
     case State::PlacingBuilding: {
-        DBG << "placing bulding";
-        if (!m_buildingToPlace) {
-            WARN << "Can't place null building";
+        if (m_buildingsToPlace.empty()) {
+            WARN << "no buildings to place while placing buildings!";
+            m_state = State::Default;
             return false;
         }
-        if (!m_canPlaceBuilding) {
-            WARN << "Can't place building here";
-            return false;
+        if (m_buildingsToPlace[0].isWall) {
+            m_wallPlacingStart = camera->absoluteMapPos(screenPos);
+            m_state = State::PlacingWall;
+            return true;
         }
 
-        m_buildingToPlace->isVisible = true;
-        add(m_buildingToPlace);
-        m_buildingToPlace->setCreationProgress(0);
-
-        for (const Unit::Ptr &unit : m_selectedUnits) {
-            if (unit->playerId != humanPlayer->playerId) {
-                continue;
-            }
-
-            Task task;
-            for (const Task &potential : unit->availableActions()) {
-                if (potential.data->ActionType == genie::Task::Build) {
-                    task = potential;
-                    break;
-                }
-            }
-            if (!task.data) {
-                continue;
-            }
-
-            unit->clearActionQueue();
-            IAction::assignTask(task, unit, m_buildingToPlace);
+        if (m_buildingsToPlace.size() != 1) {
+            WARN << "more than one building to place, and it's not a wall";
         }
 
-        m_buildingToPlace.reset();
-        break;
+        placeBuilding(m_buildingsToPlace[0]);
+        m_buildingsToPlace.clear();
+
+        m_state = State::Default;
+        return true;
     }
     case State::SelectingAttackTarget: {
         DBG << "Selecting attack target";
@@ -534,7 +521,7 @@ bool UnitManager::onLeftClick(const ScreenPos &screenPos, const CameraPtr &camer
 
 void UnitManager::onRightClick(const ScreenPos &screenPos, const CameraPtr &camera)
 {
-    m_buildingToPlace.reset();
+    m_buildingsToPlace.clear();
 
     if (m_selectedUnits.empty()) {
         return;
@@ -596,16 +583,91 @@ void UnitManager::onRightClick(const ScreenPos &screenPos, const CameraPtr &came
 
 void UnitManager::onMouseMove(const MapPos &mapPos)
 {
-    if (m_buildingToPlace) {
-        m_buildingToPlace->setPosition(mapPos);
-        m_buildingToPlace->snapPositionToGrid();
-        m_canPlaceBuilding = m_buildingToPlace->canPlace(m_map);
+    if (m_buildingsToPlace.empty()) {
+        return;
     }
+
+    if (m_state == State::PlacingWall) {
+        MapPos startTile = (m_wallPlacingStart / Constants::TILE_SIZE).rounded();
+        MapPos endTile = (mapPos / Constants::TILE_SIZE).rounded();
+
+        DBG << "placing wall from" << startTile << "to" << endTile;
+
+        DBG << std::abs(startTile.angleTo(endTile) - M_PI_2);
+
+        const size_t tileCount = std::max<size_t>(startTile.manhattanDistance(endTile), 1);
+        if (tileCount > m_buildingsToPlace.size()) {
+            for (size_t i = 0; i < tileCount - m_buildingsToPlace.size() + 1; i++) {
+                m_buildingsToPlace.emplace_back(m_buildingsToPlace[0]); // duplicate
+                DBG << i << m_buildingsToPlace.size();
+//                DBG << m_buildingsToPlace[m_buildingsToPlace.size() - 1].data;
+            }
+        } else {
+            // Shrink
+            m_buildingsToPlace.resize(tileCount);
+        }
+
+        assert(tileCount == m_buildingsToPlace.size());
+
+        size_t index = 0;
+
+        const int startX = startTile.x < endTile.x ? startTile.x : endTile.x;
+        const int startY = startTile.y < endTile.y ? startTile.y : endTile.y;
+        const int endX = startTile.x < endTile.x ? endTile.x : startTile.x;
+        const int endY = startTile.y < endTile.y ? endTile.y : startTile.y;
+
+        if (std::abs(startTile.x - endTile.x) > std::abs(startTile.y - endTile.y)) {
+            for (int x = startX; x < endX; x++) {
+                m_buildingsToPlace[index++].position = MapPos(x, startTile.y);
+            }
+
+            for (int y = startY; y < endY; y++) {
+                m_buildingsToPlace[index++].position = MapPos(endTile.x, y);
+            }
+        } else {
+            for (int x = startX; x < endX; x++) {
+                m_buildingsToPlace[index++].position = MapPos(x, endTile.y);
+            }
+
+            for (int y = startY; y < endY; y++) {
+                m_buildingsToPlace[index++].position = MapPos(startTile.x, y);
+            }
+        }
+
+        for (UnplacedBuilding &building : m_buildingsToPlace) {
+            building.position *= Constants::TILE_SIZE;
+        }
+        m_canPlaceBuilding = true;
+    } else {
+        m_buildingsToPlace[0].position = Unit::snapPositionToGrid(mapPos, m_map, m_buildingsToPlace[0].data);
+    }
+
+    m_canPlaceBuilding = true;
+    for (const UnplacedBuilding &building : m_buildingsToPlace) {
+        if (!Building::canPlace(building.position, m_map, building.data)) {
+            m_canPlaceBuilding = false;
+            break;
+        }
+    }
+}
+
+bool UnitManager::onMouseRelease()
+{
+    if (m_buildingsToPlace.empty()) {
+        return false;
+    }
+
+    for (const UnplacedBuilding &building : m_buildingsToPlace) {
+        placeBuilding(building);
+    }
+    m_buildingsToPlace.clear();
+
+    return true;
 }
 
 void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &camera)
 {
-    if (m_buildingToPlace) {
+    if (!m_buildingsToPlace.empty()) {
         return;
     }
 
@@ -702,7 +764,7 @@ void UnitManager::setSelectedUnits(const UnitSet &units)
 {
     m_selectedUnits = units;
     m_currentActions.clear();
-    m_buildingToPlace.reset();
+    m_buildingsToPlace.clear();
 
     if (units.empty()) {
         return;
@@ -743,16 +805,25 @@ void UnitManager::setSelectedUnits(const UnitSet &units)
 #endif
 }
 
-void UnitManager::placeBuilding(const int unitId, const std::shared_ptr<Player> &player)
+void UnitManager::startPlaceBuilding(const int unitId, const std::shared_ptr<Player> &player)
 {
-    Unit::Ptr unit = UnitFactory::Inst().createUnit(unitId, MapPos(), player, *this);
-    m_buildingToPlace = Unit::asBuilding(unit);
-    if (!m_buildingToPlace) {
-        WARN << "Got invalid unit from factory";
-        return;
+    DBG << "starting to place unit" << unitId;
+    m_buildingsToPlace.clear();
+
+    UnplacedBuilding toPlace;
+    toPlace.unitID = unitId;
+    toPlace.data = &player->civilization.unitData(unitId);
+    toPlace.isWall = toPlace.data->Class == genie::Unit::Wall;
+    DBG << "is wall?" << toPlace.isWall;
+    if (unitId == Unit::Farm) { // Farms are very special (shortbus special), so better to just use a special class
+        DBG << "placing a farm";
+        toPlace.graphic = std::make_shared<FarmRender>(Size(toPlace.data->Size));
+    } else {
+        toPlace.graphic = std::make_shared<GraphicRender>();
+        toPlace.graphic->setGraphic(toPlace.data->StandingGraphic.first);
     }
-    m_buildingToPlace->selected = true;
-    m_canPlaceBuilding = false;
+
+    m_buildingsToPlace.push_back(std::move(toPlace));
     m_state = State::PlacingBuilding;
 }
 
@@ -845,6 +916,52 @@ void UnitManager::moveUnitTo(const Unit::Ptr &unit, const MapPos &targetPos)
 void UnitManager::selectAttackTarget()
 {
     m_state = State::SelectingAttackTarget;
+}
+
+void UnitManager::placeBuilding(const UnplacedBuilding &building)
+{
+    Unit::Ptr unit = UnitFactory::Inst().createUnit(building.unitID, building.position, m_humanPlayer.lock(), *this);
+    Building::Ptr buildingToPlace = Unit::asBuilding(unit);
+
+    DBG << "placing bulding";
+    if (!buildingToPlace) {
+        WARN << "Can't place null building";
+        return;
+    }
+    if (!m_canPlaceBuilding) {
+        WARN << "Can't place building here";
+        return;
+    }
+
+    Player::Ptr humanPlayer = m_humanPlayer.lock();
+    if (!humanPlayer) {
+        WARN << "human player gone";
+        return;
+    }
+
+    buildingToPlace->isVisible = true;
+    add(buildingToPlace);
+    buildingToPlace->setCreationProgress(0);
+
+    for (const Unit::Ptr &unit : m_selectedUnits) {
+        if (unit->playerId != humanPlayer->playerId) {
+            continue;
+        }
+
+        Task task;
+        for (const Task &potential : unit->availableActions()) {
+            if (potential.data->ActionType == genie::Task::Build) {
+                task = potential;
+                break;
+            }
+        }
+        if (!task.data) {
+            continue;
+        }
+
+        unit->clearActionQueue();
+        IAction::assignTask(task, unit, buildingToPlace);
+    }
 }
 
 void UnitManager::playSound(const Unit::Ptr &unit)

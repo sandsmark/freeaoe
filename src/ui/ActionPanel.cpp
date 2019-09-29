@@ -535,7 +535,7 @@ void ActionPanel::addMilitaryButtons(const std::shared_ptr<Unit> &unit)
 void ActionPanel::handleButtonClick(const ActionPanel::InterfaceButton &button)
 {
     if (button.type == InterfaceButton::CreateBuilding) {
-        m_unitManager->placeBuilding(button.unit->ID, m_humanPlayer);
+        m_unitManager->startPlaceBuilding(button.unit->ID, m_humanPlayer);
         return;
     } else if (button.type == InterfaceButton::CreateUnit) {
         m_unitManager->enqueueProduceUnit(button.unit, m_selectedUnits);

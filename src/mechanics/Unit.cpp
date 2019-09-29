@@ -155,16 +155,24 @@ bool Unit::update(Time time) noexcept
     return Entity::update(time) || updated;
 }
 
-void Unit::snapPositionToGrid() noexcept
+MapPos Unit::snapPositionToGrid(const MapPos &position, const MapPtr &map, const genie::Unit *data) noexcept
 {
-    MapPos newPos = position();
+    MapPos newPos = position;
     newPos /= Constants::TILE_SIZE;
-    newPos += Size(m_data->Size);
+    newPos += Size(data->Size);
     newPos.round();
-    newPos -= Size(m_data->Size);
+    newPos -= Size(data->Size);
     newPos *= Constants::TILE_SIZE;
 
-    setPosition(newPos);
+    if (map) {
+        if (map->isValidPosition(newPos)) {
+            newPos.z = map->elevationAt(newPos);
+        }
+    } else {
+        WARN << "map gone!";
+    }
+
+    return newPos;
 }
 
 const std::vector<const genie::Unit *> Unit::creatableUnits() noexcept

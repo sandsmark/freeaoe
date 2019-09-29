@@ -136,7 +136,7 @@ struct Unit : public Entity
     void clearActionQueue() noexcept;
     const ActionPtr &currentAction() const noexcept { return m_currentAction; }
 
-    void snapPositionToGrid() noexcept;
+    [[nodiscard]] static MapPos snapPositionToGrid(const MapPos &position, const MapPtr &map, const genie::Unit *data) noexcept;
 
     bool update(Time time) noexcept override;
 

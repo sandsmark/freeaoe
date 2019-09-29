@@ -37,10 +37,18 @@ typedef std::shared_ptr<Camera> CameraPtr;
 class Map;
 using MapPtr = std::shared_ptr<Map>;
 
-
 namespace genie {
 class Tech;
 }
+
+struct UnplacedBuilding {
+    GraphicRenderPtr graphic;
+    MapPos position;
+    int unitID = 0;
+    const genie::Unit *data = nullptr;
+    bool isWall = false;
+};
+
 
 struct MapPositionSorter
 {
@@ -81,6 +89,7 @@ public:
 
     enum class State {
         PlacingBuilding,
+        PlacingWall,
         SelectingAttackTarget,
         Default
     };
@@ -103,6 +112,7 @@ public:
     bool onLeftClick(const ScreenPos &screenPos, const CameraPtr &camera);
     void onRightClick(const ScreenPos &screenPos, const CameraPtr &camera);
     void onMouseMove(const MapPos &mapPos);
+    bool onMouseRelease();
 
     void selectUnits(const ScreenRect &selectionRect, const CameraPtr &camera);
     void setMap(const MapPtr &map);
@@ -113,7 +123,7 @@ public:
 
     const UnitVector &units() const { return m_units; }
 
-    void placeBuilding(const int unitId, const std::shared_ptr<Player> &player);
+    void startPlaceBuilding(const int unitId, const std::shared_ptr<Player> &player);
     void enqueueProduceUnit(const genie::Unit *unitData, const UnitSet &producers);
     void enqueueResearch(const genie::Tech *techData, const UnitSet &producers);
 
@@ -134,6 +144,9 @@ public:
     void onCombatantUnitsMoved() { m_unitsMoved = true; }
 
 private:
+    void updateBuildingToPlace();
+    void placeBuilding(const UnplacedBuilding &building);
+
     State m_state = State::Default;
 
     void playSound(const Unit::Ptr &unit);
@@ -150,8 +163,9 @@ private:
     sf::RenderTexture m_outlineOverlay;
     MoveTargetMarker::Ptr m_moveTargetMarker;
 
-    std::shared_ptr<Building> m_buildingToPlace;
+    std::vector<UnplacedBuilding> m_buildingsToPlace;
     bool m_canPlaceBuilding = false;
+    MapPos m_wallPlacingStart;
 
     bool m_unitsMoved = true;
 

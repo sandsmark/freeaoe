@@ -170,6 +170,10 @@ struct MapPos {
         return *this;
     }
 
+    float manhattanDistance(const MapPos &other) const noexcept {
+        return std::abs(other.x - x) + std::abs(other.y - y);
+    }
+
     float distance(const MapPos &other) const noexcept {
         return util::hypot(other.x - x, other.y - y, other.z - z);
     }
