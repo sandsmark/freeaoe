@@ -212,6 +212,24 @@ struct MapPos {
         z = std::round(z);
     }
 
+    inline void clampX(const float min, const float max) noexcept {
+        x = std::clamp(x, min, max);
+    }
+
+    inline void clampY(const float min, const float max) noexcept {
+        y = std::clamp(y, min, max);
+    }
+
+    inline void clampZ(const float min, const float max) noexcept {
+        z = std::clamp(z, min, max);
+    }
+
+    inline void clamp(const Size size) noexcept {
+        x = std::clamp(x, 0.f, size.width);
+        y = std::clamp(y, 0.f, size.height);
+    }
+
+
     /// relative map position to screen position (map(0,0,0) is on screen(0,0)
     ScreenPos toScreen() const;
 };
