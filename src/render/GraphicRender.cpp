@@ -350,6 +350,16 @@ bool GraphicRender::checkClick(const ScreenPos &pos) const noexcept
     return false;
 }
 
+void GraphicRender::setOrientation(int orientation) noexcept
+{
+    if (!m_graphic) {
+        WARN << "no graphic!";
+        return;
+    }
+
+    setAngle(m_graphic->orientationToAngle(orientation));
+}
+
 void GraphicRender::setAngle(float angle) noexcept
 {
     m_angle = angle;

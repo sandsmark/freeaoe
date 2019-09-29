@@ -46,6 +46,7 @@ struct UnplacedBuilding {
     MapPos position;
     int unitID = 0;
     const genie::Unit *data = nullptr;
+    int orientation = 0; // "fake" orientation..
     bool isWall = false;
     bool canPlace = true;
 };

@@ -101,6 +101,8 @@ public:
     ScreenRect rect() const noexcept;
     bool checkClick(const ScreenPos &pos) const noexcept;
 
+    void setOrientation(int orientation) noexcept;
+
     void setAngle(float angle) noexcept;
     float angle() const { return m_angle; }
 

@@ -446,6 +446,7 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
         }
 
         for (const UnplacedBuilding &building : m_buildingsToPlace) {
+            building.graphic->setOrientation(building.orientation);
             building.graphic->render(*renderTarget->renderTarget_,
                                         renderTarget->camera()->absoluteScreenPos(building.position),
                                         building.canPlace ? RenderType::ConstructAvailable : RenderType::ConstructUnavailable);
@@ -606,6 +607,7 @@ void UnitManager::onMouseMove(const MapPos &mapPos)
             m_buildingsToPlace.resize(tileCount);
         }
         assert(tileCount == m_buildingsToPlace.size());
+        assert(tileCount > 0);
 
         size_t index = 0;
 
@@ -620,28 +622,45 @@ void UnitManager::onMouseMove(const MapPos &mapPos)
             int dx = startTile.x < endTile.x ? 1 : -1;
             int dy = startTile.y < endTile.y ? 1 : -1;
 
+            // Magic values
+            const int orientation = dx == dy ? 3 : 4;
+
             for (index = 0; index < m_buildingsToPlace.size(); index++) {
                 m_buildingsToPlace[index].position = MapPos(x, y);
+                m_buildingsToPlace[index].orientation = orientation;
+
                 x += dx;
                 y += dy;
             }
         } else if (std::abs(startTile.x - endTile.x) > std::abs(startTile.y - endTile.y)) {
             for (int x = startX; x < endX; x++) {
+                m_buildingsToPlace[index].orientation = 1;
                 m_buildingsToPlace[index++].position = MapPos(startTile.x < endTile.x ?  x : x + 1, startTile.y); // im probably dumb, but this works for now
+            }
+            if (index > 0) {
+                m_buildingsToPlace[index - 1].orientation = 2;
             }
 
             for (int y = startY; y < endY; y++) {
+                m_buildingsToPlace[index].orientation = 0;
                 m_buildingsToPlace[index++].position = MapPos(endTile.x, y);
             }
         } else {
             for (int x = startX; x < endX; x++) {
+                m_buildingsToPlace[index].orientation = 1;
                 m_buildingsToPlace[index++].position = MapPos(x, endTile.y);
+            }
+            if (index > 0) {
+                m_buildingsToPlace[index - 1].orientation = 2;
             }
 
             for (int y = startY; y < endY; y++) {
+                m_buildingsToPlace[index].orientation = 0;
                 m_buildingsToPlace[index++].position = MapPos(startTile.x, startTile.y < endTile.y ? y : y + 1); // im probably dumb, but this works for now x2
             }
         }
+        m_buildingsToPlace.front().orientation = 2;
+        m_buildingsToPlace.back().orientation = 2;
 
         // Do it in another pass here, makes the code above a bit more readable
         for (UnplacedBuilding &building : m_buildingsToPlace) {
