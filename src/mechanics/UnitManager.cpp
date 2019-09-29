@@ -448,8 +448,7 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
         for (const UnplacedBuilding &building : m_buildingsToPlace) {
             building.graphic->render(*renderTarget->renderTarget_,
                                         renderTarget->camera()->absoluteScreenPos(building.position),
-                                        m_canPlaceBuilding ? RenderType::ConstructAvailable : RenderType::ConstructUnavailable);
-
+                                        building.canPlace ? RenderType::ConstructAvailable : RenderType::ConstructUnavailable);
         }
     }
 }
@@ -589,24 +588,23 @@ void UnitManager::onMouseMove(const MapPos &mapPos)
 
     if (m_state == State::PlacingWall) {
         MapPos startTile = (m_wallPlacingStart / Constants::TILE_SIZE).rounded();
+        startTile.clamp(Size(m_map->getCols(), m_map->getRows()));
+
         MapPos endTile = (mapPos / Constants::TILE_SIZE).rounded();
+        endTile.clamp(Size(m_map->getCols(), m_map->getRows()));
 
-        DBG << "placing wall from" << startTile << "to" << endTile;
+        // Is the angle between the start and end less than 0.1 radians away from 45° (aka. M_PI / 4) from any quadrant?
+        const bool diagonal = std::abs(std::abs(std::fmod(startTile.angleTo(endTile), M_PI_2)) - M_PI_2 / 2.) < 0.1;
 
-        DBG << std::abs(startTile.angleTo(endTile) - M_PI_2);
-
-        const size_t tileCount = std::max<size_t>(startTile.manhattanDistance(endTile), 1);
+        const size_t tileCount = std::max<size_t>(diagonal ? startTile.distance(endTile) : startTile.manhattanDistance(endTile), 1);
         if (tileCount > m_buildingsToPlace.size()) {
-            for (size_t i = 0; i < tileCount - m_buildingsToPlace.size() + 1; i++) {
+            for (size_t i = m_buildingsToPlace.size(); i < tileCount; i++) {
                 m_buildingsToPlace.emplace_back(m_buildingsToPlace[0]); // duplicate
-                DBG << i << m_buildingsToPlace.size();
-//                DBG << m_buildingsToPlace[m_buildingsToPlace.size() - 1].data;
             }
         } else {
             // Shrink
             m_buildingsToPlace.resize(tileCount);
         }
-
         assert(tileCount == m_buildingsToPlace.size());
 
         size_t index = 0;
@@ -616,9 +614,20 @@ void UnitManager::onMouseMove(const MapPos &mapPos)
         const int endX = startTile.x < endTile.x ? endTile.x : startTile.x;
         const int endY = startTile.y < endTile.y ? endTile.y : startTile.y;
 
-        if (std::abs(startTile.x - endTile.x) > std::abs(startTile.y - endTile.y)) {
+        if (diagonal) {
+            int x = startTile.x;
+            int y = startTile.y;
+            int dx = startTile.x < endTile.x ? 1 : -1;
+            int dy = startTile.y < endTile.y ? 1 : -1;
+
+            for (index = 0; index < m_buildingsToPlace.size(); index++) {
+                m_buildingsToPlace[index].position = MapPos(x, y);
+                x += dx;
+                y += dy;
+            }
+        } else if (std::abs(startTile.x - endTile.x) > std::abs(startTile.y - endTile.y)) {
             for (int x = startX; x < endX; x++) {
-                m_buildingsToPlace[index++].position = MapPos(x, startTile.y);
+                m_buildingsToPlace[index++].position = MapPos(startTile.x < endTile.x ?  x : x + 1, startTile.y); // im probably dumb, but this works for now
             }
 
             for (int y = startY; y < endY; y++) {
@@ -630,24 +639,21 @@ void UnitManager::onMouseMove(const MapPos &mapPos)
             }
 
             for (int y = startY; y < endY; y++) {
-                m_buildingsToPlace[index++].position = MapPos(startTile.x, y);
+                m_buildingsToPlace[index++].position = MapPos(startTile.x, startTile.y < endTile.y ? y : y + 1); // im probably dumb, but this works for now x2
             }
         }
 
+        // Do it in another pass here, makes the code above a bit more readable
         for (UnplacedBuilding &building : m_buildingsToPlace) {
             building.position *= Constants::TILE_SIZE;
         }
-        m_canPlaceBuilding = true;
     } else {
-        m_buildingsToPlace[0].position = Unit::snapPositionToGrid(mapPos, m_map, m_buildingsToPlace[0].data);
+        m_buildingsToPlace[0].position = mapPos;
     }
 
-    m_canPlaceBuilding = true;
-    for (const UnplacedBuilding &building : m_buildingsToPlace) {
-        if (!Building::canPlace(building.position, m_map, building.data)) {
-            m_canPlaceBuilding = false;
-            break;
-        }
+    for (UnplacedBuilding &building : m_buildingsToPlace) {
+        building.position = Unit::snapPositionToGrid(building.position, m_map, building.data);
+        building.canPlace = Building::canPlace(building.position, m_map, building.data);
     }
 }
 
@@ -920,16 +926,17 @@ void UnitManager::selectAttackTarget()
 
 void UnitManager::placeBuilding(const UnplacedBuilding &building)
 {
+    if (!building.canPlace) {
+        DBG << "Can't place this building";
+        return;
+    }
+
     Unit::Ptr unit = UnitFactory::Inst().createUnit(building.unitID, building.position, m_humanPlayer.lock(), *this);
     Building::Ptr buildingToPlace = Unit::asBuilding(unit);
 
     DBG << "placing bulding";
     if (!buildingToPlace) {
         WARN << "Can't place null building";
-        return;
-    }
-    if (!m_canPlaceBuilding) {
-        WARN << "Can't place building here";
         return;
     }
 
@@ -959,7 +966,8 @@ void UnitManager::placeBuilding(const UnplacedBuilding &building)
             continue;
         }
 
-        unit->clearActionQueue();
+        // TODO: should clear this elsewhere, otherwise it just gets queued up
+//        unit->clearActionQueue();
         IAction::assignTask(task, unit, buildingToPlace);
     }
 }

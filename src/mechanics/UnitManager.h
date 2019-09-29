@@ -47,6 +47,7 @@ struct UnplacedBuilding {
     int unitID = 0;
     const genie::Unit *data = nullptr;
     bool isWall = false;
+    bool canPlace = true;
 };
 
 
@@ -164,7 +165,6 @@ private:
     MoveTargetMarker::Ptr m_moveTargetMarker;
 
     std::vector<UnplacedBuilding> m_buildingsToPlace;
-    bool m_canPlaceBuilding = false;
     MapPos m_wallPlacingStart;
 
     bool m_unitsMoved = true;
