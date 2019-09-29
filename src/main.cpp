@@ -16,13 +16,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <bits/exception.h>
-#include <errno.h>
 #include <genie/script/ScnFile.h>
 #include <string.h>
 #include <filesystem>
 #include <memory>
-#include <stdexcept>
 #include <string>
 
 #include "Engine.h"

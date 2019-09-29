@@ -1,6 +1,5 @@
 #include "Civilization.h"
 
-#include <ext/alloc_traits.h>
 #include <genie/Types.h>
 #include <genie/dat/Civ.h>
 #include <genie/dat/Research.h>
@@ -12,7 +11,6 @@
 #include <genie/dat/unit/Creatable.h>
 #include <genie/dat/unit/Missile.h>
 #include <genie/dat/unit/Moving.h>
-#include <stddef.h>
 #include <algorithm>
 #include <cstdint>
 

@@ -1,8 +1,6 @@
-#include <bits/exception.h>
 #include <genie/script/ScnFile.h>
 #include <filesystem>
 #include <memory>
-#include <stdexcept>
 #include <string>
 
 #include "core/Logger.h"

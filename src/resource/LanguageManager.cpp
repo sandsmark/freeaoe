@@ -1,7 +1,5 @@
 #include "LanguageManager.h"
 
-#include <bits/exception.h>
-#include <ctype.h>
 #include <genie/lang/LangFile.h>
 #include <algorithm>
 #include <filesystem>
