@@ -18,7 +18,6 @@
 
 #include "Unit.h"
 
-#include <ext/alloc_traits.h>
 #include <genie/dat/Unit.h>
 #include <genie/dat/ResourceUsage.h>
 #include <genie/dat/UnitCommand.h>
