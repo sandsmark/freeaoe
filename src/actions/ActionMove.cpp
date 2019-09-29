@@ -774,7 +774,9 @@ bool ActionMove::isPassable(const float x, const float y) noexcept
 
     const double z = m_map->elevationAt(MapPos(x, y));
     const Unit::Ptr unit = m_unit.lock();
-    const genie::XYZF size = unit->data()->Size;
+    genie::XYZF size = unit->data()->Size;
+    size.x *= Constants::TILE_SIZE;
+    size.y *= Constants::TILE_SIZE;
 
     for (int dx = tileX-1; dx<=tileX+1; dx++) {
         for (int dy = tileY-1; dy<=tileY+1; dy++) {
@@ -782,10 +784,6 @@ bool ActionMove::isPassable(const float x, const float y) noexcept
                 continue;
             }
             const std::vector<std::weak_ptr<Entity>> &entities = m_map->entitiesAt(dx, dy);
-
-            if (entities.empty()) {
-                continue;
-            }
 
             for (size_t i=0; i<entities.size(); i++) {
                 const Unit::Ptr otherUnit = Entity::asUnit(entities[i]);
@@ -801,14 +799,31 @@ bool ActionMove::isPassable(const float x, const float y) noexcept
                     continue;
                 }
 
-                const genie::XYZF &otherSize = otherUnit->data()->Size;
-                const MapPos &otherPos = otherUnit->position();
+                switch (otherUnit->data()->ObstructionType) {
+                case genie::Unit::PassableObstruction:
+                case genie::Unit::PassableObstruction2:
+                case genie::Unit::PassableNoOutlineObstruction:
+                    continue;
+                case genie::Unit::BuildingObstruction:
+                case genie::Unit::MountainObstruction: // TOOD:  apparently uses the selection mask?
+                    if (dx == tileX && dy == tileY) { // TODO: need to check the distance from the tile
+                        m_passable[cacheIndex] = false;
+                        return false;
+                    }
+                    break;
+                case genie::Unit::UnitObstruction:
+                default: {
+                    const genie::XYZF &otherSize = otherUnit->data()->Size;
+                    const MapPos &otherPos = otherUnit->position();
 
-                const double centreDistance = util::hypot(x - otherPos.x, y - otherPos.y, z - otherPos.z);
-                const double clearance = std::max(util::hypot(size.x, size.y, size.z), util::hypot(otherSize.x, otherSize.y, otherSize.z));
-                if (centreDistance < clearance) {
-                    m_passable[cacheIndex] = false;
-                    return false;
+                    const double centreDistance = util::hypot(x - otherPos.x, y - otherPos.y, z - otherPos.z);
+                    const double clearance = util::hypot(size.x, size.y, size.z) + util::hypot(otherSize.x, otherSize.y, otherSize.z);
+                    if (centreDistance < clearance) {
+                        m_passable[cacheIndex] = false;
+                        return false;
+                    }
+                    break;
+                }
                 }
             }
         }
