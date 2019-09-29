@@ -91,6 +91,12 @@ Unit::~Unit()
     }
 }
 
+void Unit::setAngle(const float angle) noexcept
+{
+    m_angle = angle;
+    m_renderer.setAngle(angle);
+}
+
 bool Unit::update(Time time) noexcept
 {
     if (isDying()) {
@@ -249,6 +255,8 @@ void Unit::setCreationProgress(float progress) noexcept
 
     if (m_data->Type == genie::Unit::BuildingType && progress < m_data->Creatable.TrainTime) {
         m_renderer.setAngle(M_PI_2 + 2. * M_PI * (creationProgress()));
+    } else {
+        m_renderer.setAngle(m_angle); // blarf
     }
 }
 

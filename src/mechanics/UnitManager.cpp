@@ -968,6 +968,9 @@ void UnitManager::placeBuilding(const UnplacedBuilding &building)
     buildingToPlace->isVisible = true;
     add(buildingToPlace);
     buildingToPlace->setCreationProgress(0);
+    DBG << building.orientation;
+    unit->setAngle(building.graphic->graphic()->orientationToAngle(building.orientation));
+    DBG << unit->angle();
 
     for (const Unit::Ptr &unit : m_selectedUnits) {
         if (unit->playerId != humanPlayer->playerId) {

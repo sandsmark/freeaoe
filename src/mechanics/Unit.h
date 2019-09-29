@@ -127,8 +127,8 @@ struct Unit : public Entity
 
     ~Unit();
 
-    inline float angle() const noexcept { return m_renderer.angle(); }
-    inline void setAngle(const float angle) noexcept { m_renderer.setAngle(angle); }
+    inline float angle() const noexcept { return m_angle; }
+    void setAngle(const float angle) noexcept;
 
     void prependAction(const ActionPtr &action) noexcept;
     void queueAction(const ActionPtr &action) noexcept;
@@ -227,6 +227,7 @@ protected:
 
     float m_damageTaken = 0.f;
     Time m_prevTime = 0;
+    float m_angle = 0.f;
 };
 
 
