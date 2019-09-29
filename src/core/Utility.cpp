@@ -8,8 +8,8 @@
 
 #if defined(WIN32) || defined(__WIN32) || defined(__WIN32__)
 #define WIN32_LEAN_AND_MEAN
-#include <shellapi.h>
 #include <windows.h>
+#include <shellapi.h>
 #else
 extern "C" {
 #include <unistd.h>
