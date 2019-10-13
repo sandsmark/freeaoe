@@ -72,9 +72,9 @@ while read -r -a LINE; do
     #echo "%token ${TYPETOKEN}" >> gen/tokens.y
 
     # Can't be arsed to do this properly
-    #if [[ "$TYPE" = "Age" ]]; then
-    #    RULEMATCHES+="| BuildingCastle \n"
-    #fi
+    if [[ "$TYPE" = "Age" ]]; then
+        RULEMATCHES+="| BuildingCastle \n"
+    fi
 
     if [[ -n "${RULEMATCHES}" ]]; then
         printf "${TYPE}:" | tr '[:upper:]' '[:lower:]' >> gen/rules
@@ -98,8 +98,8 @@ while read -r -a LINE; do
         ALL_TYPES+="  | ${TYPELOWERCASE}\n"
     fi
     #PARSER_TYPES+="%%type <${TYPE}> ${TYPE}\n"
-    #PARSER_TYPES+="%%type <${TYPE}> ${TYPELOWERCASE}\n"
-    PARSER_TYPES+="%%type <${TYPELOWERCASE}> ${TYPELOWERCASE}\n"
+    PARSER_TYPES+="%%type <${TYPE}> ${TYPELOWERCASE}\n"
+    #PARSER_TYPES+="%%type <${TYPELOWERCASE}> ${TYPELOWERCASE}\n"
     UNION_MEMBERS+="    ${TYPE} ${TYPELOWERCASE};\n"
 done < lists/parameters.list
 
@@ -259,7 +259,8 @@ printf "$PARSER_TYPES" >> gen/parser-types.y
 printf "%%union {\n    int number;\n    const char *string;\n${UNION_MEMBERS}}\n" >> gen/union.y
 
 
-rm -f grammar.gen.ypp && cat parser.head.y <(sort -u < gen/tokens.y) gen/union.y gen/parser-types.y parser.mid.y gen/rules  parser.tail.y > grammar.gen.ypp
+#rm -f grammar.gen.ypp && cat parser.head.y <(sort -u < gen/tokens.y) gen/union.y gen/parser-types.y parser.mid.y gen/rules  parser.tail.y > grammar.gen.ypp
+rm -f grammar.gen.ypp && cat parser.head.y <(sort -u < gen/tokens.y)  gen/parser-types.y parser.mid.y gen/rules  parser.tail.y > grammar.gen.ypp
 rm -f tokenizer.gen.flex && cat tokenizer.head.flex gen/tokens.flex tokenizer.tail.flex > tokenizer.gen.flex
 
 flex++ -Ca  -+  tokenizer.gen.flex  && bison --language=C++  --defines --debug -v -d grammar.gen.ypp

@@ -2,7 +2,7 @@
 
 aiscript:
     /* Empty */
-    | rules { printf("got script\n"); }
+    | rules ScriptEnd { printf("got script\n"); }
 ;
 
 rules:

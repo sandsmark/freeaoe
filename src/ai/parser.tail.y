@@ -1,17 +1,10 @@
-
 %%
 
 int main() {
-	yyin = stdin;
-
-	do {
-		yyparse();
-	} while(!feof(yyin));
-
-	return 0;
+       ai::ScriptLoader parser;
+       return parser.parse(std::cin, std::cout);
 }
 
-void yyerror(const char* s) {
-	fprintf(stderr, "Parse error: %s\n", s);
-	exit(1);
+void ai::ScriptParser::error(const location_type &loc, const std::string& message) {
+    std::cerr << "parser error: " << message << " at line " << loc.begin.line << " to " << loc.end.line << std::endl;
 }
