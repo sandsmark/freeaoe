@@ -2,181 +2,199 @@
 
 #include "core/Logger.h"
 
-std::unique_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const Fact type)
+std::shared_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const Fact type)
 {
     WARN << "unimplemented condition";
     return nullptr;
 }
 
-std::unique_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const Fact type, const Building building)
+std::shared_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const ai::Fact type, const ai::Age building)
 {
     WARN << "unimplemented condition";
     return nullptr;
 }
 
-std::unique_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const Fact type, const Building building, const RelOp comparison, const int number)
+std::shared_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const Fact type, const Building building)
 {
     WARN << "unimplemented condition";
     return nullptr;
 }
 
-std::unique_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const Fact type, const Civ civ)
+std::shared_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const Fact type, const Building building, const RelOp comparison, const int number)
 {
     WARN << "unimplemented condition";
     return nullptr;
 }
 
-std::unique_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const Fact type, const Commodity commodity)
+std::shared_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const Fact type, const Civ civ)
 {
     WARN << "unimplemented condition";
     return nullptr;
 }
 
-std::unique_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const Fact type, const Commodity commodity, const RelOp comparison, const int number)
+std::shared_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const Fact type, const Commodity commodity)
 {
     WARN << "unimplemented condition";
     return nullptr;
 }
 
-std::unique_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const Fact type, const MapSizeType mapsize)
+std::shared_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const Fact type, const Commodity commodity, const RelOp comparison, const int number)
 {
     WARN << "unimplemented condition";
     return nullptr;
 }
 
-std::unique_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const Fact type, const MapTypeName maptype)
+std::shared_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const Fact type, const MapSizeType mapsize)
 {
     WARN << "unimplemented condition";
     return nullptr;
 }
 
-std::unique_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const Fact type, const PlayerNumberType playerNumber)
+std::shared_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const Fact type, const MapTypeName maptype)
 {
     WARN << "unimplemented condition";
     return nullptr;
 }
 
-std::unique_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const Fact type, const PlayerNumberType playerNumber, const int number)
+std::shared_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const Fact type, const PlayerNumberType playerNumber)
 {
     WARN << "unimplemented condition";
     return nullptr;
 }
 
-std::unique_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const Fact type, const PlayerNumberType playerNumber, const Building building, const RelOp comparison, const int number)
+std::shared_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const Fact type, const PlayerNumberType playerNumber, const int number)
 {
     WARN << "unimplemented condition";
     return nullptr;
 }
 
-std::unique_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const Fact type, const PlayerNumberType playerNumber, const Civ civ)
+std::shared_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const ai::Fact type, const ai::PlayerNumberType playerNumber, const ai::RelOp comparison, const int number)
 {
     WARN << "unimplemented condition";
     return nullptr;
 }
 
-std::unique_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const Fact type, const PlayerNumberType playerNumber, const Commodity commodity, const RelOp comparison, const int number)
+std::shared_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const Fact type, const PlayerNumberType playerNumber, const Building building, const RelOp comparison, const int number)
 {
     WARN << "unimplemented condition";
     return nullptr;
 }
 
-std::unique_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const Fact type, const PlayerNumberType playerNumber, const DiplomaticStance stance)
+std::shared_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const Fact type, const PlayerNumberType playerNumber, const Civ civ)
 {
     WARN << "unimplemented condition";
     return nullptr;
 }
 
-std::unique_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const Fact type, const PlayerNumberType playerNumber, const RelOp comparison, const Age age)
+std::shared_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const Fact type, const PlayerNumberType playerNumber, const Commodity commodity, const RelOp comparison, const int number)
 {
     WARN << "unimplemented condition";
     return nullptr;
 }
 
-std::unique_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const Fact type, const PlayerNumberType playerNumber, const Unit unit, const RelOp comparison, const int number)
+std::shared_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const Fact type, const PlayerNumberType playerNumber, const DiplomaticStance stance)
 {
     WARN << "unimplemented condition";
     return nullptr;
 }
 
-std::unique_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const ai::Fact type, const ai::RelOp comparison, const ai::Age age)
+std::shared_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const Fact type, const PlayerNumberType playerNumber, const RelOp comparison, const Age age)
 {
     WARN << "unimplemented condition";
     return nullptr;
 }
 
-std::unique_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const ai::Fact type, const ai::RelOp comparison, const ai::DifficultyLevel age)
+std::shared_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const Fact type, const PlayerNumberType playerNumber, const Unit unit, const RelOp comparison, const int number)
 {
     WARN << "unimplemented condition";
     return nullptr;
 }
 
-std::unique_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const ai::Fact type, const ai::RelOp comparison, const ai::StartingResourcesType startingResources)
+std::shared_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const ai::Fact type, const ai::RelOp comparison, const ai::Age age)
 {
     WARN << "unimplemented condition";
     return nullptr;
 }
 
-std::unique_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const ai::Fact type, const ai::StrategicNumberName, const ai::RelOp comparison, const int number)
+std::shared_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const ai::Fact type, const ai::RelOp comparison, const ai::DifficultyLevel age)
 {
     WARN << "unimplemented condition";
     return nullptr;
 }
 
-std::unique_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const ai::Fact type, const ai::Unit unit, const ai::RelOp comparison, const int number)
+std::shared_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const ai::Fact type, const ai::RelOp comparison, const ai::StartingResourcesType startingResources)
 {
     WARN << "unimplemented condition";
     return nullptr;
 }
 
-std::unique_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const ai::Fact type, const int number1, const ai::RelOp comparison, const int number2)
+std::shared_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const ai::Fact type, const ai::StrategicNumberName, const ai::RelOp comparison, const int number)
 {
     WARN << "unimplemented condition";
     return nullptr;
 }
 
-std::unique_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const ai::Fact type, const int number1, const int number2)
+std::shared_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const ai::Fact type, const ai::Unit unit, const ai::RelOp comparison, const int number)
 {
     WARN << "unimplemented condition";
     return nullptr;
 }
 
-std::unique_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const ai::Fact type, const int number, const ai::WallType wallType)
+std::shared_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const ai::Fact type, const int number1, const ai::RelOp comparison, const int number2)
 {
     WARN << "unimplemented condition";
     return nullptr;
 }
 
-std::unique_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const ai::Fact type, const int number)
+std::shared_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const ai::Fact type, const int number1, const int number2)
 {
     WARN << "unimplemented condition";
     return nullptr;
 }
 
-std::unique_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const ai::Fact type, const ai::ResearchItem research)
+std::shared_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const ai::Fact type, const int number, const ai::WallType wallType)
 {
     WARN << "unimplemented condition";
     return nullptr;
 }
 
-std::unique_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const ai::Fact type, const ai::Unit unit)
+std::shared_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const ai::Fact type, const int number)
 {
     WARN << "unimplemented condition";
     return nullptr;
 }
 
-std::unique_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const ai::Fact type, const ai::VictoryConditionName)
+std::shared_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const ai::Fact type, const ai::ResearchItem research)
 {
     WARN << "unimplemented condition";
     return nullptr;
 }
 
-std::unique_ptr<ai::AiRule::Condition> ai::AiRule::createOrCondition(const ai::RelOp type, std::unique_ptr<ai::AiRule::Condition> &condition1, std::unique_ptr<ai::AiRule::Condition> &condition2)
+std::shared_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const ai::Fact type, const ai::Unit unit)
 {
     WARN << "unimplemented condition";
     return nullptr;
 }
 
-std::unique_ptr<ai::AiRule::Condition> ai::AiRule::createNotCondition(const ai::RelOp type, std::unique_ptr<ai::AiRule::Condition> &condition)
+std::shared_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const ai::Fact type, const ai::VictoryConditionName)
+{
+    WARN << "unimplemented condition";
+    return nullptr;
+}
+
+std::shared_ptr<ai::AiRule::Condition> ai::AiRule::createCondition(const ai::Fact type, const ai::RelOp comparison, const int number)
+{
+    WARN << "unimplemented condition";
+    return nullptr;
+}
+
+std::shared_ptr<ai::AiRule::Condition> ai::AiRule::createOrCondition(const ai::RelOp type, std::shared_ptr<ai::AiRule::Condition> &condition1, std::shared_ptr<ai::AiRule::Condition> &condition2)
+{
+    WARN << "unimplemented condition";
+    return nullptr;
+}
+
+std::shared_ptr<ai::AiRule::Condition> ai::AiRule::createNotCondition(const ai::RelOp type, std::shared_ptr<ai::AiRule::Condition> &condition)
 {
     WARN << "unimplemented condition";
     return nullptr;

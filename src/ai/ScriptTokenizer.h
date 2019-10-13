@@ -23,7 +23,7 @@ namespace ai {
     public:
         ScriptTokenizer(ai::ScriptLoader &driver) : yyFlexLexer(std::cin, std::cout), _driver(driver) {}
         virtual ~ScriptTokenizer() {}
-        virtual ai::ScriptParser::symbol_type yylex(ai::ScriptLoader &driver);
+        ai::ScriptParser::symbol_type yylex(ai::ScriptLoader &_driver);
     private:
         ai::ScriptLoader &_driver;
     };

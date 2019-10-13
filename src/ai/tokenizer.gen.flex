@@ -14,14 +14,17 @@
 
     static ai::location loc;
 
-    #define YY_USER_ACTION loc.step(); loc.columns(yyleng);
+    #define YY_USER_ACTION loc.step(); loc.columns(yyleng); std::cout << yytext <<std::endl;
 
     #undef  YY_DECL
     #define YY_DECL ai::ScriptParser::symbol_type ai::ScriptTokenizer::yylex(ai::ScriptLoader &driver)
 
     #define yyterminate() return ai::ScriptParser::make_ScriptEnd(loc);
+    #define STRINGIFY(x) #x
+#define TOSTRING(x) STRINGIFY(x)
 
-    #define RET_TOKEN(token_name) return ai::ScriptParser::symbol_type(ai::ScriptParser::token::token_name, loc);
+    #define RET_TOKEN(token_name) std::cout << TOSTRING(token_name) << std::endl; return ai::ScriptParser::symbol_type(ai::ScriptParser::token::token_name, loc);
+    #define RET_TOKEN_ENUM(token_name, enum_name) std::cout << TOSTRING(token_name) << std::endl; return ai::ScriptParser::symbol_type(ai::ScriptParser::token::token_name, ai::enum_name, loc);
     #define RET_STRING(token_name) return ai::ScriptParser::symbol_type(ai::ScriptParser::token::token_name, yytext, loc);
     #define RET_INT(token_name) return ai::ScriptParser::symbol_type(ai::ScriptParser::token::token_name, atoi(yytext), loc);
 
@@ -533,167 +536,167 @@ blank   [ \t]+
 "palisade-wall"    { RET_TOKEN(WallTypePalisadeWall) }
 "stone-wall"    { RET_TOKEN(WallTypeStoneWall) }
 "stone-wall-line"    { RET_TOKEN(WallTypeStoneWallLine) }
-"acknowledge-event"    { RET_TOKEN(AcknowledgeEvent) }
-"acknowledge-taunt"    { RET_TOKEN(AcknowledgeTaunt) }
-"attack-now"    { RET_TOKEN(AttackNow) }
-"build"    { RET_TOKEN(Build) }
-"build-forward"    { RET_TOKEN(BuildForward) }
-"build-gate"    { RET_TOKEN(BuildGate) }
-"build-wall"    { RET_TOKEN(BuildWall) }
-"buy-commodity"    { RET_TOKEN(BuyCommodity) }
-"cc-add-resource"    { RET_TOKEN(CcAddResource) }
-"chat-local"    { RET_TOKEN(ChatLocal) }
-"chat-local-to-self"    { RET_TOKEN(ChatLocalToSelf) }
-"chat-local-using-id"    { RET_TOKEN(ChatLocalUsingId) }
-"chat-local-using-range"    { RET_TOKEN(ChatLocalUsingRange) }
-"chat-to-all"    { RET_TOKEN(ChatToAll) }
-"chat-to-all-using-id"    { RET_TOKEN(ChatToAllUsingId) }
-"chat-to-all-using-range"    { RET_TOKEN(ChatToAllUsingRange) }
-"chat-to-allies"    { RET_TOKEN(ChatToAllies) }
-"chat-to-allies-using-id"    { RET_TOKEN(ChatToAlliesUsingId) }
-"chat-to-allies-using-range"    { RET_TOKEN(ChatToAlliesUsingRange) }
-"chat-to-enemies"    { RET_TOKEN(ChatToEnemies) }
-"chat-to-enemies-using-id"    { RET_TOKEN(ChatToEnemiesUsingId) }
-"chat-to-enemies-using-range"    { RET_TOKEN(ChatToEnemiesUsingRange) }
-"chat-to-player"    { RET_TOKEN(ChatToPlayer) }
-"chat-to-player-using-id"    { RET_TOKEN(ChatToPlayerUsingId) }
-"chat-to-player-using-range"    { RET_TOKEN(ChatToPlayerUsingRange) }
-"chat-trace"    { RET_TOKEN(ChatTrace) }
-"clear-tribute-memory"    { RET_TOKEN(ClearTributeMemory) }
-"delete-building"    { RET_TOKEN(DeleteBuilding) }
-"delete-unit"    { RET_TOKEN(DeleteUnit) }
-"disable-self"    { RET_TOKEN(DisableSelf) }
-"disable-timer"    { RET_TOKEN(DisableTimer) }
-"do-nothing"    { RET_TOKEN(DoNothing) }
-"enable-timer"    { RET_TOKEN(EnableTimer) }
-"enable-wall-placement"    { RET_TOKEN(EnableWallPlacement) }
-"generate-random-number"    { RET_TOKEN(GenerateRandomNumber) }
-"log"    { RET_TOKEN(Log) }
-"log-trace"    { RET_TOKEN(LogTrace) }
-"release-escrow"    { RET_TOKEN(ReleaseEscrow) }
-"research"    { RET_TOKEN(Research) }
-"resign"    { RET_TOKEN(Resign) }
-"sell-commodity"    { RET_TOKEN(SellCommodity) }
-"set-difficulty-parameter"    { RET_TOKEN(SetDifficultyParameter) }
-"set-doctrine"    { RET_TOKEN(SetDoctrine) }
-"set-escrow-percentage"    { RET_TOKEN(SetEscrowPercentage) }
-"set-goal"    { RET_TOKEN(SetGoal) }
-"set-shared-goal"    { RET_TOKEN(SetSharedGoal) }
-"set-signal"    { RET_TOKEN(SetSignal) }
-"set-stance"    { RET_TOKEN(SetStance) }
-"set-strategic-number"    { RET_TOKEN(SetStrategicNumber) }
-"spy"    { RET_TOKEN(Spy) }
-"taunt"    { RET_TOKEN(Taunt) }
-"taunt-using-range"    { RET_TOKEN(TauntUsingRange) }
-"train"    { RET_TOKEN(Train) }
-"tribute-to-player"    { RET_TOKEN(TributeToPlayer) }
-"true"    { RET_TOKEN(True) }
-"false"    { RET_TOKEN(False) }
-"attack-soldier-count"    { RET_TOKEN(AttackSoldierCount) }
-"attack-warboat-count"    { RET_TOKEN(AttackWarboatCount) }
-"building-available"    { RET_TOKEN(BuildingAvailable) }
-"building-count"    { RET_TOKEN(BuildingCount) }
-"building-count-total"    { RET_TOKEN(BuildingCountTotal) }
-"building-type-count"    { RET_TOKEN(BuildingTypeCount) }
-"building-type-count-total"    { RET_TOKEN(BuildingTypeCountTotal) }
-"can-afford-building"    { RET_TOKEN(CanAffordBuilding) }
-"can-afford-complete-wall"    { RET_TOKEN(CanAffordCompleteWall) }
-"can-afford-research"    { RET_TOKEN(CanAffordResearch) }
-"can-afford-unit"    { RET_TOKEN(CanAffordUnit) }
-"can-build"    { RET_TOKEN(CanBuild) }
-"can-build-gate"    { RET_TOKEN(CanBuildGate) }
-"can-build-gate-with-escrow"    { RET_TOKEN(CanBuildGateWithEscrow) }
-"can-build-wall"    { RET_TOKEN(CanBuildWall) }
-"can-build-wall-with-escrow"    { RET_TOKEN(CanBuildWallWithEscrow) }
-"can-build-with-escrow"    { RET_TOKEN(CanBuildWithEscrow) }
-"can-buy-commodity"    { RET_TOKEN(CanBuyCommodity) }
-"can-research"    { RET_TOKEN(CanResearch) }
-"can-research-with-escrow"    { RET_TOKEN(CanResearchWithEscrow) }
-"can-sell-commodity"    { RET_TOKEN(CanSellCommodity) }
-"can-spy"    { RET_TOKEN(CanSpy) }
-"can-spy-with-escrow"    { RET_TOKEN(CanSpyWithEscrow) }
-"can-train"    { RET_TOKEN(CanTrain) }
-"can-train-with-escrow"    { RET_TOKEN(CanTrainWithEscrow) }
-"cc-players-building-count"    { RET_TOKEN(CcPlayersBuildingCount) }
-"cc-players-building-type-count"    { RET_TOKEN(CcPlayersBuildingTypeCount) }
-"cc-players-unit-count"    { RET_TOKEN(CcPlayersUnitCount) }
-"cc-players-unit-type-count"    { RET_TOKEN(CcPlayersUnitTypeCount) }
-"cheats-enabled"    { RET_TOKEN(CheatsEnabled) }
-"civ-selected"    { RET_TOKEN(CivSelected) }
-"civilian-population"    { RET_TOKEN(CivilianPopulation) }
-"commodity-buying-price"    { RET_TOKEN(CommodityBuyingPrice) }
-"commodity-selling-price"    { RET_TOKEN(CommoditySellingPrice) }
-"current-age"    { RET_TOKEN(CurrentAge) }
-"current-age-time"    { RET_TOKEN(CurrentAgeTime) }
-"current-score"    { RET_TOKEN(CurrentScore) }
-"death-match-game"    { RET_TOKEN(DeathMatchGame) }
-"defend-soldier-count"    { RET_TOKEN(DefendSoldierCount) }
-"defend-warboat-count"    { RET_TOKEN(DefendWarboatCount) }
-"difficulty"    { RET_TOKEN(Difficulty) }
-"doctrine"    { RET_TOKEN(Doctrine) }
-"dropsite-min-distance"    { RET_TOKEN(DropsiteMinDistance) }
-"enemy-buildings-in-town"    { RET_TOKEN(EnemyBuildingsInTown) }
-"enemy-captured-relics"    { RET_TOKEN(EnemyCapturedRelics) }
-"escrow-amount"    { RET_TOKEN(EscrowAmount) }
-"event-detected"    { RET_TOKEN(EventDetected) }
-"food-amount"    { RET_TOKEN(FoodAmount) }
-"game-time"    { RET_TOKEN(GameTime) }
-"goal"    { RET_TOKEN(Goal) }
-"gold-amount"    { RET_TOKEN(GoldAmount) }
-"housing-headroom"    { RET_TOKEN(HousingHeadroom) }
-"idle-farm-count"    { RET_TOKEN(IdleFarmCount) }
-"map-size"    { RET_TOKEN(MapSize) }
-"map-type"    { RET_TOKEN(MapType) }
-"military-population"    { RET_TOKEN(MilitaryPopulation) }
-"player-computer"    { RET_TOKEN(PlayerComputer) }
-"player-human"    { RET_TOKEN(PlayerHuman) }
-"player-in-game"    { RET_TOKEN(PlayerInGame) }
-"player-number"    { RET_TOKEN(PlayerNumber) }
-"player-resigned"    { RET_TOKEN(PlayerResigned) }
-"player-valid"    { RET_TOKEN(PlayerValid) }
-"players-building-count"    { RET_TOKEN(PlayersBuildingCount) }
-"players-building-type-count"    { RET_TOKEN(PlayersBuildingTypeCount) }
-"players-civ"    { RET_TOKEN(PlayersCiv) }
-"players-civilian-population"    { RET_TOKEN(PlayersCivilianPopulation) }
-"players-current-age"    { RET_TOKEN(PlayersCurrentAge) }
-"players-current-age-time"    { RET_TOKEN(PlayersCurrentAgeTime) }
-"players-military-population"    { RET_TOKEN(PlayersMilitaryPopulation) }
-"players-population"    { RET_TOKEN(PlayersPopulation) }
-"players-score"    { RET_TOKEN(PlayersScore) }
-"players-stance"    { RET_TOKEN(PlayersStance) }
-"players-tribute"    { RET_TOKEN(PlayersTribute) }
-"players-tribute-memory"    { RET_TOKEN(PlayersTributeMemory) }
-"players-unit-count"    { RET_TOKEN(PlayersUnitCount) }
-"players-unit-type-count"    { RET_TOKEN(PlayersUnitTypeCount) }
-"population"    { RET_TOKEN(Population) }
-"population-cap"    { RET_TOKEN(PopulationCap) }
-"population-headroom"    { RET_TOKEN(PopulationHeadroom) }
-"random-number"    { RET_TOKEN(RandomNumber) }
-"regicide-game"    { RET_TOKEN(RegicideGame) }
-"research-available"    { RET_TOKEN(ResearchAvailable) }
-"research-completed"    { RET_TOKEN(ResearchCompleted) }
-"resource-found"    { RET_TOKEN(ResourceFound) }
-"shared-goal"    { RET_TOKEN(SharedGoal) }
-"sheep-and-forage-too-far"    { RET_TOKEN(SheepAndForageTooFar) }
-"soldier-count"    { RET_TOKEN(SoldierCount) }
-"stance-toward"    { RET_TOKEN(StanceToward) }
-"starting-age"    { RET_TOKEN(StartingAge) }
-"starting-resources"    { RET_TOKEN(StartingResources) }
-"stone-amount"    { RET_TOKEN(StoneAmount) }
-"strategic-number"    { RET_TOKEN(StrategicNumber) }
-"taunt-detected"    { RET_TOKEN(TauntDetected) }
-"timer-triggered"    { RET_TOKEN(TimerTriggered) }
-"town-under-attack"    { RET_TOKEN(TownUnderAttack) }
-"unit-available"    { RET_TOKEN(UnitAvailable) }
-"unit-count"    { RET_TOKEN(UnitCount) }
-"unit-count-total"    { RET_TOKEN(UnitCountTotal) }
-"unit-type-count"    { RET_TOKEN(UnitTypeCount) }
-"unit-type-count-total"    { RET_TOKEN(UnitTypeCountTotal) }
-"victory-condition"    { RET_TOKEN(VictoryCondition) }
-"wall-completed-percentage"    { RET_TOKEN(WallCompletedPercentage) }
-"wall-invisible-percentage"    { RET_TOKEN(WallInvisiblePercentage) }
-"warboat-count"    { RET_TOKEN(WarboatCount) }
-"wood-amount"    { RET_TOKEN(WoodAmount) }
+"acknowledge-event"    { RET_TOKEN_ENUM(AcknowledgeEvent, ActionType::AcknowledgeEvent) }
+"acknowledge-taunt"    { RET_TOKEN_ENUM(AcknowledgeTaunt, ActionType::AcknowledgeTaunt) }
+"attack-now"    { RET_TOKEN_ENUM(AttackNow, ActionType::AttackNow) }
+"build"    { RET_TOKEN_ENUM(Build, ActionType::Build) }
+"build-forward"    { RET_TOKEN_ENUM(BuildForward, ActionType::BuildForward) }
+"build-gate"    { RET_TOKEN_ENUM(BuildGate, ActionType::BuildGate) }
+"build-wall"    { RET_TOKEN_ENUM(BuildWall, ActionType::BuildWall) }
+"buy-commodity"    { RET_TOKEN_ENUM(BuyCommodity, ActionType::BuyCommodity) }
+"cc-add-resource"    { RET_TOKEN_ENUM(CcAddResource, ActionType::CcAddResource) }
+"chat-local"    { RET_TOKEN_ENUM(ChatLocal, ActionType::ChatLocal) }
+"chat-local-to-self"    { RET_TOKEN_ENUM(ChatLocalToSelf, ActionType::ChatLocalToSelf) }
+"chat-local-using-id"    { RET_TOKEN_ENUM(ChatLocalUsingId, ActionType::ChatLocalUsingId) }
+"chat-local-using-range"    { RET_TOKEN_ENUM(ChatLocalUsingRange, ActionType::ChatLocalUsingRange) }
+"chat-to-all"    { RET_TOKEN_ENUM(ChatToAll, ActionType::ChatToAll) }
+"chat-to-all-using-id"    { RET_TOKEN_ENUM(ChatToAllUsingId, ActionType::ChatToAllUsingId) }
+"chat-to-all-using-range"    { RET_TOKEN_ENUM(ChatToAllUsingRange, ActionType::ChatToAllUsingRange) }
+"chat-to-allies"    { RET_TOKEN_ENUM(ChatToAllies, ActionType::ChatToAllies) }
+"chat-to-allies-using-id"    { RET_TOKEN_ENUM(ChatToAlliesUsingId, ActionType::ChatToAlliesUsingId) }
+"chat-to-allies-using-range"    { RET_TOKEN_ENUM(ChatToAlliesUsingRange, ActionType::ChatToAlliesUsingRange) }
+"chat-to-enemies"    { RET_TOKEN_ENUM(ChatToEnemies, ActionType::ChatToEnemies) }
+"chat-to-enemies-using-id"    { RET_TOKEN_ENUM(ChatToEnemiesUsingId, ActionType::ChatToEnemiesUsingId) }
+"chat-to-enemies-using-range"    { RET_TOKEN_ENUM(ChatToEnemiesUsingRange, ActionType::ChatToEnemiesUsingRange) }
+"chat-to-player"    { RET_TOKEN_ENUM(ChatToPlayer, ActionType::ChatToPlayer) }
+"chat-to-player-using-id"    { RET_TOKEN_ENUM(ChatToPlayerUsingId, ActionType::ChatToPlayerUsingId) }
+"chat-to-player-using-range"    { RET_TOKEN_ENUM(ChatToPlayerUsingRange, ActionType::ChatToPlayerUsingRange) }
+"chat-trace"    { RET_TOKEN_ENUM(ChatTrace, ActionType::ChatTrace) }
+"clear-tribute-memory"    { RET_TOKEN_ENUM(ClearTributeMemory, ActionType::ClearTributeMemory) }
+"delete-building"    { RET_TOKEN_ENUM(DeleteBuilding, ActionType::DeleteBuilding) }
+"delete-unit"    { RET_TOKEN_ENUM(DeleteUnit, ActionType::DeleteUnit) }
+"disable-self"    { RET_TOKEN_ENUM(DisableSelf, ActionType::DisableSelf) }
+"disable-timer"    { RET_TOKEN_ENUM(DisableTimer, ActionType::DisableTimer) }
+"do-nothing"    { RET_TOKEN_ENUM(DoNothing, ActionType::DoNothing) }
+"enable-timer"    { RET_TOKEN_ENUM(EnableTimer, ActionType::EnableTimer) }
+"enable-wall-placement"    { RET_TOKEN_ENUM(EnableWallPlacement, ActionType::EnableWallPlacement) }
+"generate-random-number"    { RET_TOKEN_ENUM(GenerateRandomNumber, ActionType::GenerateRandomNumber) }
+"log"    { RET_TOKEN_ENUM(Log, ActionType::Log) }
+"log-trace"    { RET_TOKEN_ENUM(LogTrace, ActionType::LogTrace) }
+"release-escrow"    { RET_TOKEN_ENUM(ReleaseEscrow, ActionType::ReleaseEscrow) }
+"research"    { RET_TOKEN_ENUM(Research, ActionType::Research) }
+"resign"    { RET_TOKEN_ENUM(Resign, ActionType::Resign) }
+"sell-commodity"    { RET_TOKEN_ENUM(SellCommodity, ActionType::SellCommodity) }
+"set-difficulty-parameter"    { RET_TOKEN_ENUM(SetDifficultyParameter, ActionType::SetDifficultyParameter) }
+"set-doctrine"    { RET_TOKEN_ENUM(SetDoctrine, ActionType::SetDoctrine) }
+"set-escrow-percentage"    { RET_TOKEN_ENUM(SetEscrowPercentage, ActionType::SetEscrowPercentage) }
+"set-goal"    { RET_TOKEN_ENUM(SetGoal, ActionType::SetGoal) }
+"set-shared-goal"    { RET_TOKEN_ENUM(SetSharedGoal, ActionType::SetSharedGoal) }
+"set-signal"    { RET_TOKEN_ENUM(SetSignal, ActionType::SetSignal) }
+"set-stance"    { RET_TOKEN_ENUM(SetStance, ActionType::SetStance) }
+"set-strategic-number"    { RET_TOKEN_ENUM(SetStrategicNumber, ActionType::SetStrategicNumber) }
+"spy"    { RET_TOKEN_ENUM(Spy, ActionType::Spy) }
+"taunt"    { RET_TOKEN_ENUM(Taunt, ActionType::Taunt) }
+"taunt-using-range"    { RET_TOKEN_ENUM(TauntUsingRange, ActionType::TauntUsingRange) }
+"train"    { RET_TOKEN_ENUM(Train, ActionType::Train) }
+"tribute-to-player"    { RET_TOKEN_ENUM(TributeToPlayer, ActionType::TributeToPlayer) }
+"true"    { RET_TOKEN_ENUM(Trueval, Fact::Trueval) }
+"false"    { RET_TOKEN_ENUM(Falseval, Fact::Falseval) }
+"attack-soldier-count"    { RET_TOKEN_ENUM(AttackSoldierCount, Fact::AttackSoldierCount) }
+"attack-warboat-count"    { RET_TOKEN_ENUM(AttackWarboatCount, Fact::AttackWarboatCount) }
+"building-available"    { RET_TOKEN_ENUM(BuildingAvailable, Fact::BuildingAvailable) }
+"building-count"    { RET_TOKEN_ENUM(BuildingCount, Fact::BuildingCount) }
+"building-count-total"    { RET_TOKEN_ENUM(BuildingCountTotal, Fact::BuildingCountTotal) }
+"building-type-count"    { RET_TOKEN_ENUM(BuildingTypeCount, Fact::BuildingTypeCount) }
+"building-type-count-total"    { RET_TOKEN_ENUM(BuildingTypeCountTotal, Fact::BuildingTypeCountTotal) }
+"can-afford-building"    { RET_TOKEN_ENUM(CanAffordBuilding, Fact::CanAffordBuilding) }
+"can-afford-complete-wall"    { RET_TOKEN_ENUM(CanAffordCompleteWall, Fact::CanAffordCompleteWall) }
+"can-afford-research"    { RET_TOKEN_ENUM(CanAffordResearch, Fact::CanAffordResearch) }
+"can-afford-unit"    { RET_TOKEN_ENUM(CanAffordUnit, Fact::CanAffordUnit) }
+"can-build"    { RET_TOKEN_ENUM(CanBuild, Fact::CanBuild) }
+"can-build-gate"    { RET_TOKEN_ENUM(CanBuildGate, Fact::CanBuildGate) }
+"can-build-gate-with-escrow"    { RET_TOKEN_ENUM(CanBuildGateWithEscrow, Fact::CanBuildGateWithEscrow) }
+"can-build-wall"    { RET_TOKEN_ENUM(CanBuildWall, Fact::CanBuildWall) }
+"can-build-wall-with-escrow"    { RET_TOKEN_ENUM(CanBuildWallWithEscrow, Fact::CanBuildWallWithEscrow) }
+"can-build-with-escrow"    { RET_TOKEN_ENUM(CanBuildWithEscrow, Fact::CanBuildWithEscrow) }
+"can-buy-commodity"    { RET_TOKEN_ENUM(CanBuyCommodity, Fact::CanBuyCommodity) }
+"can-research"    { RET_TOKEN_ENUM(CanResearch, Fact::CanResearch) }
+"can-research-with-escrow"    { RET_TOKEN_ENUM(CanResearchWithEscrow, Fact::CanResearchWithEscrow) }
+"can-sell-commodity"    { RET_TOKEN_ENUM(CanSellCommodity, Fact::CanSellCommodity) }
+"can-spy"    { RET_TOKEN_ENUM(CanSpy, Fact::CanSpy) }
+"can-spy-with-escrow"    { RET_TOKEN_ENUM(CanSpyWithEscrow, Fact::CanSpyWithEscrow) }
+"can-train"    { RET_TOKEN_ENUM(CanTrain, Fact::CanTrain) }
+"can-train-with-escrow"    { RET_TOKEN_ENUM(CanTrainWithEscrow, Fact::CanTrainWithEscrow) }
+"cc-players-building-count"    { RET_TOKEN_ENUM(CcPlayersBuildingCount, Fact::CcPlayersBuildingCount) }
+"cc-players-building-type-count"    { RET_TOKEN_ENUM(CcPlayersBuildingTypeCount, Fact::CcPlayersBuildingTypeCount) }
+"cc-players-unit-count"    { RET_TOKEN_ENUM(CcPlayersUnitCount, Fact::CcPlayersUnitCount) }
+"cc-players-unit-type-count"    { RET_TOKEN_ENUM(CcPlayersUnitTypeCount, Fact::CcPlayersUnitTypeCount) }
+"cheats-enabled"    { RET_TOKEN_ENUM(CheatsEnabled, Fact::CheatsEnabled) }
+"civ-selected"    { RET_TOKEN_ENUM(CivSelected, Fact::CivSelected) }
+"civilian-population"    { RET_TOKEN_ENUM(CivilianPopulation, Fact::CivilianPopulation) }
+"commodity-buying-price"    { RET_TOKEN_ENUM(CommodityBuyingPrice, Fact::CommodityBuyingPrice) }
+"commodity-selling-price"    { RET_TOKEN_ENUM(CommoditySellingPrice, Fact::CommoditySellingPrice) }
+"current-age"    { RET_TOKEN_ENUM(CurrentAge, Fact::CurrentAge) }
+"current-age-time"    { RET_TOKEN_ENUM(CurrentAgeTime, Fact::CurrentAgeTime) }
+"current-score"    { RET_TOKEN_ENUM(CurrentScore, Fact::CurrentScore) }
+"death-match-game"    { RET_TOKEN_ENUM(DeathMatchGame, Fact::DeathMatchGame) }
+"defend-soldier-count"    { RET_TOKEN_ENUM(DefendSoldierCount, Fact::DefendSoldierCount) }
+"defend-warboat-count"    { RET_TOKEN_ENUM(DefendWarboatCount, Fact::DefendWarboatCount) }
+"difficulty"    { RET_TOKEN_ENUM(Difficulty, Fact::Difficulty) }
+"doctrine"    { RET_TOKEN_ENUM(Doctrine, Fact::Doctrine) }
+"dropsite-min-distance"    { RET_TOKEN_ENUM(DropsiteMinDistance, Fact::DropsiteMinDistance) }
+"enemy-buildings-in-town"    { RET_TOKEN_ENUM(EnemyBuildingsInTown, Fact::EnemyBuildingsInTown) }
+"enemy-captured-relics"    { RET_TOKEN_ENUM(EnemyCapturedRelics, Fact::EnemyCapturedRelics) }
+"escrow-amount"    { RET_TOKEN_ENUM(EscrowAmount, Fact::EscrowAmount) }
+"event-detected"    { RET_TOKEN_ENUM(EventDetected, Fact::EventDetected) }
+"food-amount"    { RET_TOKEN_ENUM(FoodAmount, Fact::FoodAmount) }
+"game-time"    { RET_TOKEN_ENUM(GameTime, Fact::GameTime) }
+"goal"    { RET_TOKEN_ENUM(Goal, Fact::Goal) }
+"gold-amount"    { RET_TOKEN_ENUM(GoldAmount, Fact::GoldAmount) }
+"housing-headroom"    { RET_TOKEN_ENUM(HousingHeadroom, Fact::HousingHeadroom) }
+"idle-farm-count"    { RET_TOKEN_ENUM(IdleFarmCount, Fact::IdleFarmCount) }
+"map-size"    { RET_TOKEN_ENUM(MapSize, Fact::MapSize) }
+"map-type"    { RET_TOKEN_ENUM(MapType, Fact::MapType) }
+"military-population"    { RET_TOKEN_ENUM(MilitaryPopulation, Fact::MilitaryPopulation) }
+"player-computer"    { RET_TOKEN_ENUM(PlayerComputer, Fact::PlayerComputer) }
+"player-human"    { RET_TOKEN_ENUM(PlayerHuman, Fact::PlayerHuman) }
+"player-in-game"    { RET_TOKEN_ENUM(PlayerInGame, Fact::PlayerInGame) }
+"player-number"    { RET_TOKEN_ENUM(PlayerNumber, Fact::PlayerNumber) }
+"player-resigned"    { RET_TOKEN_ENUM(PlayerResigned, Fact::PlayerResigned) }
+"player-valid"    { RET_TOKEN_ENUM(PlayerValid, Fact::PlayerValid) }
+"players-building-count"    { RET_TOKEN_ENUM(PlayersBuildingCount, Fact::PlayersBuildingCount) }
+"players-building-type-count"    { RET_TOKEN_ENUM(PlayersBuildingTypeCount, Fact::PlayersBuildingTypeCount) }
+"players-civ"    { RET_TOKEN_ENUM(PlayersCiv, Fact::PlayersCiv) }
+"players-civilian-population"    { RET_TOKEN_ENUM(PlayersCivilianPopulation, Fact::PlayersCivilianPopulation) }
+"players-current-age"    { RET_TOKEN_ENUM(PlayersCurrentAge, Fact::PlayersCurrentAge) }
+"players-current-age-time"    { RET_TOKEN_ENUM(PlayersCurrentAgeTime, Fact::PlayersCurrentAgeTime) }
+"players-military-population"    { RET_TOKEN_ENUM(PlayersMilitaryPopulation, Fact::PlayersMilitaryPopulation) }
+"players-population"    { RET_TOKEN_ENUM(PlayersPopulation, Fact::PlayersPopulation) }
+"players-score"    { RET_TOKEN_ENUM(PlayersScore, Fact::PlayersScore) }
+"players-stance"    { RET_TOKEN_ENUM(PlayersStance, Fact::PlayersStance) }
+"players-tribute"    { RET_TOKEN_ENUM(PlayersTribute, Fact::PlayersTribute) }
+"players-tribute-memory"    { RET_TOKEN_ENUM(PlayersTributeMemory, Fact::PlayersTributeMemory) }
+"players-unit-count"    { RET_TOKEN_ENUM(PlayersUnitCount, Fact::PlayersUnitCount) }
+"players-unit-type-count"    { RET_TOKEN_ENUM(PlayersUnitTypeCount, Fact::PlayersUnitTypeCount) }
+"population"    { RET_TOKEN_ENUM(Population, Fact::Population) }
+"population-cap"    { RET_TOKEN_ENUM(PopulationCap, Fact::PopulationCap) }
+"population-headroom"    { RET_TOKEN_ENUM(PopulationHeadroom, Fact::PopulationHeadroom) }
+"random-number"    { RET_TOKEN_ENUM(RandomNumber, Fact::RandomNumber) }
+"regicide-game"    { RET_TOKEN_ENUM(RegicideGame, Fact::RegicideGame) }
+"research-available"    { RET_TOKEN_ENUM(ResearchAvailable, Fact::ResearchAvailable) }
+"research-completed"    { RET_TOKEN_ENUM(ResearchCompleted, Fact::ResearchCompleted) }
+"resource-found"    { RET_TOKEN_ENUM(ResourceFound, Fact::ResourceFound) }
+"shared-goal"    { RET_TOKEN_ENUM(SharedGoal, Fact::SharedGoal) }
+"sheep-and-forage-too-far"    { RET_TOKEN_ENUM(SheepAndForageTooFar, Fact::SheepAndForageTooFar) }
+"soldier-count"    { RET_TOKEN_ENUM(SoldierCount, Fact::SoldierCount) }
+"stance-toward"    { RET_TOKEN_ENUM(StanceToward, Fact::StanceToward) }
+"starting-age"    { RET_TOKEN_ENUM(StartingAge, Fact::StartingAge) }
+"starting-resources"    { RET_TOKEN_ENUM(StartingResources, Fact::StartingResources) }
+"stone-amount"    { RET_TOKEN_ENUM(StoneAmount, Fact::StoneAmount) }
+"strategic-number"    { RET_TOKEN_ENUM(StrategicNumber, Fact::StrategicNumber) }
+"taunt-detected"    { RET_TOKEN_ENUM(TauntDetected, Fact::TauntDetected) }
+"timer-triggered"    { RET_TOKEN_ENUM(TimerTriggered, Fact::TimerTriggered) }
+"town-under-attack"    { RET_TOKEN_ENUM(TownUnderAttack, Fact::TownUnderAttack) }
+"unit-available"    { RET_TOKEN_ENUM(UnitAvailable, Fact::UnitAvailable) }
+"unit-count"    { RET_TOKEN_ENUM(UnitCount, Fact::UnitCount) }
+"unit-count-total"    { RET_TOKEN_ENUM(UnitCountTotal, Fact::UnitCountTotal) }
+"unit-type-count"    { RET_TOKEN_ENUM(UnitTypeCount, Fact::UnitTypeCount) }
+"unit-type-count-total"    { RET_TOKEN_ENUM(UnitTypeCountTotal, Fact::UnitTypeCountTotal) }
+"victory-condition"    { RET_TOKEN_ENUM(VictoryCondition, Fact::VictoryCondition) }
+"wall-completed-percentage"    { RET_TOKEN_ENUM(WallCompletedPercentage, Fact::WallCompletedPercentage) }
+"wall-invisible-percentage"    { RET_TOKEN_ENUM(WallInvisiblePercentage, Fact::WallInvisiblePercentage) }
+"warboat-count"    { RET_TOKEN_ENUM(WarboatCount, Fact::WarboatCount) }
+"wood-amount"    { RET_TOKEN_ENUM(WoodAmount, Fact::WoodAmount) }
 
 "("                 RET_TOKEN(OpenParen)
 ")"                 RET_TOKEN(CloseParen)

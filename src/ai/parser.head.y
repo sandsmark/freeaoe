@@ -3,7 +3,7 @@
 %}
 
 %skeleton "lalr1.cc"
-%require  "3.0"
+%require  "3.4"
 
 %defines
 %define api.namespace { ai }

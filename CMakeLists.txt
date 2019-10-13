@@ -112,6 +112,12 @@ add_subdirectory(tools/resgen)
 add_resource(FONT_ALEGREYA fonts/Alegreya/Alegreya-Bold.latin)
 add_resource(FONT_BERRYROTUNDA fonts/BerryRotunda/BerryRotunda.ttf)
 
+set(AI_SRC
+    src/ai/grammar.gen.tab.cpp
+    src/ai/lex.yy.cc
+    src/ai/AiRule.cpp
+    )
+
 set(CORE_SRC
     src/core/Logger.cpp
     src/core/Utility.cpp
@@ -210,6 +216,7 @@ set(DEBUG_SRC
 set(ENGINE_SRC
     src/Engine.cpp
     ${CORE_SRC}
+#    ${AI_SRC}
     ${RESOURCE_SRC}
     ${GLOBAL_SRC}
     ${MECHANICS_SRC}
