@@ -1,6 +1,5 @@
 %{
     #include "gen/enums.h"
-    #include "AiScript.h"
 %}
 %option case-insensitive
 %option noyywrap

@@ -2,6 +2,7 @@
 
 #include "global/EventListener.h"
 #include "core/SignalEmitter.h"
+#include "gen/enums.h"
 
 #include <memory>
 #include <vector>

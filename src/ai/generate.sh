@@ -73,7 +73,7 @@ while read -r -a LINE; do
 
     # Can't be arsed to do this properly
     if [[ "$TYPE" = "Age" ]]; then
-        RULEMATCHES+="| BuildingCastle \n"
+        RULEMATCHES+="    | BuildingCastle { \$\$ = CastleAge; } \n"
     fi
 
     if [[ -n "${RULEMATCHES}" ]]; then
@@ -236,33 +236,47 @@ while read -r -a LINE; do
         echo "\"${STRING}\"    { RET_TOKEN(${FACT}) }" >> gen/tokens.flex
 
         if [[ -z "${ALL_FACTS}" ]]; then
-            ALL_FACTS+="    ${FACTLOWERCASE}"
+            ALL_FACTS+="     ${FACTLOWERCASE}"
         else
-            ALL_FACTS+="  | ${FACTLOWERCASE}"
+            ALL_FACTS+="   | ${FACTLOWERCASE}"
         fi
-        RULEMATCHES+=" { \$\$ = AiRule::createCondition("
-        # I'm too lazy to do this properly, so sue me
-        if [[ "${#LINE[@]}" -eq "0" ]]; then
-            RULEMATCHES+="\$1"
-        elif [[ "${#LINE[@]}" -eq "1" ]]; then
-            RULEMATCHES+="\$1, \$2"
-        elif [[ "${#LINE[@]}" -eq "2" ]]; then
-            RULEMATCHES+="\$1, \$2, \$3"
-        elif [[ "${#LINE[@]}" -eq "3" ]]; then
-            RULEMATCHES+="\$1, \$2, \$3, \$4"
-        elif [[ "${#LINE[@]}" -eq "4" ]]; then
-            RULEMATCHES+="\$1, \$2, \$3, \$4, \$5"
-        fi
-        RULEMATCHES+="); }\n"
 
         LVAL_ENUMS+="    Fact${FACT},\n"
         PARSER_TYPES+="%%type <Fact> ${FACT}\n"
         PARSER_TYPES+="%%type <std::unique_ptr<AiRule::Condition>> ${FACTLOWERCASE}\n"
     fi
+    RULEMATCHES+=" { \$\$ = AiRule::createCondition("
+    # I'm too lazy to do this properly, so sue me
+    if [[ "${#LINE[@]}" -eq "0" ]]; then
+        RULEMATCHES+="\$1"
+    elif [[ "${#LINE[@]}" -eq "1" ]]; then
+        RULEMATCHES+="\$1, \$2"
+    elif [[ "${#LINE[@]}" -eq "2" ]]; then
+        RULEMATCHES+="\$1, \$2, \$3"
+    elif [[ "${#LINE[@]}" -eq "3" ]]; then
+        RULEMATCHES+="\$1, \$2, \$3, \$4"
+    elif [[ "${#LINE[@]}" -eq "4" ]]; then
+        RULEMATCHES+="\$1, \$2, \$3, \$4, \$5"
+    fi
+        RULEMATCHES+="); }\n"
+    #    RULEMATCHES+=" { \$\$ = AiRule::createCondition("
+    #    # I'm too lazy to do this properly, so sue me
+    #    if [[ "${#LINE[@]}" -eq "1" ]]; then
+    #        RULEMATCHES+="\$1"
+    #    elif [[ "${#LINE[@]}" -eq "2" ]]; then
+    #        RULEMATCHES+="\$1, \$2"
+    #    elif [[ "${#LINE[@]}" -eq "3" ]]; then
+    #        RULEMATCHES+="\$1, \$2, \$3"
+    #    elif [[ "${#LINE[@]}" -eq "4" ]]; then
+    #        RULEMATCHES+="\$1, \$2, \$3, \$4"
+    #    elif [[ "${#LINE[@]}" -eq "5" ]]; then
+    #        RULEMATCHES+="\$1, \$2, \$3, \$4, \$5"
+    #    fi
+    #    RULEMATCHES+="); }\n"
 
     echo "%token ${FACT}" >> gen/tokens.y
     if [[ -n "${RULEMATCHES}" ]]; then
-        printf "${RULEMATCHES}\n"  >> gen/rules
+        printf "${RULEMATCHES}"  >> gen/rules
     fi
     LAST_FACT="${FACT}"
     #PARSER_TYPES+="%%type <${TYPE}> ${TYPELOWERCASE}\n"
