@@ -19,6 +19,9 @@
 %parse-param {ai::ScriptTokenizer &scanner}
 
 %code requires {
+    #include "gen/enums.h"
+    #include "AiRule.h"
+    #include <memory>
 
     namespace ai {
         class ScriptTokenizer;

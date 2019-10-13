@@ -2,6 +2,7 @@
 
 #include <unordered_map>
 #include <functional>
+#include <algorithm>
 
 template<typename T>
 struct SignalHolder;
