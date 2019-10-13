@@ -55,9 +55,7 @@ while read -r -a LINE; do
         TOKENNAME="${TYPE}${NAME}"
 
         echo "\"${TOKEN}\"    { RET_TOKEN(${TOKENNAME}) }" >> gen/tokens.flex
-        #echo "\"${TOKEN}\"    { RET_TOKEN_ENUM(${TOKENNAME}, ${TYPE}::${NAME}) }" >> gen/tokens.flex
 
-        #RULEMATCHES+=" ${TOKENNAME}"
         TOKENLIST+=" ${TOKENNAME}"
         if [[ "${i}" -lt 1 ]]; then
             RULEMATCHES+="    ${TOKENNAME}"
@@ -148,6 +146,21 @@ while read -r -a LINE; do
         RULEMATCHES+=" ${TOKENNAME}"
     done
 
+    RULEMATCHES+=" { \$\$ = AiRule::createAction("
+    # I'm too lazy to do this properly, so sue me
+    if [[ "${#LINE[@]}" -eq "0" ]]; then
+        RULEMATCHES+="\$1"
+    elif [[ "${#LINE[@]}" -eq "1" ]]; then
+        RULEMATCHES+="\$1, \$2"
+    elif [[ "${#LINE[@]}" -eq "2" ]]; then
+        RULEMATCHES+="\$1, \$2, \$3"
+    elif [[ "${#LINE[@]}" -eq "3" ]]; then
+        RULEMATCHES+="\$1, \$2, \$3, \$4"
+    elif [[ "${#LINE[@]}" -eq "4" ]]; then
+        RULEMATCHES+="\$1, \$2, \$3, \$4, \$5"
+    fi
+    RULEMATCHES+="); }\n"
+
 
     if [[ "$ACTION" != "$LAST_ACTION" ]]; then
         echo "\"${STRING}\"    { RET_TOKEN_ENUM(${ACTION}, ActionType::${ACTION}) }" >> gen/tokens.flex
@@ -160,6 +173,7 @@ while read -r -a LINE; do
 
         LVAL_ENUMS+="    ${ACTION},\n"
         PARSER_TYPES+="%%type <ActionType> ${ACTION}\n"
+        PARSER_TYPES+="%%type <std::shared_ptr<AiRule::Action>> ${ACTIONLOWERCASE}\n"
     fi
 
     echo "%token ${ACTION}" >> gen/tokens.y

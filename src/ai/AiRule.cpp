@@ -199,3 +199,119 @@ std::shared_ptr<ai::AiRule::Condition> ai::AiRule::createNotCondition(const ai::
     WARN << "unimplemented condition";
     return nullptr;
 }
+
+////////////// actions
+
+std::shared_ptr<ai::AiRule::Action> ai::AiRule::createAction(const ai::ActionType type)
+{
+    WARN << "unimplemented action";
+    return nullptr;
+}
+
+std::shared_ptr<ai::AiRule::Action> ai::AiRule::createAction(const ai::ActionType type, const std::string &string)
+{
+    WARN << "unimplemented action";
+    return nullptr;
+}
+
+std::shared_ptr<ai::AiRule::Action> ai::AiRule::createAction(const ai::ActionType type, const int number1, const int number2)
+{
+    WARN << "unimplemented action";
+    return nullptr;
+}
+
+std::shared_ptr<ai::AiRule::Action> ai::AiRule::createAction(const ai::ActionType type, const int number)
+{
+    WARN << "unimplemented action";
+    return nullptr;
+}
+
+std::shared_ptr<ai::AiRule::Action> ai::AiRule::createAction(const ai::ActionType type, const int number, const ai::WallType building)
+{
+    WARN << "unimplemented action";
+    return nullptr;
+}
+
+std::shared_ptr<ai::AiRule::Action> ai::AiRule::createAction(const ai::ActionType type, const ai::Age age)
+{
+    WARN << "unimplemented action";
+    return nullptr;
+}
+
+std::shared_ptr<ai::AiRule::Action> ai::AiRule::createAction(const ai::ActionType type, const ai::Building building)
+{
+    WARN << "unimplemented action";
+    return nullptr;
+}
+
+std::shared_ptr<ai::AiRule::Action> ai::AiRule::createAction(const ai::ActionType type, const ai::ResearchItem research)
+{
+    WARN << "unimplemented action";
+    return nullptr;
+}
+
+std::shared_ptr<ai::AiRule::Action> ai::AiRule::createAction(const ai::ActionType type, const ai::Commodity commodity)
+{
+    WARN << "unimplemented action";
+    return nullptr;
+}
+
+std::shared_ptr<ai::AiRule::Action> ai::AiRule::createAction(const ai::ActionType type, const ai::Unit unit)
+{
+    WARN << "unimplemented action";
+    return nullptr;
+}
+
+std::shared_ptr<ai::AiRule::Action> ai::AiRule::createAction(const ai::ActionType type, const ai::Commodity commodity, const int number)
+{
+    WARN << "unimplemented action";
+    return nullptr;
+}
+
+std::shared_ptr<ai::AiRule::Action> ai::AiRule::createAction(const ai::ActionType type, const ai::PlayerNumberType playernumber, const int number)
+{
+    WARN << "unimplemented action";
+    return nullptr;
+}
+
+std::shared_ptr<ai::AiRule::Action> ai::AiRule::createAction(const ai::ActionType type, const ai::StrategicNumberName strategicNumber, const int number)
+{
+    WARN << "unimplemented action";
+    return nullptr;
+}
+
+std::shared_ptr<ai::AiRule::Action> ai::AiRule::createAction(const ai::ActionType type, const ai::PlayerNumberType playernumber, const ai::Commodity commodity, const int number)
+{
+    WARN << "unimplemented action";
+    return nullptr;
+}
+
+std::shared_ptr<ai::AiRule::Action> ai::AiRule::createAction(const ai::ActionType type, const ai::PlayerNumberType playernumber, const std::string &string)
+{
+    WARN << "unimplemented action";
+    return nullptr;
+}
+
+std::shared_ptr<ai::AiRule::Action> ai::AiRule::createAction(const ai::ActionType type, const ai::PlayerNumberType playernumber, const ai::DiplomaticStance stance)
+{
+    WARN << "unimplemented action";
+    return nullptr;
+}
+
+std::shared_ptr<ai::AiRule::Action> ai::AiRule::createAction(const ai::ActionType type, const ai::PlayerNumberType playernumber, const ai::Commodity commodity)
+{
+    WARN << "unimplemented action";
+    return nullptr;
+}
+
+std::shared_ptr<ai::AiRule::Action> ai::AiRule::createAction(const ai::ActionType type, const ai::DifficultyParameter difficulty, const int number)
+{
+    WARN << "unimplemented action";
+    return nullptr;
+}
+
+std::shared_ptr<ai::AiRule::Action> ai::AiRule::createAction(const ai::ActionType type, const ai::PlayerNumberType playernumber, const int number1, const int number2)
+{
+    WARN << "unimplemented action";
+    return nullptr;
+}

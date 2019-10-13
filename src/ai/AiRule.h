@@ -62,8 +62,28 @@ struct AiRule
 
     struct Action {
         virtual ~Action();
-        virtual void trigger(UnitManager *unitManager);
+        virtual void trigger(UnitManager *unitManager) = 0;
     };
+
+    static std::shared_ptr<Action> createAction(const ActionType type);
+    static std::shared_ptr<Action> createAction(const ActionType type, const std::string &string);
+    static std::shared_ptr<Action> createAction(const ActionType type, const int number1, const int number2);
+    static std::shared_ptr<Action> createAction(const ActionType type, const int number);
+    static std::shared_ptr<Action> createAction(const ActionType type, const int number, const WallType building);
+    static std::shared_ptr<Action> createAction(const ActionType type, const Age age);
+    static std::shared_ptr<Action> createAction(const ActionType type, const Building building);
+    static std::shared_ptr<Action> createAction(const ActionType type, const ResearchItem research);
+    static std::shared_ptr<Action> createAction(const ActionType type, const Commodity commodity);
+    static std::shared_ptr<Action> createAction(const ActionType type, const Unit unit);
+    static std::shared_ptr<Action> createAction(const ActionType type, const Commodity building, const int number);
+    static std::shared_ptr<Action> createAction(const ActionType type, const PlayerNumberType playernumber, const int number);
+    static std::shared_ptr<Action> createAction(const ActionType type, const StrategicNumberName strategicNumber, const int number);
+    static std::shared_ptr<Action> createAction(const ActionType type, const PlayerNumberType playernumber, const Commodity commodity, const int number);
+    static std::shared_ptr<Action> createAction(const ActionType type, const PlayerNumberType playernumber, const std::string &string);
+    static std::shared_ptr<Action> createAction(const ActionType type, const PlayerNumberType playernumber, const DiplomaticStance stance);
+    static std::shared_ptr<Action> createAction(const ActionType type, const PlayerNumberType playernumber, const Commodity commodity);
+    static std::shared_ptr<Action> createAction(const ActionType type, const DifficultyParameter difficulty, const int number);
+    static std::shared_ptr<Action> createAction(const ActionType type, const PlayerNumberType playernumber, const int number1, const int number2);
 
     // should really have unique_ptr, but bison is a pile of shit
     std::vector<std::shared_ptr<Condition>> conditions;
