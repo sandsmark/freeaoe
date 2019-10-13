@@ -5,12 +5,16 @@ rm -f gen/rules
 rm -f gen/tokens.flex
 rm -f gen/tokens.y
 rm -f gen/enums.h
+rm -f gen/parser-types.y
+rm -f gen/union.y
 
 echo "#pragma once" >> gen/enums.h
 
 
-ALL_TYPES="fact "
+ALL_TYPES="    fact\n"
 LVAL_ENUMS=""
+PARSER_TYPES=""
+UNION_MEMBERS=""
 while read -r -a LINE; do
 
     TYPE="${LINE[0]}"
@@ -58,7 +62,8 @@ while read -r -a LINE; do
         else
             RULEMATCHES+="  | ${TOKENNAME}"
         fi
-        RULEMATCHES+="  {}// static_cast<Condition*>(aiRule)->type = ${TYPE}::${NAME}; } \n"
+        RULEMATCHES+="  { \$\$ = ${NAME}; }\n"
+        #RULEMATCHES+="  { \$\$ = ${TYPE}::${NAME}; }\n"
         ENUMS+="    ${NAME},\n"
         LVAL_ENUMS+="    ${NAME},\n"
     done
@@ -67,9 +72,9 @@ while read -r -a LINE; do
     #echo "%token ${TYPETOKEN}" >> gen/tokens.y
 
     # Can't be arsed to do this properly
-    if [[ "$TYPE" = "Age" ]]; then
-        RULEMATCHES+="| BuildingCastle \n"
-    fi
+    #if [[ "$TYPE" = "Age" ]]; then
+    #    RULEMATCHES+="| BuildingCastle \n"
+    #fi
 
     if [[ -n "${RULEMATCHES}" ]]; then
         printf "${TYPE}:" | tr '[:upper:]' '[:lower:]' >> gen/rules
@@ -80,23 +85,31 @@ while read -r -a LINE; do
         echo "%token${TOKENLIST}" >> gen/tokens.y
     fi
     if [[ -n "${ENUMS}" ]]; then
-        echo "enum class ${TYPE} {" >> gen/enums.h
+        #echo "enum class ${TYPE} {" >> gen/enums.h
+        printf "enum ${TYPE} {\n" >> gen/enums.h
         printf "${ENUMS}" >> gen/enums.h
-        echo "};" >> gen/enums.h
+        printf "};\n" >> gen/enums.h
     fi
 
     TYPELOWERCASE=$(tr '[:upper:]' '[:lower:]' <<<"$TYPE")
     if [[ -z "${ALL_TYPES}" ]]; then
-        ALL_TYPES+="    ${TYPELOWERCASE}"
+        ALL_TYPES+="    ${TYPELOWERCASE}\n"
     else
-        ALL_TYPES+="  | ${TYPELOWERCASE}"
+        ALL_TYPES+="  | ${TYPELOWERCASE}\n"
     fi
+    #PARSER_TYPES+="%%type <${TYPE}> ${TYPE}\n"
+    #PARSER_TYPES+="%%type <${TYPE}> ${TYPELOWERCASE}\n"
+    PARSER_TYPES+="%%type <${TYPELOWERCASE}> ${TYPELOWERCASE}\n"
+    UNION_MEMBERS+="    ${TYPE} ${TYPELOWERCASE};\n"
 done < lists/parameters.list
 
-printf "\nsymbolname:\n${ALL_TYPES}\n" >> gen/rules
+printf "\nsymbolname:\n${ALL_TYPES}\n    " >> gen/rules
 
 printf "enum class ParameterType {\n${LVAL_ENUMS}\n};" >> gen/enums.h
 
+#UNION_MEMBERS+="    ActionType action;\n"
+#PARSER_TYPES+="%%type <action> action\n"
+#PARSER_TYPES+="%%type <ActionType> action\n"
 LVAL_ENUMS=""
 ALL_ACTIONS=""
 LAST_ACTION=""
@@ -139,6 +152,9 @@ while read -r -a LINE; do
         fi
 
         RULEMATCHES+=" ${TOKENNAME}"
+
+        #PARSER_TYPES+="%%type <${NAME}> ${TOKENNAME}\n"
+        #UNION_MEMBERS+="    ${TOKENNAME} ${NAME};\n"
     done
 
 
@@ -146,13 +162,14 @@ while read -r -a LINE; do
         echo "\"${STRING}\"    { RET_TOKEN(${ACTION}) }" >> gen/tokens.flex
 
         if [[ -z "${ALL_ACTIONS}" ]]; then
-            ALL_ACTIONS+="    ${ACTIONLOWERCASE}"
+            ALL_ACTIONS+="    ${ACTIONLOWERCASE}\n"
         else
-            ALL_ACTIONS+="  | ${ACTIONLOWERCASE}"
+            ALL_ACTIONS+="  | ${ACTIONLOWERCASE}\n"
         fi
+
+        LVAL_ENUMS+="    Action${ACTION},\n"
     fi
 
-    LVAL_ENUMS+="    Action${ACTION},\n"
     echo "%token ${ACTION}" >> gen/tokens.y
     if [[ -n "${RULEMATCHES}" ]]; then
         printf "\n${RULEMATCHES}"  >> gen/rules
@@ -180,9 +197,9 @@ while read -r -a LINE; do
     #RULEMATCHES=""
 
     if [[ "$FACT" = "$LAST_FACT" ]]; then
-        RULEMATCHES="| ${FACT}"
+        RULEMATCHES="    | ${FACT}"
     else
-        RULEMATCHES="${FACTLOWERCASE}:\n    ${FACT}"
+        RULEMATCHES="\n${FACTLOWERCASE}:\n    ${FACT}"
     fi
 
     ENUMS=""
@@ -218,25 +235,31 @@ while read -r -a LINE; do
         echo "\"${STRING}\"    { RET_TOKEN(${FACT}) }" >> gen/tokens.flex
 
         if [[ -z "${ALL_FACTS}" ]]; then
-            ALL_FACTS+="    ${FACTLOWERCASE}"
+            ALL_FACTS+="    ${FACTLOWERCASE}\n"
         else
-            ALL_FACTS+="  | ${FACTLOWERCASE}"
+            ALL_FACTS+="  | ${FACTLOWERCASE}\n"
         fi
+
+        LVAL_ENUMS+="    Fact${FACT},\n"
     fi
 
-    LVAL_ENUMS+="    Fact${FACT},\n"
     echo "%token ${FACT}" >> gen/tokens.y
     if [[ -n "${RULEMATCHES}" ]]; then
-        printf "\n${RULEMATCHES}\n"  >> gen/rules
+        printf "${RULEMATCHES}\n"  >> gen/rules
     fi
     LAST_FACT="${FACT}"
+    #PARSER_TYPES+="%%type <${TYPE}> ${TYPELOWERCASE}\n"
 done < lists/facts.list
 
 printf "\nfact:\n${ALL_FACTS}\n" >> gen/rules
 
 printf "enum class Fact {\n${LVAL_ENUMS}\n};" >> gen/enums.h
 
-rm -f grammar.gen.y && cat parser.head.y <(sort -u < gen/tokens.y) parser.mid.y gen/rules  parser.tail.y > grammar.gen.y
+printf "$PARSER_TYPES" >> gen/parser-types.y
+printf "%%union {\n    int number;\n    const char *string;\n${UNION_MEMBERS}}\n" >> gen/union.y
+
+
+rm -f grammar.gen.ypp && cat parser.head.y <(sort -u < gen/tokens.y) gen/union.y gen/parser-types.y parser.mid.y gen/rules  parser.tail.y > grammar.gen.ypp
 rm -f tokenizer.gen.flex && cat tokenizer.head.flex gen/tokens.flex tokenizer.tail.flex > tokenizer.gen.flex
 
-flex++ -Ca  -+  tokenizer.gen.flex  && bison --language=C++  --defines --debug -v -d grammar.gen.y
+flex++ -Ca  -+  tokenizer.gen.flex  && bison --language=C++  --defines --debug -v -d grammar.gen.ypp

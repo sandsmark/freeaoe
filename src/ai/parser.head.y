@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "gen/enums.h"
 
 extern int yylex(void);
 extern int yyparse(void);
@@ -11,12 +12,7 @@ extern FILE* yyin;
 void yyerror(const char* s);
 %}
 
-%union {
-	int number;
-	const char *string;
-}
-
-%destructor { free($$); $$ = NULL; } String SymbolName;
+//%destructor { free($$); $$ = NULL; } String SymbolName;
 
 
 %token<number> Number

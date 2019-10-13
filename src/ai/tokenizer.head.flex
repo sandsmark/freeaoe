@@ -5,7 +5,8 @@
 %{
     //#include "ScriptLoader.h"
     //#include "ScriptTokenizer.h"
-    #include "grammar.gen.tab.h"
+    #include "gen/enums.h"
+    #include "grammar.gen.tab.hpp"
     //#include "location.hh"
 
     //static ai::location loc;
