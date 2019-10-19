@@ -124,3 +124,8 @@ void EventManager::unitDisappeared(Player *player, Unit *unit)
 {
     call(UnitDisappeared, [=](EventListener *l) { l->onUnitDisappeared(player, unit); });
 }
+
+void EventManager::playerResourceChanged(Player *player, const genie::ResourceType type, const float newValue)
+{
+    call(PlayerResourceChanged, [=](EventListener *l) { l->onPlayerResourceChanged(player, type, newValue); });
+}

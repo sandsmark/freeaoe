@@ -4,7 +4,8 @@
 namespace ai
 {
 
-AiScript::AiScript()
+AiScript::AiScript(Player *player) :
+    m_player(player)
 {
 
 }

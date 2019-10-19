@@ -210,13 +210,13 @@ void GameState::setupScenario()
         }
 
         const genie::ScnPlayerResources &resources = scenario_->playerResources[playerNum];
-        player->resourcesAvailable[genie::ResourceType::GoldStorage] = resources.gold;
-        player->resourcesAvailable[genie::ResourceType::FoodStorage] = resources.food;
-        player->resourcesAvailable[genie::ResourceType::WoodStorage] = resources.wood;
-        player->resourcesAvailable[genie::ResourceType::StoneStorage] = resources.stone;
-        player->resourcesAvailable[genie::ResourceType::OreStorage] = resources.ore;
-        player->resourcesAvailable[genie::ResourceType::TradeGoods] = resources.goods;
-        player->resourcesAvailable[genie::ResourceType::PopulationHeadroom] = resources.popLimit;
+        player->setAvailableResource(genie::ResourceType::GoldStorage,  resources.gold);
+        player->setAvailableResource(genie::ResourceType::FoodStorage,  resources.food);
+        player->setAvailableResource(genie::ResourceType::WoodStorage,  resources.wood);
+        player->setAvailableResource(genie::ResourceType::StoneStorage, resources.stone);
+        player->setAvailableResource(genie::ResourceType::OreStorage,   resources.ore);
+        player->setAvailableResource(genie::ResourceType::TradeGoods,   resources.goods);
+        player->setAvailableResource(genie::ResourceType::PopulationHeadroom, resources.popLimit);
 
         if (playersData.resourcesPlusPlayerInfo[realPlayerNum].isHuman) {
             if (m_humanPlayer) {

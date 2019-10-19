@@ -124,6 +124,8 @@ set(AI_SRC
     src/ai/AiRule.cpp
     src/ai/AiScript.cpp
     src/ai/ScriptLoader.cpp
+    src/ai/actions/Actions.cpp
+    src/ai/conditions/Conditions.cpp
     )
 
 set(CORE_SRC

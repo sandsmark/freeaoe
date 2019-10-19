@@ -10,6 +10,10 @@ struct MapPos;
 struct Player;
 struct Unit;
 
+namespace genie {
+enum class ResourceType : int16_t;
+}
+
 // Not scalable at all, so sue me
 class EventManager
 {
@@ -42,6 +46,8 @@ public:
         DiscoveredUnit,
         UnitDisappeared,
 
+        PlayerResourceChanged,
+
         EventTypeCount
     };
 
@@ -68,6 +74,8 @@ public:
     static void attributeChanged(Player *player, int attributeId, float newValue);
     static void unitDiscovered(Player *player, Unit *unit);
     static void unitDisappeared(Player *player, Unit *unit);
+
+    static void playerResourceChanged(Player *player, const genie::ResourceType type, const float newValue);
 
 private:
     static void call(const EventType type, std::function<void(EventListener *listener)> function)

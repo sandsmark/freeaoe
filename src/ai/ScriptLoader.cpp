@@ -6,7 +6,9 @@
 #include "grammar.gen.tab.hpp"
 #include "core/Logger.h"
 #include "EnumLogDefs.h"
+
 #include "conditions/Conditions.h"
+#include "actions/Actions.h"
 
 namespace ai {
 
@@ -233,7 +235,14 @@ std::shared_ptr<Condition> ScriptLoader::createNotCondition(const RelOp type, st
 
 std::shared_ptr<Action> ScriptLoader::createAction(const ActionType type)
 {
-    WARN << "unimplemented action" << type;
+    switch(type) {
+    case ActionType::DisableSelf:
+        return std::make_shared<Actions::DisableSelf>();
+    default:
+        WARN << "unimplemented action" << type;
+        break;
+    }
+
     return nullptr;
 }
 
@@ -305,7 +314,14 @@ std::shared_ptr<Action> ScriptLoader::createAction(const ActionType type, const 
 
 std::shared_ptr<Action> ScriptLoader::createAction(const ActionType type, const StrategicNumberName strategicNumber, const int number)
 {
-    WARN << "unimplemented action" << type << strategicNumber << number;
+    switch(type) {
+    case ActionType::SetStrategicNumber:
+        return std::make_shared<Actions::SetStrategicNumber>(strategicNumber, number);
+    default:
+        WARN << "unimplemented action" << type << strategicNumber << number;
+        break;
+    }
+
     return nullptr;
 }
 

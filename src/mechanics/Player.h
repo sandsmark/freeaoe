@@ -118,7 +118,6 @@ struct Player
 
     Civilization civilization;
 
-    ResourceMap resourcesAvailable;
     ResourceMap resourcesUsed;
 
     typedef std::shared_ptr<Player> Ptr;
@@ -128,6 +127,9 @@ struct Player
     void applyTechEffect(const int effectId);
     void applyTechEffectCommand(const genie::EffectCommand &effect);
     void setAge(const Age age);
+    inline Age currentAge() {
+        return Age(m_resourcesAvailable[genie::ResourceType::CurrentAge]);
+    }
 
     void addUnit(Unit *unit);
     void removeUnit(Unit *unit);
@@ -136,8 +138,17 @@ struct Player
     void removeAlliedPlayer(int playerId);
     bool isAllied(int playerId);
 
+    void removeResource(const genie::ResourceType type, float amount) {
+        setAvailableResource(type, m_resourcesAvailable[type] - amount);
+    }
+    void addResource(const genie::ResourceType type, float amount) {
+        setAvailableResource(type, m_resourcesAvailable[type] + amount);
+    }
+    void setAvailableResource(const genie::ResourceType type, float newValue);
+    inline float resourcesAvailable(const genie::ResourceType type) { return m_resourcesAvailable[type]; }
 
 private:
+    ResourceMap m_resourcesAvailable;
     std::unordered_set<Unit*> m_units;
     std::unordered_set<int> m_activeTechs;
     std::unordered_set<int> m_alliedPlayers;

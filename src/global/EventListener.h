@@ -5,6 +5,12 @@ struct MapPos;
 struct Player;
 struct Unit;
 
+#include <stdint.h>
+
+namespace genie {
+enum class ResourceType : int16_t;
+}
+
 /**
  * @brief For classes that want to monitor for events, e. g. for scenarios or AI
  */
@@ -68,6 +74,9 @@ protected:
 
     virtual void onUnitDisappeared(Player *player, Unit *unit)
         { (void)player; (void)unit; }
+
+    virtual void onPlayerResourceChanged(Player *player, const genie::ResourceType type, float newValue)
+        { (void)player; }
 };
 
 #endif // EVENTLISTENER_H

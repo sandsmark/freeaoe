@@ -12,6 +12,7 @@
 #include "core/Logger.h"
 #include "mechanics/Civilization.h"
 #include "mechanics/Unit.h"
+#include "global/EventManager.h"
 #include "resource/DataManager.h"
 
 //#define CHEAT_VISIBILITY 1
@@ -20,12 +21,12 @@ Player::Player(const int id, const int civId, const ResourceMap &startingResourc
     visibility(std::make_shared<VisibilityMap>()),
     playerId(id),
     civilization(civId),
-    resourcesAvailable(civilization.startingResources()),
-    name("Player " + std::to_string(id))
+    name("Player " + std::to_string(id)),
+    m_resourcesAvailable(civilization.startingResources())
 {
     // Override
     for (const std::pair<const genie::ResourceType, float> &r : startingResources) {
-        resourcesAvailable[r.first] = r.second;
+        m_resourcesAvailable[r.first] = r.second;
     }
 }
 
@@ -99,9 +100,9 @@ void Player::applyTechEffectCommand(const genie::EffectCommand &effect)
     case genie::EffectCommand::ResourceModifier: {
         const genie::ResourceType resourceType = genie::ResourceType(effect.TargetUnit);
         if (effect.UnitClassID) {
-            resourcesAvailable[resourceType] += effect.Amount;
+            m_resourcesAvailable[resourceType] += effect.Amount;
         } else {
-            resourcesAvailable[resourceType] = effect.Amount;
+            m_resourcesAvailable[resourceType] = effect.Amount;
         }
         break;
     }
@@ -130,7 +131,7 @@ void Player::applyTechEffectCommand(const genie::EffectCommand &effect)
         civilization.applyUnitAttributeModifier(effect);
         break;
     case genie::EffectCommand::ResourceMultiplier:
-        resourcesAvailable[genie::ResourceType(effect.TargetUnit)] *= effect.Amount;
+        m_resourcesAvailable[genie::ResourceType(effect.TargetUnit)] *= effect.Amount;
         break;
     case genie::EffectCommand::TechCostModifier:
         WARN << "Disable tech cost modifier not implemented";
@@ -150,7 +151,7 @@ void Player::applyTechEffectCommand(const genie::EffectCommand &effect)
 
 void Player::setAge(const Age age)
 {
-    resourcesAvailable[genie::ResourceType::CurrentAge] = age;
+    m_resourcesAvailable[genie::ResourceType::CurrentAge] = age;
 
     genie::ResourceType effectResourceType;
     switch (age) {
@@ -188,7 +189,7 @@ void Player::addUnit(Unit *unit)
             if (res.Amount < 0) {
                 resourcesUsed[genie::ResourceType(res.Type)] -= res.Amount;
             } else {
-                resourcesAvailable[genie::ResourceType(res.Type)] += res.Amount;
+                m_resourcesAvailable[genie::ResourceType(res.Type)] += res.Amount;
             }
             break;
         default:
@@ -210,7 +211,7 @@ void Player::removeUnit(Unit *unit)
             if (res.Amount < 0) {
                 resourcesUsed[genie::ResourceType(res.Type)] += res.Amount;
             } else {
-                resourcesAvailable[genie::ResourceType(res.Type)] -= res.Amount;
+                m_resourcesAvailable[genie::ResourceType(res.Type)] -= res.Amount;
             }
             break;
         default:
@@ -234,6 +235,13 @@ bool Player::isAllied(int playerId)
 {
     // STL sucks
     return m_alliedPlayers.count(playerId) > 0;
+}
+
+void Player::setAvailableResource(const genie::ResourceType type, float newValue)
+{
+    m_resourcesAvailable[type] = newValue;
+
+    EventManager::playerResourceChanged(this, type, newValue);
 }
 
 namespace {
