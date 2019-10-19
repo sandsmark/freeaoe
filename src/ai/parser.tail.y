@@ -1,7 +1,7 @@
 %%
 
 int main() {
-       ai::ScriptLoader parser;
+       ai::ScriptLoader parser(nullptr);
        return parser.parse(std::cin, std::cout);
 }
 

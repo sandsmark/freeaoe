@@ -21,6 +21,7 @@
 %code requires {
     #include "gen/enums.h"
     #include "AiRule.h"
+    #include "AiScript.h"
     #include <memory>
 
     namespace ai {
@@ -70,3 +71,9 @@
 %token ScriptEnd 0 "end of script"
 
 %start aiscript
+
+%type <std::shared_ptr<ai::Condition>> conditiontype
+%type <std::shared_ptr<ai::Condition>> condition
+%type <std::shared_ptr<ai::Condition>> fact
+%type <std::shared_ptr<ai::Action>> singleaction
+%type <std::shared_ptr<ai::Action>> action

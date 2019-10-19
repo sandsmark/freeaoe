@@ -1,5 +1,7 @@
 #!/bin/bash -e
 
+######## TODO: rewrite this in c++ or something other sane
+
 mkdir -p gen
 rm -f gen/rules
 rm -f gen/tokens.flex
@@ -146,7 +148,7 @@ while read -r -a LINE; do
         RULEMATCHES+=" ${TOKENNAME}"
     done
 
-    RULEMATCHES+=" { \$\$ = AiRule::createAction("
+    RULEMATCHES+=" { \$\$ = driver.createAction("
     # I'm too lazy to do this properly, so sue me
     if [[ "${#LINE[@]}" -eq "0" ]]; then
         RULEMATCHES+="\$1"
@@ -173,7 +175,7 @@ while read -r -a LINE; do
 
         LVAL_ENUMS+="    ${ACTION},\n"
         PARSER_TYPES+="%%type <ActionType> ${ACTION}\n"
-        PARSER_TYPES+="%%type <std::shared_ptr<AiRule::Action>> ${ACTIONLOWERCASE}\n"
+        PARSER_TYPES+="%%type <std::shared_ptr<ai::Action>> ${ACTIONLOWERCASE}\n"
     fi
 
     echo "%token ${ACTION}" >> gen/tokens.y
@@ -258,9 +260,9 @@ while read -r -a LINE; do
 
         LVAL_ENUMS+="    ${FACT},\n"
         PARSER_TYPES+="%%type <Fact> ${FACT}\n"
-        PARSER_TYPES+="%%type <std::shared_ptr<AiRule::Condition>> ${FACTLOWERCASE}\n"
+        PARSER_TYPES+="%%type <std::shared_ptr<ai::Condition>> ${FACTLOWERCASE}\n"
     fi
-    RULEMATCHES+=" { \$\$ = AiRule::createCondition("
+    RULEMATCHES+=" { \$\$ = driver.createCondition("
     # I'm too lazy to do this properly, so sue me
     if [[ "${#LINE[@]}" -eq "0" ]]; then
         RULEMATCHES+="\$1"
@@ -311,4 +313,4 @@ rm -f grammar.gen.ypp && cat parser.head.y <(sort -u < gen/tokens.y)  gen/parser
 rm -f tokenizer.gen.flex && cat tokenizer.head.flex gen/tokens.flex tokenizer.tail.flex > tokenizer.gen.flex
 
 flex++ -Ca --debug -+  tokenizer.gen.flex  && bison --language=C++  --defines --debug -v -d grammar.gen.ypp
-clang++  -Wall -Wextra -pedantic -Wno-unused-parameter -std=gnu++17 -I.. grammar.gen.tab.cpp lex.yy.cc ScriptLoader.cpp AiRule.cpp ../core/Logger.cpp ../global/EventListener.cpp ../global/EventManager.cpp && ./a.out < SAMPLEAI.PER
+clang++  -Wall -Wextra -pedantic -Wno-unused-parameter -std=gnu++17 -I.. grammar.gen.tab.cpp lex.yy.cc ScriptLoader.cpp AiScript.cpp AiRule.cpp ../core/Logger.cpp ../global/EventListener.cpp ../global/EventManager.cpp && ./a.out < SAMPLEAI.PER

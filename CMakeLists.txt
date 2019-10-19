@@ -122,6 +122,7 @@ set(AI_SRC
     src/ai/grammar.gen.tab.cpp
     src/ai/lex.yy.cc
     src/ai/AiRule.cpp
+    src/ai/AiScript.cpp
     )
 
 set(CORE_SRC
