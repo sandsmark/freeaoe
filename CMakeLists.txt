@@ -123,6 +123,7 @@ set(AI_SRC
     src/ai/lex.yy.cc
     src/ai/AiRule.cpp
     src/ai/AiScript.cpp
+    src/ai/ScriptLoader.cpp
     )
 
 set(CORE_SRC
@@ -223,7 +224,7 @@ set(DEBUG_SRC
 set(ENGINE_SRC
     src/Engine.cpp
     ${CORE_SRC}
-#    ${AI_SRC}
+    ${AI_SRC}
     ${RESOURCE_SRC}
     ${GLOBAL_SRC}
     ${MECHANICS_SRC}

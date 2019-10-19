@@ -313,4 +313,4 @@ rm -f grammar.gen.ypp && cat parser.head.y <(sort -u < gen/tokens.y)  gen/parser
 rm -f tokenizer.gen.flex && cat tokenizer.head.flex gen/tokens.flex tokenizer.tail.flex > tokenizer.gen.flex
 
 flex++ -Ca --debug -+  tokenizer.gen.flex  && bison --language=C++  --defines --debug -v -d grammar.gen.ypp
-clang++  -Wall -Wextra -pedantic -Wno-unused-parameter -std=gnu++17 -I.. grammar.gen.tab.cpp lex.yy.cc ScriptLoader.cpp AiScript.cpp AiRule.cpp ../core/Logger.cpp ../global/EventListener.cpp ../global/EventManager.cpp && ./a.out < SAMPLEAI.PER
+clang++  -DPARSER_TEST -Wall -Wextra -pedantic -Wno-unused-parameter -std=gnu++17 -I.. grammar.gen.tab.cpp lex.yy.cc ScriptLoader.cpp AiScript.cpp AiRule.cpp ../core/Logger.cpp ../global/EventListener.cpp ../global/EventManager.cpp && ./a.out < SAMPLEAI.PER

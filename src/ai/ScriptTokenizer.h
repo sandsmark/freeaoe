@@ -8,7 +8,7 @@
 #include <iostream>
 
 #ifndef yyFlexLexerOnce
-#include <FlexLexer.h>
+#include "FlexLexer.h"
 #endif
 
 #include "grammar.gen.tab.hpp"
@@ -24,7 +24,7 @@ namespace ai {
         ScriptTokenizer(ai::ScriptLoader &driver) : yyFlexLexer(std::cin, std::cout), _driver(driver) {}
         virtual ~ScriptTokenizer() {}
         ai::ScriptParser::symbol_type yylex(ai::ScriptLoader &_driver);
-        int yylex() override { assert(false); }
+        int yylex() override { assert(false); return 0; }
     private:
         ai::ScriptLoader &_driver;
     };
