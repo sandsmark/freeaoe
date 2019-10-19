@@ -37,7 +37,7 @@ static const char *s_registryKey = "InstallationDirectory";
 #if defined(WIN32) || defined(__WIN32) || defined(__WIN32__)
 
 // I think this was for mingw or something
-#ifndef WINAPI_FAMILY_PARTITION
+#ifndef _MSC_VER
 #define WINAPI_FAMILY_PARTITION
 #endif
 
