@@ -72,6 +72,12 @@ if(MSVC)
     find_package(PNG)
     set(EXTRA_LIBS PNG::PNG ZLIB::ZLIB BZip2::BZip2)
 else()
+    if (CMAKE_BUILD_TYPE MATCHES Debug)
+        add_definitions(-fno-math-errno)
+    else()
+        add_definitions(-ffast-math) # So sue me, we're not doing anything sciency
+    endif()
+
     add_definitions(-Wall -Wextra -pedantic -Wno-sign-compare -Wno-unused-parameter)
     set(EXTRA_LIBS stdc++fs pthread dl)
     set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/)
