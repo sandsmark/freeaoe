@@ -35,13 +35,20 @@ struct LogPrinter
         Error,
     };
 
-    inline std::string className(const std::string& prettyFunction)
+    static constexpr inline std::string_view extractClassName(const std::string_view &prettyFunction)
     {
-        size_t colons = prettyFunction.find("::");
-        if (colons == std::string::npos)
+        const size_t argumentsStart = prettyFunction.find('(');
+        if (argumentsStart == std::string::npos) {
+            return "";
+        }
+
+        const size_t colons = prettyFunction.find_last_of("::", argumentsStart);
+        if (colons == std::string::npos || colons == 0) {
             return "::";
-        size_t begin = prettyFunction.substr(0,colons).rfind(" ") + 1;
-        size_t end = colons - begin;
+        }
+
+        const size_t begin = prettyFunction.find_last_of(' ', argumentsStart) + 1;
+        const size_t end = colons - begin - 1;
 
         return prettyFunction.substr(begin,end);
     }
