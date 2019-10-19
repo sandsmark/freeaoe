@@ -4,6 +4,7 @@
 %option case-insensitive
 %option noyywrap
 %option yylineno
+%option nounistd
 %option c++
 %option yyclass="ai::ScriptTokenizer"
 %{

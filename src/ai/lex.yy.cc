@@ -6815,80 +6815,80 @@ static const yy_state_type yy_NUL_trans[6682] =
 
 static const flex_int32_t yy_rule_linenum[677] =
     {   0,
-       40,   41,   42,   43,   44,   45,   46,   47,   48,   49,
-       50,   51,   52,   53,   54,   55,   56,   57,   58,   59,
-       60,   61,   62,   63,   64,   65,   66,   67,   68,   69,
-       70,   71,   72,   73,   74,   75,   76,   77,   78,   79,
-       80,   81,   82,   83,   84,   85,   86,   87,   88,   89,
-       90,   91,   92,   93,   94,   95,   96,   97,   98,   99,
-      100,  101,  102,  103,  104,  105,  106,  107,  108,  109,
-      110,  111,  112,  113,  114,  115,  116,  117,  118,  119,
-      120,  121,  122,  123,  124,  125,  126,  127,  128,  129,
-      130,  131,  132,  133,  134,  135,  136,  137,  138,  139,
+       41,   42,   43,   44,   45,   46,   47,   48,   49,   50,
+       51,   52,   53,   54,   55,   56,   57,   58,   59,   60,
+       61,   62,   63,   64,   65,   66,   67,   68,   69,   70,
+       71,   72,   73,   74,   75,   76,   77,   78,   79,   80,
+       81,   82,   83,   84,   85,   86,   87,   88,   89,   90,
+       91,   92,   93,   94,   95,   96,   97,   98,   99,  100,
+      101,  102,  103,  104,  105,  106,  107,  108,  109,  110,
+      111,  112,  113,  114,  115,  116,  117,  118,  119,  120,
+      121,  122,  123,  124,  125,  126,  127,  128,  129,  130,
+      131,  132,  133,  134,  135,  136,  137,  138,  139,  140,
 
-      140,  141,  142,  143,  144,  145,  146,  147,  148,  149,
-      150,  151,  152,  153,  154,  155,  156,  157,  158,  159,
-      160,  161,  162,  163,  164,  165,  166,  167,  168,  169,
-      170,  171,  172,  173,  174,  175,  176,  177,  178,  179,
-      180,  181,  182,  183,  184,  185,  186,  187,  188,  189,
-      190,  191,  192,  193,  194,  195,  196,  197,  198,  199,
-      200,  201,  202,  203,  204,  205,  206,  207,  208,  209,
-      210,  211,  212,  213,  214,  215,  216,  217,  218,  219,
-      220,  221,  222,  223,  224,  225,  226,  227,  228,  229,
-      230,  231,  232,  233,  234,  235,  236,  237,  238,  239,
+      141,  142,  143,  144,  145,  146,  147,  148,  149,  150,
+      151,  152,  153,  154,  155,  156,  157,  158,  159,  160,
+      161,  162,  163,  164,  165,  166,  167,  168,  169,  170,
+      171,  172,  173,  174,  175,  176,  177,  178,  179,  180,
+      181,  182,  183,  184,  185,  186,  187,  188,  189,  190,
+      191,  192,  193,  194,  195,  196,  197,  198,  199,  200,
+      201,  202,  203,  204,  205,  206,  207,  208,  209,  210,
+      211,  212,  213,  214,  215,  216,  217,  218,  219,  220,
+      221,  222,  223,  224,  225,  226,  227,  228,  229,  230,
+      231,  232,  233,  234,  235,  236,  237,  238,  239,  240,
 
-      240,  241,  242,  243,  244,  245,  246,  247,  248,  249,
-      250,  251,  252,  253,  254,  255,  256,  257,  258,  259,
-      260,  261,  262,  263,  264,  265,  266,  267,  268,  269,
-      270,  271,  272,  273,  274,  275,  276,  277,  278,  279,
-      280,  281,  282,  283,  284,  285,  286,  287,  288,  289,
-      290,  291,  292,  293,  294,  295,  296,  297,  298,  299,
-      300,  301,  302,  303,  304,  305,  306,  307,  308,  309,
-      310,  311,  312,  313,  314,  315,  316,  317,  318,  319,
-      320,  321,  322,  323,  324,  325,  326,  327,  328,  329,
-      330,  331,  332,  333,  334,  335,  336,  337,  338,  339,
+      241,  242,  243,  244,  245,  246,  247,  248,  249,  250,
+      251,  252,  253,  254,  255,  256,  257,  258,  259,  260,
+      261,  262,  263,  264,  265,  266,  267,  268,  269,  270,
+      271,  272,  273,  274,  275,  276,  277,  278,  279,  280,
+      281,  282,  283,  284,  285,  286,  287,  288,  289,  290,
+      291,  292,  293,  294,  295,  296,  297,  298,  299,  300,
+      301,  302,  303,  304,  305,  306,  307,  308,  309,  310,
+      311,  312,  313,  314,  315,  316,  317,  318,  319,  320,
+      321,  322,  323,  324,  325,  326,  327,  328,  329,  330,
+      331,  332,  333,  334,  335,  336,  337,  338,  339,  340,
 
-      340,  341,  342,  343,  344,  345,  346,  347,  348,  349,
-      350,  351,  352,  353,  354,  355,  356,  357,  358,  359,
-      360,  361,  362,  363,  364,  365,  366,  367,  368,  369,
-      370,  371,  372,  373,  374,  375,  376,  377,  378,  379,
-      380,  381,  382,  383,  384,  385,  386,  387,  388,  389,
-      390,  391,  392,  393,  394,  395,  396,  397,  398,  399,
-      400,  401,  402,  403,  404,  405,  406,  407,  408,  409,
-      410,  411,  412,  413,  414,  415,  416,  417,  418,  419,
-      420,  421,  422,  423,  424,  425,  426,  427,  428,  429,
-      430,  431,  432,  433,  434,  435,  436,  437,  438,  439,
+      341,  342,  343,  344,  345,  346,  347,  348,  349,  350,
+      351,  352,  353,  354,  355,  356,  357,  358,  359,  360,
+      361,  362,  363,  364,  365,  366,  367,  368,  369,  370,
+      371,  372,  373,  374,  375,  376,  377,  378,  379,  380,
+      381,  382,  383,  384,  385,  386,  387,  388,  389,  390,
+      391,  392,  393,  394,  395,  396,  397,  398,  399,  400,
+      401,  402,  403,  404,  405,  406,  407,  408,  409,  410,
+      411,  412,  413,  414,  415,  416,  417,  418,  419,  420,
+      421,  422,  423,  424,  425,  426,  427,  428,  429,  430,
+      431,  432,  433,  434,  435,  436,  437,  438,  439,  440,
 
-      440,  441,  442,  443,  444,  445,  446,  447,  448,  449,
-      450,  451,  452,  453,  454,  455,  456,  457,  458,  459,
-      460,  461,  462,  463,  464,  465,  466,  467,  468,  469,
-      470,  471,  472,  473,  474,  475,  476,  477,  478,  479,
-      480,  481,  482,  483,  484,  485,  486,  487,  488,  489,
-      490,  491,  492,  493,  494,  495,  496,  497,  498,  499,
-      500,  501,  502,  503,  504,  505,  506,  507,  508,  509,
-      510,  511,  512,  513,  514,  515,  516,  517,  518,  519,
-      520,  521,  522,  523,  524,  525,  526,  527,  528,  529,
-      530,  531,  532,  533,  534,  535,  536,  537,  538,  539,
+      441,  442,  443,  444,  445,  446,  447,  448,  449,  450,
+      451,  452,  453,  454,  455,  456,  457,  458,  459,  460,
+      461,  462,  463,  464,  465,  466,  467,  468,  469,  470,
+      471,  472,  473,  474,  475,  476,  477,  478,  479,  480,
+      481,  482,  483,  484,  485,  486,  487,  488,  489,  490,
+      491,  492,  493,  494,  495,  496,  497,  498,  499,  500,
+      501,  502,  503,  504,  505,  506,  507,  508,  509,  510,
+      511,  512,  513,  514,  515,  516,  517,  518,  519,  520,
+      521,  522,  523,  524,  525,  526,  527,  528,  529,  530,
+      531,  532,  533,  534,  535,  536,  537,  538,  539,  540,
 
-      540,  541,  542,  543,  544,  545,  546,  547,  548,  549,
-      550,  551,  552,  553,  554,  555,  556,  557,  558,  559,
-      560,  561,  562,  563,  564,  565,  566,  567,  568,  569,
-      570,  571,  572,  573,  574,  575,  576,  577,  578,  579,
-      580,  581,  582,  583,  584,  585,  586,  587,  588,  589,
-      590,  591,  592,  593,  594,  595,  596,  597,  598,  599,
-      600,  601,  602,  603,  604,  605,  606,  607,  608,  609,
-      610,  611,  612,  613,  614,  615,  616,  617,  618,  619,
-      620,  621,  622,  623,  624,  625,  626,  627,  628,  629,
-      630,  631,  632,  633,  634,  635,  636,  637,  638,  639,
+      541,  542,  543,  544,  545,  546,  547,  548,  549,  550,
+      551,  552,  553,  554,  555,  556,  557,  558,  559,  560,
+      561,  562,  563,  564,  565,  566,  567,  568,  569,  570,
+      571,  572,  573,  574,  575,  576,  577,  578,  579,  580,
+      581,  582,  583,  584,  585,  586,  587,  588,  589,  590,
+      591,  592,  593,  594,  595,  596,  597,  598,  599,  600,
+      601,  602,  603,  604,  605,  606,  607,  608,  609,  610,
+      611,  612,  613,  614,  615,  616,  617,  618,  619,  620,
+      621,  622,  623,  624,  625,  626,  627,  628,  629,  630,
+      631,  632,  633,  634,  635,  636,  637,  638,  639,  640,
 
-      640,  641,  642,  643,  644,  645,  646,  647,  648,  649,
-      650,  651,  652,  653,  654,  655,  656,  657,  658,  659,
-      660,  661,  662,  663,  664,  665,  666,  667,  668,  669,
-      670,  671,  672,  673,  674,  675,  676,  677,  678,  679,
-      680,  681,  682,  683,  684,  685,  686,  687,  688,  689,
-      690,  691,  692,  693,  694,  695,  696,  697,  699,  700,
-      701,  702,  704,  705,  707,  708,  709,  710,  711,  713,
-      714,  715,  717,  719,  720,  721
+      641,  642,  643,  644,  645,  646,  647,  648,  649,  650,
+      651,  652,  653,  654,  655,  656,  657,  658,  659,  660,
+      661,  662,  663,  664,  665,  666,  667,  668,  669,  670,
+      671,  672,  673,  674,  675,  676,  677,  678,  679,  680,
+      681,  682,  683,  684,  685,  686,  687,  688,  689,  690,
+      691,  692,  693,  694,  695,  696,  697,  698,  700,  701,
+      702,  703,  705,  706,  708,  709,  710,  711,  712,  714,
+      715,  716,  718,  720,  721,  722
     } ;
 
 /* The intent behind this definition is that it'll catch
@@ -6902,7 +6902,8 @@ static const flex_int32_t yy_rule_linenum[677] =
 #line 2 "tokenizer.gen.flex"
     #include "gen/enums.h"
 #line 6904 "lex.yy.cc"
-#line 10 "tokenizer.gen.flex"
+#define YY_NO_UNISTD_H 1
+#line 11 "tokenizer.gen.flex"
     #include "ScriptLoader.h"
     #include "ScriptTokenizer.h"
     #include "grammar.gen.tab.hpp"
@@ -6922,8 +6923,8 @@ static const flex_int32_t yy_rule_linenum[677] =
     #define RET_STRING(token_name) return ai::ScriptParser::symbol_type(ai::ScriptParser::token::token_name, yytext, loc);
     #define RET_INT(token_name) return ai::ScriptParser::symbol_type(ai::ScriptParser::token::token_name, atoi(yytext), loc);
 
-#line 6925 "lex.yy.cc"
 #line 6926 "lex.yy.cc"
+#line 6927 "lex.yy.cc"
 
 #define INITIAL 0
 
@@ -7115,10 +7116,10 @@ YY_DECL
 
 	{
 /* %% [7.0] user's declarations go here */
-#line 38 "tokenizer.gen.flex"
+#line 39 "tokenizer.gen.flex"
 
 
-#line 7121 "lex.yy.cc"
+#line 7122 "lex.yy.cc"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -7207,3391 +7208,3391 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 40 "tokenizer.gen.flex"
+#line 41 "tokenizer.gen.flex"
 
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 41 "tokenizer.gen.flex"
+#line 42 "tokenizer.gen.flex"
 
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 42 "tokenizer.gen.flex"
+#line 43 "tokenizer.gen.flex"
 { RET_TOKEN(AgeDarkAge) }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 43 "tokenizer.gen.flex"
+#line 44 "tokenizer.gen.flex"
 { RET_TOKEN(AgeFeudalAge) }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 44 "tokenizer.gen.flex"
+#line 45 "tokenizer.gen.flex"
 { RET_TOKEN(AgeCastleAge) }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 45 "tokenizer.gen.flex"
+#line 46 "tokenizer.gen.flex"
 { RET_TOKEN(AgeImperialAge) }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 46 "tokenizer.gen.flex"
+#line 47 "tokenizer.gen.flex"
 { RET_TOKEN(AgePostImperialAge) }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 47 "tokenizer.gen.flex"
+#line 48 "tokenizer.gen.flex"
 { RET_TOKEN(BuildingArcheryRange) }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 48 "tokenizer.gen.flex"
+#line 49 "tokenizer.gen.flex"
 { RET_TOKEN(BuildingBarracks) }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 49 "tokenizer.gen.flex"
+#line 50 "tokenizer.gen.flex"
 { RET_TOKEN(BuildingBlacksmith) }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 50 "tokenizer.gen.flex"
+#line 51 "tokenizer.gen.flex"
 { RET_TOKEN(BuildingBombardTower) }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 51 "tokenizer.gen.flex"
+#line 52 "tokenizer.gen.flex"
 { RET_TOKEN(BuildingCastle) }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 52 "tokenizer.gen.flex"
+#line 53 "tokenizer.gen.flex"
 { RET_TOKEN(BuildingDock) }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 53 "tokenizer.gen.flex"
+#line 54 "tokenizer.gen.flex"
 { RET_TOKEN(BuildingFarm) }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 54 "tokenizer.gen.flex"
+#line 55 "tokenizer.gen.flex"
 { RET_TOKEN(BuildingFishTrap) }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 55 "tokenizer.gen.flex"
+#line 56 "tokenizer.gen.flex"
 { RET_TOKEN(BuildingGuardTower) }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 56 "tokenizer.gen.flex"
+#line 57 "tokenizer.gen.flex"
 { RET_TOKEN(BuildingHouse) }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 57 "tokenizer.gen.flex"
+#line 58 "tokenizer.gen.flex"
 { RET_TOKEN(BuildingKeep) }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 58 "tokenizer.gen.flex"
+#line 59 "tokenizer.gen.flex"
 { RET_TOKEN(BuildingLumberCamp) }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 59 "tokenizer.gen.flex"
+#line 60 "tokenizer.gen.flex"
 { RET_TOKEN(BuildingMarket) }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 60 "tokenizer.gen.flex"
+#line 61 "tokenizer.gen.flex"
 { RET_TOKEN(BuildingMill) }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 61 "tokenizer.gen.flex"
+#line 62 "tokenizer.gen.flex"
 { RET_TOKEN(BuildingMiningCamp) }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 62 "tokenizer.gen.flex"
+#line 63 "tokenizer.gen.flex"
 { RET_TOKEN(BuildingMonastery) }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 63 "tokenizer.gen.flex"
+#line 64 "tokenizer.gen.flex"
 { RET_TOKEN(BuildingOutpost) }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 64 "tokenizer.gen.flex"
+#line 65 "tokenizer.gen.flex"
 { RET_TOKEN(BuildingSiegeWorkshop) }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 65 "tokenizer.gen.flex"
+#line 66 "tokenizer.gen.flex"
 { RET_TOKEN(BuildingStable) }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 66 "tokenizer.gen.flex"
+#line 67 "tokenizer.gen.flex"
 { RET_TOKEN(BuildingTownCenter) }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 67 "tokenizer.gen.flex"
+#line 68 "tokenizer.gen.flex"
 { RET_TOKEN(BuildingUniversity) }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 68 "tokenizer.gen.flex"
+#line 69 "tokenizer.gen.flex"
 { RET_TOKEN(BuildingWatchTower) }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 69 "tokenizer.gen.flex"
+#line 70 "tokenizer.gen.flex"
 { RET_TOKEN(BuildingWonder) }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 70 "tokenizer.gen.flex"
+#line 71 "tokenizer.gen.flex"
 { RET_TOKEN(BuildingWatchTowerLine) }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 71 "tokenizer.gen.flex"
+#line 72 "tokenizer.gen.flex"
 { RET_TOKEN(CivBriton) }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 72 "tokenizer.gen.flex"
+#line 73 "tokenizer.gen.flex"
 { RET_TOKEN(CivByzantine) }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 73 "tokenizer.gen.flex"
+#line 74 "tokenizer.gen.flex"
 { RET_TOKEN(CivCeltic) }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 74 "tokenizer.gen.flex"
+#line 75 "tokenizer.gen.flex"
 { RET_TOKEN(CivChinese) }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 75 "tokenizer.gen.flex"
+#line 76 "tokenizer.gen.flex"
 { RET_TOKEN(CivFrankish) }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 76 "tokenizer.gen.flex"
+#line 77 "tokenizer.gen.flex"
 { RET_TOKEN(CivGothic) }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 77 "tokenizer.gen.flex"
+#line 78 "tokenizer.gen.flex"
 { RET_TOKEN(CivJapanese) }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 78 "tokenizer.gen.flex"
+#line 79 "tokenizer.gen.flex"
 { RET_TOKEN(CivMongol) }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 79 "tokenizer.gen.flex"
+#line 80 "tokenizer.gen.flex"
 { RET_TOKEN(CivPersian) }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 80 "tokenizer.gen.flex"
+#line 81 "tokenizer.gen.flex"
 { RET_TOKEN(CivSaracen) }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 81 "tokenizer.gen.flex"
+#line 82 "tokenizer.gen.flex"
 { RET_TOKEN(CivTeutonic) }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 82 "tokenizer.gen.flex"
+#line 83 "tokenizer.gen.flex"
 { RET_TOKEN(CivTurkish) }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 83 "tokenizer.gen.flex"
+#line 84 "tokenizer.gen.flex"
 { RET_TOKEN(CivViking) }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 84 "tokenizer.gen.flex"
+#line 85 "tokenizer.gen.flex"
 { RET_TOKEN(CivMyCiv) }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 85 "tokenizer.gen.flex"
+#line 86 "tokenizer.gen.flex"
 { RET_TOKEN(CommodityFood) }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 86 "tokenizer.gen.flex"
+#line 87 "tokenizer.gen.flex"
 { RET_TOKEN(CommodityStone) }
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 87 "tokenizer.gen.flex"
+#line 88 "tokenizer.gen.flex"
 { RET_TOKEN(CommodityWood) }
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 88 "tokenizer.gen.flex"
+#line 89 "tokenizer.gen.flex"
 { RET_TOKEN(CommodityGold) }
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 89 "tokenizer.gen.flex"
+#line 90 "tokenizer.gen.flex"
 { RET_TOKEN(DifficultyLevelEasiest) }
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 90 "tokenizer.gen.flex"
+#line 91 "tokenizer.gen.flex"
 { RET_TOKEN(DifficultyLevelEasy) }
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 91 "tokenizer.gen.flex"
+#line 92 "tokenizer.gen.flex"
 { RET_TOKEN(DifficultyLevelModerate) }
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 92 "tokenizer.gen.flex"
+#line 93 "tokenizer.gen.flex"
 { RET_TOKEN(DifficultyLevelHard) }
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 93 "tokenizer.gen.flex"
+#line 94 "tokenizer.gen.flex"
 { RET_TOKEN(DifficultyLevelHardest) }
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 94 "tokenizer.gen.flex"
+#line 95 "tokenizer.gen.flex"
 { RET_TOKEN(DifficultyParameterAbilityToDodgeMissiles) }
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 95 "tokenizer.gen.flex"
+#line 96 "tokenizer.gen.flex"
 { RET_TOKEN(DifficultyParameterAbilityToMaintainDistance) }
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 96 "tokenizer.gen.flex"
+#line 97 "tokenizer.gen.flex"
 { RET_TOKEN(DiplomaticStanceAlly) }
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 97 "tokenizer.gen.flex"
+#line 98 "tokenizer.gen.flex"
 { RET_TOKEN(DiplomaticStanceNeutral) }
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 98 "tokenizer.gen.flex"
+#line 99 "tokenizer.gen.flex"
 { RET_TOKEN(DiplomaticStanceEnemy) }
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 99 "tokenizer.gen.flex"
+#line 100 "tokenizer.gen.flex"
 { RET_TOKEN(MapSizeTypeTiny) }
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 100 "tokenizer.gen.flex"
+#line 101 "tokenizer.gen.flex"
 { RET_TOKEN(MapSizeTypeSmall) }
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 101 "tokenizer.gen.flex"
+#line 102 "tokenizer.gen.flex"
 { RET_TOKEN(MapSizeTypeMedium) }
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 102 "tokenizer.gen.flex"
+#line 103 "tokenizer.gen.flex"
 { RET_TOKEN(MapSizeTypeNormal) }
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 103 "tokenizer.gen.flex"
+#line 104 "tokenizer.gen.flex"
 { RET_TOKEN(MapSizeTypeLarge) }
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-#line 104 "tokenizer.gen.flex"
+#line 105 "tokenizer.gen.flex"
 { RET_TOKEN(MapSizeTypeGiant) }
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
-#line 105 "tokenizer.gen.flex"
+#line 106 "tokenizer.gen.flex"
 { RET_TOKEN(MapTypeNameArabia) }
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
-#line 106 "tokenizer.gen.flex"
+#line 107 "tokenizer.gen.flex"
 { RET_TOKEN(MapTypeNameArchipelago) }
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
-#line 107 "tokenizer.gen.flex"
+#line 108 "tokenizer.gen.flex"
 { RET_TOKEN(MapTypeNameBaltic) }
 	YY_BREAK
 case 69:
 YY_RULE_SETUP
-#line 108 "tokenizer.gen.flex"
+#line 109 "tokenizer.gen.flex"
 { RET_TOKEN(MapTypeNameBlackForest) }
 	YY_BREAK
 case 70:
 YY_RULE_SETUP
-#line 109 "tokenizer.gen.flex"
+#line 110 "tokenizer.gen.flex"
 { RET_TOKEN(MapTypeNameCoastal) }
 	YY_BREAK
 case 71:
 YY_RULE_SETUP
-#line 110 "tokenizer.gen.flex"
+#line 111 "tokenizer.gen.flex"
 { RET_TOKEN(MapTypeNameContinental) }
 	YY_BREAK
 case 72:
 YY_RULE_SETUP
-#line 111 "tokenizer.gen.flex"
+#line 112 "tokenizer.gen.flex"
 { RET_TOKEN(MapTypeNameCraterLake) }
 	YY_BREAK
 case 73:
 YY_RULE_SETUP
-#line 112 "tokenizer.gen.flex"
+#line 113 "tokenizer.gen.flex"
 { RET_TOKEN(MapTypeNameFortress) }
 	YY_BREAK
 case 74:
 YY_RULE_SETUP
-#line 113 "tokenizer.gen.flex"
+#line 114 "tokenizer.gen.flex"
 { RET_TOKEN(MapTypeNameGoldRush) }
 	YY_BREAK
 case 75:
 YY_RULE_SETUP
-#line 114 "tokenizer.gen.flex"
+#line 115 "tokenizer.gen.flex"
 { RET_TOKEN(MapTypeNameHighland) }
 	YY_BREAK
 case 76:
 YY_RULE_SETUP
-#line 115 "tokenizer.gen.flex"
+#line 116 "tokenizer.gen.flex"
 { RET_TOKEN(MapTypeNameIslands) }
 	YY_BREAK
 case 77:
 YY_RULE_SETUP
-#line 116 "tokenizer.gen.flex"
+#line 117 "tokenizer.gen.flex"
 { RET_TOKEN(MapTypeNameMediterranean) }
 	YY_BREAK
 case 78:
 YY_RULE_SETUP
-#line 117 "tokenizer.gen.flex"
+#line 118 "tokenizer.gen.flex"
 { RET_TOKEN(MapTypeNameMigration) }
 	YY_BREAK
 case 79:
 YY_RULE_SETUP
-#line 118 "tokenizer.gen.flex"
+#line 119 "tokenizer.gen.flex"
 { RET_TOKEN(MapTypeNameRivers) }
 	YY_BREAK
 case 80:
 YY_RULE_SETUP
-#line 119 "tokenizer.gen.flex"
+#line 120 "tokenizer.gen.flex"
 { RET_TOKEN(MapTypeNameTeamIslands) }
 	YY_BREAK
 case 81:
 YY_RULE_SETUP
-#line 120 "tokenizer.gen.flex"
+#line 121 "tokenizer.gen.flex"
 { RET_TOKEN(MapTypeNameScenarioMap) }
 	YY_BREAK
 case 82:
 YY_RULE_SETUP
-#line 121 "tokenizer.gen.flex"
+#line 122 "tokenizer.gen.flex"
 { RET_TOKEN(PlayerNumberTypeAnyAlly) }
 	YY_BREAK
 case 83:
 YY_RULE_SETUP
-#line 122 "tokenizer.gen.flex"
+#line 123 "tokenizer.gen.flex"
 { RET_TOKEN(PlayerNumberTypeAnyComputer) }
 	YY_BREAK
 case 84:
 YY_RULE_SETUP
-#line 123 "tokenizer.gen.flex"
+#line 124 "tokenizer.gen.flex"
 { RET_TOKEN(PlayerNumberTypeAnyComputerAlly) }
 	YY_BREAK
 case 85:
 YY_RULE_SETUP
-#line 124 "tokenizer.gen.flex"
+#line 125 "tokenizer.gen.flex"
 { RET_TOKEN(PlayerNumberTypeAnyComputerEnemy) }
 	YY_BREAK
 case 86:
 YY_RULE_SETUP
-#line 125 "tokenizer.gen.flex"
+#line 126 "tokenizer.gen.flex"
 { RET_TOKEN(PlayerNumberTypeAnyComputerNeutral) }
 	YY_BREAK
 case 87:
 YY_RULE_SETUP
-#line 126 "tokenizer.gen.flex"
+#line 127 "tokenizer.gen.flex"
 { RET_TOKEN(PlayerNumberTypeAnyEnemy) }
 	YY_BREAK
 case 88:
 YY_RULE_SETUP
-#line 127 "tokenizer.gen.flex"
+#line 128 "tokenizer.gen.flex"
 { RET_TOKEN(PlayerNumberTypeAnyHuman) }
 	YY_BREAK
 case 89:
 YY_RULE_SETUP
-#line 128 "tokenizer.gen.flex"
+#line 129 "tokenizer.gen.flex"
 { RET_TOKEN(PlayerNumberTypeAnyHumanAlly) }
 	YY_BREAK
 case 90:
 YY_RULE_SETUP
-#line 129 "tokenizer.gen.flex"
+#line 130 "tokenizer.gen.flex"
 { RET_TOKEN(PlayerNumberTypeAnyHumanEnemy) }
 	YY_BREAK
 case 91:
 YY_RULE_SETUP
-#line 130 "tokenizer.gen.flex"
+#line 131 "tokenizer.gen.flex"
 { RET_TOKEN(PlayerNumberTypeAnyHumanNeutral) }
 	YY_BREAK
 case 92:
 YY_RULE_SETUP
-#line 131 "tokenizer.gen.flex"
+#line 132 "tokenizer.gen.flex"
 { RET_TOKEN(PlayerNumberTypeAnyNeutral) }
 	YY_BREAK
 case 93:
 YY_RULE_SETUP
-#line 132 "tokenizer.gen.flex"
+#line 133 "tokenizer.gen.flex"
 { RET_TOKEN(PlayerNumberTypeEveryAlly) }
 	YY_BREAK
 case 94:
 YY_RULE_SETUP
-#line 133 "tokenizer.gen.flex"
+#line 134 "tokenizer.gen.flex"
 { RET_TOKEN(PlayerNumberTypeEveryComputer) }
 	YY_BREAK
 case 95:
 YY_RULE_SETUP
-#line 134 "tokenizer.gen.flex"
+#line 135 "tokenizer.gen.flex"
 { RET_TOKEN(PlayerNumberTypeEveryEnemy) }
 	YY_BREAK
 case 96:
 YY_RULE_SETUP
-#line 135 "tokenizer.gen.flex"
+#line 136 "tokenizer.gen.flex"
 { RET_TOKEN(PlayerNumberTypeEveryHuman) }
 	YY_BREAK
 case 97:
 YY_RULE_SETUP
-#line 136 "tokenizer.gen.flex"
+#line 137 "tokenizer.gen.flex"
 { RET_TOKEN(PlayerNumberTypeEveryNeutral) }
 	YY_BREAK
 case 98:
 YY_RULE_SETUP
-#line 137 "tokenizer.gen.flex"
+#line 138 "tokenizer.gen.flex"
 { RET_TOKEN(PlayerNumberTypeMyPlayerNumber) }
 	YY_BREAK
 case 99:
 YY_RULE_SETUP
-#line 138 "tokenizer.gen.flex"
+#line 139 "tokenizer.gen.flex"
 { RET_TOKEN(RelOpLessThan) }
 	YY_BREAK
 case 100:
 YY_RULE_SETUP
-#line 139 "tokenizer.gen.flex"
+#line 140 "tokenizer.gen.flex"
 { RET_TOKEN(RelOpLessOrEqual) }
 	YY_BREAK
 case 101:
 YY_RULE_SETUP
-#line 140 "tokenizer.gen.flex"
+#line 141 "tokenizer.gen.flex"
 { RET_TOKEN(RelOpGreaterThan) }
 	YY_BREAK
 case 102:
 YY_RULE_SETUP
-#line 141 "tokenizer.gen.flex"
+#line 142 "tokenizer.gen.flex"
 { RET_TOKEN(RelOpGreaterOrEqual) }
 	YY_BREAK
 case 103:
 YY_RULE_SETUP
-#line 142 "tokenizer.gen.flex"
+#line 143 "tokenizer.gen.flex"
 { RET_TOKEN(RelOpEqual) }
 	YY_BREAK
 case 104:
 YY_RULE_SETUP
-#line 143 "tokenizer.gen.flex"
+#line 144 "tokenizer.gen.flex"
 { RET_TOKEN(RelOpNotEqual) }
 	YY_BREAK
 case 105:
 YY_RULE_SETUP
-#line 144 "tokenizer.gen.flex"
+#line 145 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiArbalest) }
 	YY_BREAK
 case 106:
 YY_RULE_SETUP
-#line 145 "tokenizer.gen.flex"
+#line 146 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiCrossbow) }
 	YY_BREAK
 case 107:
 YY_RULE_SETUP
-#line 146 "tokenizer.gen.flex"
+#line 147 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiEliteSkirmisher) }
 	YY_BREAK
 case 108:
 YY_RULE_SETUP
-#line 147 "tokenizer.gen.flex"
+#line 148 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiHandCannon) }
 	YY_BREAK
 case 109:
 YY_RULE_SETUP
-#line 148 "tokenizer.gen.flex"
+#line 149 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiHeavyCavalryArcher) }
 	YY_BREAK
 case 110:
 YY_RULE_SETUP
-#line 149 "tokenizer.gen.flex"
+#line 150 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiChampion) }
 	YY_BREAK
 case 111:
 YY_RULE_SETUP
-#line 150 "tokenizer.gen.flex"
+#line 151 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiEliteEagleWarrior) }
 	YY_BREAK
 case 112:
 YY_RULE_SETUP
-#line 151 "tokenizer.gen.flex"
+#line 152 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiHalberdier) }
 	YY_BREAK
 case 113:
 YY_RULE_SETUP
-#line 152 "tokenizer.gen.flex"
+#line 153 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiLongSwordsman) }
 	YY_BREAK
 case 114:
 YY_RULE_SETUP
-#line 153 "tokenizer.gen.flex"
+#line 154 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiManAtArms) }
 	YY_BREAK
 case 115:
 YY_RULE_SETUP
-#line 154 "tokenizer.gen.flex"
+#line 155 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiParthianTactics) }
 	YY_BREAK
 case 116:
 YY_RULE_SETUP
-#line 155 "tokenizer.gen.flex"
+#line 156 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiPikeman) }
 	YY_BREAK
 case 117:
 YY_RULE_SETUP
-#line 156 "tokenizer.gen.flex"
+#line 157 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiSquires) }
 	YY_BREAK
 case 118:
 YY_RULE_SETUP
-#line 157 "tokenizer.gen.flex"
+#line 158 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiThumbRing) }
 	YY_BREAK
 case 119:
 YY_RULE_SETUP
-#line 158 "tokenizer.gen.flex"
+#line 159 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiTracking) }
 	YY_BREAK
 case 120:
 YY_RULE_SETUP
-#line 159 "tokenizer.gen.flex"
+#line 160 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiTwoHandedSwordsman) }
 	YY_BREAK
 case 121:
 YY_RULE_SETUP
-#line 160 "tokenizer.gen.flex"
+#line 161 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiBlastFurnace) }
 	YY_BREAK
 case 122:
 YY_RULE_SETUP
-#line 161 "tokenizer.gen.flex"
+#line 162 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiBodkinArrow) }
 	YY_BREAK
 case 123:
 YY_RULE_SETUP
-#line 162 "tokenizer.gen.flex"
+#line 163 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiBracer) }
 	YY_BREAK
 case 124:
 YY_RULE_SETUP
-#line 163 "tokenizer.gen.flex"
+#line 164 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiChainBarding) }
 	YY_BREAK
 case 125:
 YY_RULE_SETUP
-#line 164 "tokenizer.gen.flex"
+#line 165 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiChainMail) }
 	YY_BREAK
 case 126:
 YY_RULE_SETUP
-#line 165 "tokenizer.gen.flex"
+#line 166 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiFletching) }
 	YY_BREAK
 case 127:
 YY_RULE_SETUP
-#line 166 "tokenizer.gen.flex"
+#line 167 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiForging) }
 	YY_BREAK
 case 128:
 YY_RULE_SETUP
-#line 167 "tokenizer.gen.flex"
+#line 168 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiIronCasting) }
 	YY_BREAK
 case 129:
 YY_RULE_SETUP
-#line 168 "tokenizer.gen.flex"
+#line 169 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiLeatherArcherArmor) }
 	YY_BREAK
 case 130:
 YY_RULE_SETUP
-#line 169 "tokenizer.gen.flex"
+#line 170 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiPaddedArcherArmor) }
 	YY_BREAK
 case 131:
 YY_RULE_SETUP
-#line 170 "tokenizer.gen.flex"
+#line 171 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiPlateBarding) }
 	YY_BREAK
 case 132:
 YY_RULE_SETUP
-#line 171 "tokenizer.gen.flex"
+#line 172 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiPlateMail) }
 	YY_BREAK
 case 133:
 YY_RULE_SETUP
-#line 172 "tokenizer.gen.flex"
+#line 173 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiRingArcherArmor) }
 	YY_BREAK
 case 134:
 YY_RULE_SETUP
-#line 173 "tokenizer.gen.flex"
+#line 174 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiScaleBarding) }
 	YY_BREAK
 case 135:
 YY_RULE_SETUP
-#line 174 "tokenizer.gen.flex"
+#line 175 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiScaleMail) }
 	YY_BREAK
 case 136:
 YY_RULE_SETUP
-#line 175 "tokenizer.gen.flex"
+#line 176 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiConscription) }
 	YY_BREAK
 case 137:
 YY_RULE_SETUP
-#line 176 "tokenizer.gen.flex"
+#line 177 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiHoardings) }
 	YY_BREAK
 case 138:
 YY_RULE_SETUP
-#line 177 "tokenizer.gen.flex"
+#line 178 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiSappers) }
 	YY_BREAK
 case 139:
 YY_RULE_SETUP
-#line 178 "tokenizer.gen.flex"
+#line 179 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiEliteBerserk) }
 	YY_BREAK
 case 140:
 YY_RULE_SETUP
-#line 179 "tokenizer.gen.flex"
+#line 180 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiEliteCataphract) }
 	YY_BREAK
 case 141:
 YY_RULE_SETUP
-#line 180 "tokenizer.gen.flex"
+#line 181 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiEliteChuKoNu) }
 	YY_BREAK
 case 142:
 YY_RULE_SETUP
-#line 181 "tokenizer.gen.flex"
+#line 182 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiEliteHuskarl) }
 	YY_BREAK
 case 143:
 YY_RULE_SETUP
-#line 182 "tokenizer.gen.flex"
+#line 183 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiEliteJanissary) }
 	YY_BREAK
 case 144:
 YY_RULE_SETUP
-#line 183 "tokenizer.gen.flex"
+#line 184 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiEliteLongbowman) }
 	YY_BREAK
 case 145:
 YY_RULE_SETUP
-#line 184 "tokenizer.gen.flex"
+#line 185 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiEliteMameluke) }
 	YY_BREAK
 case 146:
 YY_RULE_SETUP
-#line 185 "tokenizer.gen.flex"
+#line 186 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiEliteMangudai) }
 	YY_BREAK
 case 147:
 YY_RULE_SETUP
-#line 186 "tokenizer.gen.flex"
+#line 187 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiEliteSamurai) }
 	YY_BREAK
 case 148:
 YY_RULE_SETUP
-#line 187 "tokenizer.gen.flex"
+#line 188 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiEliteTeutonicKnight) }
 	YY_BREAK
 case 149:
 YY_RULE_SETUP
-#line 188 "tokenizer.gen.flex"
+#line 189 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiEliteThrowingAxeman) }
 	YY_BREAK
 case 150:
 YY_RULE_SETUP
-#line 189 "tokenizer.gen.flex"
+#line 190 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiEliteWarElephant) }
 	YY_BREAK
 case 151:
 YY_RULE_SETUP
-#line 190 "tokenizer.gen.flex"
+#line 191 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiEliteWoadRaider) }
 	YY_BREAK
 case 152:
 YY_RULE_SETUP
-#line 191 "tokenizer.gen.flex"
+#line 192 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiMyUniqueEliteUnit) }
 	YY_BREAK
 case 153:
 YY_RULE_SETUP
-#line 192 "tokenizer.gen.flex"
+#line 193 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiMyUniqueResearch) }
 	YY_BREAK
 case 154:
 YY_RULE_SETUP
-#line 193 "tokenizer.gen.flex"
+#line 194 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiCannonGalleon) }
 	YY_BREAK
 case 155:
 YY_RULE_SETUP
-#line 194 "tokenizer.gen.flex"
+#line 195 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiCareening) }
 	YY_BREAK
 case 156:
 YY_RULE_SETUP
-#line 195 "tokenizer.gen.flex"
+#line 196 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiDeckGuns) }
 	YY_BREAK
 case 157:
 YY_RULE_SETUP
-#line 196 "tokenizer.gen.flex"
+#line 197 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiDryDock) }
 	YY_BREAK
 case 158:
 YY_RULE_SETUP
-#line 197 "tokenizer.gen.flex"
+#line 198 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiEliteLongboat) }
 	YY_BREAK
 case 159:
 YY_RULE_SETUP
-#line 198 "tokenizer.gen.flex"
+#line 199 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiFastFireShip) }
 	YY_BREAK
 case 160:
 YY_RULE_SETUP
-#line 199 "tokenizer.gen.flex"
+#line 200 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiGalleon) }
 	YY_BREAK
 case 161:
 YY_RULE_SETUP
-#line 200 "tokenizer.gen.flex"
+#line 201 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiHeavyDemolitionShip) }
 	YY_BREAK
 case 162:
 YY_RULE_SETUP
-#line 201 "tokenizer.gen.flex"
+#line 202 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiShipwright) }
 	YY_BREAK
 case 163:
 YY_RULE_SETUP
-#line 202 "tokenizer.gen.flex"
+#line 203 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiWarGalley) }
 	YY_BREAK
 case 164:
 YY_RULE_SETUP
-#line 203 "tokenizer.gen.flex"
+#line 204 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiBowSaw) }
 	YY_BREAK
 case 165:
 YY_RULE_SETUP
-#line 204 "tokenizer.gen.flex"
+#line 205 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiDoubleBitAxe) }
 	YY_BREAK
 case 166:
 YY_RULE_SETUP
-#line 205 "tokenizer.gen.flex"
+#line 206 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiTwoManSaw) }
 	YY_BREAK
 case 167:
 YY_RULE_SETUP
-#line 206 "tokenizer.gen.flex"
+#line 207 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiBanking) }
 	YY_BREAK
 case 168:
 YY_RULE_SETUP
-#line 207 "tokenizer.gen.flex"
+#line 208 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiCaravan) }
 	YY_BREAK
 case 169:
 YY_RULE_SETUP
-#line 208 "tokenizer.gen.flex"
+#line 209 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiCartography) }
 	YY_BREAK
 case 170:
 YY_RULE_SETUP
-#line 209 "tokenizer.gen.flex"
+#line 210 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiCoinage) }
 	YY_BREAK
 case 171:
 YY_RULE_SETUP
-#line 210 "tokenizer.gen.flex"
+#line 211 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiGuilds) }
 	YY_BREAK
 case 172:
 YY_RULE_SETUP
-#line 211 "tokenizer.gen.flex"
+#line 212 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiCropRotation) }
 	YY_BREAK
 case 173:
 YY_RULE_SETUP
-#line 212 "tokenizer.gen.flex"
+#line 213 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiHeavyPlow) }
 	YY_BREAK
 case 174:
 YY_RULE_SETUP
-#line 213 "tokenizer.gen.flex"
+#line 214 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiHorseCollar) }
 	YY_BREAK
 case 175:
 YY_RULE_SETUP
-#line 214 "tokenizer.gen.flex"
+#line 215 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiGoldMining) }
 	YY_BREAK
 case 176:
 YY_RULE_SETUP
-#line 215 "tokenizer.gen.flex"
+#line 216 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiGoldShaftMining) }
 	YY_BREAK
 case 177:
 YY_RULE_SETUP
-#line 216 "tokenizer.gen.flex"
+#line 217 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiStoneMining) }
 	YY_BREAK
 case 178:
 YY_RULE_SETUP
-#line 217 "tokenizer.gen.flex"
+#line 218 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiStoneShaftMining) }
 	YY_BREAK
 case 179:
 YY_RULE_SETUP
-#line 218 "tokenizer.gen.flex"
+#line 219 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiAtonement) }
 	YY_BREAK
 case 180:
 YY_RULE_SETUP
-#line 219 "tokenizer.gen.flex"
+#line 220 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiBlockPrinting) }
 	YY_BREAK
 case 181:
 YY_RULE_SETUP
-#line 220 "tokenizer.gen.flex"
+#line 221 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiFaith) }
 	YY_BREAK
 case 182:
 YY_RULE_SETUP
-#line 221 "tokenizer.gen.flex"
+#line 222 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiFervor) }
 	YY_BREAK
 case 183:
 YY_RULE_SETUP
-#line 222 "tokenizer.gen.flex"
+#line 223 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiHerbalMedicine) }
 	YY_BREAK
 case 184:
 YY_RULE_SETUP
-#line 223 "tokenizer.gen.flex"
+#line 224 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiHeresy) }
 	YY_BREAK
 case 185:
 YY_RULE_SETUP
-#line 224 "tokenizer.gen.flex"
+#line 225 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiIllumination) }
 	YY_BREAK
 case 186:
 YY_RULE_SETUP
-#line 225 "tokenizer.gen.flex"
+#line 226 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiRedemption) }
 	YY_BREAK
 case 187:
 YY_RULE_SETUP
-#line 226 "tokenizer.gen.flex"
+#line 227 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiSanctity) }
 	YY_BREAK
 case 188:
 YY_RULE_SETUP
-#line 227 "tokenizer.gen.flex"
+#line 228 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiTheocracy) }
 	YY_BREAK
 case 189:
 YY_RULE_SETUP
-#line 228 "tokenizer.gen.flex"
+#line 229 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiBombardCannon) }
 	YY_BREAK
 case 190:
 YY_RULE_SETUP
-#line 229 "tokenizer.gen.flex"
+#line 230 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiCappedRam) }
 	YY_BREAK
 case 191:
 YY_RULE_SETUP
-#line 230 "tokenizer.gen.flex"
+#line 231 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiHeavyScorpion) }
 	YY_BREAK
 case 192:
 YY_RULE_SETUP
-#line 231 "tokenizer.gen.flex"
+#line 232 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiOnager) }
 	YY_BREAK
 case 193:
 YY_RULE_SETUP
-#line 232 "tokenizer.gen.flex"
+#line 233 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiScorpion) }
 	YY_BREAK
 case 194:
 YY_RULE_SETUP
-#line 233 "tokenizer.gen.flex"
+#line 234 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiSiegeOnager) }
 	YY_BREAK
 case 195:
 YY_RULE_SETUP
-#line 234 "tokenizer.gen.flex"
+#line 235 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiSiegeRam) }
 	YY_BREAK
 case 196:
 YY_RULE_SETUP
-#line 235 "tokenizer.gen.flex"
+#line 236 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiBloodlines) }
 	YY_BREAK
 case 197:
 YY_RULE_SETUP
-#line 236 "tokenizer.gen.flex"
+#line 237 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiCavalier) }
 	YY_BREAK
 case 198:
 YY_RULE_SETUP
-#line 237 "tokenizer.gen.flex"
+#line 238 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiHeavyCamel) }
 	YY_BREAK
 case 199:
 YY_RULE_SETUP
-#line 238 "tokenizer.gen.flex"
+#line 239 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiHusbandry) }
 	YY_BREAK
 case 200:
 YY_RULE_SETUP
-#line 239 "tokenizer.gen.flex"
+#line 240 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiHussar) }
 	YY_BREAK
 case 201:
 YY_RULE_SETUP
-#line 240 "tokenizer.gen.flex"
+#line 241 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiLightCavalry) }
 	YY_BREAK
 case 202:
 YY_RULE_SETUP
-#line 241 "tokenizer.gen.flex"
+#line 242 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiPaladin) }
 	YY_BREAK
 case 203:
 YY_RULE_SETUP
-#line 242 "tokenizer.gen.flex"
+#line 243 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiHandCart) }
 	YY_BREAK
 case 204:
 YY_RULE_SETUP
-#line 243 "tokenizer.gen.flex"
+#line 244 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiLoom) }
 	YY_BREAK
 case 205:
 YY_RULE_SETUP
-#line 244 "tokenizer.gen.flex"
+#line 245 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiTownPatrol) }
 	YY_BREAK
 case 206:
 YY_RULE_SETUP
-#line 245 "tokenizer.gen.flex"
+#line 246 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiTownWatch) }
 	YY_BREAK
 case 207:
 YY_RULE_SETUP
-#line 246 "tokenizer.gen.flex"
+#line 247 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiWheelBarrow) }
 	YY_BREAK
 case 208:
 YY_RULE_SETUP
-#line 247 "tokenizer.gen.flex"
+#line 248 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiArchitecture) }
 	YY_BREAK
 case 209:
 YY_RULE_SETUP
-#line 248 "tokenizer.gen.flex"
+#line 249 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiBallistics) }
 	YY_BREAK
 case 210:
 YY_RULE_SETUP
-#line 249 "tokenizer.gen.flex"
+#line 250 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiBombardTower) }
 	YY_BREAK
 case 211:
 YY_RULE_SETUP
-#line 250 "tokenizer.gen.flex"
+#line 251 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiChemistry) }
 	YY_BREAK
 case 212:
 YY_RULE_SETUP
-#line 251 "tokenizer.gen.flex"
+#line 252 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiFortifiedWall) }
 	YY_BREAK
 case 213:
 YY_RULE_SETUP
-#line 252 "tokenizer.gen.flex"
+#line 253 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiGuardTower) }
 	YY_BREAK
 case 214:
 YY_RULE_SETUP
-#line 253 "tokenizer.gen.flex"
+#line 254 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiHeatedShot) }
 	YY_BREAK
 case 215:
 YY_RULE_SETUP
-#line 254 "tokenizer.gen.flex"
+#line 255 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiKeep) }
 	YY_BREAK
 case 216:
 YY_RULE_SETUP
-#line 255 "tokenizer.gen.flex"
+#line 256 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiMasonry) }
 	YY_BREAK
 case 217:
 YY_RULE_SETUP
-#line 256 "tokenizer.gen.flex"
+#line 257 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiMurderHoles) }
 	YY_BREAK
 case 218:
 YY_RULE_SETUP
-#line 257 "tokenizer.gen.flex"
+#line 258 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiSiegeEngineers) }
 	YY_BREAK
 case 219:
 YY_RULE_SETUP
-#line 258 "tokenizer.gen.flex"
+#line 259 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemRiStonecutting) }
 	YY_BREAK
 case 220:
 YY_RULE_SETUP
-#line 259 "tokenizer.gen.flex"
+#line 260 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemMyUniqueUnitUpgrade) }
 	YY_BREAK
 case 221:
 YY_RULE_SETUP
-#line 260 "tokenizer.gen.flex"
+#line 261 "tokenizer.gen.flex"
 { RET_TOKEN(ResearchItemMyUniqueResearch) }
 	YY_BREAK
 case 222:
 YY_RULE_SETUP
-#line 261 "tokenizer.gen.flex"
+#line 262 "tokenizer.gen.flex"
 { RET_TOKEN(StartingResourcesTypeLowResources) }
 	YY_BREAK
 case 223:
 YY_RULE_SETUP
-#line 262 "tokenizer.gen.flex"
+#line 263 "tokenizer.gen.flex"
 { RET_TOKEN(StartingResourcesTypeMediumResources) }
 	YY_BREAK
 case 224:
 YY_RULE_SETUP
-#line 263 "tokenizer.gen.flex"
+#line 264 "tokenizer.gen.flex"
 { RET_TOKEN(StartingResourcesTypeHighResources) }
 	YY_BREAK
 case 225:
 YY_RULE_SETUP
-#line 264 "tokenizer.gen.flex"
+#line 265 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnPercentCivilianExplorers) }
 	YY_BREAK
 case 226:
 YY_RULE_SETUP
-#line 265 "tokenizer.gen.flex"
+#line 266 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnPercentCivilianBuilders) }
 	YY_BREAK
 case 227:
 YY_RULE_SETUP
-#line 266 "tokenizer.gen.flex"
+#line 267 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnPercentCivilianGatherers) }
 	YY_BREAK
 case 228:
 YY_RULE_SETUP
-#line 267 "tokenizer.gen.flex"
+#line 268 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnCapCivilianExplorers) }
 	YY_BREAK
 case 229:
 YY_RULE_SETUP
-#line 268 "tokenizer.gen.flex"
+#line 269 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnCapCivilianBuilders) }
 	YY_BREAK
 case 230:
 YY_RULE_SETUP
-#line 269 "tokenizer.gen.flex"
+#line 270 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnCapCivilianGatherers) }
 	YY_BREAK
 case 231:
 YY_RULE_SETUP
-#line 270 "tokenizer.gen.flex"
+#line 271 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnMinimumAttackGroupSize) }
 	YY_BREAK
 case 232:
 YY_RULE_SETUP
-#line 271 "tokenizer.gen.flex"
+#line 272 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnTotalNumberExplorers) }
 	YY_BREAK
 case 233:
 YY_RULE_SETUP
-#line 272 "tokenizer.gen.flex"
+#line 273 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnPercentEnemySightedResponse) }
 	YY_BREAK
 case 234:
 YY_RULE_SETUP
-#line 273 "tokenizer.gen.flex"
+#line 274 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnEnemySightedResponseDistance) }
 	YY_BREAK
 case 235:
 YY_RULE_SETUP
-#line 274 "tokenizer.gen.flex"
+#line 275 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnSentryDistance) }
 	YY_BREAK
 case 236:
 YY_RULE_SETUP
-#line 275 "tokenizer.gen.flex"
+#line 276 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnRelicReturnDistance) }
 	YY_BREAK
 case 237:
 YY_RULE_SETUP
-#line 276 "tokenizer.gen.flex"
+#line 277 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnMinimumDefendGroupSize) }
 	YY_BREAK
 case 238:
 YY_RULE_SETUP
-#line 277 "tokenizer.gen.flex"
+#line 278 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnMaximumAttackGroupSize) }
 	YY_BREAK
 case 239:
 YY_RULE_SETUP
-#line 278 "tokenizer.gen.flex"
+#line 279 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnMaximumDefendGroupSize) }
 	YY_BREAK
 case 240:
 YY_RULE_SETUP
-#line 279 "tokenizer.gen.flex"
+#line 280 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnMinimumPeaceLikeLevel) }
 	YY_BREAK
 case 241:
 YY_RULE_SETUP
-#line 280 "tokenizer.gen.flex"
+#line 281 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnPercentExplorationRequired) }
 	YY_BREAK
 case 242:
 YY_RULE_SETUP
-#line 281 "tokenizer.gen.flex"
+#line 282 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnZeroPriorityDistance) }
 	YY_BREAK
 case 243:
 YY_RULE_SETUP
-#line 282 "tokenizer.gen.flex"
+#line 283 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnMinimumCivilianExplorers) }
 	YY_BREAK
 case 244:
 YY_RULE_SETUP
-#line 283 "tokenizer.gen.flex"
+#line 284 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnNumberAttackGroups) }
 	YY_BREAK
 case 245:
 YY_RULE_SETUP
-#line 284 "tokenizer.gen.flex"
+#line 285 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnNumberDefendGroups) }
 	YY_BREAK
 case 246:
 YY_RULE_SETUP
-#line 285 "tokenizer.gen.flex"
+#line 286 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnAttackGroupGatherSpacing) }
 	YY_BREAK
 case 247:
 YY_RULE_SETUP
-#line 286 "tokenizer.gen.flex"
+#line 287 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnNumberExploreGroups) }
 	YY_BREAK
 case 248:
 YY_RULE_SETUP
-#line 287 "tokenizer.gen.flex"
+#line 288 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnMinimumExploreGroupSize) }
 	YY_BREAK
 case 249:
 YY_RULE_SETUP
-#line 288 "tokenizer.gen.flex"
+#line 289 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnMaximumExploreGroupSize) }
 	YY_BREAK
 case 250:
 YY_RULE_SETUP
-#line 289 "tokenizer.gen.flex"
+#line 290 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnGoldDefendPriority) }
 	YY_BREAK
 case 251:
 YY_RULE_SETUP
-#line 290 "tokenizer.gen.flex"
+#line 291 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnStoneDefendPriority) }
 	YY_BREAK
 case 252:
 YY_RULE_SETUP
-#line 291 "tokenizer.gen.flex"
+#line 292 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnForageDefendPriority) }
 	YY_BREAK
 case 253:
 YY_RULE_SETUP
-#line 292 "tokenizer.gen.flex"
+#line 293 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnRelicDefendPriority) }
 	YY_BREAK
 case 254:
 YY_RULE_SETUP
-#line 293 "tokenizer.gen.flex"
+#line 294 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnTownDefendPriority) }
 	YY_BREAK
 case 255:
 YY_RULE_SETUP
-#line 294 "tokenizer.gen.flex"
+#line 295 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnDefenseDistance) }
 	YY_BREAK
 case 256:
 YY_RULE_SETUP
-#line 295 "tokenizer.gen.flex"
+#line 296 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnNumberBoatAttackGroups) }
 	YY_BREAK
 case 257:
 YY_RULE_SETUP
-#line 296 "tokenizer.gen.flex"
+#line 297 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnMinimumBoatAttackGroupSize) }
 	YY_BREAK
 case 258:
 YY_RULE_SETUP
-#line 297 "tokenizer.gen.flex"
+#line 298 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnMaximumBoatAttackGroupSize) }
 	YY_BREAK
 case 259:
 YY_RULE_SETUP
-#line 298 "tokenizer.gen.flex"
+#line 299 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnNumberBoatExploreGroups) }
 	YY_BREAK
 case 260:
 YY_RULE_SETUP
-#line 299 "tokenizer.gen.flex"
+#line 300 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnMinimumBoatExploreGroupSize) }
 	YY_BREAK
 case 261:
 YY_RULE_SETUP
-#line 300 "tokenizer.gen.flex"
+#line 301 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnMaximumBoatExploreGroupSize) }
 	YY_BREAK
 case 262:
 YY_RULE_SETUP
-#line 301 "tokenizer.gen.flex"
+#line 302 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnNumberBoatDefendGroups) }
 	YY_BREAK
 case 263:
 YY_RULE_SETUP
-#line 302 "tokenizer.gen.flex"
+#line 303 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnMinimumBoatDefendGroupSize) }
 	YY_BREAK
 case 264:
 YY_RULE_SETUP
-#line 303 "tokenizer.gen.flex"
+#line 304 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnMaximumBoatDefendGroupSize) }
 	YY_BREAK
 case 265:
 YY_RULE_SETUP
-#line 304 "tokenizer.gen.flex"
+#line 305 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnDockDefendPriority) }
 	YY_BREAK
 case 266:
 YY_RULE_SETUP
-#line 305 "tokenizer.gen.flex"
+#line 306 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnSentryDistanceVariation) }
 	YY_BREAK
 case 267:
 YY_RULE_SETUP
-#line 306 "tokenizer.gen.flex"
+#line 307 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnMinimumTownSize) }
 	YY_BREAK
 case 268:
 YY_RULE_SETUP
-#line 307 "tokenizer.gen.flex"
+#line 308 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnMaximumTownSize) }
 	YY_BREAK
 case 269:
 YY_RULE_SETUP
-#line 308 "tokenizer.gen.flex"
+#line 309 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnGroupCommanderSelectionMethod) }
 	YY_BREAK
 case 270:
 YY_RULE_SETUP
-#line 309 "tokenizer.gen.flex"
+#line 310 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnConsecutiveIdleUnitLimit) }
 	YY_BREAK
 case 271:
 YY_RULE_SETUP
-#line 310 "tokenizer.gen.flex"
+#line 311 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnTargetEvaluationDistance) }
 	YY_BREAK
 case 272:
 YY_RULE_SETUP
-#line 311 "tokenizer.gen.flex"
+#line 312 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnTargetEvaluationHitpoints) }
 	YY_BREAK
 case 273:
 YY_RULE_SETUP
-#line 312 "tokenizer.gen.flex"
+#line 313 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnTargetEvaluationDamageCapability) }
 	YY_BREAK
 case 274:
 YY_RULE_SETUP
-#line 313 "tokenizer.gen.flex"
+#line 314 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnTargetEvaluationKills) }
 	YY_BREAK
 case 275:
 YY_RULE_SETUP
-#line 314 "tokenizer.gen.flex"
+#line 315 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnTargetEvaluationAllyProximity) }
 	YY_BREAK
 case 276:
 YY_RULE_SETUP
-#line 315 "tokenizer.gen.flex"
+#line 316 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnTargetEvaluationRof) }
 	YY_BREAK
 case 277:
 YY_RULE_SETUP
-#line 316 "tokenizer.gen.flex"
+#line 317 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnTargetEvaluationRandomness) }
 	YY_BREAK
 case 278:
 YY_RULE_SETUP
-#line 317 "tokenizer.gen.flex"
+#line 318 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnCampMaxDistance) }
 	YY_BREAK
 case 279:
 YY_RULE_SETUP
-#line 318 "tokenizer.gen.flex"
+#line 319 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnMillMaxDistance) }
 	YY_BREAK
 case 280:
 YY_RULE_SETUP
-#line 319 "tokenizer.gen.flex"
+#line 320 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnTargetEvaluationAttackAttempts) }
 	YY_BREAK
 case 281:
 YY_RULE_SETUP
-#line 320 "tokenizer.gen.flex"
+#line 321 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnTargetEvaluationRange) }
 	YY_BREAK
 case 282:
 YY_RULE_SETUP
-#line 321 "tokenizer.gen.flex"
+#line 322 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnDefendOverlapDistance) }
 	YY_BREAK
 case 283:
 YY_RULE_SETUP
-#line 322 "tokenizer.gen.flex"
+#line 323 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnScaleMinimumAttackGroupSize) }
 	YY_BREAK
 case 284:
 YY_RULE_SETUP
-#line 323 "tokenizer.gen.flex"
+#line 324 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnScaleMaximumAttackGroupSize) }
 	YY_BREAK
 case 285:
 YY_RULE_SETUP
-#line 324 "tokenizer.gen.flex"
+#line 325 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnAttackGroupSizeRandomness) }
 	YY_BREAK
 case 286:
 YY_RULE_SETUP
-#line 325 "tokenizer.gen.flex"
+#line 326 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnScalingFrequency) }
 	YY_BREAK
 case 287:
 YY_RULE_SETUP
-#line 326 "tokenizer.gen.flex"
+#line 327 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnMaximumGaiaAttackResponse) }
 	YY_BREAK
 case 288:
 YY_RULE_SETUP
-#line 327 "tokenizer.gen.flex"
+#line 328 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnBuildFrequency) }
 	YY_BREAK
 case 289:
 YY_RULE_SETUP
-#line 328 "tokenizer.gen.flex"
+#line 329 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnAttackSeparationTimeRandomness) }
 	YY_BREAK
 case 290:
 YY_RULE_SETUP
-#line 329 "tokenizer.gen.flex"
+#line 330 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnAttackIntelligence) }
 	YY_BREAK
 case 291:
 YY_RULE_SETUP
-#line 330 "tokenizer.gen.flex"
+#line 331 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnInitialAttackDelay) }
 	YY_BREAK
 case 292:
 YY_RULE_SETUP
-#line 331 "tokenizer.gen.flex"
+#line 332 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnSaveScenarioInformation) }
 	YY_BREAK
 case 293:
 YY_RULE_SETUP
-#line 332 "tokenizer.gen.flex"
+#line 333 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnSpecialAttackType1) }
 	YY_BREAK
 case 294:
 YY_RULE_SETUP
-#line 333 "tokenizer.gen.flex"
+#line 334 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnSpecialAttackInfluence1) }
 	YY_BREAK
 case 295:
 YY_RULE_SETUP
-#line 334 "tokenizer.gen.flex"
+#line 335 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnMinimumWaterBodySizeForDock) }
 	YY_BREAK
 case 296:
 YY_RULE_SETUP
-#line 335 "tokenizer.gen.flex"
+#line 336 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnNumberBuildAttemptsBeforeSkip) }
 	YY_BREAK
 case 297:
 YY_RULE_SETUP
-#line 336 "tokenizer.gen.flex"
+#line 337 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnMaxSkipsPerAttempt) }
 	YY_BREAK
 case 298:
 YY_RULE_SETUP
-#line 337 "tokenizer.gen.flex"
+#line 338 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnFoodGathererPercentage) }
 	YY_BREAK
 case 299:
 YY_RULE_SETUP
-#line 338 "tokenizer.gen.flex"
+#line 339 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnGoldGathererPercentage) }
 	YY_BREAK
 case 300:
 YY_RULE_SETUP
-#line 339 "tokenizer.gen.flex"
+#line 340 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnStoneGathererPercentage) }
 	YY_BREAK
 case 301:
 YY_RULE_SETUP
-#line 340 "tokenizer.gen.flex"
+#line 341 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnWoodGathererPercentage) }
 	YY_BREAK
 case 302:
 YY_RULE_SETUP
-#line 341 "tokenizer.gen.flex"
+#line 342 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnTargetEvaluationContinent) }
 	YY_BREAK
 case 303:
 YY_RULE_SETUP
-#line 342 "tokenizer.gen.flex"
+#line 343 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnTargetEvaluationSiegeWeapon) }
 	YY_BREAK
 case 304:
 YY_RULE_SETUP
-#line 343 "tokenizer.gen.flex"
+#line 344 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnGroupLeaderDefenseDistance) }
 	YY_BREAK
 case 305:
 YY_RULE_SETUP
-#line 344 "tokenizer.gen.flex"
+#line 345 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnInitialAttackDelayType) }
 	YY_BREAK
 case 306:
 YY_RULE_SETUP
-#line 345 "tokenizer.gen.flex"
+#line 346 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnBlotExplorationMap) }
 	YY_BREAK
 case 307:
 YY_RULE_SETUP
-#line 346 "tokenizer.gen.flex"
+#line 347 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnBlotSize) }
 	YY_BREAK
 case 308:
 YY_RULE_SETUP
-#line 347 "tokenizer.gen.flex"
+#line 348 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnIntelligentGathering) }
 	YY_BREAK
 case 309:
 YY_RULE_SETUP
-#line 348 "tokenizer.gen.flex"
+#line 349 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnTaskUngroupedSoldiers) }
 	YY_BREAK
 case 310:
 YY_RULE_SETUP
-#line 349 "tokenizer.gen.flex"
+#line 350 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnTargetEvaluationBoat) }
 	YY_BREAK
 case 311:
 YY_RULE_SETUP
-#line 350 "tokenizer.gen.flex"
+#line 351 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnNumberEnemyObjectsRequired) }
 	YY_BREAK
 case 312:
 YY_RULE_SETUP
-#line 351 "tokenizer.gen.flex"
+#line 352 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnNumberMaxSkipCycles) }
 	YY_BREAK
 case 313:
 YY_RULE_SETUP
-#line 352 "tokenizer.gen.flex"
+#line 353 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnRetaskGatherAmount) }
 	YY_BREAK
 case 314:
 YY_RULE_SETUP
-#line 353 "tokenizer.gen.flex"
+#line 354 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnMaxRetaskGatherAmount) }
 	YY_BREAK
 case 315:
 YY_RULE_SETUP
-#line 354 "tokenizer.gen.flex"
+#line 355 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnMaxBuildPlanGathererPercentage) }
 	YY_BREAK
 case 316:
 YY_RULE_SETUP
-#line 355 "tokenizer.gen.flex"
+#line 356 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnFoodDropsiteDistance) }
 	YY_BREAK
 case 317:
 YY_RULE_SETUP
-#line 356 "tokenizer.gen.flex"
+#line 357 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnWoodDropsiteDistance) }
 	YY_BREAK
 case 318:
 YY_RULE_SETUP
-#line 357 "tokenizer.gen.flex"
+#line 358 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnStoneDropsiteDistance) }
 	YY_BREAK
 case 319:
 YY_RULE_SETUP
-#line 358 "tokenizer.gen.flex"
+#line 359 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnGoldDropsiteDistance) }
 	YY_BREAK
 case 320:
 YY_RULE_SETUP
-#line 359 "tokenizer.gen.flex"
+#line 360 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnInitialExplorationRequired) }
 	YY_BREAK
 case 321:
 YY_RULE_SETUP
-#line 360 "tokenizer.gen.flex"
+#line 361 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnRandomPlacementFactor) }
 	YY_BREAK
 case 322:
 YY_RULE_SETUP
-#line 361 "tokenizer.gen.flex"
+#line 362 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnRequiredForestTiles) }
 	YY_BREAK
 case 323:
 YY_RULE_SETUP
-#line 362 "tokenizer.gen.flex"
+#line 363 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnAttackDiplomacyImpact) }
 	YY_BREAK
 case 324:
 YY_RULE_SETUP
-#line 363 "tokenizer.gen.flex"
+#line 364 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnPercentHalfExploration) }
 	YY_BREAK
 case 325:
 YY_RULE_SETUP
-#line 364 "tokenizer.gen.flex"
+#line 365 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnTargetEvaluationTimeKillRatio) }
 	YY_BREAK
 case 326:
 YY_RULE_SETUP
-#line 365 "tokenizer.gen.flex"
+#line 366 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnTargetEvaluationInProgress) }
 	YY_BREAK
 case 327:
 YY_RULE_SETUP
-#line 366 "tokenizer.gen.flex"
+#line 367 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnAttackWinningPlayer) }
 	YY_BREAK
 case 328:
 YY_RULE_SETUP
-#line 367 "tokenizer.gen.flex"
+#line 368 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnCoopShareInformation) }
 	YY_BREAK
 case 329:
 YY_RULE_SETUP
-#line 368 "tokenizer.gen.flex"
+#line 369 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnAttackWinningPlayerFactor) }
 	YY_BREAK
 case 330:
 YY_RULE_SETUP
-#line 369 "tokenizer.gen.flex"
+#line 370 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnCoopShareAttacking) }
 	YY_BREAK
 case 331:
 YY_RULE_SETUP
-#line 370 "tokenizer.gen.flex"
+#line 371 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnCoopShareAttackingInterval) }
 	YY_BREAK
 case 332:
 YY_RULE_SETUP
-#line 371 "tokenizer.gen.flex"
+#line 372 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnPercentageExploreExterminators) }
 	YY_BREAK
 case 333:
 YY_RULE_SETUP
-#line 372 "tokenizer.gen.flex"
+#line 373 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnTrackPlayerHistory) }
 	YY_BREAK
 case 334:
 YY_RULE_SETUP
-#line 373 "tokenizer.gen.flex"
+#line 374 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnMinimumDropsiteBuffer) }
 	YY_BREAK
 case 335:
 YY_RULE_SETUP
-#line 374 "tokenizer.gen.flex"
+#line 375 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnUseByTypeMaxGathering) }
 	YY_BREAK
 case 336:
 YY_RULE_SETUP
-#line 375 "tokenizer.gen.flex"
+#line 376 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnMinimumBoarHuntGroupSize) }
 	YY_BREAK
 case 337:
 YY_RULE_SETUP
-#line 376 "tokenizer.gen.flex"
+#line 377 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnMinimumAmountForTrading) }
 	YY_BREAK
 case 338:
 YY_RULE_SETUP
-#line 377 "tokenizer.gen.flex"
+#line 378 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnEasiestReactionPercentage) }
 	YY_BREAK
 case 339:
 YY_RULE_SETUP
-#line 378 "tokenizer.gen.flex"
+#line 379 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnEasierReactionPercentage) }
 	YY_BREAK
 case 340:
 YY_RULE_SETUP
-#line 379 "tokenizer.gen.flex"
+#line 380 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnHitsBeforeAllianceChange) }
 	YY_BREAK
 case 341:
 YY_RULE_SETUP
-#line 380 "tokenizer.gen.flex"
+#line 381 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnAllowCivilianDefense) }
 	YY_BREAK
 case 342:
 YY_RULE_SETUP
-#line 381 "tokenizer.gen.flex"
+#line 382 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnNumberForwardBuilders) }
 	YY_BREAK
 case 343:
 YY_RULE_SETUP
-#line 382 "tokenizer.gen.flex"
+#line 383 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnPercentAttackSoldiers) }
 	YY_BREAK
 case 344:
 YY_RULE_SETUP
-#line 383 "tokenizer.gen.flex"
+#line 384 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnPercentAttackBoats) }
 	YY_BREAK
 case 345:
 YY_RULE_SETUP
-#line 384 "tokenizer.gen.flex"
+#line 385 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnDoNotScaleForDifficultyLevel) }
 	YY_BREAK
 case 346:
 YY_RULE_SETUP
-#line 385 "tokenizer.gen.flex"
+#line 386 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnGroupFormDistance) }
 	YY_BREAK
 case 347:
 YY_RULE_SETUP
-#line 386 "tokenizer.gen.flex"
+#line 387 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnIgnoreAttackGroupUnderAttack) }
 	YY_BREAK
 case 348:
 YY_RULE_SETUP
-#line 387 "tokenizer.gen.flex"
+#line 388 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnGatherDefenseUnits) }
 	YY_BREAK
 case 349:
 YY_RULE_SETUP
-#line 388 "tokenizer.gen.flex"
+#line 389 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnMaximumWoodDropDistance) }
 	YY_BREAK
 case 350:
 YY_RULE_SETUP
-#line 389 "tokenizer.gen.flex"
+#line 390 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnMaximumFoodDropDistance) }
 	YY_BREAK
 case 351:
 YY_RULE_SETUP
-#line 390 "tokenizer.gen.flex"
+#line 391 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnMaximumHuntDropDistance) }
 	YY_BREAK
 case 352:
 YY_RULE_SETUP
-#line 391 "tokenizer.gen.flex"
+#line 392 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnMaximumFishBoatDropDistance) }
 	YY_BREAK
 case 353:
 YY_RULE_SETUP
-#line 392 "tokenizer.gen.flex"
+#line 393 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnMaximumGoldDropDistance) }
 	YY_BREAK
 case 354:
 YY_RULE_SETUP
-#line 393 "tokenizer.gen.flex"
+#line 394 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnMaximumStoneDropDistance) }
 	YY_BREAK
 case 355:
 YY_RULE_SETUP
-#line 394 "tokenizer.gen.flex"
+#line 395 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnGatherIdleSoldiersAtCenter) }
 	YY_BREAK
 case 356:
 YY_RULE_SETUP
-#line 395 "tokenizer.gen.flex"
+#line 396 "tokenizer.gen.flex"
 { RET_TOKEN(StrategicNumberNameSnGarrisonRams) }
 	YY_BREAK
 case 357:
 YY_RULE_SETUP
-#line 396 "tokenizer.gen.flex"
+#line 397 "tokenizer.gen.flex"
 { RET_TOKEN(UnitArbalest) }
 	YY_BREAK
 case 358:
 YY_RULE_SETUP
-#line 397 "tokenizer.gen.flex"
+#line 398 "tokenizer.gen.flex"
 { RET_TOKEN(UnitArcher) }
 	YY_BREAK
 case 359:
 YY_RULE_SETUP
-#line 398 "tokenizer.gen.flex"
+#line 399 "tokenizer.gen.flex"
 { RET_TOKEN(UnitCavalryArcher) }
 	YY_BREAK
 case 360:
 YY_RULE_SETUP
-#line 399 "tokenizer.gen.flex"
+#line 400 "tokenizer.gen.flex"
 { RET_TOKEN(UnitCrossbowman) }
 	YY_BREAK
 case 361:
 YY_RULE_SETUP
-#line 400 "tokenizer.gen.flex"
+#line 401 "tokenizer.gen.flex"
 { RET_TOKEN(UnitEliteSkirmisher) }
 	YY_BREAK
 case 362:
 YY_RULE_SETUP
-#line 401 "tokenizer.gen.flex"
+#line 402 "tokenizer.gen.flex"
 { RET_TOKEN(UnitHandCannoneer) }
 	YY_BREAK
 case 363:
 YY_RULE_SETUP
-#line 402 "tokenizer.gen.flex"
+#line 403 "tokenizer.gen.flex"
 { RET_TOKEN(UnitHeavyCavalryArcher) }
 	YY_BREAK
 case 364:
 YY_RULE_SETUP
-#line 403 "tokenizer.gen.flex"
+#line 404 "tokenizer.gen.flex"
 { RET_TOKEN(UnitSkirmisher) }
 	YY_BREAK
 case 365:
 YY_RULE_SETUP
-#line 404 "tokenizer.gen.flex"
+#line 405 "tokenizer.gen.flex"
 { RET_TOKEN(UnitChampion) }
 	YY_BREAK
 case 366:
 YY_RULE_SETUP
-#line 405 "tokenizer.gen.flex"
+#line 406 "tokenizer.gen.flex"
 { RET_TOKEN(UnitEagleWarrior) }
 	YY_BREAK
 case 367:
 YY_RULE_SETUP
-#line 406 "tokenizer.gen.flex"
+#line 407 "tokenizer.gen.flex"
 { RET_TOKEN(UnitEliteEagleWarrior) }
 	YY_BREAK
 case 368:
 YY_RULE_SETUP
-#line 407 "tokenizer.gen.flex"
+#line 408 "tokenizer.gen.flex"
 { RET_TOKEN(UnitHalberdier) }
 	YY_BREAK
 case 369:
 YY_RULE_SETUP
-#line 408 "tokenizer.gen.flex"
+#line 409 "tokenizer.gen.flex"
 { RET_TOKEN(UnitLongSwordsman) }
 	YY_BREAK
 case 370:
 YY_RULE_SETUP
-#line 409 "tokenizer.gen.flex"
+#line 410 "tokenizer.gen.flex"
 { RET_TOKEN(UnitManAtArms) }
 	YY_BREAK
 case 371:
 YY_RULE_SETUP
-#line 410 "tokenizer.gen.flex"
+#line 411 "tokenizer.gen.flex"
 { RET_TOKEN(UnitMilitiaman) }
 	YY_BREAK
 case 372:
 YY_RULE_SETUP
-#line 411 "tokenizer.gen.flex"
+#line 412 "tokenizer.gen.flex"
 { RET_TOKEN(UnitPikeman) }
 	YY_BREAK
 case 373:
 YY_RULE_SETUP
-#line 412 "tokenizer.gen.flex"
+#line 413 "tokenizer.gen.flex"
 { RET_TOKEN(UnitSpearman) }
 	YY_BREAK
 case 374:
 YY_RULE_SETUP
-#line 413 "tokenizer.gen.flex"
+#line 414 "tokenizer.gen.flex"
 { RET_TOKEN(UnitTwoHandedSwordsman) }
 	YY_BREAK
 case 375:
 YY_RULE_SETUP
-#line 414 "tokenizer.gen.flex"
+#line 415 "tokenizer.gen.flex"
 { RET_TOKEN(UnitBerserk) }
 	YY_BREAK
 case 376:
 YY_RULE_SETUP
-#line 415 "tokenizer.gen.flex"
+#line 416 "tokenizer.gen.flex"
 { RET_TOKEN(UnitCataphract) }
 	YY_BREAK
 case 377:
 YY_RULE_SETUP
-#line 416 "tokenizer.gen.flex"
+#line 417 "tokenizer.gen.flex"
 { RET_TOKEN(UnitChuKoNu) }
 	YY_BREAK
 case 378:
 YY_RULE_SETUP
-#line 417 "tokenizer.gen.flex"
+#line 418 "tokenizer.gen.flex"
 { RET_TOKEN(UnitConquistador) }
 	YY_BREAK
 case 379:
 YY_RULE_SETUP
-#line 418 "tokenizer.gen.flex"
+#line 419 "tokenizer.gen.flex"
 { RET_TOKEN(UnitEliteBerserk) }
 	YY_BREAK
 case 380:
 YY_RULE_SETUP
-#line 419 "tokenizer.gen.flex"
+#line 420 "tokenizer.gen.flex"
 { RET_TOKEN(UnitEliteCataphract) }
 	YY_BREAK
 case 381:
 YY_RULE_SETUP
-#line 420 "tokenizer.gen.flex"
+#line 421 "tokenizer.gen.flex"
 { RET_TOKEN(UnitEliteChuKoNu) }
 	YY_BREAK
 case 382:
 YY_RULE_SETUP
-#line 421 "tokenizer.gen.flex"
+#line 422 "tokenizer.gen.flex"
 { RET_TOKEN(UnitEliteConquistador) }
 	YY_BREAK
 case 383:
 YY_RULE_SETUP
-#line 422 "tokenizer.gen.flex"
+#line 423 "tokenizer.gen.flex"
 { RET_TOKEN(UnitEliteHuskarl) }
 	YY_BREAK
 case 384:
 YY_RULE_SETUP
-#line 423 "tokenizer.gen.flex"
+#line 424 "tokenizer.gen.flex"
 { RET_TOKEN(UnitEliteJaguarWarrior) }
 	YY_BREAK
 case 385:
 YY_RULE_SETUP
-#line 424 "tokenizer.gen.flex"
+#line 425 "tokenizer.gen.flex"
 { RET_TOKEN(UnitEliteJanissary) }
 	YY_BREAK
 case 386:
 YY_RULE_SETUP
-#line 425 "tokenizer.gen.flex"
+#line 426 "tokenizer.gen.flex"
 { RET_TOKEN(UnitEliteLongbowman) }
 	YY_BREAK
 case 387:
 YY_RULE_SETUP
-#line 426 "tokenizer.gen.flex"
+#line 427 "tokenizer.gen.flex"
 { RET_TOKEN(UnitEliteMameluke) }
 	YY_BREAK
 case 388:
 YY_RULE_SETUP
-#line 427 "tokenizer.gen.flex"
+#line 428 "tokenizer.gen.flex"
 { RET_TOKEN(UnitEliteMangudai) }
 	YY_BREAK
 case 389:
 YY_RULE_SETUP
-#line 428 "tokenizer.gen.flex"
+#line 429 "tokenizer.gen.flex"
 { RET_TOKEN(UnitElitePlumedArcher) }
 	YY_BREAK
 case 390:
 YY_RULE_SETUP
-#line 429 "tokenizer.gen.flex"
+#line 430 "tokenizer.gen.flex"
 { RET_TOKEN(UnitEliteSamurai) }
 	YY_BREAK
 case 391:
 YY_RULE_SETUP
-#line 430 "tokenizer.gen.flex"
+#line 431 "tokenizer.gen.flex"
 { RET_TOKEN(UnitEliteTarkan) }
 	YY_BREAK
 case 392:
 YY_RULE_SETUP
-#line 431 "tokenizer.gen.flex"
+#line 432 "tokenizer.gen.flex"
 { RET_TOKEN(UnitEliteTeutonicKnight) }
 	YY_BREAK
 case 393:
 YY_RULE_SETUP
-#line 432 "tokenizer.gen.flex"
+#line 433 "tokenizer.gen.flex"
 { RET_TOKEN(UnitEliteThrowingAxeman) }
 	YY_BREAK
 case 394:
 YY_RULE_SETUP
-#line 433 "tokenizer.gen.flex"
+#line 434 "tokenizer.gen.flex"
 { RET_TOKEN(UnitEliteWarElephant) }
 	YY_BREAK
 case 395:
 YY_RULE_SETUP
-#line 434 "tokenizer.gen.flex"
+#line 435 "tokenizer.gen.flex"
 { RET_TOKEN(UnitEliteWarWagon) }
 	YY_BREAK
 case 396:
 YY_RULE_SETUP
-#line 435 "tokenizer.gen.flex"
+#line 436 "tokenizer.gen.flex"
 { RET_TOKEN(UnitEliteWoadRaider) }
 	YY_BREAK
 case 397:
 YY_RULE_SETUP
-#line 436 "tokenizer.gen.flex"
+#line 437 "tokenizer.gen.flex"
 { RET_TOKEN(UnitHuskarl) }
 	YY_BREAK
 case 398:
 YY_RULE_SETUP
-#line 437 "tokenizer.gen.flex"
+#line 438 "tokenizer.gen.flex"
 { RET_TOKEN(UnitJaguarWarrior) }
 	YY_BREAK
 case 399:
 YY_RULE_SETUP
-#line 438 "tokenizer.gen.flex"
+#line 439 "tokenizer.gen.flex"
 { RET_TOKEN(UnitJanissary) }
 	YY_BREAK
 case 400:
 YY_RULE_SETUP
-#line 439 "tokenizer.gen.flex"
+#line 440 "tokenizer.gen.flex"
 { RET_TOKEN(UnitLongbowman) }
 	YY_BREAK
 case 401:
 YY_RULE_SETUP
-#line 440 "tokenizer.gen.flex"
+#line 441 "tokenizer.gen.flex"
 { RET_TOKEN(UnitMameluke) }
 	YY_BREAK
 case 402:
 YY_RULE_SETUP
-#line 441 "tokenizer.gen.flex"
+#line 442 "tokenizer.gen.flex"
 { RET_TOKEN(UnitMangudai) }
 	YY_BREAK
 case 403:
 YY_RULE_SETUP
-#line 442 "tokenizer.gen.flex"
+#line 443 "tokenizer.gen.flex"
 { RET_TOKEN(UnitPetard) }
 	YY_BREAK
 case 404:
 YY_RULE_SETUP
-#line 443 "tokenizer.gen.flex"
+#line 444 "tokenizer.gen.flex"
 { RET_TOKEN(UnitPlumedArcher) }
 	YY_BREAK
 case 405:
 YY_RULE_SETUP
-#line 444 "tokenizer.gen.flex"
+#line 445 "tokenizer.gen.flex"
 { RET_TOKEN(UnitSamurai) }
 	YY_BREAK
 case 406:
 YY_RULE_SETUP
-#line 445 "tokenizer.gen.flex"
+#line 446 "tokenizer.gen.flex"
 { RET_TOKEN(UnitTarkan) }
 	YY_BREAK
 case 407:
 YY_RULE_SETUP
-#line 446 "tokenizer.gen.flex"
+#line 447 "tokenizer.gen.flex"
 { RET_TOKEN(UnitTeutonicKnight) }
 	YY_BREAK
 case 408:
 YY_RULE_SETUP
-#line 447 "tokenizer.gen.flex"
+#line 448 "tokenizer.gen.flex"
 { RET_TOKEN(UnitThrowingAxeman) }
 	YY_BREAK
 case 409:
 YY_RULE_SETUP
-#line 448 "tokenizer.gen.flex"
+#line 449 "tokenizer.gen.flex"
 { RET_TOKEN(UnitTrebuchet) }
 	YY_BREAK
 case 410:
 YY_RULE_SETUP
-#line 449 "tokenizer.gen.flex"
+#line 450 "tokenizer.gen.flex"
 { RET_TOKEN(UnitWarElephant) }
 	YY_BREAK
 case 411:
 YY_RULE_SETUP
-#line 450 "tokenizer.gen.flex"
+#line 451 "tokenizer.gen.flex"
 { RET_TOKEN(UnitWarWagon) }
 	YY_BREAK
 case 412:
 YY_RULE_SETUP
-#line 451 "tokenizer.gen.flex"
+#line 452 "tokenizer.gen.flex"
 { RET_TOKEN(UnitWoadRaider) }
 	YY_BREAK
 case 413:
 YY_RULE_SETUP
-#line 452 "tokenizer.gen.flex"
+#line 453 "tokenizer.gen.flex"
 { RET_TOKEN(UnitCannonGalleon) }
 	YY_BREAK
 case 414:
 YY_RULE_SETUP
-#line 453 "tokenizer.gen.flex"
+#line 454 "tokenizer.gen.flex"
 { RET_TOKEN(UnitDemolitionShip) }
 	YY_BREAK
 case 415:
 YY_RULE_SETUP
-#line 454 "tokenizer.gen.flex"
+#line 455 "tokenizer.gen.flex"
 { RET_TOKEN(UnitEliteCannonGalleon) }
 	YY_BREAK
 case 416:
 YY_RULE_SETUP
-#line 455 "tokenizer.gen.flex"
+#line 456 "tokenizer.gen.flex"
 { RET_TOKEN(UnitEliteLongboat) }
 	YY_BREAK
 case 417:
 YY_RULE_SETUP
-#line 456 "tokenizer.gen.flex"
+#line 457 "tokenizer.gen.flex"
 { RET_TOKEN(UnitEliteTurtleShip) }
 	YY_BREAK
 case 418:
 YY_RULE_SETUP
-#line 457 "tokenizer.gen.flex"
+#line 458 "tokenizer.gen.flex"
 { RET_TOKEN(UnitFastFireShip) }
 	YY_BREAK
 case 419:
 YY_RULE_SETUP
-#line 458 "tokenizer.gen.flex"
+#line 459 "tokenizer.gen.flex"
 { RET_TOKEN(UnitFireShip) }
 	YY_BREAK
 case 420:
 YY_RULE_SETUP
-#line 459 "tokenizer.gen.flex"
+#line 460 "tokenizer.gen.flex"
 { RET_TOKEN(UnitFishingShip) }
 	YY_BREAK
 case 421:
 YY_RULE_SETUP
-#line 460 "tokenizer.gen.flex"
+#line 461 "tokenizer.gen.flex"
 { RET_TOKEN(UnitGalleon) }
 	YY_BREAK
 case 422:
 YY_RULE_SETUP
-#line 461 "tokenizer.gen.flex"
+#line 462 "tokenizer.gen.flex"
 { RET_TOKEN(UnitGalley) }
 	YY_BREAK
 case 423:
 YY_RULE_SETUP
-#line 462 "tokenizer.gen.flex"
+#line 463 "tokenizer.gen.flex"
 { RET_TOKEN(UnitHeavyDemolitionShip) }
 	YY_BREAK
 case 424:
 YY_RULE_SETUP
-#line 463 "tokenizer.gen.flex"
+#line 464 "tokenizer.gen.flex"
 { RET_TOKEN(UnitLongboat) }
 	YY_BREAK
 case 425:
 YY_RULE_SETUP
-#line 464 "tokenizer.gen.flex"
+#line 465 "tokenizer.gen.flex"
 { RET_TOKEN(UnitTradeCog) }
 	YY_BREAK
 case 426:
 YY_RULE_SETUP
-#line 465 "tokenizer.gen.flex"
+#line 466 "tokenizer.gen.flex"
 { RET_TOKEN(UnitTransportShip) }
 	YY_BREAK
 case 427:
 YY_RULE_SETUP
-#line 466 "tokenizer.gen.flex"
+#line 467 "tokenizer.gen.flex"
 { RET_TOKEN(UnitTurtleShip) }
 	YY_BREAK
 case 428:
 YY_RULE_SETUP
-#line 467 "tokenizer.gen.flex"
+#line 468 "tokenizer.gen.flex"
 { RET_TOKEN(UnitWarGalley) }
 	YY_BREAK
 case 429:
 YY_RULE_SETUP
-#line 468 "tokenizer.gen.flex"
+#line 469 "tokenizer.gen.flex"
 { RET_TOKEN(UnitTradeCart) }
 	YY_BREAK
 case 430:
 YY_RULE_SETUP
-#line 469 "tokenizer.gen.flex"
+#line 470 "tokenizer.gen.flex"
 { RET_TOKEN(UnitMissionary) }
 	YY_BREAK
 case 431:
 YY_RULE_SETUP
-#line 470 "tokenizer.gen.flex"
+#line 471 "tokenizer.gen.flex"
 { RET_TOKEN(UnitMonk) }
 	YY_BREAK
 case 432:
 YY_RULE_SETUP
-#line 471 "tokenizer.gen.flex"
+#line 472 "tokenizer.gen.flex"
 { RET_TOKEN(UnitBatteringRam) }
 	YY_BREAK
 case 433:
 YY_RULE_SETUP
-#line 472 "tokenizer.gen.flex"
+#line 473 "tokenizer.gen.flex"
 { RET_TOKEN(UnitBombardCannon) }
 	YY_BREAK
 case 434:
 YY_RULE_SETUP
-#line 473 "tokenizer.gen.flex"
+#line 474 "tokenizer.gen.flex"
 { RET_TOKEN(UnitCappedRam) }
 	YY_BREAK
 case 435:
 YY_RULE_SETUP
-#line 474 "tokenizer.gen.flex"
+#line 475 "tokenizer.gen.flex"
 { RET_TOKEN(UnitHeavyScorpion) }
 	YY_BREAK
 case 436:
 YY_RULE_SETUP
-#line 475 "tokenizer.gen.flex"
+#line 476 "tokenizer.gen.flex"
 { RET_TOKEN(UnitMangonel) }
 	YY_BREAK
 case 437:
 YY_RULE_SETUP
-#line 476 "tokenizer.gen.flex"
+#line 477 "tokenizer.gen.flex"
 { RET_TOKEN(UnitOnager) }
 	YY_BREAK
 case 438:
 YY_RULE_SETUP
-#line 477 "tokenizer.gen.flex"
+#line 478 "tokenizer.gen.flex"
 { RET_TOKEN(UnitScorpion) }
 	YY_BREAK
 case 439:
 YY_RULE_SETUP
-#line 478 "tokenizer.gen.flex"
+#line 479 "tokenizer.gen.flex"
 { RET_TOKEN(UnitSiegeOnager) }
 	YY_BREAK
 case 440:
 YY_RULE_SETUP
-#line 479 "tokenizer.gen.flex"
+#line 480 "tokenizer.gen.flex"
 { RET_TOKEN(UnitSiegeRam) }
 	YY_BREAK
 case 441:
 YY_RULE_SETUP
-#line 480 "tokenizer.gen.flex"
+#line 481 "tokenizer.gen.flex"
 { RET_TOKEN(UnitCamel) }
 	YY_BREAK
 case 442:
 YY_RULE_SETUP
-#line 481 "tokenizer.gen.flex"
+#line 482 "tokenizer.gen.flex"
 { RET_TOKEN(UnitCavalier) }
 	YY_BREAK
 case 443:
 YY_RULE_SETUP
-#line 482 "tokenizer.gen.flex"
+#line 483 "tokenizer.gen.flex"
 { RET_TOKEN(UnitHeavyCamel) }
 	YY_BREAK
 case 444:
 YY_RULE_SETUP
-#line 483 "tokenizer.gen.flex"
+#line 484 "tokenizer.gen.flex"
 { RET_TOKEN(UnitHussar) }
 	YY_BREAK
 case 445:
 YY_RULE_SETUP
-#line 484 "tokenizer.gen.flex"
+#line 485 "tokenizer.gen.flex"
 { RET_TOKEN(UnitKnight) }
 	YY_BREAK
 case 446:
 YY_RULE_SETUP
-#line 485 "tokenizer.gen.flex"
+#line 486 "tokenizer.gen.flex"
 { RET_TOKEN(UnitLightCavalry) }
 	YY_BREAK
 case 447:
 YY_RULE_SETUP
-#line 486 "tokenizer.gen.flex"
+#line 487 "tokenizer.gen.flex"
 { RET_TOKEN(UnitPaladin) }
 	YY_BREAK
 case 448:
 YY_RULE_SETUP
-#line 487 "tokenizer.gen.flex"
+#line 488 "tokenizer.gen.flex"
 { RET_TOKEN(UnitScoutCavalry) }
 	YY_BREAK
 case 449:
 YY_RULE_SETUP
-#line 488 "tokenizer.gen.flex"
+#line 489 "tokenizer.gen.flex"
 { RET_TOKEN(UnitVillager) }
 	YY_BREAK
 case 450:
 YY_RULE_SETUP
-#line 489 "tokenizer.gen.flex"
+#line 490 "tokenizer.gen.flex"
 { RET_TOKEN(UnitArcherLine) }
 	YY_BREAK
 case 451:
 YY_RULE_SETUP
-#line 490 "tokenizer.gen.flex"
+#line 491 "tokenizer.gen.flex"
 { RET_TOKEN(UnitCavalryArcherLine) }
 	YY_BREAK
 case 452:
 YY_RULE_SETUP
-#line 491 "tokenizer.gen.flex"
+#line 492 "tokenizer.gen.flex"
 { RET_TOKEN(UnitSkirmisherLine) }
 	YY_BREAK
 case 453:
 YY_RULE_SETUP
-#line 492 "tokenizer.gen.flex"
+#line 493 "tokenizer.gen.flex"
 { RET_TOKEN(UnitEagleWarriorLine) }
 	YY_BREAK
 case 454:
 YY_RULE_SETUP
-#line 493 "tokenizer.gen.flex"
+#line 494 "tokenizer.gen.flex"
 { RET_TOKEN(UnitMilitiamanLine) }
 	YY_BREAK
 case 455:
 YY_RULE_SETUP
-#line 494 "tokenizer.gen.flex"
+#line 495 "tokenizer.gen.flex"
 { RET_TOKEN(UnitSpearmanLine) }
 	YY_BREAK
 case 456:
 YY_RULE_SETUP
-#line 495 "tokenizer.gen.flex"
+#line 496 "tokenizer.gen.flex"
 { RET_TOKEN(UnitBerserkLine) }
 	YY_BREAK
 case 457:
 YY_RULE_SETUP
-#line 496 "tokenizer.gen.flex"
+#line 497 "tokenizer.gen.flex"
 { RET_TOKEN(UnitCataphractLine) }
 	YY_BREAK
 case 458:
 YY_RULE_SETUP
-#line 497 "tokenizer.gen.flex"
+#line 498 "tokenizer.gen.flex"
 { RET_TOKEN(UnitChuKoNuLine) }
 	YY_BREAK
 case 459:
 YY_RULE_SETUP
-#line 498 "tokenizer.gen.flex"
+#line 499 "tokenizer.gen.flex"
 { RET_TOKEN(UnitConquistadorLine) }
 	YY_BREAK
 case 460:
 YY_RULE_SETUP
-#line 499 "tokenizer.gen.flex"
+#line 500 "tokenizer.gen.flex"
 { RET_TOKEN(UnitHuskarlLine) }
 	YY_BREAK
 case 461:
 YY_RULE_SETUP
-#line 500 "tokenizer.gen.flex"
+#line 501 "tokenizer.gen.flex"
 { RET_TOKEN(UnitJaguarWarriorLine) }
 	YY_BREAK
 case 462:
 YY_RULE_SETUP
-#line 501 "tokenizer.gen.flex"
+#line 502 "tokenizer.gen.flex"
 { RET_TOKEN(UnitJanissaryLine) }
 	YY_BREAK
 case 463:
 YY_RULE_SETUP
-#line 502 "tokenizer.gen.flex"
+#line 503 "tokenizer.gen.flex"
 { RET_TOKEN(UnitLongbowmanLine) }
 	YY_BREAK
 case 464:
 YY_RULE_SETUP
-#line 503 "tokenizer.gen.flex"
+#line 504 "tokenizer.gen.flex"
 { RET_TOKEN(UnitMamelukeLine) }
 	YY_BREAK
 case 465:
 YY_RULE_SETUP
-#line 504 "tokenizer.gen.flex"
+#line 505 "tokenizer.gen.flex"
 { RET_TOKEN(UnitMangudaiLine) }
 	YY_BREAK
 case 466:
 YY_RULE_SETUP
-#line 505 "tokenizer.gen.flex"
+#line 506 "tokenizer.gen.flex"
 { RET_TOKEN(UnitPlumedArcherLine) }
 	YY_BREAK
 case 467:
 YY_RULE_SETUP
-#line 506 "tokenizer.gen.flex"
+#line 507 "tokenizer.gen.flex"
 { RET_TOKEN(UnitSamuraiLine) }
 	YY_BREAK
 case 468:
 YY_RULE_SETUP
-#line 507 "tokenizer.gen.flex"
+#line 508 "tokenizer.gen.flex"
 { RET_TOKEN(UnitTarkanLine) }
 	YY_BREAK
 case 469:
 YY_RULE_SETUP
-#line 508 "tokenizer.gen.flex"
+#line 509 "tokenizer.gen.flex"
 { RET_TOKEN(UnitTeutonicKnightLine) }
 	YY_BREAK
 case 470:
 YY_RULE_SETUP
-#line 509 "tokenizer.gen.flex"
+#line 510 "tokenizer.gen.flex"
 { RET_TOKEN(UnitThrowingAxemanLine) }
 	YY_BREAK
 case 471:
 YY_RULE_SETUP
-#line 510 "tokenizer.gen.flex"
+#line 511 "tokenizer.gen.flex"
 { RET_TOKEN(UnitWarElephantLine) }
 	YY_BREAK
 case 472:
 YY_RULE_SETUP
-#line 511 "tokenizer.gen.flex"
+#line 512 "tokenizer.gen.flex"
 { RET_TOKEN(UnitWarWagonLine) }
 	YY_BREAK
 case 473:
 YY_RULE_SETUP
-#line 512 "tokenizer.gen.flex"
+#line 513 "tokenizer.gen.flex"
 { RET_TOKEN(UnitWoadRaiderLine) }
 	YY_BREAK
 case 474:
 YY_RULE_SETUP
-#line 513 "tokenizer.gen.flex"
+#line 514 "tokenizer.gen.flex"
 { RET_TOKEN(UnitCannonGalleonLine) }
 	YY_BREAK
 case 475:
 YY_RULE_SETUP
-#line 514 "tokenizer.gen.flex"
+#line 515 "tokenizer.gen.flex"
 { RET_TOKEN(UnitDemolitionShipLine) }
 	YY_BREAK
 case 476:
 YY_RULE_SETUP
-#line 515 "tokenizer.gen.flex"
+#line 516 "tokenizer.gen.flex"
 { RET_TOKEN(UnitFireShipLine) }
 	YY_BREAK
 case 477:
 YY_RULE_SETUP
-#line 516 "tokenizer.gen.flex"
+#line 517 "tokenizer.gen.flex"
 { RET_TOKEN(UnitGalleyLine) }
 	YY_BREAK
 case 478:
 YY_RULE_SETUP
-#line 517 "tokenizer.gen.flex"
+#line 518 "tokenizer.gen.flex"
 { RET_TOKEN(UnitLongboatLine) }
 	YY_BREAK
 case 479:
 YY_RULE_SETUP
-#line 518 "tokenizer.gen.flex"
+#line 519 "tokenizer.gen.flex"
 { RET_TOKEN(UnitTurtleShipLine) }
 	YY_BREAK
 case 480:
 YY_RULE_SETUP
-#line 519 "tokenizer.gen.flex"
+#line 520 "tokenizer.gen.flex"
 { RET_TOKEN(UnitBatteringRamLine) }
 	YY_BREAK
 case 481:
 YY_RULE_SETUP
-#line 520 "tokenizer.gen.flex"
+#line 521 "tokenizer.gen.flex"
 { RET_TOKEN(UnitMangonelLine) }
 	YY_BREAK
 case 482:
 YY_RULE_SETUP
-#line 521 "tokenizer.gen.flex"
+#line 522 "tokenizer.gen.flex"
 { RET_TOKEN(UnitScorpionLine) }
 	YY_BREAK
 case 483:
 YY_RULE_SETUP
-#line 522 "tokenizer.gen.flex"
+#line 523 "tokenizer.gen.flex"
 { RET_TOKEN(UnitCamelLine) }
 	YY_BREAK
 case 484:
 YY_RULE_SETUP
-#line 523 "tokenizer.gen.flex"
+#line 524 "tokenizer.gen.flex"
 { RET_TOKEN(UnitKnightLine) }
 	YY_BREAK
 case 485:
 YY_RULE_SETUP
-#line 524 "tokenizer.gen.flex"
+#line 525 "tokenizer.gen.flex"
 { RET_TOKEN(UnitScoutCavalryLine) }
 	YY_BREAK
 case 486:
 YY_RULE_SETUP
-#line 525 "tokenizer.gen.flex"
+#line 526 "tokenizer.gen.flex"
 { RET_TOKEN(UnitMyEliteUniqueUnit) }
 	YY_BREAK
 case 487:
 YY_RULE_SETUP
-#line 526 "tokenizer.gen.flex"
+#line 527 "tokenizer.gen.flex"
 { RET_TOKEN(UnitMyUniqueUnit) }
 	YY_BREAK
 case 488:
 YY_RULE_SETUP
-#line 527 "tokenizer.gen.flex"
+#line 528 "tokenizer.gen.flex"
 { RET_TOKEN(UnitMyUniqueUnitLine) }
 	YY_BREAK
 case 489:
 YY_RULE_SETUP
-#line 528 "tokenizer.gen.flex"
+#line 529 "tokenizer.gen.flex"
 { RET_TOKEN(VictoryConditionNameStandard) }
 	YY_BREAK
 case 490:
 YY_RULE_SETUP
-#line 529 "tokenizer.gen.flex"
+#line 530 "tokenizer.gen.flex"
 { RET_TOKEN(VictoryConditionNameConquest) }
 	YY_BREAK
 case 491:
 YY_RULE_SETUP
-#line 530 "tokenizer.gen.flex"
+#line 531 "tokenizer.gen.flex"
 { RET_TOKEN(VictoryConditionNameTimeLimit) }
 	YY_BREAK
 case 492:
 YY_RULE_SETUP
-#line 531 "tokenizer.gen.flex"
+#line 532 "tokenizer.gen.flex"
 { RET_TOKEN(VictoryConditionNameScore) }
 	YY_BREAK
 case 493:
 YY_RULE_SETUP
-#line 532 "tokenizer.gen.flex"
+#line 533 "tokenizer.gen.flex"
 { RET_TOKEN(VictoryConditionNameCustom) }
 	YY_BREAK
 case 494:
 YY_RULE_SETUP
-#line 533 "tokenizer.gen.flex"
+#line 534 "tokenizer.gen.flex"
 { RET_TOKEN(WallTypeFortifiedWall) }
 	YY_BREAK
 case 495:
 YY_RULE_SETUP
-#line 534 "tokenizer.gen.flex"
+#line 535 "tokenizer.gen.flex"
 { RET_TOKEN(WallTypePalisadeWall) }
 	YY_BREAK
 case 496:
 YY_RULE_SETUP
-#line 535 "tokenizer.gen.flex"
+#line 536 "tokenizer.gen.flex"
 { RET_TOKEN(WallTypeStoneWall) }
 	YY_BREAK
 case 497:
 YY_RULE_SETUP
-#line 536 "tokenizer.gen.flex"
+#line 537 "tokenizer.gen.flex"
 { RET_TOKEN(WallTypeStoneWallLine) }
 	YY_BREAK
 case 498:
 YY_RULE_SETUP
-#line 537 "tokenizer.gen.flex"
+#line 538 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(AcknowledgeEvent, ActionType::AcknowledgeEvent) }
 	YY_BREAK
 case 499:
 YY_RULE_SETUP
-#line 538 "tokenizer.gen.flex"
+#line 539 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(AcknowledgeTaunt, ActionType::AcknowledgeTaunt) }
 	YY_BREAK
 case 500:
 YY_RULE_SETUP
-#line 539 "tokenizer.gen.flex"
+#line 540 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(AttackNow, ActionType::AttackNow) }
 	YY_BREAK
 case 501:
 YY_RULE_SETUP
-#line 540 "tokenizer.gen.flex"
+#line 541 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(Build, ActionType::Build) }
 	YY_BREAK
 case 502:
 YY_RULE_SETUP
-#line 541 "tokenizer.gen.flex"
+#line 542 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(BuildForward, ActionType::BuildForward) }
 	YY_BREAK
 case 503:
 YY_RULE_SETUP
-#line 542 "tokenizer.gen.flex"
+#line 543 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(BuildGate, ActionType::BuildGate) }
 	YY_BREAK
 case 504:
 YY_RULE_SETUP
-#line 543 "tokenizer.gen.flex"
+#line 544 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(BuildWall, ActionType::BuildWall) }
 	YY_BREAK
 case 505:
 YY_RULE_SETUP
-#line 544 "tokenizer.gen.flex"
+#line 545 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(BuyCommodity, ActionType::BuyCommodity) }
 	YY_BREAK
 case 506:
 YY_RULE_SETUP
-#line 545 "tokenizer.gen.flex"
+#line 546 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(CcAddResource, ActionType::CcAddResource) }
 	YY_BREAK
 case 507:
 YY_RULE_SETUP
-#line 546 "tokenizer.gen.flex"
+#line 547 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(ChatLocal, ActionType::ChatLocal) }
 	YY_BREAK
 case 508:
 YY_RULE_SETUP
-#line 547 "tokenizer.gen.flex"
+#line 548 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(ChatLocalToSelf, ActionType::ChatLocalToSelf) }
 	YY_BREAK
 case 509:
 YY_RULE_SETUP
-#line 548 "tokenizer.gen.flex"
+#line 549 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(ChatLocalUsingId, ActionType::ChatLocalUsingId) }
 	YY_BREAK
 case 510:
 YY_RULE_SETUP
-#line 549 "tokenizer.gen.flex"
+#line 550 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(ChatLocalUsingRange, ActionType::ChatLocalUsingRange) }
 	YY_BREAK
 case 511:
 YY_RULE_SETUP
-#line 550 "tokenizer.gen.flex"
+#line 551 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(ChatToAll, ActionType::ChatToAll) }
 	YY_BREAK
 case 512:
 YY_RULE_SETUP
-#line 551 "tokenizer.gen.flex"
+#line 552 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(ChatToAllUsingId, ActionType::ChatToAllUsingId) }
 	YY_BREAK
 case 513:
 YY_RULE_SETUP
-#line 552 "tokenizer.gen.flex"
+#line 553 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(ChatToAllUsingRange, ActionType::ChatToAllUsingRange) }
 	YY_BREAK
 case 514:
 YY_RULE_SETUP
-#line 553 "tokenizer.gen.flex"
+#line 554 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(ChatToAllies, ActionType::ChatToAllies) }
 	YY_BREAK
 case 515:
 YY_RULE_SETUP
-#line 554 "tokenizer.gen.flex"
+#line 555 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(ChatToAlliesUsingId, ActionType::ChatToAlliesUsingId) }
 	YY_BREAK
 case 516:
 YY_RULE_SETUP
-#line 555 "tokenizer.gen.flex"
+#line 556 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(ChatToAlliesUsingRange, ActionType::ChatToAlliesUsingRange) }
 	YY_BREAK
 case 517:
 YY_RULE_SETUP
-#line 556 "tokenizer.gen.flex"
+#line 557 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(ChatToEnemies, ActionType::ChatToEnemies) }
 	YY_BREAK
 case 518:
 YY_RULE_SETUP
-#line 557 "tokenizer.gen.flex"
+#line 558 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(ChatToEnemiesUsingId, ActionType::ChatToEnemiesUsingId) }
 	YY_BREAK
 case 519:
 YY_RULE_SETUP
-#line 558 "tokenizer.gen.flex"
+#line 559 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(ChatToEnemiesUsingRange, ActionType::ChatToEnemiesUsingRange) }
 	YY_BREAK
 case 520:
 YY_RULE_SETUP
-#line 559 "tokenizer.gen.flex"
+#line 560 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(ChatToPlayer, ActionType::ChatToPlayer) }
 	YY_BREAK
 case 521:
 YY_RULE_SETUP
-#line 560 "tokenizer.gen.flex"
+#line 561 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(ChatToPlayerUsingId, ActionType::ChatToPlayerUsingId) }
 	YY_BREAK
 case 522:
 YY_RULE_SETUP
-#line 561 "tokenizer.gen.flex"
+#line 562 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(ChatToPlayerUsingRange, ActionType::ChatToPlayerUsingRange) }
 	YY_BREAK
 case 523:
 YY_RULE_SETUP
-#line 562 "tokenizer.gen.flex"
+#line 563 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(ChatTrace, ActionType::ChatTrace) }
 	YY_BREAK
 case 524:
 YY_RULE_SETUP
-#line 563 "tokenizer.gen.flex"
+#line 564 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(ClearTributeMemory, ActionType::ClearTributeMemory) }
 	YY_BREAK
 case 525:
 YY_RULE_SETUP
-#line 564 "tokenizer.gen.flex"
+#line 565 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(DeleteBuilding, ActionType::DeleteBuilding) }
 	YY_BREAK
 case 526:
 YY_RULE_SETUP
-#line 565 "tokenizer.gen.flex"
+#line 566 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(DeleteUnit, ActionType::DeleteUnit) }
 	YY_BREAK
 case 527:
 YY_RULE_SETUP
-#line 566 "tokenizer.gen.flex"
+#line 567 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(DisableSelf, ActionType::DisableSelf) }
 	YY_BREAK
 case 528:
 YY_RULE_SETUP
-#line 567 "tokenizer.gen.flex"
+#line 568 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(DisableTimer, ActionType::DisableTimer) }
 	YY_BREAK
 case 529:
 YY_RULE_SETUP
-#line 568 "tokenizer.gen.flex"
+#line 569 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(DoNothing, ActionType::DoNothing) }
 	YY_BREAK
 case 530:
 YY_RULE_SETUP
-#line 569 "tokenizer.gen.flex"
+#line 570 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(EnableTimer, ActionType::EnableTimer) }
 	YY_BREAK
 case 531:
 YY_RULE_SETUP
-#line 570 "tokenizer.gen.flex"
+#line 571 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(EnableWallPlacement, ActionType::EnableWallPlacement) }
 	YY_BREAK
 case 532:
 YY_RULE_SETUP
-#line 571 "tokenizer.gen.flex"
+#line 572 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(GenerateRandomNumber, ActionType::GenerateRandomNumber) }
 	YY_BREAK
 case 533:
 YY_RULE_SETUP
-#line 572 "tokenizer.gen.flex"
+#line 573 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(Log, ActionType::Log) }
 	YY_BREAK
 case 534:
 YY_RULE_SETUP
-#line 573 "tokenizer.gen.flex"
+#line 574 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(LogTrace, ActionType::LogTrace) }
 	YY_BREAK
 case 535:
 YY_RULE_SETUP
-#line 574 "tokenizer.gen.flex"
+#line 575 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(ReleaseEscrow, ActionType::ReleaseEscrow) }
 	YY_BREAK
 case 536:
 YY_RULE_SETUP
-#line 575 "tokenizer.gen.flex"
+#line 576 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(Research, ActionType::Research) }
 	YY_BREAK
 case 537:
 YY_RULE_SETUP
-#line 576 "tokenizer.gen.flex"
+#line 577 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(Resign, ActionType::Resign) }
 	YY_BREAK
 case 538:
 YY_RULE_SETUP
-#line 577 "tokenizer.gen.flex"
+#line 578 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(SellCommodity, ActionType::SellCommodity) }
 	YY_BREAK
 case 539:
 YY_RULE_SETUP
-#line 578 "tokenizer.gen.flex"
+#line 579 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(SetDifficultyParameter, ActionType::SetDifficultyParameter) }
 	YY_BREAK
 case 540:
 YY_RULE_SETUP
-#line 579 "tokenizer.gen.flex"
+#line 580 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(SetDoctrine, ActionType::SetDoctrine) }
 	YY_BREAK
 case 541:
 YY_RULE_SETUP
-#line 580 "tokenizer.gen.flex"
+#line 581 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(SetEscrowPercentage, ActionType::SetEscrowPercentage) }
 	YY_BREAK
 case 542:
 YY_RULE_SETUP
-#line 581 "tokenizer.gen.flex"
+#line 582 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(SetGoal, ActionType::SetGoal) }
 	YY_BREAK
 case 543:
 YY_RULE_SETUP
-#line 582 "tokenizer.gen.flex"
+#line 583 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(SetSharedGoal, ActionType::SetSharedGoal) }
 	YY_BREAK
 case 544:
 YY_RULE_SETUP
-#line 583 "tokenizer.gen.flex"
+#line 584 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(SetSignal, ActionType::SetSignal) }
 	YY_BREAK
 case 545:
 YY_RULE_SETUP
-#line 584 "tokenizer.gen.flex"
+#line 585 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(SetStance, ActionType::SetStance) }
 	YY_BREAK
 case 546:
 YY_RULE_SETUP
-#line 585 "tokenizer.gen.flex"
+#line 586 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(SetStrategicNumber, ActionType::SetStrategicNumber) }
 	YY_BREAK
 case 547:
 YY_RULE_SETUP
-#line 586 "tokenizer.gen.flex"
+#line 587 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(Spy, ActionType::Spy) }
 	YY_BREAK
 case 548:
 YY_RULE_SETUP
-#line 587 "tokenizer.gen.flex"
+#line 588 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(Taunt, ActionType::Taunt) }
 	YY_BREAK
 case 549:
 YY_RULE_SETUP
-#line 588 "tokenizer.gen.flex"
+#line 589 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(TauntUsingRange, ActionType::TauntUsingRange) }
 	YY_BREAK
 case 550:
 YY_RULE_SETUP
-#line 589 "tokenizer.gen.flex"
+#line 590 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(Train, ActionType::Train) }
 	YY_BREAK
 case 551:
 YY_RULE_SETUP
-#line 590 "tokenizer.gen.flex"
+#line 591 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(TributeToPlayer, ActionType::TributeToPlayer) }
 	YY_BREAK
 case 552:
 YY_RULE_SETUP
-#line 591 "tokenizer.gen.flex"
+#line 592 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(Trueval, Fact::Trueval) }
 	YY_BREAK
 case 553:
 YY_RULE_SETUP
-#line 592 "tokenizer.gen.flex"
+#line 593 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(Falseval, Fact::Falseval) }
 	YY_BREAK
 case 554:
 YY_RULE_SETUP
-#line 593 "tokenizer.gen.flex"
+#line 594 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(AttackSoldierCount, Fact::AttackSoldierCount) }
 	YY_BREAK
 case 555:
 YY_RULE_SETUP
-#line 594 "tokenizer.gen.flex"
+#line 595 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(AttackWarboatCount, Fact::AttackWarboatCount) }
 	YY_BREAK
 case 556:
 YY_RULE_SETUP
-#line 595 "tokenizer.gen.flex"
+#line 596 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(BuildingAvailable, Fact::BuildingAvailable) }
 	YY_BREAK
 case 557:
 YY_RULE_SETUP
-#line 596 "tokenizer.gen.flex"
+#line 597 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(BuildingCount, Fact::BuildingCount) }
 	YY_BREAK
 case 558:
 YY_RULE_SETUP
-#line 597 "tokenizer.gen.flex"
+#line 598 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(BuildingCountTotal, Fact::BuildingCountTotal) }
 	YY_BREAK
 case 559:
 YY_RULE_SETUP
-#line 598 "tokenizer.gen.flex"
+#line 599 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(BuildingTypeCount, Fact::BuildingTypeCount) }
 	YY_BREAK
 case 560:
 YY_RULE_SETUP
-#line 599 "tokenizer.gen.flex"
+#line 600 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(BuildingTypeCountTotal, Fact::BuildingTypeCountTotal) }
 	YY_BREAK
 case 561:
 YY_RULE_SETUP
-#line 600 "tokenizer.gen.flex"
+#line 601 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(CanAffordBuilding, Fact::CanAffordBuilding) }
 	YY_BREAK
 case 562:
 YY_RULE_SETUP
-#line 601 "tokenizer.gen.flex"
+#line 602 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(CanAffordCompleteWall, Fact::CanAffordCompleteWall) }
 	YY_BREAK
 case 563:
 YY_RULE_SETUP
-#line 602 "tokenizer.gen.flex"
+#line 603 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(CanAffordResearch, Fact::CanAffordResearch) }
 	YY_BREAK
 case 564:
 YY_RULE_SETUP
-#line 603 "tokenizer.gen.flex"
+#line 604 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(CanAffordUnit, Fact::CanAffordUnit) }
 	YY_BREAK
 case 565:
 YY_RULE_SETUP
-#line 604 "tokenizer.gen.flex"
+#line 605 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(CanBuild, Fact::CanBuild) }
 	YY_BREAK
 case 566:
 YY_RULE_SETUP
-#line 605 "tokenizer.gen.flex"
+#line 606 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(CanBuildGate, Fact::CanBuildGate) }
 	YY_BREAK
 case 567:
 YY_RULE_SETUP
-#line 606 "tokenizer.gen.flex"
+#line 607 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(CanBuildGateWithEscrow, Fact::CanBuildGateWithEscrow) }
 	YY_BREAK
 case 568:
 YY_RULE_SETUP
-#line 607 "tokenizer.gen.flex"
+#line 608 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(CanBuildWall, Fact::CanBuildWall) }
 	YY_BREAK
 case 569:
 YY_RULE_SETUP
-#line 608 "tokenizer.gen.flex"
+#line 609 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(CanBuildWallWithEscrow, Fact::CanBuildWallWithEscrow) }
 	YY_BREAK
 case 570:
 YY_RULE_SETUP
-#line 609 "tokenizer.gen.flex"
+#line 610 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(CanBuildWithEscrow, Fact::CanBuildWithEscrow) }
 	YY_BREAK
 case 571:
 YY_RULE_SETUP
-#line 610 "tokenizer.gen.flex"
+#line 611 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(CanBuyCommodity, Fact::CanBuyCommodity) }
 	YY_BREAK
 case 572:
 YY_RULE_SETUP
-#line 611 "tokenizer.gen.flex"
+#line 612 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(CanResearch, Fact::CanResearch) }
 	YY_BREAK
 case 573:
 YY_RULE_SETUP
-#line 612 "tokenizer.gen.flex"
+#line 613 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(CanResearchWithEscrow, Fact::CanResearchWithEscrow) }
 	YY_BREAK
 case 574:
 YY_RULE_SETUP
-#line 613 "tokenizer.gen.flex"
+#line 614 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(CanSellCommodity, Fact::CanSellCommodity) }
 	YY_BREAK
 case 575:
 YY_RULE_SETUP
-#line 614 "tokenizer.gen.flex"
+#line 615 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(CanSpy, Fact::CanSpy) }
 	YY_BREAK
 case 576:
 YY_RULE_SETUP
-#line 615 "tokenizer.gen.flex"
+#line 616 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(CanSpyWithEscrow, Fact::CanSpyWithEscrow) }
 	YY_BREAK
 case 577:
 YY_RULE_SETUP
-#line 616 "tokenizer.gen.flex"
+#line 617 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(CanTrain, Fact::CanTrain) }
 	YY_BREAK
 case 578:
 YY_RULE_SETUP
-#line 617 "tokenizer.gen.flex"
+#line 618 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(CanTrainWithEscrow, Fact::CanTrainWithEscrow) }
 	YY_BREAK
 case 579:
 YY_RULE_SETUP
-#line 618 "tokenizer.gen.flex"
+#line 619 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(CcPlayersBuildingCount, Fact::CcPlayersBuildingCount) }
 	YY_BREAK
 case 580:
 YY_RULE_SETUP
-#line 619 "tokenizer.gen.flex"
+#line 620 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(CcPlayersBuildingTypeCount, Fact::CcPlayersBuildingTypeCount) }
 	YY_BREAK
 case 581:
 YY_RULE_SETUP
-#line 620 "tokenizer.gen.flex"
+#line 621 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(CcPlayersUnitCount, Fact::CcPlayersUnitCount) }
 	YY_BREAK
 case 582:
 YY_RULE_SETUP
-#line 621 "tokenizer.gen.flex"
+#line 622 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(CcPlayersUnitTypeCount, Fact::CcPlayersUnitTypeCount) }
 	YY_BREAK
 case 583:
 YY_RULE_SETUP
-#line 622 "tokenizer.gen.flex"
+#line 623 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(CheatsEnabled, Fact::CheatsEnabled) }
 	YY_BREAK
 case 584:
 YY_RULE_SETUP
-#line 623 "tokenizer.gen.flex"
+#line 624 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(CivSelected, Fact::CivSelected) }
 	YY_BREAK
 case 585:
 YY_RULE_SETUP
-#line 624 "tokenizer.gen.flex"
+#line 625 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(CivilianPopulation, Fact::CivilianPopulation) }
 	YY_BREAK
 case 586:
 YY_RULE_SETUP
-#line 625 "tokenizer.gen.flex"
+#line 626 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(CommodityBuyingPrice, Fact::CommodityBuyingPrice) }
 	YY_BREAK
 case 587:
 YY_RULE_SETUP
-#line 626 "tokenizer.gen.flex"
+#line 627 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(CommoditySellingPrice, Fact::CommoditySellingPrice) }
 	YY_BREAK
 case 588:
 YY_RULE_SETUP
-#line 627 "tokenizer.gen.flex"
+#line 628 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(CurrentAge, Fact::CurrentAge) }
 	YY_BREAK
 case 589:
 YY_RULE_SETUP
-#line 628 "tokenizer.gen.flex"
+#line 629 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(CurrentAgeTime, Fact::CurrentAgeTime) }
 	YY_BREAK
 case 590:
 YY_RULE_SETUP
-#line 629 "tokenizer.gen.flex"
+#line 630 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(CurrentScore, Fact::CurrentScore) }
 	YY_BREAK
 case 591:
 YY_RULE_SETUP
-#line 630 "tokenizer.gen.flex"
+#line 631 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(DeathMatchGame, Fact::DeathMatchGame) }
 	YY_BREAK
 case 592:
 YY_RULE_SETUP
-#line 631 "tokenizer.gen.flex"
+#line 632 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(DefendSoldierCount, Fact::DefendSoldierCount) }
 	YY_BREAK
 case 593:
 YY_RULE_SETUP
-#line 632 "tokenizer.gen.flex"
+#line 633 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(DefendWarboatCount, Fact::DefendWarboatCount) }
 	YY_BREAK
 case 594:
 YY_RULE_SETUP
-#line 633 "tokenizer.gen.flex"
+#line 634 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(Difficulty, Fact::Difficulty) }
 	YY_BREAK
 case 595:
 YY_RULE_SETUP
-#line 634 "tokenizer.gen.flex"
+#line 635 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(Doctrine, Fact::Doctrine) }
 	YY_BREAK
 case 596:
 YY_RULE_SETUP
-#line 635 "tokenizer.gen.flex"
+#line 636 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(DropsiteMinDistance, Fact::DropsiteMinDistance) }
 	YY_BREAK
 case 597:
 YY_RULE_SETUP
-#line 636 "tokenizer.gen.flex"
+#line 637 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(EnemyBuildingsInTown, Fact::EnemyBuildingsInTown) }
 	YY_BREAK
 case 598:
 YY_RULE_SETUP
-#line 637 "tokenizer.gen.flex"
+#line 638 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(EnemyCapturedRelics, Fact::EnemyCapturedRelics) }
 	YY_BREAK
 case 599:
 YY_RULE_SETUP
-#line 638 "tokenizer.gen.flex"
+#line 639 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(EscrowAmount, Fact::EscrowAmount) }
 	YY_BREAK
 case 600:
 YY_RULE_SETUP
-#line 639 "tokenizer.gen.flex"
+#line 640 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(EventDetected, Fact::EventDetected) }
 	YY_BREAK
 case 601:
 YY_RULE_SETUP
-#line 640 "tokenizer.gen.flex"
+#line 641 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(FoodAmount, Fact::FoodAmount) }
 	YY_BREAK
 case 602:
 YY_RULE_SETUP
-#line 641 "tokenizer.gen.flex"
+#line 642 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(GameTime, Fact::GameTime) }
 	YY_BREAK
 case 603:
 YY_RULE_SETUP
-#line 642 "tokenizer.gen.flex"
+#line 643 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(Goal, Fact::Goal) }
 	YY_BREAK
 case 604:
 YY_RULE_SETUP
-#line 643 "tokenizer.gen.flex"
+#line 644 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(GoldAmount, Fact::GoldAmount) }
 	YY_BREAK
 case 605:
 YY_RULE_SETUP
-#line 644 "tokenizer.gen.flex"
+#line 645 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(HousingHeadroom, Fact::HousingHeadroom) }
 	YY_BREAK
 case 606:
 YY_RULE_SETUP
-#line 645 "tokenizer.gen.flex"
+#line 646 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(IdleFarmCount, Fact::IdleFarmCount) }
 	YY_BREAK
 case 607:
 YY_RULE_SETUP
-#line 646 "tokenizer.gen.flex"
+#line 647 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(MapSize, Fact::MapSize) }
 	YY_BREAK
 case 608:
 YY_RULE_SETUP
-#line 647 "tokenizer.gen.flex"
+#line 648 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(MapType, Fact::MapType) }
 	YY_BREAK
 case 609:
 YY_RULE_SETUP
-#line 648 "tokenizer.gen.flex"
+#line 649 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(MilitaryPopulation, Fact::MilitaryPopulation) }
 	YY_BREAK
 case 610:
 YY_RULE_SETUP
-#line 649 "tokenizer.gen.flex"
+#line 650 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(PlayerComputer, Fact::PlayerComputer) }
 	YY_BREAK
 case 611:
 YY_RULE_SETUP
-#line 650 "tokenizer.gen.flex"
+#line 651 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(PlayerHuman, Fact::PlayerHuman) }
 	YY_BREAK
 case 612:
 YY_RULE_SETUP
-#line 651 "tokenizer.gen.flex"
+#line 652 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(PlayerInGame, Fact::PlayerInGame) }
 	YY_BREAK
 case 613:
 YY_RULE_SETUP
-#line 652 "tokenizer.gen.flex"
+#line 653 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(PlayerNumber, Fact::PlayerNumber) }
 	YY_BREAK
 case 614:
 YY_RULE_SETUP
-#line 653 "tokenizer.gen.flex"
+#line 654 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(PlayerResigned, Fact::PlayerResigned) }
 	YY_BREAK
 case 615:
 YY_RULE_SETUP
-#line 654 "tokenizer.gen.flex"
+#line 655 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(PlayerValid, Fact::PlayerValid) }
 	YY_BREAK
 case 616:
 YY_RULE_SETUP
-#line 655 "tokenizer.gen.flex"
+#line 656 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(PlayersBuildingCount, Fact::PlayersBuildingCount) }
 	YY_BREAK
 case 617:
 YY_RULE_SETUP
-#line 656 "tokenizer.gen.flex"
+#line 657 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(PlayersBuildingTypeCount, Fact::PlayersBuildingTypeCount) }
 	YY_BREAK
 case 618:
 YY_RULE_SETUP
-#line 657 "tokenizer.gen.flex"
+#line 658 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(PlayersCiv, Fact::PlayersCiv) }
 	YY_BREAK
 case 619:
 YY_RULE_SETUP
-#line 658 "tokenizer.gen.flex"
+#line 659 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(PlayersCivilianPopulation, Fact::PlayersCivilianPopulation) }
 	YY_BREAK
 case 620:
 YY_RULE_SETUP
-#line 659 "tokenizer.gen.flex"
+#line 660 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(PlayersCurrentAge, Fact::PlayersCurrentAge) }
 	YY_BREAK
 case 621:
 YY_RULE_SETUP
-#line 660 "tokenizer.gen.flex"
+#line 661 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(PlayersCurrentAgeTime, Fact::PlayersCurrentAgeTime) }
 	YY_BREAK
 case 622:
 YY_RULE_SETUP
-#line 661 "tokenizer.gen.flex"
+#line 662 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(PlayersMilitaryPopulation, Fact::PlayersMilitaryPopulation) }
 	YY_BREAK
 case 623:
 YY_RULE_SETUP
-#line 662 "tokenizer.gen.flex"
+#line 663 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(PlayersPopulation, Fact::PlayersPopulation) }
 	YY_BREAK
 case 624:
 YY_RULE_SETUP
-#line 663 "tokenizer.gen.flex"
+#line 664 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(PlayersScore, Fact::PlayersScore) }
 	YY_BREAK
 case 625:
 YY_RULE_SETUP
-#line 664 "tokenizer.gen.flex"
+#line 665 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(PlayersStance, Fact::PlayersStance) }
 	YY_BREAK
 case 626:
 YY_RULE_SETUP
-#line 665 "tokenizer.gen.flex"
+#line 666 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(PlayersTribute, Fact::PlayersTribute) }
 	YY_BREAK
 case 627:
 YY_RULE_SETUP
-#line 666 "tokenizer.gen.flex"
+#line 667 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(PlayersTributeMemory, Fact::PlayersTributeMemory) }
 	YY_BREAK
 case 628:
 YY_RULE_SETUP
-#line 667 "tokenizer.gen.flex"
+#line 668 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(PlayersUnitCount, Fact::PlayersUnitCount) }
 	YY_BREAK
 case 629:
 YY_RULE_SETUP
-#line 668 "tokenizer.gen.flex"
+#line 669 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(PlayersUnitTypeCount, Fact::PlayersUnitTypeCount) }
 	YY_BREAK
 case 630:
 YY_RULE_SETUP
-#line 669 "tokenizer.gen.flex"
+#line 670 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(Population, Fact::Population) }
 	YY_BREAK
 case 631:
 YY_RULE_SETUP
-#line 670 "tokenizer.gen.flex"
+#line 671 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(PopulationCap, Fact::PopulationCap) }
 	YY_BREAK
 case 632:
 YY_RULE_SETUP
-#line 671 "tokenizer.gen.flex"
+#line 672 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(PopulationHeadroom, Fact::PopulationHeadroom) }
 	YY_BREAK
 case 633:
 YY_RULE_SETUP
-#line 672 "tokenizer.gen.flex"
+#line 673 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(RandomNumber, Fact::RandomNumber) }
 	YY_BREAK
 case 634:
 YY_RULE_SETUP
-#line 673 "tokenizer.gen.flex"
+#line 674 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(RegicideGame, Fact::RegicideGame) }
 	YY_BREAK
 case 635:
 YY_RULE_SETUP
-#line 674 "tokenizer.gen.flex"
+#line 675 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(ResearchAvailable, Fact::ResearchAvailable) }
 	YY_BREAK
 case 636:
 YY_RULE_SETUP
-#line 675 "tokenizer.gen.flex"
+#line 676 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(ResearchCompleted, Fact::ResearchCompleted) }
 	YY_BREAK
 case 637:
 YY_RULE_SETUP
-#line 676 "tokenizer.gen.flex"
+#line 677 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(ResourceFound, Fact::ResourceFound) }
 	YY_BREAK
 case 638:
 YY_RULE_SETUP
-#line 677 "tokenizer.gen.flex"
+#line 678 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(SharedGoal, Fact::SharedGoal) }
 	YY_BREAK
 case 639:
 YY_RULE_SETUP
-#line 678 "tokenizer.gen.flex"
+#line 679 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(SheepAndForageTooFar, Fact::SheepAndForageTooFar) }
 	YY_BREAK
 case 640:
 YY_RULE_SETUP
-#line 679 "tokenizer.gen.flex"
+#line 680 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(SoldierCount, Fact::SoldierCount) }
 	YY_BREAK
 case 641:
 YY_RULE_SETUP
-#line 680 "tokenizer.gen.flex"
+#line 681 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(StanceToward, Fact::StanceToward) }
 	YY_BREAK
 case 642:
 YY_RULE_SETUP
-#line 681 "tokenizer.gen.flex"
+#line 682 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(StartingAge, Fact::StartingAge) }
 	YY_BREAK
 case 643:
 YY_RULE_SETUP
-#line 682 "tokenizer.gen.flex"
+#line 683 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(StartingResources, Fact::StartingResources) }
 	YY_BREAK
 case 644:
 YY_RULE_SETUP
-#line 683 "tokenizer.gen.flex"
+#line 684 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(StoneAmount, Fact::StoneAmount) }
 	YY_BREAK
 case 645:
 YY_RULE_SETUP
-#line 684 "tokenizer.gen.flex"
+#line 685 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(StrategicNumber, Fact::StrategicNumber) }
 	YY_BREAK
 case 646:
 YY_RULE_SETUP
-#line 685 "tokenizer.gen.flex"
+#line 686 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(TauntDetected, Fact::TauntDetected) }
 	YY_BREAK
 case 647:
 YY_RULE_SETUP
-#line 686 "tokenizer.gen.flex"
+#line 687 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(TimerTriggered, Fact::TimerTriggered) }
 	YY_BREAK
 case 648:
 YY_RULE_SETUP
-#line 687 "tokenizer.gen.flex"
+#line 688 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(TownUnderAttack, Fact::TownUnderAttack) }
 	YY_BREAK
 case 649:
 YY_RULE_SETUP
-#line 688 "tokenizer.gen.flex"
+#line 689 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(UnitAvailable, Fact::UnitAvailable) }
 	YY_BREAK
 case 650:
 YY_RULE_SETUP
-#line 689 "tokenizer.gen.flex"
+#line 690 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(UnitCount, Fact::UnitCount) }
 	YY_BREAK
 case 651:
 YY_RULE_SETUP
-#line 690 "tokenizer.gen.flex"
+#line 691 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(UnitCountTotal, Fact::UnitCountTotal) }
 	YY_BREAK
 case 652:
 YY_RULE_SETUP
-#line 691 "tokenizer.gen.flex"
+#line 692 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(UnitTypeCount, Fact::UnitTypeCount) }
 	YY_BREAK
 case 653:
 YY_RULE_SETUP
-#line 692 "tokenizer.gen.flex"
+#line 693 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(UnitTypeCountTotal, Fact::UnitTypeCountTotal) }
 	YY_BREAK
 case 654:
 YY_RULE_SETUP
-#line 693 "tokenizer.gen.flex"
+#line 694 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(VictoryCondition, Fact::VictoryCondition) }
 	YY_BREAK
 case 655:
 YY_RULE_SETUP
-#line 694 "tokenizer.gen.flex"
+#line 695 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(WallCompletedPercentage, Fact::WallCompletedPercentage) }
 	YY_BREAK
 case 656:
 YY_RULE_SETUP
-#line 695 "tokenizer.gen.flex"
+#line 696 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(WallInvisiblePercentage, Fact::WallInvisiblePercentage) }
 	YY_BREAK
 case 657:
 YY_RULE_SETUP
-#line 696 "tokenizer.gen.flex"
+#line 697 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(WarboatCount, Fact::WarboatCount) }
 	YY_BREAK
 case 658:
 YY_RULE_SETUP
-#line 697 "tokenizer.gen.flex"
+#line 698 "tokenizer.gen.flex"
 { RET_TOKEN_ENUM(WoodAmount, Fact::WoodAmount) }
 	YY_BREAK
 case 659:
 YY_RULE_SETUP
-#line 699 "tokenizer.gen.flex"
+#line 700 "tokenizer.gen.flex"
 RET_TOKEN(OpenParen)
 	YY_BREAK
 case 660:
 YY_RULE_SETUP
-#line 700 "tokenizer.gen.flex"
+#line 701 "tokenizer.gen.flex"
 RET_TOKEN(CloseParen)
 	YY_BREAK
 case 661:
 YY_RULE_SETUP
-#line 701 "tokenizer.gen.flex"
+#line 702 "tokenizer.gen.flex"
 RET_TOKEN(RuleStart)
 	YY_BREAK
 case 662:
 YY_RULE_SETUP
-#line 702 "tokenizer.gen.flex"
+#line 703 "tokenizer.gen.flex"
 RET_TOKEN(ConditionActionSeparator)
 	YY_BREAK
 case 663:
 YY_RULE_SETUP
-#line 704 "tokenizer.gen.flex"
+#line 705 "tokenizer.gen.flex"
 RET_TOKEN(Not)
 	YY_BREAK
 case 664:
 YY_RULE_SETUP
-#line 705 "tokenizer.gen.flex"
+#line 706 "tokenizer.gen.flex"
 RET_TOKEN(Or)
 	YY_BREAK
 case 665:
 YY_RULE_SETUP
-#line 707 "tokenizer.gen.flex"
+#line 708 "tokenizer.gen.flex"
 RET_TOKEN(RelOpLessThan)
 	YY_BREAK
 case 666:
 YY_RULE_SETUP
-#line 708 "tokenizer.gen.flex"
+#line 709 "tokenizer.gen.flex"
 RET_TOKEN(RelOpLessOrEqual)
 	YY_BREAK
 case 667:
 YY_RULE_SETUP
-#line 709 "tokenizer.gen.flex"
+#line 710 "tokenizer.gen.flex"
 RET_TOKEN(RelOpGreaterThan)
 	YY_BREAK
 case 668:
 YY_RULE_SETUP
-#line 710 "tokenizer.gen.flex"
+#line 711 "tokenizer.gen.flex"
 RET_TOKEN(RelOpGreaterOrEqual)
 	YY_BREAK
 case 669:
 YY_RULE_SETUP
-#line 711 "tokenizer.gen.flex"
+#line 712 "tokenizer.gen.flex"
 RET_TOKEN(RelOpEqual)
 	YY_BREAK
 case 670:
 YY_RULE_SETUP
-#line 713 "tokenizer.gen.flex"
+#line 714 "tokenizer.gen.flex"
 RET_TOKEN(LoadIfDefined)
 	YY_BREAK
 case 671:
 YY_RULE_SETUP
-#line 714 "tokenizer.gen.flex"
+#line 715 "tokenizer.gen.flex"
 RET_TOKEN(Else)
 	YY_BREAK
 case 672:
 YY_RULE_SETUP
-#line 715 "tokenizer.gen.flex"
+#line 716 "tokenizer.gen.flex"
 RET_TOKEN(EndIf)
 	YY_BREAK
 case 673:
 /* rule 673 can match eol */
 YY_RULE_SETUP
-#line 717 "tokenizer.gen.flex"
+#line 718 "tokenizer.gen.flex"
 
 	YY_BREAK
 case 674:
 YY_RULE_SETUP
-#line 719 "tokenizer.gen.flex"
+#line 720 "tokenizer.gen.flex"
 RET_STRING(SymbolName)
 	YY_BREAK
 case 675:
 YY_RULE_SETUP
-#line 720 "tokenizer.gen.flex"
+#line 721 "tokenizer.gen.flex"
 RET_STRING(String)
 	YY_BREAK
 case 676:
 YY_RULE_SETUP
-#line 721 "tokenizer.gen.flex"
+#line 722 "tokenizer.gen.flex"
 RET_INT(Number)
 	YY_BREAK
 case 677:
 YY_RULE_SETUP
-#line 723 "tokenizer.gen.flex"
+#line 724 "tokenizer.gen.flex"
 ECHO;
 	YY_BREAK
-#line 10594 "lex.yy.cc"
+#line 10595 "lex.yy.cc"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -11712,6 +11713,6 @@ void yyfree (void * ptr )
 
 /* %ok-for-header */
 
-#line 723 "tokenizer.gen.flex"
+#line 724 "tokenizer.gen.flex"
 
 

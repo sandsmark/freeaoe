@@ -35,7 +35,12 @@ static const char *s_registryGroupTC = R"(SOFTWARE\Microsoft\Microsoft Games\Age
 
 static const char *s_registryKey = "InstallationDirectory";
 #if defined(WIN32) || defined(__WIN32) || defined(__WIN32__)
+
+// I think this was for mingw or something
+#ifndef WINAPI_FAMILY_PARTITION
 #define WINAPI_FAMILY_PARTITION
+#endif
+
 #include <atlbase.h>
 #include <knownfolders.h>
 #include <shlobj.h>
