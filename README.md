@@ -79,7 +79,6 @@ TODO (this is probably going to get outdated)
  - Patrolling.
  - Garrisoning.
  - AI Script execution (lot of overlap with scenario triggers).
- - (Proper) wall building.
  - Campaign cinematics (mainly just parse the .mm files).
  - Streaming sound (music, scenario voices, etc.).
  - Map analysis stuff (for RMS and AI).
@@ -88,6 +87,7 @@ TODO (this is probably going to get outdated)
  - Various refactoring (move VisibilityMap out into separate file, rendering of units out from UnitManager, etc.)
  - Proper support for new terrain graphics (Rise of the Rajas stopped shipping the old ones).
  - Rewrite AI script parsing without any parser generators/libraries (it's a trivial grammar, and there are no good parser generators in existence).
+ - Fix edges of walls when dragging.
 
 Done
 ----
@@ -112,6 +112,7 @@ Compared to other reimplementations as much as possible is fetched from the data
  * Buildings:
     * Construction of buildings.
     * Training units.
+    * Dragging wall construction.
  * Actions types:
     * Melee attacks.
     * Ranged attacks.
