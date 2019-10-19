@@ -87,6 +87,7 @@ TODO (this is probably going to get outdated)
  - Performance (especially the path finding).
  - Various refactoring (move VisibilityMap out into separate file, rendering of units out from UnitManager, etc.)
  - Proper support for new terrain graphics (Rise of the Rajas stopped shipping the old ones).
+ - Rewrite AI script parsing without any parser generators/libraries (it's a trivial grammar, and there are no good parser generators in existence).
 
 Done
 ----
