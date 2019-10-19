@@ -62,7 +62,7 @@ while read -r -a LINE; do
         else
             RULEMATCHES+="  | ${TOKENNAME}"
         fi
-        RULEMATCHES+="  { \$\$ = ${TYPE}::${NAME}; std::cout << \"$NAME\" << std::endl; }\n"
+        RULEMATCHES+="  { \$\$ = ${TYPE}::${NAME}; }\n"
         #RULEMATCHES+="  { \$\$ = ${TYPE}::${NAME}; }\n"
         ENUMS+="    ${NAME},\n"
         LVAL_ENUMS+="    ${NAME},\n"
@@ -273,7 +273,7 @@ while read -r -a LINE; do
     elif [[ "${#LINE[@]}" -eq "4" ]]; then
         RULEMATCHES+="\$1, \$2, \$3, \$4, \$5"
     fi
-    RULEMATCHES+="); std::cout << \"$FACT\" << std::endl; }\n"
+    RULEMATCHES+="); }\n"
     #    RULEMATCHES+=" { \$\$ = AiRule::createCondition("
     #    # I'm too lazy to do this properly, so sue me
     #    if [[ "${#LINE[@]}" -eq "1" ]]; then
@@ -311,3 +311,4 @@ rm -f grammar.gen.ypp && cat parser.head.y <(sort -u < gen/tokens.y)  gen/parser
 rm -f tokenizer.gen.flex && cat tokenizer.head.flex gen/tokens.flex tokenizer.tail.flex > tokenizer.gen.flex
 
 flex++ -Ca --debug -+  tokenizer.gen.flex  && bison --language=C++  --defines --debug -v -d grammar.gen.ypp
+clang++  -Wall -Wextra -pedantic -Wno-unused-parameter -std=gnu++17 -I.. grammar.gen.tab.cpp lex.yy.cc ScriptLoader.cpp AiRule.cpp ../core/Logger.cpp ../global/EventListener.cpp ../global/EventManager.cpp && ./a.out < SAMPLEAI.PER

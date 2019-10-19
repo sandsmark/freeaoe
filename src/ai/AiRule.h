@@ -44,9 +44,9 @@ struct AiRule
     static std::shared_ptr<Condition> createCondition(const Fact type, const PlayerNumberType playerNumber, const RelOp comparison, const Age age);
     static std::shared_ptr<Condition> createCondition(const Fact type, const PlayerNumberType playerNumber, const Unit unit, const RelOp comparison, const int number);
     static std::shared_ptr<Condition> createCondition(const Fact type, const RelOp comparison, const Age age);
-    static std::shared_ptr<Condition> createCondition(const Fact type, const RelOp comparison, const DifficultyLevel age);
+    static std::shared_ptr<Condition> createCondition(const Fact type, const RelOp comparison, const DifficultyLevel level);
     static std::shared_ptr<Condition> createCondition(const Fact type, const RelOp comparison, const StartingResourcesType startingResources);
-    static std::shared_ptr<Condition> createCondition(const Fact type, const StrategicNumberName, const RelOp comparison, const int number);
+    static std::shared_ptr<Condition> createCondition(const Fact type, const StrategicNumberName strategicNumber, const RelOp comparison, const int number);
     static std::shared_ptr<Condition> createCondition(const Fact type, const Unit unit, const RelOp comparison, const int number);
     static std::shared_ptr<Condition> createCondition(const Fact type, const int number1, const RelOp comparison, const int number2);
     static std::shared_ptr<Condition> createCondition(const Fact type, const int number1, const int number2);
@@ -54,7 +54,7 @@ struct AiRule
     static std::shared_ptr<Condition> createCondition(const Fact type, const int number);
     static std::shared_ptr<Condition> createCondition(const Fact type, const ResearchItem research);
     static std::shared_ptr<Condition> createCondition(const Fact type, const Unit unit);
-    static std::shared_ptr<Condition> createCondition(const Fact type, const VictoryConditionName);
+    static std::shared_ptr<Condition> createCondition(const Fact type, const VictoryConditionName condition);
     static std::shared_ptr<Condition> createCondition(const Fact type, const RelOp comparison, const int number);
 
     static std::shared_ptr<Condition> createOrCondition(const RelOp type, std::shared_ptr<Condition> &condition1, std::shared_ptr<Condition> &condition2);
@@ -69,7 +69,7 @@ struct AiRule
     static std::shared_ptr<Action> createAction(const ActionType type, const std::string &string);
     static std::shared_ptr<Action> createAction(const ActionType type, const int number1, const int number2);
     static std::shared_ptr<Action> createAction(const ActionType type, const int number);
-    static std::shared_ptr<Action> createAction(const ActionType type, const int number, const WallType building);
+    static std::shared_ptr<Action> createAction(const ActionType type, const int number, const WallType wallType);
     static std::shared_ptr<Action> createAction(const ActionType type, const Age age);
     static std::shared_ptr<Action> createAction(const ActionType type, const Building building);
     static std::shared_ptr<Action> createAction(const ActionType type, const ResearchItem research);

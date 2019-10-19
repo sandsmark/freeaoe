@@ -7,7 +7,7 @@ aiscript:
 
 rules:
     rule { printf("got single rule\n"); }
-    | rule rules { printf("got multiple rules\n"); }
+    | rule rules { /*printf("got multiple rules\n");*/ }
 
 rule:
     OpenParen RuleStart conditions ConditionActionSeparator actions CloseParen { printf("got rule\n====\n\n"); }
