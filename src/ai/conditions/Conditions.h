@@ -122,7 +122,7 @@ struct CurrentAge : public Condition
             return;
         }
 
-        if (!checkAge(Player::Age(newValue))) {
+        if (!checkAge(player->currentAge())) {
             return;
         }
 

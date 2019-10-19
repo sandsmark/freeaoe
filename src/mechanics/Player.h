@@ -128,7 +128,7 @@ struct Player
     void applyTechEffectCommand(const genie::EffectCommand &effect);
     void setAge(const Age age);
     inline Age currentAge() {
-        return Age(m_resourcesAvailable[genie::ResourceType::CurrentAge]);
+        return Age(int(m_resourcesAvailable[genie::ResourceType::CurrentAge]));
     }
 
     void addUnit(Unit *unit);
