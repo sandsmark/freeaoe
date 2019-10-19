@@ -53,7 +53,7 @@ struct LogPrinter
         return prettyFunction.substr(begin,end);
     }
 
-    LogPrinter(const char *funcName, const char *filename, const int linenum, const LogType type) :
+    LogPrinter(const char *funcName, const std::string_view &className, const char *filename, const int linenum, const LogType type) :
         m_funcName(funcName),
         m_filename(filename),
         m_linenum(linenum),
@@ -63,7 +63,7 @@ struct LogPrinter
         *m_refs = 1;
 
 #ifndef _MSC_VER
-        std::cout <<  "\033[0;37m"<< className(funcName) << " ";
+        std::cout <<  "\033[0;37m"<< className << " ";
 #endif
 
         switch(type) {
@@ -149,11 +149,11 @@ private:
 };
 
 #ifdef _MSC_VER
-#define DBG LogPrinter(__FUNCTION__, __FILE__, __LINE__, LogPrinter::LogType::Debug)
-#define WARN LogPrinter(__FUNCTION__, __FILE__, __LINE__, LogPrinter::LogType::Warning)
+#define DBG LogPrinter(__FUNCTION__, "", __FILE__, __LINE__, LogPrinter::LogType::Debug)
+#define WARN LogPrinter(__FUNCTION__, "", __FILE__, __LINE__, LogPrinter::LogType::Warning)
 #else
-#define DBG LogPrinter(__PRETTY_FUNCTION__, __FILE__, __LINE__, LogPrinter::LogType::Debug)
-#define WARN LogPrinter(__PRETTY_FUNCTION__, __FILE__, __LINE__, LogPrinter::LogType::Warning)
+#define DBG LogPrinter(__PRETTY_FUNCTION__, LogPrinter::extractClassName(__PRETTY_FUNCTION__), __FILE__, __LINE__, LogPrinter::LogType::Debug)
+#define WARN LogPrinter(__PRETTY_FUNCTION__, LogPrinter::extractClassName(__PRETTY_FUNCTION__), __FILE__, __LINE__, LogPrinter::LogType::Warning)
 #endif
 
 class LifeTimePrinter
