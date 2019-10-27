@@ -152,9 +152,9 @@ void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos scree
             blendMode.alphaEquation = sf::BlendMode::Add;
             blendMode.alphaDstFactor = sf::BlendMode::DstAlpha;
 
-            blendMode.colorDstFactor = sf::BlendMode::SrcColor;
             blendMode.colorSrcFactor = sf::BlendMode::One;
             blendMode.colorEquation = sf::BlendMode::Add;
+            blendMode.colorDstFactor = sf::BlendMode::Zero;
             break;
         case RenderType::ConstructAvailable:
             sprite.setTexture(m_graphic->texture(m_currentFrame, m_angle, m_playerColor, ImageType::Construction));
