@@ -226,7 +226,7 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
         if (entity->isUnit()) {
             Unit::Ptr unit = Entity::asUnit(entity);
 
-            if (visibility == VisibilityMap::Visible) {
+            if (visibility == VisibilityMap::Visible || visibility == VisibilityMap::Explored) {
                 entity->isVisible = true;
                 visibleUnits.push_back(Entity::asUnit(entity));
                 entity->renderer().render(*renderTarget->renderTarget_, camera->absoluteScreenPos(entity->position()), RenderType::Shadow);
