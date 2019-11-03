@@ -335,8 +335,14 @@ Config::Config(const std::string &applicationName)
         WARN << "Failed to get user configuration path!";
     }
     if (rawPath) {
+        try {
         m_filePath = std::wstring_convert<
                 std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}.to_bytes(std::wstring(rawPath));
+        } catch (const std::exception &e) {
+            std::cerr << "Failed to convert wchar* to char*: '" << e.what() << "'" << std::endl;
+            std::cerr << "While trying to convert '" << std::wstring(rawPath) << "'" << std::endl;
+            m_filePath.clear();
+        }
         m_filePath += std::string("\\");
         CoTaskMemFree(static_cast<void*>(rawPath));
     }
