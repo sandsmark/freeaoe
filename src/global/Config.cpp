@@ -340,7 +340,10 @@ Config::Config(const std::string &applicationName)
                 std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}.to_bytes(std::wstring(rawPath));
         } catch (const std::exception &e) {
             std::cerr << "Failed to convert wchar* to char*: '" << e.what() << "'" << std::endl;
-            std::cerr << "While trying to convert '" << std::wstring(rawPath) << "'" << std::endl;
+
+            std::cout << "While trying to convert '";
+            std::wcout << std::wstring(rawPath);
+            std::cout << "'" << std::endl;
             m_filePath.clear();
         }
         m_filePath += std::string("\\");
