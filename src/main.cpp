@@ -88,7 +88,6 @@ int main(int argc, char **argv) try
                 WARN << "failed to open file dialog!";
                 return 1;
             }
-            DBG << "set up file dialog";
             filediag.setErrorString(e.what());
 
             const std::string selectedPath = filediag.getPath();

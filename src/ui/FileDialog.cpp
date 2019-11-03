@@ -43,9 +43,7 @@ bool FileDialog::setup(int width, int height)
     const Size buttonSize(250, 50);
 
     m_fileList = std::make_unique<ListView>(SfmlRenderTarget::defaultFont(), ScreenRect(ScreenPos(width/2 - width*3/8, 55), Size(width*3/4, 550)));
-    DBG << "setting current path";
     m_fileList->setCurrentPath(std::filesystem::current_path().string());
-    DBG << "set current path";
 
     m_okButton = std::make_unique<Button>("OK", SfmlRenderTarget::defaultFont(), ScreenRect(ScreenPos(m_fileList->rect().x, 700), buttonSize));
 
@@ -341,13 +339,10 @@ void ListView::setCurrentPath(std::string pathString)
     try {
 
         // avoid crashing
-        DBG << "Pre possibly crashing";
         if (!std::filesystem::exists(path) || !std::filesystem::is_directory(path)) {
             throw std::filesystem::filesystem_error("fuckings to boost which I blame for this shitty API", std::error_code());
         }
-        DBG << "creating iterator";
         std::filesystem::directory_iterator boostIsShit(path);
-        DBG << "looping";
         for (std::filesystem::directory_entry entry : boostIsShit) {
             if (entry.path().filename() == "Data" && entry.is_directory()) {
                 hasDataFolder = true;
@@ -355,7 +350,6 @@ void ListView::setCurrentPath(std::string pathString)
 
             m_list.push_back(entry.path().string());
         }
-        DBG << "generated list";
 
     } catch (const std::filesystem::filesystem_error &err) {
         WARN << "Err" << err.what();
@@ -365,17 +359,15 @@ void ListView::setCurrentPath(std::string pathString)
         }
 
         pathString = m_currentPath.string();
-        path = std::filesystem::path(pathString);
     }
+    path = std::filesystem::path(pathString);
 
-    DBG << "Checking for parent";
     if (!path.parent_path().empty() && pathString != path.parent_path()) {
         std::filesystem::path dotdot = pathString;
         dotdot += "/..";
         m_list.push_back(dotdot.string());
     }
 
-    DBG << "SOrting";
     std::sort(m_list.begin(), m_list.end(), [](const std::filesystem::path &a, const std::filesystem::path &b){
         const bool aIsDir = std::filesystem::is_directory(a);
         const bool bIsDir = std::filesystem::is_directory(b);
@@ -397,7 +389,6 @@ void ListView::setCurrentPath(std::string pathString)
     m_currentItem = 0;
     m_offset = 0;
 
-    DBG << "setting up texts";
     for (size_t i=0; i<m_texts.size(); i++) {
         if (i < m_list.size()) {
             std::string filename = std::filesystem::path(m_list[i]).filename().string();
