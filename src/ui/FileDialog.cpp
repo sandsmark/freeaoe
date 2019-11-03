@@ -350,7 +350,9 @@ void ListView::setCurrentPath(std::string pathString)
                 continue;
             }
             DBG << "Checking" << entry.path().filename().string();
+            DBG << "got filename";
             DBG << "Is directory?" << entry.is_directory();
+            DBG << "checked directory";
 
             if (entry.path().filename() == "Data" && entry.is_directory()) {
                 hasDataFolder = true;
