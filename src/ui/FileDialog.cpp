@@ -109,7 +109,7 @@ std::string FileDialog::getPath()
         m_fileList->handleEvent(event);
         m_okButton->enabled = m_fileList->hasDataFolder;
 
-        m_renderWindow->clear(sf::Color::Black);
+        m_renderWindow->clear(sf::Color(32, 32, 32));
         m_openDownloadUrlButton->render(m_renderWindow.get());
         m_cancelButton->render(m_renderWindow.get());
         m_okButton->render(m_renderWindow.get());
@@ -223,6 +223,7 @@ ListView::ListView(const sf::Font &font, const ScreenRect rect) :
         text->setOutlineThickness(1);
         const int textHeight = text->getLocalBounds().height;
         text->setPosition(rect.x + 10, rect.y + i * m_itemHeight + textHeight/3);
+        text->setOutlineColor(sf::Color::Transparent);
 
         m_texts.push_back(std::move(text));
     }
@@ -230,24 +231,23 @@ ListView::ListView(const sf::Font &font, const ScreenRect rect) :
     m_background = std::make_unique<sf::RectangleShape>();
 
     m_background->setOutlineThickness(2);
-    m_background->setPosition(m_rect.topLeft() - ScreenPos(2, 2));
-    m_background->setSize(Size(m_rect.width + 4, m_rect.height + 4));
-    m_background->setFillColor(sf::Color::Transparent);
+    m_background->setPosition(m_rect.topLeft());// - ScreenPos(2, 2));
+    m_background->setSize(Size(m_rect.width/* + 4*/, m_rect.height/* + 4*/));
+    m_background->setFillColor(sf::Color::Black);
     m_background->setOutlineColor(sf::Color::White);
 
     m_selectedOutline = std::make_unique<sf::RectangleShape>();
     m_selectedOutline->setOutlineThickness(1);
     m_selectedOutline->setPosition(m_rect.topLeft());
-    m_selectedOutline->setSize(Size(m_rect.width - 20, m_itemHeight));
     m_selectedOutline->setFillColor(sf::Color::White);
     m_selectedOutline->setOutlineColor(sf::Color::Transparent);
 
     m_scrollBar = std::make_unique<sf::RectangleShape>();
     m_scrollBar->setOutlineThickness(2);
-    m_scrollBar->setPosition(m_rect.topRight() + ScreenPos(-19, 5));
-    m_scrollBar->setSize(Size(18, 10));
-    m_scrollBar->setFillColor(sf::Color::White);
-    m_scrollBar->setOutlineColor(sf::Color::Transparent);
+    m_scrollBar->setPosition(m_rect.topRight() + ScreenPos(-20, 5));
+    m_scrollBar->setSize(Size(0, 10));
+    m_scrollBar->setFillColor(sf::Color(0, 0, 0, 128));
+    m_scrollBar->setOutlineColor(sf::Color::White);
 
     updateScrollbar();
 }
@@ -265,11 +265,16 @@ void ListView::handleEvent(const sf::Event &event)
     }
 
     if (event.type == sf::Event::MouseButtonReleased) {
+        m_scrollBar->setFillColor(sf::Color(0, 0, 0, 128));
         m_pressed = false;
         return;
     }
 
     if (event.type == sf::Event::MouseWheelScrolled) {
+        if (event.mouseWheelScroll.wheel != sf::Mouse::VerticalWheel) {
+            return;
+        }
+
         if (event.mouseWheelScroll.delta < 0) {
             setOffset(m_offset + 1);
         } else {
@@ -288,6 +293,7 @@ void ListView::handleEvent(const sf::Event &event)
 
     // scrollbar hit
     if (mousePos.x > m_rect.x + m_rect.width - 20) {
+        m_scrollBar->setFillColor(sf::Color(128, 128, 128, 128));
         moveScrollbar(mousePos.y);
         m_pressed = true;
         return;
@@ -313,9 +319,24 @@ void ListView::render(sf::RenderWindow *window)
 {
     window->draw(*m_background);
 
+    for (size_t i=0; i<m_texts.size(); i++) {
+        if (i+m_offset >= m_list.size()) {
+            continue;
+        }
+
+        if (std::filesystem::is_directory(m_list[i+m_offset])) {
+            m_texts[i]->setFillColor(sf::Color::White);
+        } else {
+            m_texts[i]->setFillColor(sf::Color(128, 128, 128));
+        }
+    }
+
     if (m_currentItem - m_offset >= 0 && m_currentItem - m_offset < numVisible) {
+        m_selectedOutline->setSize(Size(m_rect.width, m_itemHeight));
         m_selectedOutline->setPosition(ScreenPos(m_rect.x, m_rect.y + (m_currentItem - m_offset) * m_itemHeight));
         window->draw(*m_selectedOutline);
+
+        m_texts[m_currentItem - m_offset]->setFillColor(sf::Color::Black);
     }
 
     for (std::unique_ptr<sf::Text> &text : m_texts) {
@@ -353,9 +374,6 @@ void ListView::setCurrentPath(std::string pathString)
 
             // MSVC and/or Wine has a troubled relationship with UTF-8 path names
         } catch (const std::exception &e) { WARN << "error adding dir entry, probably windows shit" << e.what(); }
-
-        DBG << "Finished looping over entries";
-
     } catch (const std::filesystem::filesystem_error &err) {
         WARN << "Err" << err.what();
         if (m_currentPath.empty()) {
@@ -441,7 +459,9 @@ void ListView::setOffset(int offset)
             }
             if (std::filesystem::is_directory(m_list[i+m_offset])) {
                 m_texts[i]->setString("[" + filename + "]");
+                m_texts[i]->setFillColor(sf::Color(192, 192, 192));
             } else{
+                m_texts[i]->setFillColor(sf::Color(192, 192, 192));
                 m_texts[i]->setString(filename);
             }
         } else {
@@ -465,12 +485,17 @@ void ListView::updateScrollbar() const
     }
 
     float scrollbarSize =  m_rect.height * (float(numVisible) / m_list.size());
-    scrollbarSize = std::min(scrollbarSize, m_rect.height);
+    float width = 20;
+    if (scrollbarSize >= m_rect.height) {
+        m_scrollBar->setSize(Size(0, 0));
+        return;
+    }
+
     scrollbarSize = std::max(scrollbarSize, 10.f);
-    m_scrollBar->setSize(Size(18, scrollbarSize));
+    m_scrollBar->setSize(Size(width, scrollbarSize));
 
     int scrollbarPos = m_rect.height * float(m_offset) / m_list.size();
-    m_scrollBar->setPosition(m_rect.topRight() + ScreenPos(-18, scrollbarPos));
+    m_scrollBar->setPosition(m_rect.topRight() + ScreenPos(-20, scrollbarPos));
 }
 
 void ListView::moveScrollbar(int mouseY)
