@@ -313,9 +313,7 @@ bool Graphic::checkClick(const ScreenPos &pos, uint32_t frame_num, float angle) 
         }
         DBG << "Assuming" << gameVersion << "needs to check pixels with mask";
         // I assume this is needed for another version of Genie
-        genie::XY spot;
-        spot.x = std::round(pos.x);
-        spot.y = std::round(pos.y);
+        genie::XY spot(std::round(pos.x), std::round(pos.y));
 
         const std::vector<genie::XY> &mask = frame->img_data.transparency_mask;
         return std::find(mask.begin(), mask.end(), spot) != mask.end();
