@@ -1,3 +1,5 @@
+// flex is shit, so unshit it
+#include <stdint.h>
 
 #line 2 "lex.yy.cc"
 
