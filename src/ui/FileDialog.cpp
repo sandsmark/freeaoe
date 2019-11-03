@@ -350,6 +350,8 @@ void ListView::setCurrentPath(std::string pathString)
             }
 
             m_list.push_back(entry.path().string());
+
+            // MSVC and/or Wine has a troubled relationship with UTF-8 path names
         } catch (const std::exception &e) { WARN << "error adding dir entry, probably windows shit" << e.what(); }
 
         DBG << "Finished looping over entries";
