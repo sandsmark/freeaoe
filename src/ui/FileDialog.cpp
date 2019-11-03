@@ -342,25 +342,16 @@ void ListView::setCurrentPath(std::string pathString)
         if (!std::filesystem::exists(path) || !std::filesystem::is_directory(path)) {
             throw std::filesystem::filesystem_error("fuckings to boost which I blame for this shitty API", std::error_code());
         }
-        std::filesystem::directory_iterator boostIsShit(path);
-        DBG << "Looping over dir entries";
-        for (std::filesystem::directory_entry entry : boostIsShit) {
-            if (!entry.exists()) {
-                WARN << "Got invalid dir entry?";
-                continue;
-            }
-            DBG << "Checking" << entry.path().filename().string();
-            DBG << "got filename";
-            DBG << "Is directory?" << entry.is_directory();
-            DBG << "checked directory";
 
+        std::filesystem::directory_iterator boostIsShit(path);
+        for (std::filesystem::directory_entry entry : boostIsShit) try {
             if (entry.path().filename() == "Data" && entry.is_directory()) {
                 hasDataFolder = true;
             }
 
-            DBG << "Pushing back as string";
             m_list.push_back(entry.path().string());
-        }
+        } catch (const std::exception &e) { WARN << "error adding dir entry, probably windows shit" << e.what(); }
+
         DBG << "Finished looping over entries";
 
     } catch (const std::filesystem::filesystem_error &err) {
