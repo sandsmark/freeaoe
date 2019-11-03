@@ -27,7 +27,7 @@ namespace Conditions {
 struct ConstantCondition : public Condition
 {
     ConstantCondition(const bool _value) : value(_value) {}
-    bool satisfied(AiRule */*owner*/) override { return value; }
+    bool satisfied(AiRule * /*owner*/) override { return value; }
     const bool value;
 };
 
@@ -86,7 +86,7 @@ struct CompareCondition : public Condition
         return false;
     }
 
-    bool satisfied(AiRule */*owner*/) override
+    bool satisfied(AiRule * /*owner*/) override
     {
         return actualCompare(m_value1, m_comparison, m_value2);
     }
