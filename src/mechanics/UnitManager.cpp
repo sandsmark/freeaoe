@@ -294,7 +294,7 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
                 (((unit->targetBlinkTimeLeft) / 500) % 2 == 0) &&
                 !unit->isDead() && !unit->isDying();
 
-        if (blinkingAsTarget || m_selectedUnits.count(unit)) { // draw health indicator
+        if (blinkingAsTarget || m_selectedUnits.count(unit)) {
             sf::RectangleShape rect;
             sf::CircleShape circle;
             circle.setFillColor(sf::Color::Transparent);
@@ -336,6 +336,30 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
             circle.setPosition(pos.x - width, pos.y - height + 1);
             renderTarget->draw(circle);
 
+            // TODO: figure out what this is used for in which games
+//            bool showOutline = false;
+            bool showHealthbar = false;
+            switch(unit->data()->SelectionEffect) {
+            case genie::Unit::ShowHPHideOutline:
+//                showOutline = false;
+                showHealthbar = true;
+                break;
+            case genie::Unit::ShowHPShowOutline:
+//                showOutline = true;
+                showHealthbar = true;
+                break;
+            case genie::Unit::HideHPHideOutline:
+//                showOutline = false;
+                showHealthbar = false;
+                break;
+            case genie::Unit::HideHPShowOutline:
+//                showOutline = true;
+                showHealthbar = false;
+                break;
+            default:
+                WARN << "invalid selection effect" << unit->data()->SelectionEffect;
+                break;
+            }
 
             if (!blinkingAsTarget) {
                 pos.x -= Constants::TILE_SIZE_HORIZONTAL / 8;
@@ -344,6 +368,10 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
                 rect.setOutlineColor(sf::Color::Transparent);
                 rect.setPosition(pos);
 
+            }
+
+            // draw health indicator
+            if (showHealthbar) {
                 if (unit->healthLeft() < 1.) {
                     rect.setFillColor(sf::Color::Red);
                     rect.setSize(sf::Vector2f(Constants::TILE_SIZE_HORIZONTAL / 4., 2));

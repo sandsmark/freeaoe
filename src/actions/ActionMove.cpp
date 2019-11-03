@@ -851,6 +851,7 @@ void ActionMove::updatePath() noexcept
 
     MapPos newDest = m_destination;
     if (!isPassable(m_destination.x, m_destination.y)) {
+        WARN << "target not passable, finding closest possible position";
         newDest = findClosestWalkableBorder(unit->position(), m_destination, 2);
         m_destination = newDest;
     }
@@ -861,6 +862,7 @@ void ActionMove::updatePath() noexcept
     // Try coarser
     // Uglier, but hopefully faster
     if (m_path.empty()) {
+        WARN << "failed to find path, trying 0.2 resolution";
         if (newDest != m_destination) {
             newDest = findClosestWalkableBorder(unit->position(), m_destination, 5);
             m_destination = newDest;
@@ -871,6 +873,7 @@ void ActionMove::updatePath() noexcept
     TIME_TICK;
 
     if (m_path.empty()) {
+        WARN << "failed to find path, trying 0.1 resolution";
         if (newDest != m_destination) {
             newDest = findClosestWalkableBorder(unit->position(), m_destination, 10);
             m_destination = newDest;
