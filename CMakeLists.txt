@@ -31,7 +31,7 @@ else()
     message(STATUS "Not enabling IPO/LTO")
 endif()
 
-find_package(SDL2 REQUIRED)
+#find_package(SDL2 REQUIRED)
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
     add_definitions(-DDEBUG)
@@ -248,8 +248,8 @@ set(ALL_LIBRARIES
     sfml-graphics
     genieutils
     ${EXTRA_LIBS}
-    SDL2::SDL2
-    SDL2::SDL2main
+#    SDL2::SDL2
+#    SDL2::SDL2main
 )
 
 add_executable(freeaoe src/main.cpp ${ENGINE_SRC})
