@@ -366,7 +366,8 @@ void ListView::setCurrentPath(std::string pathString)
 
         std::filesystem::directory_iterator boostIsShit(path);
         for (std::filesystem::directory_entry entry : boostIsShit) try {
-            if (entry.path().filename() == "Data" && entry.is_directory()) {
+            const std::string entryName = entry.path().filename();
+            if ((entryName == "Data" || entryName == "resources") && entry.is_directory()) {
                 hasDataFolder = true;
             }
 
