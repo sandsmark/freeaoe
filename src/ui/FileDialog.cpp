@@ -43,7 +43,7 @@ bool FileDialog::setup(int width, int height)
     const Size buttonSize(250, 50);
 
     m_fileList = std::make_unique<ListView>(SfmlRenderTarget::defaultFont(), ScreenRect(ScreenPos(width/2 - width*3/8, 55), Size(width*3/4, 550)));
-    m_fileList->setCurrentPath(std::filesystem::current_path());
+    m_fileList->setCurrentPath(std::filesystem::current_path().string());
 
     m_okButton = std::make_unique<Button>("OK", SfmlRenderTarget::defaultFont(), ScreenRect(ScreenPos(m_fileList->rect().x, 700), buttonSize));
 
