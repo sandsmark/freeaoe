@@ -43,7 +43,7 @@ bool FileDialog::setup(int width, int height)
     const Size buttonSize(250, 50);
 
     m_fileList = std::make_unique<ListView>(SfmlRenderTarget::defaultFont(), ScreenRect(ScreenPos(width/2 - width*3/8, 55), Size(width*3/4, 550)));
-    m_fileList->setCurrentPath(std::string());
+    m_fileList->setCurrentPath(std::filesystem::current_path());
 
     m_okButton = std::make_unique<Button>("OK", SfmlRenderTarget::defaultFont(), ScreenRect(ScreenPos(m_fileList->rect().x, 700), buttonSize));
 
@@ -212,7 +212,8 @@ void Button::render(sf::RenderWindow *window)
 }
 
 ListView::ListView(const sf::Font &font, const ScreenRect rect) :
-    m_rect(rect)
+    m_rect(rect),
+    m_currentPath("/")
 {
     m_itemHeight = rect.height / numVisible;
 
@@ -327,6 +328,10 @@ void ListView::render(sf::RenderWindow *window)
 
 void ListView::setCurrentPath(std::string path)
 {
+    if (path.empty()) {
+        path = "/";
+    }
+
     m_list.clear();
 
     hasDataFolder = false;
@@ -347,6 +352,7 @@ void ListView::setCurrentPath(std::string path)
     } catch (const std::filesystem::filesystem_error &err) {
         WARN << "Err" << err.what();
         if (m_currentPath.empty()) {
+            WARN << "not even a current path, blame boost";
             return;
         }
 
