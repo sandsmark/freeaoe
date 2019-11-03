@@ -81,7 +81,7 @@ public:
 
     Drawable::Image::Ptr createImage(const Size &size, const uint8_t *bytes) override;
     void draw(const Drawable::Image::Ptr &image, const ScreenPos &position) override;
-    void draw(const std::shared_ptr<IRenderTarget> &renderTarget) override;
+    void draw(const std::shared_ptr<IRenderTarget> &renderTarget, const ScreenPos &pos = ScreenPos(0, 0)) override;
 
     //----------------------------------------------------------------------------
     /// Displays frame.
@@ -92,7 +92,7 @@ public:
 
     std::shared_ptr<IRenderTarget> createTextureTarget(const Size &size) override;
 
-    void clear() override;
+    void clear(const Drawable::Color &color = Drawable::Color(0, 0, 0, 255)) override;
 
     std::unique_ptr<sf::RenderTexture> m_renderTexture;
 

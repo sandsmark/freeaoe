@@ -9,7 +9,6 @@
 #include "mechanics/Unit.h"
 #include "mechanics/UnitManager.h"
 #include "render/Camera.h"
-#include "render/SfmlRenderTarget.h"
 #include "resource/AssetManager.h"
 #include "resource/DataManager.h"
 
@@ -19,9 +18,6 @@
 #include <genie/resource/Color.h>
 #include <genie/resource/PalFile.h>
 
-#include <SFML/Graphics/CircleShape.hpp>
-#include <SFML/Graphics/RectangleShape.hpp>
-#include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Event.hpp>
 
 #include <algorithm>
@@ -30,7 +26,7 @@
 
 #include <assert.h>
 
-Minimap::Minimap(const std::shared_ptr<SfmlRenderTarget> &renderTarget) :
+Minimap::Minimap(const IRenderTargetPtr &renderTarget) :
     m_renderTarget(renderTarget),
     m_rect(865, 815, 400, 200)
 {
@@ -112,10 +108,10 @@ void Minimap::updateCamera()
     m_cameraRect.y = m_rect.y + cameraPos.y * scaleY + center.y - m_cameraRect.height / 2;
 }
 
-sf::Color Minimap::unitColor(const std::shared_ptr<Unit> &unit)
+Drawable::Color Minimap::unitColor(const std::shared_ptr<Unit> &unit)
 {
     if (unit->selected) {
-        return sf::Color::White;
+        return Drawable::White;
     }
 
     switch(m_mode) {
@@ -123,12 +119,12 @@ sf::Color Minimap::unitColor(const std::shared_ptr<Unit> &unit)
         //TODO
         break;
     case MinimapMode::Diplomatic:
-        if (unit->playerId == 0) {
-            return sf::Color(128, 192, 128);
+        if (unit->playerId == UnitManager::GaiaID) {
+            return Drawable::Color(128, 192, 128);
         } else if (unit->playerId == 1) { ///TODO fixme get the human player
-            return sf::Color::Blue;
+            return Drawable::Blue;
         } else {
-            return sf::Color::Red;
+            return Drawable::Red;
         }
         break;
     case MinimapMode::Economic:
@@ -138,13 +134,16 @@ sf::Color Minimap::unitColor(const std::shared_ptr<Unit> &unit)
         break;
     }
 
-    return sf::Color::Red;
+    return Drawable::Red;
 }
 
 
 bool Minimap::init()
 {
-    return m_terrainTexture.create(m_rect.width, m_rect.height);
+    m_terrainTexture = m_renderTarget->createTextureTarget(m_rect.size());
+    DBG << "creating texture target with size" << m_rect.size();
+    m_terrainUpdated = true;
+    return m_terrainTexture != nullptr;
 }
 
 bool Minimap::handleEvent(sf::Event event)
@@ -205,22 +204,30 @@ bool Minimap::update(Time /*time*/)
     const MapRect mapDimensions(0, 0, m_map->getCols(), m_map->getRows());
 
     if (m_terrainUpdated) {
-        if (m_terrainTexture.getSize().x != m_rect.width || m_terrainTexture.getSize().y != m_rect.height) {
-            m_terrainTexture.create(m_rect.width, m_rect.height);
+        DBG << "redrawing terrain";
+        if (!m_terrainTexture ||  m_terrainTexture->getSize() != m_rect.size()) {
+            DBG << "recreating terrain";
+            m_terrainTexture = m_renderTarget->createTextureTarget(m_rect.size());
         }
 
-        m_terrainTexture.clear(sf::Color::Transparent);
+        m_terrainTexture->clear(Drawable::Transparent);
 
         const float scaleX = m_rect.boundingMapRect().width / mapDimensions.width / 2;
         const float scaleY = m_rect.boundingMapRect().height / mapDimensions.height / 2;
 
-        sf::CircleShape background(m_rect.width/ 2, 4);
-        background.setScale(1, m_rect.height / m_rect.width);
-        background.setFillColor(sf::Color::Black);
-        m_terrainTexture.draw(background);
+        Drawable::Circle background;
+        background.aspectRatio = m_rect.height / m_rect.width;
+        background.radius = std::floor(m_rect.width / 2);
+        background.pointCount = 4;
+        background.fillColor = Drawable::Black;
+        background.filled = true;
+        m_terrainTexture->draw(background);
 
-        sf::CircleShape tileShape(scaleY, 4);
-        tileShape.setScale(1, m_rect.height / m_rect.width);
+        Drawable::Circle tileShape;
+        tileShape.aspectRatio =  m_rect.height / m_rect.width;
+        tileShape.radius = scaleY;
+        tileShape.filled = true;
+        tileShape.pointCount = 4;
         const ScreenPos center(m_rect.width/2, m_rect.height/2);
 
         const std::vector<genie::Color> &colors = AssetManager::Inst()->getPalette(50500).getColors();
@@ -235,20 +242,20 @@ bool Minimap::update(Time /*time*/)
                 const genie::Terrain &terrain = DataManager::Inst().getTerrain(tile.terrainId);
                 const genie::Color &color = colors[terrain.Colors[0]];
                 if (visibility == VisibilityMap::Explored) {
-                    tileShape.setFillColor(sf::Color(color.r/2, color.g/2, color.b/2));
+                    tileShape.fillColor = Drawable::Color(color.r/2, color.g/2, color.b/2);
                 } else {
-                    tileShape.setFillColor(sf::Color(color.r, color.g, color.b));
+                    tileShape.fillColor = Drawable::Color(color.r, color.g, color.b);
                 }
 
                 // WTF TODO FIXME why the fuck is flipping row and col the correct here..
                 const ScreenPos pos = MapPos(row * scaleX, col * scaleY).toScreen();
-                tileShape.setPosition(pos.x, pos.y + center.y - scaleY / 2);
-                m_terrainTexture.draw(tileShape);
+                tileShape.center = ScreenPos(pos.x, pos.y + center.y - scaleY / 2);
+                m_terrainTexture->draw(tileShape);
 
             }
         }
 
-        m_terrainTexture.display();
+        m_terrainTexture->display();
 
         m_terrainUpdated = false;
     }
@@ -256,11 +263,10 @@ bool Minimap::update(Time /*time*/)
     if (m_unitsUpdated && m_unitManager) {
         TIME_THIS;
 
-        if (m_unitsTexture.getSize().x != m_rect.width || m_unitsTexture.getSize().y != m_rect.height) {
-            m_unitsTexture.create(m_rect.width, m_rect.height);
+        if (!m_unitsTexture || m_unitsTexture->getSize() != m_rect.size()) {
+            m_unitsTexture = m_renderTarget->createTextureTarget(m_rect.size());
         }
-
-        m_unitsTexture.clear(sf::Color::Transparent);
+        m_unitsTexture->clear(Drawable::Transparent);
 
 
         const MapRect mapDimensions(0, 0, m_map->getCols(), m_map->getRows());
@@ -269,10 +275,14 @@ bool Minimap::update(Time /*time*/)
 
         const ScreenPos center(m_rect.width/2, m_rect.height/2);
 
-        sf::CircleShape diamondSprite(scaleY, 4);
-        diamondSprite.setScale(1, m_rect.height / m_rect.width);
+        Drawable::Circle diamondSprite;
+        diamondSprite.pointCount = 4;
+        diamondSprite.radius = scaleY;
+        diamondSprite.aspectRatio = m_rect.height / m_rect.width;
+        diamondSprite.filled = true;
 
-        sf::RectangleShape rectangleSprite;
+        Drawable::Rect rectangleSprite;
+        rectangleSprite.filled = true;
 
         const std::vector<genie::Color> &colors = AssetManager::Inst()->getPalette(50500).getColors();
 
@@ -307,24 +317,22 @@ bool Minimap::update(Time /*time*/)
             // WARN: according to genieutils this is the inverted of what the game officially does,
             // but squares on the minimap look soooo ugly
             if (mode == genie::Unit::MinimapBuilding) {
-                rectangleSprite.setSize(sf::Vector2f(size, size));
-                rectangleSprite.setPosition(pos);
-                rectangleSprite.setFillColor(unitColor(unit));
-                m_unitsTexture.draw(rectangleSprite);
+                rectangleSprite.rect = ScreenRect(pos, Size(size, size));
+                rectangleSprite.fillColor = unitColor(unit);
+                m_unitsTexture->draw(rectangleSprite);
             } else if (mode == genie::Unit::MinimapUnit) {
-                diamondSprite.setFillColor(unitColor(unit));
-                diamondSprite.setPosition(pos);
-                diamondSprite.setRadius(size);
-                m_unitsTexture.draw(diamondSprite);
+                diamondSprite.fillColor = unitColor(unit);
+                diamondSprite.center = pos;
+                diamondSprite.radius = size;
+                m_unitsTexture->draw(diamondSprite);
             } else if (mode == genie::Unit::MinimapLargeTerrain) {
-                rectangleSprite.setSize(sf::Vector2f(size, size));
-                rectangleSprite.setPosition(pos);
+                rectangleSprite.rect = ScreenRect(pos, Size(size, size));
                 const genie::Color &color = colors[unit->data()->MinimapColor];
-                rectangleSprite.setFillColor(sf::Color(color.r, color.g, color.b));
-                m_unitsTexture.draw(rectangleSprite);
+                rectangleSprite.fillColor = Drawable::Color(color.r, color.g, color.b);
+                m_unitsTexture->draw(rectangleSprite);
             }
         }
-        m_unitsTexture.display();
+        m_unitsTexture->display();
         m_unitsUpdated = false;
     }
 
@@ -333,8 +341,8 @@ bool Minimap::update(Time /*time*/)
 
 void Minimap::draw()
 {
-    m_renderTarget->draw(m_terrainTexture.getTexture(), m_rect.topLeft());
-    m_renderTarget->draw(m_unitsTexture.getTexture(), m_rect.topLeft());
+    m_renderTarget->draw(m_terrainTexture, m_rect.topLeft());
+    m_renderTarget->draw(m_unitsTexture, m_rect.topLeft());
 
     if (m_rect.isEmpty()) {
         return;
@@ -345,16 +353,16 @@ void Minimap::draw()
         return;
     }
 
-    sf::RectangleShape rect;
-    rect.setSize(cameraRect.size());
-    rect.setFillColor(sf::Color::Transparent);
-    rect.setOutlineThickness(1);
+    Drawable::Rect rect;
+    rect.rect = ScreenRect(ScreenPos(cameraRect.x, cameraRect.y + 1), Size(cameraRect.size()));
+    rect.fillColor = Drawable::Transparent;
+    rect.filled = true;
+    rect.borderSize = 1;
 
-    rect.setOutlineColor(sf::Color::Black);
-    rect.setPosition(cameraRect.x, cameraRect.y + 1);
+    rect.borderColor = Drawable::Black;
     m_renderTarget->draw(rect);
 
-    rect.setPosition(cameraRect.topLeft());
-    rect.setOutlineColor(sf::Color::White);
+    rect.rect.setTopLeft(cameraRect.topLeft());
+    rect.borderColor = Drawable::White;
     m_renderTarget->draw(rect);
 }

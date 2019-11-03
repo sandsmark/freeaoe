@@ -76,8 +76,6 @@ struct Rect : public Shape
 
 struct Circle : public Shape
 {
-    ScreenRect boundingRect;
-
     int pointCount = 0;
     ScreenPos center;
     float radius = 0.f;
@@ -170,7 +168,7 @@ public:
 
     virtual void draw(const Drawable::Rect &rect) = 0;
     virtual void draw(const Drawable::Circle &circle) = 0;
-    virtual void draw(const std::shared_ptr<IRenderTarget> &renderTarget) = 0;
+    virtual void draw(const std::shared_ptr<IRenderTarget> &renderTarget, const ScreenPos &pos = ScreenPos(0, 0)) = 0;
 
     virtual Drawable::Image::Ptr createImage(const Size &size, const uint8_t *pixels) = 0;
     Drawable::Image::Ptr convertFrameToImage(const genie::SlpFramePtr &frame);
@@ -182,7 +180,7 @@ public:
     virtual Drawable::Text::Ptr createText() = 0;
     virtual void draw(const Drawable::Text::Ptr &text) = 0;
 
-    virtual void clear() = 0;
+    virtual void clear(const Drawable::Color &color = Drawable::Color(0, 0, 0, 255)) = 0;
 
 
 protected:

@@ -1,15 +1,13 @@
 #ifndef MINIMAP_H
 #define MINIMAP_H
 
-#include <SFML/Graphics/Color.hpp>
-#include <SFML/Graphics/RenderTexture.hpp>
 #include <memory>
 
 #include "core/Types.h"
 #include "mechanics/IState.h"
+#include "render/IRenderTarget.h"
 
 class Map;
-class SfmlRenderTarget;
 class UnitManager;
 namespace sf {
 class Event;
@@ -27,7 +25,7 @@ public:
         Diplomatic
     };
 
-    Minimap(const std::shared_ptr<SfmlRenderTarget> &renderTarget);
+    Minimap(const IRenderTargetPtr &renderTarget);
 
     void setMap(const std::shared_ptr<Map> &map);
     void setUnitManager(const std::shared_ptr<UnitManager> &unitManager);
@@ -44,16 +42,16 @@ private:
     void updateUnits();
     void updateTerrain();
     void updateCamera();
-    sf::Color unitColor(const std::shared_ptr<Unit> &unit);
+    Drawable::Color unitColor(const std::shared_ptr<Unit> &unit);
 
     bool m_unitsUpdated = false;
     bool m_terrainUpdated = false;
     std::shared_ptr<Map> m_map;
     std::shared_ptr<UnitManager> m_unitManager;
-    std::shared_ptr<SfmlRenderTarget> m_renderTarget;
+    IRenderTargetPtr m_renderTarget;
     ScreenRect m_rect;
-    sf::RenderTexture m_terrainTexture;
-    sf::RenderTexture m_unitsTexture;
+    IRenderTargetPtr m_terrainTexture;
+    IRenderTargetPtr m_unitsTexture;
     MapPos m_lastCameraPos;
     ScreenRect m_cameraRect;
     bool m_mousePressed = false;

@@ -275,13 +275,13 @@ std::shared_ptr<IRenderTarget> SfmlRenderTarget::createTextureTarget(const Size 
 }
 
 
-void SfmlRenderTarget::clear()
+void SfmlRenderTarget::clear(const Drawable::Color &color)
 {
-    renderTarget_->clear();
+    renderTarget_->clear(convertColor(color));
 }
 
 
-void SfmlRenderTarget::draw(const std::shared_ptr<IRenderTarget> &renderTarget)
+void SfmlRenderTarget::draw(const std::shared_ptr<IRenderTarget> &renderTarget, const ScreenPos &pos)
 {
     if (!renderTarget) {
         WARN << "can't render null render target";
@@ -295,7 +295,8 @@ void SfmlRenderTarget::draw(const std::shared_ptr<IRenderTarget> &renderTarget)
     }
 
     sfmlRenderTarget->m_renderTexture->display();
-    draw(sfmlRenderTarget->m_renderTexture->getTexture(), ScreenPos(0, 0));
+//    DBG << "rendrering texture target at" << pos;
+    draw(sfmlRenderTarget->m_renderTexture->getTexture(), pos);
 }
 
 
