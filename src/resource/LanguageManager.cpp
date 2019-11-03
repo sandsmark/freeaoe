@@ -47,7 +47,7 @@ bool LanguageManager::initialize(const std::string &gamePath)
             return true;
         }
 
-        throw error;
+        throw std::runtime_error("Failed to load language file " + filename);
     }
 
     return true;
