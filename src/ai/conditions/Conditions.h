@@ -95,36 +95,21 @@ struct CompareCondition : public Condition
     const RelOp m_comparison;
 };
 
-struct CurrentAge : public Condition
+struct ResourceValue : public Condition
 {
-    CurrentAge(const Age targetAge);
-
-    bool checkAge(const Player::Age age)
-    {
-        switch(age) {
-        case Player::Age::DarkAge:
-            return m_targetAge == Age::DarkAge;
-        case Player::Age::FeudalAge:
-            return m_targetAge == Age::FeudalAge;
-        case Player::Age::CastleAge:
-            return m_targetAge == Age::CastleAge;
-        case Player::Age::ImperialAge:
-            return m_targetAge == Age::ImperialAge;
-        default:
-            WARN << "invalid age" << age;
-            return false;
-        }
-    }
+    ResourceValue(const genie::ResourceType m_type, const RelOp comparison, const int targetValue);
 
     void onPlayerResourceChanged(Player *player, const genie::ResourceType type, float newValue) override
     {
-        if (type != genie::ResourceType::CurrentAge) {
+        if (type != m_type) {
             return;
         }
 
-        if (!checkAge(player->currentAge())) {
+        bool isSatisfied = CompareCondition::actualCompare(int(m_targetValue), m_relOp, newValue);
+        if (isSatisfied == m_isSatisfied) {
             return;
         }
+        m_isSatisfied = isSatisfied;
 
         // TODO: check player first.. but then we need to store our player or something, so figure out a way to do that cleanly
 
@@ -133,10 +118,14 @@ struct CurrentAge : public Condition
 
     bool satisfied(AiRule *owner) override
     {
-        return checkAge(owner->m_owner->m_player->currentAge());
+        m_isSatisfied = CompareCondition::actualCompare(int(m_targetValue), m_relOp, owner->m_owner->m_player->currentAge());
+        return m_isSatisfied;
     }
 
-    const Age m_targetAge;
+    genie::ResourceType m_type = genie::ResourceType::InvalidResource;
+    int m_targetValue;
+    const RelOp m_relOp;
+    bool m_isSatisfied = false;
 };
 
 }//namespace Conditions

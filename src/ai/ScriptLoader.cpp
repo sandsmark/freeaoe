@@ -144,6 +144,13 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const 
 
 std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const RelOp comparison, const Age age)
 {
+    switch(type) {
+    case Fact::CurrentAge:
+        return std::make_shared<Conditions::ResourceValue>(genie::ResourceType::CurrentAge, comparison, int(age));
+    default:
+        break;
+    }
+
     WARN << "unimplemented condition" << type << comparison << age;
     return nullptr;
 }
@@ -214,10 +221,28 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const 
     return nullptr;
 }
 
-std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const RelOp comparison, const int number)
+std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact fact, const RelOp comparison, const int number)
 {
-    WARN << "unimplemented condition" << type << comparison << number;
-    return nullptr;
+    genie::ResourceType type = genie::ResourceType::InvalidResource;
+    switch(fact) {
+    case Fact::StoneAmount:
+        type = genie::ResourceType::StoneStorage;
+        break;
+    case Fact::GoldAmount:
+        type = genie::ResourceType::GoldStorage;
+        break;
+    case Fact::FoodAmount:
+        type = genie::ResourceType::FoodStorage;
+        break;
+    case Fact::WoodAmount:
+        type = genie::ResourceType::WoodStorage;
+        break;
+    default:
+        WARN << "unimplemented condition" << type << comparison << number;
+        return nullptr;
+    }
+
+    return std::make_shared<Conditions::ResourceValue>(type, comparison, number);
 }
 
 std::shared_ptr<Condition> ScriptLoader::createOrCondition(std::shared_ptr<Condition> &condition1, std::shared_ptr<Condition> &condition2)

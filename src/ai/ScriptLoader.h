@@ -53,7 +53,7 @@ public:
     std::shared_ptr<Condition> createCondition(const Fact type, const ResearchItem research);
     std::shared_ptr<Condition> createCondition(const Fact type, const Unit unit);
     std::shared_ptr<Condition> createCondition(const Fact type, const VictoryConditionName condition);
-    std::shared_ptr<Condition> createCondition(const Fact type, const RelOp comparison, const int number);
+    std::shared_ptr<Condition> createCondition(const Fact fact, const RelOp comparison, const int number);
 
     std::shared_ptr<Condition> createOrCondition(std::shared_ptr<Condition> &condition1, std::shared_ptr<Condition> &condition2);
     std::shared_ptr<Condition> createNotCondition(const RelOp type, std::shared_ptr<Condition> &condition);

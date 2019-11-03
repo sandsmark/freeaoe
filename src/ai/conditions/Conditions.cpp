@@ -4,8 +4,30 @@
 namespace ai {
 namespace Conditions {
 
-CurrentAge::CurrentAge(const Age targetAge) : m_targetAge(targetAge)
+ResourceValue::ResourceValue(const genie::ResourceType type, const RelOp comparison, const int targetValue) :
+    m_type(type),
+    m_relOp(comparison)
 {
+    if (type == genie::ResourceType::CurrentAge) {
+        switch(Age(targetValue)) {
+        case Age::DarkAge:
+            m_targetValue = Player::Age::DarkAge;
+            break;
+        case Age::FeudalAge:
+            m_targetValue = Player::Age::FeudalAge;
+            break;
+        case Age::CastleAge:
+            m_targetValue = Player::Age::CastleAge;
+            break;
+        case Age::ImperialAge:
+            m_targetValue = Player::Age::ImperialAge;
+            break;
+        case Age::PostImperialAge:
+            m_targetValue = int(Player::Age::ImperialAge) + 1;
+            break;
+        }
+    }
+
     EventManager::registerListener(this, EventManager::PlayerResourceChanged);
 }
 
