@@ -38,7 +38,7 @@
 #include "ui/HomeScreen.h"
 
 // TODO: Bad_alloc
-int main(int argc, char **argv)
+int main(int argc, char **argv) try
 {
     DBG << "executable path" << util::executablePath();
 
@@ -183,4 +183,7 @@ int main(int argc, char **argv)
     en.start();
 
     return 0;
+} catch (const std::exception &e) {
+    std::cerr << "uncatched exception " << e.what() << std::endl;
+    return 1;
 }
