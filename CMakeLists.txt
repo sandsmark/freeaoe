@@ -256,8 +256,8 @@ add_executable(freeaoe src/main.cpp ${ENGINE_SRC})
 target_link_libraries(freeaoe ${ALL_LIBRARIES})
 install(TARGETS freeaoe DESTINATION bin)
 
-add_executable(test test/main.cpp ${ENGINE_SRC})
-target_link_libraries(test ${ALL_LIBRARIES})
+#add_executable(test test/main.cpp ${ENGINE_SRC})
+#target_link_libraries(test ${ALL_LIBRARIES})
 
 #if (CMAKE_BUILD_TYPE MATCHES Debug)
 #    if(CLANG_TIDY_EXE)
