@@ -18,9 +18,8 @@
 
 #pragma once
 
-#include <SFML/Graphics/Image.hpp>
-#include <SFML/Graphics/RenderTexture.hpp>
 #include <genie/resource/Slope.h>
+#include <genie/resource/TileSpan.h>
 #include <memory>
 #include <unordered_map>
 
@@ -55,8 +54,10 @@ public:
 
 private:
     void updateTexture();
-    const sf::Texture &shadowMask(const genie::Slope slope, const int edges);
-    const sf::Texture &unexploredMask(const genie::Slope slope, const int edges);
+
+    Drawable::Image::Ptr drawTileSpans(const std::vector<genie::TileSpan> &tileSpans, const uint32_t color) const;
+    Drawable::Image::Ptr shadowMask(const genie::Slope slope, const int edges);
+    Drawable::Image::Ptr unexploredMask(const genie::Slope slope, const int edges);
 
     MapPos m_lastCameraPos;
     bool m_camChanged;

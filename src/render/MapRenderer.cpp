@@ -184,17 +184,6 @@ void MapRenderer::updateTexture()
     invalidIndicator.aspectRatio = 0.5;
     invalidIndicator.filled = true;
     invalidIndicator.fillColor = Drawable::Red;
-//    sf::CircleShape invalidIndicator(Constants::TILE_SIZE, 4);
-//    invalidIndicator.setScale(1, 0.5);
-//    invalidIndicator.setFillColor(sf::Color::Red);
-//    invalidIndicator.setOutlineThickness(3);
-//    invalidIndicator.setOutlineColor(sf::Color::Transparent);
-
-//    sf::Text text;
-//    text.setFont(SfmlRenderTarget::defaultFont());
-//    text.setOutlineColor(sf::Color::Transparent);
-//    text.setFillColor(sf::Color::White);
-//    text.setCharacterSize(12);
 
     for (int col = m_rColBegin; col < m_rColEnd; col++) {
         for (int row = m_rRowEnd-1; row >= m_rRowBegin; row--) {
@@ -235,14 +224,11 @@ void MapRenderer::updateTexture()
                 continue;
             }
 
-//            sf::Sprite sprite = terrain->sprite(mapTile);
-//            sprite.move(spos);
             m_textureTarget->draw(terrain->texture(mapTile, m_textureTarget), spos);
 //                invalidIndicator.setPosition(spos);
 //                m_textureTarget.draw(invalidIndicator);
 //            m_textureTarget.draw(terrain->texture(mapTile), spos);
 
-            // TODO actually load the blkedge and tileedge
             if (m_visibilityMap->visibilityAt(col, row) == VisibilityMap::Explored) {
                 m_textureTarget->draw(shadowMask(mapTile.slopes.self.toGenie(), 0), spos);
             } else {
@@ -257,7 +243,7 @@ void MapRenderer::updateTexture()
     }
 }
 
-static sf::Image drawTileSpans(const std::vector<genie::TileSpan> &tileSpans, const uint32_t color)
+Drawable::Image::Ptr MapRenderer::drawTileSpans(const std::vector<genie::TileSpan> &tileSpans, const uint32_t color) const
 {
     const int width = 97;
     const int height = 96;
@@ -279,33 +265,29 @@ static sf::Image drawTileSpans(const std::vector<genie::TileSpan> &tileSpans, co
         int offset = span.y * width + span.xStart;
         std::fill_n(pixelsBuf.begin() + offset, count, color);
     }
-    sf::Image image;
-    image.create(width, height, reinterpret_cast<uint8_t*>(pixelsBuf.data()));
-    return image;
+    return renderTarget_->createImage(Size(width, height), reinterpret_cast<uint8_t*>(pixelsBuf.data()));
 }
 
-const sf::Texture &MapRenderer::shadowMask(const genie::Slope slope, const int edges)
+Drawable::Image::Ptr MapRenderer::shadowMask(const genie::Slope slope, const int edges)
 {
     const int cacheIndex = slope * 256 + edges;
     sf::Texture &texture = m_shadowCaches[cacheIndex];
     if (texture.getSize().x > 0) {
-        return texture;
+        return Drawable::Image::null;
     }
 
     const genie::VisibilityMask &mask = AssetManager::Inst()->exploredVisibilityMask(slope, edges);
-    texture.loadFromImage(drawTileSpans(mask.lines, 0x7f000000));
-    return texture;
+    return drawTileSpans(mask.lines, 0x7f000000);
 }
 
-const sf::Texture &MapRenderer::unexploredMask(const genie::Slope slope, const int edges)
+Drawable::Image::Ptr MapRenderer::unexploredMask(const genie::Slope slope, const int edges)
 {
     const int cacheIndex = slope * 256 + edges;
     sf::Texture &texture = m_unexploredMaskCache[cacheIndex];
     if (texture.getSize().x > 0) {
-        return texture;
+        return Drawable::Image::null;
     }
 
     const genie::VisibilityMask &mask = AssetManager::Inst()->unexploredVisibilityMask(slope, edges);
-    texture.loadFromImage(drawTileSpans(mask.lines, 0xff000000));
-    return texture;
+    return drawTileSpans(mask.lines, 0xff000000);
 }
