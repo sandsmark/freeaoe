@@ -46,7 +46,7 @@ struct ListView
     void handleEvent(const sf::Event &event);
     void render(sf::RenderWindow *window);
 
-    void setCurrentPath(std::string path);
+    void setCurrentPath(std::string pathString);
 
     void setOffset(int offset);
 

@@ -212,8 +212,7 @@ void Button::render(sf::RenderWindow *window)
 }
 
 ListView::ListView(const sf::Font &font, const ScreenRect rect) :
-    m_rect(rect),
-    m_currentPath("/")
+    m_rect(rect)
 {
     m_itemHeight = rect.height / numVisible;
 
@@ -326,16 +325,19 @@ void ListView::render(sf::RenderWindow *window)
     window->draw(*m_scrollBar);
 }
 
-void ListView::setCurrentPath(std::string path)
+void ListView::setCurrentPath(std::string pathString)
 {
-    if (path.empty()) {
-        path = "/";
+    if (pathString.empty()) {
+        pathString = "/";
     }
+
+    std::filesystem::path path(pathString);
 
     m_list.clear();
 
     hasDataFolder = false;
     try {
+
         // avoid crashing
         if (!std::filesystem::exists(path) || !std::filesystem::is_directory(path)) {
             throw std::filesystem::filesystem_error("fuckings to boost which I blame for this shitty API", std::error_code());
@@ -356,11 +358,12 @@ void ListView::setCurrentPath(std::string path)
             return;
         }
 
-        path = m_currentPath.string();
+        pathString = m_currentPath.string();
     }
+    path = std::filesystem::path(pathString);
 
-    if (!std::filesystem::path(path).parent_path().empty() && path != std::filesystem::path(path).parent_path()) {
-        std::filesystem::path dotdot = path;
+    if (!path.parent_path().empty() && pathString != path.parent_path()) {
+        std::filesystem::path dotdot = pathString;
         dotdot += "/..";
         m_list.push_back(dotdot.string());
     }
@@ -405,7 +408,7 @@ void ListView::setCurrentPath(std::string path)
 
     updateScrollbar();
 
-    m_currentPath = path;
+    m_currentPath = pathString;
 }
 
 void ListView::setOffset(int offset)
