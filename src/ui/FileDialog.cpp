@@ -29,6 +29,7 @@ bool FileDialog::setup(int width, int height)
     m_renderWindow = std::make_unique<sf::RenderWindow>(sf::VideoMode(width, height), "freeaoe");
     m_renderWindow->setSize(sf::Vector2u(width, height));
     m_renderWindow->setView(sf::View(sf::FloatRect(0, 0, width, height)));
+    m_renderTarget = std::make_shared<SfmlRenderTarget>(*m_renderWindow);
 
 
 
@@ -45,12 +46,12 @@ bool FileDialog::setup(int width, int height)
     m_fileList = std::make_unique<ListView>(SfmlRenderTarget::defaultFont(), ScreenRect(ScreenPos(width/2 - width*3/8, 55), Size(width*3/4, 550)));
     m_fileList->setCurrentPath(std::filesystem::current_path().string());
 
-    m_okButton = std::make_unique<Button>("OK", SfmlRenderTarget::defaultFont(), ScreenRect(ScreenPos(m_fileList->rect().x, 700), buttonSize));
+    m_okButton = std::make_unique<Button>("OK", ScreenRect(ScreenPos(m_fileList->rect().x, 700), buttonSize), m_renderTarget);
 
-    m_cancelButton = std::make_unique<Button>("Cancel", SfmlRenderTarget::defaultFont(), ScreenRect(ScreenPos(m_fileList->rect().right() - buttonSize.width, 700), buttonSize));
+    m_cancelButton = std::make_unique<Button>("Cancel", ScreenRect(ScreenPos(m_fileList->rect().right() - buttonSize.width, 700), buttonSize), m_renderTarget);
     m_cancelButton->enabled = true;
 
-    m_openDownloadUrlButton = std::make_unique<Button>("Download trial version", SfmlRenderTarget::defaultFont(), ScreenRect(ScreenPos(m_fileList->rect().center().x - buttonSize.width/2, 700), buttonSize));
+    m_openDownloadUrlButton = std::make_unique<Button>("Download trial version", ScreenRect(ScreenPos(m_fileList->rect().center().x - buttonSize.width/2, 700), buttonSize), m_renderTarget);
     m_openDownloadUrlButton->enabled = true;
 
 #if defined(__linux__)
@@ -59,7 +60,7 @@ bool FileDialog::setup(int width, int height)
         if (std::filesystem::exists(m_winePath + "/drive_c")) {
             m_winePath += "/drive_c";
         }
-        m_goToWineButton = std::make_unique<Button>("Go to Wine folder", SfmlRenderTarget::defaultFont(), ScreenRect(ScreenPos(m_fileList->rect().x, m_fileList->rect().bottom() + 10), buttonSize));
+        m_goToWineButton = std::make_unique<Button>("Go to Wine folder", ScreenRect(ScreenPos(m_fileList->rect().x, m_fileList->rect().bottom() + 10), buttonSize), m_renderTarget);
         m_goToWineButton->enabled = true;
     }
 #endif
@@ -110,9 +111,9 @@ std::string FileDialog::getPath()
         m_okButton->enabled = m_fileList->hasDataFolder;
 
         m_renderWindow->clear(sf::Color(32, 32, 32));
-        m_openDownloadUrlButton->render(m_renderWindow.get());
-        m_cancelButton->render(m_renderWindow.get());
-        m_okButton->render(m_renderWindow.get());
+        m_openDownloadUrlButton->render(m_renderTarget);
+        m_cancelButton->render(m_renderTarget);
+        m_okButton->render(m_renderTarget);
         m_fileList->render(m_renderWindow.get());
         m_renderWindow->draw(*m_description);
         if (m_errorText) {
@@ -121,7 +122,7 @@ std::string FileDialog::getPath()
 
 #if defined(__linux__)
         if (m_goToWineButton) {
-            m_goToWineButton->render(m_renderWindow.get());
+            m_goToWineButton->render(m_renderTarget);
         }
 #endif
         m_renderWindow->display();
@@ -139,20 +140,19 @@ void FileDialog::setErrorString(const std::string &error) noexcept
     m_errorText->setFillColor(sf::Color(255, 128, 128));
 }
 
-Button::Button(const std::string &text, const sf::Font &font, const ScreenRect rect) :
+Button::Button(const std::string &text, const ScreenRect &rect, const IRenderTargetPtr &renderTarget) :
     m_rect(rect)
 {
-    m_text = std::make_unique<sf::Text>(text, font);
-    m_text->setCharacterSize(24);
-    const int textWidth = m_text->getLocalBounds().width;
-    const int textHeight = m_text->getLocalBounds().height;
-    m_text->setPosition(m_rect.x + (m_rect.width/2 - textWidth/2), m_rect.y + (m_rect.height/2 - textHeight));
+    m_text = renderTarget->createText();
+    m_text->string = text;
+    m_text->pointSize = 24;
+    const int textWidth = m_text->size().width;
+    const int textHeight = m_text->size().height;
+    m_text->position.x = m_rect.x + (m_rect.width/2 - textWidth/2);
+    m_text->position.y = m_rect.y + (m_rect.height/2 - textHeight);
 
-    m_background = std::make_unique<sf::RectangleShape>();
-
-    m_background->setOutlineThickness(2);
-    m_background->setPosition(m_rect.topLeft());
-    m_background->setSize(m_rect.size());
+    m_background.borderSize = 2;
+    m_background.rect = m_rect;
 }
 
 bool Button::checkClick(const sf::Event &event)
@@ -192,23 +192,26 @@ bool Button::checkClick(const sf::Event &event)
     return m_pressed;
 }
 
-void Button::render(sf::RenderWindow *window)
+void Button::render(IRenderTargetPtr window)
 {
     if (!enabled) {
-        m_background->setOutlineColor(sf::Color(128, 128, 128));
-        m_background->setFillColor(sf::Color(64, 64, 64));
-        m_text->setFillColor(sf::Color(128, 128, 128));
+        m_background.borderColor = Drawable::Color(128, 128, 128);
+        m_background.fillColor = Drawable::Color(64, 64, 64);
+        m_background.filled = true;
+        m_text->color = Drawable::Color(128, 128, 128);
     } else if (m_pressed) {
-        m_background->setOutlineColor(sf::Color::Black);
-        m_background->setFillColor(sf::Color::White);
-        m_text->setFillColor(sf::Color::Black);
+        m_background.borderColor = Drawable::Black;
+        m_background.fillColor = Drawable::White;
+        m_background.filled = true;
+        m_text->color = Drawable::Black;
     } else {
-        m_background->setOutlineColor(sf::Color::White);
-        m_background->setFillColor(sf::Color::Black);
-        m_text->setFillColor(sf::Color::White);
+        m_background.borderColor = Drawable::White;
+        m_background.fillColor = Drawable::Black;
+        m_background.filled = true;
+        m_text->color = Drawable::White;
     }
-    window->draw(*m_background);
-    window->draw(*m_text);
+    window->draw(m_background);
+    window->draw(m_text);
 }
 
 ListView::ListView(const sf::Font &font, const ScreenRect rect) :

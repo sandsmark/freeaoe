@@ -332,7 +332,6 @@ void SfmlRenderTarget::draw(const Drawable::Text::Ptr &text)
     if (text->outlineColor.a > 0) {
         sfmlText->text.setOutlineColor(convertColor(text->outlineColor));
         sfmlText->text.setOutlineThickness(2);
-
     }
 
     if (sfmlText->lastAlignment != text->alignment || sfmlText->lastPos != text->position || changed) {

@@ -8,6 +8,8 @@
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 
+#include "render/IRenderTarget.h"
+
 #include <filesystem>
 #include <memory>
 #include <string>
@@ -21,16 +23,16 @@ class Event;
 
 struct Button
 {
-    Button(const std::string &text, const sf::Font &font, const ScreenRect rect);
+    Button(const std::string &text, const ScreenRect &rect, const IRenderTargetPtr &renderTarget);
 
     bool checkClick(const sf::Event &event);
-    void render(sf::RenderWindow *window);
+    void render(IRenderTargetPtr window);
 
     bool enabled = false;
 
 private:
-    std::unique_ptr<sf::Text> m_text;
-    std::unique_ptr<sf::RectangleShape> m_background;
+    Drawable::Text::Ptr m_text;
+    Drawable::Rect m_background;
     ScreenRect m_rect;
     bool m_pressed = false;
 };
@@ -97,6 +99,8 @@ private:
     std::unique_ptr<sf::Text> m_description;
     std::unique_ptr<sf::Text> m_errorText;
     std::unique_ptr<sf::Text> m_secondaryErrorText;
+    IRenderTargetPtr m_renderTarget;
+
 
 #if defined(__linux__)
     std::string m_winePath;
