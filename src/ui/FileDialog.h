@@ -43,10 +43,10 @@ struct ListView
 
     const int numVisible = 20;
 
-    ListView(const sf::Font &font, const ScreenRect rect);
+    ListView(const ScreenRect rect, const IRenderTargetPtr &window);
 
     void handleEvent(const sf::Event &event);
-    void render(sf::RenderWindow *window);
+    void render(IRenderTargetPtr window);
 
     void setCurrentPath(std::string pathString);
 
@@ -54,7 +54,7 @@ struct ListView
 
     std::string currentText() const;
 
-    void updateScrollbar() const;
+    void updateScrollbar();
 
     const ScreenRect &rect() const noexcept { return m_rect; }
 
@@ -67,10 +67,10 @@ private:
     int m_offset = 0;
     int m_itemHeight = 10;
 
-    std::vector<std::unique_ptr<sf::Text>> m_texts;
-    std::unique_ptr<sf::RectangleShape> m_selectedOutline;
-    std::unique_ptr<sf::RectangleShape> m_background;
-    std::unique_ptr<sf::RectangleShape> m_scrollBar;
+    std::vector<Drawable::Text::Ptr> m_texts;
+    Drawable::Rect m_selectedOutline;
+    Drawable::Rect m_background;
+    Drawable::Rect m_scrollBar;
     std::vector<std::string> m_list;
 
     std::filesystem::path m_currentPath;
