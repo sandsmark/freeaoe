@@ -19,7 +19,6 @@
 #pragma once
 
 #include "render/Camera.h"
-#include <SFML/Graphics/Color.hpp>
 
 namespace sf {
 class Sprite;
@@ -27,13 +26,6 @@ class Drawable;
 class Texture;
 class Shape;
 class Image;
-}
-
-namespace sf {
-class Sprite;
-class Image;
-class Texture;
-class Drawable;
 class Color;
 }
 
@@ -46,18 +38,18 @@ typedef std::shared_ptr<SlpFrame> SlpFramePtr;
 namespace Drawable {
 struct Color {
     Color() = default;
-    Color(const uint8_t r_, const uint8_t g_, const uint8_t b_, const uint8_t a_ = 255) :
+    constexpr Color(const uint8_t r_, const uint8_t g_, const uint8_t b_, const uint8_t a_ = 255) :
         r(r_), g(g_), b(b_), a(a_) {}
 
-    uint8_t r = 0, g = 0, b = 0, a = 0;
+    uint8_t r = 0, g = 0, b = 0, a = 255;
 
 };
-static const Color Red(255, 0, 0);
-static const Color Green(0, 255, 0);
-static const Color Blue(0, 0, 255);
-static const Color Transparent(0, 0, 0, 0);
-static const Color White(255, 255, 255);
-static const Color Black;
+static constexpr Color Red(255, 0, 0);
+static constexpr Color Green(0, 255, 0);
+static constexpr Color Blue(0, 0, 255);
+static constexpr Color Transparent(0, 0, 0, 0);
+static constexpr Color White(255, 255, 255);
+static constexpr Color Black;
 
 struct Shape
 {
