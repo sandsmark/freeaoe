@@ -260,11 +260,14 @@ enum Direction : uint8_t {
 struct EdgeTileLut {
     constexpr EdgeTileLut() : values{}
     {
+        const uint8_t uninitialized = -1;
+
         for (size_t i=0; i<values.size(); i++) {
-            values[i] = -1;
+            values[i] = uninitialized;
         }
 
-        for (size_t edge=0, tileNum = 0; edge<values.size(); edge++) {
+        uint8_t tileNum = 0;
+        for (size_t edge=0; edge<values.size(); edge++) {
             const bool west      = (edge & West);
             const bool south     = (edge & South);
             const bool east      = (edge & East);
@@ -291,11 +294,11 @@ struct EdgeTileLut {
         }
 
         for (size_t edge=0; edge<values.size(); edge++) {
-            if (values[edge] != -1) {
+            if (values[edge] != uninitialized) {
                 continue;
             }
 
-            int aliasEdge = edge & (NorthWest | NorthEast | SouthEast |  SouthWest);
+            uint8_t aliasEdge = edge & (NorthWest | NorthEast | SouthEast |  SouthWest);
 
             if (edge & SouthWest) {
                 aliasEdge &= ~North;
@@ -319,10 +322,9 @@ struct EdgeTileLut {
 
             values[edge] = values[aliasEdge];
         }
-
     }
 
-    std::array<int, 256> values;
+    std::array<uint8_t, 256> values;
 };
 } // anonymous namespace
 
@@ -339,7 +341,7 @@ int VisibilityMap::edgeTileNum(const int tileX, const int tileY, const Visibilit
 {
     static constexpr EdgeTileLut edgetileLut;
 
-    int edges = 0;
+    uint8_t edges = 0;
 
     if (visibilityAt(tileX - 1, tileY + 0, type) <= type) { edges |= SouthWest; }
     if (visibilityAt(tileX + 1, tileY + 0, type) <= type) { edges |= NorthEast; }
