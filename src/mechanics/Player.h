@@ -97,7 +97,6 @@ struct VisibilityMap
 
 private:
     std::array<int, Constants::MAP_MAX_SIZE * Constants::MAP_MAX_SIZE> m_visibility;
-    std::array<int, 256> m_edgetileLut;
 };
 
 struct Player

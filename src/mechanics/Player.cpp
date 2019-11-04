@@ -245,79 +245,89 @@ void Player::setAvailableResource(const genie::ResourceType type, float newValue
 }
 
 namespace {
-    enum Direction {
-        West = 1 << 0,
-        South = 1 << 1,
-        East = 1 << 2,
-        North = 1 << 3,
+enum Direction : uint8_t {
+    West = 1 << 0,
+    South = 1 << 1,
+    East = 1 << 2,
+    North = 1 << 3,
 
-        NorthWest = 1 << 4,
-        NorthEast = 1 << 5,
-        SouthEast = 1 << 6,
-        SouthWest = 1 << 7,
-    };
-}
+    NorthWest = 1 << 4,
+    NorthEast = 1 << 5,
+    SouthEast = 1 << 6,
+    SouthWest = 1 << 7,
+};
 
+struct EdgeTileLut {
+    constexpr EdgeTileLut() : values{}
+    {
+        for (size_t i=0; i<values.size(); i++) {
+            values[i] = -1;
+        }
+
+        for (size_t edge=0, tileNum = 0; edge<values.size(); edge++) {
+            const bool west      = (edge & West);
+            const bool south     = (edge & South);
+            const bool east      = (edge & East);
+            const bool north     = (edge & North);
+            const bool southWest = (edge & SouthWest);
+            const bool southEast = (edge & SouthEast);
+            const bool northWest = (edge & NorthWest);
+            const bool northEast = (edge & NorthEast);
+
+            if (southWest && (west || north)) {
+                continue;
+            }
+            if (southEast && (east || north)) {
+                continue;
+            }
+            if (northEast && (east || south)) {
+                continue;
+            }
+            if (northWest && (west || south)) {
+                continue;
+            }
+
+            values[edge] = tileNum++;
+        }
+
+        for (size_t edge=0; edge<values.size(); edge++) {
+            if (values[edge] != -1) {
+                continue;
+            }
+
+            int aliasEdge = edge & (NorthWest | NorthEast | SouthEast |  SouthWest);
+
+            if (edge & SouthWest) {
+                aliasEdge &= ~North;
+                aliasEdge &= ~West;
+            }
+
+            if (edge & SouthEast) {
+                aliasEdge &= ~North;
+                aliasEdge &= ~East;
+            }
+
+            if (edge & NorthEast) {
+                aliasEdge &= ~South;
+                aliasEdge &= ~East;
+            }
+
+            if (edge & NorthWest) {
+                aliasEdge &= ~South;
+                aliasEdge &= ~West;
+            }
+
+            values[edge] = values[aliasEdge];
+        }
+
+    }
+
+    std::array<int, 256> values;
+};
+} // anonymous namespace
 
 VisibilityMap::VisibilityMap()
 {
-    m_edgetileLut.fill(-1);
-    for (size_t edge=0, tileNum = 0; edge<m_edgetileLut.size(); edge++) {
-        const bool west      = (edge & West);
-        const bool south     = (edge & South);
-        const bool east      = (edge & East);
-        const bool north     = (edge & North);
-        const bool southWest = (edge & SouthWest);
-        const bool southEast = (edge & SouthEast);
-        const bool northWest = (edge & NorthWest);
-        const bool northEast = (edge & NorthEast);
-
-        if (southWest && (west || north)) {
-            continue;
-        }
-        if (southEast && (east || north)) {
-            continue;
-        }
-        if (northEast && (east || south)) {
-            continue;
-        }
-        if (northWest && (west || south)) {
-            continue;
-        }
-
-        m_edgetileLut[edge] = tileNum++;
-    }
-
-    for (size_t edge=0; edge<m_edgetileLut.size(); edge++) {
-        if (m_edgetileLut[edge] != -1) {
-            continue;
-        }
-
-        int aliasEdge = edge & (NorthWest | NorthEast | SouthEast |  SouthWest);
-
-        if (edge & SouthWest) {
-            aliasEdge &= ~North;
-            aliasEdge &= ~West;
-        }
-
-        if (edge & SouthEast) {
-            aliasEdge &= ~North;
-            aliasEdge &= ~East;
-        }
-
-        if (edge & NorthEast) {
-            aliasEdge &= ~South;
-            aliasEdge &= ~East;
-        }
-
-        if (edge & NorthWest) {
-            aliasEdge &= ~South;
-            aliasEdge &= ~West;
-        }
-
-        m_edgetileLut[edge] = m_edgetileLut[aliasEdge];
-    }
-
 #ifdef CHEAT_VISIBILITY
     m_visibility.fill(Visible);
 #else
@@ -327,6 +337,8 @@ VisibilityMap::VisibilityMap()
 
 int VisibilityMap::edgeTileNum(const int tileX, const int tileY, const Visibility type) const
 {
+    static constexpr EdgeTileLut edgetileLut;
+
     int edges = 0;
 
     if (visibilityAt(tileX - 1, tileY + 0, type) <= type) { edges |= SouthWest; }
@@ -339,5 +351,5 @@ int VisibilityMap::edgeTileNum(const int tileX, const int tileY, const Visibilit
     if (visibilityAt(tileX + 1, tileY - 1, type) <= type) { edges |= South; }
     if (visibilityAt(tileX + 1, tileY + 1, type) <= type) { edges |= East; }
 
-    return m_edgetileLut[edges];
+    return edgetileLut.values[edges];
 }
