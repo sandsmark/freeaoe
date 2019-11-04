@@ -268,26 +268,28 @@ Drawable::Image::Ptr MapRenderer::drawTileSpans(const std::vector<genie::TileSpa
     return renderTarget_->createImage(Size(width, height), reinterpret_cast<uint8_t*>(pixelsBuf.data()));
 }
 
-Drawable::Image::Ptr MapRenderer::shadowMask(const genie::Slope slope, const int edges)
+const Drawable::Image::Ptr &MapRenderer::shadowMask(const genie::Slope slope, const int edges)
 {
     const int cacheIndex = slope * 256 + edges;
-    sf::Texture &texture = m_shadowCaches[cacheIndex];
-    if (texture.getSize().x > 0) {
-        return Drawable::Image::null;
+    Drawable::Image::Ptr &texture = m_shadowCaches[cacheIndex];
+    if (texture) {
+        return texture;
     }
 
     const genie::VisibilityMask &mask = AssetManager::Inst()->exploredVisibilityMask(slope, edges);
-    return drawTileSpans(mask.lines, 0x7f000000);
+    texture = drawTileSpans(mask.lines, 0x7f000000);
+    return texture;
 }
 
-Drawable::Image::Ptr MapRenderer::unexploredMask(const genie::Slope slope, const int edges)
+const Drawable::Image::Ptr &MapRenderer::unexploredMask(const genie::Slope slope, const int edges)
 {
     const int cacheIndex = slope * 256 + edges;
-    sf::Texture &texture = m_unexploredMaskCache[cacheIndex];
-    if (texture.getSize().x > 0) {
-        return Drawable::Image::null;
+    Drawable::Image::Ptr &texture = m_unexploredMaskCache[cacheIndex];
+    if (texture) {
+        return texture;
     }
 
     const genie::VisibilityMask &mask = AssetManager::Inst()->unexploredVisibilityMask(slope, edges);
-    return drawTileSpans(mask.lines, 0xff000000);
+    texture = drawTileSpans(mask.lines, 0xff000000);
+    return texture;
 }

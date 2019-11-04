@@ -56,8 +56,8 @@ private:
     void updateTexture();
 
     Drawable::Image::Ptr drawTileSpans(const std::vector<genie::TileSpan> &tileSpans, const uint32_t color) const;
-    Drawable::Image::Ptr shadowMask(const genie::Slope slope, const int edges);
-    Drawable::Image::Ptr unexploredMask(const genie::Slope slope, const int edges);
+    const Drawable::Image::Ptr &shadowMask(const genie::Slope slope, const int edges);
+    const Drawable::Image::Ptr &unexploredMask(const genie::Slope slope, const int edges);
 
     MapPos m_lastCameraPos;
     bool m_camChanged;
@@ -69,8 +69,8 @@ private:
     int m_rRowBegin, m_rRowEnd;
     int m_rColBegin, m_rColEnd;
 
-    std::unordered_map<int, sf::Texture> m_shadowCaches;
-    std::unordered_map<int, sf::Texture> m_unexploredMaskCache;
+    std::unordered_map<int, Drawable::Image::Ptr> m_shadowCaches;
+    std::unordered_map<int, Drawable::Image::Ptr> m_unexploredMaskCache;
 
     IRenderTargetPtr m_textureTarget;
 
