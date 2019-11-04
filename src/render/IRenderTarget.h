@@ -102,6 +102,8 @@ struct Text
     Color color = Black;
     Color outlineColor = Transparent;
 
+    virtual Size size() = 0;
+
 protected:
     Text() {}
 

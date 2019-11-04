@@ -47,6 +47,14 @@ struct SfmlText : public Drawable::Text
     sf::Text text;
     ScreenPos lastPos;
     Alignment lastAlignment = AlignLeft;
+
+    Size size() override {
+        text.setString(string);
+        text.setCharacterSize(pointSize);
+
+        const sf::FloatRect bounds = text.getLocalBounds();
+        return Size(bounds.width, bounds.height);
+    }
 };
 
 class SfmlRenderTarget : public IRenderTarget
