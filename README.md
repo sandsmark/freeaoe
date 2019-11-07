@@ -23,6 +23,10 @@ handle anything that can be edited by that (and therefore basically all
 community content created for AoE2). Because of this it doesn't need to unpack
 or convert anything, all data files are used as is.
 
+This repo is originally a fork of https://github.com/apreiml/freeaoe, but
+because a lot of stuff doesn't like working on forked repos it is now created
+as a separate repo.
+
 Windows
 -------
 Automated windows builds can be [downloaded from AppVeyor](https://ci.appveyor.com/project/sandsmark/freeaoe/build/artifacts).
