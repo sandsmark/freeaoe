@@ -86,6 +86,8 @@ struct Slope {
             return "NSW";
         case NorthSouthEastUp:
             return "NSE";
+        default:
+            return "Unknown (" + std::to_string(int(direction)) + ")";
         }
     }
 
@@ -117,6 +119,8 @@ struct Slope {
             return "NorthWestEastUp";
         case NorthSouthEastUp:
             return "NorthWestEastUp";
+        default:
+            return "Unknown (" + std::to_string(int(direction)) + ")";
         }
     }
 
@@ -336,6 +340,9 @@ inline LogPrinter operator <<(LogPrinter os, const Slope &slope)
         break;
     case Slope::NorthSouthEastUp:
         os << "NorthWestEastUp";
+        break;
+    default:
+        os << "Unknown (" << int(slope.direction);
         break;
     }
 
