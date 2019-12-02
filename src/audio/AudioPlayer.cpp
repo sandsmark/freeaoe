@@ -22,7 +22,7 @@
 #define MAL_NO_SDL
 #define MAL_NO_OPENAL
 #define MAL_NO_ALSA
-#define MAL_DEBUG_OUTPUT
+//#define MAL_DEBUG_OUTPUT
 #include <mini_al/mini_al.h>
 
 uint32_t AudioPlayer::malCallback(mal_device *device, uint32_t frameCount, void *buffer)
