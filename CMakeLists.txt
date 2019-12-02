@@ -9,6 +9,10 @@ set (CMAKE_CXX_STANDARD 17)
 
 project(freeaoe)
 
+if(DEFAULT_DATA_PATH)
+    add_definitions(-DDEFAULT_DATA_PATH=\"${DEFAULT_DATA_PATH}\")
+endif()
+
 #############################
 ## Compiler specific stuff ##
 #############################

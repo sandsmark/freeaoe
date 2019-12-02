@@ -267,6 +267,11 @@ bool Config::parseOptions(int argc, char **argv)
     if (m_options["game-path"].empty()) {
         m_options["game-path"] = getRegistryString(s_registryGroupAoK, s_registryKey);
     }
+#if defined(DEFAULT_DATA_PATH)
+    if (m_options["game-path"].empty()) {
+        m_options["game-path"] = DEFAULT_DATA_PATH;
+    }
+#endif
 
     if (m_options != configuredOptions) {
         writeConfigFile(m_filePath);
