@@ -29,8 +29,12 @@ uint32_t AudioPlayer::malCallback(mal_device *device, uint32_t frameCount, void 
 {
     AudioPlayer *that = reinterpret_cast<AudioPlayer*>(device->pUserData);
 
-    std::lock_guard<std::mutex> guard(that->m_mutex);
+    if (!that->m_mutex.try_lock()) {
+        WARN << "Failed to lock mutex, probably shutting down";
+        return 0;
+    }
     sts_mixer_mix_audio(that->m_mixer.get(), buffer, frameCount);
+    that->m_mutex.unlock();
 
     return frameCount;
 }
@@ -63,6 +67,7 @@ AudioPlayer::AudioPlayer()
 
 AudioPlayer::~AudioPlayer()
 {
+    std::lock_guard<std::mutex> guard(m_mutex);
     mal_device_uninit(m_device.get());
     sts_mixer_shutdown(m_mixer.get());
 }
@@ -83,7 +88,9 @@ struct WavHeader {
         IEEEFloat = 0x3,
         ALaw = 0x6,
         MULaw = 0x7,
-        DVIADPCM = 0x11
+        DVIADPCM = 0x11,
+        AAC = 0xff,
+        WWISE = 0xffffu,
     };
 
     uint16_t AudioFormat;
@@ -98,10 +105,10 @@ struct WavHeader {
     uint32_t Subchunk2Size;
 };
 
+
+
 void AudioPlayer::playSample(const std::shared_ptr<uint8_t[]> &data, const float pan, const float volume)
 {
-    std::lock_guard<std::mutex> guard(m_mutex);
-
     if (!m_mixer || !m_device) {
         return;
     }
@@ -142,6 +149,8 @@ void AudioPlayer::playSample(const std::shared_ptr<uint8_t[]> &data, const float
     sample->audiodata = data.get() + sizeof(WavHeader);
 
     const float pitch = 1.f;
+
+    std::lock_guard<std::mutex> guard(m_mutex);
     if (sts_mixer_play_sample(m_mixer.get(), sample, volume, pitch, pan) < 0) {
         WARN << "unable to play sample, too many playing already";
         delete sample;
