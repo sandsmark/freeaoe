@@ -76,6 +76,8 @@ sf::Image Graphic::slpFrameToImage(const genie::SlpFramePtr &frame, int8_t playe
         return img;
     }
 
+    const size_t byteCount = width * height * 4;
+
     switch(imageType) {
     case ImageType::Base:
         img = Resource::convertFrameToImage(frame, palette, playerColor);
@@ -109,7 +111,7 @@ sf::Image Graphic::slpFrameToImage(const genie::SlpFramePtr &frame, int8_t playe
     }
     case ImageType::ConstructionUnavailable: {
         // fuck msvc
-        std::vector<Uint8> pixelsBuf(width * height * 4);
+        std::vector<Uint8> pixelsBuf(byteCount);
         Uint8 *pixels = pixelsBuf.data();
 
         for (uint32_t row = 0; row < height; row++) {
@@ -139,7 +141,7 @@ sf::Image Graphic::slpFrameToImage(const genie::SlpFramePtr &frame, int8_t playe
     }
     case ImageType::Construction: {
         // fuck msvc
-        std::vector<Uint8> pixelsBuf(width * height * 4);
+        std::vector<Uint8> pixelsBuf(byteCount);
         Uint8 *pixels = pixelsBuf.data();
 
         for (uint32_t row = 0; row < height; row++) {
@@ -169,7 +171,7 @@ sf::Image Graphic::slpFrameToImage(const genie::SlpFramePtr &frame, int8_t playe
     }
     case ImageType::InTheShadows: {
         // fuck msvc
-        std::vector<Uint8> pixelsBuf(width * height * 4);
+        std::vector<Uint8> pixelsBuf(byteCount);
         Uint8 *pixels = pixelsBuf.data();
 
         for (uint32_t row = 0; row < height; row++) {

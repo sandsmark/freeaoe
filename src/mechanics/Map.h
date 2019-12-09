@@ -158,7 +158,6 @@ private:
         return tiles_[index].slopes.self;
     }
 
-    // cols_ = x, rows_ = y
     int rows_ = 0, cols_ = 0;
 
     typedef std::vector<MapTile> MapTileArray;
