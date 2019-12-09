@@ -15,6 +15,7 @@ struct AiRule
 {
     AiRule(AiScript *owner) : m_owner(owner) {}
     AiRule() = delete;
+    ~AiRule();
 
     AiScript *m_owner = nullptr;
 

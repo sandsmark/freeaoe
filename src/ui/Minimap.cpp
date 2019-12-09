@@ -44,11 +44,13 @@ void Minimap::setMap(const std::shared_ptr<Map> &map)
         return;
     }
 
-    // FIXME disconnect this shit
-    assert(!m_map);
+    if (m_map) {
+        m_map->disconnect(this);
+    }
+
     m_map = map;
-    map->connect(Map::Signals::UnitsChanged, std::bind(&Minimap::updateUnits, this));
-    map->connect(Map::Signals::TerrainChanged, std::bind(&Minimap::updateTerrain, this));
+    map->connect(Map::Signals::UnitsChanged, this, &Minimap::updateUnits);
+    map->connect(Map::Signals::TerrainChanged, this, &Minimap::updateTerrain);
 
     m_unitsUpdated = true;
 

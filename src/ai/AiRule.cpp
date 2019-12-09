@@ -5,6 +5,13 @@
 
 namespace ai {
 
+AiRule::~AiRule()
+{
+    for (const std::shared_ptr<ai::Condition> &condition : m_conditions) {
+        condition->disconnect(this);
+    }
+}
+
 void ai::AiRule::onConditionSatisfied()
 {
     for (const std::shared_ptr<Condition> &condition : m_conditions) {
@@ -23,8 +30,7 @@ void ai::AiRule::onConditionSatisfied()
 void AiRule::addCondition(const std::shared_ptr<ai::Condition> &condition)
 {
     m_conditions.push_back(condition);
-
-    condition->connect(Condition::SatisfiedChanged, std::bind(&AiRule::onConditionSatisfied, this));
+    condition->connect(Condition::SatisfiedChanged, this, &AiRule::onConditionSatisfied);
 }
 
 void AiRule::addAction(const std::shared_ptr<Action> &action)
