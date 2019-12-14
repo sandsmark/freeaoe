@@ -241,6 +241,8 @@ private:
     std::string m_dataPath;
     std::unordered_set<uint32_t> m_nonExistentSlps;
 
+    std::unordered_map<std::string, std::string> m_hdFilePaths;
+
     // TODO don't duplicate with datamanager, but I'm lazy
     bool m_isHd = false;
     std::string m_hdAssetPath;

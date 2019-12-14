@@ -104,6 +104,8 @@ struct Text
 
     virtual Size size() = 0;
 
+    virtual ~Text() = default;
+
 protected:
     Text() {}
 

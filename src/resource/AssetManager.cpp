@@ -347,6 +347,23 @@ bool AssetManager::initialize(const std::string &gamePath, const genie::GameVers
 
     if (m_isHd) {
         DBG << "Is HD, not loading DRS files";
+        TIME_THIS;
+
+        for (const std::string &subfolder : {"drs/graphics", "drs/gamedata_x2", "drs/terrain", "drs/gamedata_x1", "drs/interface", "drs/sounds", "slp" }) {
+            const std::string folder = m_hdAssetPath + subfolder + "/";
+            if (!std::filesystem::exists(folder)) {
+                WARN << "folder no exist" << folder;
+                continue;
+            }
+            for (const std::filesystem::directory_entry &entry : std::filesystem::directory_iterator(folder)) {
+                if (!entry.is_regular_file()) {
+                    WARN << "not regular file!" << entry.path();
+                    continue;
+                }
+                const std::filesystem::path path = entry.path();
+                m_hdFilePaths[path.filename().string()] = path.string();
+            }
+        }
         return true;
     }
 
@@ -674,37 +691,9 @@ bool AssetManager::missingData() const
 
 std::string AssetManager::findHdFile(const std::string &filename) const
 {
-    // TODO: store all filenames in all folders, automatically walk folders
-    // when less lazy
-
-    std::string filePath = m_hdAssetPath + "/drs/graphics/" + filename; // most files seems to be in this
-    if (std::filesystem::exists(filePath)) {
-        return filePath;
-    }
-    filePath = m_hdAssetPath + "/drs/gamedata_x2/" + filename; // second most files seems to be in this
-    if (std::filesystem::exists(filePath)) {
-        return filePath;
-    }
-    filePath = m_hdAssetPath + "/drs/terrain/" + filename;
-    if (std::filesystem::exists(filePath)) {
-        return filePath;
-    }
-    filePath = m_hdAssetPath + "/drs/gamedata_x1/" + filename;
-    if (std::filesystem::exists(filePath)) {
-        return filePath;
-    }
-    filePath = m_hdAssetPath + "/drs/interface/" + filename;
-    if (std::filesystem::exists(filePath)) {
-        return filePath;
-    }
-    filePath = m_hdAssetPath + "/drs/sounds/" + filename;
-    if (std::filesystem::exists(filePath)) {
-        return filePath;
-    }
-
-    filePath = m_hdAssetPath + "/slp/" + filename;
-    if (std::filesystem::exists(filePath)) {
-        return filePath;
+    std::unordered_map<std::string, std::string>::const_iterator it = m_hdFilePaths.find(filename);
+    if (it != m_hdFilePaths.end()) {
+        return it->second;
     }
 
     return "";
