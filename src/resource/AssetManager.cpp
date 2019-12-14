@@ -66,6 +66,24 @@ genie::SlpFilePtr AssetManager::getSlp(const std::string &name, const ResourceTy
 
 genie::SlpFilePtr AssetManager::getUiOverlay(const AssetManager::UiResolution res, const AssetManager::UiCiv civ)
 {
+    if (m_isHd) { // more wtf
+        int offset = 0;
+        switch(res) {
+        case UiResolution::Ui800x600:
+            offset = 18;
+            break;
+        case UiResolution::Ui1024x768:
+            offset = 10;
+            break;
+        case UiResolution::Ui1280x1024:
+            offset = 20;
+            break;
+        default:
+            WARN << "This probably isn't going to exist";
+        }
+        WARN << (uint32_t(res) + uint32_t(civ) + offset);
+        return getSlp(uint32_t(res) + uint32_t(civ) + offset, ResourceType::Interface);
+    }
     // wtf
     if (res == UiResolution::Ui1280x1024 && civ > UiCiv::Spanish) {
         return getSlp(51142 + uint32_t(civ), ResourceType::Interface);
