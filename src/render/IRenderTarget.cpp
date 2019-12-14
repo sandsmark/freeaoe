@@ -14,7 +14,7 @@ Drawable::Image::Ptr IRenderTarget::convertFrameToImage(const genie::SlpFramePtr
 Drawable::Image::Ptr IRenderTarget::convertFrameToImage(const genie::SlpFramePtr &frame, const genie::PalFile &palette, const int playerId)
 {
     if (!frame) {
-        createImage(Size(), nullptr);
+        return createImage(Size(), nullptr);
     }
 
     const uint32_t width = frame->getWidth();
@@ -22,6 +22,20 @@ Drawable::Image::Ptr IRenderTarget::convertFrameToImage(const genie::SlpFramePtr
     const genie::SlpFrameData &frameData = frame->img_data;
     const int area = width * height;
 
+    if (frame->is32bit()) {
+        TIME_THIS;
+        std::vector<uint32_t> pixelsBuf = frameData.bgra_channels;
+
+        // BGRA to RGBA, idk if it's that efficient with fancy c++ for loops but it's not too slow at least
+        for (uint32_t &pixel : pixelsBuf) {
+            pixel = ((pixel & 0x000000ff) << 24)
+                    | ((pixel & 0x0000ff00) << 8)
+                    | ((pixel & 0x00ff0000) >> 8)
+                    | ((pixel & 0xff000000) >> 24);
+        }
+
+        return createImage(Size(width, height), reinterpret_cast<uint8_t*>(pixelsBuf.data()));
+    }
 
     // fuck msvc
     std::vector<Uint8> pixelsBuf(area * 4);
@@ -30,6 +44,8 @@ Drawable::Image::Ptr IRenderTarget::convertFrameToImage(const genie::SlpFramePtr
     const std::vector<genie::Color> &colors = palette.colors_;
     const std::vector<uint8_t> &pixelindexes = frameData.pixel_indexes;
     const std::vector<uint8_t> &alphachannel = frameData.alpha_channel;
+    assert(pixelindexes.size() == area);
+    assert(alphachannel.size() == area);
     for (int i=0; i<area; i++) {
         const genie::Color &col = colors[pixelindexes[i]];
         *pixels++ = col.r;
