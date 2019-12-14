@@ -26,12 +26,20 @@
 
 #include <genie/Types.h>
 
-#include <SFML/Config.hpp>
+#include <SFML/System/Vector2.hpp>
 #include <SFML/Graphics/Rect.hpp>
 #include <cmath>
 
 #include "core/Logger.h"
 #include "core/Utility.h"
+
+#ifndef SFML_CONFIG_HPP
+namespace sf {
+    typedef unsigned char Uint8;
+    typedef signed   int Int32;
+    typedef unsigned int Uint32;
+}
+#endif
 
 using sf::Uint32;
 using sf::Uint8;
