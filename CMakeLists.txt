@@ -116,6 +116,7 @@ endif()
 
 include_directories(
     src/
+    extern/
     ${PROJECT_BINARY_DIR}
   )
 
