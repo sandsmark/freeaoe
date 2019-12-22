@@ -99,7 +99,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 # TODO: proper find_packages
-if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/extern/mini_al/mini_al.h)
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/extern/mini_al/miniaudio.h)
     message(STATUS "Using bundled mini_al")
     include_directories(${CMAKE_CURRENT_SOURCE_DIR}/extern/)
 endif()
