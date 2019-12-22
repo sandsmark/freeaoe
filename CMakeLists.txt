@@ -258,6 +258,7 @@ set(ALL_LIBRARIES
 )
 
 add_library(freeaoe_common OBJECT ${ENGINE_SRC})
+target_link_libraries(freeaoe_common ${ALL_LIBRARIES})
 
 #add_executable(freeaoe src/main.cpp ${ENGINE_SRC})
 add_executable(freeaoe src/main.cpp $<TARGET_OBJECTS:freeaoe_common>)
