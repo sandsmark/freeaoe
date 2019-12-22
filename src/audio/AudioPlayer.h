@@ -4,7 +4,7 @@
 #include <memory>
 #include <mutex>
 
-struct mal_device;
+struct ma_device;
 struct sts_mixer_t;
 
 class AudioPlayer
@@ -20,10 +20,10 @@ public:
 private:
     void playSample(const std::shared_ptr<uint8_t[]> &data, const float pan = 0.f, const float volume = 1.f);
 
-    static uint32_t malCallback(mal_device *device, uint32_t frameCount, void *buffer);
+    static void malCallback(ma_device *device, void *buffer, const void *, uint32_t frameCount);
 
     std::unique_ptr<sts_mixer_t> m_mixer;
-    std::unique_ptr<mal_device> m_device;
+    std::unique_ptr<ma_device> m_device;
     std::mutex m_mutex;
 };
 

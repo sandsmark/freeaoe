@@ -10,33 +10,33 @@
 #include "resource/DataManager.h"
 #include "sts_mixer.h"
 
-#define DR_MP3_IMPLEMENTATION
 #include <genie/dat/Sound.h>
 #include <genie/dat/SoundItem.h>
-#include <mini_al/extras/dr_mp3.h>
 #include <stddef.h>
 
-#define MINI_AL_IMPLEMENTATION
-#define MAL_NO_DECODING
-#define MAL_NO_JACK
-#define MAL_NO_SDL
-#define MAL_NO_OPENAL
-#define MAL_NO_ALSA
-//#define MAL_DEBUG_OUTPUT
-#include <mini_al/mini_al.h>
+//#define DR_MP3_IMPLEMENTATION
+//#include <mini_al/extras/dr_mp3.h>
 
-uint32_t AudioPlayer::malCallback(mal_device *device, uint32_t frameCount, void *buffer)
+#define MINIAUDIO_IMPLEMENTATION
+#define MA_NO_DECODING
+#define MA_NO_JACK
+#define MA_NO_SDL
+#define MA_NO_OPENAL
+#define MA_NO_ALSA
+#define MA_NO_STDIO
+//#define ma_DEBUG_OUTPUT
+#include <mini_al/miniaudio.h>
+
+void AudioPlayer::malCallback(ma_device *device, void *buffer, const void* /*input*/, uint32_t frameCount)
 {
     AudioPlayer *that = reinterpret_cast<AudioPlayer*>(device->pUserData);
 
     if (!that->m_mutex.try_lock()) {
         WARN << "Failed to lock mutex, probably shutting down";
-        return 0;
+        return;
     }
     sts_mixer_mix_audio(that->m_mixer.get(), buffer, frameCount);
     that->m_mutex.unlock();
-
-    return frameCount;
 }
 
 AudioPlayer::AudioPlayer()
@@ -44,23 +44,25 @@ AudioPlayer::AudioPlayer()
     m_mixer = std::make_unique<sts_mixer_t>();
     sts_mixer_init(m_mixer.get(), 44100, STS_MIXER_SAMPLE_FORMAT_16);
 
-    mal_device_config config = mal_device_config_init_playback(
-                mal_format_s16,
-                2,
-                44100,
-                malCallback
-                );
 
-    m_device = std::make_unique<mal_device>();
-    mal_result ret = mal_device_init(nullptr, mal_device_type_playback, nullptr, &config, this, m_device.get());
-    if (ret != MAL_SUCCESS) {
+    ma_device_config config = ma_device_config_init(ma_device_type_playback);
+    config.playback.format   = ma_format_s16;
+    config.playback.channels = 2;
+    config.sampleRate        = 44100;
+    config.dataCallback      = &AudioPlayer::malCallback;
+    config.pUserData         = this;
+
+    m_device = std::make_unique<ma_device>();
+    ma_result ret = ma_device_init(nullptr, &config, m_device.get());
+    if (ret != MA_SUCCESS) {
         WARN << "Failed to open playback device" << ret;
         return;
     }
 
-    if (mal_device_start(m_device.get()) != MAL_SUCCESS) {
-        WARN << "Failed to start playback device.";
-        mal_device_uninit(m_device.get());
+    ret = ma_device_start(m_device.get());
+    if (ret != MA_SUCCESS) {
+        WARN << "Failed to start playback device." << ret;
+        ma_device_uninit(m_device.get());
         return;
     }
 }
@@ -68,7 +70,7 @@ AudioPlayer::AudioPlayer()
 AudioPlayer::~AudioPlayer()
 {
     std::lock_guard<std::mutex> guard(m_mutex);
-    mal_device_uninit(m_device.get());
+    ma_device_uninit(m_device.get());
     sts_mixer_shutdown(m_mixer.get());
 }
 
