@@ -259,12 +259,12 @@ set(ALL_LIBRARIES
 add_library(freeaoe_common OBJECT ${ENGINE_SRC})
 
 #add_executable(freeaoe src/main.cpp ${ENGINE_SRC})
-add_executable(freeaoe src/main.cpp)
-target_link_libraries(freeaoe  freeaoe_common ${ALL_LIBRARIES})
+add_executable(freeaoe src/main.cpp $<TARGET_OBJECTS:freeaoe_common>)
+target_link_libraries(freeaoe ${ALL_LIBRARIES})
 install(TARGETS freeaoe DESTINATION bin)
 
-add_executable(test test/main.cpp)
-target_link_libraries(test freeaoe_common ${ALL_LIBRARIES})
+add_executable(test test/main.cpp $<TARGET_OBJECTS:freeaoe_common>)
+target_link_libraries(test ${ALL_LIBRARIES})
 
 #if (CMAKE_BUILD_TYPE MATCHES Debug)
 #    if(CLANG_TIDY_EXE)
