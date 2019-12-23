@@ -5,7 +5,7 @@
 struct Unit;
 using UnitPtr = std::shared_ptr<Unit>;
 
-#include <genie/dat/UnitCommand.h>
+#include <genie/dat/ActionType.h>
 
 #include <memory>
 
@@ -15,7 +15,7 @@ public:
     ActionAttack(const UnitPtr &attacker, const UnitPtr &target, const Task &task);
     ActionAttack(const UnitPtr &attacker, const MapPos &targetPos, const Task &task);
 
-    genie::Task::ActionTypes taskType() const override { return genie::Task::Attack; }
+    genie::ActionType::Types taskType() const override { return genie::ActionType::Attack; }
     UnitState unitState() const override;
     UpdateResult update(Time time) override;
 

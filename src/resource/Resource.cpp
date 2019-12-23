@@ -24,6 +24,7 @@
 #include <genie/dat/PlayerColour.h>
 #include <genie/resource/Color.h>
 #include <genie/resource/PalFile.h>
+#include <genie/resource/SlpFrame.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <memory>

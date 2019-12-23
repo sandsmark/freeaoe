@@ -20,7 +20,6 @@
 
 #include <genie/dat/Unit.h>
 #include <genie/dat/ResourceUsage.h>
-#include <genie/dat/UnitCommand.h>
 #include <genie/dat/unit/Action.h>
 #include <genie/dat/unit/Building.h>
 #include <algorithm>
@@ -70,7 +69,7 @@ Unit::Ptr UnitFactory::duplicateUnit(const Unit::Ptr &other)
 void UnitFactory::handleDefaultAction(const Unit::Ptr &unit, const genie::Task &task)
 {
     switch(task.ActionType) {
-    case genie::Task::Fly: {
+    case genie::ActionType::Fly: {
         MapPos flyingPosition = unit->position();
         DBG << "Flying unit at" << flyingPosition;
 
@@ -88,8 +87,8 @@ void UnitFactory::handleDefaultAction(const Unit::Ptr &unit, const genie::Task &
     }
 
         //TODO
-    case genie::Task::Graze:
-    case genie::Task::GetAutoConverted:
+    case genie::ActionType::Graze:
+    case genie::ActionType::GetAutoConverted:
         break;
     default:
         WARN << "unhandled default action" << task.actionTypeName() << "for" << unit->debugName;

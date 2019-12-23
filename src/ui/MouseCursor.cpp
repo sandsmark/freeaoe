@@ -1,6 +1,5 @@
 #include "MouseCursor.h"
 
-#include <genie/dat/unit/../UnitCommand.h>
 #include <genie/resource/SlpFile.h>
 #include <genie/resource/SlpFrame.h>
 
@@ -43,7 +42,7 @@ bool MouseCursor::update(const std::shared_ptr<UnitManager> &unitManager)
     const Task targetAction = unitManager->defaultActionAt(m_position, m_renderTarget->camera());
     if (!targetAction.data) {
         return setCursor(MouseCursor::Normal);
-    } else if (targetAction.data->ActionType == genie::Task::Combat) {
+    } else if (targetAction.data->ActionType == genie::ActionType::Combat) {
         return setCursor(MouseCursor::Attack);
     } else {
         return setCursor(MouseCursor::Action);

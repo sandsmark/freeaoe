@@ -37,7 +37,6 @@
 
 #include <genie/Types.h>
 #include <genie/dat/Unit.h>
-#include <genie/dat/UnitCommand.h>
 #include <genie/dat/unit/Action.h>
 
 #include <SFML/Graphics/BlendMode.hpp>
@@ -529,9 +528,9 @@ bool UnitManager::onLeftClick(const ScreenPos &screenPos, const CameraPtr &camer
 
             std::shared_ptr<ActionAttack> action;
             if (targetUnit) {
-                action = std::make_shared<ActionAttack>(unit, targetUnit, unit->findMatchingTask(genie::Task::Attack, targetUnit->data()->ID));
+                action = std::make_shared<ActionAttack>(unit, targetUnit, unit->findMatchingTask(genie::ActionType::Attack, targetUnit->data()->ID));
             } else {
-                action = std::make_shared<ActionAttack>(unit, targetPos, unit->findMatchingTask(genie::Task::Attack, -1));
+                action = std::make_shared<ActionAttack>(unit, targetPos, unit->findMatchingTask(genie::ActionType::Attack, -1));
             }
             unit->setCurrentAction(action);
         }
@@ -572,7 +571,7 @@ void UnitManager::onRightClick(const ScreenPos &screenPos, const CameraPtr &came
             continue;
         }
 
-        if (task.data->ActionType == genie::Task::Combat) {
+        if (task.data->ActionType == genie::ActionType::Combat) {
             AudioPlayer::instance().playSound(unit->data()->Action.AttackSound, humanPlayer->civilization.id());
         }
 
@@ -1007,7 +1006,7 @@ void UnitManager::placeBuilding(const UnplacedBuilding &building)
 
         Task task;
         for (const Task &potential : unit->availableActions()) {
-            if (potential.data->ActionType == genie::Task::Build) {
+            if (potential.data->ActionType == genie::ActionType::Build) {
                 task = potential;
                 break;
             }

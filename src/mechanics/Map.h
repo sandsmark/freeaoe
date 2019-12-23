@@ -19,8 +19,6 @@
 #pragma once
 
 #include <assert.h>
-#include <stdint.h>
-#include <algorithm>
 #include <memory>
 #include <vector>
 
@@ -28,7 +26,7 @@
 #include "core/Constants.h"
 #include "core/SignalEmitter.h"
 #include "core/Utility.h"
-#include "mechanics/Entity.h"
+#include "core/Types.h"
 
 namespace genie {
 class ScnMap;

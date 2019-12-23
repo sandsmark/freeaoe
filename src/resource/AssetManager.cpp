@@ -270,16 +270,17 @@ const genie::VisibilityMask &AssetManager::exploredVisibilityMask(const genie::S
 const genie::PalFile &AssetManager::getPalette(uint32_t id)
 {
     if (m_isHd) {
-        if (m_hdPalFiles.count(id)) {
-            return m_hdPalFiles[id];
+        if (m_hdPalFiles[id]) {
+            return *m_hdPalFiles[id];
         }
         std::string filepath = findHdFile(std::to_string(id) + ".bina");
         if (!filepath.empty()) {
-            m_hdPalFiles[id].load(filepath);
+            m_hdPalFiles[id] = std::make_unique<genie::PalFile>();
+            m_hdPalFiles[id]->load(filepath);
         } else {
             WARN << "Failed to find palette" << id;
         }
-        return m_hdPalFiles[id];
+        return *m_hdPalFiles[id];
     }
 
 

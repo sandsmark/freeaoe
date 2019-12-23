@@ -1,12 +1,6 @@
 #pragma once
 
-#include <SFML/Graphics/Font.hpp>
-#include <SFML/Graphics/RectangleShape.hpp>
-#include <SFML/Graphics/RenderWindow.hpp>
-#include <SFML/Graphics/Text.hpp>
 #include "core/Types.h"
-#include <SFML/Graphics/Text.hpp>
-#include <SFML/Graphics/RectangleShape.hpp>
 
 #include "render/IRenderTarget.h"
 
@@ -18,7 +12,10 @@
 #include "core/Types.h"
 
 namespace sf {
+class RenderWindow;
 class Event;
+class Font;
+class Text;
 }
 
 struct Button
@@ -82,6 +79,8 @@ class FileDialog
 {
 public:
     FileDialog();
+
+    ~FileDialog(); // empty, but necessary to get std::unique_ptr to work with a forward declaration
 
     bool setup(int width, int height);
 

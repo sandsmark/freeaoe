@@ -5,13 +5,11 @@
 #include "global/Config.h"
 #include "render/SfmlRenderTarget.h"
 
+#include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Color.hpp>
-#include <SFML/Graphics/Rect.hpp>
-#include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/View.hpp>
-#include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/VideoMode.hpp>
 
@@ -23,6 +21,8 @@
 FileDialog::FileDialog()
 {
 }
+
+FileDialog::~FileDialog() { }
 
 bool FileDialog::setup(int width, int height)
 {

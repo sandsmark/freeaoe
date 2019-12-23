@@ -19,12 +19,6 @@
 #pragma once
 
 #include <genie/Types.h>
-#include <genie/resource/BlendomaticFile.h>
-#include <genie/resource/EdgeFiles.h>
-#include <genie/resource/Slope.h>
-#include <genie/resource/SlpFile.h>
-#include <genie/resource/SlpTemplate.h>
-#include <genie/script/ScnFile.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <algorithm>
@@ -35,7 +29,6 @@
 #include <fstream>
 #include <sstream>
 
-#include <genie/resource/PalFile.h>
 #include <genie/resource/Slope.h>
 
 class ColorPalette;
@@ -217,7 +210,7 @@ private:
     std::shared_ptr<genie::DrsFile> m_graphicsFile;
     std::shared_ptr<genie::DrsFile> m_terrainFile;
 
-    std::unordered_map<int, genie::PalFile> m_hdPalFiles;
+    std::unordered_map<int, std::unique_ptr<genie::PalFile>> m_hdPalFiles;
 
     DrsFileVector m_allFiles;
 

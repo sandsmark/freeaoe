@@ -25,13 +25,15 @@
 
 #include "IRenderer.h"
 #include "core/Types.h"
-#include "mechanics/Map.h"
 #include "render/IRenderTarget.h"
 
 namespace sf {
 class Texture;
 }  // namespace sf
 struct VisibilityMap;
+
+class Map;
+using MapPtr = std::shared_ptr<Map>;
 
 class MapRenderer : public IRenderer
 {

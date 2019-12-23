@@ -5,7 +5,6 @@
 #include "mechanics/Unit.h"
 
 #include <genie/dat/ResourceUsage.h>
-#include <genie/dat/UnitCommand.h>
 
 #include <memory>
 
@@ -16,7 +15,7 @@ public:
 
     UpdateResult update(Time time) override;
     UnitState unitState() const override { return UnitState::Proceeding; }
-    genie::Task::ActionTypes taskType() const override { return genie::Task::ActionTypes(m_task.data->ActionType); }
+    genie::ActionType::Types taskType() const override { return genie::ActionType::Types(m_task.data->ActionType); }
 
 private:
     std::weak_ptr<Unit> m_target;
@@ -30,7 +29,7 @@ public:
 
     UpdateResult update(Time time) override;
     UnitState unitState() const override;
-    genie::Task::ActionTypes taskType() const override { return genie::Task::ActionTypes(m_task.data->ActionType); }
+    genie::ActionType::Types taskType() const override { return genie::ActionType::Types(m_task.data->ActionType); }
 
 private:
     void maybeDropOff(const Unit::Ptr &unit);

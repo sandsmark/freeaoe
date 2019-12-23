@@ -25,7 +25,6 @@
 #include <genie/dat/TerrainBlock.h>
 #include <genie/dat/TerrainRestriction.h>
 #include <genie/dat/Unit.h>
-#include <genie/dat/unit/../UnitCommand.h>
 #include <filesystem>
 #include <map>
 #include <memory>

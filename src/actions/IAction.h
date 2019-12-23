@@ -20,7 +20,7 @@
 
 #include "core/Types.h"
 
-#include <genie/dat/unit/Action.h>
+#include <genie/dat/ActionType.h>
 
 #include <unordered_set>
 
@@ -30,6 +30,10 @@ class Map;
 class UnitManager;
 struct Player;
 
+namespace genie {
+class Task;
+}
+
 struct Task {
     Task(const genie::Task &t, int id) : data(&t), unitId(id) {}
     Task() = default;
@@ -37,12 +41,7 @@ struct Task {
     const genie::Task *data = nullptr;
     int unitId = -1; // for task group swapping
 
-    bool operator==(const Task &other) const {
-        return unitId == other.unitId && (
-                (data && other.data && data->ID == other.data->ID) ||
-                (data == other.data)
-        );
-    }
+    bool operator==(const Task &other) const;
 };
 
 
@@ -82,7 +81,7 @@ public:
     static Task findMatchingTask(const std::shared_ptr<Player> ownPlayer, const std::shared_ptr<Unit> &target, const std::unordered_set<Task> &potentials);
 
     virtual UnitState unitState() const { return UnitState::Idle; }
-    virtual genie::Task::ActionTypes taskType() const = 0;
+    virtual genie::ActionType::Types taskType() const = 0;
 
     static void assignTask(const Task &task, const std::shared_ptr<Unit> &unit, const std::shared_ptr<Unit> &target);
 
@@ -146,70 +145,70 @@ inline LogPrinter operator <<(LogPrinter os, const IAction::Type actionType)
     return os;
 }
 
-inline LogPrinter operator <<(LogPrinter os, const genie::Task::ActionTypes actionType)
+inline LogPrinter operator <<(LogPrinter os, const genie::ActionType::Types actionType)
 {
     const char *separator = os.separator;
     os.separator = "";
 
-    os << "genie::Task::";
+    os << "genie::Actions::";
 
-    //:%s,\(.*\) =.*,case genie::Task::\1: os << "\1"; break;,
+    //:%s,\(.*\) =.*,case genie::Actions::\1: os << "\1"; break;,
     switch(actionType) {
-    case genie::Task::None: os << "None"; break;
+    case genie::ActionType::None: os << "None"; break;
 
     /// In AoC
-    case genie::Task::Garrison: os << "Garrison"; break;
-    case genie::Task::GatherRebuild: os << "GatherRebuild"; break;
-    case genie::Task::Graze: os << "Graze"; break;
-    case genie::Task::Combat: os << "Combat"; break;
-    case genie::Task::Fly: os << "Fly"; break;
-    case genie::Task::ScareHunt: os << "ScareHunt"; break;
-    case genie::Task::UnloadBoat: os << "UnloadBoat"; break;
-    case genie::Task::Guard: os << "Guard"; break;
-    case genie::Task::SetInitialResources: os << "SetInitialResources"; break;
-    case genie::Task::Build: os << "Build"; break;
-    case genie::Task::Convert: os << "Convert"; break;
-    case genie::Task::Heal: os << "Heal"; break;
-    case genie::Task::Repair: os << "Repair"; break;
-    case genie::Task::GetAutoConverted: os << "GetAutoConverted"; break;
-    case genie::Task::RetreatToShootingRage: os << "RetreatToShootingRage"; break;
-    case genie::Task::Hunt: os << "Hunt"; break;
-    case genie::Task::Trade: os << "Trade"; break;
-    case genie::Task::GenerateWonderVictory: os << "GenerateWonderVictory"; break;
-    case genie::Task::FarmDeselectWhenBuilt: os << "FarmDeselectWhenBuilt"; break;
-    case genie::Task::Loot: os << "Loot"; break;
-    case genie::Task::UnpackAndAttack: os << "UnpackAndAttack"; break;
-    case genie::Task::OffMapTrade1: os << "OffMapTrade1"; break;
-    case genie::Task::PickupRelic: os << "PickupRelic"; break;
-    case genie::Task::KidnapUnit: os << "KidnapUnit"; break;
-    case genie::Task::DepositRelic: os << "DepositRelic"; break;
+    case genie::ActionType::Garrison: os << "Garrison"; break;
+    case genie::ActionType::GatherRebuild: os << "GatherRebuild"; break;
+    case genie::ActionType::Graze: os << "Graze"; break;
+    case genie::ActionType::Combat: os << "Combat"; break;
+    case genie::ActionType::Fly: os << "Fly"; break;
+    case genie::ActionType::ScareHunt: os << "ScareHunt"; break;
+    case genie::ActionType::UnloadBoat: os << "UnloadBoat"; break;
+    case genie::ActionType::Guard: os << "Guard"; break;
+    case genie::ActionType::SetInitialResources: os << "SetInitialResources"; break;
+    case genie::ActionType::Build: os << "Build"; break;
+    case genie::ActionType::Convert: os << "Convert"; break;
+    case genie::ActionType::Heal: os << "Heal"; break;
+    case genie::ActionType::Repair: os << "Repair"; break;
+    case genie::ActionType::GetAutoConverted: os << "GetAutoConverted"; break;
+    case genie::ActionType::RetreatToShootingRage: os << "RetreatToShootingRage"; break;
+    case genie::ActionType::Hunt: os << "Hunt"; break;
+    case genie::ActionType::Trade: os << "Trade"; break;
+    case genie::ActionType::GenerateWonderVictory: os << "GenerateWonderVictory"; break;
+    case genie::ActionType::FarmDeselectWhenBuilt: os << "FarmDeselectWhenBuilt"; break;
+    case genie::ActionType::Loot: os << "Loot"; break;
+    case genie::ActionType::UnpackAndAttack: os << "UnpackAndAttack"; break;
+    case genie::ActionType::OffMapTrade1: os << "OffMapTrade1"; break;
+    case genie::ActionType::PickupRelic: os << "PickupRelic"; break;
+    case genie::ActionType::KidnapUnit: os << "KidnapUnit"; break;
+    case genie::ActionType::DepositRelic: os << "DepositRelic"; break;
 
     /// Not in AoC
-    case genie::Task::MoveTo: os << "MoveTo"; break;
-    case genie::Task::Follow: os << "Follow"; break;
-    case genie::Task::Explore: os << "Explore"; break;
-    case genie::Task::Shoot: os << "Shoot"; break;
-    case genie::Task::Attack: os << "Attack"; break;
-    case genie::Task::Escape: os << "Escape"; break;
-    case genie::Task::Num: os << "Num"; break;
-    case genie::Task::MakeUnit: os << "MakeUnit"; break;
-    case genie::Task::MakeTech: os << "MakeTech"; break;
-    case genie::Task::DiscoveryArtifact: os << "DiscoveryArtifact"; break;
-    case genie::Task::Housing: os << "Housing"; break;
-    case genie::Task::Pack: os << "Pack"; break;
-    case genie::Task::OffMapTrade0: os << "OffMapTrade0"; break;
-    case genie::Task::ChargeAttack: os << "ChargeAttack"; break;
-    case genie::Task::TransformUnit: os << "TransformUnit"; break;
-    case genie::Task::Shear: os << "Shear"; break;
+    case genie::ActionType::MoveTo: os << "MoveTo"; break;
+    case genie::ActionType::Follow: os << "Follow"; break;
+    case genie::ActionType::Explore: os << "Explore"; break;
+    case genie::ActionType::Shoot: os << "Shoot"; break;
+    case genie::ActionType::Attack: os << "Attack"; break;
+    case genie::ActionType::Escape: os << "Escape"; break;
+    case genie::ActionType::Num: os << "Num"; break;
+    case genie::ActionType::MakeUnit: os << "MakeUnit"; break;
+    case genie::ActionType::MakeTech: os << "MakeTech"; break;
+    case genie::ActionType::DiscoveryArtifact: os << "DiscoveryArtifact"; break;
+    case genie::ActionType::Housing: os << "Housing"; break;
+    case genie::ActionType::Pack: os << "Pack"; break;
+    case genie::ActionType::OffMapTrade0: os << "OffMapTrade0"; break;
+    case genie::ActionType::ChargeAttack: os << "ChargeAttack"; break;
+    case genie::ActionType::TransformUnit: os << "TransformUnit"; break;
+    case genie::ActionType::Shear: os << "Shear"; break;
 
     /// Only in HD, I guess
-    case genie::Task::HDSiegeTowerAbility: os << "HDSiegeTowerAbility"; break;
-    case genie::Task::HDRegeneration: os << "HDRegeneration"; break;
-    case genie::Task::HDFeitoria: os << "HDFeitoria"; break;
+    case genie::ActionType::HDSiegeTowerAbility: os << "HDSiegeTowerAbility"; break;
+    case genie::ActionType::HDRegeneration: os << "HDRegeneration"; break;
+    case genie::ActionType::HDFeitoria: os << "HDFeitoria"; break;
 
-    case genie::Task::Stop: os << "Stop"; break;
-    case genie::Task::AboutFace: os << "AboutFace"; break;
-    case genie::Task::Wheel: os << "Wheel"; break;
+    case genie::ActionType::Stop: os << "Stop"; break;
+    case genie::ActionType::AboutFace: os << "AboutFace"; break;
+    case genie::ActionType::Wheel: os << "Wheel"; break;
     }
 
     os << separator;

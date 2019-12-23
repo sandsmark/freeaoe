@@ -20,9 +20,7 @@
 
 #include "IRenderTarget.h"
 
-#include <resource/Graphic.h>
-#include <SFML/Graphics/Texture.hpp>
-#include <SFML/Graphics/Text.hpp>
+#include "resource/Graphic.h"
 
 namespace sf {
 class Drawable;
@@ -31,30 +29,25 @@ class Image;
 class RenderTarget;
 class Sprite;
 class Texture;
+class Text;
 }
 
 struct SfmlImage : public Drawable::Image
 {
     SfmlImage() {}
 
-    sf::Texture texture;
+    std::unique_ptr<sf::Texture> texture;
 };
 
 struct SfmlText : public Drawable::Text
 {
-    SfmlText() {}
+    SfmlText();
 
-    sf::Text text;
+    std::unique_ptr<sf::Text> text;
     ScreenPos lastPos;
     Alignment lastAlignment = AlignLeft;
 
-    Size size() override {
-        text.setString(string);
-        text.setCharacterSize(pointSize);
-
-        const sf::FloatRect bounds = text.getLocalBounds();
-        return Size(bounds.width, bounds.height);
-    }
+    Size size() override;
 };
 
 class SfmlRenderTarget : public IRenderTarget

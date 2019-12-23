@@ -32,6 +32,7 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Transform.hpp>
 #include <SFML/Graphics/View.hpp>
+#include <SFML/Graphics/Text.hpp>
 #include <SFML/System/Vector2.hpp>
 
 #include <memory>
@@ -197,7 +198,8 @@ Drawable::Image::Ptr SfmlRenderTarget::createImage(const Size &size, const uint8
         image.create(10, 10, sf::Color::Red);
     }
 
-    ret->texture.loadFromImage(image);
+    ret->texture = std::make_unique<sf::Texture>();
+    ret->texture->loadFromImage(image);
     ret->size = size;
 
     // clang complains if we don't use move here because of mismatching return types and old compilers (I bet msvc)
@@ -261,7 +263,7 @@ void SfmlRenderTarget::draw(const Drawable::Image::Ptr &image, const ScreenPos &
     const std::shared_ptr<const SfmlImage> sfmlImage = std::static_pointer_cast<const SfmlImage>(image);
 
     sf::Sprite sprite;
-    sprite.setTexture(sfmlImage->texture);
+    sprite.setTexture(*sfmlImage->texture);
     sprite.setScale(SCALE, SCALE);
     sprite.setPosition(position);
 
@@ -303,7 +305,7 @@ void SfmlRenderTarget::draw(const std::shared_ptr<IRenderTarget> &renderTarget, 
 Drawable::Text::Ptr SfmlRenderTarget::createText()
 {
     std::shared_ptr<SfmlText> ret = std::make_shared<SfmlText>();
-    ret->text.setFont(defaultFont());
+    ret->text->setFont(defaultFont());
     return ret;
 }
 
@@ -318,20 +320,20 @@ void SfmlRenderTarget::draw(const Drawable::Text::Ptr &text)
 
     bool changed = false;
 
-    if (sfmlText->text.getCharacterSize() != text->pointSize) {
-        sfmlText->text.setCharacterSize(text->pointSize);
+    if (sfmlText->text->getCharacterSize() != text->pointSize) {
+        sfmlText->text->setCharacterSize(text->pointSize);
         changed = true;
     }
 
-    if (sfmlText->text.getString() != text->string) {
-        sfmlText->text.setString(text->string);
+    if (sfmlText->text->getString() != text->string) {
+        sfmlText->text->setString(text->string);
         changed = true;
     }
 
-    sfmlText->text.setFillColor(convertColor(text->color));
+    sfmlText->text->setFillColor(convertColor(text->color));
     if (text->outlineColor.a > 0) {
-        sfmlText->text.setOutlineColor(convertColor(text->outlineColor));
-        sfmlText->text.setOutlineThickness(2);
+        sfmlText->text->setOutlineColor(convertColor(text->outlineColor));
+        sfmlText->text->setOutlineThickness(2);
     }
 
     if (sfmlText->lastAlignment != text->alignment || sfmlText->lastPos != text->position || changed) {
@@ -339,10 +341,25 @@ void SfmlRenderTarget::draw(const Drawable::Text::Ptr &text)
         sfmlText->lastAlignment = text->alignment;
 
         if (text->alignment == Drawable::Text::AlignRight) {
-            sfmlText->text.setPosition(sf::Vector2f(text->position.x - sfmlText->text.getLocalBounds().width, text->position.y));
+            sfmlText->text->setPosition(sf::Vector2f(text->position.x - sfmlText->text->getLocalBounds().width, text->position.y));
         } else {
-            sfmlText->text.setPosition(text->position);
+            sfmlText->text->setPosition(text->position);
         }
     }
-    renderTarget_->draw(sfmlText->text);
+    renderTarget_->draw(*sfmlText->text);
+}
+
+SfmlText::SfmlText()
+{
+    text = std::make_unique<sf::Text>();
+
+}
+
+Size SfmlText::size()
+{
+    text->setString(string);
+    text->setCharacterSize(pointSize);
+
+    const sf::FloatRect bounds = text->getLocalBounds();
+    return Size(bounds.width, bounds.height);
 }

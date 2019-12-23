@@ -48,6 +48,7 @@
 #include "resource/AssetManager.h"
 #include "resource/DataManager.h"
 #include "resource/LanguageManager.h"
+#include "resource/Graphic.h"
 
 Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager) :
     Entity(Type::Unit, LanguageManager::getString(data_.LanguageDLLName) + " (" + std::to_string(data_.ID) + ")"),
@@ -437,7 +438,7 @@ void Unit::checkForAutoTargets() noexcept
         // TODO: should only prefer civilians (and I think only wolves? lions?)
         // should attack others as well
         // Maybe check combat level instead? but then suddenly we get wolves trying to find a path to ships
-        if (potentialTask.data->ActionType == genie::Task::Combat && data()->Class == genie::Unit::PredatorAnimal) {
+        if (potentialTask.data->ActionType == genie::ActionType::Combat && data()->Class == genie::Unit::PredatorAnimal) {
             if (other->data()->Creatable.CreatableType != genie::unit::Creatable::VillagerType) {
                 continue;
             }
@@ -484,7 +485,7 @@ std::unordered_set<Task> Unit::availableActions() noexcept
     return tasks;
 }
 
-Task Unit::findMatchingTask(const genie::Task::ActionTypes &type, int targetUnit) noexcept
+Task Unit::findMatchingTask(const genie::ActionType::Types &type, int targetUnit) noexcept
 {
     std::unordered_set<Task> available = availableActions();
     for (const Task &task : available) {
@@ -608,11 +609,11 @@ float Unit::healthLeft() const noexcept
     return healthpoints / data()->HitPoints;
 }
 
-int Unit::taskGraphicId(const genie::Task::ActionTypes taskType, const IAction::UnitState state)
+int Unit::taskGraphicId(const genie::ActionType::Types taskType, const IAction::UnitState state)
 {
     for (const genie::Task &task : DataManager::Inst().getTasks(m_data->ID)) {
         if (task.ActionType != taskType/* &&
-                !(taskType == genie::Task::GatherRebuild && task.ActionType == genie::Task::Hunt)*/) {
+                !(taskType == genie::Actions::GatherRebuild && task.ActionType == genie::Actions::Hunt)*/) {
             continue;
         }
 
@@ -671,7 +672,7 @@ void Unit::updateGraphic()
     case IAction::Type::Move:
         graphic = movingGraphics;
         for (const genie::Task &task : DataManager::Inst().getTasks(m_data->ID)) {
-            if (task.ActionType != genie::Task::GatherRebuild && task.ActionType != genie::Task::Hunt) {
+            if (task.ActionType != genie::ActionType::GatherRebuild && task.ActionType != genie::ActionType::Hunt) {
                 continue;
             }
 

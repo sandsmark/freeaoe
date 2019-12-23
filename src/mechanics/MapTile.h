@@ -21,7 +21,7 @@
 #include "core/Logger.h"
 
 #include <genie/resource/Slope.h>
-#include <genie/resource/SlpTemplate.h>
+#include <genie/resource/MaskPattern.h>
 
 class TerrainSprite;
 typedef std::shared_ptr<TerrainSprite> TerrainPtr;

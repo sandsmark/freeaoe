@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <genie/dat/ResourceUsage.h>
+#include <genie/dat/ResourceType.h>
 #include <unordered_map>
 #include "Logger.h"
 

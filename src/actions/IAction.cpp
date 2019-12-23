@@ -19,7 +19,7 @@
 #include "IAction.h"
 
 #include <genie/dat/Unit.h>
-#include <genie/dat/unit/../UnitCommand.h>
+#include <genie/dat/UnitCommand.h>
 #include <memory>
 #include <unordered_set>
 
@@ -87,12 +87,12 @@ Task IAction::findMatchingTask(const std::shared_ptr<Player> ownPlayer, const st
             break;
         }
 
-        if (action->ActionType == genie::Task::Garrison) {
+        if (action->ActionType == genie::ActionType::Garrison) {
             continue;
         }
 
         if (target->creationProgress() < 1) {
-            if (action->ActionType == genie::Task::Build) {
+            if (action->ActionType == genie::ActionType::Build) {
                 return task;
             }
 
@@ -111,7 +111,7 @@ Task IAction::findMatchingTask(const std::shared_ptr<Player> ownPlayer, const st
     // Try more generic targeting
     for (const Task &task : potentials) {
         const genie::Task *action = task.data;
-        if (action->ActionType != genie::Task::Combat) {
+        if (action->ActionType != genie::ActionType::Combat) {
             continue;
         }
         if (action->TargetDiplomacy != genie::Task::TargetGaiaNeutralEnemies && action->TargetDiplomacy != genie::Task::TargetNeutralsEnemies) {
@@ -140,7 +140,7 @@ void IAction::assignTask(const Task &task, const std::shared_ptr<Unit> &unit, co
     }
 
     switch(task.data->ActionType) {
-    case genie::Task::Build: {
+    case genie::ActionType::Build: {
         if (!target) {
             DBG << "Can't build nothing";
             return;
@@ -153,15 +153,15 @@ void IAction::assignTask(const Task &task, const std::shared_ptr<Unit> &unit, co
         unit->queueAction(buildAction);
 
         if (target->data()->Class == genie::Unit::Farm) {
-            Task farmTask = unit->findMatchingTask(genie::Task::GatherRebuild, target->data()->ID);
+            Task farmTask = unit->findMatchingTask(genie::ActionType::GatherRebuild, target->data()->ID);
             ActionPtr farmAction = std::make_shared<ActionGather>(unit, target, farmTask);
             farmAction->requiredUnitID = farmTask.unitId;
             unit->queueAction(farmAction);
         }
         break;
     }
-    case genie::Task::Hunt:
-    case genie::Task::GatherRebuild: {
+    case genie::ActionType::Hunt:
+    case genie::ActionType::GatherRebuild: {
         if (!target) {
             DBG << "Can't gather from nothing";
             return;
@@ -172,7 +172,7 @@ void IAction::assignTask(const Task &task, const std::shared_ptr<Unit> &unit, co
         unit->queueAction(farmAction);
         break;
     }
-    case genie::Task::Combat: {
+    case genie::ActionType::Combat: {
         if (target) {
             DBG << "attacking" << target->debugName;
         }
@@ -193,4 +193,12 @@ void IAction::assignTask(const Task &task, const std::shared_ptr<Unit> &unit, co
 
 IAction::~IAction()
 {
+}
+
+bool Task::operator==(const Task &other) const
+{
+    return unitId == other.unitId && (
+                (data && other.data && data->ID == other.data->ID) ||
+                (data == other.data)
+                );
 }

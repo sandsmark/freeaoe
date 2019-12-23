@@ -497,7 +497,7 @@ std::shared_ptr<ActionMove> ActionMove::moveUnitTo(const Unit::Ptr &unit, MapPos
 std::shared_ptr<ActionMove> ActionMove::moveUnitTo(const Unit::Ptr &unit, MapPos destination) noexcept
 {
     static genie::Task defaultGenieMoveTask;
-    defaultGenieMoveTask.ActionType = genie::Task::MoveTo;
+    defaultGenieMoveTask.ActionType = genie::ActionType::MoveTo;
 
     return moveUnitTo(unit, destination, Task(defaultGenieMoveTask, -1));
 }

@@ -32,6 +32,7 @@
 #include "debug/ISampleGame.h"
 #include "mechanics/UnitManager.h"
 #include "mechanics/Player.h"
+#include "mechanics/Map.h"
 
 #include "resource/LanguageManager.h"
 
@@ -39,7 +40,6 @@
 #include "genie/script/ScnFile.h"
 
 #include <SFML/Graphics/RenderTarget.hpp>
-#include <SFML/Window/Mouse.hpp>
 
 #include <iostream>
 #include <render/GraphicRender.h>

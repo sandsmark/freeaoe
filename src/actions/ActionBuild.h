@@ -6,8 +6,6 @@ struct Building;
 struct Unit;
 using UnitPtr = std::shared_ptr<Unit>;
 
-#include <genie/dat/UnitCommand.h>
-
 #include <memory>
 
 struct Building;
@@ -22,7 +20,7 @@ public:
 
     UnitState unitState() const override;
 
-    genie::Task::ActionTypes taskType() const override { return genie::Task::Build; }
+    genie::ActionType::Types taskType() const override { return genie::ActionType::Build; }
 
 private:
     std::weak_ptr<Building> m_targetBuilding;

@@ -4,8 +4,6 @@
 #include "core/Constants.h"
 #include "core/Types.h"
 
-#include <genie/dat/UnitCommand.h>
-
 #include <memory>
 
 struct Unit;
@@ -20,7 +18,7 @@ public:
     UpdateResult update(Time time) override;
     UnitState unitState() const override;
 
-    genie::Task::ActionTypes taskType() const override { return genie::Task::Fly; }
+    genie::ActionType::Types taskType() const override { return genie::ActionType::Fly; }
 
 private:
     Time m_lastUpdateTime = 0;

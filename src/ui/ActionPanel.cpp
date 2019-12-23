@@ -7,7 +7,6 @@
 #include <SFML/Window/Event.hpp>
 #include <genie/dat/Research.h>
 #include <genie/dat/Unit.h>
-#include <genie/dat/UnitCommand.h>
 
 #include <genie/dat/unit/Creatable.h>
 #include <genie/resource/SlpFile.h>
@@ -329,14 +328,14 @@ void ActionPanel::updateButtons()
         addedTypes.insert(task.data->ActionType);
 
         switch(task.data->ActionType) {
-        case genie::Task::Garrison: {
+        case genie::ActionType::Garrison: {
             InterfaceButton garrisonButton;
             garrisonButton.action = Command::Garrison;
             garrisonButton.index = 4;
             currentButtons.push_back(garrisonButton);
             break;
         }
-        case genie::Task::Build: {
+        case genie::ActionType::Build: {
             InterfaceButton backButton;
             backButton.action = Command::PreviousPage;
             backButton.index = 14;
@@ -361,8 +360,8 @@ void ActionPanel::updateButtons()
             currentButtons.push_back(repairButton);
             break;
         }
-        case genie::Task::RetreatToShootingRage:
-        case genie::Task::Combat:
+        case genie::ActionType::RetreatToShootingRage:
+        case genie::ActionType::Combat:
             break;
         default:
             WARN << "Unhandled action type" << task.data->ActionType << task.data->actionTypeName() << task.data->AutoSearchTargets;

@@ -19,7 +19,6 @@
 
 #include <genie/Types.h>
 #include <genie/dat/Unit.h>
-#include <genie/dat/UnitCommand.h>
 #include <algorithm>
 #include <cstdint>
 #include <deque>
@@ -35,15 +34,16 @@
 #include "core/Constants.h"
 #include "core/ResourceMap.h"
 #include "core/Types.h"
-#include "render/GraphicRender.h"
-#include "resource/Graphic.h"
 
 class UnitManager;
 namespace genie {
+class Unit;
+
 namespace unit {
 class AttackOrArmor;
 }  // namespace unit
 }  // namespace genie
+
 struct Building;
 struct Player;
 
@@ -55,6 +55,10 @@ template<> struct hash<Task>
     }
 };
 }
+
+
+class Graphic;
+using GraphicPtr = std::shared_ptr<Graphic>;
 
 struct Unit : public Entity
 {
@@ -157,7 +161,7 @@ struct Unit : public Entity
     bool hasAutoTargets() const noexcept { return !m_autoTargetTasks.empty(); }
     void checkForAutoTargets() noexcept;
     std::unordered_set<Task> availableActions() noexcept;
-    Task findMatchingTask(const genie::Task::ActionTypes &m_type, int targetUnit) noexcept;
+    Task findMatchingTask(const genie::ActionType::Types &m_type, int targetUnit) noexcept;
     Size selectionSize() const noexcept;
 
     virtual void setCreationProgress(float progress) noexcept;
@@ -211,7 +215,7 @@ protected:
     Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager, const Type m_type);
 
     void removeAction(const ActionPtr &action);
-    int taskGraphicId(const genie::Task::ActionTypes taskType, const IAction::UnitState state);
+    int taskGraphicId(const genie::ActionType::Types taskType, const IAction::UnitState state);
     void updateGraphic();
 
     const genie::Unit *m_data = nullptr;

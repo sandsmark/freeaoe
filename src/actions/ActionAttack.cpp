@@ -118,7 +118,7 @@ IAction::UpdateResult ActionAttack::update(Time time)
             return IAction::UpdateResult::Failed;
         }
 
-        if (unit->findMatchingTask(genie::Task::RetreatToShootingRage, -1).data) {
+        if (unit->findMatchingTask(genie::ActionType::RetreatToShootingRage, -1).data) {
             const float angleToTarget = unit->position().angleTo(m_targetPosition);
 
             float targetX = m_targetPosition.x + cos(angleToTarget + M_PI) * unit->data()->Combat.MinRange * Constants::TILE_SIZE * 1.1;

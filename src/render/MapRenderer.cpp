@@ -20,13 +20,15 @@
 
 #include <genie/dat/TerrainBlock.h>
 #include <genie/resource/EdgeFiles.h>
-#include <mechanics/MapTile.h>
-#include <resource/AssetManager.h>
-#include <resource/DataManager.h>
+
 #include <algorithm>
 #include <cstdint>
 #include <vector>
 
+#include "mechanics/Map.h"
+#include "mechanics/MapTile.h"
+#include "resource/AssetManager.h"
+#include "resource/DataManager.h"
 #include "IRenderTarget.h"
 #include "core/Constants.h"
 #include "core/Logger.h"

@@ -32,6 +32,9 @@
 #include "core/Types.h"
 #include "core/Utility.h"
 #include "resource/TerrainSprite.h"
+#include "mechanics/Entity.h"
+
+#include <genie/script/scn/MapDescription.h>
 
 Map::Map() //: map_txt_(0)
 {
