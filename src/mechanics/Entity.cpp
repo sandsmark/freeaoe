@@ -22,8 +22,7 @@
 #include "Building.h"
 #include "core/Constants.h"
 #include "core/Types.h"
-#include "mechanics/Entity.h"
-#include "mechanics/Map.h"
+#include "Map.h"
 #include "render/GraphicRender.h"
 
 #include <stddef.h>

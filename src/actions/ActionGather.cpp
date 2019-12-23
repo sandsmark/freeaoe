@@ -15,7 +15,7 @@
 #include <limits>
 #include <utility>
 
-ActionGather::ActionGather(const Unit::Ptr &unit, const Unit::Ptr &target, const Task &task) :
+ActionGather::ActionGather(const std::shared_ptr<Unit> &unit, const std::shared_ptr<Unit> &target, const Task &task) :
     IAction(Type::Gather, unit, task),
     m_target(target)
 {
@@ -138,7 +138,7 @@ genie::ActionType ActionGather::taskType() const
     return m_task.data->ActionType;
 }
 
-Unit::Ptr ActionGather::findDropSite(const Unit::Ptr &unit)
+std::shared_ptr<Unit> ActionGather::findDropSite(const std::shared_ptr<Unit> &unit)
 {
     float closestDistance = std::numeric_limits<float>::max();
     MapPos closestPos = unit->position(); // fallback
@@ -166,7 +166,7 @@ Unit::Ptr ActionGather::findDropSite(const Unit::Ptr &unit)
 }
 
 
-ActionDropOff::ActionDropOff(const Unit::Ptr &unit, const Unit::Ptr &target, const Task &task) :
+ActionDropOff::ActionDropOff(const std::shared_ptr<Unit> &unit, const std::shared_ptr<Unit> &target, const Task &task) :
     IAction(Type::DropOff, unit, task),
     m_target(target)
 {

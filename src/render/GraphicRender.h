@@ -21,8 +21,6 @@
 #include "core/Logger.h"
 #include "core/Types.h"
 
-#include <SFML/Graphics/Texture.hpp>
-
 #include <memory>
 
 struct Entity;
@@ -33,6 +31,10 @@ class GraphicRender;
 
 class Graphic;
 typedef std::shared_ptr<Graphic> GraphicPtr;
+
+namespace sf {
+class RenderTarget;
+}
 
 enum class RenderType {
     Shadow,
@@ -78,8 +80,6 @@ typedef std::shared_ptr<GraphicRender> GraphicRenderPtr;
 /// Draws and manages Graphics for EntityForm objects.
 class GraphicRender
 {
-    static const sf::Texture nullImage;
-
 public:
     virtual ~GraphicRender() = default;
 
@@ -135,8 +135,6 @@ private:
     GraphicPtr m_graphic;
 
     std::unique_ptr<GraphicRender> m_damageOverlay;
-
-    sf::Texture m_halfBlackTexture; // for shading half visible units
 
     bool m_frameChanged = false;
     int m_currentSound = 0;

@@ -36,8 +36,6 @@
 #include "render/GraphicRender.h"
 #include "resource/Graphic.h"
 
-const sf::Texture GraphicRender::nullImage;
-
 bool GraphicRender::update(Time time, const bool isVisible) noexcept
 {
     m_frameChanged = false;
