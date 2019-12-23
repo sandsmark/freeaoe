@@ -36,8 +36,9 @@ else()
 endif()
 
 if (VC_STATIC)
-    set(CMAKE_CXX_FLAGS_RELEASE "/MT /O2 /Ob2 /DNDEBUG ${CMAKE_CXX_FLAGS_RELEASE}")
-    set(CMAKE_C_FLAGS_RELEASE "/MT /O2 /Ob2 /DNDEBUG ${CMAKE_C_FLAGS_RELEASE}")
+    message(STATUS "Static build with MSVC")
+    set(CMAKE_CXX_FLAGS_RELEASE "/MT /O2 /Ob2 /DNDEBUG")
+    set(CMAKE_C_FLAGS_RELEASE "/MT /O2 /Ob2 /DNDEBUG")
 endif()
 
 #find_package(SDL2 REQUIRED)
