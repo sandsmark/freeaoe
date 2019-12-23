@@ -1,9 +1,14 @@
 %%
 
 #ifdef PARSER_TEST
-int main() {
-       ai::ScriptLoader parser(nullptr);
-       return parser.parse(std::cin, std::cout);
+int main(int argc, char *argv[]) {
+    if (argc < 2) {
+        std::cerr << "Please pass a file as argument" << std::endl;
+        return 1;
+    }
+    std::ifstream in(argv[1]);
+    ai::ScriptLoader parser(0);
+    return parser.parse(in, std::cout);
 }
 #endif
 

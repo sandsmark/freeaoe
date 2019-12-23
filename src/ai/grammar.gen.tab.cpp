@@ -38,6 +38,7 @@
 // First part of user prologue.
 #line 1 "grammar.gen.ypp"
 
+#include <fstream>
     #include "gen/enums.h"
 #line 40 "grammar.gen.ypp"
 
@@ -8911,9 +8912,17 @@ namespace  ai  {
 
 
 #ifdef PARSER_TEST
-int main() {
-       ai::ScriptLoader parser(nullptr);
-       return parser.parse(std::cin, std::cout);
+int main(int argc, char *argv[]) {
+    std::cout << "starting" << std::endl;
+       if (argc < 2) {
+           std::cerr << "pass file" << std::endl;
+           return 1;
+       }
+       std::ifstream in;
+       in.open(argv[1]);
+       std::cout << in.good() << std::endl;
+       ai::ScriptLoader parser(0);
+       return parser.parse(in, std::cout);
 }
 #endif
 

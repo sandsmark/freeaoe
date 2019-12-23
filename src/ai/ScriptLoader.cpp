@@ -14,7 +14,7 @@ namespace ai {
 
 int ScriptLoader::parse(std::istream& in, std::ostream& out) {
 
-    ScriptTokenizer scanner {*this};
+    ScriptTokenizer scanner {in, *this};
     ScriptParser parser {*this, scanner};
     //parser.set_debug_stream(out);
     //parser.set_debug_level(4);
