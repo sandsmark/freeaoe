@@ -4,9 +4,10 @@
 namespace ai {
 namespace Conditions {
 
-ResourceValue::ResourceValue(const genie::ResourceType type, const RelOp comparison, const int targetValue) :
+ResourceValue::ResourceValue(const genie::ResourceType type, const RelOp comparison, const int targetValue, int playerId) :
     m_type(type),
-    m_relOp(comparison)
+    m_relOp(comparison),
+    m_playerId(playerId)
 {
     if (type == genie::ResourceType::CurrentAge) {
         switch(Age(targetValue)) {

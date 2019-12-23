@@ -18,7 +18,7 @@ struct Action;
 
 class ScriptLoader {
 public:
-    ScriptLoader(const std::shared_ptr<Player> &player) : m_player(player) {};
+    ScriptLoader(const int playerId) : m_playerId(playerId) {};
     virtual ~ScriptLoader() {};
 
     int parse(std::istream& in, std::ostream& out);
@@ -79,7 +79,7 @@ public:
     std::shared_ptr<Action> createAction(const ActionType type, const PlayerNumberType playernumber, const int number1, const int number2);
 
 private:
-    std::shared_ptr<Player> m_player;
+    const int m_playerId;
 };
 
 }

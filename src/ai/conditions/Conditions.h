@@ -97,11 +97,14 @@ struct CompareCondition : public Condition
 
 struct ResourceValue : public Condition
 {
-    ResourceValue(const genie::ResourceType m_type, const RelOp comparison, const int targetValue);
+    ResourceValue(const genie::ResourceType m_type, const RelOp comparison, const int targetValue, int playerId);
 
     void onPlayerResourceChanged(Player *player, const genie::ResourceType type, float newValue) override
     {
         if (type != m_type) {
+            return;
+        }
+        if (player->playerId != m_playerId) {
             return;
         }
 
@@ -110,8 +113,6 @@ struct ResourceValue : public Condition
             return;
         }
         m_isSatisfied = isSatisfied;
-
-        // TODO: check player first.. but then we need to store our player or something, so figure out a way to do that cleanly
 
         emit(SatisfiedChanged);
     }
@@ -126,6 +127,7 @@ struct ResourceValue : public Condition
     int m_targetValue;
     const RelOp m_relOp;
     bool m_isSatisfied = false;
+    const int m_playerId;
 };
 
 }//namespace Conditions

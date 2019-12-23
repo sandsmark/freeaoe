@@ -146,7 +146,7 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const 
 {
     switch(type) {
     case Fact::CurrentAge:
-        return std::make_shared<Conditions::ResourceValue>(genie::ResourceType::CurrentAge, comparison, int(age));
+        return std::make_shared<Conditions::ResourceValue>(genie::ResourceType::CurrentAge, comparison, int(age), m_playerId);
     default:
         break;
     }
@@ -242,7 +242,7 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact fact, const 
         return nullptr;
     }
 
-    return std::make_shared<Conditions::ResourceValue>(type, comparison, number);
+    return std::make_shared<Conditions::ResourceValue>(type, comparison, number, m_playerId);
 }
 
 std::shared_ptr<Condition> ScriptLoader::createOrCondition(std::shared_ptr<Condition> &condition1, std::shared_ptr<Condition> &condition2)
