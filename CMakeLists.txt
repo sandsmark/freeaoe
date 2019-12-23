@@ -74,6 +74,7 @@ if(WIN32)
     add_definitions(-DNTDDI_VERSION=NTDDI_WINBLUE)
 endif()
 
+set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/)
 if(MSVC)
     add_definitions(/D_USE_MATH_DEFINES)
     add_definitions(/wd4244 /wd4018 /wd4267 /wd4996 /wd4305 /wd4800 /wd4065)
@@ -92,7 +93,6 @@ else()
 
     add_definitions(-Wall -Wextra -pedantic -Wno-sign-compare -Wno-unused-parameter)
     set(EXTRA_LIBS stdc++fs pthread dl)
-    set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/)
 
     # Somehow need this because otherwise the SFML config gets fucked
     find_package(ZLIB)
