@@ -87,12 +87,12 @@ Task IAction::findMatchingTask(const std::shared_ptr<Player> ownPlayer, const st
             break;
         }
 
-        if (action->ActionType == genie::ActionType::Garrison) {
+        if (action->type() == genie::ActionType::Garrison) {
             continue;
         }
 
         if (target->creationProgress() < 1) {
-            if (action->ActionType == genie::ActionType::Build) {
+            if (action->type() == genie::ActionType::Build) {
                 return task;
             }
 
@@ -111,7 +111,7 @@ Task IAction::findMatchingTask(const std::shared_ptr<Player> ownPlayer, const st
     // Try more generic targeting
     for (const Task &task : potentials) {
         const genie::Task *action = task.data;
-        if (action->ActionType != genie::ActionType::Combat) {
+        if (action->type() != genie::ActionType::Combat) {
             continue;
         }
         if (action->TargetDiplomacy != genie::Task::TargetGaiaNeutralEnemies && action->TargetDiplomacy != genie::Task::TargetNeutralsEnemies) {
@@ -139,7 +139,7 @@ void IAction::assignTask(const Task &task, const std::shared_ptr<Unit> &unit, co
         return;
     }
 
-    switch(task.data->ActionType) {
+    switch(task.data->type()) {
     case genie::ActionType::Build: {
         if (!target) {
             DBG << "Can't build nothing";

@@ -81,7 +81,7 @@ public:
     static Task findMatchingTask(const std::shared_ptr<Player> ownPlayer, const std::shared_ptr<Unit> &target, const std::unordered_set<Task> &potentials);
 
     virtual UnitState unitState() const { return UnitState::Idle; }
-    virtual genie::ActionType::Types taskType() const = 0;
+    virtual genie::ActionType taskType() const = 0;
 
     static void assignTask(const Task &task, const std::shared_ptr<Unit> &unit, const std::shared_ptr<Unit> &target);
 
@@ -145,7 +145,7 @@ inline LogPrinter operator <<(LogPrinter os, const IAction::Type actionType)
     return os;
 }
 
-inline LogPrinter operator <<(LogPrinter os, const genie::ActionType::Types actionType)
+inline LogPrinter operator <<(LogPrinter os, const genie::ActionType actionType)
 {
     const char *separator = os.separator;
     os.separator = "";

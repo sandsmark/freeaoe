@@ -15,7 +15,7 @@ public:
     ActionAttack(const UnitPtr &attacker, const UnitPtr &target, const Task &task);
     ActionAttack(const UnitPtr &attacker, const MapPos &targetPos, const Task &task);
 
-    genie::ActionType::Types taskType() const override { return genie::ActionType::Attack; }
+    genie::ActionType taskType() const override { return genie::ActionType::Attack; }
     UnitState unitState() const override;
     UpdateResult update(Time time) override;
 

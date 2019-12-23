@@ -161,7 +161,7 @@ struct Unit : public Entity
     bool hasAutoTargets() const noexcept { return !m_autoTargetTasks.empty(); }
     void checkForAutoTargets() noexcept;
     std::unordered_set<Task> availableActions() noexcept;
-    Task findMatchingTask(const genie::ActionType::Types &m_type, int targetUnit) noexcept;
+    Task findMatchingTask(const genie::ActionType &m_type, int targetUnit) noexcept;
     Size selectionSize() const noexcept;
 
     virtual void setCreationProgress(float progress) noexcept;
@@ -215,7 +215,7 @@ protected:
     Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager, const Type m_type);
 
     void removeAction(const ActionPtr &action);
-    int taskGraphicId(const genie::ActionType::Types taskType, const IAction::UnitState state);
+    int taskGraphicId(const genie::ActionType taskType, const IAction::UnitState state);
     void updateGraphic();
 
     const genie::Unit *m_data = nullptr;

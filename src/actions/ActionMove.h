@@ -46,7 +46,7 @@ public:
     static std::shared_ptr<ActionMove> moveUnitTo(const UnitPtr &unit, MapPos destination, const Task &task) noexcept;
     static std::shared_ptr<ActionMove> moveUnitTo(const UnitPtr &unit, MapPos destination) noexcept;
     const std::vector<MapPos> &path() const noexcept { return m_path; }
-    genie::ActionType::Types taskType() const noexcept override { return genie::ActionType::MoveTo; }
+    genie::ActionType taskType() const noexcept override { return genie::ActionType::MoveTo; }
 
 private:
     ActionMove(MapPos destination, const UnitPtr &unit, const Task &task);

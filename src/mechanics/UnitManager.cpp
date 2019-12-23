@@ -571,7 +571,7 @@ void UnitManager::onRightClick(const ScreenPos &screenPos, const CameraPtr &came
             continue;
         }
 
-        if (task.data->ActionType == genie::ActionType::Combat) {
+        if (task.data->type() == genie::ActionType::Combat) {
             AudioPlayer::instance().playSound(unit->data()->Action.AttackSound, humanPlayer->civilization.id());
         }
 
@@ -1006,7 +1006,7 @@ void UnitManager::placeBuilding(const UnplacedBuilding &building)
 
         Task task;
         for (const Task &potential : unit->availableActions()) {
-            if (potential.data->ActionType == genie::ActionType::Build) {
+            if (potential.data->type() == genie::ActionType::Build) {
                 task = potential;
                 break;
             }

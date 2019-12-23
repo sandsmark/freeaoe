@@ -68,7 +68,7 @@ Unit::Ptr UnitFactory::duplicateUnit(const Unit::Ptr &other)
 
 void UnitFactory::handleDefaultAction(const Unit::Ptr &unit, const genie::Task &task)
 {
-    switch(task.ActionType) {
+    switch(task.type()) {
     case genie::ActionType::Fly: {
         MapPos flyingPosition = unit->position();
         DBG << "Flying unit at" << flyingPosition;
