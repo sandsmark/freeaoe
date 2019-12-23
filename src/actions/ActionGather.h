@@ -15,7 +15,7 @@ public:
 
     UpdateResult update(Time time) override;
     UnitState unitState() const override { return UnitState::Proceeding; }
-    genie::ActionType taskType() const override { return m_task.data->type(); }
+    genie::ActionType taskType() const override { return m_task.data->ActionType; }
 
 private:
     std::weak_ptr<Unit> m_target;
@@ -29,7 +29,7 @@ public:
 
     UpdateResult update(Time time) override;
     UnitState unitState() const override;
-    genie::ActionType taskType() const override { return m_task.data->type(); }
+    genie::ActionType taskType() const override { return m_task.data->ActionType; }
 
 private:
     void maybeDropOff(const Unit::Ptr &unit);

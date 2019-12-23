@@ -125,7 +125,7 @@ IAction::UpdateResult ActionGather::update(Time time)
 
 IAction::UnitState ActionGather::unitState() const
 {
-    if (m_task.data->type() == genie::ActionType::Hunt) {
+    if (m_task.data->ActionType == genie::ActionType::Hunt) {
         return UnitState::Working;
     } else {
         return UnitState::Proceeding;

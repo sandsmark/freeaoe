@@ -389,7 +389,7 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
 
 #ifdef DEBUG
         ActionPtr action = unit->currentAction();
-        if (action && action->type == IAction::Type::Move) {
+        if (action && action->ActionType == IAction::Type::Move) {
             std::shared_ptr<ActionMove> moveAction = std::static_pointer_cast<ActionMove>(action);
 
             sf::CircleShape circle;
@@ -571,7 +571,7 @@ void UnitManager::onRightClick(const ScreenPos &screenPos, const CameraPtr &came
             continue;
         }
 
-        if (task.data->type() == genie::ActionType::Combat) {
+        if (task.data->ActionType == genie::ActionType::Combat) {
             AudioPlayer::instance().playSound(unit->data()->Action.AttackSound, humanPlayer->civilization.id());
         }
 
@@ -1006,7 +1006,7 @@ void UnitManager::placeBuilding(const UnplacedBuilding &building)
 
         Task task;
         for (const Task &potential : unit->availableActions()) {
-            if (potential.data->type() == genie::ActionType::Build) {
+            if (potential.data->ActionType == genie::ActionType::Build) {
                 task = potential;
                 break;
             }

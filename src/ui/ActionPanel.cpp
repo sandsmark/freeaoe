@@ -327,7 +327,7 @@ void ActionPanel::updateButtons()
         }
         addedTypes.insert(task.data->ActionType);
 
-        switch(task.data->type()) {
+        switch(task.data->ActionType) {
         case genie::ActionType::Garrison: {
             InterfaceButton garrisonButton;
             garrisonButton.action = Command::Garrison;

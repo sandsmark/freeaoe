@@ -438,7 +438,7 @@ void Unit::checkForAutoTargets() noexcept
         // TODO: should only prefer civilians (and I think only wolves? lions?)
         // should attack others as well
         // Maybe check combat level instead? but then suddenly we get wolves trying to find a path to ships
-        if (potentialTask.data->type() == genie::ActionType::Combat && data()->Class == genie::Unit::PredatorAnimal) {
+        if (potentialTask.data->ActionType == genie::ActionType::Combat && data()->Class == genie::Unit::PredatorAnimal) {
             if (other->data()->Creatable.CreatableType != genie::unit::Creatable::VillagerType) {
                 continue;
             }
@@ -489,13 +489,13 @@ Task Unit::findMatchingTask(const genie::ActionType &type, int targetUnit) noexc
 {
     std::unordered_set<Task> available = availableActions();
     for (const Task &task : available) {
-        if (task.data->type() == type && task.data->UnitID == targetUnit) {
+        if (task.data->ActionType == type && task.data->UnitID == targetUnit) {
             return task;
         }
     }
 
     for (const Task &task : available) {
-        if (task.data->type() == type && task.data->UnitID == -1) { // less specific
+        if (task.data->ActionType == type && task.data->UnitID == -1) { // less specific
             return task;
         }
     }
@@ -612,7 +612,7 @@ float Unit::healthLeft() const noexcept
 int Unit::taskGraphicId(const genie::ActionType taskType, const IAction::UnitState state)
 {
     for (const genie::Task &task : DataManager::Inst().getTasks(m_data->ID)) {
-        if (task.type() != taskType/* &&
+        if (task.ActionType != taskType/* &&
                 !(taskType == genie::Actions::GatherRebuild && task.ActionType == genie::Actions::Hunt)*/) {
             continue;
         }
@@ -672,7 +672,7 @@ void Unit::updateGraphic()
     case IAction::Type::Move:
         graphic = movingGraphics;
         for (const genie::Task &task : DataManager::Inst().getTasks(m_data->ID)) {
-            if (task.type() != genie::ActionType::GatherRebuild && task.type() != genie::ActionType::Hunt) {
+            if (task.ActionType != genie::ActionType::GatherRebuild && task.ActionType != genie::ActionType::Hunt) {
                 continue;
             }
 
