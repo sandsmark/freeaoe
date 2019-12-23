@@ -35,6 +35,11 @@ else()
     message(STATUS "Not enabling IPO/LTO")
 endif()
 
+if (VC_STATIC)
+    set(CMAKE_CXX_FLAGS_RELEASE "/MT /O2 /Ob2 /DNDEBUG ${CMAKE_CXX_FLAGS_RELEASE}")
+    set(CMAKE_C_FLAGS_RELEASE "/MT /O2 /Ob2 /DNDEBUG ${CMAKE_C_FLAGS_RELEASE}")
+endif()
+
 #find_package(SDL2 REQUIRED)
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
