@@ -320,7 +320,7 @@ void ActionPanel::updateButtons()
     }
 
     const std::unordered_set<Task> actions = unit->availableActions();
-    std::unordered_set<int16_t> addedTypes;
+    std::unordered_set<genie::ActionType> addedTypes;
     for (const Task &task : actions) {
         if (addedTypes.count(task.data->ActionType)) {
             continue;
