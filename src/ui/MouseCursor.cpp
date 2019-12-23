@@ -2,6 +2,7 @@
 
 #include <genie/resource/SlpFile.h>
 #include <genie/resource/SlpFrame.h>
+#include <genie/dat/UnitCommand.h>
 
 #include "actions/IAction.h"
 #include "core/Logger.h"

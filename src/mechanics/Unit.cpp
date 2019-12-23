@@ -28,6 +28,7 @@
 #include <genie/dat/unit/Creatable.h>
 #include <genie/dat/unit/DamageGraphic.h>
 #include <genie/dat/unit/Moving.h>
+#include <genie/dat/UnitCommand.h>
 #include <math.h>
 #include <stddef.h>
 #include <iterator>
@@ -581,6 +582,11 @@ void Unit::setUnitData(const genie::Unit &data_) noexcept
     }
 }
 
+Size Unit::clearanceSize() const noexcept
+{
+    return Size(data()->Size.x * Constants::TILE_SIZE, data()->Size.y * Constants::TILE_SIZE);
+}
+
 void Unit::forEachVisibleTile(std::function<void (const int, const int)> action)
 {
     const int los = data()->LineOfSight;
@@ -771,3 +777,5 @@ void Unit::clearActionQueue() noexcept
     m_currentAction.reset();
     updateGraphic();
 }
+
+

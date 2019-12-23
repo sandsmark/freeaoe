@@ -195,6 +195,8 @@ IAction::~IAction()
 {
 }
 
+Task::Task(const genie::Task &t, int id) : taskId(t.ID), data(&t), unitId(id) {}
+
 bool Task::operator==(const Task &other) const
 {
     return unitId == other.unitId && (

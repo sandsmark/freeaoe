@@ -35,7 +35,8 @@ class Task;
 }
 
 struct Task {
-    Task(const genie::Task &t, int id) : data(&t), unitId(id) {}
+    int16_t taskId = -1;
+    Task(const genie::Task &t, int id);
     Task() = default;
 
     const genie::Task *data = nullptr;
@@ -44,7 +45,14 @@ struct Task {
     bool operator==(const Task &other) const;
 };
 
-
+namespace std {
+template<> struct hash<Task>
+{
+    size_t operator()(const Task &b) const {
+        return hash<int16_t>()(b.taskId) ^ hash<uint16_t>()(b.unitId);
+    }
+};
+}
 
 class IAction
 {

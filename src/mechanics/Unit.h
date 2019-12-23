@@ -17,8 +17,6 @@
 
 #pragma once
 
-#include <genie/Types.h>
-#include <genie/dat/Unit.h>
 #include <algorithm>
 #include <cstdint>
 #include <deque>
@@ -46,16 +44,6 @@ class AttackOrArmor;
 
 struct Building;
 struct Player;
-
-namespace std {
-template<> struct hash<Task>
-{
-    size_t operator()(const Task &b) const {
-        return hash<int16_t>()(b.data->ID) ^ hash<uint16_t>()(b.unitId);
-    }
-};
-}
-
 
 class Graphic;
 using GraphicPtr = std::shared_ptr<Graphic>;
@@ -196,9 +184,7 @@ struct Unit : public Entity
         return centreDistance - clearance;
     }
 
-    Size clearanceSize() const noexcept {
-        return Size(data()->Size.x * Constants::TILE_SIZE, data()->Size.y * Constants::TILE_SIZE);
-    }
+    Size clearanceSize() const noexcept;
 
     double distanceTo(const Unit::Ptr &otherUnit) const noexcept
     {

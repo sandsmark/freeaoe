@@ -8,7 +8,7 @@
 #include <genie/dat/Research.h>
 #include <genie/dat/Unit.h>
 
-#include <genie/dat/unit/Creatable.h>
+#include <genie/dat/Unit.h>
 #include <genie/resource/SlpFile.h>
 #include <stddef.h>
 #include <stdint.h>

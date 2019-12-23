@@ -4,7 +4,6 @@
 
 #include "mechanics/IState.h"
 #include <SFML/Graphics/Texture.hpp>
-#include <genie/dat/Unit.h>
 
 #include <memory>
 #include <ostream>
@@ -36,6 +35,7 @@ typedef std::unordered_set<std::shared_ptr<Unit>> UnitSet;
 
 namespace genie {
 class Tech;
+class Unit;
 }
 
 class ActionPanel : public IState

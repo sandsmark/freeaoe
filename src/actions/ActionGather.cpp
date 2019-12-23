@@ -9,6 +9,7 @@
 #include "mechanics/UnitManager.h"
 
 #include <genie/dat/Unit.h>
+#include <genie/dat/UnitCommand.h>
 #include <genie/dat/unit/Action.h>
 #include <algorithm>
 #include <limits>
@@ -132,6 +133,11 @@ IAction::UnitState ActionGather::unitState() const
     }
 }
 
+genie::ActionType ActionGather::taskType() const
+{
+    return m_task.data->ActionType;
+}
+
 Unit::Ptr ActionGather::findDropSite(const Unit::Ptr &unit)
 {
     float closestDistance = std::numeric_limits<float>::max();
@@ -200,4 +206,9 @@ IAction::UpdateResult ActionDropOff::update(Time /*time*/)
     unit->resources[m_resourceType] = 0;
 
     return UpdateResult::Completed;
+}
+
+genie::ActionType ActionDropOff::taskType() const
+{
+    return m_task.data->ActionType;
 }
