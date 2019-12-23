@@ -38,6 +38,7 @@ Entity::Entity(const Entity::Type type_, const std::string &name) :
     debugName(name),
     m_type(type_)
 {
+    m_renderer = std::make_unique<GraphicRender>();
 }
 
 Entity::~Entity()
@@ -55,7 +56,7 @@ bool Entity::update(Time time) noexcept
 {
     bool updated = false;
 
-    updated = m_renderer.update(time, isVisible) || updated;
+    updated = m_renderer->update(time, isVisible) || updated;
 
     return updated && isVisible;
 }
@@ -134,15 +135,15 @@ void Entity::setPosition(const MapPos &pos, const bool initial) noexcept
 MoveTargetMarker::MoveTargetMarker() :
     Entity(Type::MoveTargetMarker, "Move target marker")
 {
-    m_renderer.setGraphic(2961);
+    m_renderer->setGraphic(2961);
 
-    m_renderer.setCurrentFrame(m_renderer.frameCount() - 1); // don't play immediately
+    m_renderer->setCurrentFrame(m_renderer->frameCount() - 1); // don't play immediately
 }
 
 void MoveTargetMarker::moveTo(const MapPos &pos) noexcept
 {
     m_position = pos;
-    m_renderer.setCurrentFrame(0);
+    m_renderer->setCurrentFrame(0);
     m_isRunning = true;
 }
 
@@ -154,7 +155,7 @@ bool MoveTargetMarker::update(Time time) noexcept
 
     bool updated = Entity::update(time);
 
-    if (m_renderer.currentFrame() >= m_renderer.frameCount() - 1) {
+    if (m_renderer->currentFrame() >= m_renderer->frameCount() - 1) {
         m_isRunning = false;
     }
 
@@ -165,7 +166,7 @@ DecayingEntity::DecayingEntity(const int graphicId, float decayTime) :
     Entity(Type::Decaying, "Eye Candy Things"),
     m_decayTimeLeft(decayTime)
 {
-    m_renderer.setGraphic(graphicId);
+    m_renderer->setGraphic(graphicId);
 }
 
 bool DecayingEntity::update(Time time) noexcept
@@ -180,4 +181,9 @@ bool DecayingEntity::update(Time time) noexcept
     }
 
     return Entity::update(time);
+}
+
+bool DecayingEntity::decaying() const noexcept
+{
+    return m_decayTimeLeft > 0 || m_renderer->currentFrame() < m_renderer->frameCount() - 1;
 }

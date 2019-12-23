@@ -22,6 +22,7 @@
 #include "resource/AssetManager.h"
 #include "resource/Graphic.h"
 #include "resource/LanguageManager.h"
+#include "render/GraphicRender.h"
 
 Missile::Missile(const genie::Unit &data, const Unit::Ptr &sourceUnit, const MapPos &target, const Unit::Ptr &targetUnit) :
     Entity(Type::Missile, LanguageManager::getString(data.LanguageDLLName) + " (" + std::to_string(data.ID) + ")"),
@@ -38,7 +39,7 @@ Missile::Missile(const genie::Unit &data, const Unit::Ptr &sourceUnit, const Map
     sourceUnit->activeMissiles++;
     DBG << "Firing at" << target;
     defaultGraphics = AssetManager::Inst()->getGraphic(data.StandingGraphic.first);
-    m_renderer.setGraphic(defaultGraphics);
+    m_renderer->setGraphic(defaultGraphics);
 }
 
 Missile::~Missile()
@@ -73,7 +74,7 @@ void Missile::setBlastType(const BlastType type, const float radius) noexcept
 bool Missile::update(Time time) noexcept
 {
     if (isExploding()) {
-        m_renderer.setCurrentFrame(m_renderer.currentFrame() + 1);
+        m_renderer->setCurrentFrame(m_renderer->currentFrame() + 1);
         return true;
     }
 
@@ -142,7 +143,7 @@ bool Missile::update(Time time) noexcept
 
     }
 
-    m_renderer.setAngle(position().toScreen().angleTo(newPos.toScreen()));
+    m_renderer->setAngle(position().toScreen().angleTo(newPos.toScreen()));
 
     setPosition(newPos);
 
@@ -249,10 +250,15 @@ bool Missile::update(Time time) noexcept
     return true;
 }
 
+bool Missile::isExploding() const noexcept
+{
+    return !m_isFlying && m_renderer->currentFrame() < m_renderer->frameCount() - 1;
+}
+
 void Missile::die()
 {
     m_isFlying = false;
-    m_renderer.setGraphic(m_data.DyingGraphic);
+    m_renderer->setGraphic(m_data.DyingGraphic);
 
     Player::Ptr player = m_player.lock();
     if (player && m_data.DyingSound != -1) {

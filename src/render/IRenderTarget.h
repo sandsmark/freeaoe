@@ -18,7 +18,9 @@
 
 #pragma once
 
-#include "render/Camera.h"
+#include "core/Types.h"
+
+#include <memory>
 
 namespace sf {
 class Sprite;
@@ -34,6 +36,9 @@ class SlpFrame;
 class PalFile;
 typedef std::shared_ptr<SlpFrame> SlpFramePtr;
 }
+
+struct Camera;
+using CameraPtr = std::shared_ptr<Camera>;
 
 namespace Drawable {
 struct Color {
@@ -129,7 +134,7 @@ class IRenderTarget
 {
 public:
     //----------------------------------------------------------------------------
-    IRenderTarget() : m_camera(std::make_shared<Camera>()) {}
+    IRenderTarget();
 
     //----------------------------------------------------------------------------
     virtual ~IRenderTarget() {}

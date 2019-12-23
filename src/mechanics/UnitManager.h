@@ -17,13 +17,10 @@
 */
 
 #pragma once
-#include <SFML/Graphics/RenderTexture.hpp>
 #include <memory>
 #include <unordered_set>
 
 #include "Unit.h"
-
-#include <SFML/Graphics/RenderTexture.hpp>
 
 class SfmlRenderTarget;
 
@@ -32,13 +29,21 @@ struct Building;
 struct Missile;
 struct Camera;
 
+
 typedef std::shared_ptr<Camera> CameraPtr;
+
+class GraphicRender;
+using GraphicRenderPtr = std::shared_ptr<GraphicRender>;
 
 class Map;
 using MapPtr = std::shared_ptr<Map>;
 
 namespace genie {
 class Tech;
+}
+
+namespace sf {
+class RenderTexture;
 }
 
 struct UnplacedBuilding {
@@ -162,7 +167,7 @@ private:
 
     UnitSet m_selectedUnits;
     MapPtr m_map;
-    sf::RenderTexture m_outlineOverlay;
+    std::unique_ptr<sf::RenderTexture> m_outlineOverlay;
     MoveTargetMarker::Ptr m_moveTargetMarker;
 
     std::vector<UnplacedBuilding> m_buildingsToPlace;

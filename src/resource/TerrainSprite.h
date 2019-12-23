@@ -18,9 +18,7 @@
 
 #pragma once
 
-#include "core/Utility.h"
 #include "render/IRenderTarget.h"
-#include "Resource.h"
 #include "mechanics/MapTile.h"
 
 #if PNG_TERRAIN_TEXTURES

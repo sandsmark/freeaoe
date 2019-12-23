@@ -18,6 +18,8 @@
 
 #include "UnitManager.h"
 
+#include "render/Camera.h"
+
 #include "Building.h"
 #include "Civilization.h"
 #include "Missile.h"
@@ -46,6 +48,7 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/System/Vector2.hpp>
+#include <SFML/Graphics/RenderTexture.hpp>
 
 #include <algorithm>
 #include <utility>
@@ -56,6 +59,7 @@ class Tech;
 
 UnitManager::UnitManager()
 {
+    m_outlineOverlay = std::make_unique<sf::RenderTexture>();
 }
 
 UnitManager::~UnitManager()
@@ -191,11 +195,11 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
 
     CameraPtr camera = renderTarget->camera();
 
-    if (Size(m_outlineOverlay.getSize()) != renderTarget->getSize()) {
-        m_outlineOverlay.create(renderTarget->getSize().width, renderTarget->getSize().height);
+    if (Size(m_outlineOverlay->getSize()) != renderTarget->getSize()) {
+        m_outlineOverlay->create(renderTarget->getSize().width, renderTarget->getSize().height);
     }
 
-    if (camera->targetPosition() != m_previousCameraPos || m_outlineOverlay.getSize().x == 0) {
+    if (camera->targetPosition() != m_previousCameraPos) {// || m_outlineOverlay->getSize().x == 0) {
         for (const Unit::Ptr &unit : m_units) {
             unit->isVisible = false;
         }
@@ -274,14 +278,14 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
     std::sort(visibleUnits.begin(), visibleUnits.end(), MapPositionSorter());
 
 
-    m_outlineOverlay.clear(sf::Color::Transparent);
+    m_outlineOverlay->clear(sf::Color::Transparent);
 
     for (const Unit::Ptr &unit : visibleUnits) {
         const ScreenPos unitPosition = camera->absoluteScreenPos(unit->position());
         if (!(unit->data()->OcclusionMode & genie::Unit::OccludeOthers)) {
-            unit->renderer().render(m_outlineOverlay, unitPosition, RenderType::Outline);
+            unit->renderer().render(*m_outlineOverlay, unitPosition, RenderType::Outline);
         } else {
-            unit->renderer().render(m_outlineOverlay, unitPosition, RenderType::BuildingAlpha);
+            unit->renderer().render(*m_outlineOverlay, unitPosition, RenderType::BuildingAlpha);
 
         }
     }
@@ -315,7 +319,7 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
             rect.setOutlineThickness(1);
             rect.setSize(unit->rect().size());
             rect.setPosition(camera->absoluteScreenPos(unit->position()) + unit->rect().topLeft());
-            m_outlineOverlay.draw(rect);
+            m_outlineOverlay->draw(rect);
 #endif
 
             ScreenPos pos = camera->absoluteScreenPos(unit->position());
@@ -374,12 +378,12 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
                 if (unit->healthLeft() < 1.) {
                     rect.setFillColor(sf::Color::Red);
                     rect.setSize(sf::Vector2f(Constants::TILE_SIZE_HORIZONTAL / 4., 2));
-                    m_outlineOverlay.draw(rect);
+                    m_outlineOverlay->draw(rect);
                 }
 
                 rect.setFillColor(sf::Color::Green);
                 rect.setSize(sf::Vector2f(unit->healthLeft() * Constants::TILE_SIZE_HORIZONTAL / 4., 2));
-                m_outlineOverlay.draw(rect);
+                m_outlineOverlay->draw(rect);
             }
         }
 
@@ -401,17 +405,17 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
             for (const MapPos &p : moveAction->path()) {
                 ScreenPos pos = camera->absoluteScreenPos(p);
                 circle.setPosition(pos.x, pos.y);
-                m_outlineOverlay.draw(circle);
+                m_outlineOverlay->draw(circle);
             }
         }
 #endif
     }
 
-    m_outlineOverlay.display();
+    m_outlineOverlay->display();
 
     { // this is a bit wrong, on bright buildings it's almost not visible, but haven't found a better solution other than writing a custom shader
         sf::Sprite sprite;
-        sprite.setTexture(m_outlineOverlay.getTexture());
+        sprite.setTexture(m_outlineOverlay->getTexture());
         renderTarget->renderTarget_->draw(sprite, sf::BlendAdd);
     }
 

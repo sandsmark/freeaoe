@@ -20,7 +20,6 @@
 
 #include "core/SignalEmitter.h"
 #include "core/Types.h"
-#include "render/GraphicRender.h"
 
 #include <memory>
 
@@ -34,9 +33,12 @@ struct Unit;
 struct Entity;
 struct MoveTargetMarker;
 struct Missile;
+class GraphicRender;
+class Graphic;
 
 typedef std::shared_ptr<Map> MapPtr;
 typedef std::shared_ptr<Entity> EntityPtr;
+typedef std::shared_ptr<Graphic> GraphicPtr;
 
 /// The most basic class thing, has a position on a map and can be rendered
 struct Entity : std::enable_shared_from_this<Entity>, SignalEmitter<Entity>
@@ -50,7 +52,7 @@ struct Entity : std::enable_shared_from_this<Entity>, SignalEmitter<Entity>
 
     virtual bool update(Time time) noexcept;
 
-    virtual GraphicRender &renderer() noexcept { return m_renderer; }
+    virtual GraphicRender &renderer() noexcept { return *m_renderer; }
 
     static std::shared_ptr<Unit> asUnit(const EntityPtr &entity) noexcept;
 
@@ -87,7 +89,7 @@ protected:
     };
     Entity(const Type type_, const std::string &name);
 
-    GraphicRender m_renderer;
+    std::unique_ptr<GraphicRender> m_renderer;
     GraphicPtr defaultGraphics;
     std::weak_ptr<Map> m_map;
 
@@ -123,7 +125,7 @@ struct DecayingEntity : public Entity
 
     bool update(Time time) noexcept override;
 
-    inline bool decaying() const noexcept { return m_decayTimeLeft > 0 || m_renderer.currentFrame() < m_renderer.frameCount() - 1; }
+    bool decaying() const noexcept;
 
 private:
     float m_decayTimeLeft = 0.f;

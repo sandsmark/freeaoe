@@ -49,6 +49,7 @@
 #include "resource/DataManager.h"
 #include "resource/LanguageManager.h"
 #include "resource/Graphic.h"
+#include "render/GraphicRender.h"
 
 Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager) :
     Entity(Type::Unit, LanguageManager::getString(data_.LanguageDLLName) + " (" + std::to_string(data_.ID) + ")"),
@@ -56,8 +57,8 @@ Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, Uni
     player(player_),
     m_unitManager(unitManager)
 {
-    m_renderer.setPlayerColor(player_->playerColor);
-    m_renderer.setCivId(player_->civilization.id());
+    m_renderer->setPlayerColor(player_->playerColor);
+    m_renderer->setCivId(player_->civilization.id());
 
     setUnitData(data_);
     m_creationProgress = m_data->Creatable.TrainTime;
@@ -71,7 +72,7 @@ Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, Uni
     player(player_),
     m_unitManager(unitManager)
 {
-    m_renderer.setPlayerColor(player_->playerColor);
+    m_renderer->setPlayerColor(player_->playerColor);
 
     setUnitData(data_);
     m_creationProgress = m_data->Creatable.TrainTime;
@@ -94,7 +95,7 @@ Unit::~Unit()
 void Unit::setAngle(const float angle) noexcept
 {
     m_angle = angle;
-    m_renderer.setAngle(angle);
+    m_renderer->setAngle(angle);
 }
 
 bool Unit::update(Time time) noexcept
@@ -209,7 +210,7 @@ std::shared_ptr<Building> Unit::asBuilding(const Unit::Ptr &unit) noexcept
 
 ScreenRect Unit::rect() const noexcept
 {
-    ScreenRect ret = m_renderer.rect();
+    ScreenRect ret = m_renderer->rect();
 
     for (const Annex &annex : annexes) {
         ScreenRect annexRect = annex.unit->rect();
@@ -229,7 +230,7 @@ ScreenRect Unit::rect() const noexcept
 
 bool Unit::checkClick(const ScreenPos &pos) const noexcept
 {
-    if (m_renderer.checkClick(pos)) {
+    if (m_renderer->checkClick(pos)) {
         return true;
     }
 
@@ -245,18 +246,18 @@ void Unit::setCreationProgress(float progress) noexcept
 {
     if (m_data->Type == genie::Unit::BuildingType) {
         if (m_creationProgress < m_data->Creatable.TrainTime && progress >= m_data->Creatable.TrainTime) {
-            m_renderer.setGraphic(defaultGraphics);
+            m_renderer->setGraphic(defaultGraphics);
         } else if (m_creationProgress == m_data->Creatable.TrainTime && progress < m_data->Creatable.TrainTime) {
-            m_renderer.setGraphic(m_data->Building.ConstructionGraphicID);
+            m_renderer->setGraphic(m_data->Building.ConstructionGraphicID);
         }
     }
 
     m_creationProgress = std::min(progress, float(m_data->Creatable.TrainTime));
 
     if (m_data->Type == genie::Unit::BuildingType && progress < m_data->Creatable.TrainTime) {
-        m_renderer.setAngle(M_PI_2 + 2. * M_PI * (creationProgress()));
+        m_renderer->setAngle(M_PI_2 + 2. * M_PI * (creationProgress()));
     } else {
-        m_renderer.setAngle(m_angle); // blarf
+        m_renderer->setAngle(m_angle); // blarf
     }
 }
 
@@ -309,14 +310,14 @@ void Unit::takeDamage(const genie::unit::AttackOrArmor &attack, const float dama
         if (graphic) {
             switch (graphic->ApplyMode) {
             case genie::unit::DamageGraphic::OverlayGraphic:
-                m_renderer.setDamageOverlay(graphic->GraphicID);
+                m_renderer->setDamageOverlay(graphic->GraphicID);
                 break;
             case genie::unit::DamageGraphic::OverlayRandomly:
                 WARN << "Random overlay damage graphics not implemented yet";
-                m_renderer.setDamageOverlay(graphic->GraphicID);
+                m_renderer->setDamageOverlay(graphic->GraphicID);
                 break;
             case genie::unit::DamageGraphic::ReplaceGraphic:
-                m_renderer.setGraphic(graphic->GraphicID);
+                m_renderer->setGraphic(graphic->GraphicID);
                 break;
             }
         }
@@ -328,8 +329,8 @@ void Unit::kill() noexcept
 {
     m_damageTaken = data()->HitPoints;
 
-    m_renderer.setPlaySounds(true);
-    m_renderer.setGraphic(m_data->DyingGraphic);
+    m_renderer->setPlaySounds(true);
+    m_renderer->setGraphic(m_data->DyingGraphic);
 
     if (data()->DyingSound != -1) {
         Player::Ptr owner = player.lock();
@@ -346,7 +347,7 @@ bool Unit::isDying() const noexcept
     }
 
     // Check if the death animation has finished
-    if (m_renderer.currentFrame() >= m_renderer.frameCount() - 1) {
+    if (m_renderer->currentFrame() >= m_renderer->frameCount() - 1) {
         return false;
     }
 
@@ -370,7 +371,7 @@ bool Unit::isDead() const noexcept
     }
 
     // Check if the death animation has finished
-    if (m_renderer.currentFrame() < m_renderer.frameCount() - 1) {
+    if (m_renderer->currentFrame() < m_renderer->frameCount() - 1) {
         return false;
     }
 
@@ -569,7 +570,7 @@ void Unit::setUnitData(const genie::Unit &data_) noexcept
         WARN << "Failed to load default graphics";
     }
 
-    m_renderer.setGraphic(defaultGraphics);
+    m_renderer->setGraphic(defaultGraphics);
 
     m_autoTargetTasks.clear();
     for (const Task &task : availableActions()) {
@@ -651,18 +652,18 @@ int Unit::taskGraphicId(const genie::ActionType taskType, const IAction::UnitSta
 void Unit::updateGraphic()
 {
     if (hitpointsLeft() <= 0 && !isDying()) {
-        m_renderer.setGraphic(m_data->DyingGraphic);
+        m_renderer->setGraphic(m_data->DyingGraphic);
         return;
     }
 
     if ((m_currentAction && m_currentAction->unitState() != IAction::Idle) || isDying()) {
-        m_renderer.setPlaySounds(true);
+        m_renderer->setPlaySounds(true);
     } else {
-        m_renderer.setPlaySounds(false);
+        m_renderer->setPlaySounds(false);
     }
 
     if (!m_currentAction) {
-        m_renderer.setGraphic(defaultGraphics);
+        m_renderer->setGraphic(defaultGraphics);
         return;
     }
 
@@ -706,7 +707,7 @@ void Unit::updateGraphic()
         graphic = defaultGraphics;
     }
 
-    m_renderer.setGraphic(graphic);
+    m_renderer->setGraphic(graphic);
 }
 
 void Unit::prependAction(const ActionPtr &action) noexcept

@@ -6,6 +6,11 @@
 #include <genie/resource/SlpFrame.h>
 #include <genie/resource/PalFile.h>
 
+#include "render/Camera.h"
+
+IRenderTarget::IRenderTarget() : m_camera(std::make_shared<Camera>())
+{ }
+
 Drawable::Image::Ptr IRenderTarget::convertFrameToImage(const genie::SlpFramePtr &frame)
 {
     return convertFrameToImage(frame, AssetManager::Inst()->getPalette(50500));

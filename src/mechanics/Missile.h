@@ -4,7 +4,6 @@
 #include "Entity.h"
 #include "genie/dat/unit/AttackOrArmor.h"
 #include "mechanics/Entity.h"
-#include "render/GraphicRender.h"
 
 namespace genie {
 class Unit;
@@ -37,7 +36,7 @@ public:
     bool update(Time time) noexcept override;
 
     inline bool isFlying() const noexcept { return m_isFlying; }
-    inline bool isExploding() const noexcept { return !m_isFlying && m_renderer.currentFrame() < m_renderer.frameCount() - 1; }
+    bool isExploding() const noexcept;
 
 private:
     void die();

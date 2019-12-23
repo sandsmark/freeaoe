@@ -35,6 +35,7 @@
 #include "mechanics/Map.h"
 
 #include "resource/LanguageManager.h"
+#include "render/Camera.h"
 
 #include <genie/resource/Color.h>
 #include "genie/script/ScnFile.h"
