@@ -233,7 +233,6 @@ const TerrainPtr &AssetManager::getTerrain(uint32_t id)
     }
 
     TerrainPtr terrain = std::make_shared<TerrainSprite>(id);
-    terrain->load();
 
     terrains_[id] = terrain;
 

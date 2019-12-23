@@ -30,7 +30,7 @@
 
 #include <genie/resource/BlendomaticFile.h>
 #include <genie/resource/Color.h>
-#include <genie/resource/BlendomaticFile.h>
+#include <genie/resource/SlpFile.h>
 
 #include <SFML/Config.hpp>
 #include <SFML/Graphics/Image.hpp>
@@ -44,6 +44,7 @@
 #include <utility>
 #include <vector>
 
+#include <cmath>
 #include <cstdint>
 
 #ifdef __BYTE_ORDER__
@@ -53,57 +54,45 @@
 #endif
 
 
-TerrainSprite::~TerrainSprite() { }
-
-bool TerrainSprite::load() noexcept
+TerrainSprite::TerrainSprite(unsigned int id_) : id(id_)
 {
-    if (m_isLoaded) {
-        return true;
+    const genie::Terrain *data = &DataManager::Inst().getTerrain(id);
+    if (data->TerrainToDraw != -1) {
+        data = &DataManager::Inst().getTerrain(data->TerrainToDraw);
+    }
+    if (!data->Enabled) {
+        DBG << "Terrain disabled!";
+        return;
     }
 
-    m_isLoaded = true;
-
-    m_data = DataManager::Inst().getTerrain(id).TerrainToDraw != -1 ?
-                DataManager::Inst().getTerrain(m_data.TerrainToDraw) :
-                DataManager::Inst().getTerrain(id);
-
-
-    m_slp = AssetManager::Inst()->getSlp(m_data.SLP);
+    m_slp = AssetManager::Inst()->getSlp(data->SLP);
+#if PNG_TERRAIN_TEXTURES
     if (!m_slp) {
-        DBG << m_data.Name2;
+        DBG << m_data->Name2;
         const std::string pngFolder = AssetManager::Inst()->assetsPath() + "/terrain/textures/";
 
         // Resolves case because windows is retard case insensitive
-        m_pngPath = AssetManager::findFile(m_data.Name2 + "_00_color.png", pngFolder);
+        m_pngPath = AssetManager::findFile(m_data->Name2 + "_00_color.png", pngFolder);
         if (m_pngPath.empty()) {
             DBG << "failed to find terrain SLP by ID and failed to find PNG texture" << m_data.Name << m_data.Name << m_data.Enabled;
-            return false;
+            return;
         }
         DBG << "Found PNG file" << m_pngPath;
         m_isPng = true;
-        DBG << m_data.TerrainDimensions.first << m_data.TerrainDimensions.second;
+        DBG << m_data->TerrainDimensions.first << m_data.TerrainDimensions.second;
     }
-//    if (m_data.TerrainToDraw != -1) {
-//        const int replacementSlp = DataManager::Inst().getTerrain(m_data.TerrainToDraw).SLP;
-//        m_slp = AssetManager::Inst()->getSlp(replacementSlp);
-//    } else {
-//        m_slp = AssetManager::Inst()->getSlp(m_data.SLP);
-//    }
+#endif
 
     if (!m_slp) {
-        WARN << "Failed to get slp for" << m_data.SLP;
+        WARN << "Failed to get slp for" << data->SLP;
         m_slp = AssetManager::Inst()->getSlp(15000); // TODO Loading grass if -1
 
-        return false;
+        return;
     }
-
-    return true;
+    m_tileSquareCount = sqrt(m_slp->getFrameCount());
 }
 
-const genie::Terrain &TerrainSprite::data() noexcept
-{
-    return m_data;
-}
+TerrainSprite::~TerrainSprite() {  }
 
 uint8_t TerrainSprite::blendMode(const uint8_t ownMode, const uint8_t neighborMode) noexcept
 {
@@ -125,6 +114,8 @@ uint8_t TerrainSprite::blendMode(const uint8_t ownMode, const uint8_t neighborMo
 
     return blendmodeTable[ownMode][neighborMode];
 }
+
+
 
 
 
@@ -373,15 +364,13 @@ sf::Sprite TerrainSprite::sprite(const MapTile &tile, const IRenderTargetPtr &re
 
 bool TerrainSprite::isValid() const noexcept
 {
-    if (!m_data.Enabled) {
-        return false;
-    }
-
+#if PNG_TERRAIN_TEXTURES
     if (m_isPng) {
         return !m_pngPath.empty();
     }
+#endif
 
-    return m_slp != nullptr && m_data.Enabled;
+    return m_slp != nullptr;
 }
 
 #define ALPHA_MASK 0xff000000

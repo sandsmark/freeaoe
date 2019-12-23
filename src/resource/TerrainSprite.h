@@ -23,24 +23,25 @@
 #include "Resource.h"
 #include "mechanics/MapTile.h"
 
-#include <genie/dat/Terrain.h>
-#include <genie/resource/SlpFile.h>
-
+#if PNG_TERRAIN_TEXTURES
 #include <SFML/Graphics/Sprite.hpp>
-#include <SFML/Graphics/Texture.hpp>
+#endif
+
 #include <memory>
 #include <string>
 #include <unordered_map>
-
-#include <math.h>
-#include <stddef.h>
-#include <stdint.h>
 
 namespace sf {
 class Texture;
 }  // namespace sf
 class TerrainSprite;
 typedef std::shared_ptr<TerrainSprite> TerrainPtr;
+
+namespace genie {
+class SlpFile;
+using SlpFilePtr = std::shared_ptr<SlpFile>;
+class Terrain;
+}
 
 class TerrainSprite
 {
@@ -49,16 +50,17 @@ public:
     //----------------------------------------------------------------------------
     /// @param Id resource id
     //
-    TerrainSprite(unsigned int id_) : id(id_) { }
+    TerrainSprite(unsigned int id_);
     virtual ~TerrainSprite();
-
-    bool load() noexcept;
-
-    const genie::Terrain &data() noexcept;
 
     static uint8_t blendMode(const uint8_t ownMode, const uint8_t neighborMode) noexcept;
 
-    inline int coordinatesToFrame(int x, int y) noexcept {
+    inline int coordinatesToFrame(int x, int y) const noexcept {
+        return (y % m_tileSquareCount) + (x % m_tileSquareCount) * m_tileSquareCount;
+    }
+
+#if PNG_TERRAIN_TEXTURES
+    inline int coordinatesToFrame(int x, int y) const noexcept {
         if (IS_UNLIKELY(!m_slp && !m_isPng)) {
             return -1;
         }
@@ -66,12 +68,10 @@ public:
             const int tileSquareCount = sqrt(4 * 4); // IDK, HD is fucked anyways
             return (y % tileSquareCount) + (x % tileSquareCount) * tileSquareCount;
         } else {
-            const int tileSquareCount = sqrt(m_slp->getFrameCount());
+            const int tileSquareCount = m_tileSquareCount;
             return (y % tileSquareCount) + (x % tileSquareCount) * tileSquareCount;
         }
     }
-
-#if PNG_TERRAIN_TEXTURES
     sf::Sprite sprite(const MapTile &tile, const IRenderTargetPtr &renderer) noexcept;
 #endif
 
@@ -84,14 +84,15 @@ public:
 private:
     void addOutline(uint32_t *pixels, const int width, const int height) noexcept;
 
-    genie::Terrain m_data;
     genie::SlpFilePtr m_slp;
+
+    int m_tileSquareCount = 1;
 
     std::unordered_map<MapTile, Drawable::Image::Ptr> m_textures;
 
-    bool m_isLoaded = false;
-
+#if PNG_TERRAIN_TEXTURES
     bool m_isPng = false;
     std::string m_pngPath;
+#endif
 };
 
