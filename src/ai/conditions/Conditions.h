@@ -130,5 +130,30 @@ struct ResourceValue : public Condition
     const int m_playerId;
 };
 
+struct UnitTypeCount : public Condition
+{
+    UnitTypeCount(const Unit type, const RelOp comparison, const int targetValue, int playerId);
+
+    bool satisfied(AiRule *owner) override
+    {
+        m_isSatisfied = CompareCondition::actualCompare(int(m_targetValue), m_relOp, m_unitCount);
+        return m_isSatisfied;
+    }
+    void onValueChanged();
+
+    int m_typeId = -1;
+    int m_targetValue;
+    const RelOp m_relOp;
+    bool m_isSatisfied = false;
+    int m_unitCount = 0;
+    const int m_playerId;
+
+
+    void onUnitCreated(::Unit *unit) override;
+    void onUnitDying(::Unit *unit) override;
+    void onUnitOwnerChanged(::Unit *unit, int oldPlayerId, int newPlayerId) override;
+    void onUnitCaptured(::Unit *unit, int oldPlayerId, int newPlayerId) override;
+};
+
 }//namespace Conditions
 }//namespace ai

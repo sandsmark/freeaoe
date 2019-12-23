@@ -1,6 +1,10 @@
 #include "Conditions.h"
 #include "global/EventManager.h"
 
+#include "mechanics/Unit.h"
+
+#include "ai/Ids.h"
+
 namespace ai {
 namespace Conditions {
 
@@ -30,6 +34,77 @@ ResourceValue::ResourceValue(const genie::ResourceType type, const RelOp compari
     }
 
     EventManager::registerListener(this, EventManager::PlayerResourceChanged);
+}
+
+UnitTypeCount::UnitTypeCount(const Unit type, const RelOp comparison, const int targetValue, int playerId) :
+    m_relOp(comparison),
+    m_playerId(playerId)
+{
+    m_typeId = unitId(type);
+}
+
+void UnitTypeCount::onUnitCreated(::Unit *unit)
+{
+    if (unit->data()->ID != m_typeId) {
+        return;
+    }
+    if (unit->playerId != m_playerId) {
+        return;
+    }
+    m_unitCount++;
+    onValueChanged();
+}
+
+void UnitTypeCount::onUnitDying(::Unit *unit)
+{
+    if (unit->data()->ID != m_typeId) {
+        return;
+    }
+    if (unit->playerId != m_playerId) {
+        return;
+    }
+    m_unitCount--;
+    onValueChanged();
+}
+
+void UnitTypeCount::onUnitOwnerChanged(::Unit *unit, int oldPlayerId, int newPlayerId)
+{
+    if (unit->data()->ID != m_typeId) {
+        return;
+    }
+    if (oldPlayerId == m_playerId) {
+        m_unitCount--;
+        onValueChanged();
+    }
+    if (newPlayerId == m_playerId) {
+        m_unitCount++;
+        onValueChanged();
+    }
+}
+
+void UnitTypeCount::onUnitCaptured(::Unit *unit, int oldPlayerId, int newPlayerId)
+{
+    if (unit->data()->ID != m_typeId) {
+        return;
+    }
+    if (oldPlayerId == m_playerId) {
+        m_unitCount--;
+        onValueChanged();
+    }
+    if (newPlayerId == m_playerId) {
+        m_unitCount++;
+        onValueChanged();
+    }
+}
+
+void UnitTypeCount::onValueChanged()
+{
+    bool satisfied = CompareCondition::actualCompare(int(m_targetValue), m_relOp, m_unitCount);
+    if (satisfied != m_isSatisfied) {
+        m_isSatisfied = satisfied;
+        emit(SatisfiedChanged);
+    }
+
 }
 
 } // namespace Conditions
