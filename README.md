@@ -82,16 +82,28 @@ TODO (this is probably going to get outdated)
  - Unit grouping/formations.
  - Patrolling.
  - Garrisoning.
- - AI Script execution (lot of overlap with scenario triggers).
  - Campaign cinematics (mainly just parse the .mm files).
  - Streaming sound (music, scenario voices, etc.).
- - Map analysis stuff (for RMS and AI).
  - Random map RMS script parsing and generating.
  - Performance (especially the path finding).
  - Various refactoring (move VisibilityMap out into separate file, rendering of units out from UnitManager, etc.)
- - Proper support for new terrain graphics (Rise of the Rajas stopped shipping the old ones).
- - Rewrite AI script parsing without any parser generators/libraries (it's a trivial grammar, and there are no good parser generators in existence).
  - Fix edges of walls when dragging.
+ - AI script actions (only implemented are set-strategic-number and disable-self).
+ - AI script conditions, missing for SAMPLEAI.PER:
+    - town-under-attack
+    - cc-players-unit-type-count (AI cheat)
+    - game-time
+    - timer-triggered
+    - difficulty
+    - dropsite-min-distance
+    - resource-found
+    - escrow-amount (also need to implement escrow in general)
+    - players-stance
+
+Wishlist/low priority:
+ - Rewrite AI script parsing without any parser generators/libraries (it's a trivial grammar, and there are no good parser generators in existence).
+ - Proper support for new terrain graphics (Rise of the Rajas stopped shipping the old ones).
+ - Map analysis stuff (for RMS and AI).
 
 Done
 ----
