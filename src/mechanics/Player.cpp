@@ -244,6 +244,43 @@ void Player::setAvailableResource(const genie::ResourceType type, float newValue
     EventManager::playerResourceChanged(this, type, newValue);
 }
 
+bool Player::canBuildUnit(const int unitId) const
+{
+    const genie::Unit &unit = civilization.unitData(unitId);
+
+    for (const genie::Unit::ResourceStorage &res : unit.ResourceStorages) {
+        if (res.Type == -1) {
+            continue;
+        }
+        switch (res.Type) {
+        case genie::ResourceStoreMode::GiveResourceType:
+        case genie::ResourceStoreMode::GiveAndTakeResourceType:
+        case genie::ResourceStoreMode::BuildingResourceType:
+            break;
+        default:
+            continue;
+        }
+        int available = resourcesAvailable(genie::ResourceType(res.Type)) - resourcesUsed(genie::ResourceType(res.Type));
+        if (available < res.Amount) {
+            DBG << unit.Name << "Not affordable" << available << res.Amount;
+            return false;
+        }
+    }
+
+    for (const genie::Resource<short, short> &cost : unit.Creatable.ResourceCosts) {
+        if (!cost.Paid) {
+            continue;
+        }
+
+        const genie::ResourceType type = genie::ResourceType(cost.Type);
+        if (resourcesAvailable(type) < cost.Amount) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 namespace {
 enum Direction : uint8_t {
     West = 1 << 0,
