@@ -27,7 +27,7 @@ public:
     const std::vector<const genie::Unit *> &creatableUnits(int16_t creator) const;
     const std::vector<const genie::Tech *> &researchAvailableAt(int16_t creator) const;
 
-    const genie::Unit &unit(const uint16_t id) const;
+    const genie::Unit &unitData(int id) const;
     const genie::Tech &tech(const uint16_t id) const;
 
     const std::vector<const genie::Unit *> &swappableUnits(const uint16_t taskSwapGroup) const;
@@ -37,8 +37,6 @@ public:
     const std::string &name() const { return m_data.Name; }
 
     float startingResource(const genie::ResourceType type) const;
-
-    const genie::Unit &unitData(unsigned id) const;
 
     void applyTechEffect(const genie::EffectCommand &effect);
     void enableUnit(const uint16_t id);
@@ -59,7 +57,7 @@ private:
 
     const int m_civId;
     const genie::Civ &m_data;
-    std::vector<genie::Unit> m_unitsData;
+    std::unordered_map<int16_t, genie::Unit> m_unitsData;
 
     std::unordered_map<uint16_t, genie::Tech> m_techs;
     ResourceMap m_startingResources;

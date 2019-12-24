@@ -27,7 +27,7 @@ Civilization::Civilization(const int civId) :
 
 const std::vector<const genie::Unit *> &Civilization::creatableUnits(int16_t creator) const
 {
-    if (creator != 118 && unit(creator).Action.TaskSwapGroup != 0) {
+    if (creator != 118 && unitData(creator).Action.TaskSwapGroup != 0) {
         creator = 118;
     }
 
@@ -47,16 +47,6 @@ const std::vector<const genie::Tech *> &Civilization::researchAvailableAt(int16_
     }
 
     return m_researchAvailable.at(creator);
-}
-
-const genie::Unit &Civilization::unit(const uint16_t id) const
-{
-    if (id >= m_unitsData.size()) {
-        WARN << "Invalid unit id" << id;
-        return nullUnit;
-    }
-
-    return m_unitsData.at(id);
 }
 
 const genie::Tech &Civilization::tech(const uint16_t id) const
@@ -85,24 +75,25 @@ float Civilization::startingResource(const genie::ResourceType type) const
     return m_data.Resources[int(type)];
 }
 
-const genie::Unit &Civilization::unitData(unsigned id) const
+const genie::Unit &Civilization::unitData(int id) const
 {
-    if (id >= m_unitsData.size()) {
+    std::unordered_map<int16_t, genie::Unit>::const_iterator it = m_unitsData.find(id);
+    if (it == m_unitsData.end()) {
         WARN << "invalid unit id" << id;
         static const genie::Unit nullUnit;
         return nullUnit;
     }
-
-    return m_unitsData[id];
+    return it->second;
 }
 
 void Civilization::enableUnit(const uint16_t id)
 {
-    if (id >= m_unitsData.size()) {
-        WARN << "invalid target unit" << id;
+    std::unordered_map<int16_t, genie::Unit>::iterator it = m_unitsData.find(id);
+    if (it == m_unitsData.end()) {
+        WARN << "invalid unit id" << id;
         return;
     }
-    genie::Unit &unit = m_unitsData[id];
+    genie::Unit &unit = it->second;
     unit.Enabled = true;
     if (unit.Creatable.TrainLocationID > 0) {
         m_creatableUnits[unit.Creatable.TrainLocationID].push_back(&unit);
@@ -133,11 +124,12 @@ void Civilization::applyUnitAttributeModifier(const genie::EffectCommand &effect
     if (effect.TargetUnit >= 0) {
         applyUnitAttributeModifier(effect, effect.TargetUnit);
     } else if (effect.UnitClassID >= 0) {
-        for (const genie::Unit &unitData : m_unitsData) {
-            if (unitData.Class != effect.UnitClassID) {
+        std::unordered_map<int16_t, genie::Unit>::iterator it;
+        for (it = m_unitsData.begin(); it != m_unitsData.end(); it++) {
+            if (it->second.Class != effect.UnitClassID) {
                 continue;
             }
-            applyUnitAttributeModifier(effect, unitData.ID);
+            applyUnitAttributeModifier(effect, it->second.ID);
         }
     } else {
         WARN << "Can't apply effect with neither unit id or class id";
@@ -153,19 +145,15 @@ void Civilization::applyData(const genie::Civ &data)
 {
     DBG << "Applying for civ";
 
-    if (data.Units.size() > m_unitsData.size()) {
-        m_unitsData.resize(data.Units.size());
-    }
+    m_unitsData.clear();
 
-    for (size_t i=0; i<data.Units.size(); i++) {
-        if (data.Units[i].ID == -1) {
+    for (const genie::Unit &unit : data.Units) {
+        if (unit.ID == -1) {
             continue;
         }
-        m_unitsData[i] = data.Units[i];
-    }
 
-    m_taskSwapUnits.resize(10);
-    for (const genie::Unit &unit : m_unitsData) {
+        m_unitsData[unit.ID] = unit;
+
         if (unit.Enabled && unit.Creatable.TrainLocationID > 0) {
             m_creatableUnits[unit.Creatable.TrainLocationID].push_back(&unit);
         }
@@ -211,12 +199,13 @@ void Civilization::applyData(const genie::Civ &data)
 
 void Civilization::applyUnitAttributeModifier(const genie::EffectCommand &effect, int unitId)
 {
-    if (unitId < 0 || unitId >= m_unitsData.size()) {
-        WARN << "invalid target unit" << effect.TargetUnit;
+    std::unordered_map<int16_t, genie::Unit>::iterator it = m_unitsData.find(unitId);
+    if (it == m_unitsData.end()) {
+        WARN << "invalid unit id" << unitId;
         return;
     }
 
-    genie::Unit &unitData = m_unitsData[unitId];
+    genie::Unit &unitData = it->second;
 
     using genie::EffectCommand;
     switch (effect.AttributeID) {
