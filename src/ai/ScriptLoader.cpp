@@ -266,8 +266,9 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const 
 std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const ResearchItem research)
 {
     switch (type) {
-    case Fact::CanResearch:
+    case Fact::CanResearch: // todo handle cost
     case Fact::CanResearchWithEscrow: // todo: handle escrow
+    case Fact::ResearchAvailable:
         return std::make_shared<Conditions::TechAvailableCondition>(research, m_playerId);
     default:
         break;
