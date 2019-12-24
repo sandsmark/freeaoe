@@ -274,6 +274,9 @@ install(TARGETS freeaoe DESTINATION bin)
 add_executable(test test/main.cpp $<TARGET_OBJECTS:freeaoe_common>)
 target_link_libraries(test ${ALL_LIBRARIES})
 
+add_executable(ai-test test/ai-test.cpp $<TARGET_OBJECTS:freeaoe_common>)
+target_link_libraries(ai-test ${ALL_LIBRARIES})
+
 #if (CMAKE_BUILD_TYPE MATCHES Debug)
 #    if(CLANG_TIDY_EXE)
 #        set_target_properties(
