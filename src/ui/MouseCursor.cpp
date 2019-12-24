@@ -4,12 +4,10 @@
 #include <genie/resource/SlpFrame.h>
 #include <genie/dat/UnitCommand.h>
 
-#include "actions/IAction.h"
 #include "core/Logger.h"
 #include "mechanics/UnitManager.h"
 #include "render/IRenderTarget.h"
 #include "resource/AssetManager.h"
-#include "resource/Resource.h"
 
 MouseCursor::MouseCursor(const std::shared_ptr<IRenderTarget> &renderTarget) :
     m_renderTarget(renderTarget)
