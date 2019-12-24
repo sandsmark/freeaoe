@@ -1,8 +1,13 @@
 #pragma once
 #include "gen/enums.h"
 
+#include "core/Logger.h"
+
+#include <unordered_set>
+
 namespace ai
 {
+
     enum class OtherUnits {
         Gate
     };
@@ -151,6 +156,252 @@ namespace ai
         case Unit::Villager: return 83;
         default: return -1;
         }
+    }
+    std::unordered_set<int> unitIds(const Unit type)
+    {
+        std::unordered_set<int> ids;
+        switch(type) {
+        case Unit::ArcherLine:
+            ids.insert(unitId(Unit::Archer));
+            ids.insert(unitId(Unit::Crossbowman));
+            ids.insert(unitId(Unit::Arbalest));
+            break;
+
+        case Unit::CavalryArcherLine:
+            ids.insert(unitId(Unit::CavalryArcher));
+            ids.insert(unitId(Unit::HeavyCavalryArcher));
+            break;
+
+        case Unit::SkirmisherLine:
+            ids.insert(unitId(Unit::Skirmisher));
+            ids.insert(unitId(Unit::EliteSkirmisher));
+            //        m_typeIds.insert(unitId(Unit::ImperialSkirmisher)); TODO: HD rise of the rajas
+            break;
+
+        case Unit::EagleWarriorLine:
+            //        m_typeIds.insert(unitId(Unit::EagleScout)); // TODO the forgotten
+            ids.insert(unitId(Unit::EagleWarrior));
+            ids.insert(unitId(Unit::EliteEagleWarrior));
+            break;
+
+        case Unit::MilitiamanLine:
+            ids.insert(unitId(Unit::Militiaman));
+            ids.insert(unitId(Unit::ManAtArms));
+            ids.insert(unitId(Unit::LongSwordsman));
+            ids.insert(unitId(Unit::TwoHandedSwordsman));
+            ids.insert(unitId(Unit::Champion));
+            break;
+
+        case Unit::SpearmanLine:
+            ids.insert(unitId(Unit::Spearman));
+            ids.insert(unitId(Unit::Pikeman));
+            ids.insert(unitId(Unit::Halberdier));
+            break;
+
+        case Unit::BerserkLine:
+            ids.insert(unitId(Unit::Berserk));
+            ids.insert(unitId(Unit::EliteBerserk));
+            break;
+
+        case Unit::CataphractLine:
+            ids.insert(unitId(Unit::Cataphract));
+            ids.insert(unitId(Unit::EliteCataphract));
+            break;
+
+        case Unit::ChuKoNuLine:
+            ids.insert(unitId(Unit::ChuKoNu));
+            ids.insert(unitId(Unit::EliteChuKoNu));
+            break;
+
+        case Unit::ConquistadorLine:
+            ids.insert(unitId(Unit::Conquistador));
+            ids.insert(unitId(Unit::EliteConquistador));
+            break;
+
+        case Unit::HuskarlLine:
+            ids.insert(unitId(Unit::Huskarl));
+            ids.insert(unitId(Unit::EliteHuskarl));
+            break;
+
+        case Unit::JaguarWarriorLine:
+            ids.insert(unitId(Unit::JaguarWarrior));
+            ids.insert(unitId(Unit::EliteJaguarWarrior));
+            break;
+
+        case Unit::JanissaryLine:
+            ids.insert(unitId(Unit::Janissary));
+            ids.insert(unitId(Unit::EliteJanissary));
+            break;
+
+        case Unit::LongbowmanLine:
+            ids.insert(unitId(Unit::Longbowman));
+            ids.insert(unitId(Unit::EliteLongbowman));
+            break;
+
+        case Unit::MamelukeLine:
+            ids.insert(unitId(Unit::Mameluke));
+            ids.insert(unitId(Unit::EliteMameluke));
+            break;
+
+        case Unit::MangudaiLine:
+            ids.insert(unitId(Unit::Mangudai));
+            ids.insert(unitId(Unit::EliteMangudai));
+            break;
+
+        case Unit::PlumedArcherLine:
+            ids.insert(unitId(Unit::PlumedArcher));
+            ids.insert(unitId(Unit::ElitePlumedArcher));
+            break;
+
+        case Unit::SamuraiLine:
+            ids.insert(unitId(Unit::Samurai));
+            ids.insert(unitId(Unit::EliteSamurai));
+            break;
+
+        case Unit::TarkanLine:
+            ids.insert(unitId(Unit::Tarkan));
+            ids.insert(unitId(Unit::EliteTarkan));
+            break;
+
+        case Unit::TeutonicKnightLine:
+            ids.insert(unitId(Unit::TeutonicKnight));
+            ids.insert(unitId(Unit::EliteTeutonicKnight));
+            break;
+
+        case Unit::ThrowingAxemanLine:
+            ids.insert(unitId(Unit::ThrowingAxeman));
+            ids.insert(unitId(Unit::EliteThrowingAxeman));
+            break;
+
+        case Unit::WarElephantLine:
+            ids.insert(unitId(Unit::WarElephant));
+            ids.insert(unitId(Unit::EliteWarElephant));
+            break;
+
+        case Unit::WarWagonLine:
+            ids.insert(unitId(Unit::WarWagon));
+            ids.insert(unitId(Unit::EliteWarWagon));
+            break;
+
+        case Unit::WoadRaiderLine:
+            ids.insert(unitId(Unit::WoadRaider));
+            ids.insert(unitId(Unit::EliteWoadRaider));
+            break;
+
+        case Unit::CannonGalleonLine:
+            ids.insert(unitId(Unit::CannonGalleon));
+            ids.insert(unitId(Unit::EliteCannonGalleon));
+            break;
+
+        case Unit::DemolitionShipLine:
+            // todo: hd demolition raft
+            ids.insert(unitId(Unit::DemolitionShip));
+            ids.insert(unitId(Unit::HeavyDemolitionShip));
+            break;
+
+        case Unit::FireShipLine:
+            // todo: hd fire galley
+            ids.insert(unitId(Unit::FireShip));
+            ids.insert(unitId(Unit::FastFireShip));
+            break;
+
+        case Unit::GalleyLine:
+            ids.insert(unitId(Unit::Galley));
+            ids.insert(unitId(Unit::WarGalley));
+            ids.insert(unitId(Unit::Galleon));
+            break;
+
+        case Unit::TurtleShipLine:
+            ids.insert(unitId(Unit::TurtleShip));
+            ids.insert(unitId(Unit::EliteTurtleShip));
+            break;
+
+        case Unit::LongboatLine:
+            ids.insert(unitId(Unit::Longboat));
+            ids.insert(unitId(Unit::EliteLongboat));
+            break;
+
+        case Unit::BatteringRamLine:
+            ids.insert(unitId(Unit::BatteringRam));
+            ids.insert(unitId(Unit::CappedRam));
+            ids.insert(unitId(Unit::SiegeRam));
+            break;
+
+        case Unit::MangonelLine:
+            ids.insert(unitId(Unit::Mangonel));
+            ids.insert(unitId(Unit::Onager));
+            ids.insert(unitId(Unit::SiegeOnager));
+            break;
+
+        case Unit::ScorpionLine:
+            ids.insert(unitId(Unit::Scorpion));
+            ids.insert(unitId(Unit::HeavyScorpion));
+            break;
+
+        case Unit::CamelLine:
+            ids.insert(unitId(Unit::Camel));
+            ids.insert(unitId(Unit::HeavyCamel));
+            // todo: imperial camel hd
+            break;
+
+        case Unit::KnightLine:
+            ids.insert(unitId(Unit::Knight));
+            ids.insert(unitId(Unit::Cavalier));
+            ids.insert(unitId(Unit::Paladin));
+            break;
+
+        case Unit::ScoutCavalryLine:
+            ids.insert(unitId(Unit::ScoutCavalry));
+            ids.insert(unitId(Unit::LightCavalry));
+            ids.insert(unitId(Unit::Hussar));
+            break;
+
+        case Unit::MyUniqueUnit:
+        case Unit::MyUniqueUnitLine:
+        case Unit::MyEliteUniqueUnit:
+            WARN << "Civ specific stuff not implemented yet";
+            break;
+
+        default:
+            ids.insert(unitId(type));
+            break;
+        }
+        return ids;
+    }
+
+    std::unordered_set<int> unitIds(const Building type)
+    {
+        std::unordered_set<int> ids;
+        switch(type) {
+        case Building::WatchTowerLine:
+        case Building::WatchTower: // apparently a bug that WatchTower means the entire upgrade line
+            ids.insert(unitId(Building::WatchTower));
+            ids.insert(unitId(Building::GuardTower));
+            ids.insert(unitId(Building::Keep));
+            break;
+        default:
+            ids.insert(unitId(type));
+            break;
+        }
+
+        return ids;
+    }
+
+    std::unordered_set<int> unitIds(const WallType type)
+    {
+        std::unordered_set<int> ids;
+
+        switch(type) {
+        case WallType::StoneWallLine:
+            ids.insert(unitId(WallType::StoneWall));
+            ids.insert(unitId(WallType::FortifiedWall));
+            break;
+        default:
+            ids.insert(unitId(type));
+            break;
+        }
+
+        return ids;
     }
 
 } // namespace ai
