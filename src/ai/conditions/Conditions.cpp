@@ -4,6 +4,7 @@
 #include "mechanics/Unit.h"
 
 #include "ai/Ids.h"
+#include "ai/EnumLogDefs.h"
 
 namespace ai {
 namespace Conditions {
@@ -55,6 +56,11 @@ UnitTypeCount::UnitTypeCount(const WallType type, const RelOp comparison, const 
     m_playerId(playerId)
 {
     m_typeIds = unitIds(type);
+
+    EventManager::registerListener(this, EventManager::UnitCreated);
+    EventManager::registerListener(this, EventManager::UnitDestroyed);
+    EventManager::registerListener(this, EventManager::UnitChangedOwner);
+    EventManager::registerListener(this, EventManager::UnitCaptured);
 }
 
 void UnitTypeCount::onUnitCreated(::Unit *unit)
@@ -118,6 +124,46 @@ void UnitTypeCount::onValueChanged()
         m_isSatisfied = satisfied;
         emit(SatisfiedChanged);
     }
+
+}
+
+PopulationHeadroomCondition::PopulationHeadroomCondition(const RelOp comparison, const int targetValue, int playerId) :
+    m_relOp(comparison),
+    m_targetValue(targetValue),
+    m_playerId(playerId)
+{
+    EventManager::registerListener(this, EventManager::PlayerResourceChanged);
+}
+
+void PopulationHeadroomCondition::onPlayerResourceChanged(Player *player, const genie::ResourceType resourceType, float newValue)
+{
+    if (player->playerId != m_playerId) {
+        return;
+    }
+    switch(resourceType) {
+    case genie::ResourceType::CurrentPopulation:
+        m_housingAvailable = player->resourcesAvailable(genie::ResourceType::PopulationHeadroom) + newValue;
+        break;
+    case genie::ResourceType::PopulationHeadroom:
+        m_housingAvailable = newValue + player->resourcesUsed[genie::ResourceType::CurrentPopulation];
+        break;
+    default:
+        return;
+    }
+
+    if (m_populationCap == -1) {
+        m_populationCap = player->resourcesAvailable(genie::ResourceType::CurrentPopulation) + player->resourcesUsed[genie::ResourceType::CurrentPopulation];
+    }
+
+    DBG << "housing available:" << m_housingAvailable << "pop cap" << m_populationCap;
+    m_currentValue = m_populationCap - m_housingAvailable;
+
+    bool satisfied = CompareCondition::actualCompare(m_targetValue, m_relOp, m_currentValue);
+    if (satisfied == m_isSatisfied) {
+        return;
+    }
+    m_isSatisfied = satisfied;
+    emit(SatisfiedChanged);
 
 }
 

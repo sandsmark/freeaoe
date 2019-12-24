@@ -243,6 +243,10 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact fact, const 
 {
     genie::ResourceType type = genie::ResourceType::InvalidResource;
     switch(fact) {
+    case Fact::PopulationHeadroom:
+        return std::make_shared<Conditions::PopulationHeadroomCondition>(comparison, number, m_playerId);
+    case Fact::HousingHeadroom:
+        type = genie::ResourceType::PopulationHeadroom;
     case Fact::StoneAmount:
         type = genie::ResourceType::StoneStorage;
         break;

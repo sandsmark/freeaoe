@@ -157,5 +157,26 @@ struct UnitTypeCount : public Condition
     void onUnitCaptured(::Unit *unit, int oldPlayerId, int newPlayerId) override;
 };
 
+struct PopulationHeadroomCondition : public Condition
+{
+    PopulationHeadroomCondition(const RelOp comparison, const int targetValue, int playerId);
+
+    void onPlayerResourceChanged(Player *player, const genie::ResourceType resourceType, float newValue) override;
+
+    bool satisfied(AiRule *owner) override {
+        return CompareCondition::actualCompare(m_targetValue, m_relOp, m_currentValue);
+    }
+
+    const RelOp m_relOp;
+    const int m_targetValue;
+    const int m_playerId;
+
+    int m_housingAvailable = 0;
+    int m_populationCap = -1;
+
+    bool m_isSatisfied = false;
+    int m_currentValue = 0;
+};
+
 }//namespace Conditions
 }//namespace ai
