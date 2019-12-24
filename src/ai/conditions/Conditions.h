@@ -172,7 +172,6 @@ struct PopulationHeadroomCondition : public Condition
     const int m_playerId;
 
     int m_housingAvailable = 0;
-    int m_populationCap = -1;
 
     bool m_isSatisfied = false;
     int m_currentValue = 0;

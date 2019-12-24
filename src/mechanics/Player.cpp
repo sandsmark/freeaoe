@@ -4,7 +4,7 @@
 #include <genie/dat/Techage.h>
 #include <genie/dat/TechageEffect.h>
 #include <genie/dat/Unit.h>
-#include <genie/dat/unit/../ResourceUsage.h>
+#include <genie/dat/ResourceUsage.h>
 #include <stdint.h>
 #include <utility>
 #include <vector>
@@ -187,7 +187,7 @@ void Player::addUnit(Unit *unit)
         case genie::ResourceStoreMode::GiveAndTakeResourceType:
         case genie::ResourceStoreMode::BuildingResourceType:
             if (res.Amount < 0) {
-                resourcesUsed[genie::ResourceType(res.Type)] -= res.Amount;
+                m_resourcesUsed[genie::ResourceType(res.Type)] -= res.Amount;
             } else {
                 m_resourcesAvailable[genie::ResourceType(res.Type)] += res.Amount;
             }
@@ -209,7 +209,7 @@ void Player::removeUnit(Unit *unit)
         case genie::ResourceStoreMode::GiveAndTakeResourceType:
         case genie::ResourceStoreMode::BuildingResourceType:
             if (res.Amount < 0) {
-                resourcesUsed[genie::ResourceType(res.Type)] += res.Amount;
+                m_resourcesUsed[genie::ResourceType(res.Type)] += res.Amount;
             } else {
                 m_resourcesAvailable[genie::ResourceType(res.Type)] -= res.Amount;
             }

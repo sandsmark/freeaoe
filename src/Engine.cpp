@@ -637,7 +637,7 @@ bool Engine::updateUi(const std::shared_ptr<GameState> &state)
     updated = m_goldLabel->setValue(humanPlayer->resourcesAvailable(genie::ResourceType::GoldStorage)) || updated;
     updated = m_stoneLabel->setValue(humanPlayer->resourcesAvailable(genie::ResourceType::StoneStorage)) || updated;
 
-    updated = m_populationLabel->setValue(humanPlayer->resourcesUsed[genie::ResourceType::PopulationHeadroom]) || updated;
+    updated = m_populationLabel->setValue(humanPlayer->resourcesUsed(genie::ResourceType::PopulationHeadroom)) || updated;
     updated = m_populationLabel->setMaxValue(humanPlayer->resourcesAvailable(genie::ResourceType::PopulationHeadroom)) || updated;
 
     updated = m_mouseCursor->update(state->unitManager()) || updated;

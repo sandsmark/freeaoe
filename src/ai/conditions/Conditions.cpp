@@ -145,18 +145,16 @@ void PopulationHeadroomCondition::onPlayerResourceChanged(Player *player, const 
         m_housingAvailable = player->resourcesAvailable(genie::ResourceType::PopulationHeadroom) + newValue;
         break;
     case genie::ResourceType::PopulationHeadroom:
-        m_housingAvailable = newValue + player->resourcesUsed[genie::ResourceType::CurrentPopulation];
+        m_housingAvailable = newValue + player->resourcesUsed(genie::ResourceType::CurrentPopulation);
         break;
     default:
         return;
     }
 
-    if (m_populationCap == -1) {
-        m_populationCap = player->resourcesAvailable(genie::ResourceType::CurrentPopulation) + player->resourcesUsed[genie::ResourceType::CurrentPopulation];
-    }
+    const int populationCap = player->resourcesAvailable(genie::ResourceType::CurrentPopulation) + player->resourcesUsed(genie::ResourceType::CurrentPopulation);
 
-    DBG << "housing available:" << m_housingAvailable << "pop cap" << m_populationCap;
-    m_currentValue = m_populationCap - m_housingAvailable;
+    DBG << "housing available:" << m_housingAvailable << "pop cap" << populationCap;
+    m_currentValue = populationCap - m_housingAvailable;
 
     bool satisfied = CompareCondition::actualCompare(m_targetValue, m_relOp, m_currentValue);
     if (satisfied == m_isSatisfied) {

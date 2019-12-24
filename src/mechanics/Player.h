@@ -117,8 +117,6 @@ struct Player
 
     Civilization civilization;
 
-    ResourceMap resourcesUsed;
-
     typedef std::shared_ptr<Player> Ptr;
     std::string name = "Player";
 
@@ -144,9 +142,25 @@ struct Player
         setAvailableResource(type, m_resourcesAvailable[type] + amount);
     }
     void setAvailableResource(const genie::ResourceType type, float newValue);
-    inline float resourcesAvailable(const genie::ResourceType type) { return m_resourcesAvailable[type]; }
+
+    float resourcesAvailable(const genie::ResourceType type) const {
+        ResourceMap::const_iterator it = m_resourcesAvailable.find(type);
+        if (it == m_resourcesAvailable.end()) {
+            return 0.f;
+        }
+        return it->second;
+    }
+
+    float resourcesUsed(const genie::ResourceType type) const {
+        ResourceMap::const_iterator it = m_resourcesUsed.find(type);
+        if (it == m_resourcesUsed.end()) {
+            return 0.f;
+        }
+        return it->second;
+    }
 
 private:
+    ResourceMap m_resourcesUsed;
     ResourceMap m_resourcesAvailable;
     std::unordered_set<Unit*> m_units;
     std::unordered_set<int> m_activeTechs;
