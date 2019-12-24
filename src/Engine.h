@@ -25,7 +25,6 @@
 #include "ui/Dialog.h"
 #include "ui/IconButton.h"
 #include "ui/Minimap.h"
-#include "ui/MouseCursor.h"
 #include "ui/NumberLabel.h"
 #include "ui/UiScreen.h"
 #include "ui/UnitInfoPanel.h"
@@ -54,6 +53,8 @@ class Event;
 class RenderWindow;
 }
 
+struct MouseCursor;
+
 class Engine
 {
 public:
@@ -62,7 +63,7 @@ public:
     static const sf::Clock GameClock;
 
     Engine();
-    virtual ~Engine() = default;
+    virtual ~Engine();
 
     bool setup(const std::shared_ptr<genie::ScnFile> &scenario = nullptr);
     void start();

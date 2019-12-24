@@ -33,6 +33,7 @@
 #include "resource/Resource.h"
 #include "ui/Minimap.h"
 #include "ui/UiScreen.h"
+#include "ui/MouseCursor.h"
 
 #include <genie/dat/ResourceUsage.h>
 #include <genie/resource/SlpFile.h>
@@ -494,6 +495,9 @@ Engine::Engine()
 {
     m_mainScreen = std::make_unique<UiScreen>("dlg_men.sin");
 }
+
+// Just to make the crappy gcc unique_ptr implementation work
+Engine::~Engine() { }
 
 bool Engine::setup(const std::shared_ptr<genie::ScnFile> &scenario)
 {
