@@ -161,8 +161,20 @@ struct Player
         return it->second;
     }
 
+    int countUnitsInGroup(int group) {
+        if (group >= m_unitGroups.size()) {
+            return 0;
+        }
+        return m_unitGroups[group].size();
+    }
+
+    void setUnitGroup(Unit *unit, int group);
+
 private:
     void updateAvailableTechs();
+
+    // group 0 == ungrouped
+    std::vector<std::unordered_set<Unit*>> m_unitGroups;
 
     ResourceMap m_resourcesUsed;
     ResourceMap m_resourcesAvailable;
