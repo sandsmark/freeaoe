@@ -256,11 +256,15 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact fact, const 
         type = genie::ResourceType::WoodStorage;
         break;
     default:
-        WARN << "unimplemented condition" << type << comparison << number;
-        return nullptr;
+        break;
     }
 
-    return std::make_shared<Conditions::ResourceValue>(type, comparison, number, m_playerId);
+    if (type != genie::ResourceType::InvalidResource) {
+        return std::make_shared<Conditions::ResourceValue>(type, comparison, number, m_playerId);
+    }
+
+    WARN << "unimplemented condition" << fact << comparison << number;
+    return nullptr;
 }
 
 std::shared_ptr<Condition> ScriptLoader::createOrCondition(std::shared_ptr<Condition> &condition1, std::shared_ptr<Condition> &condition2)
