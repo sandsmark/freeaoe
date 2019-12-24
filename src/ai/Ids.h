@@ -1,17 +1,22 @@
 #pragma once
 #include "gen/enums.h"
+
 namespace ai
 {
     enum class OtherUnits {
         Gate
     };
-    int unitId(const OtherUnits &unit) {
+
+    int unitId(const OtherUnits &unit)
+    {
         switch (unit) {
         case OtherUnits::Gate: return 487;
         default: return -1;
         }
     }
-    int unitId(const WallType &wall) {
+
+    int unitId(const WallType &wall)
+    {
         switch (wall) {
         case WallType::FortifiedWall: return 155;
         case WallType::PalisadeWall: return 72;
@@ -20,8 +25,9 @@ namespace ai
         }
     }
 
-    int unitId(const Building &building) {
-        switch(building) {
+    int unitId(const Building &building)
+    {
+        switch (building) {
         case Building::ArcheryRange: return 87;
         case Building::Barracks: return 12;
         case Building::Blacksmith: return 103;
@@ -49,8 +55,9 @@ namespace ai
         }
     }
 
-    int unitId(const Unit &unit) {
-        switch(unit) {
+    int unitId(const Unit &unit)
+    {
+        switch (unit) {
         case Unit::Arbalest: return 492;
         case Unit::Archer: return 4;
         case Unit::CavalryArcher: return 39;
@@ -144,5 +151,6 @@ namespace ai
         case Unit::Villager: return 83;
         default: return -1;
         }
-}
-};
+    }
+
+} // namespace ai
