@@ -213,6 +213,14 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const 
 
 std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const int number1, const int number2)
 {
+    switch(type) {
+    case Fact::Goal:
+        return std::make_shared<Conditions::Goal>(number1, RelOp::Equal, number2);
+    default:
+        break;
+
+    }
+
     WARN << "unimplemented condition" << type << number1 << number2;
     return nullptr;
 }

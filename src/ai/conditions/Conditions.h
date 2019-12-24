@@ -237,5 +237,22 @@ private:
     bool checkType(const genie::Unit *unit) const;
 };
 
+struct Goal : public Condition
+{
+    Goal(const int goalId, const RelOp comparison, const int targetValue);
+
+    void onGoalChanged() {
+        emit (SatisfiedChanged); // don't check anything, the satisfied check is cheap anyways
+    }
+
+    const int m_goalId;
+    const RelOp m_comparison;
+    const int m_targetValue;
+
+    AiScript *m_script = nullptr;
+
+    bool satisfied(AiRule *owner) override;
+};
+
 }//namespace Conditions
 }//namespace ai

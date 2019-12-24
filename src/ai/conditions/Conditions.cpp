@@ -398,5 +398,27 @@ bool CombatUnitsCount::checkType(const genie::Unit *unit) const
 //    }
 }
 
+Goal::Goal(const int goalId, const RelOp comparison, const int targetValue) :
+    m_goalId(goalId),
+    m_comparison(comparison),
+    m_targetValue(targetValue)
+{ }
+
+bool Goal::satisfied(AiRule *owner)
+{
+    // hackish, TODO: fixme pass in script
+    if (owner->m_owner != m_script) {
+        if (m_script) {
+            // never going to happen, but meh
+            m_script->disconnect(this);
+        }
+
+        m_script = owner->m_owner;
+        m_script->connect(AiScript::GoalChanged, this, &Goal::onGoalChanged);
+    }
+
+    return CompareCondition::actualCompare(m_targetValue, m_comparison, m_script->goal(m_goalId));
+}
+
 } // namespace Conditions
 } //namespace ai

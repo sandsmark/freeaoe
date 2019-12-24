@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ai/gen/enums.h"
+#include "core/SignalEmitter.h"
 
 #include <memory>
 #include <unordered_map>
@@ -13,9 +14,12 @@ namespace ai {
 
 struct AiRule;
 
-struct AiScript
+struct AiScript : public SignalEmitter<AiScript>
 {
-public:
+    enum Signals {
+        GoalChanged
+    };
+
     AiScript(Player *player);
     AiScript() = delete;
 
@@ -25,6 +29,19 @@ public:
 
 
     Player *m_player = nullptr;
+
+    void setGoal(int goalId, int value) {
+        if (m_goals.count(goalId) && value == m_goals[goalId]) {
+            return;
+        }
+        m_goals[goalId] = value;
+        emit(GoalChanged);
+    }
+
+    int goal(int goalId) { return m_goals[goalId]; }
+
+private:
+    std::unordered_map<int, int> m_goals;
 };
 
 } // namespace ai
