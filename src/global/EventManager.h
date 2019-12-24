@@ -15,6 +15,7 @@ enum class ResourceType : int16_t;
 }
 
 // Not scalable at all, so sue me
+// TODO: template magic to only subscribe to what you want
 class EventManager
 {
 public:
@@ -37,6 +38,7 @@ public:
         UnitGarrisoned,
         UnitGotTarget,
         UnitDeliveredUnit,
+        UnitChangedGroup,
 
         ResearchStarted,
         ResearchComplete,
@@ -66,6 +68,8 @@ public:
     static void unitGarrisoned(Unit *unit, Unit *garrisonedIn);
     static void unitGotTarget(Unit *unit, Unit *targetUnit);
     static void unitDelivered(Unit *unit, Unit *deliveredUnit, Unit *targetUnit);
+    static void unitChangedGroup(Unit *unit, int oldGroup, int newGroup);
+
 
     static void researchStarted(Player *player, int researchId);
     static void researchCompleted(Player *player, int researchId);

@@ -133,6 +133,8 @@ struct Player
     void addUnit(Unit *unit);
     void removeUnit(Unit *unit);
 
+    void setUnitGroup(Unit *unit, int group);
+
     void addAlliedPlayer(int playerId);
     void removeAlliedPlayer(int playerId);
     bool isAllied(int playerId);
@@ -161,14 +163,18 @@ struct Player
         return it->second;
     }
 
-    int countUnitsInGroup(int group) {
+    static constexpr int UngroupedGroupID = 0;
+    const std::unordered_set<Unit*> &unitsInGroup(int group) {
         if (group >= m_unitGroups.size()) {
-            return 0;
-        }
-        return m_unitGroups[group].size();
-    }
+            WARN << "invalid group" << group;
+            static const std::unordered_set<Unit*> nullgroup;
+            return nullgroup;
 
-    void setUnitGroup(Unit *unit, int group);
+        }
+
+        return m_unitGroups[group];
+    }
+    int unitGroupCount() const { return m_unitGroups.size(); }
 
 private:
     void updateAvailableTechs();

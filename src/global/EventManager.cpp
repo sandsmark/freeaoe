@@ -90,6 +90,11 @@ void EventManager::unitDelivered(Unit *unit, Unit *deliveredUnit, Unit *targetUn
     call(UnitDeliveredUnit, [=](EventListener *l) { l->onUnitDelivered(unit, deliveredUnit, targetUnit); });
 }
 
+void EventManager::unitChangedGroup(Unit *unit, int oldGroup, int newGroup)
+{
+    call(UnitChangedGroup, [=](EventListener *l) { l->onUnitChangedGroup(unit, oldGroup, newGroup); });
+}
+
 void EventManager::researchStarted(Player *player, int researchId)
 {
     call(ResearchStarted, [=](EventListener *l) { l->onResearchStarted(player, researchId); });

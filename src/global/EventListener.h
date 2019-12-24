@@ -54,6 +54,10 @@ protected:
     virtual void onUnitDelivered(Unit *unit, Unit *deliveredUnit, Unit *targetUnit)
         { (void)unit; (void)deliveredUnit; (void)targetUnit; }
 
+    virtual void onUnitChangedGroup(Unit *unit, int oldGroup, int newGroup)
+        { (void)unit; (void)oldGroup; (void)newGroup; }
+
+
     virtual void onResearchStarted(Player *player, int researchId)
         { (void)player; (void)researchId; }
 

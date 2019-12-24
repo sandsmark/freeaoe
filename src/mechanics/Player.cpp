@@ -204,6 +204,8 @@ void Player::addUnit(Unit *unit)
         m_unitGroups.resize(1);
     }
     m_unitGroups[0].insert(unit);
+
+    EventManager::unitChangedGroup(unit, -1, 0);
 }
 
 void Player::removeUnit(Unit *unit)
@@ -227,9 +229,16 @@ void Player::removeUnit(Unit *unit)
     }
     m_units.erase(unit);
 
-    for (std::unordered_set<Unit*> &group : m_unitGroups) {
-        group.erase(unit);
+    int oldGroup = -1;
+    for (size_t i=0; i<m_unitGroups.size(); i++) {
+        if (m_unitGroups[i].erase(unit)) {
+            if (oldGroup != -1) {
+                WARN << "Unit" << unit->debugName << "in multiple groups";
+            }
+            oldGroup = i;
+        }
     }
+    EventManager::unitChangedGroup(unit, oldGroup, -1);
 
     // bleh, probably not the best, if we want to preserve them for some reason
 //    std::vector<std::unordered_set<Unit*>>::iterator it;
@@ -238,6 +247,32 @@ void Player::removeUnit(Unit *unit)
 //            it = unitGroups.erase(it);
 //        }
 //    }
+}
+
+void Player::setUnitGroup(Unit *unit, int group)
+{
+    if (group < 0) {
+        WARN << "Invalid group" << group;
+        group = 0;
+    }
+
+    // could break out of the loop when we found it, but I don't trust myself not to be dumb enough to add to multiple groups
+    int oldGroup = -1;
+    for (size_t i=0; i<m_unitGroups.size(); i++) {
+        if (m_unitGroups[i].erase(unit)) {
+            if (oldGroup != -1) {
+                WARN << "Unit" << unit->debugName << "in multiple groups";
+            }
+            oldGroup = i;
+        }
+    }
+
+    if (group >= m_units.size()) {
+        m_unitGroups.resize(group + 1);
+    }
+    m_unitGroups[group].insert(unit);
+
+    EventManager::unitChangedGroup(unit, oldGroup, group);
 }
 
 void Player::addAlliedPlayer(int playerId)
@@ -261,24 +296,6 @@ void Player::setAvailableResource(const genie::ResourceType type, float newValue
     m_resourcesAvailable[type] = newValue;
 
     EventManager::playerResourceChanged(this, type, newValue);
-}
-
-void Player::setUnitGroup(Unit *unit, int group)
-{
-    if (group < 0) {
-        WARN << "Invalid group" << group;
-        group = 0;
-    }
-
-    // could break out of the loop when we found it, but I don't trust myself not to be dumb enough to add to multiple groups
-    for (std::unordered_set<Unit*> &group : m_unitGroups) {
-        group.erase(unit);
-    }
-
-    if (group >= m_units.size()) {
-        m_unitGroups.resize(group + 1);
-    }
-    m_unitGroups[group].insert(unit);
 }
 
 void Player::updateAvailableTechs()

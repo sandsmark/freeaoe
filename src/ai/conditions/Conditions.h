@@ -46,6 +46,19 @@ struct OrCondition : public Condition
             WARN << "missing second condition!";
             m_subcondition2 = std::make_shared<ConstantCondition>(true);
         }
+
+        m_subcondition1->connect(SatisfiedChanged, this, &OrCondition::onSubconditionSatisfiedChanged);
+        m_subcondition2->connect(SatisfiedChanged, this, &OrCondition::onSubconditionSatisfiedChanged);
+    }
+
+    ~OrCondition() {
+        m_subcondition1->disconnect(this);
+        m_subcondition2->disconnect(this);
+    }
+
+    void onSubconditionSatisfiedChanged()
+    {
+        emit(SatisfiedChanged);
     }
 
 
@@ -192,6 +205,7 @@ struct CanTrainOrBuildCondition : public Condition
     std::unordered_set<int> m_typeIds;
     bool m_isSatisfied = false;
 };
+
 struct TechAvailableCondition : public Condition
 {
     TechAvailableCondition(ResearchItem tech, int playerId);
@@ -203,6 +217,24 @@ struct TechAvailableCondition : public Condition
     void onResearchCompleted(Player *player, int researchId) override;
 
     bool satisfied(AiRule *owner) override;
+};
+
+struct CombatUnitsCount : public Condition
+{
+    CombatUnitsCount(Fact type, const RelOp comparison, int targetNumber, const int playerId);
+
+    const int m_playerId;
+    const Fact m_type;
+    const RelOp m_comparison;
+    const int m_targetValue;
+    bool m_isSatisfied = false;
+
+    bool satisfied(AiRule *owner) override;
+    void onUnitChangedGroup(::Unit *unit, int oldGroup, int newGroup) override;
+
+private:
+    bool actualCheck(Player *player) const;
+    bool checkType(const genie::Unit *unit) const;
 };
 
 }//namespace Conditions

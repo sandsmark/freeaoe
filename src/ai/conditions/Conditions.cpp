@@ -250,5 +250,153 @@ bool TechAvailableCondition::satisfied(AiRule *owner)
     return m_isSatisfied;
 }
 
+CombatUnitsCount::CombatUnitsCount(Fact type, const RelOp comparison, int targetNumber, const int playerId) :
+    m_playerId(playerId),
+    m_type(type),
+    m_comparison(comparison),
+    m_targetValue(targetNumber)
+{
+    EventManager::registerListener(this, EventManager::UnitChangedGroup);
+}
+
+
+bool Conditions::CombatUnitsCount::satisfied(AiRule *owner)
+{
+    m_isSatisfied = actualCheck(owner->m_owner->m_player);
+    return m_isSatisfied;
+}
+
+void ai::Conditions::CombatUnitsCount::onUnitChangedGroup(::Unit *unit, int oldGroup, int newGroup)
+{
+    if (unit->playerId != m_playerId) {
+        return;
+    }
+
+    switch (m_type) {
+    case Fact::DefendWarboatCount:
+    case Fact::DefendSoldierCount:
+    case Fact::AttackWarboatCount:
+    case Fact::AttackSoldierCount:
+        // We only care about those who are either new defenders or attackers (i. e. assigned a group)
+        if (oldGroup != 0 && newGroup != 0) {
+            return;
+        }
+        break;
+    default:
+        break;
+    }
+
+
+    Player::Ptr player = unit->player.lock();
+    if (!player) {
+        WARN << "unit without player!";
+        emit(SatisfiedChanged);// just in case
+        return;
+    }
+
+    const bool satisfied = actualCheck(player.get());
+    if (satisfied != m_isSatisfied) {
+        m_isSatisfied = satisfied;
+        emit(SatisfiedChanged);
+    }
+}
+
+bool CombatUnitsCount::actualCheck(Player *player) const
+{
+    std::vector<int> unitGroupsToCheck;
+
+    switch (m_type) {
+    case Fact::DefendWarboatCount:
+    case Fact::DefendSoldierCount:
+        unitGroupsToCheck.push_back(0);
+        break;
+    case Fact::AttackWarboatCount:
+    case Fact::AttackSoldierCount:
+        for (int i=1; i< player->unitGroupCount(); i++) {
+            unitGroupsToCheck.push_back(i);
+        }
+        break;
+    case Fact::WarboatCount:
+    case Fact::SoldierCount:
+        for (int i=0; i< player->unitGroupCount(); i++) {
+            unitGroupsToCheck.push_back(i);
+        }
+        break;
+    default:
+        WARN << "unhandled type" << m_type;
+        return false;
+    }
+
+    int unitCount = 0;
+    for (const int group : unitGroupsToCheck) {
+        for (const ::Unit *unit : player->unitsInGroup(group)) {
+            if (!checkType(unit->data())) {
+                continue;
+            }
+            unitCount++;
+        }
+    }
+
+    return CompareCondition::actualCompare(m_targetValue, m_comparison, unitCount);
+}
+
+bool CombatUnitsCount::checkType(const genie::Unit *unit) const
+{
+    if (unit->Type < genie::Unit::CombatantType) {
+        return false;
+    }
+    if (unit->CombatLevel != genie::Unit::SoldierCombatLevel) {
+        return false;
+    }
+
+    switch (m_type) {
+    case Fact::DefendWarboatCount:
+    case Fact::AttackWarboatCount:
+    case Fact::WarboatCount:
+        return unit->Class == genie::Unit::Warship;
+
+    case Fact::DefendSoldierCount:
+    case Fact::AttackSoldierCount:
+    case Fact::SoldierCount:
+        break;
+
+    default:
+        WARN << "unhandled type" << m_type;
+        return false;
+    }
+
+    return true;
+
+    // Could do this, but we just check combatlevel above
+//    switch (unit->Class) {
+//    case genie::Unit::Archer:
+//    case genie::Unit::Infantry:
+//    case genie::Unit::Cavalry:
+//    case genie::Unit::Conquistador:
+//    case genie::Unit::WarElephant:
+//    case genie::Unit::ElephantArcher:
+//    case genie::Unit::Phalanx:
+//    case genie::Unit::Petard:
+//    case genie::Unit::CavalryArcher:
+//    case genie::Unit::HandCannoneer:
+//    case genie::Unit::TwoHandedSwordsman:
+//    case genie::Unit::Pikeman:
+//    case genie::Unit::Scout:
+//    case genie::Unit::Spearman:
+
+//    case genie::Unit::Raider:
+//    case genie::Unit::CavalryRaider:
+
+//    case genie::Unit::SiegeWeapon:
+//    case genie::Unit::UnpackedSiegeUnit: // HMM
+//    case genie::Unit::PackedUnit: // HMMM
+//    case genie::Unit::Hero: // HMMMM
+//        return true;
+
+//    default:
+//        return false;
+//    }
+}
+
 } // namespace Conditions
 } //namespace ai

@@ -268,6 +268,13 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact fact, const 
     switch(fact) {
     case Fact::PopulationHeadroom:
         return std::make_shared<Conditions::PopulationHeadroomCondition>(comparison, number, m_playerId);
+    case Fact::AttackWarboatCount:
+    case Fact::AttackSoldierCount:
+    case Fact::DefendWarboatCount:
+    case Fact::DefendSoldierCount:
+    case Fact::WarboatCount:
+    case Fact::SoldierCount:
+        return std::make_shared<Conditions::CombatUnitsCount>(fact, comparison, number, m_playerId);
     case Fact::HousingHeadroom:
         type = genie::ResourceType::PopulationHeadroom;
     case Fact::StoneAmount:
