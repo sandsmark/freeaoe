@@ -180,7 +180,7 @@ CanTrainOrBuildCondition::CanTrainOrBuildCondition(const Building type, const in
 
 void CanTrainOrBuildCondition::onPlayerResourceChanged(Player *player, const genie::ResourceType resourceType, float newValue)
 {
-    // todo, I'm lazy
+    // todo: I'm lazy, add the rest that we want to ignore
     switch(resourceType) {
     case genie::ResourceType::InvalidResource:
     case genie::ResourceType::ConversionRange:
@@ -222,6 +222,32 @@ bool CanTrainOrBuildCondition::checkCanBuild(const Player *player) const
     }
     return false;
 
+}
+
+TechAvailableCondition::TechAvailableCondition(ResearchItem tech, int playerId) :
+    m_playerId(playerId),
+    m_techId(researchId(tech))
+{
+    if (m_techId == -1) {
+        WARN << "Unhandled tech" << tech;
+    }
+}
+
+void TechAvailableCondition::onResearchCompleted(Player *player, int researchId)
+{
+    bool satisfied = player->researchAvailable(m_techId);
+    if (satisfied == m_isSatisfied) {
+        return;
+    }
+
+    m_isSatisfied = satisfied;
+    emit(SatisfiedChanged);
+}
+
+bool TechAvailableCondition::satisfied(AiRule *owner)
+{
+    m_isSatisfied = owner->m_owner->m_player->researchAvailable(m_techId);
+    return m_isSatisfied;
 }
 
 } // namespace Conditions

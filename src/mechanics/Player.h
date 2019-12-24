@@ -120,6 +120,7 @@ struct Player
     typedef std::shared_ptr<Player> Ptr;
     std::string name = "Player";
 
+    bool researchAvailable(const int researchId) { return m_currentlyAvailableTechs.count(researchId); }
     void applyResearch(const int researchId);
     void applyTechEffect(const int effectId);
     void applyTechEffectCommand(const genie::EffectCommand &effect);
@@ -161,9 +162,12 @@ struct Player
     }
 
 private:
+    void updateAvailableTechs();
+
     ResourceMap m_resourcesUsed;
     ResourceMap m_resourcesAvailable;
     std::unordered_set<Unit*> m_units;
     std::unordered_set<int> m_activeTechs;
     std::unordered_set<int> m_alliedPlayers;
+    std::unordered_map<int, genie::Tech> m_currentlyAvailableTechs;
 };

@@ -29,6 +29,7 @@ public:
 
     const genie::Unit &unitData(int id) const;
     const genie::Tech &tech(const uint16_t id) const;
+    const std::unordered_map<uint16_t, genie::Tech> &availableTechs() const { return m_techs; }
 
     const std::vector<const genie::Unit *> &swappableUnits(const uint16_t taskSwapGroup) const;
 

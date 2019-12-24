@@ -28,6 +28,8 @@ Player::Player(const int id, const int civId, const ResourceMap &startingResourc
     for (const std::pair<const genie::ResourceType, float> &r : startingResources) {
         m_resourcesAvailable[r.first] = r.second;
     }
+
+    updateAvailableTechs();
 }
 
 void Player::applyResearch(const int researchId)
@@ -72,6 +74,7 @@ void Player::applyResearch(const int researchId)
 
         applyTechEffect(research.EffectID);
     }
+    updateAvailableTechs();
 }
 
 void Player::applyTechEffect(const int effectId)
@@ -242,6 +245,36 @@ void Player::setAvailableResource(const genie::ResourceType type, float newValue
     m_resourcesAvailable[type] = newValue;
 
     EventManager::playerResourceChanged(this, type, newValue);
+}
+
+void Player::updateAvailableTechs()
+{
+    m_currentlyAvailableTechs.clear();
+
+    std::unordered_map<uint16_t, genie::Tech>::const_iterator it;
+    for (it = civilization.availableTechs().begin(); it != civilization.availableTechs().end(); it++) {
+        if (m_activeTechs.count(it->first)) {
+            continue;
+        }
+
+        bool requirementsSatisfied = false;
+        for (const int reqId : it->second.RequiredTechs) {
+            if (reqId == -1) {
+                continue;
+            }
+            if (m_activeTechs.count(reqId)) {
+                requirementsSatisfied = true;
+            } else {
+                requirementsSatisfied = false;
+                break;
+            }
+        }
+
+        if (!requirementsSatisfied) {
+            continue;
+        }
+        m_currentlyAvailableTechs[it->first] = it->second;
+    }
 }
 
 bool Player::canBuildUnit(const int unitId) const

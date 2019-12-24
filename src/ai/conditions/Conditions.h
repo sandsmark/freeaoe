@@ -192,6 +192,18 @@ struct CanTrainOrBuildCondition : public Condition
     std::unordered_set<int> m_typeIds;
     bool m_isSatisfied = false;
 };
+struct TechAvailableCondition : public Condition
+{
+    TechAvailableCondition(ResearchItem tech, int playerId);
+
+    const int m_playerId;
+    const int m_techId;
+
+    bool m_isSatisfied = false;
+    void onResearchCompleted(Player *player, int researchId) override;
+
+    bool satisfied(AiRule *owner) override;
+};
 
 }//namespace Conditions
 }//namespace ai

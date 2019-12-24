@@ -230,6 +230,14 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const 
 
 std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const ResearchItem research)
 {
+    switch (type) {
+    case Fact::CanResearch:
+    case Fact::CanResearchWithEscrow: // todo: handle escrow
+        return std::make_shared<Conditions::TechAvailableCondition>(research, m_playerId);
+    default:
+        break;
+    }
+
     WARN << "unimplemented condition" << type << research;
     return nullptr;
 }
