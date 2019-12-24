@@ -1,7 +1,6 @@
 #include "MouseCursor.h"
 
 #include <genie/resource/SlpFile.h>
-#include <genie/resource/SlpFrame.h>
 #include <genie/dat/UnitCommand.h>
 
 #include "core/Logger.h"
@@ -32,7 +31,6 @@ bool MouseCursor::setPosition(const ScreenPos &position)
     }
 
     m_position = position;
-    m_sprite.setPosition(position);
     return true;
 }
 
@@ -50,7 +48,7 @@ bool MouseCursor::update(const std::shared_ptr<UnitManager> &unitManager)
 
 void MouseCursor::render()
 {
-    m_renderTarget->draw(m_sprite);
+    m_renderTarget->draw(m_image, m_position);
 }
 
 bool MouseCursor::setCursor(const MouseCursor::Type type)
@@ -69,8 +67,7 @@ bool MouseCursor::setCursor(const MouseCursor::Type type)
         return false;
     }
 
-    m_texture.loadFromImage(Resource::convertFrameToImage(newFrame));
-    m_sprite.setTexture(m_texture, true);
+    m_image = m_renderTarget->convertFrameToImage(newFrame);
     m_currentType = type;
     return true;
 }

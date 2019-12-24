@@ -2,9 +2,6 @@
 
 #include "core/Types.h"
 
-#include <SFML/Graphics/Sprite.hpp>
-#include <SFML/Graphics/Texture.hpp>
-
 #include <memory>
 
 namespace genie {
@@ -14,6 +11,10 @@ typedef std::shared_ptr<SlpFile> SlpFilePtr;
 
 class UnitManager;
 class IRenderTarget;
+
+namespace Drawable {
+struct Image;
+}
 
 struct MouseCursor
 {
@@ -52,8 +53,7 @@ private:
     bool setCursor(const Type type);
     Type m_currentType = Invalid;
 
-    sf::Texture m_texture;
-    sf::Sprite m_sprite;
+    std::shared_ptr<Drawable::Image> m_image;
     genie::SlpFilePtr m_cursorsFile;
     ScreenPos m_position;
 
