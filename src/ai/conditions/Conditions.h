@@ -255,6 +255,25 @@ struct Goal : public Condition
     bool satisfied(AiRule *owner) override;
 };
 
+struct TradingPrice : public Condition
+{
+    enum BuyOrSell {
+        Buy,
+        Sell
+    } m_type;
+
+    TradingPrice(const BuyOrSell type, const Commodity commodity, const RelOp comparison, const int targetValue);
+
+    const RelOp m_comparison;
+    const int m_targetValue;
+    int m_tradingPrice;
+    genie::ResourceType m_resourceType = genie::ResourceType::InvalidResource;
+    bool m_isSatisfied = false; // todo: this is reused by everything, put it in Condition
+
+    void onTradingPriceChanged(const genie::ResourceType type, const int newPrice) override;
+    bool satisfied(AiRule *owner) override { return m_isSatisfied; }
+};
+
 struct CanTrade : public Condition
 {
     genie::ResourceType m_resourceType = genie::ResourceType::InvalidResource;

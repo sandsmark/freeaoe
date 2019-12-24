@@ -106,6 +106,15 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const 
 
 std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const Commodity commodity, const RelOp comparison, const int number)
 {
+    switch(type) {
+    case Fact::CommodityBuyingPrice:
+        return std::make_shared<Conditions::TradingPrice>(Conditions::TradingPrice::Buy, commodity, comparison, m_playerId);
+    case Fact::CommoditySellingPrice:
+        return std::make_shared<Conditions::TradingPrice>(Conditions::TradingPrice::Sell, commodity, comparison, m_playerId);
+    default:
+        break;
+    }
+
     WARN << "unimplemented condition" << type << commodity << comparison << number;
     return nullptr;
 }

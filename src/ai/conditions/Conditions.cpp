@@ -431,6 +431,59 @@ bool Goal::satisfied(AiRule *owner)
     return CompareCondition::actualCompare(m_targetValue, m_comparison, m_script->goal(m_goalId));
 }
 
+TradingPrice::TradingPrice(const BuyOrSell type, const Commodity resource, const RelOp comparison, const int targetValue) :
+    m_type(type),
+    m_comparison(comparison),
+    m_targetValue(targetValue),
+    m_tradingPrice(type == Buy ? 130 : 70) // default values, should hopefully be updated immediately
+{
+    switch(resource) {
+    case Commodity::Food:
+        m_resourceType = genie::ResourceType::FoodStorage;
+        break;
+
+    case Commodity::Wood:
+        m_resourceType = genie::ResourceType::WoodStorage;
+        break;
+
+    case Commodity::Stone:
+        m_resourceType = genie::ResourceType::StoneStorage;
+        break;
+
+    default:
+        WARN << "Unhandled commodity for trading price" << resource;
+        break;
+    }
+
+    EventManager::registerListener(this, EventManager::TradingPriceChanged);
+
+}
+
+void TradingPrice::onTradingPriceChanged(const genie::ResourceType type, const int newPrice)
+{
+    if (type != m_resourceType) {
+        return;
+    }
+
+    switch(m_type) {
+    case Buy:
+        m_tradingPrice = newPrice * 1.3;
+        break;
+    case Sell:
+        m_tradingPrice = newPrice * 0.7;
+        break;
+    }
+
+    const bool satisfied = CompareCondition::actualCompare(m_tradingPrice, m_comparison, m_targetValue);
+
+    if (satisfied == m_isSatisfied) {
+        return;
+    }
+    m_isSatisfied = satisfied;
+    emit(SatisfiedChanged);
+
+}
+
 CanTrade::CanTrade(const Commodity resource, const CanTrade::BuyOrSell type, const int playerId) :
     m_type(type),
     m_playerId(playerId)
