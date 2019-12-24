@@ -312,6 +312,7 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact fact, const 
         return std::make_shared<Conditions::CombatUnitsCount>(fact, comparison, number, m_playerId);
     case Fact::HousingHeadroom:
         type = genie::ResourceType::PopulationHeadroom;
+        break;
     case Fact::StoneAmount:
         type = genie::ResourceType::StoneStorage;
         break;
