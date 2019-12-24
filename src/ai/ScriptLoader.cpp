@@ -42,6 +42,14 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type)
 
 std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const Age age)
 {
+    switch (type) {
+    case Fact::CanResearch:
+    case Fact::CanResearchWithEscrow: // todo: handle escrow
+        return std::make_shared<Conditions::TechAvailableCondition>(age, m_playerId);
+    default:
+        break;
+    }
+
     WARN << "unimplemented condition" << type << age;
     return nullptr;
 }

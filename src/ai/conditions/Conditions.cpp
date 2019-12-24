@@ -231,6 +231,17 @@ TechAvailableCondition::TechAvailableCondition(ResearchItem tech, int playerId) 
     if (m_techId == -1) {
         WARN << "Unhandled tech" << tech;
     }
+    EventManager::registerListener(this, EventManager::ResearchComplete);
+}
+
+TechAvailableCondition::TechAvailableCondition(Age targetAge, int playerId) :
+    m_playerId(playerId),
+    m_techId(researchId(targetAge))
+{
+    if (m_techId == -1) {
+        WARN << "Unhandled age" << targetAge;
+    }
+    EventManager::registerListener(this, EventManager::ResearchComplete);
 }
 
 void TechAvailableCondition::onResearchCompleted(Player *player, int researchId)

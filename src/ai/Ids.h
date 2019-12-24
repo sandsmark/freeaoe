@@ -7,6 +7,18 @@
 
 namespace ai
 {
+    int researchId(const Age age)
+    {
+        switch(age) {
+        case Age::FeudalAge: return 101;
+        case Age::CastleAge: return 102;
+        case Age::ImperialAge: return 103;
+        case Age::DarkAge:
+            WARN << "who the fuck wants to research dark age";
+            return 104;
+        default: return -1;
+        }
+    }
     int researchId(const ResearchItem item)
     {
         switch(item) {
