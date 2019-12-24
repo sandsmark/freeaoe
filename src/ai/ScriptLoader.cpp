@@ -54,6 +54,15 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const 
 
 std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const Building building, const RelOp comparison, const int number)
 {
+    switch(type) {
+    case Fact::BuildingTypeCount:
+        return std::make_shared<Conditions::UnitTypeCount>(building, comparison, number, m_playerId);
+    case Fact::BuildingTypeCountTotal:
+        return std::make_shared<Conditions::UnitTypeCount>(building, comparison, number, -1);
+    default:
+        break;
+    }
+
     WARN << "unimplemented condition" << type << building << comparison << number;
     return nullptr;
 }
@@ -175,6 +184,15 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const 
 
 std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const Unit unit, const RelOp comparison, const int number)
 {
+    switch(type) {
+    case Fact::UnitTypeCount:
+        return std::make_shared<Conditions::UnitTypeCount>(unit, comparison, number, m_playerId);
+    case Fact::UnitTypeCountTotal:
+        return std::make_shared<Conditions::UnitTypeCount>(unit, comparison, number, -1);
+    default:
+        break;
+    }
+
     WARN << "unimplemented condition" << type << unit << comparison << number;
     return nullptr;
 }
