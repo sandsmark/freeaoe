@@ -217,7 +217,7 @@ void GameState::setupScenario()
         player->setAvailableResource(genie::ResourceType::StoneStorage, resources.stone);
         player->setAvailableResource(genie::ResourceType::OreStorage,   resources.ore);
         player->setAvailableResource(genie::ResourceType::TradeGoods,   resources.goods);
-        player->setAvailableResource(genie::ResourceType::PopulationHeadroom, resources.popLimit);
+        player->setAvailableResource(genie::ResourceType::CurrentPopulation, resources.popLimit);
 
         if (playersData.resourcesPlusPlayerInfo[realPlayerNum].isHuman) {
             if (m_humanPlayer) {
