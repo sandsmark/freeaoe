@@ -431,5 +431,88 @@ bool Goal::satisfied(AiRule *owner)
     return CompareCondition::actualCompare(m_targetValue, m_comparison, m_script->goal(m_goalId));
 }
 
+CanTrade::CanTrade(const Commodity resource, const CanTrade::BuyOrSell type, const int playerId) :
+    m_type(type),
+    m_playerId(playerId)
+{
+    switch(resource) {
+    case Commodity::Food:
+        m_resourceType = genie::ResourceType::FoodStorage;
+        break;
+
+    case Commodity::Wood:
+        m_resourceType = genie::ResourceType::WoodStorage;
+        break;
+
+    case Commodity::Stone:
+        m_resourceType = genie::ResourceType::StoneStorage;
+        break;
+
+    default:
+        WARN << "Unhandled commodity for trade" << resource;
+        break;
+    }
+
+    EventManager::registerListener(this, EventManager::TradingPriceChanged);
+}
+
+void CanTrade::onPlayerResourceChanged(Player *player, const genie::ResourceType type, float newValue)
+{
+    if (m_type == Sell && type == m_resourceType) {
+        return;
+    } else if (m_type == Buy && type != genie::ResourceType::GoldStorage) {
+        return;
+    }
+
+    if (player->playerId != m_playerId) {
+        return;
+    }
+
+    m_resourceAvailable = newValue;
+
+    actualCheck();
+}
+
+void CanTrade::onTradingPriceChanged(const genie::ResourceType type, const int newPrice)
+{
+    if (type != m_resourceType) {
+        return;
+    }
+
+    m_tradingPrice = newPrice;
+
+    actualCheck();
+}
+
+bool CanTrade::satisfied(AiRule *owner)
+{
+    if (!m_resourceAvailable) {
+        if (m_type == Buy) {
+            m_resourceAvailable = owner->m_owner->m_player->resourcesAvailable(genie::ResourceType::GoldStorage);
+        } else {
+            m_resourceAvailable = owner->m_owner->m_player->resourcesAvailable(m_resourceType);
+        }
+    }
+    return m_isSatisfied;
+}
+
+void CanTrade::actualCheck()
+{
+    bool canTrade = false;
+
+    // idk I think this is right lol, math is hard
+    if (m_type == Buy) {
+        canTrade = m_resourceAvailable > m_tradingPrice * 1.3;
+    } else {
+        canTrade = m_resourceAvailable * 0.7 > m_tradingPrice;
+    }
+
+    if (canTrade == m_isSatisfied) {
+        return;
+    }
+    m_isSatisfied = canTrade;
+    emit(SatisfiedChanged);
+}
+
 } // namespace Conditions
 } //namespace ai

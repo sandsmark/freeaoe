@@ -50,6 +50,8 @@ public:
 
         PlayerResourceChanged,
 
+        TradingPriceChanged,
+
         EventTypeCount
     };
 
@@ -80,6 +82,8 @@ public:
     static void unitDisappeared(Player *player, Unit *unit);
 
     static void playerResourceChanged(Player *player, const genie::ResourceType type, const float newValue);
+
+    static void tradingPriceChanged(const genie::ResourceType type, const int newPrice);
 
 private:
     static void call(const EventType type, std::function<void(EventListener *listener)> function)

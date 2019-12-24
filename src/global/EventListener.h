@@ -81,6 +81,9 @@ protected:
 
     virtual void onPlayerResourceChanged(Player *player, const genie::ResourceType type, float newValue)
         { (void)player; }
+
+    virtual void onTradingPriceChanged(const genie::ResourceType type, const int newPrice)
+        { (void)type; (void)newPrice; }
 };
 
 #endif // EVENTLISTENER_H

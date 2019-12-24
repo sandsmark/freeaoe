@@ -30,6 +30,7 @@
 #include "debug/ISampleGame.h"
 #include "debug/SampleGameFactory.h"
 #include "debug/ISampleGame.h"
+#include "global/EventManager.h"
 #include "mechanics/UnitManager.h"
 #include "mechanics/Player.h"
 #include "mechanics/Map.h"
@@ -178,6 +179,26 @@ void GameState::onPlayerWin(int playerId)
     } else {
         result = Result::Lost;
     }
+}
+
+void GameState::onResourceBought(const genie::ResourceType type)
+{
+    m_tradingPrices[type] += 2;
+
+    EventManager::tradingPriceChanged(type, m_tradingPrices[type]);
+}
+
+void GameState::onResourceSold(const genie::ResourceType type)
+{
+    m_tradingPrices[type] -= 2;
+
+    EventManager::tradingPriceChanged(type, m_tradingPrices[type]);
+}
+
+void GameState::setTradingPrice(const genie::ResourceType type, const int newPrice)
+{
+    m_tradingPrices[type] = newPrice;
+    EventManager::tradingPriceChanged(type, m_tradingPrices[type]);
 }
 
 void GameState::setupScenario()

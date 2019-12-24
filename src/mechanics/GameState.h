@@ -70,6 +70,7 @@ public:
         Running // meh names
     } result = Result::Running;
 
+
     static std::unordered_map<GameType, ResourceMap> defaultStartingResources;
 
     GameState(const std::shared_ptr<SfmlRenderTarget> &renderTarget);
@@ -94,6 +95,14 @@ public:
     void onPlayerWin(int playerId);
     const std::unique_ptr<ScenarioController> &scenarioController() const { return m_scenarioController; }
 
+    int sellPrice(const genie::ResourceType type) { return (0.7 * m_tradingPrices[type]); }
+    int buyPrice(const genie::ResourceType type) { return (1.3 * m_tradingPrices[type]); }
+
+    void onResourceBought(const genie::ResourceType type);
+    void onResourceSold(const genie::ResourceType type);
+
+    void setTradingPrice(const genie::ResourceType type, const int newPrice);
+
 private:
     void setupScenario();
     void setupGame(const GameType gameType);
@@ -116,5 +125,11 @@ private:
     GameType m_gameType = GameType::Default;
 
     std::unique_ptr<ScenarioController> m_scenarioController;
+
+    ResourceMap m_tradingPrices = {
+        { genie::ResourceType::FoodStorage, 100 },
+        { genie::ResourceType::WoodStorage, 100 },
+        { genie::ResourceType::StoneStorage, 100 }
+    };
 };
 
