@@ -41,22 +41,16 @@ bool Building::enqueueProduceUnit(const genie::Unit *data) noexcept
         return false;
     }
 
+    if (!owner->canBuildUnit(data->ID)) {
+        DBG << "Can't afford" << data->Name;
+        return false;
+    }
+
     DBG << debugName << "enqueueing production of unit" << data->Name;
 
     std::unique_ptr<Product> product = std::make_unique<Product>();
     product->type = Product::Unit;
     product->unit = data;
-
-    for (const genie::Resource<short, short> &cost : data->Creatable.ResourceCosts) {
-        if (!cost.Paid) {
-            continue;
-        }
-
-        const genie::ResourceType type = genie::ResourceType(cost.Type);
-        if (owner->resourcesAvailable(type) < cost.Amount) {
-            return false;
-        }
-    }
 
     for (const genie::Resource<short, short> &cost : data->Creatable.ResourceCosts) {
         if (!cost.Paid) {
