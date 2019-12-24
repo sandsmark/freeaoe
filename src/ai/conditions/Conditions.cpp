@@ -285,7 +285,7 @@ void UnitTypeCount::onUnitCreated(::Unit *unit)
     if (!m_typeIds.count(unit->data()->ID)) {
         return;
     }
-    if (unit->playerId != m_playerId) {
+    if (m_playerId != -1 && unit->playerId != m_playerId) {
         return;
     }
     m_unitCount++;
@@ -297,7 +297,7 @@ void UnitTypeCount::onUnitDying(::Unit *unit)
     if (!m_typeIds.count(unit->data()->ID)) {
         return;
     }
-    if (unit->playerId != m_playerId) {
+    if (m_playerId != -1 && unit->playerId != m_playerId) {
         return;
     }
     m_unitCount--;
@@ -309,7 +309,7 @@ void UnitTypeCount::onUnitOwnerChanged(::Unit *unit, int oldPlayerId, int newPla
     if (!m_typeIds.count(unit->data()->ID)) {
         return;
     }
-    if (oldPlayerId == m_playerId) {
+    if (m_playerId != -1 && oldPlayerId == m_playerId) {
         m_unitCount--;
         onValueChanged();
     }
@@ -324,7 +324,7 @@ void UnitTypeCount::onUnitCaptured(::Unit *unit, int oldPlayerId, int newPlayerI
     if (!m_typeIds.count(unit->data()->ID)) {
         return;
     }
-    if (oldPlayerId == m_playerId) {
+    if (m_playerId != -1 && oldPlayerId == m_playerId) {
         m_unitCount--;
         onValueChanged();
     }

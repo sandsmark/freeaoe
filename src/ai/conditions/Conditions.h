@@ -148,8 +148,8 @@ struct UnitTypeCount : public Condition
     const RelOp m_relOp;
     bool m_isSatisfied = false;
     int m_unitCount = 0;
-    const int m_playerId;
 
+    const int m_playerId; // -1 == any player
 
     void onUnitCreated(::Unit *unit) override;
     void onUnitDying(::Unit *unit) override;
