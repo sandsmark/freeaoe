@@ -133,6 +133,8 @@ struct ResourceValue : public Condition
 struct UnitTypeCount : public Condition
 {
     UnitTypeCount(const Unit type, const RelOp comparison, const int targetValue, int playerId);
+    UnitTypeCount(const Building type, const RelOp comparison, const int targetValue, int playerId);
+    UnitTypeCount(const WallType type, const RelOp comparison, const int targetValue, int playerId);
 
     bool satisfied(AiRule *owner) override
     {
@@ -141,7 +143,7 @@ struct UnitTypeCount : public Condition
     }
     void onValueChanged();
 
-    int m_typeId = -1;
+    std::unordered_set<int> m_typeIds;
     int m_targetValue;
     const RelOp m_relOp;
     bool m_isSatisfied = false;
