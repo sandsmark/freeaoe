@@ -124,7 +124,6 @@ void UnitTypeCount::onValueChanged()
         m_isSatisfied = satisfied;
         emit(SatisfiedChanged);
     }
-
 }
 
 PopulationHeadroomCondition::PopulationHeadroomCondition(const RelOp comparison, const int targetValue, int playerId) :
@@ -162,6 +161,66 @@ void PopulationHeadroomCondition::onPlayerResourceChanged(Player *player, const 
     }
     m_isSatisfied = satisfied;
     emit(SatisfiedChanged);
+}
+
+CanTrainOrBuildCondition::CanTrainOrBuildCondition(const Unit type, const int playerId) :
+    m_playerId(playerId)
+{
+    m_typeIds = unitIds(type);
+    EventManager::registerListener(this, EventManager::PlayerResourceChanged);
+}
+
+CanTrainOrBuildCondition::CanTrainOrBuildCondition(const Building type, const int playerId) :
+    m_playerId(playerId)
+{
+    m_typeIds = unitIds(type);
+    EventManager::registerListener(this, EventManager::PlayerResourceChanged);
+
+}
+
+void CanTrainOrBuildCondition::onPlayerResourceChanged(Player *player, const genie::ResourceType resourceType, float newValue)
+{
+    // todo, I'm lazy
+    switch(resourceType) {
+    case genie::ResourceType::InvalidResource:
+    case genie::ResourceType::ConversionRange:
+    case genie::ResourceType::CurrentAge:
+    case genie::ResourceType::RelicsCaptured:
+    case genie::ResourceType::RemarkableDiscovery:
+    case genie::ResourceType::MonumentsCaptured:
+    case genie::ResourceType::UnitsKilled:
+    case genie::ResourceType::PercentMapExplored:
+    case genie::ResourceType::Faith:
+    case genie::ResourceType::FaithRechargingRate:
+    case genie::ResourceType::FarmFoodAmount:
+    case genie::ResourceType::CivilianPopulation:
+    case genie::ResourceType::MilitaryPopulation:
+    case genie::ResourceType::HitPointsKilled:
+    case genie::ResourceType::HitPointsRazed:
+        DBG << "Ignoring resource type" << resourceType;
+        return;
+
+    default:
+        break;
+    }
+
+    bool satisfied = checkCanBuild(player);
+    if (satisfied == m_isSatisfied) {
+        return;
+    }
+
+    m_isSatisfied = satisfied;
+    emit(SatisfiedChanged);
+}
+
+bool CanTrainOrBuildCondition::checkCanBuild(const Player *player) const
+{
+    for (const int id : m_typeIds) {
+        if (player->canBuildUnit(id)) {
+            return true;
+        }
+    }
+    return false;
 
 }
 

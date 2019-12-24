@@ -24,7 +24,7 @@ public:
     int parse(std::istream& in, std::ostream& out);
 
     std::shared_ptr<Condition> createCondition(const Fact type);
-    std::shared_ptr<Condition> createCondition(const Fact type, const Age building);
+    std::shared_ptr<Condition> createCondition(const Fact type, const Age age);
     std::shared_ptr<Condition> createCondition(const Fact type, const Building building);
     std::shared_ptr<Condition> createCondition(const Fact type, const Building building, const RelOp comparison, const int number);
     std::shared_ptr<Condition> createCondition(const Fact type, const Civ civ);

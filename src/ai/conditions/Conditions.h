@@ -177,5 +177,21 @@ struct PopulationHeadroomCondition : public Condition
     int m_currentValue = 0;
 };
 
+struct CanTrainOrBuildCondition : public Condition
+{
+    CanTrainOrBuildCondition(const Unit type, const int playerId);
+    CanTrainOrBuildCondition(const Building type, const int playerId);
+
+    void onPlayerResourceChanged(Player *player, const genie::ResourceType resourceType, float newValue) override;
+    bool satisfied(AiRule *owner) override {
+        return checkCanBuild(owner->m_owner->m_player);
+    }
+    bool checkCanBuild(const Player *player) const;
+
+    const int m_playerId;
+    std::unordered_set<int> m_typeIds;
+    bool m_isSatisfied = false;
+};
+
 }//namespace Conditions
 }//namespace ai

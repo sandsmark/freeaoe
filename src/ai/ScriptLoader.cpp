@@ -40,14 +40,21 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type)
     return nullptr;
 }
 
-std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const Age building)
+std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const Age age)
 {
-    WARN << "unimplemented condition" << type << building;
+    WARN << "unimplemented condition" << type << age;
     return nullptr;
 }
 
 std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const Building building)
 {
+    switch(type) {
+    case Fact::CanBuild:
+        return std::make_shared<Conditions::CanTrainOrBuildCondition>(building, m_playerId);
+    default:
+        break;
+    }
+
     WARN << "unimplemented condition" << type << building;
     return nullptr;
 }
@@ -229,6 +236,13 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const 
 
 std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const Unit unit)
 {
+    switch(type) {
+    case Fact::CanTrain:
+        return std::make_shared<Conditions::CanTrainOrBuildCondition>(unit, m_playerId);
+    default:
+        break;
+    }
+
     WARN << "unimplemented condition" << type << unit;
     return nullptr;
 }
