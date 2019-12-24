@@ -7,6 +7,124 @@
 
 namespace ai
 {
+    int researchId(const ResearchItem item)
+    {
+        switch(item) {
+            case ResearchItem::RiArbalest: return 237;
+            case ResearchItem::RiCrossbow: return 100;
+            case ResearchItem::RiEliteSkirmisher: return 98;
+            case ResearchItem::RiHandCannon: return 85;
+            case ResearchItem::RiHeavyCavalryArcher: return 218;
+            case ResearchItem::RiParthianTactics: return 436;
+            case ResearchItem::RiThumbRing: return 437;
+            case ResearchItem::RiChampion: return 264;
+            case ResearchItem::RiEliteEagleWarrior: return 434;
+            case ResearchItem::RiHalberdier: return 429;
+            case ResearchItem::RiLongSwordsman: return 207;
+            case ResearchItem::RiManAtArms: return 222;
+            case ResearchItem::RiPikeman: return 197;
+            case ResearchItem::RiSquires: return 215;
+            case ResearchItem::RiTracking: return 90;
+            case ResearchItem::RiTwoHandedSwordsman: return 217;
+            case ResearchItem::RiBlastFurnace: return 75;
+            case ResearchItem::RiBodkinArrow: return 200;
+            case ResearchItem::RiBracer: return 201;
+            case ResearchItem::RiChainBarding: return 82;
+            case ResearchItem::RiChainMail: return 76;
+            case ResearchItem::RiFletching: return 199;
+            case ResearchItem::RiForging: return 67;
+            case ResearchItem::RiIronCasting: return 68;
+            case ResearchItem::RiLeatherArcherArmor: return 212;
+            case ResearchItem::RiPaddedArcherArmor: return 211;
+            case ResearchItem::RiPlateBarding: return 80;
+            case ResearchItem::RiPlateMail: return 77;
+            case ResearchItem::RiRingArcherArmor: return 219;
+            case ResearchItem::RiScaleBarding: return 81;
+            case ResearchItem::RiScaleMail: return 74;
+            case ResearchItem::RiConscription: return 315;
+            case ResearchItem::RiHoardings: return 379;
+            case ResearchItem::RiSappers: return 321;
+            case ResearchItem::RiEliteBerserk: return 398;
+            case ResearchItem::RiEliteCataphract: return 361;
+            case ResearchItem::RiEliteChuKoNu: return 362;
+            case ResearchItem::RiEliteHuskarl: return 365;
+            case ResearchItem::RiEliteJanissary: return 369;
+            case ResearchItem::RiEliteLongbowman: return 360;
+            case ResearchItem::RiEliteMameluke: return 368;
+            case ResearchItem::RiEliteMangudai: return 371;
+            case ResearchItem::RiEliteSamurai: return 366;
+            case ResearchItem::RiEliteTeutonicKnight: return 364;
+            case ResearchItem::RiEliteThrowingAxeman: return 363;
+            case ResearchItem::RiEliteWarElephant: return 367;
+            case ResearchItem::RiEliteWoadRaider: return 370;
+            case ResearchItem::RiCannonGalleon: return 37;
+            case ResearchItem::RiCareening: return 374;
+            case ResearchItem::RiDeckGuns: return 376;
+            case ResearchItem::RiDryDock: return 375;
+            case ResearchItem::RiFastFireShip: return 246;
+            case ResearchItem::RiGalleon: return 35;
+            case ResearchItem::RiHeavyDemolitionShip: return 244;
+            case ResearchItem::RiShipwright: return 373;
+            case ResearchItem::RiWarGalley: return 34;
+            case ResearchItem::RiEliteLongboat: return 372;
+            case ResearchItem::RiBowSaw: return 203;
+            case ResearchItem::RiDoubleBitAxe: return 202;
+            case ResearchItem::RiTwoManSaw: return 221;
+            case ResearchItem::RiBanking: return 17;
+            case ResearchItem::RiCaravan: return 48;
+            case ResearchItem::RiCartography: return 19;
+            case ResearchItem::RiCoinage: return 23;
+            case ResearchItem::RiGuilds: return 15;
+            case ResearchItem::RiCropRotation: return 12;
+            case ResearchItem::RiHeavyPlow: return 13;
+            case ResearchItem::RiHorseCollar: return 14;
+            case ResearchItem::RiGoldMining: return 55;
+            case ResearchItem::RiGoldShaftMining: return 182;
+            case ResearchItem::RiStoneMining: return 278;
+            case ResearchItem::RiStoneShaftMining: return 279;
+            case ResearchItem::RiAtonement: return 319;
+            case ResearchItem::RiBlockPrinting: return 230;
+            case ResearchItem::RiFaith: return 45;
+            case ResearchItem::RiFervor: return 252;
+            case ResearchItem::RiHeresy: return 439;
+            case ResearchItem::RiIllumination: return 233;
+            case ResearchItem::RiRedemption: return 316;
+            case ResearchItem::RiSanctity: return 231;
+            case ResearchItem::RiTheocracy: return 438;
+            case ResearchItem::RiBombardCannon: return 188;
+            case ResearchItem::RiHeavyScorpion: return 239;
+            case ResearchItem::RiCappedRam: return 96;
+            case ResearchItem::RiOnager: return 257;
+            case ResearchItem::RiScorpion: return 94;
+            case ResearchItem::RiSiegeOnager: return 320;
+            case ResearchItem::RiSiegeRam: return 255;
+            case ResearchItem::RiBloodlines: return 435;
+            case ResearchItem::RiCavalier: return 209;
+            case ResearchItem::RiHeavyCamel: return 236;
+            case ResearchItem::RiHusbandry: return 39;
+            case ResearchItem::RiHussar: return 428;
+            case ResearchItem::RiLightCavalry: return 254;
+            case ResearchItem::RiPaladin: return 265;
+            case ResearchItem::RiHandCart: return 249;
+            case ResearchItem::RiLoom: return 22;
+            case ResearchItem::RiTownPatrol: return 280;
+            case ResearchItem::RiTownWatch: return 8;
+            case ResearchItem::RiWheelBarrow: return 213;
+            case ResearchItem::RiArchitecture: return 51;
+            case ResearchItem::RiBallistics: return 93;
+            case ResearchItem::RiBombardTower: return 64;
+            case ResearchItem::RiChemistry: return 47;
+            case ResearchItem::RiFortifiedWall: return 194;
+            case ResearchItem::RiGuardTower: return 140;
+            case ResearchItem::RiHeatedShot: return 380;
+            case ResearchItem::RiKeep: return 63;
+            case ResearchItem::RiMasonry: return 50;
+            case ResearchItem::RiMurderHoles: return 322;
+            case ResearchItem::RiSiegeEngineers: return 377;
+            case ResearchItem::RiStonecutting: return 54;
+            default: return -1;
+        }
+    }
 
     enum class OtherUnits {
         Gate
@@ -157,6 +275,7 @@ namespace ai
         default: return -1;
         }
     }
+
     std::unordered_set<int> unitIds(const Unit type)
     {
         std::unordered_set<int> ids;
