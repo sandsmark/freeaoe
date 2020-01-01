@@ -16,6 +16,7 @@ endif()
 #############################
 ## Compiler specific stuff ##
 #############################
+option(ENABLE_IPO "Enable link-time optimization, improves speed and memory usage (https://en.wikipedia.org/wiki/Interprocedural_optimization)")
 if (ENABLE_IPO)
     include(CheckIPOSupported)
     check_ipo_supported(RESULT IPO_AVAILABLE OUTPUT IPO_ERROR)
@@ -59,6 +60,7 @@ if (CMAKE_BUILD_TYPE MATCHES Debug)
     endif()
 endif()
 
+option(ENABLE_SANITIZERS "Enable runtime sanitizing (for development)")
 if (ENABLE_SANITIZERS)
     message("Enabling asan and ubsan")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
@@ -115,7 +117,7 @@ if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/extern/genieutils/include/genie/Types.h)
     message(STATUS "Using bundled genieutils")
     include_directories(${CMAKE_CURRENT_SOURCE_DIR}/extern/genieutils/include/)
 
-    set(GENIEUTILS_STATIC_BUILD True)
+    set(GUTILS_STATIC_BUILD True)
     add_subdirectory(extern/genieutils)
 endif()
 

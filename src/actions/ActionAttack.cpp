@@ -161,8 +161,8 @@ void ActionAttack::spawnMissiles(const Unit::Ptr &source, const int unitId, cons
 {
     DBG << "Spawning missile" << unitId;
 
-    const std::vector<float> &graphicDisplacement = source->data()->Combat.GraphicDisplacement;
-    const std::vector<float> &spawnArea = source->data()->Creatable.ProjectileSpawningArea;
+    const std::array<float, 3> &graphicDisplacement = source->data()->Combat.GraphicDisplacement;
+    const std::array<float, 3> &spawnArea = source->data()->Creatable.ProjectileSpawningArea;
     DBG << source->data()->Combat.AccuracyPercent << source->data()->Creatable.SecondaryProjectileUnit;
 
     Player::Ptr owner = source->player.lock();
