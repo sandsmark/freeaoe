@@ -25,6 +25,7 @@
 #include <bitset>
 #include <memory>
 #include <vector>
+#include <thread>
 
 struct Unit;
 using UnitPtr = std::shared_ptr<Unit>;
@@ -34,6 +35,11 @@ using MapPtr = std::shared_ptr<Map>;
 
 class ActionMove : public IAction
 {
+    struct MapUnit {
+        MapPos pos;
+        Size size;
+        bool rectangular = false;
+    };
 
 public:
 #ifdef DEBUG
@@ -68,5 +74,7 @@ private:
     std::bitset<Constants::TILE_SIZE * Constants::TILE_SIZE * Constants::MAP_MAX_SIZE * Constants::MAP_MAX_SIZE> m_passable;
     std::bitset<Constants::TILE_SIZE * Constants::TILE_SIZE * Constants::MAP_MAX_SIZE * Constants::MAP_MAX_SIZE> m_passableCached;
     bool m_passableDirty = false;
+
+    std::thread m_pathfindingThread;
 };
 

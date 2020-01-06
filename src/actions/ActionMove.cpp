@@ -21,6 +21,7 @@
 #include "core/Logger.h"
 #include "core/Utility.h"
 #include "mechanics/Unit.h"
+#include "mechanics/UnitManager.h"
 #include "mechanics/MapTile.h"
 #include "mechanics/Map.h"
 #include "resource/DataManager.h"
@@ -845,6 +846,34 @@ void ActionMove::updatePath() noexcept
     if (!unit) {
         WARN << "Lost our unit";
         return;
+    }
+
+    if (false) { // TODO use this and run the pathfinding in a background thread
+        TIME_THIS;
+        std::vector<MapUnit> mapUnits;
+        MapUnit mapUnit;
+        for (const Unit::Ptr &unit : unit->unitManager().units()) {
+            mapUnit.pos = unit->position();
+            mapUnit.size = unit->data()->ClearanceSize;
+
+            switch (unit->data()->ObstructionType) {
+            case genie::Unit::PassableObstruction:
+            case genie::Unit::PassableObstruction2:
+            case genie::Unit::PassableNoOutlineObstruction:
+                continue;
+            case genie::Unit::BuildingObstruction:
+            case genie::Unit::MountainObstruction: // TOOD:  apparently uses the selection mask?
+                mapUnit.rectangular = true;
+                break;
+            case genie::Unit::UnitObstruction:
+            default:
+                mapUnit.rectangular = false;
+                break;
+            }
+
+            mapUnits.push_back(std::move(mapUnit));
+        }
+        DBG << mapUnits.size();
     }
 
     TIME_TICK;
