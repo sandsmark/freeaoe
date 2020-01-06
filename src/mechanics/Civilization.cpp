@@ -144,7 +144,9 @@ void Civilization::applyData(const genie::Civ &data)
 {
     DBG << "Applying for civ";
 
-    m_unitsData.resize(data.Units.size());
+    if (data.Units.size() > m_unitsData.size()) {
+        m_unitsData.resize(data.Units.size());
+    }
 
     for (size_t i=0; i<data.Units.size(); i++) {
         if (data.Units[i].ID == -1) {
