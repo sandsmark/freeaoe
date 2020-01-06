@@ -75,25 +75,25 @@ float Civilization::startingResource(const genie::ResourceType type) const
     return m_data.Resources[int(type)];
 }
 
-const genie::Unit &Civilization::unitData(int id) const
+const genie::Unit &Civilization::unitData(uint32_t id) const
 {
-    std::unordered_map<int16_t, genie::Unit>::const_iterator it = m_unitsData.find(id);
-    if (it == m_unitsData.end()) {
+    if (id >= m_unitsData.size()) {
         WARN << "invalid unit id" << id;
         static const genie::Unit nullUnit;
         return nullUnit;
     }
-    return it->second;
+
+    return m_unitsData[id];
 }
 
 void Civilization::enableUnit(const uint16_t id)
 {
-    std::unordered_map<int16_t, genie::Unit>::iterator it = m_unitsData.find(id);
-    if (it == m_unitsData.end()) {
+    if (id >= m_unitsData.size()) {
         WARN << "invalid unit id" << id;
         return;
     }
-    genie::Unit &unit = it->second;
+
+    genie::Unit &unit = m_unitsData[id];
     unit.Enabled = true;
     if (unit.Creatable.TrainLocationID > 0) {
         m_creatableUnits[unit.Creatable.TrainLocationID].push_back(&unit);
@@ -124,12 +124,11 @@ void Civilization::applyUnitAttributeModifier(const genie::EffectCommand &effect
     if (effect.TargetUnit >= 0) {
         applyUnitAttributeModifier(effect, effect.TargetUnit);
     } else if (effect.UnitClassID >= 0) {
-        std::unordered_map<int16_t, genie::Unit>::iterator it;
-        for (it = m_unitsData.begin(); it != m_unitsData.end(); it++) {
-            if (it->second.Class != effect.UnitClassID) {
+        for (const genie::Unit &unitData : m_unitsData) {
+            if (unitData.Class != effect.UnitClassID) {
                 continue;
             }
-            applyUnitAttributeModifier(effect, it->second.ID);
+            applyUnitAttributeModifier(effect, unitData.ID);
         }
     } else {
         WARN << "Can't apply effect with neither unit id or class id";
@@ -145,15 +144,16 @@ void Civilization::applyData(const genie::Civ &data)
 {
     DBG << "Applying for civ";
 
-    m_unitsData.clear();
+    m_unitsData.resize(data.Units.size());
 
-    for (const genie::Unit &unit : data.Units) {
-        if (unit.ID == -1) {
+    for (size_t i=0; i<data.Units.size(); i++) {
+        if (data.Units[i].ID == -1) {
             continue;
         }
+        m_unitsData[i] = data.Units[i];
+    }
 
-        m_unitsData[unit.ID] = unit;
-
+    for (const genie::Unit &unit : m_unitsData) {
         if (unit.Enabled && unit.Creatable.TrainLocationID > 0) {
             m_creatableUnits[unit.Creatable.TrainLocationID].push_back(&unit);
         }
@@ -197,15 +197,13 @@ void Civilization::applyData(const genie::Civ &data)
     }
 }
 
-void Civilization::applyUnitAttributeModifier(const genie::EffectCommand &effect, int unitId)
+void Civilization::applyUnitAttributeModifier(const genie::EffectCommand &effect, uint32_t unitId)
 {
-    std::unordered_map<int16_t, genie::Unit>::iterator it = m_unitsData.find(unitId);
-    if (it == m_unitsData.end()) {
+    if (unitId >= m_unitsData.size()) {
         WARN << "invalid unit id" << unitId;
         return;
     }
-
-    genie::Unit &unitData = it->second;
+    genie::Unit &unitData = m_unitsData[unitId];
 
     using genie::EffectCommand;
     switch (effect.AttributeID) {

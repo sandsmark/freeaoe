@@ -27,7 +27,7 @@ public:
     const std::vector<const genie::Unit *> &creatableUnits(int16_t creator) const;
     const std::vector<const genie::Tech *> &researchAvailableAt(int16_t creator) const;
 
-    const genie::Unit &unitData(int id) const;
+    const genie::Unit &unitData(uint32_t id) const;
     const genie::Tech &tech(const uint16_t id) const;
     const std::unordered_map<uint16_t, genie::Tech> &availableTechs() const { return m_techs; }
 
@@ -49,7 +49,7 @@ public:
 private:
     void applyData(const genie::Civ &data);
 
-    void applyUnitAttributeModifier(const genie::EffectCommand &effect, int unitId);
+    void applyUnitAttributeModifier(const genie::EffectCommand &effect, uint32_t unitId);
 
     std::unordered_map<int16_t, std::vector<const genie::Unit*>> m_creatableUnits;
     std::unordered_map<int16_t, std::vector<const genie::Tech*>> m_researchAvailable;
@@ -58,7 +58,7 @@ private:
 
     const int m_civId;
     const genie::Civ &m_data;
-    std::unordered_map<int16_t, genie::Unit> m_unitsData;
+    std::vector<genie::Unit> m_unitsData;
 
     std::unordered_map<uint16_t, genie::Tech> m_techs;
     ResourceMap m_startingResources;
