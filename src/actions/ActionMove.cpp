@@ -131,7 +131,7 @@ MapPos ActionMove::findClosestWalkableBorder(const MapPos &start, const MapPos &
     std::shared_ptr<Unit> targetUnit;
     const float xSize = unit->data()->Size.x * Constants::TILE_SIZE;
     const float ySize = unit->data()->Size.y * Constants::TILE_SIZE;
-    const float radius = util::hypot(xSize, ySize);
+    const float radius = std::max(xSize, ySize);
 
     const int tileX = target.x / Constants::TILE_SIZE;
     const int tileY = target.y / Constants::TILE_SIZE;
@@ -175,7 +175,7 @@ MapPos ActionMove::findClosestWalkableBorder(const MapPos &start, const MapPos &
         testedPoints.push_back(target);
 #endif
         const Size targetSize = targetUnit->clearanceSize();
-        const float targetRadius = util::hypot(targetSize.width, targetSize.height);
+        const float targetRadius = std::max(targetSize.width, targetSize.height);
         const float clearanceLength = std::max(targetRadius, radius);
 
 
