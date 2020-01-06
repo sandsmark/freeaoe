@@ -60,6 +60,10 @@ struct Size {
 
     explicit Size (const genie::XYZF &genieVec) : width(genieVec.x), height(genieVec.y) { }
 
+    Size(const genie::XYF &xyf) :
+        width(xyf.x), height(xyf.y)
+    {}
+
     Size(const sf::Vector2f &sfVector) :
         width(sfVector.x), height(sfVector.y)
     {}
