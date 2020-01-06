@@ -85,20 +85,13 @@ IAction::UpdateResult ActionAttack::update(Time time)
 
     const float angleToTarget = unit->position().toScreen().angleTo(m_targetPosition.toScreen());
     unit->setAngle(angleToTarget);
-    const float distance = unit->position().distance(m_targetPosition) / Constants::TILE_SIZE;
+    const float distance = (targetUnit ?
+                unit->distanceTo(targetUnit) :
+                unit->distanceTo(m_targetPosition)
+                                )
+            / Constants::TILE_SIZE;
 
-    bool inRange = true;
-    if (targetUnit) {
-        const float xSize = (targetUnit->data()->Size.x + unit->data()->Size.x) * Constants::TILE_SIZE + unit->data()->Combat.MaxRange + 10;
-        const float ySize = (targetUnit->data()->Size.y + unit->data()->Size.y) * Constants::TILE_SIZE + unit->data()->Combat.MaxRange + 10;
-        const float xDistance = std::abs(targetUnit->position().x - unit->position().x);
-        const float yDistance = std::abs(targetUnit->position().y - unit->position().y);
-        if (xDistance > xSize || yDistance > ySize) {
-            inRange = false;
-        }
-    }
-
-    if (!inRange && distance > unit->data()->Combat.MaxRange) {
+    if (distance > unit->data()->Combat.MaxRange + 0.1) {
         if (!unit->data()->Speed) {
             DBG << "this unit can't move...";
             return IAction::UpdateResult::Failed;
@@ -106,8 +99,9 @@ IAction::UpdateResult ActionAttack::update(Time time)
 
         const float angleToTarget = unit->position().angleTo(m_targetPosition);
 
-        float targetX = m_targetPosition.x + cos(angleToTarget + M_PI) * unit->data()->Combat.MaxRange * Constants::TILE_SIZE / 1.1;
-        float targetY = m_targetPosition.y + sin(angleToTarget + M_PI) * unit->data()->Combat.MaxRange * Constants::TILE_SIZE / 1.1;
+        float targetX = m_targetPosition.x + cos(angleToTarget + M_PI) * unit->data()->Combat.MaxRange * Constants::TILE_SIZE;// / 1.1;
+        float targetY = m_targetPosition.y + sin(angleToTarget + M_PI) * unit->data()->Combat.MaxRange * Constants::TILE_SIZE;// / 1.1;
+//        DBG << "Unit out of range at distance" << distance << unit->distanceTo(targetUnit) << " moving to" << targetX << targetY;
 
         unit->prependAction(ActionMove::moveUnitTo(unit, MapPos(targetX, targetY), m_task));
         return IAction::UpdateResult::NotUpdated;
