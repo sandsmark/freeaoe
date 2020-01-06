@@ -229,15 +229,15 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
         if (entity->isUnit()) {
             Unit::Ptr unit = Entity::asUnit(entity);
 
-            if (visibility == VisibilityMap::Visible || visibility == VisibilityMap::Explored) {
+            if (visibility == VisibilityMap::Visible) {
                 entity->isVisible = true;
-                visibleUnits.push_back(Entity::asUnit(entity));
+                visibleUnits.push_back(unit);
                 entity->renderer().render(*renderTarget->renderTarget_, camera->absoluteScreenPos(entity->position()), RenderType::Shadow);
 
                 continue;
             }
 
-            if (unit->playerId != GaiaID) {
+            if (visibility != VisibilityMap::Explored || !unit->data()->FogVisibility) {
                 continue;
             }
 
@@ -250,7 +250,7 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
 
         if (entity->isMissile()) {
             Missile::Ptr missile = Entity::asMissile(entity);
-            if (visibility == VisibilityMap::Explored && missile->playerId != GaiaID) {
+            if (visibility != VisibilityMap::Visible) {;// && missile->playerId != GaiaID) {
                 continue;
             }
 
@@ -393,7 +393,7 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
 
 #ifdef DEBUG
         ActionPtr action = unit->currentAction();
-        if (action && action->ActionType == IAction::Type::Move) {
+        if (action && action->type == IAction::Type::Move) {
             std::shared_ptr<ActionMove> moveAction = std::static_pointer_cast<ActionMove>(action);
 
             sf::CircleShape circle;
