@@ -92,17 +92,17 @@ void BasicGameSample::addHumanUnits()
     unit = UnitFactory::Inst().createUnit(Unit::MaleBuilder, MapPos(48*2, 48*12, 0), m_humanPlayer, *unitManager_);
     unitManager_->add(unit);
 
-    unit = UnitFactory::Inst().createUnit(280, MapPos(48*11, 48*10, 0), m_humanPlayer, *unitManager_);
-    unitManager_->add(unit);
+//    unit = UnitFactory::Inst().createUnit(280, MapPos(48*11, 48*10, 0), m_humanPlayer, *unitManager_);
+//    unitManager_->add(unit);
 
-    unit = UnitFactory::Inst().createUnit(279, MapPos(48*13, 48*11, 0), m_humanPlayer, *unitManager_);
-    unitManager_->add(unit);
+//    unit = UnitFactory::Inst().createUnit(279, MapPos(48*13, 48*11, 0), m_humanPlayer, *unitManager_);
+//    unitManager_->add(unit);
 
     unit = UnitFactory::Inst().createUnit(Unit::Mill, MapPos(48*15, 48*15, 0), m_humanPlayer, *unitManager_);
     unitManager_->add(unit);
 
-    unit = UnitFactory::Inst().createUnit(827, MapPos(48*10, 48*9, 0), m_humanPlayer, *unitManager_);
-    unitManager_->add(unit);
+//    unit = UnitFactory::Inst().createUnit(827, MapPos(48*10, 48*9, 0), m_humanPlayer, *unitManager_);
+//    unitManager_->add(unit);
 
     unit = UnitFactory::Inst().createUnit(74, MapPos(48*8, 48*9, 0), m_humanPlayer, *unitManager_);
     unitManager_->add(unit);

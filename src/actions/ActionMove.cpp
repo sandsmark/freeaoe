@@ -813,11 +813,11 @@ bool ActionMove::isPassable(const float x, const float y) noexcept
                     break;
                 case genie::Unit::UnitObstruction:
                 default: {
-                    const genie::XYZF &otherSize = otherUnit->data()->Size;
                     const MapPos &otherPos = otherUnit->position();
 
                     const double centreDistance = util::hypot(x - otherPos.x, y - otherPos.y, z - otherPos.z);
-                    const double clearance = util::hypot(size.x, size.y, size.z) + util::hypot(otherSize.x, otherSize.y, otherSize.z);
+                    const Size otherSize = otherUnit->clearanceSize();
+                    const double clearance = std::max(std::max(size.x, size.y), std::max(otherSize.width, otherSize.height));
                     if (centreDistance < clearance) {
                         m_passable[cacheIndex] = false;
                         return false;
