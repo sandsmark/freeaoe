@@ -105,7 +105,7 @@ struct LogPrinter
     inline LogPrinter &operator<<(const double num) { std::cout << num << separator; return *this; }
     inline LogPrinter &operator<<(const bool b) { std::cout << (b ? "true" : "false") << separator; return *this; }
     inline LogPrinter &operator<<(const std::string &str) { std::cout << '\'' << str << '\'' << separator; return *this; }
-    inline LogPrinter &operator<<(const void *addr) { std::cout << "0x" << std::hex << addr << std::dec << separator; return *this; }
+    inline LogPrinter &operator<<(const void *addr) { std::cout << std::hex << addr << std::dec << separator; return *this; }
     inline LogPrinter &operator<<(const std::filesystem::path &path) { std::cout << '\'' << path.string() << '\'' << separator; return *this; }
 
     template<typename T>
