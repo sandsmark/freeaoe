@@ -34,7 +34,7 @@ static size_t s_entityCount = 0;
 
 Entity::Entity(const Entity::Type type_, const std::string &name) :
     id(s_entityCount++),
-    debugName(name),
+    debugName(name + " #" + std::to_string(id)),
     m_type(type_)
 {
     m_renderer = std::make_unique<GraphicRender>();
