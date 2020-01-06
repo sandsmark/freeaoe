@@ -71,7 +71,6 @@ void UnitFactory::handleDefaultAction(const Unit::Ptr &unit, const genie::Task &
     switch(task.ActionType) {
     case genie::ActionType::Fly: {
         MapPos flyingPosition = unit->position();
-        DBG << "Flying unit at" << flyingPosition;
 
         // The below comment will stay just to illustrate what one of my professors once told me
         // about commenting in source code; don't, comments always get outdated
