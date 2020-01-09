@@ -172,7 +172,8 @@ void sts_mixer_stop_stream(sts_mixer_t* mixer, sts_mixer_stream_t* stream) {
 }
 
 
-void sts_mixer_mix_audio(sts_mixer_t* mixer, void* output, unsigned int samples) {
+void sts_mixer_mix_audio(sts_mixer_t* mixer, void* output, unsigned int samples) 
+{
   sts_mixer_voice_t*  voice;
   unsigned int        i, position;
   float               left, right, advance, sample;

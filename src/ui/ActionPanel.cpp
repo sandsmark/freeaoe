@@ -312,12 +312,13 @@ void ActionPanel::updateButtons()
         return;
     }
 
-    if (unit->data()->Type >= genie::Unit::MovingType && unit->data()->Type < genie::Unit::BuildingType) {
+	// Still prefer Definitive Edition Way. Simple Delete button. Always felt it takes unnecessary Index space. I think I will do Attack Move first. Then do simple waypoint behaviour?
+    /*if (unit->data()->Type >= genie::Unit::MovingType && unit->data()->Type < genie::Unit::BuildingType) {
         InterfaceButton killButton;
         killButton.action = Command::Kill;
         killButton.index = 3;
         currentButtons.push_back(killButton);
-    }
+    }*/
 
     const std::unordered_set<Task> actions = unit->availableActions();
     std::unordered_set<genie::ActionType> addedTypes;
@@ -327,15 +328,18 @@ void ActionPanel::updateButtons()
         }
         addedTypes.insert(task.data->ActionType);
 
-        switch(task.data->ActionType) {
-        case genie::ActionType::Garrison: {
+        switch(task.data->ActionType) 
+		{
+        case genie::ActionType::Garrison: 
+		{
             InterfaceButton garrisonButton;
             garrisonButton.action = Command::Garrison;
             garrisonButton.index = 4;
             currentButtons.push_back(garrisonButton);
             break;
         }
-        case genie::ActionType::Build: {
+        case genie::ActionType::Build: 
+		{
             InterfaceButton backButton;
             backButton.action = Command::PreviousPage;
             backButton.index = 14;
@@ -478,7 +482,8 @@ void ActionPanel::addMilitaryButtons(const std::shared_ptr<Unit> &unit)
         return;
     }
 
-    if (unit->data()->Class == genie::Unit::SiegeWeapon || unit->data()->Class == genie::Unit::UnpackedSiegeUnit) {
+    if (unit->data()->Class == genie::Unit::SiegeWeapon || unit->data()->Class == genie::Unit::UnpackedSiegeUnit) 
+	{
         InterfaceButton button;
         button.type = InterfaceButton::Other;
         button.interfacePage = 0;
@@ -487,9 +492,38 @@ void ActionPanel::addMilitaryButtons(const std::shared_ptr<Unit> &unit)
 
         currentButtons.push_back(button);
     }
+	else
+	{
+		InterfaceButton button;
+		button.type = InterfaceButton::Other;
+		button.interfacePage = 0;
+		button.index = 3;
+		button.action = Command::AttackWithSword; // In AOC uses a very different Icon. Seems like a Beta formation. AttackWithSword=AttackMove
+		currentButtons.push_back(button);
+
+		button.type = InterfaceButton::Other;
+		button.interfacePage = 0;
+		button.index = 0;
+		button.action = Command::Patrol; 
+		currentButtons.push_back(button);
+
+		button.type = InterfaceButton::Other;
+		button.interfacePage = 0;
+		button.index = 1;
+		button.action = Command::Guard;
+		currentButtons.push_back(button);
+
+
+		button.type = InterfaceButton::Other;
+		button.interfacePage = 0;
+		button.index = 2;
+		button.action = Command::Follow;
+		currentButtons.push_back(button);
+	}
 
     // Stance buttons
-    if (unit->hasAutoTargets()) {
+    if (unit->hasAutoTargets()) 
+	{
         const Unit::Stance current = unit->stance;
         InterfaceButton button;
         button.showBorder = false;
@@ -582,7 +616,8 @@ void ActionPanel::handleButtonClick(const ActionPanel::InterfaceButton &button)
             }
             break;
         case Command::Kill:
-            for (Unit::Ptr unit : m_unitManager->selected()) {
+            for (Unit::Ptr unit : m_unitManager->selected()) 
+			{
                 unit->kill();
             }
             break;
