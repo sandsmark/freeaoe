@@ -50,28 +50,30 @@ using GraphicPtr = std::shared_ptr<Graphic>;
 
 struct Unit : public Entity
 {
-    enum HardcodedTypes {
-        TownCenter = 109,
+	enum HardcodedTypes {
+		TownCenter = 109,
 
-        FemaleVillager = 293,
+		FemaleVillager = 293,
 
-        MaleVillager = 83,
-        MaleLumberjack = 123,
-        MaleStoneMiner = 124,
-        MaleHunter = 122,
-        MaleFarmer = 259,
-        MaleForager = 120,
-        MaleFisherman = 56,
-        MaleGoldMiner = 579,
-        MaleShepherd = 592,
-        MaleBuilder = 118,
-        MaleRepairer = 156,
+		MaleVillager = 83,
+		MaleLumberjack = 123,
+		MaleStoneMiner = 124,
+		MaleHunter = 122,
+		MaleFarmer = 259,
+		MaleForager = 120,
+		MaleFisherman = 56,
+		MaleGoldMiner = 579,
+		MaleShepherd = 592,
+		MaleBuilder = 118,
+		MaleRepairer = 156,
 
-        Docket = 45,
-        Castle = 82,
-        Market = 84,
+		Docket = 45,
+		Castle = 82,
+		Market = 84,
 
-        ArcheryRange = 87,
+		ArcheryRange = 87,
+		Archer = 4,
+
         Barracks = 12,
         Monastery = 104,
         SiegeWorkshop = 49,

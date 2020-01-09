@@ -52,8 +52,8 @@ Map::~Map()
 
 void Map::setupBasic() noexcept
 {
-    cols_ = 20;
-    rows_ = 20;
+    cols_ = 22;
+    rows_ = 22;
 
     tiles_.clear();
 

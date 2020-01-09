@@ -232,9 +232,12 @@ void UnitInfoPanel::draw()
 
     m_unitButtons.clear();
 
-    if (m_selectedUnits.size() == 1) {
+    if (m_selectedUnits.size() == 1) 
+	{
         drawSingleUnit();
-    } else {
+    } 
+	else 
+	{
         updateSelectedUnitButtons();
         drawMultipleUnits();
     }
@@ -376,7 +379,8 @@ void UnitInfoPanel::drawSingleUnit()
         pos.y += item.icon.getSize().y + 5;
     }
 
-    if (unit->resources[genie::ResourceType::WoodStorage] > 0) {
+    if (unit->resources[genie::ResourceType::WoodStorage] > 0) 
+	{
         StatItem &item = m_statItems[StatItem::CarryingWoodAmount];
         m_renderTarget->draw(item.icon, ScreenPos(pos));
         item.text.setPosition(ScreenPos(rightX, pos.y));
@@ -512,9 +516,12 @@ void UnitInfoPanel::drawConstructionInfo(const std::shared_ptr<Building> &buildi
     pos.x += iconSize.width + 2;
     pos.y -= 4;
     m_productionUpperText.setPosition(pos);
-    if (building->isResearching()) {
+    if (building->isResearching()) 
+	{
         m_productionUpperText.setString("Researching - " + std::to_string(int(building->productionProgress() * 100)) + "%");
-    } else {
+    } 
+	else 
+	{
         m_productionUpperText.setString("Building - " + std::to_string(int(building->productionProgress() * 100)) + "%");
     }
     m_renderTarget->draw(m_productionUpperText);

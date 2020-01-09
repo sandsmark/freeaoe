@@ -100,7 +100,8 @@ struct sts_mixer_voice_t {
 //
 // The mixer state.
 //
-struct sts_mixer_t {
+struct sts_mixer_t 
+{
   float                     gain;             // the global gain (you can change it if you want to change to overall volume)
   unsigned int              frequency;        // the frequency for the output of mixed audio data
   int                       audio_format;     // the audio format for the output of mixed audio data

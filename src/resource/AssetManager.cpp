@@ -367,7 +367,7 @@ bool AssetManager::initialize(const std::string &gamePath, const genie::GameVers
         DBG << "Is HD, not loading DRS files";
         TIME_THIS;
 
-        for (const std::string &subfolder : {"drs/graphics", "drs/gamedata_x2", "drs/terrain", "drs/gamedata_x1", "drs/interface", "drs/sounds", "slp" }) {
+        for (const std::string &subfolder : {"drs/graphics", "drs/gamedata_x2", "drs/terrain/textures", "drs/gamedata_x1", "drs/interface", "drs/sounds", "slp" }) {
             const std::string folder = m_hdAssetPath + subfolder + "/";
             if (!std::filesystem::exists(folder)) {
                 WARN << "folder no exist" << folder;

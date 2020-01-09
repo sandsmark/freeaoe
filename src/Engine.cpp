@@ -34,6 +34,7 @@
 #include "ui/Minimap.h"
 #include "ui/UiScreen.h"
 #include "ui/MouseCursor.h"
+#include "settings/input.h"
 
 #include <genie/dat/ResourceUsage.h>
 #include <genie/resource/SlpFile.h>

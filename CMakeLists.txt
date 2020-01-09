@@ -201,6 +201,10 @@ set(RENDER_SRC
 set(SERVER_SRC
     src/server/GameServer.cpp
     )
+	
+set(SETTINGS_SRC
+	src/settings/input.cpp
+	)
 
 set(COMMUNICATION_SRC
     src/client/GameClient.cpp
@@ -252,6 +256,7 @@ set(ENGINE_SRC
     ${UI_SRC}
     ${FONT_ALEGREYA}
     ${FONT_BERRYROTUNDA}
+	${SETTINGS_SRC}
     ${DEBUG_SRC}
     )
 
