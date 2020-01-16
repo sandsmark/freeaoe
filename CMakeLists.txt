@@ -237,6 +237,10 @@ set (UI_SRC
     src/ui/IconButton.cpp
     )
 
+set (EDITOR_SRC
+	src/editor/editor.cpp
+	)
+
 set(DEBUG_SRC
     src/debug/AllunitsGameSample.cpp
     src/debug/BasicGameSample.cpp
@@ -258,6 +262,7 @@ set(ENGINE_SRC
     ${FONT_BERRYROTUNDA}
 	${SETTINGS_SRC}
     ${DEBUG_SRC}
+	${EDITOR_SRC}
     )
 
 set(ALL_LIBRARIES

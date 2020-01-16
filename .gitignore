@@ -8,6 +8,8 @@
 
 # build subdirectory
 build/
+.vs/
+CMakeSettings.json
 
 # generated files by doxygen
 doc/html/
