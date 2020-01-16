@@ -95,3 +95,4 @@ std::string util::executablePath()
 
     return path;
 }
+

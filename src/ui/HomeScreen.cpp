@@ -103,7 +103,9 @@ bool HomeScreen::init()
         m_buttons[Button::Options].textRect =      { 304, 450, 117,  24 };
         m_buttons[Button::Exit].textRect =         { 200, 704, 160,  26 };
 
-    } else {
+    } 
+	else 
+	{
         // These are fun to figure out
         m_buttons[Button::Singleplayer].rect = { 309,  12, 120, 189 };
         m_buttons[Button::Multiplayer].rect =  { 263, 217,  97, 131 };
@@ -127,13 +129,15 @@ bool HomeScreen::init()
     }
 
     // Indicate which aren't implemented yet
-    m_buttons[Button::MapEditor].text.setStyle(sf::Text::StrikeThrough);
+    //m_buttons[Button::MapEditor].text.setStyle(sf::Text::StrikeThrough);
     m_buttons[Button::Multiplayer].text.setStyle(sf::Text::StrikeThrough);
     m_buttons[Button::Options].text.setStyle(sf::Text::StrikeThrough);
 
 
-    for (int i=0; i<Button::TypeCount; i++) {
-        if (i == Button::About) {
+    for (int i=0; i<Button::TypeCount; i++) 
+	{
+        if (i == Button::About) 
+		{
             continue; // TODO: need to find where the fuck it's supposed to go
         }
 
@@ -152,7 +156,8 @@ bool HomeScreen::init()
         const genie::SlpFramePtr &selectedFrame = slpFile->getFrame(frameNum + 1);
         const genie::SlpFramePtr &hoverFrame = slpFile->getFrame(frameNum + 2);
 
-        if (i != Button::Banner) {
+        if (i != Button::Banner) 
+		{
             b.text.setString(LanguageManager::getString(9500 + i));
         }
         b.description = LanguageManager::getString(31000 + i);
@@ -220,15 +225,18 @@ bool HomeScreen::init()
 
 HomeScreen::Button::Type HomeScreen::getSelection()
 {
-    if (!run()) {
+    if (!run()) 
+	{
         return Button::Exit;
     }
 
-    if (m_hoveredButton != -1) {
+    if (m_hoveredButton != -1) 
+	{
         return Button::Type(m_hoveredButton);
     }
 
-    if (m_selectedButton != -1) {
+    if (m_selectedButton != -1) 
+	{
         return Button::Type(m_selectedButton);
     }
 
@@ -237,17 +245,23 @@ HomeScreen::Button::Type HomeScreen::getSelection()
 
 void HomeScreen::render()
 {
-    for (int i=0; i<Button::TypeCount; i++) {
+    for (int i=0; i<Button::TypeCount; i++) 
+	{
         sf::Sprite sprite;
         ScreenPos pos = m_buttons[i].rect.topLeft();
 
-        if (i == m_selectedButton) {
+        if (i == m_selectedButton) 
+		{
             sprite.setTexture(m_buttons[i].selectedTexture);
             pos -= m_buttons[i].selectedOffset;
-        } else if (i == m_hoveredButton) {
+        } 
+		else if (i == m_hoveredButton) 
+		{
             sprite.setTexture(m_buttons[i].hoverTexture);
             pos -= m_buttons[i].hoverOffset;
-        } else {
+        } 
+		else 
+		{
             sprite.setTexture(m_buttons[i].texture);
             pos -= m_buttons[i].offset;
         }
@@ -256,7 +270,8 @@ void HomeScreen::render()
         m_renderWindow->draw(sprite);
 
     }
-    for (int i=0; i<Button::TypeCount; i++) {
+    for (int i=0; i<Button::TypeCount; i++) 
+	{
         ScreenPos pos = m_buttons[i].textRect.center();
         sf::FloatRect textRect = m_buttons[i].text.getLocalBounds();
         pos.x -= textRect.width / 2;
@@ -267,8 +282,10 @@ void HomeScreen::render()
     }
 
     switch (m_selectedButton) {
-    case Button::Singleplayer: {
-        for (int i=0; i<GameTypeChoice::GameTypeCount; i++) {
+    case Button::Singleplayer: 
+	{
+        for (int i=0; i<GameTypeChoice::GameTypeCount; i++) 
+		{
             m_textButtons[i].render(this);
         }
         break;
@@ -291,8 +308,10 @@ bool HomeScreen::handleMouseEvent(const sf::Event &event)
         ScreenPos mousePos(event.mouseMove.x, event.mouseMove.y);
         m_hoveredButton = -1;
 
-        for (int i=0; i<Button::TypeCount; i++) {
-            if (m_buttons[i].rect.contains(mousePos)) {
+        for (int i=0; i<Button::TypeCount; i++) 
+		{
+            if (m_buttons[i].rect.contains(mousePos)) 
+			{
                 m_hoveredButton = i;
                 if (!missingData) {
                     m_description.setString(m_buttons[i].description);
@@ -311,7 +330,8 @@ bool HomeScreen::handleMouseEvent(const sf::Event &event)
     if (event.type == sf::Event::MouseButtonPressed) {
         ScreenPos mousePos(event.mouseButton.x, event.mouseButton.y);
         if (m_selectedButton == Button::Singleplayer) {
-            for (int i=0; i<GameTypeChoice::GameTypeCount; i++) {
+            for (int i=0; i<GameTypeChoice::GameTypeCount; i++) 
+			{
                 if (m_textButtons[i].rect.contains(mousePos)) {
                     m_gameType = i;
                     return true;

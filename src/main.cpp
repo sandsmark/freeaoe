@@ -36,6 +36,7 @@
 #include "debug/SampleGameFactory.h"
 
 #include "ui/HomeScreen.h"
+#include "editor/editor.h"
 
 // TODO: Bad_alloc
 int main(int argc, char **argv) try
@@ -119,24 +120,36 @@ int main(int argc, char **argv) try
         // TODO: clean up this mess...
         while (!startGame) {
             HomeScreen home;
-            if (!home.init()) {
+            if (!home.init()) 
+			{
                 return 1;
             }
 
             const HomeScreen::Button::Type button = home.getSelection();
             if (button == HomeScreen::Button::Exit) {
                 return 0;
-            } else if (button == HomeScreen::Button::History) {
+            } 
+			else if (button == HomeScreen::Button::History) 
+			{
+				Editor editor = Editor();
                 HistoryScreen history;
-                if (!history.init(config.getValue("game-path") + "/History/")) {
+                if (!history.init(config.getValue("game-path") + "/History/")) 
+				{
                     return 1;
                 }
                 history.display();
-            } else if (button == HomeScreen::Button::Tutorial) {
+            }
+			else if (button == HomeScreen::Button::MapEditor)
+			{
+			}
+			else if (button == HomeScreen::Button::Tutorial) 
+			{
                 startGame = true;
-                try {
+                try 
+				{
                     genie::CpxFile cpxFile;
-                    if (DataManager::Inst().isHd()){
+					if (DataManager::Inst().isHd())
+					{
                         cpxFile.setFileName(config.getValue("game-path") + "/resources/_common/drs/retail-campaigns/dlc0/kings/cam8.cpn");
                     } else {
                         cpxFile.setFileName(config.getValue("game-path") + "/Campaign/cam8.cpn");
@@ -147,50 +160,69 @@ int main(int argc, char **argv) try
                 } catch (const std::exception &error) {
                     WARN << "Failed to load" << ":" << error.what();
                 }
-            } else if (button == HomeScreen::Button::Singleplayer) {
+            }
+			else if (button == HomeScreen::Button::Singleplayer) 
+			{
                 startGame = true;
-                if (home.getGameType() == HomeScreen::GameTypeChoice::Campaign) {
-                    try {
+                if (home.getGameType() == HomeScreen::GameTypeChoice::Campaign) 
+				{
+                    try 
+					{
                         genie::CpxFile cpxFile;
-                        if (DataManager::Inst().isHd()){
+                        if (DataManager::Inst().isHd())
+						{
                             cpxFile.setFileName(config.getValue("game-path") + "/resources/_common/drs/retail-campaigns/dlc0/conquerors/xcam3.cpn");
-                        } else {
+                        } else 
+						{
                             cpxFile.setFileName(config.getValue("game-path") + "/Campaign/xcam3.cpx");
                         }
                         cpxFile.load();
 
                         scenarioFile = cpxFile.getScnFile(0);
-                    } catch (const std::exception &error) {
+                    } 
+					catch (const std::exception &error) 
+					{
                         WARN << "Failed to load" << ":" << error.what();
                     }
                 }
-            } else {
+            } 
+			else 
+			{
                 startGame = true;
-                if (!config.getValue("scenario-file").empty()) {
-                    try {
+                if (!config.getValue("scenario-file").empty()) 
+				{
+                    try 
+					{
                         scenarioFile = std::make_shared<genie::ScnFile>();
                         scenarioFile->load(config.getValue("scenario-file"));
-                    } catch (const std::exception &error) {
+                    } 
+					catch (const std::exception &error) 
+					{
                         WARN << "Failed to load" << config.getValue("scenario-file") << ":" << error.what();
                     }
                 }
                 break;
             }
         }
-    } else if (!config.getValue("game-sample").empty()) {
+    } 
+	else if (!config.getValue("game-sample").empty()) 
+	{
         const std::string alias = config.getValue("game-sample");
         SampleGameFactory::Inst().setSampleFromAlias(alias);
     }
 
     Engine en;
-    if (!en.setup(scenarioFile)) {
+    if (!en.setup(scenarioFile)) 
+	{
         return 1;
     }
 
     en.start();
 
     return 0;
-} catch (const std::exception &e) {
+} 
+catch (const std::exception &e) 
+{
     std::cerr << "uncatched exception " << e.what() << std::endl;
     return 1;
 }
