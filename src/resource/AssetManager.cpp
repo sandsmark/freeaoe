@@ -486,6 +486,34 @@ int AssetManager::filenameID(const std::string &filename)
         { "tech_tile.slp", 50343  },
         { "ttx.slp", 53211        }, // unit not available
 
+        // Palettes
+        { "scrstart.pal", 50563   },
+        { "scr_hist.pal", 50530   },
+        { "cam1.pal", 50243       },
+        { "cam2.pal", 50244       },
+        { "cam3.pal", 50245       },
+        { "cam4.pal", 50246       },
+        { "cam.pal", 50268        },
+        { "xcam1.pal", 53111      },
+        { "xcam2.pal", 53112      },
+        { "xcam3.pal", 53113      },
+        { "xcam4.pal", 53114      },
+        { "xcam.pal", 53016       },
+        { "main2.pal", 50532      },
+        { "xmain.pal", 50589      },
+        { "pal1.pal", 50501       },
+        { "pal2.pal", 50502       },
+        { "pal4.pal", 50504       },
+        { "pal9.pal", 50507       },
+        { "palette.pal", 50500    },
+        //{ "palette.pal", 50505    }, // duplicate?
+        //{ "palette.pal", 50506    }, // duplicate?
+        { "psel.pal", 50520       },
+        { "scr3.pal", 50533       },
+        { "scr_ach.pal", 50531    },
+        { "scr_cred.pal", 50519   },
+        { "xcredits.pal", 50588   },
+
         // Various backgrounds
         { "xmain.slp", 50189      }, // Mainscreen
         { "objtabs.slp", 53005    },
@@ -496,10 +524,53 @@ int AssetManager::filenameID(const std::string &filename)
         { "scr2.slp", 50100       }, // 800x600
         { "scr2b.slp", 50101      }, // 1024x768
         { "scr2c.slp", 50102      }, // 1280x1024
+        { "scr3.slp", 50104       },
+        { "scr5b.slp", 50127      },
+        { "scr9b.slp", 50145      },
+        { "scr10B.slp", 50149     },
         { "scrstart.slp", 50163   },
-        { "scrstart.pal", 50563   },
         { "scr_hist.slp", 50161   },
-        { "scr_hist.pal", 50530   },
+        { "dlg_woo.slp", 50212    }, // wood tiles
+        { "dlg1n.slp", 50200      }, // unknown
+        { "dlg2.slp", 50202       }, // wood, weird palette?
+        { "dlg4n.slp", 50206      },
+        { "dlg5n.slp", 50208      },
+        //{ "dlg_woo", 50212      }, // duplicate?
+        { "dlg_dip.slp", 50221    },
+        { "dlg_men.slp", 50222    },
+        { "dlg_obj.slp", 50223    },
+        { "dlg_objx.slp", 53208   },
+        { "dlg_cha1.slp", 50224   },
+        { "dlg_gam.slp", 50225    },
+        { "dlg_cha2.slp", 50226   },
+        { "maindlg2.slp", 50270   },
+        { "maindlg.slp", 50233    },
+        { "xmaindlg.slp", 50190   },
+        { "main.slp", 50231       },
+        { "credits1.slp", 50155   },
+        { "psel.slp", 50230       },
+        { "xcredits", 50188       },
+
+        // Campaign backgrounds
+        { "cam1.slp", 50235       },
+        { "cam2.slp", 50236       },
+        { "cam3.slp", 50237       },
+        { "cam4.slp", 50238       },
+        { "cam8.slp", 50242       },
+        { "xcam.slp", 53014       },
+        { "xcam1.slp", 53101      },
+        { "xcam2.slp", 53102      },
+        { "xcam3.slp", 53103      },
+        { "xcam4.slp", 53104      },
+        { "camdlg1.slp", 53171    },
+        { "camdlg2.slp", 53172    },
+        { "camdlg3.slp", 53173    },
+        { "camdlg4.slp", 53174    },
+        { "xcamdlg1.slp", 53161   },
+        { "xcamdlg2.slp", 53162   },
+        { "xcamdlg3.slp", 53163   },
+        { "xcamdlg4.slp", 53164   },
+        { "cam.slp", 50232        },
 
         // Logos
         { "c_logo.slp", 53207     },
