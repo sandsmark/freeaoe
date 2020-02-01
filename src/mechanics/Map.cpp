@@ -322,7 +322,7 @@ void Map::addEntityAt(int col, int row, const EntityPtr &entity) noexcept
         return;
     }
 
-    Unit::Ptr unit = Entity::asUnit(entity);
+    Unit::Ptr unit = Unit::fromEntity(entity);
     const int newTerrain = unit->data()->Building.FoundationTerrainID;
 
     if (newTerrain < 0) {

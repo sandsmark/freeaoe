@@ -52,6 +52,17 @@
 #include "resource/Graphic.h"
 #include "render/GraphicRender.h"
 
+std::shared_ptr<Unit> Unit::fromEntity(const EntityPtr &entity) noexcept
+{
+    if (!entity) {
+        return nullptr;
+    }
+    if (!entity->isUnit()) {
+        return nullptr;
+    }
+    return std::static_pointer_cast<Unit>(entity);
+}
+
 Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager) :
     Entity(Type::Unit, LanguageManager::getString(data_.LanguageDLLName) + " (" + std::to_string(data_.ID) + ")"),
     playerId(player_->playerId),
@@ -412,7 +423,7 @@ void Unit::checkForAutoTargets() noexcept
     float closestDistance = los * Constants::TILE_SIZE;
     const std::vector<std::weak_ptr<Entity>> entities = map->entitiesBetween(left, top, right, bottom);
     for (size_t i=0; i<entities.size(); i++) {
-        Unit::Ptr other = Entity::asUnit(entities[i]);
+        Unit::Ptr other = Unit::fromEntity(entities[i]);
         if (!other) {
             continue;
         }
@@ -458,7 +469,7 @@ void Unit::checkForAutoTargets() noexcept
     }
 
     DBG << "found auto task" << newTask.data->actionTypeName() << "for" << debugName;
-    IAction::assignTask(newTask, Entity::asUnit(shared_from_this()), target);
+    IAction::assignTask(newTask, Unit::fromEntity(shared_from_this()), target);
 }
 
 std::unordered_set<Task> Unit::availableActions() noexcept

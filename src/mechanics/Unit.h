@@ -114,6 +114,11 @@ struct Unit : public Entity
     // The blinking animation thing when it is selected as a target
     int targetBlinkTimeLeft = 0;
 
+    static std::shared_ptr<Unit> fromEntity(const EntityPtr &entity) noexcept;
+    static inline std::shared_ptr<Unit> fromEntity(const std::weak_ptr<Entity> &entity) noexcept {
+        return fromEntity(entity.lock());
+    }
+
     Unit() = delete;
     Unit(const Unit &unit) = delete;
 

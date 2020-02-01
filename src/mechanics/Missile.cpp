@@ -175,7 +175,7 @@ bool Missile::update(Time time) noexcept
                 }
 
                 for (const std::weak_ptr<Entity> &entity : entities) {
-                    Unit::Ptr otherUnit = Entity::asUnit(entity);
+                    Unit::Ptr otherUnit = Unit::fromEntity(entity);
                     if (IS_UNLIKELY(!otherUnit)) {
                         continue;
                     }

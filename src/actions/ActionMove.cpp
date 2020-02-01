@@ -787,7 +787,7 @@ bool ActionMove::isPassable(const float x, const float y) noexcept
             const std::vector<std::weak_ptr<Entity>> &entities = m_map->entitiesAt(dx, dy);
 
             for (size_t i=0; i<entities.size(); i++) {
-                const Unit::Ptr otherUnit = Entity::asUnit(entities[i]);
+                const Unit::Ptr otherUnit = Unit::fromEntity(entities[i]);
                 if (IS_UNLIKELY(!otherUnit)) {
                     continue;
                 }

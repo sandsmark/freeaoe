@@ -383,7 +383,7 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
                                                               effect.areaTo.x);
 
         for (const std::weak_ptr<Entity> &entity : entities) {
-            Unit::Ptr unit = Entity::asUnit(entity);
+            Unit::Ptr unit = Unit::fromEntity(entity);
             if (!unit) {
                 WARN << "got invalid unit in area for effect";
                 continue;
@@ -410,7 +410,7 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
         targetPos *= Constants::TILE_SIZE;
 
         for (const std::weak_ptr<Entity> &entity : entities) {
-            Unit::Ptr unit = Entity::asUnit(entity);
+            Unit::Ptr unit = Unit::fromEntity(entity);
             if (!unit) {
                 WARN << "got invalid unit in area for effect";
                 continue;

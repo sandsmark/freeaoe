@@ -227,7 +227,7 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
         }
 
         if (entity->isUnit()) {
-            Unit::Ptr unit = Entity::asUnit(entity);
+            Unit::Ptr unit = Unit::fromEntity(entity);
 
             if (visibility == VisibilityMap::Visible) {
                 entity->isVisible = true;

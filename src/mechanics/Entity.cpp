@@ -17,7 +17,6 @@
 */
 
 #include "Entity.h"
-#include "Unit.h"
 #include "Missile.h"
 #include "Building.h"
 #include "core/Constants.h"
@@ -58,16 +57,6 @@ bool Entity::update(Time time) noexcept
     updated = m_renderer->update(time, isVisible) || updated;
 
     return updated && isVisible;
-}
-
-std::shared_ptr<Unit> Entity::asUnit(const EntityPtr &entity) noexcept {
-    if (!entity) {
-        return nullptr;
-    }
-    if (!entity->isUnit()) {
-        return nullptr;
-    }
-    return std::static_pointer_cast<Unit>(entity);
 }
 
 std::shared_ptr<Missile> Entity::asMissile(const std::shared_ptr<Entity> &entity) noexcept

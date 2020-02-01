@@ -54,12 +54,6 @@ struct Entity : std::enable_shared_from_this<Entity>, SignalEmitter<Entity>
 
     virtual GraphicRender &renderer() noexcept { return *m_renderer; }
 
-    static std::shared_ptr<Unit> asUnit(const EntityPtr &entity) noexcept;
-
-    static inline std::shared_ptr<Unit> asUnit(const std::weak_ptr<Entity> &entity) noexcept {
-        return asUnit(entity.lock());
-    }
-
     static std::shared_ptr<Missile> asMissile(const std::shared_ptr<Entity> &entity) noexcept;
 
     const std::string debugName;
