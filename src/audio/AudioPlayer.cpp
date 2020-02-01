@@ -15,7 +15,7 @@
 #include <stddef.h>
 
 //#define DR_MP3_IMPLEMENTATION
-//#include <mini_al/extras/dr_mp3.h>
+//#include <miniaudio/extras/dr_mp3.h>
 
 #define MINIAUDIO_IMPLEMENTATION
 #define MA_NO_DECODING
@@ -25,7 +25,7 @@
 #define MA_NO_ALSA
 #define MA_NO_STDIO
 //#define ma_DEBUG_OUTPUT
-#include <mini_al/miniaudio.h>
+#include <miniaudio/miniaudio.h>
 
 void AudioPlayer::malCallback(ma_device *device, void *buffer, const void* /*input*/, uint32_t frameCount)
 {
