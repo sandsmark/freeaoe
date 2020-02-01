@@ -37,10 +37,8 @@ class Event;
 class HomeScreen : public UiScreen
 {
 public:
-    struct Button 
-	{
-        enum Type 
-		{
+    struct Button {
+        enum Type {
             Singleplayer,
             Multiplayer,
             Zone,
@@ -75,7 +73,7 @@ public:
     enum GameTypeChoice {
         Campaign,
         StandardGame,
-		MapEditor,
+        MapEditor,
         GameTypeCount
     };
 

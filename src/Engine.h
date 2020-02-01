@@ -76,11 +76,11 @@ private:
     void loadUiOverlay();
     void drawUi();
     bool updateCamera(const std::shared_ptr<GameState> &state);
-	bool handleEvent(const sf::Event &event, const std::shared_ptr<GameState> &state);
-	bool handleKeyEvent(const sf::Event &event, const std::shared_ptr<GameState> &state);
-	bool handleMouseMove(const sf::Event &event, const std::shared_ptr<GameState> &state);
-	bool handleMousePress(const sf::Event &event, const std::shared_ptr<GameState> &state);
-	bool handleMouseRelease(const sf::Event &event, const std::shared_ptr<GameState> &state);
+    bool handleEvent(const sf::Event &event, const std::shared_ptr<GameState> &state);
+    bool handleKeyEvent(const sf::Event &event, const std::shared_ptr<GameState> &state);
+    bool handleMouseMove(const sf::Event &event, const std::shared_ptr<GameState> &state);
+    bool handleMousePress(const sf::Event &event, const std::shared_ptr<GameState> &state);
+    bool handleMouseRelease(const sf::Event &event, const std::shared_ptr<GameState> &state);
     void showMenu();
     bool updateUi(const std::shared_ptr<GameState> &state);
 

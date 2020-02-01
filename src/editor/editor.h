@@ -20,11 +20,11 @@
 #include <string>
 #include <vector>
 
-namespace sf 
+namespace sf
 {
-	class Clock;
-	class Event;
-	class RenderWindow;
+class Clock;
+class Event;
+class RenderWindow;
 }
 
 class SfmlRenderTarget;
@@ -33,8 +33,8 @@ struct MouseCursor;
 class Editor
 {
 public:
-	Editor();
-	virtual ~Editor();
+    Editor();
+    virtual ~Editor();
 private:
-	Engine engine;
+    Engine engine;
 };

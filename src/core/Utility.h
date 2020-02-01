@@ -120,5 +120,6 @@ inline bool floatsEquals(const double a, const double b)
 bool openUrl(const std::string &url, std::string *error);
 
 std::string executablePath();
+
 }
 

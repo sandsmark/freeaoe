@@ -1,11 +1,11 @@
 #pragma once
 
 #include "core/Types.h"
+
 #include <SFML/Graphics/Text.hpp>
 #include <memory>
 
-namespace genie 
-{
+namespace genie {
 class SlpFile;
 typedef std::shared_ptr<SlpFile> SlpFilePtr;
 }
@@ -57,7 +57,7 @@ private:
     std::shared_ptr<Drawable::Image> m_image;
     genie::SlpFilePtr m_cursorsFile;
     ScreenPos m_position;
-	sf::Text m_cursor_pos_text;
+    sf::Text m_cursor_pos_text;
 
     std::shared_ptr<IRenderTarget> m_renderTarget;
 };

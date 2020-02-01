@@ -201,10 +201,10 @@ set(RENDER_SRC
 set(SERVER_SRC
     src/server/GameServer.cpp
     )
-	
+
 set(SETTINGS_SRC
-	src/settings/input.cpp
-	)
+    src/settings/input.cpp
+    )
 
 set(COMMUNICATION_SRC
     src/client/GameClient.cpp
@@ -238,8 +238,8 @@ set (UI_SRC
     )
 
 set (EDITOR_SRC
-	src/editor/editor.cpp
-	)
+    src/editor/editor.cpp
+    )
 
 set(DEBUG_SRC
     src/debug/AllunitsGameSample.cpp
@@ -260,9 +260,9 @@ set(ENGINE_SRC
     ${UI_SRC}
     ${FONT_ALEGREYA}
     ${FONT_BERRYROTUNDA}
-	${SETTINGS_SRC}
+    ${SETTINGS_SRC}
     ${DEBUG_SRC}
-	${EDITOR_SRC}
+    ${EDITOR_SRC}
     )
 
 set(ALL_LIBRARIES

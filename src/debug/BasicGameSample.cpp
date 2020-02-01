@@ -35,8 +35,6 @@ void BasicGameSample::setupMap()
 
 void BasicGameSample::setupActors(const ResourceMap &startingResources)
 {
-
-
     m_gaiaPlayer = std::make_shared<Player>(UnitManager::GaiaID, 0, startingResources);
     m_humanPlayer = std::make_shared<Player>(1, 1, startingResources);
     m_enemyPlayer = std::make_shared<Player>(2, 2, startingResources);
@@ -104,7 +102,7 @@ void BasicGameSample::addHumanUnits()
     unit = UnitFactory::Inst().createUnit(Unit::Archer, MapPos(48*15, 48*15, 0), m_humanPlayer, *unitManager_);
     unitManager_->add(unit);
 
-	unit = UnitFactory::Inst().createUnit(Unit::ArcheryRange, MapPos(48 * 10, 48 * 5, 0), m_humanPlayer, *unitManager_);
+    unit = UnitFactory::Inst().createUnit(Unit::ArcheryRange, MapPos(48 * 10, 48 * 5, 0), m_humanPlayer, *unitManager_);
 
 //    unit = UnitFactory::Inst().createUnit(827, MapPos(48*10, 48*9, 0), m_humanPlayer, *unitManager_);
 //    unitManager_->add(unit);

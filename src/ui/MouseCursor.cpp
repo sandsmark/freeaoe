@@ -37,25 +37,21 @@ bool MouseCursor::setPosition(const ScreenPos &position)
 bool MouseCursor::update(const std::shared_ptr<UnitManager> &unitManager)
 {
     const Task targetAction = unitManager->defaultActionAt(m_position, m_renderTarget->camera());
-    if (!targetAction.data) 
-	{
+    if (!targetAction.data) {
         return setCursor(MouseCursor::Normal);
-    } 
-	else if (targetAction.data->ActionType == genie::ActionType::Combat) 
-	{
+    } else if (targetAction.data->ActionType == genie::ActionType::Combat) {
         return setCursor(MouseCursor::Attack);
-    } 
-	else {
+    } else {
         return setCursor(MouseCursor::Action);
     }
 }
 
 void MouseCursor::render()
 {
-	m_cursor_pos_text.setString(std::to_string(m_position.x) + ", " + std::to_string(m_position.y));
-	m_cursor_pos_text.setCharacterSize(11);
-	m_cursor_pos_text.setPosition(ScreenPos(m_position));
-	m_renderTarget->draw(m_cursor_pos_text);
+    m_cursor_pos_text.setString(std::to_string(m_position.x) + ", " + std::to_string(m_position.y));
+    m_cursor_pos_text.setCharacterSize(11);
+    m_cursor_pos_text.setPosition(ScreenPos(m_position));
+    m_renderTarget->draw(m_cursor_pos_text);
     m_renderTarget->draw(m_image, m_position);
 }
 
