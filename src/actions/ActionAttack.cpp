@@ -97,13 +97,17 @@ IAction::UpdateResult ActionAttack::update(Time time)
             return IAction::UpdateResult::Failed;
         }
 
-        const float angleToTarget = unit->position().angleTo(m_targetPosition);
+        if (targetUnit) {
+            unit->prependAction(ActionMove::moveUnitTo(unit, targetUnit, m_task));
+        } else {
+            const float angleToTarget = unit->position().angleTo(m_targetPosition);
 
-        float targetX = m_targetPosition.x + cos(angleToTarget + M_PI) * unit->data()->Combat.MaxRange * Constants::TILE_SIZE;// / 1.1;
-        float targetY = m_targetPosition.y + sin(angleToTarget + M_PI) * unit->data()->Combat.MaxRange * Constants::TILE_SIZE;// / 1.1;
+            float targetX = m_targetPosition.x + cos(angleToTarget + M_PI) * unit->data()->Combat.MaxRange * Constants::TILE_SIZE;// / 1.1;
+            float targetY = m_targetPosition.y + sin(angleToTarget + M_PI) * unit->data()->Combat.MaxRange * Constants::TILE_SIZE;// / 1.1;
+            unit->prependAction(ActionMove::moveUnitTo(unit, MapPos(targetX, targetY), m_task));
+        }
 //        DBG << "Unit out of range at distance" << distance << unit->distanceTo(targetUnit) << " moving to" << targetX << targetY;
 
-        unit->prependAction(ActionMove::moveUnitTo(unit, MapPos(targetX, targetY), m_task));
         return IAction::UpdateResult::NotUpdated;
     }
     if (distance < unit->data()->Combat.MinRange) {

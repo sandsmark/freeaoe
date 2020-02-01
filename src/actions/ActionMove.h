@@ -51,6 +51,8 @@ public:
 
     static std::shared_ptr<ActionMove> moveUnitTo(const UnitPtr &unit, MapPos destination, const Task &task) noexcept;
     static std::shared_ptr<ActionMove> moveUnitTo(const UnitPtr &unit, MapPos destination) noexcept;
+    static std::shared_ptr<ActionMove> moveUnitTo(const UnitPtr &unit, const UnitPtr &targetUnit) noexcept;
+    static std::shared_ptr<ActionMove> moveUnitTo(const UnitPtr &unit, const UnitPtr &targetUnit, const Task &task) noexcept;
     const std::vector<MapPos> &path() const noexcept { return m_path; }
     genie::ActionType taskType() const noexcept override { return genie::ActionType::MoveTo; }
 
@@ -66,6 +68,7 @@ private:
 
     MapPtr m_map;
     MapPos m_destination;
+    std::weak_ptr<Unit> m_targetUnit;
     std::vector<MapPos> m_path;
     std::vector<float> m_terrainMoveMultipliers;
     float m_speed;

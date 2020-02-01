@@ -128,42 +128,44 @@ MapPos ActionMove::findClosestWalkableBorder(const MapPos &start, const MapPos &
         return start;
     }
 
-    std::shared_ptr<Unit> targetUnit;
+    std::shared_ptr<Unit> targetUnit = m_targetUnit.lock();
     const float xSize = unit->data()->Size.x * Constants::TILE_SIZE;
     const float ySize = unit->data()->Size.y * Constants::TILE_SIZE;
     const float radius = std::max(xSize, ySize);
 
-    const int tileX = target.x / Constants::TILE_SIZE;
-    const int tileY = target.y / Constants::TILE_SIZE;
-    for (int dx = tileX-1; dx<=tileX+1 && !targetUnit; dx++) {
-        for (int dy = tileY-1; dy<=tileY+1 && !targetUnit; dy++) {
-            if (IS_UNLIKELY(dx < 0 || dy < 0 || dx >= m_map->getCols() || dy >= m_map->getRows())) {
-                continue;
-            }
-            const std::vector<std::weak_ptr<Entity>> &entities = m_map->entitiesAt(dx, dy);
+    if (!targetUnit) {
+        const int tileX = target.x / Constants::TILE_SIZE;
+        const int tileY = target.y / Constants::TILE_SIZE;
+        for (int dx = tileX-1; dx<=tileX+1 && !targetUnit; dx++) {
+            for (int dy = tileY-1; dy<=tileY+1 && !targetUnit; dy++) {
+                if (IS_UNLIKELY(dx < 0 || dy < 0 || dx >= m_map->getCols() || dy >= m_map->getRows())) {
+                    continue;
+                }
+                const std::vector<std::weak_ptr<Entity>> &entities = m_map->entitiesAt(dx, dy);
 
-            if (entities.empty()) {
-                continue;
-            }
-
-            for (const std::weak_ptr<Entity> &entity : entities) {
-                Unit::Ptr otherUnit = Entity::asUnit(entity);
-                if (IS_UNLIKELY(!otherUnit)) {
+                if (entities.empty()) {
                     continue;
                 }
 
-                if (IS_UNLIKELY(otherUnit->id == unit->id)) {
-                    continue;
-                }
+                for (const std::weak_ptr<Entity> &entity : entities) {
+                    Unit::Ptr otherUnit = Unit::fromEntity(entity);
+                    if (IS_UNLIKELY(!otherUnit)) {
+                        continue;
+                    }
 
-                if (otherUnit->data()->Size.z == 0) {
-                    continue;
-                }
+                    if (IS_UNLIKELY(otherUnit->id == unit->id)) {
+                        continue;
+                    }
 
-                if (otherUnit->distanceTo(target) < radius) {
-//                    DBG << "unit in our spot, trying to find a place close to it" << otherUnit->debugName;
-                    targetUnit = std::move(otherUnit);
-                    break;
+                    if (otherUnit->data()->Size.z == 0) {
+                        continue;
+                    }
+
+                    if (otherUnit->distanceTo(target) < radius) {
+                        //                    DBG << "unit in our spot, trying to find a place close to it" << otherUnit->debugName;
+                        targetUnit = std::move(otherUnit);
+                        break;
+                    }
                 }
             }
         }
@@ -326,6 +328,16 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
         return UpdateResult::NotUpdated;
     }
 
+    Unit::Ptr targetUnit = m_targetUnit.lock();
+    if (targetUnit) { // check if it moved
+        const double targetMovedDistance = m_destination.distance(targetUnit->position());
+        m_destination = targetUnit->position();
+        if (targetMovedDistance > 1) {  // chosen by dice roll
+            DBG << "Unit moved, repathing";
+            updatePath();
+        }
+    }
+
     if (m_targetReached) {
         return UpdateResult::Completed;
     }
@@ -480,6 +492,32 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
     m_prevTime = time;
 
     return UpdateResult::Updated;
+}
+
+std::shared_ptr<ActionMove> ActionMove::moveUnitTo(const UnitPtr &unit, const UnitPtr &targetUnit) noexcept
+{
+    if (!unit->data()->Speed) {
+        DBG << "Handed unit that can't move" << unit->debugName;
+        return nullptr;
+    }
+
+    std::shared_ptr<ActionMove> action = moveUnitTo(unit, targetUnit->position());
+    action->m_targetUnit = targetUnit;
+
+    return action;
+}
+
+std::shared_ptr<ActionMove> ActionMove::moveUnitTo(const UnitPtr &unit, const UnitPtr &targetUnit, const Task &task) noexcept
+{
+    if (!unit->data()->Speed) {
+        DBG << "Handed unit that can't move" << unit->debugName;
+        return nullptr;
+    }
+
+    std::shared_ptr<ActionMove> action = moveUnitTo(unit, targetUnit->position(), task);
+    action->m_targetUnit = targetUnit;
+
+    return action;
 }
 
 std::shared_ptr<ActionMove> ActionMove::moveUnitTo(const Unit::Ptr &unit, MapPos destination, const Task &task) noexcept
@@ -880,7 +918,7 @@ void ActionMove::updatePath() noexcept
 
     MapPos newDest = m_destination;
     if (!isPassable(m_destination.x, m_destination.y)) {
-        WARN << "target not passable, finding closest possible position";
+        // WARN << "target not passable, finding closest possible position";
         newDest = findClosestWalkableBorder(unit->position(), m_destination, 2);
         m_destination = newDest;
     }
