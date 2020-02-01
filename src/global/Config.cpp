@@ -333,7 +333,6 @@ Config::Config(const std::string &applicationName)
 		}
 	}
 	m_filePath += "/";
-	m_f
 #elif defined(WIN32) || defined(__WIN32) || defined(__WIN32__)
 	//FIXME: don't really windows, and not tested
 	m_filePath = std::filesystem::current_path().string();
