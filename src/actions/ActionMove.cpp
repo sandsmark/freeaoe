@@ -647,6 +647,17 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
         return path;
     }
 
+
+    MapRect targetRect(MapPos(endX-1, endY-1), Size(2, 2));
+    const Unit::Ptr targetUnit = m_targetUnit.lock();
+    if (targetUnit) {
+        const Size size = targetUnit->clearanceSize();
+        targetRect.x -= size.width/2;
+        targetRect.y -= size.height/2;
+        targetRect.width = size.width;
+        targetRect.height = size.height;
+    }
+
     PathPoint currentPosition(startX, startY);
 
     std::unordered_map<PathPoint, PathPoint> cameFrom;
@@ -667,7 +678,7 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
         parent = queue.top();
         queue.pop();
 
-        if (parent.x == endX && parent.y == endY) {
+        if (targetRect.contains(parent.x, parent.y)) {
             break;
         }
 
