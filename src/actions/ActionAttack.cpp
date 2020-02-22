@@ -67,24 +67,6 @@ IAction::UpdateResult ActionAttack::update(Time time)
         m_targetPosition = targetUnit->position();
     }
 
-    ScreenPos screenPosition = unit->position().toScreen();
-    ScreenPos targetScreenPosition = m_targetPosition.toScreen();
-    unit->setAngle(screenPosition.angleTo(targetScreenPosition));
-
-    if (unitFiresMissiles(unit) && missilesUnitCanFire(unit) <= 0) {
-        return IAction::UpdateResult::NotUpdated;
-    }
-
-    float timeSinceLastAttack = (time - m_lastAttackTime) * 0.0015;
-
-    if (timeSinceLastAttack < unit->data()->Combat.DisplayedReloadTime) {
-        m_firing = true;
-    } else {
-        m_firing = false;
-    }
-
-    const float angleToTarget = unit->position().toScreen().angleTo(m_targetPosition.toScreen());
-    unit->setAngle(angleToTarget);
     const float distance = (targetUnit ?
                 unit->distanceTo(targetUnit) :
                 unit->distanceTo(m_targetPosition)
@@ -97,19 +79,48 @@ IAction::UpdateResult ActionAttack::update(Time time)
             return IAction::UpdateResult::Failed;
         }
 
-        unit->prependAction(ActionMove::moveUnitTo(unit, targetUnit, m_task));
+        std::shared_ptr<ActionMove> moveAction = ActionMove::moveUnitTo(unit, targetUnit, m_task);
+        moveAction->maxDistance = unit->data()->Combat.MaxRange * Constants::TILE_SIZE;
+        unit->prependAction(moveAction);
+
         return IAction::UpdateResult::NotUpdated;
     }
-    if (unit->data()->Combat.MinRange > 0 && distance < unit->data()->Combat.MinRange) {
+
+    const float minDistance = unit->data()->Combat.MinRange * Constants::TILE_SIZE;
+    if (minDistance > 0.f && m_targetPosition.distance(unit->position()) < minDistance) {
         if (!unit->data()->Speed) {
             DBG << "this unit can't move...";
             return IAction::UpdateResult::Failed;
         }
 
-        if (unit->findMatchingTask(genie::ActionType::RetreatToShootingRage, -1).data) {
-            unit->prependAction(ActionMove::moveUnitTo(unit, targetUnit, m_task));
-            return IAction::UpdateResult::NotUpdated;
+        if (!unit->findMatchingTask(genie::ActionType::RetreatToShootingRage, -1).data) {
+            return IAction::UpdateResult::Failed;
         }
+
+        const float angleToTarget = unit->position().angleTo(m_targetPosition);
+
+        float targetX = m_targetPosition.x + cos(angleToTarget + M_PI) * minDistance;
+        float targetY = m_targetPosition.y + sin(angleToTarget + M_PI) * minDistance;
+
+        std::shared_ptr<ActionMove> moveAction = ActionMove::moveUnitTo(unit, MapPos(targetX, targetY), m_task);
+        unit->prependAction(moveAction);
+        return IAction::UpdateResult::NotUpdated;
+    }
+
+    if (unitFiresMissiles(unit) && missilesUnitCanFire(unit) <= 0) {
+        return IAction::UpdateResult::NotUpdated;
+    }
+
+    ScreenPos screenPosition = unit->position().toScreen();
+    ScreenPos targetScreenPosition = m_targetPosition.toScreen();
+    unit->setAngle(screenPosition.angleTo(targetScreenPosition));
+
+    float timeSinceLastAttack = (time - m_lastAttackTime) * 0.0015;
+
+    if (timeSinceLastAttack < unit->data()->Combat.DisplayedReloadTime) {
+        m_firing = true;
+    } else {
+        m_firing = false;
     }
 
     if (timeSinceLastAttack < unit->data()->Combat.ReloadTime) {

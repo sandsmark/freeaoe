@@ -128,6 +128,20 @@ MapPos ActionMove::findClosestWalkableBorder(const MapPos &start, const MapPos &
         return start;
     }
 
+//    if (minDistance > 0.f && target.distance(start) < minDistance) {
+//        const float angleToTarget = start.angleTo(target);
+//        DBG << "too close" << minDistance << target.distance(start) << angleToTarget;
+
+//        target.x = start.x + cos(angleToTarget) * minDistance + 0.1;
+//        target.y = start.y + sin(angleToTarget) * minDistance + 0.1;
+
+//        if (isPassable(target.x, target.y)) {
+//            m_destination = target;
+//            DBG << "position away is okay";
+//            return target;
+//        }
+//    }
+
     const float xSize = unit->data()->Size.x * Constants::TILE_SIZE;
     const float ySize = unit->data()->Size.y * Constants::TILE_SIZE;
     const float radius = std::max(xSize, ySize);
@@ -169,9 +183,9 @@ MapPos ActionMove::findClosestWalkableBorder(const MapPos &start, const MapPos &
         }
     }
 
-    MapPos newPos = start;
+    MapPos newPos = target;
     if (clearanceLength > 0.f) {
-        DBG << "Found target unit";
+//        DBG << "Found target unit";
 #ifdef DEBUG
         testedPoints.push_back(target);
 #endif
@@ -210,7 +224,7 @@ MapPos ActionMove::findClosestWalkableBorder(const MapPos &start, const MapPos &
         }
     }
     if (isPassable(newPos.x, newPos.y)) {
-        DBG << "Found way around target";
+//        DBG << "Found way around target";
         return newPos;
     }
     // follow a straight line from the target to our location, to find the closest position we can get to
@@ -308,7 +322,8 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
 
     MapPos unitPosition = unit->position();
 
-    MapRect targetRect(m_destination, Size(2, 2));
+    // TODO differentiate between max manhattan distance (square obstruction type) and euclidian distance (round obstruction type)
+    MapRect targetRect(m_destination, Size(maxDistance + 1, maxDistance + 1));
 
     Unit::Ptr targetUnit = m_targetUnit.lock();
     if (targetUnit) {
@@ -317,10 +332,10 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
         }
 
         const Size size = targetUnit->clearanceSize();
-        targetRect.x -= size.width/2;
-        targetRect.y -= size.height/2;
         targetRect.width = size.width;
         targetRect.height = size.height;
+        targetRect.x -= targetRect.width/2;
+        targetRect.y -= targetRect.height/2;
     }
     if (targetUnit && (targetUnit->position()/50).rounded() != (m_lastTargetUnitPosition/50).rounded()) {
         m_lastTargetUnitPosition = targetUnit->position();
@@ -673,14 +688,14 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
     }
 
 
-    MapRect targetRect(MapPos(endX-1, endY-1), Size(2, 2));
+    MapRect targetRect(MapPos(endX-coarseness/2, endY-coarseness/2), Size(maxDistance / coarseness + coarseness, maxDistance / coarseness + coarseness));
     const Unit::Ptr targetUnit = m_targetUnit.lock();
     if (targetUnit) {
-        const Size size = targetUnit->clearanceSize();
-        targetRect.x -= size.width/2;
-        targetRect.y -= size.height/2;
-        targetRect.width = size.width;
-        targetRect.height = size.height;
+        const Size size = targetUnit->clearanceSize() / coarseness;
+        targetRect.width += size.width;
+        targetRect.height += size.height;
+        targetRect.x -= targetRect.width/2;
+        targetRect.y -= targetRect.height/2;
     }
 
     PathPoint currentPosition(startX, startY);
@@ -703,7 +718,7 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
         parent = queue.top();
         queue.pop();
 
-        if (targetRect.contains(parent.x, parent.y)) {
+        if (targetRect.contains(parent.x, parent.y)) {// && (minDistance <= 0.f || parent.distance > minDistance/coarseness)) {
             break;
         }
 
@@ -953,7 +968,7 @@ void ActionMove::updatePath() noexcept
 
     MapPos newDest = m_destination;
     if (!isPassable(m_destination.x, m_destination.y)) {
-        WARN << "target not passable, finding closest possible position";
+//        WARN << "target not passable, finding closest possible position";
         newDest = findClosestWalkableBorder(unit->position(), m_destination, 2);
         m_destination = newDest;
     }

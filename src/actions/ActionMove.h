@@ -42,6 +42,9 @@ class ActionMove : public IAction
     };
 
 public:
+    float maxDistance = 0.f;
+//    float minDistance = 0.f; // TODO: avoid a roundtrip into actionattack if target moves
+
 #ifdef DEBUG
     static std::vector<MapPos> testedPoints;
 #endif
