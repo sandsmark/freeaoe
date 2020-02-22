@@ -91,42 +91,25 @@ IAction::UpdateResult ActionAttack::update(Time time)
                                 )
             / Constants::TILE_SIZE;
 
-    if (distance > unit->data()->Combat.MaxRange + 0.1) {
+    if (distance > unit->data()->Combat.MaxRange) {
         if (!unit->data()->Speed) {
             DBG << "this unit can't move...";
             return IAction::UpdateResult::Failed;
         }
 
-//        if (targetUnit) {
-//            unit->prependAction(ActionMove::moveUnitTo(unit, targetUnit, m_task));
-//        } else {
-            const float angleToTarget = unit->position().angleTo(m_targetPosition);
-
-            float targetX = m_targetPosition.x + cos(angleToTarget + M_PI) * unit->data()->Combat.MaxRange * Constants::TILE_SIZE;// / 1.1;
-            float targetY = m_targetPosition.y + sin(angleToTarget + M_PI) * unit->data()->Combat.MaxRange * Constants::TILE_SIZE;// / 1.1;
-            unit->prependAction(ActionMove::moveUnitTo(unit, MapPos(targetX, targetY), m_task));
-//        }
-//        DBG << "Unit out of range at distance" << distance << unit->distanceTo(targetUnit) << " moving to" << targetX << targetY;
-
+        unit->prependAction(ActionMove::moveUnitTo(unit, targetUnit, m_task));
         return IAction::UpdateResult::NotUpdated;
     }
-    if (distance < unit->data()->Combat.MinRange) {
+    if (unit->data()->Combat.MinRange > 0 && distance < unit->data()->Combat.MinRange) {
         if (!unit->data()->Speed) {
             DBG << "this unit can't move...";
             return IAction::UpdateResult::Failed;
         }
 
         if (unit->findMatchingTask(genie::ActionType::RetreatToShootingRage, -1).data) {
-            const float angleToTarget = unit->position().angleTo(m_targetPosition);
-
-            float targetX = m_targetPosition.x + cos(angleToTarget + M_PI) * unit->data()->Combat.MinRange * Constants::TILE_SIZE * 1.1;
-            float targetY = m_targetPosition.y + sin(angleToTarget + M_PI) * unit->data()->Combat.MinRange * Constants::TILE_SIZE * 1.1;
-
-            unit->prependAction(ActionMove::moveUnitTo(unit, MapPos(targetX, targetY), m_task));
+            unit->prependAction(ActionMove::moveUnitTo(unit, targetUnit, m_task));
             return IAction::UpdateResult::NotUpdated;
         }
-
-        return IAction::UpdateResult::Failed;
     }
 
     if (timeSinceLastAttack < unit->data()->Combat.ReloadTime) {

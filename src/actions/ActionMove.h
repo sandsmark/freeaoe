@@ -68,7 +68,6 @@ private:
 
     MapPtr m_map;
     MapPos m_destination;
-    std::weak_ptr<Unit> m_targetUnit;
     std::vector<MapPos> m_path;
     std::vector<float> m_terrainMoveMultipliers;
     float m_speed;
@@ -79,5 +78,7 @@ private:
     bool m_passableDirty = false;
 
     std::thread m_pathfindingThread;
+    std::weak_ptr<Unit> m_targetUnit;
+    MapPos m_lastTargetUnitPosition;
 };
 

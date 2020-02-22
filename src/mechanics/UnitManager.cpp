@@ -318,8 +318,8 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
             rect.setFillColor(sf::Color::Transparent);
             rect.setOutlineColor(sf::Color::White);
             rect.setOutlineThickness(1);
-            rect.setSize(unit->rect().size());
-            rect.setPosition(camera->absoluteScreenPos(unit->position()) + unit->rect().topLeft());
+            rect.setSize(unit->clearanceSize());
+            rect.setPosition(camera->absoluteScreenPos(unit->position()));// + unit->rect().topLeft());
             m_outlineOverlay->draw(rect);
 #endif
 
@@ -392,7 +392,7 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
         unit->renderer().render(*renderTarget->renderTarget_, pos, RenderType::Base);
 
 
-#ifdef DEBUG
+#if defined(DEBUG)
         ActionPtr action = unit->currentAction();
         if (action && action->type == IAction::Type::Move) {
             std::shared_ptr<ActionMove> moveAction = std::static_pointer_cast<ActionMove>(action);
@@ -420,7 +420,7 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
         renderTarget->renderTarget_->draw(sprite, sf::BlendAdd);
     }
 
-#ifdef DEBUG
+#if defined(DEBUG)
     for (size_t i=0; i<ActionMove::testedPoints.size(); i++) {
         const MapPos &mpos = ActionMove::testedPoints[i];
         sf::CircleShape circle;
@@ -775,7 +775,7 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
             continue;
         }
         if (hasHumanPlayer && unit->playerId != humanPlayer->playerId) {
-            continue;
+            //continue;
         }
 
         newSelection.insert(unit);

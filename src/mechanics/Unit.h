@@ -187,7 +187,7 @@ struct Unit : public Entity
     {
         const double centreDistance = position().distance(pos);
         const Size size = clearanceSize();
-        const double clearance = util::hypot(size.width, size.height);//)//, std::max(otherSize.width, otherSize.height));
+        const double clearance = std::max(size.width, size.height);//)//, std::max(otherSize.width, otherSize.height));
         return centreDistance - clearance;
     }
 
@@ -198,7 +198,7 @@ struct Unit : public Entity
         const double centreDistance = position().distance(otherUnit->position());
         const Size otherSize = otherUnit->clearanceSize();
         const Size size = clearanceSize();
-        const double clearance = std::max(std::max(size.width, size.height), std::max(otherSize.width, otherSize.height));
+        const double clearance = std::max(size.width, size.height) + std::max(otherSize.width, otherSize.height);
         return centreDistance - clearance;
     }
 
