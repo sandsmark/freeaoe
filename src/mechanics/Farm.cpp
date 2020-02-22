@@ -97,10 +97,15 @@ void Farm::setTerrain(const Farm::TerrainTypes terrainToSet) noexcept
     const int tileY = position().y / Constants::TILE_SIZE;
     float width = data()->Size.x;
     float height = data()->Size.y;
+    bool gotError = false;
     for (int x = -width; x < width; x++) {
         for (int y = -height; y < height; y++) {
-            map->updateTileAt(tileX + x, tileY + y, terrainToSet);
+            gotError = !map->updateTileAt(tileX + x, tileY + y, terrainToSet) || gotError;
         }
+    }
+
+    if (gotError) {
+        WARN << "Farm" << debugName << "size extends out of map from" << (tileX - width) << (tileY - width) << "to" << (tileX + width) << (tileY + width);
     }
 
     m_currentTerrain = terrainToSet;

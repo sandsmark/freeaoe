@@ -238,13 +238,12 @@ void Map::setTileAt(unsigned col, unsigned row, unsigned id) noexcept
     m_updated = true;
 }
 
-void Map::updateTileAt(const int col, const int row, unsigned id) noexcept
+bool Map::updateTileAt(const int col, const int row, unsigned id) noexcept
 {
     unsigned int index = row * cols_ + col;
 
     if (index >= tiles_.size()) {
-        WARN << "Trying to get MapTile out of range!";
-        return;
+        return false;
     }
 
     tiles_[index].terrainId = id;
@@ -267,6 +266,8 @@ void Map::updateTileAt(const int col, const int row, unsigned id) noexcept
     }
 
     m_updated = true;
+
+    return true;
 }
 
 void Map::removeEntityAt(unsigned int col, unsigned int row, const int entityId) noexcept
@@ -331,10 +332,15 @@ void Map::addEntityAt(int col, int row, const EntityPtr &entity) noexcept
 
     const int width = unit->data()->Size.x;
     const int height = unit->data()->Size.y;
+    bool gotError = false;
     for (int x = 0; x < width*2; x++) {
         for (int y = 0; y < height*2; y++) {
-            updateTileAt(col + x - width, row + y - width, newTerrain);
+            gotError = !updateTileAt(col + x - width, row + y - width, newTerrain) || gotError;
         }
+    }
+
+    if (gotError) {
+        WARN << "Unit" << unit->debugName << "size extends out of map from" << (col - width) << (row - width) << "to" << (col + width) << (row + width);
     }
 
     for (int col_ = std::max(col - 1, 0); col_ < std::min(col + width + 2, cols_); col_++) {

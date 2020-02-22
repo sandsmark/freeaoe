@@ -104,7 +104,7 @@ public:
     }
 
     void setTileAt(unsigned col, unsigned row, unsigned id) noexcept;
-    void updateTileAt(const int col, const int row, unsigned id) noexcept;
+    bool updateTileAt(const int col, const int row, unsigned id) noexcept;
 
     void removeEntityAt(unsigned int col, unsigned int row, const int entityId) noexcept;
     void addEntityAt(int col, int row, const EntityPtr &entity) noexcept;
