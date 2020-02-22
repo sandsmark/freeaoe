@@ -112,12 +112,16 @@ else()
     endif()
 
     add_definitions(-Wall -Wextra -pedantic -Wno-sign-compare -Wno-unused-parameter)
-    set(EXTRA_LIBS stdc++fs pthread dl)
+    set(EXTRA_LIBS pthread dl)
 
     # Somehow need this because otherwise the SFML config gets fucked
     find_package(ZLIB)
 
     find_package(SFML COMPONENTS system window graphics REQUIRED)
+endif()
+
+if(NOT APPLE)
+    set(EXTRA_LIBS ${EXTRA_LIBS} stdc++fs)
 endif()
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
