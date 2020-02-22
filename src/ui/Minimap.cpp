@@ -223,6 +223,7 @@ bool Minimap::update(Time /*time*/)
         background.pointCount = 4;
         background.fillColor = Drawable::Black;
         background.filled = true;
+        background.borderSize = 0;
         m_terrainTexture->draw(background);
 
         Drawable::Circle tileShape;
@@ -230,6 +231,7 @@ bool Minimap::update(Time /*time*/)
         tileShape.radius = scaleY;
         tileShape.filled = true;
         tileShape.pointCount = 4;
+        tileShape.borderSize = 0;
         const ScreenPos center(m_rect.width/2, m_rect.height/2);
 
         const std::vector<genie::Color> &colors = AssetManager::Inst()->getPalette(50500).getColors();
@@ -282,9 +284,11 @@ bool Minimap::update(Time /*time*/)
         diamondSprite.radius = scaleY;
         diamondSprite.aspectRatio = m_rect.height / m_rect.width;
         diamondSprite.filled = true;
+        diamondSprite.borderSize = 0;
 
         Drawable::Rect rectangleSprite;
         rectangleSprite.filled = true;
+        rectangleSprite.borderSize = 0;
 
         const std::vector<genie::Color> &colors = AssetManager::Inst()->getPalette(50500).getColors();
 

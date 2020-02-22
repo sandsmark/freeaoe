@@ -213,8 +213,8 @@ void SfmlRenderTarget::draw(const Drawable::Rect &rect)
 
     if (rect.borderSize > 0) {
         shape.setOutlineColor(convertColor(rect.borderColor));
-        shape.setOutlineThickness(rect.borderSize);
     }
+    shape.setOutlineThickness(rect.borderSize);
 
     if (rect.filled) {
         shape.setFillColor(convertColor(rect.fillColor));
@@ -232,8 +232,8 @@ void SfmlRenderTarget::draw(const Drawable::Circle &circle)
 
     if (circle.borderSize > 0) {
         shape.setOutlineColor(convertColor(circle.borderColor));
-        shape.setOutlineThickness(circle.borderSize);
     }
+    shape.setOutlineThickness(circle.borderSize);
 
     if (circle.filled) {
         shape.setFillColor(convertColor(circle.fillColor));
