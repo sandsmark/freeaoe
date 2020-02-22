@@ -120,10 +120,6 @@ else()
     find_package(SFML COMPONENTS system window graphics REQUIRED)
 endif()
 
-if(NOT APPLE)
-    set(EXTRA_LIBS ${EXTRA_LIBS} stdc++fs)
-endif()
-
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     add_definitions(-Wno-nested-anon-types)
 endif()
