@@ -102,7 +102,8 @@ void BasicGameSample::addHumanUnits()
     unit = UnitFactory::Inst().createUnit(Unit::Archer, m_humanPlayer, *unitManager_);
     unitManager_->add(unit, MapPos(48*15, 48*15, 0));
 
-    unit = UnitFactory::Inst().createUnit(Unit::ArcheryRange, MapPos(48 * 10, 48 * 5, 0), m_humanPlayer, *unitManager_);
+    unit = UnitFactory::Inst().createUnit(Unit::ArcheryRange, m_humanPlayer, *unitManager_);
+    unitManager_->add(unit, MapPos(48 * 10, 48 * 5, 0));
 
 //    unit = UnitFactory::Inst().createUnit(827, MapPos(48*10, 48*9, 0), m_humanPlayer, *unitManager_);
 //    unitManager_->add(unit);
