@@ -713,8 +713,6 @@ void Unit::updateGraphic()
         if (m_currentAction->unitState() == IAction::UnitState::Attacking) {
             graphic = AssetManager::Inst()->getGraphic(data()->Combat.AttackGraphic);
             graphic->setRunOnce(true);
-        } else {
-            graphic = defaultGraphics;
         }
         break;
     default:
