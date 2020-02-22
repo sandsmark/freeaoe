@@ -96,23 +96,25 @@ void BasicGameSample::addHumanUnits()
     unit = UnitFactory::Inst().createUnit(Unit::MaleBuilder, m_humanPlayer, *unitManager_);
     unitManager_->add(unit, MapPos(48*2, 48*12, 0));
 
-//    unit = UnitFactory::Inst().createUnit(280, MapPos(48*11, 48*10, 0), m_humanPlayer, *unitManager_);
-//    unitManager_->add(unit);
+    // mangonel
+//    unit = UnitFactory::Inst().createUnit(280, m_humanPlayer, *unitManager_);
+//    unitManager_->add(unit, MapPos(48*9, 48*8, 0));
 
-//    unit = UnitFactory::Inst().createUnit(279, MapPos(48*13, 48*11, 0), m_humanPlayer, *unitManager_);
-//    unitManager_->add(unit);
+    // scorpion
+//    unit = UnitFactory::Inst().createUnit(279, m_humanPlayer, *unitManager_);
+//    unitManager_->add(unit, MapPos(48*13, 48*11, 0));
 
     unit = UnitFactory::Inst().createUnit(Unit::Archer, m_humanPlayer, *unitManager_);
     unitManager_->add(unit, MapPos(48*15, 48*15, 0));
 
-    unit = UnitFactory::Inst().createUnit(Unit::ArcheryRange, m_humanPlayer, *unitManager_);
-    unitManager_->add(unit, MapPos(48 * 10, 48 * 5, 0));
+//    unit = UnitFactory::Inst().createUnit(Unit::ArcheryRange, m_humanPlayer, *unitManager_);
+//    unitManager_->add(unit, MapPos(48 * 10, 48 * 5, 0));
 
 //    unit = UnitFactory::Inst().createUnit(827, MapPos(48*10, 48*9, 0), m_humanPlayer, *unitManager_);
 //    unitManager_->add(unit);
 
-    unit = UnitFactory::Inst().createUnit(74, m_humanPlayer, *unitManager_);
-    unitManager_->add(unit, MapPos(48*8, 48*10, 0));
+//    unit = UnitFactory::Inst().createUnit(74, m_humanPlayer, *unitManager_);
+//    unitManager_->add(unit, MapPos(48*8, 48*10, 0));
 }
 
 void BasicGameSample::addEnemyUnits()
