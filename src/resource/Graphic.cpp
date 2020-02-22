@@ -50,8 +50,8 @@ Graphic::Graphic(const genie::Graphic &data, const int id) :
     m_runOnce(data.SequenceType & genie::Graphic::SequenceOnce)
 {
 
-    if (data.SLP < 0) {
-        WARN << data.Name << "doesn't have a SLP id" << data.ID << data.Deltas.size();
+    if (data.SLP < 0 && data.Deltas.empty()) {
+        WARN << data.Name << data.ID  << "doesn't have a SLP and no deltas";
         return;
     }
 
