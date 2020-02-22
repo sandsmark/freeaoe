@@ -97,7 +97,14 @@ bool Missile::update(Time time) noexcept
     }
 
     if (m_previousUpdateTime == 0) {
-        m_distanceLeft = position().distance(m_targetPosition);
+        Unit::Ptr sourceUnit = m_sourceUnit.lock();
+        if (!sourceUnit) {
+            WARN << "Source unit gone before we could start";
+            die();
+            return false;
+        }
+
+        m_distanceLeft = std::min(position().distance(m_targetPosition), sourceUnit->data()->Combat.MaxRange * Constants::TILE_SIZE);;
         m_angle = std::atan2(m_targetPosition.y - position().y, m_targetPosition.x - position().x);
         float flightTime = m_distanceLeft / m_data.Speed;
         float timeToApex = flightTime / 2;
