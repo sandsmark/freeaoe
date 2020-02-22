@@ -1,11 +1,6 @@
 project(resgen)
 add_executable(resgen main.cpp)
 
-if(NOT MSVC)
-    target_link_libraries(resgen stdc++fs)
-endif()
-
-
 function(add_resource generated_source)
     set(resource_file "${CMAKE_CURRENT_SOURCE_DIR}/${ARGV1}")
     set(outfile "${PROJECT_BINARY_DIR}/${ARGV1}")
