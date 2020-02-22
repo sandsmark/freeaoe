@@ -80,12 +80,13 @@ void Entity::setMap(const MapPtr &newMap) noexcept
     MapPtr oldMap = m_map.lock();
     if (oldMap) {
         oldMap->removeEntityAt(tileX, tileY, id);
+
+        if (newMap) { // todo assume we have a valid position
+            newMap->addEntityAt(tileX, tileY, shared_from_this());
+        }
     }
 
     m_map = newMap;
-    if (newMap) {
-        newMap->addEntityAt(tileX, tileY, shared_from_this());
-    }
 }
 
 MapPtr Entity::map() const noexcept

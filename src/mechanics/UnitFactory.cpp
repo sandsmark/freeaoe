@@ -200,9 +200,9 @@ DecayingEntity::Ptr UnitFactory::createCorpseFor(const Unit::Ptr &unit)
     }
     DecayingEntity::Ptr corpse = std::make_shared<DecayingEntity>(corpseData.StandingGraphic.first, decayTime);
     corpse->renderer().setPlayerColor(owner->playerColor);
+    corpse->setMap(unit->map());
     corpse->setPosition(unit->position());
     corpse->renderer().setAngle(unit->angle());
-    corpse->setMap(unit->map());
 
     return corpse;
 
