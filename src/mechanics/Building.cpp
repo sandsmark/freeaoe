@@ -316,8 +316,8 @@ void Building::finalizeUnit() noexcept
     waypoint.x = position().x + 24;
     waypoint.y = position().y + 24;
 
-    Unit::Ptr unit = UnitFactory::Inst().createUnit(m_currentProduct->unit->ID, waypoint, owner, m_unitManager);
-    m_unitManager.add(unit);
+    Unit::Ptr unit = UnitFactory::Inst().createUnit(m_currentProduct->unit->ID, owner, m_unitManager);
+    m_unitManager.add(unit, waypoint);
 
     Player::Ptr player = unit->player.lock();
     if (player) {

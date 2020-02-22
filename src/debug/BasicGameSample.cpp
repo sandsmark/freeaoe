@@ -64,16 +64,16 @@ Player::Ptr BasicGameSample::getEnemyPlayer()
 
 void BasicGameSample::addHumanTownCenter()
 {
-    Unit::Ptr unit = UnitFactory::Inst().createUnit(Unit::TownCenter, MapPos(48*2, 48*2, 0), m_humanPlayer, *unitManager_);
-    unitManager_->add(unit);
+    Unit::Ptr unit = UnitFactory::Inst().createUnit(Unit::TownCenter, m_humanPlayer, *unitManager_);
+    unitManager_->add(unit, MapPos(48*2, 48*2, 0));
 }
 
 void BasicGameSample::addHumanWalls()
 {
     Unit::Ptr unit;
     std::function<void(int, int, float)> addWall = [&](int x, int y, float angle) {
-        unit = UnitFactory::Inst().createUnit(Unit::StoneWall, MapPos(48*x, 48*y, 0), m_humanPlayer, *unitManager_);
-        unitManager_->add(unit);
+        unit = UnitFactory::Inst().createUnit(Unit::StoneWall, m_humanPlayer, *unitManager_);
+        unitManager_->add(unit, MapPos(48*x, 48*y, 0));
         unit->setAngle(angle);
     };
 
@@ -90,8 +90,8 @@ void BasicGameSample::addHumanUnits()
 {
     Unit::Ptr unit;
 
-    unit = UnitFactory::Inst().createUnit(Unit::MaleBuilder, MapPos(48*2, 48*12, 0), m_humanPlayer, *unitManager_);
-    unitManager_->add(unit);
+    unit = UnitFactory::Inst().createUnit(Unit::MaleBuilder, m_humanPlayer, *unitManager_);
+    unitManager_->add(unit, MapPos(48*2, 48*12, 0));
 
 //    unit = UnitFactory::Inst().createUnit(280, MapPos(48*11, 48*10, 0), m_humanPlayer, *unitManager_);
 //    unitManager_->add(unit);
@@ -99,30 +99,30 @@ void BasicGameSample::addHumanUnits()
 //    unit = UnitFactory::Inst().createUnit(279, MapPos(48*13, 48*11, 0), m_humanPlayer, *unitManager_);
 //    unitManager_->add(unit);
 
-    unit = UnitFactory::Inst().createUnit(Unit::Archer, MapPos(48*15, 48*15, 0), m_humanPlayer, *unitManager_);
-    unitManager_->add(unit);
+    unit = UnitFactory::Inst().createUnit(Unit::Archer, m_humanPlayer, *unitManager_);
+    unitManager_->add(unit, MapPos(48*15, 48*15, 0));
 
     unit = UnitFactory::Inst().createUnit(Unit::ArcheryRange, MapPos(48 * 10, 48 * 5, 0), m_humanPlayer, *unitManager_);
 
 //    unit = UnitFactory::Inst().createUnit(827, MapPos(48*10, 48*9, 0), m_humanPlayer, *unitManager_);
 //    unitManager_->add(unit);
 
-    unit = UnitFactory::Inst().createUnit(74, MapPos(48*8, 48*9, 0), m_humanPlayer, *unitManager_);
-    unitManager_->add(unit);
+    unit = UnitFactory::Inst().createUnit(74, m_humanPlayer, *unitManager_);
+    unitManager_->add(unit, MapPos(48*8, 48*10, 0));
 }
 
 void BasicGameSample::addEnemyUnits()
 {
-    Unit::Ptr unit = UnitFactory::Inst().createUnit(74, MapPos(48*8, 48*8, 0), m_enemyPlayer, *unitManager_);
-    unitManager_->add(unit);
+    Unit::Ptr unit = UnitFactory::Inst().createUnit(74, m_enemyPlayer, *unitManager_);
+    unitManager_->add(unit, MapPos(48*8, 48*8, 0));
 }
 
 void BasicGameSample::addGaia()
 {
-    Unit::Ptr unit = UnitFactory::Inst().createUnit(399, MapPos(48 * 2, 48*19, 0), m_gaiaPlayer, *unitManager_); // tree
+    Unit::Ptr unit = UnitFactory::Inst().createUnit(399, m_gaiaPlayer, *unitManager_); // tree
     m_humanPlayer->visibility->setExplored(1, 18);
     m_humanPlayer->visibility->setExplored(2, 18);
     m_humanPlayer->visibility->setExplored(1, 19);
     m_humanPlayer->visibility->setExplored(2, 19);
-    unitManager_->add(unit);
+    unitManager_->add(unit, MapPos(48 * 2, 48*19, 0));
 }

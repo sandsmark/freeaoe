@@ -107,7 +107,7 @@ public:
     UnitManager();
     virtual ~UnitManager();
 
-    void add(const Unit::Ptr &unit);
+    void add(const Unit::Ptr &unit, const MapPos &position);
     void remove(const Unit::Ptr &unit);
 
     bool init();

@@ -37,7 +37,7 @@ public:
     static UnitFactory &Inst();
 
     std::shared_ptr<Unit> duplicateUnit(const std::shared_ptr<Unit> &other);
-    std::shared_ptr<Unit> createUnit(const int ID, const MapPos &position, const std::shared_ptr<Player> &owner, UnitManager &unitManager);
+    std::shared_ptr<Unit> createUnit(const int ID, const std::shared_ptr<Player> &owner, UnitManager &unitManager);
     std::shared_ptr<DecayingEntity> createCorpseFor(const std::shared_ptr<Unit> &unit);
 
 private:

@@ -558,6 +558,8 @@ void Unit::setPosition(const MapPos &pos, const bool initial) noexcept
         forEachVisibleTile([&](const int tileX, const int tileY) {
             owner->visibility->addUnitLookingAt(tileX, tileY);
         });
+    } else {
+        WARN << "No player set!";
     }
 
     for (Annex &annex : annexes) {

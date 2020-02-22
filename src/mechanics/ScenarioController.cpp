@@ -369,9 +369,9 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
             break;
         }
         MapPos location(effect.location.y * Constants::TILE_SIZE, effect.location.x * Constants::TILE_SIZE);
-        Unit::Ptr unit = UnitFactory::Inst().createUnit(effect.object, location, player, *m_gameState->unitManager());
+        Unit::Ptr unit = UnitFactory::Inst().createUnit(effect.object, player, *m_gameState->unitManager());
         DBG << "Created" << unit->debugName;
-        m_gameState->unitManager()->add(unit);
+        m_gameState->unitManager()->add(unit, location);
         break;
     }
     case genie::TriggerEffect::RemoveObject: {

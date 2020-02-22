@@ -66,13 +66,14 @@ UnitManager::~UnitManager()
 {
 }
 
-void UnitManager::add(const Unit::Ptr &unit)
+void UnitManager::add(const Unit::Ptr &unit, const MapPos &position)
 {
     if (IS_UNLIKELY(!unit)) {
         WARN << "trying to add null unit";
         return;
     }
     unit->setMap(m_map);
+    unit->setPosition(position, true);
     m_units.push_back(unit);
     if (unit->hasAutoTargets()) {
         m_unitsWithActions.insert(unit);
@@ -992,7 +993,7 @@ void UnitManager::placeBuilding(const UnplacedBuilding &building)
         return;
     }
 
-    Unit::Ptr unit = UnitFactory::Inst().createUnit(building.unitID, building.position, m_humanPlayer.lock(), *this);
+    Unit::Ptr unit = UnitFactory::Inst().createUnit(building.unitID, m_humanPlayer.lock(), *this);
     Building::Ptr buildingToPlace = Unit::asBuilding(unit);
 
     DBG << "placing bulding";
@@ -1008,7 +1009,7 @@ void UnitManager::placeBuilding(const UnplacedBuilding &building)
     }
 
     buildingToPlace->isVisible = true;
-    add(buildingToPlace);
+    add(buildingToPlace, building.position);
     buildingToPlace->setCreationProgress(0);
     DBG << building.orientation;
     unit->setAngle(building.graphic->graphic()->orientationToAngle(building.orientation));

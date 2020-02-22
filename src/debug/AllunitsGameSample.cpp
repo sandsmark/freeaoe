@@ -62,8 +62,8 @@ std::shared_ptr<Player> AllunitsGameSample::getEnemyPlayer()
 
 void AllunitsGameSample::addHumanTownCenter()
 {
-    Unit::Ptr unit = UnitFactory::Inst().createUnit(Unit::TownCenter, MapPos(48*2, 48*2, 0), m_humanPlayer, *unitManager_);
-    unitManager_->add(unit);
+    Unit::Ptr unit = UnitFactory::Inst().createUnit(Unit::TownCenter, m_humanPlayer, *unitManager_);
+    unitManager_->add(unit, MapPos(48*2, 48*2, 0));
 }
 
 void AllunitsGameSample::addHumanUnits()
@@ -85,8 +85,8 @@ void AllunitsGameSample::addHumanUnits()
         int y = (pos / 5) * dy + baseY;
 
         WARN << "::::: createUnit" << unitID;
-        Unit::Ptr unit = UnitFactory::Inst().createUnit(unitID, MapPos(x, y, 0), m_humanPlayer, *unitManager_);
-        unitManager_->add(unit);
+        Unit::Ptr unit = UnitFactory::Inst().createUnit(unitID, m_humanPlayer, *unitManager_);
+        unitManager_->add(unit, MapPos(x, y, 0));
 
         pos++;
     }
@@ -96,17 +96,17 @@ void AllunitsGameSample::addEnemyUnits()
 {
     Unit::Ptr unit;
 
-    unit = UnitFactory::Inst().createUnit(74, MapPos(48*12, 48*20, 0), m_enemyPlayer, *unitManager_);
-    unitManager_->add(unit);
-    unit = UnitFactory::Inst().createUnit(74, MapPos(48*11, 48*20, 0), m_enemyPlayer, *unitManager_);
-    unitManager_->add(unit);
+    unit = UnitFactory::Inst().createUnit(74, m_enemyPlayer, *unitManager_);
+    unitManager_->add(unit, MapPos(48*12, 48*20, 0));
+    unit = UnitFactory::Inst().createUnit(74, m_enemyPlayer, *unitManager_);
+    unitManager_->add(unit, MapPos(48*11, 48*20, 0));
 
-    unit = UnitFactory::Inst().createUnit(358, MapPos(48*9, 48*20, 0), m_enemyPlayer, *unitManager_);
-    unitManager_->add(unit);
+    unit = UnitFactory::Inst().createUnit(358, m_enemyPlayer, *unitManager_);
+    unitManager_->add(unit, MapPos(48*9, 48*20, 0));
 }
 
 void AllunitsGameSample::addEnemyBuildings()
 {
-    Unit::Ptr unit = UnitFactory::Inst().createUnit(Unit::Dock, MapPos(48*15, 48*20, 0), m_enemyPlayer, *unitManager_);
-    unitManager_->add(unit);
+    Unit::Ptr unit = UnitFactory::Inst().createUnit(Unit::Dock, m_enemyPlayer, *unitManager_);
+    unitManager_->add(unit, MapPos(48*15, 48*20, 0));
 }

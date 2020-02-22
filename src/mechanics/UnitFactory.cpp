@@ -63,7 +63,7 @@ Unit::Ptr UnitFactory::duplicateUnit(const Unit::Ptr &other)
         return nullptr;
     }
 
-    return createUnit(other->data()->ID, other->position(), owner, other->unitManager());
+    return createUnit(other->data()->ID, owner, other->unitManager());
 }
 
 void UnitFactory::handleDefaultAction(const Unit::Ptr &unit, const genie::Task &task)
@@ -95,7 +95,7 @@ void UnitFactory::handleDefaultAction(const Unit::Ptr &unit, const genie::Task &
 
 }
 
-Unit::Ptr UnitFactory::createUnit(const int ID, const MapPos &position, const Player::Ptr &owner, UnitManager &unitManager)
+Unit::Ptr UnitFactory::createUnit(const int ID, const Player::Ptr &owner, UnitManager &unitManager)
 {
     const genie::Unit &gunit = owner->civilization.unitData(ID);
     owner->applyResearch(gunit.Building.TechID);
@@ -150,8 +150,6 @@ Unit::Ptr UnitFactory::createUnit(const int ID, const MapPos &position, const Pl
             std::reverse(unit->annexes.begin(), unit->annexes.end());
         }
     }
-
-    unit->setPosition(position, true);
 
     const std::vector<genie::Task>  &taskList = DataManager::Inst().getTasks(ID);
     if (gunit.Action.DefaultTaskID >= 0 && gunit.Action.DefaultTaskID < taskList.size()) {
