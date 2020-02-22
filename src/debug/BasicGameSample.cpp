@@ -36,8 +36,11 @@ void BasicGameSample::setupMap()
 void BasicGameSample::setupActors(const ResourceMap &startingResources)
 {
     m_gaiaPlayer = std::make_shared<Player>(UnitManager::GaiaID, 0, startingResources);
+    m_gaiaPlayer->playerColor = -1;
     m_humanPlayer = std::make_shared<Player>(1, 1, startingResources);
+    m_humanPlayer->playerColor = 0;
     m_enemyPlayer = std::make_shared<Player>(2, 2, startingResources);
+    m_enemyPlayer->playerColor = 1;
 
     addHumanTownCenter();
     addHumanWalls();
