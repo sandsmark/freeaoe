@@ -476,6 +476,13 @@ std::unordered_set<Task> Unit::availableActions() noexcept
 {
     std::unordered_set<Task> tasks;
     for (const genie::Task &task : DataManager::Inst().getTasks(m_data->ID)) {
+
+        // TODO: some units (archery range) have a combat task, but no attacks
+        // Could be if it needs garrisoned units?
+        if (task.ActionType == genie::ActionType::Combat && m_data->Combat.Attacks.empty()) {
+            continue;
+        }
+
         tasks.insert(Task(task, m_data->ID));
     }
 
@@ -491,6 +498,9 @@ std::unordered_set<Task> Unit::availableActions() noexcept
 
     for (const genie::Unit *swappable : owner->civilization.swappableUnits(m_data->Action.TaskSwapGroup)) {
         for (const genie::Task &task : DataManager::Inst().getTasks(swappable->ID)) {
+            if (task.ActionType == genie::ActionType::Combat && m_data->Combat.Attacks.empty()) {
+                continue;
+            }
             tasks.insert(Task(task, swappable->ID));
         }
     }
