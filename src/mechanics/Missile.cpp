@@ -91,7 +91,7 @@ bool Missile::update(Time time) noexcept
     Player::Ptr player = m_player.lock();
 
     if (position().z <= map->elevationAt(position())) {
-        DBG << "we hit the ground";
+        DBG << "we hit the ground, we're at" << position().z << "ground at" << map->elevationAt(position());
         die();
         return false;
     }
@@ -141,6 +141,12 @@ bool Missile::update(Time time) noexcept
             m_unitManager.addDecayingEntity(trailingUnit);
         }
 
+    }
+    if (movement != 0.f && m_zVelocity != 0.f) {
+        const int nextFrame = std::round((0.5 + m_zVelocity / movement) * m_renderer->frameCount());
+        m_renderer->setCurrentFrame(std::clamp(nextFrame, 0, m_renderer->frameCount()));
+    } else {
+        m_renderer->setCurrentFrame(0);
     }
 
     m_renderer->setAngle(position().toScreen().angleTo(newPos.toScreen()));
