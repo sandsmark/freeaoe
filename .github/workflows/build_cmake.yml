@@ -27,6 +27,12 @@ jobs:
       # We'll use this as our working directory for all subsequent commands
       run: brew install sfml
 
+    - name: fetch submodules
+      # Use a bash shell so we can use the same syntax for environment variable
+      # access regardless of the host operating system
+      shell: bash
+      run: git submodule update --init --recursive
+
     - name: Configure CMake
       # Use a bash shell so we can use the same syntax for environment variable
       # access regardless of the host operating system
