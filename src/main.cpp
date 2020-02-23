@@ -75,6 +75,7 @@ int main(int argc, char **argv) try
             }
             DBG << "Loaded game data";
 
+            AssetManager::create(DataManager::Inst().isHd());
             if (!AssetManager::Inst()->initialize(dataPath, DataManager::Inst().gameVersion())) {
                 throw std::runtime_error("Failed to load game assets");
             }

@@ -51,35 +51,31 @@ template<int EdgeCount> class EdgeFile;
 struct VisibilityMask;
 }
 
+// genie
+using DrsFilePtr = std::shared_ptr<genie::DrsFile>;
+using DrsFileVector = std::vector<DrsFilePtr>;
+using SlpFilePtr = std::shared_ptr<genie::SlpFile>;
+using PatternMasksFilePtr = std::shared_ptr<genie::PatternMasksFile>;
+using FiltermapFilePtr = std::shared_ptr<genie::FiltermapFile>;
+using ScnFilePtr = std::shared_ptr<genie::ScnFile>;
+using SlpTemplateFilePtr = std::shared_ptr<genie::SlpTemplateFile>;
+using BlendomaticFilePtr = std::shared_ptr<genie::BlendomaticFile>;
+using TileEdgeFile = genie::EdgeFile<94>;
+using TileEdgeFilePtr = std::shared_ptr<TileEdgeFile>;
+using BlkEdgeFile = genie::EdgeFile<47>;
+using BlkEdgeFilePtr = std::shared_ptr<BlkEdgeFile>;
+
+// ours
+using GraphicPtr = std::shared_ptr<Graphic>;
+using GraphicMap = std::unordered_map<uint32_t, GraphicPtr>;
+using TerrainPtr = std::shared_ptr<TerrainSprite>;
+using TerrainMap = std::unordered_map<uint32_t, TerrainPtr>;
+
 //------------------------------------------------------------------------------
 /// The resource manager is the primary interface for getting recourses. At
 //
 class AssetManager
 {
-    // genie
-    using DrsFilePtr = std::shared_ptr<genie::DrsFile>;
-    using DrsFileVector = std::vector<DrsFilePtr>;
-    using SlpFilePtr = std::shared_ptr<genie::SlpFile>;
-    using PatternMasksFilePtr = std::shared_ptr<genie::PatternMasksFile>;
-    using FiltermapFilePtr = std::shared_ptr<genie::FiltermapFile>;
-    using ScnFilePtr = std::shared_ptr<genie::ScnFile>;
-    using SlpTemplateFilePtr = std::shared_ptr<genie::SlpTemplateFile>;
-    using BlendomaticFilePtr = std::shared_ptr<genie::BlendomaticFile>;
-    using TileEdgeFile = genie::EdgeFile<94>;
-    using TileEdgeFilePtr = std::shared_ptr<TileEdgeFile>;
-    using BlkEdgeFile = genie::EdgeFile<47>;
-    using BlkEdgeFilePtr = std::shared_ptr<BlkEdgeFile>;
-
-    // ours
-    using GraphicPtr = std::shared_ptr<Graphic>;
-    using GraphicMap = std::unordered_map<uint32_t, GraphicPtr>;
-    using TerrainPtr = std::shared_ptr<TerrainSprite>;
-    using TerrainMap = std::unordered_map<uint32_t, TerrainPtr>;
-
-private:
-    AssetManager() = default;
-    virtual ~AssetManager() = default;
-
 public:
     enum UiResolution {
         Ui800x600 = 51100,
@@ -119,7 +115,7 @@ public:
 
     static std::string uiFilename(const UiResolution resolution, const UiCiv civ);
 
-    AssetManager(const AssetManager &) = delete;
+    AssetManager(const AssetManager &) = default;
     AssetManager &operator=(const AssetManager &) = delete;
 
     //----------------------------------------------------------------------------
@@ -127,7 +123,8 @@ public:
     /// calling inst the first time the manager will load header information from
     /// drs and other files.
     //
-    static AssetManager *Inst();
+    static void create(const bool isHd);
+    static const std::unique_ptr<AssetManager> &Inst();
 
     //----------------------------------------------------------------------------
     /// Returns the slp file with given id or 0 if not found. The slp file
@@ -136,14 +133,14 @@ public:
     /// @param id id of the slp file
     /// @return slp file
     //
-    SlpFilePtr getSlp(uint32_t id, const ResourceType type = ResourceType::Undefined);
-    SlpFilePtr getSlp(const std::string &name, const ResourceType type = ResourceType::Undefined);
+    virtual SlpFilePtr getSlp(uint32_t id, const ResourceType type = ResourceType::Undefined);
+    virtual SlpFilePtr getSlp(const std::string &name, const ResourceType type = ResourceType::Undefined);
 
-    SlpFilePtr getUiOverlay(const UiResolution res, const UiCiv civ);
+    virtual SlpFilePtr getUiOverlay(const UiResolution res, const UiCiv civ);
 
     ScnFilePtr getScn(uint32_t id);
 
-    std::shared_ptr<genie::UIFile> getUIFile(const std::string &name);
+    virtual std::shared_ptr<genie::UIFile> getUIFile(const std::string &name);
 
     std::shared_ptr<uint8_t[]> getWavPtr(uint32_t id);
 
@@ -168,14 +165,14 @@ public:
     const TerrainPtr &getTerrain(uint32_t id);
 
     const genie::PalFile &getPalette(const std::string &name);
-    const genie::PalFile &getPalette(uint32_t id = 50500);
+    virtual const genie::PalFile &getPalette(uint32_t id = 50500);
 
     const genie::BlendMode &getBlendmode(uint32_t id = 0);
 
     const genie::VisibilityMask &unexploredVisibilityMask(const genie::Slope slope, int edges) const;
     const genie::VisibilityMask &exploredVisibilityMask(const genie::Slope slope, int edges) const;
 
-    bool initialize(const std::string &gamePath, const genie::GameVersion gameVersion);
+    virtual bool initialize(const std::string &gamePath, const genie::GameVersion gameVersion);
 
     static int filenameID(const std::string &filename);
 
@@ -183,13 +180,21 @@ public:
 
     static std::string findFile(const std::string &filename, const std::string &folder);
 
-    const std::string &assetsPath() const;
+    virtual const std::string &assetsPath() const;
 
-     bool missingData() const;
+    virtual bool missingData() const;
+
+protected:
+    friend class std::default_delete<AssetManager>;
+    friend std::unique_ptr<AssetManager> std::make_unique<AssetManager>();
+    AssetManager() = default;
+    virtual ~AssetManager() = default;
+
+    virtual std::string blendomaticFilename() const { return "blendomatic.dat"; }
+
+    bool initializeInternal(const std::string &gamePath, const genie::GameVersion gameVersion);
 
 private:
-    std::string findHdFile(const std::string &filename) const;
-
     DrsFileVector loadDrs(const std::vector<std::string> &filenames);
     DrsFilePtr loadDrs(const std::string &filename);
 
@@ -199,8 +204,6 @@ private:
     DrsFilePtr m_interfaceFile;
     DrsFilePtr m_graphicsFile;
     DrsFilePtr m_terrainFile;
-
-    std::unordered_map<int, std::unique_ptr<genie::PalFile>> m_hdPalFiles;
 
     DrsFileVector m_allFiles;
 
@@ -225,10 +228,6 @@ private:
     std::string m_dataPath;
     std::unordered_set<uint32_t> m_nonExistentSlps;
 
-    std::unordered_map<std::string, std::string> m_hdFilePaths;
-
-    // TODO don't duplicate with datamanager, but I'm lazy
-    bool m_isHd = false;
-    std::string m_hdAssetPath;
+    static std::unique_ptr<AssetManager> m_instance;
 };
 
