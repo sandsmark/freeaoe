@@ -83,7 +83,6 @@ TODO (this is probably going to get outdated)
  - Patrolling.
  - Garrisoning.
  - Campaign cinematics (mainly just parse the .mm files).
- - Streaming sound (music, scenario voices, etc.).
  - Random map RMS script parsing and generating.
  - Performance (especially the path finding).
  - Various refactoring (move VisibilityMap out into separate file, rendering of units out from UnitManager, etc.)
@@ -166,6 +165,7 @@ Compared to other reimplementations as much as possible is fetched from the data
     * Sound when dying.
     * Sound when training units.
     * Positional.
+    * Streaming sound (scenario voices, music, etc.).
  * Civilizations:
     * Starting resources.
     * Different UI interface graphics.
