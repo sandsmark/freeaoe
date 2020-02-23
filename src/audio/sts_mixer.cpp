@@ -195,15 +195,16 @@ void sts_mixer_mix_audio(sts_mixer_t* mixer, void* output, unsigned int samples)
         if (position >= voice->stream->sample.length) {
           // buffer empty...refill
           voice->stream->callback(&voice->stream->sample, voice->stream->userdata);
-          if (voice->stream->sample.length == 0) {
-            sts_mixer__reset_voice(mixer, i);
-          }
           voice->position = 0.0f;
           position = 0;
         }
-        left += sts_mixer__clamp_sample(sts_mixer__get_sample(&voice->stream->sample, position) * voice->gain);
-        right += sts_mixer__clamp_sample(sts_mixer__get_sample(&voice->stream->sample, position + 1) * voice->gain);
-        voice->position += (float)voice->stream->sample.frequency * advance;
+        if (voice->stream->sample.length > 0) {
+          left += sts_mixer__clamp_sample(sts_mixer__get_sample(&voice->stream->sample, position) * voice->gain);
+          right += sts_mixer__clamp_sample(sts_mixer__get_sample(&voice->stream->sample, position + 1) * voice->gain);
+          voice->position += (float)voice->stream->sample.frequency * advance;
+        } else {
+          sts_mixer__reset_voice(mixer, i);
+        }
       }
     }
 
