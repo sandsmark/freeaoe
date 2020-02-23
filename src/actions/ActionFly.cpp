@@ -64,7 +64,7 @@ IAction::UpdateResult ActionFly::update(Time time)
     // Need to convert to screen, because I'm dumb and the angles are screen relative
     const ScreenPos screenMovement(cos(unit->angle()), sin(unit->angle()));
     MapPos pos = unit->position() + screenMovement.toMap() * movement;
-    pos.clamp(unit->map()->pixelSize());
+    pos.clamp(Size(unit->map()->pixelWidth() - 1, unit->map()->pixelHeight() - 1));
 
     const float terrainHeight = unit->map()->elevationAt(pos);
     const float targetHeight = terrainHeight + wantedHeight;
