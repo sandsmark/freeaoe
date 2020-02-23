@@ -71,7 +71,7 @@ static void sts_mixer__reset_voice(sts_mixer_t* mixer, const int i) {
   sts_mixer_voice_t*  voice = &mixer->voices[i];
   voice->state = STS_MIXER_VOICE_STOPPED;
   if (voice->stream && voice->stream->stop_callback) {
-    voice->stream->stop_callback(&voice->stream->sample, voice->stream->userdata);
+    voice->stream->stop_callback(i, &voice->stream->sample, voice->stream->userdata);
   }
   delete voice->sample;
   delete voice->stream;

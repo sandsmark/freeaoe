@@ -37,6 +37,7 @@ class Event;
 class HomeScreen : public UiScreen
 {
 public:
+    ~HomeScreen();
     struct Button {
         enum Type {
             Singleplayer,

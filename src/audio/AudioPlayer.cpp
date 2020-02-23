@@ -47,11 +47,21 @@ void AudioPlayer::mp3Callback(sts_mixer_sample_t *sample, void *userdata)
     sample->length = ma_decoder_read_pcm_frames(decoder, sample->audiodata, DRMP3_SRC_CACHE_SIZE_IN_FRAMES) * 2;
 }
 
-void AudioPlayer::mp3StopCallback(sts_mixer_sample_t *sample, void *userdata)
+void AudioPlayer::mp3StopCallback(const int id, sts_mixer_sample_t *sample, void *userdata)
 {
     ma_decoder* decoder = reinterpret_cast<ma_decoder*>(userdata);
     ma_decoder_uninit(decoder);
     delete decoder;
+
+    std::unordered_map<std::string, int>::iterator it = instance().m_activeStreams.begin();
+    for (; it != instance().m_activeStreams.end(); it++) {
+        if (it->second == id) {
+            DBG << it->first << "stopped";
+            instance().m_activeStreams.erase(it);
+            return;
+        }
+    }
+    WARN << "Failed to find" << id << "in active streams";
 }
 
 AudioPlayer::AudioPlayer()
@@ -316,13 +326,25 @@ void AudioPlayer::playStream(const std::string &filename)
 
     stream->userdata = mp3Decoder.get();
 
-    if (sts_mixer_play_stream(m_mixer.get(), stream, 0.5) < 0) {
+    int id =sts_mixer_play_stream(m_mixer.get(), stream, 0.5);
+    if (id < 0) {
         WARN << "unable to play sample, too many playing already";
         delete stream;
         return;
     }
+    m_activeStreams[filename] = id;
 
     mp3Decoder.release();
+}
+
+void AudioPlayer::stopStream(const std::string &filename)
+{
+    if (!m_activeStreams.contains(filename)) {
+        WARN << filename << "is not playing";
+        return;
+    }
+
+    sts_mixer_stop_voice(m_mixer.get(), m_activeStreams[filename]);
 }
 
 AudioPlayer &AudioPlayer::instance()

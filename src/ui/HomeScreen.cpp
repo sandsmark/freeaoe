@@ -39,6 +39,11 @@ namespace genie {
 class PalFile;
 }  // namespace genie
 
+HomeScreen::~HomeScreen()
+{
+    AudioPlayer::instance().stopStream("stream/xopen.mp3");
+}
+
 HomeScreen::HomeScreen() :
     UiScreen(DataManager::Inst().isHd() ? "main.sin" : "xmain.sin")
 {

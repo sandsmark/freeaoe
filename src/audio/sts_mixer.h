@@ -67,7 +67,7 @@ struct sts_mixer_sample_t {
 
 // The callback which will be called when the stream needs more data.
 typedef void (*sts_mixer_stream_callback)(sts_mixer_sample_t* sample, void* userdata);
-typedef void (*sts_mixer_stream_stop_callback)(sts_mixer_sample_t* sample, void* userdata);
+typedef void (*sts_mixer_stream_stop_callback)(const int id, sts_mixer_sample_t* sample, void* userdata);
 
 typedef struct {
   void*                     userdata;         // a userdata pointer which will passed to the callback
