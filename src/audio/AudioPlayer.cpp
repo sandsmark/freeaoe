@@ -344,7 +344,9 @@ void AudioPlayer::stopStream(const std::string &filename)
         return;
     }
 
+    m_mutex.lock();
     sts_mixer_stop_voice(m_mixer.get(), m_activeStreams[filename]);
+    m_mutex.unlock();
 }
 
 AudioPlayer &AudioPlayer::instance()
