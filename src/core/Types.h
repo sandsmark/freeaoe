@@ -245,6 +245,13 @@ struct MapPos {
         y = std::clamp(y, 0.f, size.height);
     }
 
+    inline MapPos clamped(const Size size) noexcept {
+        return MapPos(
+            std::clamp(x, 0.f, size.width),
+            std::clamp(y, 0.f, size.height),
+            z
+        );
+    }
 
     /// relative map position to screen position (map(0,0,0) is on screen(0,0)
     ScreenPos toScreen() const;

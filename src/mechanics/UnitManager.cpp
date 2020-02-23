@@ -594,17 +594,7 @@ void UnitManager::onRightClick(const ScreenPos &screenPos, const CameraPtr &came
     }
 
 
-    MapPos mapPos = camera->absoluteMapPos(screenPos);
-    if (mapPos.x < 0) {
-        mapPos.x = 0;
-    } else if (mapPos.x > Constants::TILE_SIZE * m_map->getRows()) {
-        mapPos.x = Constants::TILE_SIZE * m_map->getRows();
-    }
-    if (mapPos.y < 0) {
-        mapPos.y = 0;
-    } else if (mapPos.y > Constants::TILE_SIZE * m_map->getCols()) {
-        mapPos.y = Constants::TILE_SIZE * m_map->getCols();
-    }
+    MapPos mapPos = camera->absoluteMapPos(screenPos).clamped(m_map->pixelSize());
 
     bool movedSomeone = false;
     for (const Unit::Ptr &unit : m_selectedUnits) {

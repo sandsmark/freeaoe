@@ -82,6 +82,9 @@ public:
 
     inline int height() const noexcept { return rows_ * Constants::TILE_SIZE; }
     inline int width() const noexcept { return cols_ * Constants::TILE_SIZE; }
+    inline Size pixelSize() const noexcept {
+        return Size(width(), height());
+    }
 
     float elevationAt(const MapPos &position) noexcept;
 

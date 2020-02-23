@@ -382,11 +382,7 @@ bool Engine::handleKeyEvent(const sf::Event &event, const std::shared_ptr<GameSt
         return false;
     }
 
-    MapPos cameraMapPos = cameraScreenPos.toMap();
-    if (cameraMapPos.x < 0) { cameraMapPos.x = 0; }
-    if (cameraMapPos.y < 0) { cameraMapPos.y = 0; }
-    if (cameraMapPos.x > state->map()->width()) { cameraMapPos.x = state->map()->width(); }
-    if (cameraMapPos.y > state->map()->height()) { cameraMapPos.y = state->map()->height(); }
+    MapPos cameraMapPos = cameraScreenPos.toMap().clamped(state->map()->pixelSize());
 
     renderTarget_->camera()->setTargetPosition(cameraMapPos);
 
@@ -667,11 +663,7 @@ bool Engine::updateCamera(const std::shared_ptr<GameState> &state)
     cameraScreenPos.x += m_cameraDeltaX * deltaTime * CAMERA_SPEED;
     cameraScreenPos.y += m_cameraDeltaY * deltaTime * CAMERA_SPEED;
 
-    MapPos cameraMapPos = cameraScreenPos.toMap();
-    if (cameraMapPos.x < 0) { cameraMapPos.x = 0; }
-    if (cameraMapPos.y < 0) { cameraMapPos.y = 0; }
-    if (cameraMapPos.x > state->map()->width()) { cameraMapPos.x = state->map()->width(); }
-    if (cameraMapPos.y > state->map()->height()) { cameraMapPos.y = state->map()->height(); }
+    MapPos cameraMapPos = cameraScreenPos.toMap().clamped(state->map()->pixelSize());
     renderTarget_->camera()->setTargetPosition(cameraMapPos);
 
 
