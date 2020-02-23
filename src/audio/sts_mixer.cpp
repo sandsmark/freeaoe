@@ -30,6 +30,8 @@
 
 #include "sts_mixer.h"
 
+#include <algorithm>
+
 enum {
   STS_MIXER_VOICE_STOPPED,
   STS_MIXER_VOICE_PLAYING,
