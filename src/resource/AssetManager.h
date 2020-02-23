@@ -186,7 +186,7 @@ public:
     virtual bool missingData() const;
 
 protected:
-    friend class std::default_delete<AssetManager>;
+    friend struct std::default_delete<AssetManager>;
     friend std::unique_ptr<AssetManager> std::make_unique<AssetManager>();
     AssetManager() = default;
     virtual ~AssetManager() = default;
