@@ -14,6 +14,7 @@
 #include <utility>
 #include <vector>
 
+#include "audio/AudioPlayer.h"
 #include "mechanics/Unit.h"
 #include "mechanics/UnitManager.h"
 #include "mechanics/GameState.h"
@@ -340,7 +341,7 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
         m_triggers[effect.trigger].enabled = false;
         break;
     case genie::TriggerEffect::DisplayInstructions:
-        DBG << "TODO: implement sound for instructions";
+        AudioPlayer::instance().playStream("scenario/" + effect.soundFile + ".mp3");
         if (m_engine) {
             m_engine->addMessage(effect.message);
         } else {
