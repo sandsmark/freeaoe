@@ -70,7 +70,11 @@ static float sts_mixer__get_sample(sts_mixer_sample_t* sample, unsigned int posi
 static void sts_mixer__reset_voice(sts_mixer_t* mixer, const int i) {
   sts_mixer_voice_t*  voice = &mixer->voices[i];
   voice->state = STS_MIXER_VOICE_STOPPED;
+  if (voice->stream && voice->stream->stop_callback) {
+    voice->stream->stop_callback(&voice->stream->sample, voice->stream->userdata);
+  }
   delete voice->sample;
+  delete voice->stream;
   voice->sample = nullptr;
   voice->stream = nullptr;
   voice->position = voice->gain = voice->pitch = voice->pan = 0.0f;
@@ -200,6 +204,9 @@ void sts_mixer_mix_audio(sts_mixer_t* mixer, void* output, unsigned int samples)
         if (position >= voice->stream->sample.length) {
           // buffer empty...refill
           voice->stream->callback(&voice->stream->sample, voice->stream->userdata);
+          if (voice->stream->sample.length == 0) {
+            sts_mixer__reset_voice(mixer, i);
+          }
           voice->position = 0.0f;
           position = 0;
         }
