@@ -80,10 +80,10 @@ public:
     inline int getRows() const noexcept { return rows_; }
     inline int getCols() const noexcept { return cols_; }
 
-    inline int height() const noexcept { return rows_ * Constants::TILE_SIZE; }
-    inline int width() const noexcept { return cols_ * Constants::TILE_SIZE; }
+    inline int pixelHeight() const noexcept { return rows_ * Constants::TILE_SIZE; }
+    inline int pixelWidth() const noexcept { return cols_ * Constants::TILE_SIZE; }
     inline Size pixelSize() const noexcept {
-        return Size(width(), height());
+        return Size(pixelWidth(), pixelHeight());
     }
 
     float elevationAt(const MapPos &position) noexcept;
@@ -144,7 +144,7 @@ public:
         }
     }
     inline bool isValidPosition(const MapPos &position) {
-        return position.x >= 0 && position.y >= 0 && position.x < width() && position.y < height();
+        return position.x >= 0 && position.y >= 0 && position.x < pixelWidth() && position.y < pixelHeight();
     }
 
 private:
