@@ -297,6 +297,11 @@ target_link_libraries(test ${ALL_LIBRARIES})
 add_executable(ai-test test/ai-test.cpp $<TARGET_OBJECTS:freeaoe_common>)
 target_link_libraries(ai-test ${ALL_LIBRARIES})
 
+if (ENABLE_SANITIZERS)
+    set_source_files_properties(src/ai/grammar.gen.tab.cpp PROPERTIES COMPILE_FLAGS -fno-sanitize=all)
+    set_source_files_properties(src/ai/lex.yy.cc PROPERTIES COMPILE_FLAGS -fno-sanitize=all)
+endif()
+
 #if (CMAKE_BUILD_TYPE MATCHES Debug)
 #    if(CLANG_TIDY_EXE)
 #        set_target_properties(
