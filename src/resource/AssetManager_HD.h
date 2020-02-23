@@ -20,6 +20,7 @@ public:
     const genie::PalFile &getPalette(uint32_t id) override;
     bool initialize(const std::string &gamePath, const genie::GameVersion gameVersion) override;
     const std::string &assetsPath() const override;
+    std::string soundsPath() const override;
     bool missingData() const override;
 
     std::string blendomaticFilename() const override { return "blendomatic_x1.dat"; }
@@ -152,6 +153,11 @@ bool AssetManager_HD::initialize(const std::string &gamePath, const genie::GameV
 const std::string &AssetManager_HD::assetsPath() const
 {
     return m_hdAssetPath;
+}
+
+std::string AssetManager_HD::soundsPath() const
+{
+    return m_hdAssetPath + "/sound/";
 }
 
 bool AssetManager_HD::missingData() const

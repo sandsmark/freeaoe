@@ -181,6 +181,7 @@ public:
     static std::string findFile(const std::string &filename, const std::string &folder);
 
     virtual const std::string &assetsPath() const;
+    virtual std::string soundsPath() const;
 
     virtual bool missingData() const;
 
@@ -226,6 +227,7 @@ private:
 
     genie::GameVersion m_gameVersion;
     std::string m_dataPath;
+    std::string m_gamePath;
     std::unordered_set<uint32_t> m_nonExistentSlps;
 
     static std::unique_ptr<AssetManager> m_instance;

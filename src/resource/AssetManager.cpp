@@ -265,6 +265,7 @@ std::string AssetManager::uiFilename(const AssetManager::UiResolution resolution
 
 bool AssetManager::initialize(const std::string &gamePath, const genie::GameVersion gameVersion)
 {
+    m_gamePath = gamePath;
     return initializeInternal(gamePath + "/Data/", gameVersion);
 }
 
@@ -674,6 +675,11 @@ std::string AssetManager::findFile(const std::string &filename, const std::strin
 const std::string &AssetManager::assetsPath() const
 {
     return m_dataPath;
+}
+
+std::string AssetManager::soundsPath() const
+{
+    return m_gamePath + "/sound/";
 }
 
 bool AssetManager::missingData() const
