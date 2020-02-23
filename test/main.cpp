@@ -32,8 +32,8 @@ void testLoadTiles()
 
     {
         TIME_THIS;
-        for (int col = 0; col < map.getCols(); col++) {
-            for (int row = 0; row < map.getRows(); row++) {
+        for (int col = 0; col < map.columnCount(); col++) {
+            for (int row = 0; row < map.rowCount(); row++) {
                 MapTile &tile = map.getTileAt(col, row);
                 TerrainPtr terrain = AssetManager::Inst()->getTerrain(tile.terrainId);
                 terrain->texture(tile, nullptr);
@@ -46,8 +46,8 @@ void testLoadTiles()
 
     {
         TIME_THIS;
-        for (int col = 0; col < map.getCols(); col++) {
-            for (int row = 0; row < map.getRows(); row++) {
+        for (int col = 0; col < map.columnCount(); col++) {
+            for (int row = 0; row < map.rowCount(); row++) {
                 MapTile &tile = map.getTileAt(col, row);
                 TerrainPtr terrain = AssetManager::Inst()->getTerrain(tile.terrainId);
                 terrain->texture(tile, nullptr);

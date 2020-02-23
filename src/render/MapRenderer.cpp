@@ -85,30 +85,30 @@ bool MapRenderer::update(Time /*time*/)
 
     // get column and row boundaries for rendering
     m_rColBegin = botLeftMp.x / Constants::TILE_SIZE;
-    if (m_rColBegin > m_map->getCols()) {
-        WARN << "E: Somethings fishy... (rColBegin_ > map_->getCols())";
+    if (m_rColBegin > m_map->columnCount()) {
+        WARN << "E: Somethings fishy... (rColBegin_ > map_->columnCount())";
     }
-    m_rColBegin = std::clamp(m_rColBegin, 0, m_map->getCols());
+    m_rColBegin = std::clamp(m_rColBegin, 0, m_map->columnCount());
 
     m_rColEnd = topRightMp.x / Constants::TILE_SIZE;
     m_rColEnd++; //round up
     if (m_rColEnd < 0) {
         WARN << "E: Somethings fishy... (rColEnd_ < 0)";
     }
-    m_rColEnd = std::clamp(m_rColEnd, 0, m_map->getCols());
+    m_rColEnd = std::clamp(m_rColEnd, 0, m_map->columnCount());
 
     m_rRowBegin = topLeftMp.y / Constants::TILE_SIZE;
-    if (m_rRowBegin > m_map->getRows()) {
-        WARN << "E: Somethings fishy... (rRowBegin > map_->getRows())";
+    if (m_rRowBegin > m_map->rowCount()) {
+        WARN << "E: Somethings fishy... (rRowBegin > map_->rowCount())";
     }
-    m_rRowBegin = std::clamp(m_rRowBegin, 0, m_map->getRows());
+    m_rRowBegin = std::clamp(m_rRowBegin, 0, m_map->rowCount());
 
     m_rRowEnd = botRightMp.y / Constants::TILE_SIZE;
     m_rRowEnd++; // round up
     if (m_rRowEnd < 0) {
         WARN << "E: Somethings fishy... (rColEnd_ < 0)";
     }
-    m_rRowEnd = std::clamp(m_rRowEnd, 0, m_map->getRows());
+    m_rRowEnd = std::clamp(m_rRowEnd, 0, m_map->rowCount());
 
     // Calculating screen offset to MapPos(rColBegin, rColEnd):
     const MapPos offsetMp(m_rColBegin * Constants::TILE_SIZE, m_rRowBegin * Constants::TILE_SIZE);
@@ -152,8 +152,8 @@ void MapRenderer::setMap(const MapPtr &map)
     m_map = map;
 
     m_rRowBegin = m_rColBegin = 0;
-    m_rRowEnd = m_map->getRows();
-    m_rColEnd = m_map->getCols();
+    m_rRowEnd = m_map->rowCount();
+    m_rColEnd = m_map->columnCount();
 
     m_camChanged = true;
 }

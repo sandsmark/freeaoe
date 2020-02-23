@@ -94,7 +94,7 @@ void Minimap::updateTerrain()
 
 void Minimap::updateCamera()
 {
-    const MapRect mapDimensions(0, 0, m_map->getCols(), m_map->getRows());
+    const MapRect mapDimensions(0, 0, m_map->columnCount(), m_map->rowCount());
     const float scaleX = m_rect.boundingMapRect().width / mapDimensions.width / 2;
     const float scaleY = m_rect.boundingMapRect().height / mapDimensions.height / 2;
 
@@ -176,7 +176,7 @@ bool Minimap::handleEvent(sf::Event event)
 
     pos.y = m_rect.height/2 - pos.y; // from the center
 
-    const MapRect mapDimensions(0, 0, m_map->getCols() * Constants::TILE_SIZE, m_map->getRows() * Constants::TILE_SIZE);
+    const MapRect mapDimensions(0, 0, m_map->columnCount() * Constants::TILE_SIZE, m_map->rowCount() * Constants::TILE_SIZE);
     const ScreenRect fullBoundingRect = mapDimensions.boundingScreenRect();
     pos.x = fullBoundingRect.width * pos.x / m_rect.width;
     pos.y = fullBoundingRect.height * pos.y / m_rect.height;
@@ -203,7 +203,7 @@ bool Minimap::update(Time /*time*/)
         return false;
     }
 
-    const MapRect mapDimensions(0, 0, m_map->getCols(), m_map->getRows());
+    const MapRect mapDimensions(0, 0, m_map->columnCount(), m_map->rowCount());
 
     if (m_terrainUpdated) {
         DBG << "redrawing terrain";
@@ -235,8 +235,8 @@ bool Minimap::update(Time /*time*/)
         const ScreenPos center(m_rect.width/2, m_rect.height/2);
 
         const std::vector<genie::Color> &colors = AssetManager::Inst()->getPalette(50500).getColors();
-        for (int col = 0; col < m_map->getCols(); col++) {
-            for (int row = 0; row < m_map->getRows(); row++) {
+        for (int col = 0; col < m_map->columnCount(); col++) {
+            for (int row = 0; row < m_map->rowCount(); row++) {
                 const VisibilityMap::Visibility visibility = m_visibilityMap->visibilityAt(col, row);
                 if (visibility == VisibilityMap::Unexplored) {
                     continue;
@@ -273,7 +273,7 @@ bool Minimap::update(Time /*time*/)
         m_unitsTexture->clear(Drawable::Transparent);
 
 
-        const MapRect mapDimensions(0, 0, m_map->getCols(), m_map->getRows());
+        const MapRect mapDimensions(0, 0, m_map->columnCount(), m_map->rowCount());
         const float scaleX = m_rect.boundingMapRect().width / mapDimensions.width / 2;
         const float scaleY = m_rect.boundingMapRect().height / mapDimensions.height / 2;
 

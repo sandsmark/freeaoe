@@ -151,7 +151,7 @@ MapPos ActionMove::findClosestWalkableBorder(const MapPos &start, const MapPos &
     const int tileY = target.y / Constants::TILE_SIZE;
     for (int dx = tileX-1; dx<=tileX+1; dx++) {
         for (int dy = tileY-1; dy<=tileY+1; dy++) {
-            if (IS_UNLIKELY(dx < 0 || dy < 0 || dx >= m_map->getCols() || dy >= m_map->getRows())) {
+            if (IS_UNLIKELY(dx < 0 || dy < 0 || dx >= m_map->columnCount() || dy >= m_map->rowCount())) {
                 continue;
             }
             const std::vector<std::weak_ptr<Entity>> &entities = m_map->entitiesAt(dx, dy);
@@ -843,7 +843,7 @@ bool ActionMove::isPassable(const float x, const float y) noexcept
     }
     const int tileX = x / Constants::TILE_SIZE + 0.5;
     const int tileY = y / Constants::TILE_SIZE + 0.5;
-    if (IS_UNLIKELY(tileX >= m_map->getCols() || tileY >= m_map->getRows())) {
+    if (IS_UNLIKELY(tileX >= m_map->columnCount() || tileY >= m_map->rowCount())) {
         return false;
     }
 
@@ -869,7 +869,7 @@ bool ActionMove::isPassable(const float x, const float y) noexcept
 
     for (int dx = tileX-1; dx<=tileX+1; dx++) {
         for (int dy = tileY-1; dy<=tileY+1; dy++) {
-            if (IS_UNLIKELY(dx < 0 || dy < 0 || dx >= m_map->getCols() || dy >= m_map->getRows())) {
+            if (IS_UNLIKELY(dx < 0 || dy < 0 || dx >= m_map->columnCount() || dy >= m_map->rowCount())) {
                 continue;
             }
             const std::vector<std::weak_ptr<Entity>> &entities = m_map->entitiesAt(dx, dy);

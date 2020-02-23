@@ -77,8 +77,8 @@ public:
 
     void create(const genie::ScnMap &mapDescription) noexcept;
 
-    inline int getRows() const noexcept { return rows_; }
-    inline int getCols() const noexcept { return cols_; }
+    inline int rowCount() const noexcept { return rows_; }
+    inline int columnCount() const noexcept { return cols_; }
 
     inline int pixelHeight() const noexcept { return rows_ * Constants::TILE_SIZE; }
     inline int pixelWidth() const noexcept { return cols_ * Constants::TILE_SIZE; }

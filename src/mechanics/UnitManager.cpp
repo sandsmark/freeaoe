@@ -622,10 +622,10 @@ void UnitManager::onMouseMove(const MapPos &mapPos)
 
     if (m_state == State::PlacingWall) {
         MapPos startTile = (m_wallPlacingStart / Constants::TILE_SIZE).rounded();
-        startTile.clamp(Size(m_map->getCols(), m_map->getRows()));
+        startTile.clamp(Size(m_map->columnCount(), m_map->rowCount()));
 
         MapPos endTile = (mapPos / Constants::TILE_SIZE).rounded();
-        endTile.clamp(Size(m_map->getCols(), m_map->getRows()));
+        endTile.clamp(Size(m_map->columnCount(), m_map->rowCount()));
 
         // Is the angle between the start and end less than 0.1 radians away from 45° (aka. M_PI / 4) from any quadrant?
         const bool diagonal = std::abs(std::abs(std::fmod(startTile.angleTo(endTile), M_PI_2)) - M_PI_2 / 2.) < 0.1;
