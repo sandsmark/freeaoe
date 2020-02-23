@@ -129,13 +129,18 @@ int main(int argc, char **argv) try
             if (button == HomeScreen::Button::Exit) {
                 return 0;
             } else if (button == HomeScreen::Button::History) {
-                Editor editor = Editor();
                 HistoryScreen history;
                 if (!history.init(config.getValue("game-path") + "/History/")) {
                     return 1;
                 }
                 history.display();
             } else if (button == HomeScreen::Button::MapEditor) {
+                Editor editor;
+                if (editor.init()) {
+                    editor.run();
+                } else {
+                    WARN << "Failed to load editor";
+                }
             } else if (button == HomeScreen::Button::Tutorial) {
                 startGame = true;
                 try {

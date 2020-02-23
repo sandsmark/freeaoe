@@ -323,6 +323,7 @@ bool HomeScreen::handleMouseEvent(const sf::Event &event)
         case Button::Exit:
         case Button::History:
         case Button::Tutorial:
+        case Button::MapEditor:
             return true;
         default:
             break;

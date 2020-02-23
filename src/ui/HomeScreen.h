@@ -73,7 +73,6 @@ public:
     enum GameTypeChoice {
         Campaign,
         StandardGame,
-        MapEditor,
         GameTypeCount
     };
 
