@@ -15,7 +15,7 @@ public:
     ~AudioPlayer();
 
     void playSound(const int id, const int civilization, const float pan = 0.f, const float volume = 1.f);
-    void playStream(const std::string &filePath);
+    void playStream(const std::string &filename);
 
     static AudioPlayer &instance();
 

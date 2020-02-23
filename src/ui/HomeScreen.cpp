@@ -25,6 +25,7 @@
 #include <genie/resource/SlpFrame.h>
 #include <memory>
 
+#include "audio/AudioPlayer.h"
 #include "TextButton.h"
 #include "core/Logger.h"
 #include "core/Utility.h"
@@ -49,6 +50,8 @@ bool HomeScreen::init()
     if (!UiScreen::init()) {
         return false;
     }
+
+    AudioPlayer::instance().playStream("stream/xopen.mp3");
 
     const bool isHd = DataManager::Inst().isHd();
 

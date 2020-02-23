@@ -5,11 +5,11 @@
 #include <random>
 #include <vector>
 
-#include "core/Logger.h"
 #include "resource/AssetManager.h"
 #include "resource/DataManager.h"
 #include "sts_mixer.h"
 
+#include <genie/util/Utility.h>
 #include <genie/dat/Sound.h>
 #include <genie/dat/SoundItem.h>
 #include <stddef.h>
@@ -264,8 +264,14 @@ inline std::string maErrorString(const ma_result result)
     }
 }
 
-void AudioPlayer::playStream(const std::string &filePath)
+void AudioPlayer::playStream(const std::string &filename)
 {
+    std::string filePath = genie::util::resolvePathCaseInsensitive("/sound/" + filename, AssetManager::Inst()->assetsPath());
+    if (filePath.empty()) {
+        WARN << "Unable to find" << filename;
+        return;
+    }
+
     ma_decoder_config decoderConfig = ma_decoder_config_init(ma_format_unknown, 2, 0);
     decoderConfig.channelMap[0] = MA_CHANNEL_LEFT;
     decoderConfig.channelMap[1] = MA_CHANNEL_RIGHT;
