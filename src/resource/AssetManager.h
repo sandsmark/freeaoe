@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include <genie/Types.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <algorithm>
@@ -29,54 +28,26 @@
 #include <fstream>
 #include <sstream>
 
+#include <genie/Types.h>
 #include <genie/resource/Slope.h>
 
 class ColorPalette;
 class BinaFile;
-
 class TerrainSprite;
-typedef std::shared_ptr<TerrainSprite> TerrainPtr;
-
 class Graphic;
-using GraphicPtr = std::shared_ptr<Graphic>;
-
 
 namespace genie {
 class DrsFile;
 class PalFile;
 class UIFile;
 class SlpFile;
-
-class FiltermapFile ;
-using FiltermapFilePtr = std::shared_ptr<FiltermapFile>;
-
 class PatternMasksFile;
-using PatternMasksFilePtr = std::shared_ptr<PatternMasksFile>;
-
-class LightmapFile;
-typedef std::shared_ptr<SlpFile> SlpFilePtr;
-
-class IcmFile;
-typedef std::shared_ptr<IcmFile> IcmFilePtr;
-
+class FiltermapFile ;
 struct BlendMode;
 class BlendomaticFile;
-typedef std::shared_ptr<BlendomaticFile> BlendomaticFilePtr;
-
 class ScnFile;
-typedef std::shared_ptr<ScnFile> ScnFilePtr;
-
 class SlpTemplateFile;
-using SlpTemplateFilePtr = std::shared_ptr<SlpTemplateFile>;
-
-
 template<int EdgeCount> class EdgeFile;
-
-using TileEdgeFile =  EdgeFile<94>;
-using TileEdgeFilePtr = std::shared_ptr<TileEdgeFile>;
-using BlkEdgeFile = EdgeFile<47>;
-using BlkEdgeFilePtr = std::shared_ptr<BlkEdgeFile>;
-
 struct VisibilityMask;
 }
 
@@ -85,6 +56,26 @@ struct VisibilityMask;
 //
 class AssetManager
 {
+    // genie
+    using DrsFilePtr = std::shared_ptr<genie::DrsFile>;
+    using DrsFileVector = std::vector<DrsFilePtr>;
+    using SlpFilePtr = std::shared_ptr<genie::SlpFile>;
+    using PatternMasksFilePtr = std::shared_ptr<genie::PatternMasksFile>;
+    using FiltermapFilePtr = std::shared_ptr<genie::FiltermapFile>;
+    using ScnFilePtr = std::shared_ptr<genie::ScnFile>;
+    using SlpTemplateFilePtr = std::shared_ptr<genie::SlpTemplateFile>;
+    using BlendomaticFilePtr = std::shared_ptr<genie::BlendomaticFile>;
+    using TileEdgeFile = genie::EdgeFile<94>;
+    using TileEdgeFilePtr = std::shared_ptr<TileEdgeFile>;
+    using BlkEdgeFile = genie::EdgeFile<47>;
+    using BlkEdgeFilePtr = std::shared_ptr<BlkEdgeFile>;
+
+    // ours
+    using GraphicPtr = std::shared_ptr<Graphic>;
+    using GraphicMap = std::unordered_map<uint32_t, GraphicPtr>;
+    using TerrainPtr = std::shared_ptr<TerrainSprite>;
+    using TerrainMap = std::unordered_map<uint32_t, TerrainPtr>;
+
 private:
     AssetManager() = default;
     virtual ~AssetManager() = default;
@@ -145,20 +136,20 @@ public:
     /// @param id id of the slp file
     /// @return slp file
     //
-    genie::SlpFilePtr getSlp(uint32_t id, const ResourceType type = ResourceType::Undefined);
-    genie::SlpFilePtr getSlp(const std::string &name, const ResourceType type = ResourceType::Undefined);
+    SlpFilePtr getSlp(uint32_t id, const ResourceType type = ResourceType::Undefined);
+    SlpFilePtr getSlp(const std::string &name, const ResourceType type = ResourceType::Undefined);
 
-    genie::SlpFilePtr getUiOverlay(const UiResolution res, const UiCiv civ);
+    SlpFilePtr getUiOverlay(const UiResolution res, const UiCiv civ);
 
-    genie::ScnFilePtr getScn(uint32_t id);
+    ScnFilePtr getScn(uint32_t id);
 
     std::shared_ptr<genie::UIFile> getUIFile(const std::string &name);
 
     std::shared_ptr<uint8_t[]> getWavPtr(uint32_t id);
 
-    const genie::SlpTemplateFilePtr &getSlpTemplateFile() { return m_stemplatesFile; }
-    const genie::FiltermapFilePtr &filtermapFile() { return m_filtermapFile; }
-    const genie::PatternMasksFilePtr &patternmasksFile() { return m_patternmasksFile; }
+    const SlpTemplateFilePtr &getSlpTemplateFile() { return m_stemplatesFile; }
+    const FiltermapFilePtr &filtermapFile() { return m_filtermapFile; }
+    const PatternMasksFilePtr &patternmasksFile() { return m_patternmasksFile; }
 
     //----------------------------------------------------------------------------
     /// Get a Graphic resource object.
@@ -199,33 +190,33 @@ public:
 private:
     std::string findHdFile(const std::string &filename) const;
 
-    typedef std::vector<std::shared_ptr<genie::DrsFile>> DrsFileVector;
     DrsFileVector loadDrs(const std::vector<std::string> &filenames);
-    std::shared_ptr<genie::DrsFile> loadDrs(const std::string &filename);
+    DrsFilePtr loadDrs(const std::string &filename);
 
     DrsFileVector m_gamedataFiles;
     DrsFileVector m_soundFiles;
 
-    std::shared_ptr<genie::DrsFile> m_interfaceFile;
-    std::shared_ptr<genie::DrsFile> m_graphicsFile;
-    std::shared_ptr<genie::DrsFile> m_terrainFile;
+    DrsFilePtr m_interfaceFile;
+    DrsFilePtr m_graphicsFile;
+    DrsFilePtr m_terrainFile;
 
     std::unordered_map<int, std::unique_ptr<genie::PalFile>> m_hdPalFiles;
 
     DrsFileVector m_allFiles;
 
-    genie::BlendomaticFilePtr blendomatic_file_;
-    genie::SlpTemplateFilePtr m_stemplatesFile;
-    genie::FiltermapFilePtr m_filtermapFile;
-    genie::PatternMasksFilePtr m_patternmasksFile;
-    genie::TileEdgeFilePtr m_tileEdgeFile;
-    genie::BlkEdgeFilePtr m_blkEdgeFile;
+    BlendomaticFilePtr blendomatic_file_;
+
+    SlpTemplateFilePtr m_stemplatesFile;
+    FiltermapFilePtr m_filtermapFile;
+    PatternMasksFilePtr m_patternmasksFile;
+
+    TileEdgeFilePtr m_tileEdgeFile;
+
+    BlkEdgeFilePtr m_blkEdgeFile;
 
     //TODO: All resources into one map?
-    typedef std::unordered_map<uint32_t, GraphicPtr> GraphicMap;
     GraphicMap graphics_;
 
-    typedef std::unordered_map<uint32_t, TerrainPtr> TerrainMap;
     TerrainMap terrains_;
 
     std::unordered_map<uint32_t, std::weak_ptr<uint8_t[]>> m_wavCache;
