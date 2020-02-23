@@ -238,7 +238,7 @@ set (UI_SRC
     )
 
 set (EDITOR_SRC
-    src/editor/editor.cpp
+    src/editor/Editor.cpp
     )
 
 set(DEBUG_SRC

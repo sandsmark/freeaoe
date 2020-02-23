@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
-#include "editor.h"
+#include "Editor.h"
 
 #include <SFML/Window/Event.hpp>
 

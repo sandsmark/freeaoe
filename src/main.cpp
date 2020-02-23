@@ -33,10 +33,10 @@
 #include "resource/LanguageManager.h"
 #include "ui/FileDialog.h"
 #include "ui/HistoryScreen.h"
+#include "editor/Editor.h"
 #include "debug/SampleGameFactory.h"
 
 #include "ui/HomeScreen.h"
-#include "editor/editor.h"
 
 // TODO: Bad_alloc
 int main(int argc, char **argv) try
