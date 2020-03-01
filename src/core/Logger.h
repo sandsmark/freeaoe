@@ -82,6 +82,7 @@ struct LogPrinter
     LogPrinter() :
         m_refs(new int)
     {
+        separator = " ";
         *m_refs = 1;
     }
 
