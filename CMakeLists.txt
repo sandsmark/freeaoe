@@ -62,6 +62,12 @@ if (CMAKE_BUILD_TYPE MATCHES Debug)
     endif()
 endif()
 
+find_program(BUILDCACHE_PROGRAM buildcache)
+if(BUILDCACHE_PROGRAM)
+  set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${BUILDCACHE_PROGRAM}")
+endif()
+
+
 option(ENABLE_SANITIZERS "Enable runtime sanitizing (for development)")
 if (ENABLE_SANITIZERS)
     message("Enabling asan and ubsan")
