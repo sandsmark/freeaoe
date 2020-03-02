@@ -64,7 +64,8 @@ endif()
 
 find_program(BUILDCACHE_PROGRAM buildcache)
 if(BUILDCACHE_PROGRAM)
-  set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${BUILDCACHE_PROGRAM}")
+    message(STATUS "Using buildcache: ${BUILDCACHE_PROGRAM}")
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${BUILDCACHE_PROGRAM}")
 endif()
 
 
