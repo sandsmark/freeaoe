@@ -53,7 +53,7 @@ std::unordered_set<Task> UnitActionHandler::availableActions() noexcept
 
 }
 
-Task UnitActionHandler::findMatchingTask(const genie::ActionType &type, int targetUnit) noexcept
+Task UnitActionHandler::findAnyTask(const genie::ActionType &type, int targetUnit) noexcept
 {
     std::unordered_set<Task> available = availableActions();
     for (const Task &task : available) {
@@ -66,6 +66,97 @@ Task UnitActionHandler::findMatchingTask(const genie::ActionType &type, int targ
         if (task.data->ActionType == type && task.data->UnitID == -1) { // less specific
             return task;
         }
+    }
+
+    return Task();
+
+}
+
+Task UnitActionHandler::findMatchingTask(const std::shared_ptr<Player> ownPlayer, const std::shared_ptr<Unit> &target, const std::unordered_set<Task> &potentials)
+{
+    if (!ownPlayer){
+        WARN << "no player passed for task finding";
+        return Task();
+    }
+    for (const Task &task : potentials) {
+        const genie::Task *action = task.data;
+
+        switch (action->TargetDiplomacy) {
+        case genie::Task::TargetSelf:
+            if (target->playerId != ownPlayer->playerId) {
+                continue;
+            }
+            break;
+        case genie::Task::TargetNeutralsEnemies: // TODO: neutrals
+            if (target->playerId == ownPlayer->playerId) {
+                continue;
+            }
+            break;
+
+        case genie::Task::TargetGaiaOnly:
+            if (target->playerId != UnitManager::GaiaID) {
+                continue;
+            }
+            break;
+        case genie::Task::TargetSelfAllyGaia:
+            if (target->playerId != ownPlayer->playerId && target->playerId != UnitManager::GaiaID && !ownPlayer->isAllied(target->playerId)) {
+                continue;
+            }
+            break;
+        case genie::Task::TargetGaiaNeutralEnemies:
+        case genie::Task::TargetOthers:
+            if (target->playerId == ownPlayer->playerId) {
+                continue;
+            }
+            if (ownPlayer->isAllied(target->playerId)) {
+                continue;
+            }
+            break;
+        case genie::Task::TargetAnyDiplo:
+        case genie::Task::TargetAnyDiplo2:
+        default:
+            break;
+        }
+
+        if (action->ActionType == genie::ActionType::Garrison) {
+            continue;
+        }
+
+        if (target->creationProgress() < 1) {
+            if (action->ActionType == genie::ActionType::Build) {
+                return task;
+            }
+
+            continue;
+        }
+
+        if (action->UnitID == target->data()->ID) {
+            return task;
+        }
+
+        if (action->ClassID == target->data()->Class) {
+            return task;
+        }
+    }
+
+    // Try more generic targeting
+    for (const Task &task : potentials) {
+        const genie::Task *action = task.data;
+        if (action->ActionType != genie::ActionType::Combat) {
+            continue;
+        }
+        if (action->TargetDiplomacy != genie::Task::TargetGaiaNeutralEnemies && action->TargetDiplomacy != genie::Task::TargetNeutralsEnemies) {
+            continue;
+        }
+        if (ownPlayer->playerId == target->playerId) {
+            continue;
+        }
+
+        if (target->data()->Type < genie::Unit::CombatantType) {
+            continue;
+        }
+
+        return task;
     }
 
     return Task();
@@ -121,7 +212,7 @@ void UnitActionHandler::checkForAutoTargets() noexcept
         }
 
         Task potentialTask;
-        potentialTask = IAction::findMatchingTask(m_unit->player.lock(), other, m_autoTargetTasks);
+        potentialTask = findMatchingTask(m_unit->player.lock(), other, m_autoTargetTasks);
         if (!potentialTask.data) {
             continue;
         }

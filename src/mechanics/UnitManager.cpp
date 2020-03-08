@@ -533,9 +533,9 @@ bool UnitManager::onLeftClick(const ScreenPos &screenPos, const CameraPtr &camer
 
             std::shared_ptr<ActionAttack> action;
             if (targetUnit) {
-                action = std::make_shared<ActionAttack>(unit, targetUnit, unit->actions.findMatchingTask(genie::ActionType::Attack, targetUnit->data()->ID));
+                action = std::make_shared<ActionAttack>(unit, targetUnit, unit->actions.findAnyTask(genie::ActionType::Attack, targetUnit->data()->ID));
             } else {
-                action = std::make_shared<ActionAttack>(unit, targetPos, unit->actions.findMatchingTask(genie::ActionType::Attack, -1));
+                action = std::make_shared<ActionAttack>(unit, targetPos, unit->actions.findAnyTask(genie::ActionType::Attack, -1));
             }
             unit->actions.setCurrentAction(action);
         }
@@ -963,7 +963,7 @@ const Task UnitManager::defaultActionAt(const ScreenPos &pos, const CameraPtr &c
         return Task();
     }
 
-    return IAction::findMatchingTask(m_humanPlayer.lock(), target, m_currentActions);
+    return UnitActionHandler::findMatchingTask(m_humanPlayer.lock(), target, m_currentActions);
 }
 
 void UnitManager::moveUnitTo(const Unit::Ptr &unit, const MapPos &targetPos)
@@ -1059,5 +1059,5 @@ const Task UnitManager::taskForPosition(const Unit::Ptr &unit, const ScreenPos &
         return Task();
     }
 
-    return IAction::findMatchingTask(m_humanPlayer.lock(), target, unit->actions.availableActions());
+    return UnitActionHandler::findMatchingTask(m_humanPlayer.lock(), target, unit->actions.availableActions());
 }

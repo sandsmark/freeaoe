@@ -86,8 +86,6 @@ public:
 
     const Type type = Type::None;
 
-    static Task findMatchingTask(const std::shared_ptr<Player> ownPlayer, const std::shared_ptr<Unit> &target, const std::unordered_set<Task> &potentials);
-
     virtual UnitState unitState() const { return UnitState::Idle; }
     virtual genie::ActionType taskType() const = 0;
 

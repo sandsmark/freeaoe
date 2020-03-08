@@ -41,97 +41,6 @@ IAction::IAction(const Type type_, const std::shared_ptr<Unit> &unit, const Task
 {
 }
 
-Task IAction::findMatchingTask(const std::shared_ptr<Player> ownPlayer, const std::shared_ptr<Unit> &target, const std::unordered_set<Task> &potentials)
-{
-    if (!ownPlayer){
-        WARN << "no player passed for task finding";
-        return Task();
-    }
-    for (const Task &task : potentials) {
-        const genie::Task *action = task.data;
-
-        switch (action->TargetDiplomacy) {
-        case genie::Task::TargetSelf:
-            if (target->playerId != ownPlayer->playerId) {
-                continue;
-            }
-            break;
-        case genie::Task::TargetNeutralsEnemies: // TODO: neutrals
-            if (target->playerId == ownPlayer->playerId) {
-                continue;
-            }
-            break;
-
-        case genie::Task::TargetGaiaOnly:
-            if (target->playerId != UnitManager::GaiaID) {
-                continue;
-            }
-            break;
-        case genie::Task::TargetSelfAllyGaia:
-            if (target->playerId != ownPlayer->playerId && target->playerId != UnitManager::GaiaID && !ownPlayer->isAllied(target->playerId)) {
-                continue;
-            }
-            break;
-        case genie::Task::TargetGaiaNeutralEnemies:
-        case genie::Task::TargetOthers:
-            if (target->playerId == ownPlayer->playerId) {
-                continue;
-            }
-            if (ownPlayer->isAllied(target->playerId)) {
-                continue;
-            }
-            break;
-        case genie::Task::TargetAnyDiplo:
-        case genie::Task::TargetAnyDiplo2:
-        default:
-            break;
-        }
-
-        if (action->ActionType == genie::ActionType::Garrison) {
-            continue;
-        }
-
-        if (target->creationProgress() < 1) {
-            if (action->ActionType == genie::ActionType::Build) {
-                return task;
-            }
-
-            continue;
-        }
-
-        if (action->UnitID == target->data()->ID) {
-            return task;
-        }
-
-        if (action->ClassID == target->data()->Class) {
-            return task;
-        }
-    }
-
-    // Try more generic targeting
-    for (const Task &task : potentials) {
-        const genie::Task *action = task.data;
-        if (action->ActionType != genie::ActionType::Combat) {
-            continue;
-        }
-        if (action->TargetDiplomacy != genie::Task::TargetGaiaNeutralEnemies && action->TargetDiplomacy != genie::Task::TargetNeutralsEnemies) {
-            continue;
-        }
-        if (ownPlayer->playerId == target->playerId) {
-            continue;
-        }
-
-        if (target->data()->Type < genie::Unit::CombatantType) {
-            continue;
-        }
-
-        return task;
-    }
-
-    return Task();
-
-}
-
 void IAction::assignTask(const Task &task, const std::shared_ptr<Unit> &unit, const std::shared_ptr<Unit> &target)
 {
     if (!task.data) {
@@ -153,7 +62,7 @@ void IAction::assignTask(const Task &task, const std::shared_ptr<Unit> &unit, co
         unit->actions.queueAction(buildAction);
 
         if (target->data()->Class == genie::Unit::Farm) {
-            Task farmTask = unit->actions.findMatchingTask(genie::ActionType::GatherRebuild, target->data()->ID);
+            Task farmTask = unit->actions.findAnyTask(genie::ActionType::GatherRebuild, target->data()->ID);
             ActionPtr farmAction = std::make_shared<ActionGather>(unit, target, farmTask);
             farmAction->requiredUnitID = farmTask.unitId;
             unit->actions.queueAction(farmAction);

@@ -93,7 +93,7 @@ IAction::UpdateResult ActionAttack::update(Time time)
             return IAction::UpdateResult::Failed;
         }
 
-        if (!unit->actions.findMatchingTask(genie::ActionType::RetreatToShootingRage, -1).data) {
+        if (!unit->actions.findAnyTask(genie::ActionType::RetreatToShootingRage, -1).data) {
             return IAction::UpdateResult::Failed;
         }
 
