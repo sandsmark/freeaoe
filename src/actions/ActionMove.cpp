@@ -486,6 +486,22 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
     }
 
     if (!isPassable(newPos.x, newPos.y)) {
+        DBG << "Wiggle left";
+        newPos = unitPosition;
+
+        newPos.x += std::cos(direction + M_PI_2) * movement;
+        newPos.y += std::sin(direction + M_PI_2) * movement;
+    }
+
+    if (!isPassable(newPos.x, newPos.y)) {
+        DBG << "Wiggle right";
+        newPos = unitPosition;
+
+        newPos.x += std::cos(direction - M_PI_2) * movement;
+        newPos.y += std::sin(direction - M_PI_2) * movement;
+    }
+
+    if (!isPassable(newPos.x, newPos.y)) {
         if (!isPassable(m_destination.x, m_destination.y)) {
             DBG << "destination isn't passable, trying again next round";
             return UpdateResult::NotUpdated;
