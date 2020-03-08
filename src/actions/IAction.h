@@ -41,6 +41,7 @@ struct Task {
 
     const genie::Task *data = nullptr;
     int unitId = -1; // for task group swapping
+    std::weak_ptr<Unit> target;
 
     bool operator==(const Task &other) const;
 };
@@ -89,7 +90,7 @@ public:
     virtual UnitState unitState() const { return UnitState::Idle; }
     virtual genie::ActionType taskType() const = 0;
 
-    static void assignTask(const Task &task, const std::shared_ptr<Unit> &unit, const std::shared_ptr<Unit> &target);
+    static void assignTask(const Task &task, const std::shared_ptr<Unit> &unit);
 
     virtual ~IAction();
 

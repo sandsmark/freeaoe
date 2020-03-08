@@ -10,7 +10,7 @@
 class ActionDropOff : public IAction
 {
 public:
-    ActionDropOff(const std::shared_ptr<Unit> &unit, const std::shared_ptr<Unit> &target, const Task &task);
+    ActionDropOff(const std::shared_ptr<Unit> &unit, const Task &task);
 
     UpdateResult update(Time time) override;
     UnitState unitState() const override { return UnitState::Proceeding; }
@@ -24,14 +24,14 @@ private:
 class ActionGather : public IAction
 {
 public:
-    ActionGather(const std::shared_ptr<Unit> &unit, const std::shared_ptr<Unit> &target, const Task &task);
+    ActionGather(const std::shared_ptr<Unit> &unit, const Task &task);
 
     UpdateResult update(Time time) override;
     UnitState unitState() const override;
     genie::ActionType taskType() const override;
 
 private:
-    void maybeDropOff(const std::shared_ptr<Unit> &unit);
+    UpdateResult maybeDropOff(const std::shared_ptr<Unit> &unit);
     std::shared_ptr<Unit> findDropSite(const std::shared_ptr<Unit> &unit);
 
     std::weak_ptr<Unit> m_target;

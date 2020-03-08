@@ -167,9 +167,6 @@ bool Unit::update(Time time) noexcept
         if (!actions.m_currentAction || currentAction != actions.m_currentAction || prevState != actions.m_currentAction->unitState()) {
             updateGraphic();
         }
-        if (!actions.m_currentAction) {
-            actions.checkForAutoTargets();
-        }
     }
 
 
@@ -220,6 +217,11 @@ std::shared_ptr<Building> Unit::asBuilding(const Unit::Ptr &unit) noexcept
         return nullptr;
     }
     return std::static_pointer_cast<Building>(unit);
+}
+
+std::shared_ptr<Building> Unit::asBuilding(const std::weak_ptr<Unit> &unit) noexcept
+{
+    return asBuilding(unit.lock());
 }
 
 ScreenRect Unit::rect() const noexcept

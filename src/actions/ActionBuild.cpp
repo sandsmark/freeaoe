@@ -5,10 +5,14 @@
 
 #include <genie/dat/Unit.h>
 
-ActionBuild::ActionBuild(const Unit::Ptr &builder, const Unit::Ptr &building, const Task &task) :
-    IAction(Type::Build, builder, task),
-    m_targetBuilding(Unit::asBuilding(building))
+ActionBuild::ActionBuild(const Unit::Ptr &builder, const Task &task) :
+    IAction(Type::Build, builder, task)
 {
+    Building::Ptr building = Unit::asBuilding(task.target);
+    if (!building) {
+        WARN << "target building gone";
+    }
+    m_targetBuilding = building;
     DBG << builder->debugName << "building" << building->debugName;
 }
 

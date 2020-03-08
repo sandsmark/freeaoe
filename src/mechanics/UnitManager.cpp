@@ -116,7 +116,11 @@ bool UnitManager::update(Time time)
         m_unitsMoved = false;
 
         for (const Unit::Ptr &unit : m_unitsWithActions) {
-            unit->actions.checkForAutoTargets();
+            Task task = unit->actions.checkForAutoTargets();
+            if (!task.data) {
+                continue;
+            }
+            IAction::assignTask(task, unit);
         }
     }
 
@@ -533,8 +537,11 @@ bool UnitManager::onLeftClick(const ScreenPos &screenPos, const CameraPtr &camer
 
             std::shared_ptr<ActionAttack> action;
             if (targetUnit) {
-                action = std::make_shared<ActionAttack>(unit, targetUnit, unit->actions.findAnyTask(genie::ActionType::Attack, targetUnit->data()->ID));
+                Task task = unit->actions.findAnyTask(genie::ActionType::Attack, targetUnit->data()->ID);
+                task.target = targetUnit;
+                action = std::make_shared<ActionAttack>(unit, task);
             } else {
+                DBG << "Attacking ground";
                 action = std::make_shared<ActionAttack>(unit, targetPos, unit->actions.findAnyTask(genie::ActionType::Attack, -1));
             }
             unit->actions.setCurrentAction(action);
@@ -582,7 +589,8 @@ void UnitManager::onRightClick(const ScreenPos &screenPos, const CameraPtr &came
 
         unit->actions.clearActionQueue();
         Unit::Ptr target = unitAt(screenPos, camera);
-        IAction::assignTask(task, unit, target);
+        task.target = target;
+        IAction::assignTask(task, unit);
         if (target) {
             target->targetBlinkTimeLeft = 3000; // 3s
         }
@@ -1023,7 +1031,8 @@ void UnitManager::placeBuilding(const UnplacedBuilding &building)
 
         // TODO: should clear this elsewhere, otherwise it just gets queued up
 //        unit->clearActionQueue();
-        IAction::assignTask(task, unit, buildingToPlace);
+        task.target = buildingToPlace;
+        IAction::assignTask(task, unit);
     }
 }
 

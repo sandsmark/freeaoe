@@ -320,12 +320,31 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
         m_passableCached.reset();
     }
 
-    MapPos unitPosition = unit->position();
-
     // TODO differentiate between max manhattan distance (square obstruction type) and euclidian distance (round obstruction type)
     MapRect targetRect(m_destination, Size(maxDistance + 1, maxDistance + 1));
+    MapPos unitPosition = unit->position();
 
     Unit::Ptr targetUnit = m_targetUnit.lock();
+
+    // First update
+    if (!m_prevTime) {
+        if (unitPosition.distance(m_destination) < 1 || targetRect.contains(unitPosition)) { // just in case
+            return UpdateResult::Completed;
+        }
+        if (targetUnit) {
+            m_lastTargetUnitPosition = targetUnit->position();
+            m_destination = m_lastTargetUnitPosition;
+        }
+
+        m_prevTime = time;
+        updatePath();
+        if (m_path.empty()) {
+            return UpdateResult::Failed;
+        }
+
+        return UpdateResult::NotUpdated;
+    }
+
     if (targetUnit) {
         if (unit->distanceTo(targetUnit) < 0.f) {
             return UpdateResult::Completed;
@@ -336,18 +355,19 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
         targetRect.height = size.height;
         targetRect.x -= targetRect.width/2;
         targetRect.y -= targetRect.height/2;
-    }
-    if (targetUnit && (targetUnit->position()/50).rounded() != (m_lastTargetUnitPosition/50).rounded()) {
-        m_lastTargetUnitPosition = targetUnit->position();
-        m_destination = m_lastTargetUnitPosition;
 
-        if (std::floor(unitPosition.distance(m_destination)) < 0.1) {// std::max(unit->clearanceSize().width, unit->clearanceSize().height) + 1) {
-            return UpdateResult::Completed;
+        if ((targetUnit->position()/50).rounded() != (m_lastTargetUnitPosition/50).rounded()) {
+            m_lastTargetUnitPosition = targetUnit->position();
+            m_destination = m_lastTargetUnitPosition;
+
+            if (std::floor(unitPosition.distance(m_destination)) < 0.1) {// std::max(unit->clearanceSize().width, unit->clearanceSize().height) + 1) {
+                return UpdateResult::Completed;
+            }
+
+            updatePath();
+
+            return UpdateResult::NotUpdated;
         }
-
-        updatePath();
-
-        return UpdateResult::NotUpdated;
     }
 
     if (!isPassable(unitPosition.x, unitPosition.y)) {
@@ -363,27 +383,15 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
         return UpdateResult::Failed;
     }
 
-    if (!m_prevTime) {
-        if (unitPosition.distance(m_destination) < 1 || targetRect.contains(unitPosition)) { // just in case
-            return UpdateResult::Completed;
-        }
-
-        m_prevTime = time;
-        updatePath();
-        if (m_path.empty()) {
-            return UpdateResult::Failed;
-        }
-        return UpdateResult::NotUpdated;
-    }
-
-    if (targetUnit) { // check if it moved
-        const double targetMovedDistance = m_destination.distance(targetUnit->position());
-        m_destination = targetUnit->position();
-        if (targetMovedDistance > 1) {  // chosen by dice roll
-            DBG << "Unit moved, repathing";
-            updatePath();
-        }
-    }
+//    if (targetUnit) { // check if it moved
+//        const double targetMovedDistance = m_lastTargetPosition.distance(targetUnit->position());
+//        m_lastTargetUnitPosition = targetUnit->position();
+//        m_destination = m_lastTargetUnitPosition;
+//        if (targetMovedDistance > 1) {  // chosen by dice roll
+//            DBG << "Unit moved, repathing";
+//            updatePath();
+//        }
+//    }
 
     if (m_targetReached) {
         return UpdateResult::Completed;
@@ -538,13 +546,19 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
     return UpdateResult::Updated;
 }
 
-std::shared_ptr<ActionMove> ActionMove::moveUnitTo(const UnitPtr &unit, const UnitPtr &targetUnit, const Task &task) noexcept
+std::shared_ptr<ActionMove> ActionMove::moveUnitTo(const UnitPtr &unit, const Task &task) noexcept
 {
     if (!unit->data()->Speed) {
         DBG << "Handed unit that can't move" << unit->debugName;
         return nullptr;
     }
 
+
+    Unit::Ptr targetUnit = task.target.lock();
+    if (!targetUnit) {
+        WARN << "Asked to move to unit, but no unit passed";
+        return nullptr;
+    }
 
     std::shared_ptr<ActionMove> action (new ActionMove(targetUnit->position(), unit, task));
     action->m_targetUnit = targetUnit;
@@ -561,6 +575,7 @@ std::shared_ptr<ActionMove> ActionMove::moveUnitTo(const Unit::Ptr &unit, MapPos
 
 
     std::shared_ptr<ActionMove> action (new ActionMove(destination, unit, task));
+    action->m_targetUnit = task.target;
 
     return action;
 }
@@ -571,6 +586,17 @@ std::shared_ptr<ActionMove> ActionMove::moveUnitTo(const Unit::Ptr &unit, MapPos
     defaultGenieMoveTask.ActionType = genie::ActionType::MoveTo;
 
     return moveUnitTo(unit, destination, Task(defaultGenieMoveTask, -1));
+}
+
+std::shared_ptr<ActionMove> ActionMove::moveUnitTo(const Unit::Ptr &unit, const Unit::Ptr &targetUnit) noexcept
+{
+    static genie::Task defaultGenieMoveTask;
+    defaultGenieMoveTask.ActionType = genie::ActionType::MoveTo;
+
+    Task moveTask(defaultGenieMoveTask, -1);
+    moveTask.target = targetUnit;
+
+    return moveUnitTo(unit, moveTask);
 }
 
 #if 0

@@ -41,12 +41,14 @@ IAction::IAction(const Type type_, const std::shared_ptr<Unit> &unit, const Task
 {
 }
 
-void IAction::assignTask(const Task &task, const std::shared_ptr<Unit> &unit, const std::shared_ptr<Unit> &target)
+void IAction::assignTask(const Task &task, const std::shared_ptr<Unit> &unit)
 {
     if (!task.data) {
         WARN << "no task data";
         return;
     }
+
+    Unit::Ptr target = task.target.lock();
 
     switch(task.data->ActionType) {
     case genie::ActionType::Build: {
@@ -57,13 +59,13 @@ void IAction::assignTask(const Task &task, const std::shared_ptr<Unit> &unit, co
 
         unit->actions.queueAction(ActionMove::moveUnitTo(unit, target->position(), task));
 
-        ActionPtr buildAction = std::make_shared<ActionBuild>(unit, target, task);
+        ActionPtr buildAction = std::make_shared<ActionBuild>(unit, task);
         buildAction->requiredUnitID = task.unitId;
         unit->actions.queueAction(buildAction);
 
         if (target->data()->Class == genie::Unit::Farm) {
             Task farmTask = unit->actions.findAnyTask(genie::ActionType::GatherRebuild, target->data()->ID);
-            ActionPtr farmAction = std::make_shared<ActionGather>(unit, target, farmTask);
+            ActionPtr farmAction = std::make_shared<ActionGather>(unit, farmTask);
             farmAction->requiredUnitID = farmTask.unitId;
             unit->actions.queueAction(farmAction);
         }
@@ -75,10 +77,11 @@ void IAction::assignTask(const Task &task, const std::shared_ptr<Unit> &unit, co
             DBG << "Can't gather from nothing";
             return;
         }
-        unit->actions.queueAction(ActionMove::moveUnitTo(unit, target->position(), task));
-        ActionPtr farmAction = std::make_shared<ActionGather>(unit, target, task);
-        farmAction->requiredUnitID = task.unitId;
-        unit->actions.queueAction(farmAction);
+        DBG << target.get();
+        unit->actions.queueAction(ActionMove::moveUnitTo(unit, task));
+        ActionPtr gatherAction = std::make_shared<ActionGather>(unit, task);
+        gatherAction->requiredUnitID = task.unitId;
+        unit->actions.queueAction(gatherAction);
         break;
     }
     case genie::ActionType::Combat: {
@@ -86,7 +89,7 @@ void IAction::assignTask(const Task &task, const std::shared_ptr<Unit> &unit, co
             DBG << "attacking" << target->debugName;
         }
 
-        ActionPtr combatAction = std::make_shared<ActionAttack>(unit, target, task);
+        ActionPtr combatAction = std::make_shared<ActionAttack>(unit, task);
         combatAction->requiredUnitID = task.unitId;
         unit->actions.queueAction(combatAction);
         break;

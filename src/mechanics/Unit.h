@@ -138,6 +138,7 @@ struct Unit : public Entity
     const std::vector<const genie::Unit *> creatableUnits() noexcept;
 
     static std::shared_ptr<Building> asBuilding(const Unit::Ptr &unit) noexcept;
+    static std::shared_ptr<Building> asBuilding(const std::weak_ptr<Unit> &unit) noexcept;
 
     bool selected = false;
     int playerId;

@@ -3,6 +3,7 @@
 #include "actions/IAction.h"
 
 #include <memory>
+#include <utility>
 #include <deque>
 #include <unordered_set>
 
@@ -19,7 +20,7 @@ struct UnitActionHandler
     static Task findMatchingTask(const std::shared_ptr<Player> ownPlayer, const std::shared_ptr<Unit> &target, const std::unordered_set<Task> &potentials);
 
     bool hasAutoTargets() const noexcept { return !m_autoTargetTasks.empty(); }
-    void checkForAutoTargets() noexcept;
+    Task checkForAutoTargets() noexcept;
 
     int taskGraphicId(const genie::ActionType taskType, const IAction::UnitState state);
 

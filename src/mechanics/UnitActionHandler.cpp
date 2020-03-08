@@ -168,16 +168,16 @@ Task UnitActionHandler::findMatchingTask(const std::shared_ptr<Player> ownPlayer
 
 }
 
-void UnitActionHandler::checkForAutoTargets() noexcept
+Task UnitActionHandler::checkForAutoTargets() noexcept
 {
     if (m_unit->stance != Unit::Stance::Aggressive || m_autoTargetTasks.empty() || m_currentAction) {
-        return;
+        return {};
     }
 
     MapPtr map = m_unit->m_map.lock();
     if (!map) {
         WARN << "no map";
-        return;
+        return {};
     }
 
     const genie::Unit *data = m_unit->m_data;
@@ -186,7 +186,6 @@ void UnitActionHandler::checkForAutoTargets() noexcept
 
     Task newTask;
     Unit::Ptr target;
-
 
     const MapPos position = m_unit->position();
     const int left = position.x / Constants::TILE_SIZE - los;
@@ -239,11 +238,12 @@ void UnitActionHandler::checkForAutoTargets() noexcept
     }
 
     if (!newTask.data || !target) {
-        return;
+        return {};
     }
 
     DBG << "found auto task" << newTask.data->actionTypeName() << "for" << m_unit->debugName;
-    IAction::assignTask(newTask, Unit::fromEntity(m_unit->shared_from_this()), target);
+    newTask.target = target;
+    return newTask;
 }
 
 void UnitActionHandler::removeAction(const ActionPtr &action)

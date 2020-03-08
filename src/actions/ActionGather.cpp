@@ -15,10 +15,15 @@
 #include <limits>
 #include <utility>
 
-ActionGather::ActionGather(const std::shared_ptr<Unit> &unit, const std::shared_ptr<Unit> &target, const Task &task) :
-    IAction(Type::Gather, unit, task),
-    m_target(target)
+ActionGather::ActionGather(const std::shared_ptr<Unit> &unit, const Task &task) :
+    IAction(Type::Gather, unit, task)
 {
+    Unit::Ptr target = task.target.lock();
+    if (!target) {
+        WARN << "no target target";
+        return;
+    }
+    m_target = target;
     m_resourceType = genie::ResourceType(m_task.data->ResourceIn);
     DBG << unit->debugName << "gathering from" << target->debugName;
 
@@ -36,31 +41,20 @@ IAction::UpdateResult ActionGather::update(Time time)
     }
 
     Unit::Ptr target = m_target.lock();
+
     if (!target) {
-        WARN << "target gone";
+        WARN << "gather target gone";
         if (unit->resources[m_resourceType] == 0) {
             return UpdateResult::Completed;
         }
-        const Unit::Ptr dropSite = findDropSite(unit);
-        if (!dropSite) {
-            WARN << "Couldn't even find a drop site!";
-            return UpdateResult::Completed;
-        }
 
-        DBG << "moving to" << dropSite->position() << "to drop off, then returning to" << unit->position();
-
-        // Bleh, will be fucked if there's more in the queue, but I'm lazy
-        unit->actions.queueAction(ActionMove::moveUnitTo(unit, dropSite->position(), m_task));
-        unit->actions.queueAction(std::make_shared<ActionDropOff>(unit, dropSite, m_task));
-        unit->actions.queueAction(ActionMove::moveUnitTo(unit, unit->position(), m_task));
-
-        return UpdateResult::Completed;
+        return maybeDropOff(unit);
     }
 
 
     if (target->healthLeft() > 0 && target->playerId != unit->playerId) {
         DBG << "Unit isn't dead, attacking first";
-        unit->actions.prependAction(std::make_shared<ActionAttack>(unit, target, m_task));
+        unit->actions.prependAction(std::make_shared<ActionAttack>(unit, m_task));
         return UpdateResult::NotUpdated;
     }
 
@@ -80,23 +74,7 @@ IAction::UpdateResult ActionGather::update(Time time)
             DBG << unit->debugName << "is full" << unit->resources[m_resourceType] << "/" << unit->data()->ResourceCapacity;
         }
 
-        const MapPos &currentPos = unit->position();
-
-        const Unit::Ptr dropSite = findDropSite(unit);
-
-        if (dropSite) {
-            DBG << "moving to" << dropSite->position() << "to drop off, then returning to" << currentPos << "to continue gathering";
-
-            unit->actions.queueAction(ActionMove::moveUnitTo(unit, dropSite->position(), m_task));
-            unit->actions.queueAction(std::make_shared<ActionDropOff>(unit, dropSite, m_task));
-            unit->actions.queueAction(ActionMove::moveUnitTo(unit, currentPos, m_task));
-
-            if (target->resources[m_resourceType] > 0) {
-                unit->actions.queueAction(std::make_shared<ActionGather>(unit, target, m_task));
-            }
-        } else {
-            WARN << "failed to find a drop site";
-        }
+        return maybeDropOff(unit);
 
         return UpdateResult::Completed;
     }
@@ -138,6 +116,31 @@ genie::ActionType ActionGather::taskType() const
     return m_task.data->ActionType;
 }
 
+IAction::UpdateResult ActionGather::maybeDropOff(const std::shared_ptr<Unit> &unit)
+{
+    const Unit::Ptr dropSite = findDropSite(unit);
+    if (!dropSite) {
+        WARN << "Couldn't even find a drop site!";
+        return UpdateResult::Completed;
+    }
+
+    DBG << "moving to" << dropSite->position() << "to drop off, then returning to" << unit->position();
+
+    // Bleh, will be fucked if there's more in the queue, but I'm lazy
+    unit->actions.queueAction(ActionMove::moveUnitTo(unit, dropSite));
+    Task dropoffTask = m_task;
+    dropoffTask.target = dropSite;
+    unit->actions.queueAction(std::make_shared<ActionDropOff>(unit, dropoffTask));
+    unit->actions.queueAction(ActionMove::moveUnitTo(unit, unit->position(), m_task));
+
+    Unit::Ptr target = m_target.lock();
+    if (target && target->resources[m_resourceType] > 0) {
+        unit->actions.queueAction(std::make_shared<ActionGather>(unit, m_task));
+    }
+
+    return UpdateResult::Completed;
+}
+
 std::shared_ptr<Unit> ActionGather::findDropSite(const std::shared_ptr<Unit> &unit)
 {
     float closestDistance = std::numeric_limits<float>::max();
@@ -166,10 +169,15 @@ std::shared_ptr<Unit> ActionGather::findDropSite(const std::shared_ptr<Unit> &un
 }
 
 
-ActionDropOff::ActionDropOff(const std::shared_ptr<Unit> &unit, const std::shared_ptr<Unit> &target, const Task &task) :
-    IAction(Type::DropOff, unit, task),
-    m_target(target)
+ActionDropOff::ActionDropOff(const std::shared_ptr<Unit> &unit, const Task &task) :
+    IAction(Type::DropOff, unit, task)
 {
+    Unit::Ptr target = task.target.lock();
+    if (!target) {
+        WARN << "no dropoff target";
+        return;
+    }
+    m_target = target;
     m_resourceType = genie::ResourceType(m_task.data->ResourceIn);
     DBG << unit->debugName << "dropping off" << target->debugName;
 
@@ -190,7 +198,7 @@ IAction::UpdateResult ActionDropOff::update(Time /*time*/)
 
     Unit::Ptr target = m_target.lock();
     if (!target) {
-        WARN << "target gone";
+        WARN << "dropoff target gone";
         return UpdateResult::Completed;
     }
 
