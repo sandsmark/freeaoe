@@ -556,7 +556,9 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
         // Avoid changing the angle quickly back and forth in some corner cases, it looks dumb
         nextPos = *(m_path.end() - 2);
         nextPos.z = m_map->elevationAt(nextPos);
-        unit->setAngle(m_prevPathPoint.toScreen().angleTo(nextPos.toScreen()));
+        if (std::abs(m_prevPathPoint.toScreen().angleTo(nextPos.toScreen())) > 0.1) {
+            unit->setAngle(m_prevPathPoint.toScreen().angleTo(nextPos.toScreen()));
+        }
     }
     newPos.z = m_map->elevationAt(newPos);
 
