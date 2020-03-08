@@ -277,7 +277,7 @@ inline std::string maErrorString(const ma_result result)
 
 void AudioPlayer::playStream(const std::string &filename)
 {
-    DBG << "resolving path" << filename;
+    DBG  << AssetManager::Inst()->soundsPath() << "resolving path" << filename;
     std::string filePath = genie::util::resolvePathCaseInsensitive(AssetManager::Inst()->soundsPath() + filename);
     if (filePath.empty()) {
         WARN << "Unable to find" << filename;
