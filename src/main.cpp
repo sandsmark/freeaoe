@@ -200,6 +200,6 @@ int main(int argc, char **argv) try
 
     return 0;
 } catch (const std::exception &e) {
-    std::cerr << "uncatched exception " << e.what() << std::endl;
+    std::cerr << "uncatched exception '" << e.what() << "', terminating uncleanly" << std::endl;
     return 1;
 }

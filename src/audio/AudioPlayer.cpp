@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <random>
 #include <vector>
+#include <filesystem>
 
 #include "resource/AssetManager.h"
 #include "resource/DataManager.h"
@@ -281,6 +282,8 @@ void AudioPlayer::playStream(const std::string &filename)
         WARN << "Unable to find" << filename;
         return;
     }
+    DBG << "Playing" << filePath;
+    DBG << "testing std::path trickery" << std::filesystem::path(filePath).native() <<std::filesystem::path(filePath).generic_string();
 
     ma_decoder_config decoderConfig = ma_decoder_config_init(ma_format_unknown, 2, 0);
     decoderConfig.channelMap[0] = MA_CHANNEL_LEFT;
