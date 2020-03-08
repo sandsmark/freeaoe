@@ -77,7 +77,6 @@ void IAction::assignTask(const Task &task, const std::shared_ptr<Unit> &unit)
             DBG << "Can't gather from nothing";
             return;
         }
-        DBG << target.get();
         unit->actions.queueAction(ActionMove::moveUnitTo(unit, task));
         ActionPtr gatherAction = std::make_shared<ActionGather>(unit, task);
         gatherAction->requiredUnitID = task.unitId;
