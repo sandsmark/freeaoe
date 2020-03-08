@@ -605,7 +605,7 @@ void ActionPanel::handleButtonClick(const ActionPanel::InterfaceButton &button)
             break;
         case Command::Stop:
             for (Unit::Ptr unit : m_unitManager->selected()) {
-                unit->actions.setCurrentAction(nullptr);
+                unit->actions.clearActionQueue();
             }
             break;
         case Command::Kill:
