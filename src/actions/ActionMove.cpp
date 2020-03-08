@@ -421,6 +421,7 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
     float distanceLeft = util::hypot(m_path.back().x - unitPosition.x, m_path.back().y - unitPosition.y);
     while (movement > distanceLeft && !m_path.empty() && isPassable(m_path.back().x, m_path.back().y)) {
         movement -= distanceLeft;
+        m_prevPathPoint = unitPosition;
         unitPosition = m_path.back();
         unitPosition.z = m_map->elevationAt(unitPosition);
         m_path.pop_back();
@@ -530,9 +531,17 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
     }
 
 
-    ScreenPos sourceScreen = unitPosition.toScreen();
-    ScreenPos targetScreen = newPos.toScreen();
-    unit->setAngle(sourceScreen.angleTo(targetScreen));
+    const ScreenPos sourceScreen = unitPosition.toScreen();
+    const ScreenPos targetScreen = newPos.toScreen();
+    const float newAngle = sourceScreen.angleTo(targetScreen);
+    if (m_path.size() < 2) {
+        unit->setAngle(newAngle);
+    } else {
+        // Avoid changing the angle quickly back and forth in some corner cases, it looks dumb
+        nextPos = *(m_path.end() - 2);
+        nextPos.z = m_map->elevationAt(nextPos);
+        unit->setAngle(m_prevPathPoint.toScreen().angleTo(nextPos.toScreen()));
+    }
     newPos.z = m_map->elevationAt(newPos);
 
     if (!isPassable(newPos.x, newPos.y)) {

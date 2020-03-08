@@ -83,5 +83,6 @@ private:
     std::thread m_pathfindingThread;
     std::weak_ptr<Unit> m_targetUnit;
     MapPos m_lastTargetUnitPosition;
+    MapPos m_prevPathPoint;
 };
 
