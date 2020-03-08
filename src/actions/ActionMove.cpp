@@ -894,8 +894,8 @@ bool ActionMove::isPassable(const float x, const float y) noexcept
     if (IS_UNLIKELY(x < 0 || y < 0)) {
         return false;
     }
-    const int tileX = x / Constants::TILE_SIZE + 0.5;
-    const int tileY = y / Constants::TILE_SIZE + 0.5;
+    const int tileX = x / Constants::TILE_SIZE;
+    const int tileY = y / Constants::TILE_SIZE;
     if (IS_UNLIKELY(tileX >= m_map->columnCount() || tileY >= m_map->rowCount())) {
         return false;
     }
