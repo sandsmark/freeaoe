@@ -53,7 +53,7 @@ public:
     void setAllowedOptions(const std::vector<ConfigOption> &options);
 
 
-    const std::string &getValue(const std::string &name);
+    std::string getValue(const std::string &name);
     void setValue(const std::string &name, const std::string &value);
 
     void printUsage(const std::string &programName);

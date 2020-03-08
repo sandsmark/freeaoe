@@ -291,8 +291,14 @@ void Config::setAllowedOptions(const std::vector<Config::ConfigOption> &options)
 }
 
 
-const std::string &Config::getValue(const std::string &name)
+std::string Config::getValue(const std::string &name)
 {
+    // TODO separate getters, it's a bit dumb with all this generic shit for basically just one
+    if (name == "game-path") {
+        std::filesystem::path path(m_options[name]);
+        return path.generic_string();
+    }
+
     return m_options[name];
 }
 
