@@ -81,7 +81,7 @@ IAction::UpdateResult ActionAttack::update(Time time)
 
         std::shared_ptr<ActionMove> moveAction = ActionMove::moveUnitTo(unit, targetUnit, m_task);
         moveAction->maxDistance = unit->data()->Combat.MaxRange * Constants::TILE_SIZE;
-        unit->prependAction(moveAction);
+        unit->actions.prependAction(moveAction);
 
         return IAction::UpdateResult::NotUpdated;
     }
@@ -93,7 +93,7 @@ IAction::UpdateResult ActionAttack::update(Time time)
             return IAction::UpdateResult::Failed;
         }
 
-        if (!unit->findMatchingTask(genie::ActionType::RetreatToShootingRage, -1).data) {
+        if (!unit->actions.findMatchingTask(genie::ActionType::RetreatToShootingRage, -1).data) {
             return IAction::UpdateResult::Failed;
         }
 
@@ -103,7 +103,7 @@ IAction::UpdateResult ActionAttack::update(Time time)
         float targetY = m_targetPosition.y + sin(angleToTarget + M_PI) * minDistance;
 
         std::shared_ptr<ActionMove> moveAction = ActionMove::moveUnitTo(unit, MapPos(targetX, targetY), m_task);
-        unit->prependAction(moveAction);
+        unit->actions.prependAction(moveAction);
         return IAction::UpdateResult::NotUpdated;
     }
 

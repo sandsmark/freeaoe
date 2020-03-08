@@ -146,17 +146,17 @@ void IAction::assignTask(const Task &task, const std::shared_ptr<Unit> &unit, co
             return;
         }
 
-        unit->queueAction(ActionMove::moveUnitTo(unit, target->position(), task));
+        unit->actions.queueAction(ActionMove::moveUnitTo(unit, target->position(), task));
 
         ActionPtr buildAction = std::make_shared<ActionBuild>(unit, target, task);
         buildAction->requiredUnitID = task.unitId;
-        unit->queueAction(buildAction);
+        unit->actions.queueAction(buildAction);
 
         if (target->data()->Class == genie::Unit::Farm) {
-            Task farmTask = unit->findMatchingTask(genie::ActionType::GatherRebuild, target->data()->ID);
+            Task farmTask = unit->actions.findMatchingTask(genie::ActionType::GatherRebuild, target->data()->ID);
             ActionPtr farmAction = std::make_shared<ActionGather>(unit, target, farmTask);
             farmAction->requiredUnitID = farmTask.unitId;
-            unit->queueAction(farmAction);
+            unit->actions.queueAction(farmAction);
         }
         break;
     }
@@ -166,10 +166,10 @@ void IAction::assignTask(const Task &task, const std::shared_ptr<Unit> &unit, co
             DBG << "Can't gather from nothing";
             return;
         }
-        unit->queueAction(ActionMove::moveUnitTo(unit, target->position(), task));
+        unit->actions.queueAction(ActionMove::moveUnitTo(unit, target->position(), task));
         ActionPtr farmAction = std::make_shared<ActionGather>(unit, target, task);
         farmAction->requiredUnitID = task.unitId;
-        unit->queueAction(farmAction);
+        unit->actions.queueAction(farmAction);
         break;
     }
     case genie::ActionType::Combat: {
@@ -179,7 +179,7 @@ void IAction::assignTask(const Task &task, const std::shared_ptr<Unit> &unit, co
 
         ActionPtr combatAction = std::make_shared<ActionAttack>(unit, target, task);
         combatAction->requiredUnitID = task.unitId;
-        unit->queueAction(combatAction);
+        unit->actions.queueAction(combatAction);
         break;
     }
     default:

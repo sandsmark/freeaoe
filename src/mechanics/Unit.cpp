@@ -65,6 +65,7 @@ std::shared_ptr<Unit> Unit::fromEntity(const EntityPtr &entity) noexcept
 
 Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager) :
     Entity(Type::Unit, LanguageManager::getString(data_.LanguageDLLName) + " (" + std::to_string(data_.ID) + ")"),
+    actions(this),
     playerId(player_->playerId),
     player(player_),
     m_unitManager(unitManager)
@@ -80,6 +81,7 @@ Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, Uni
 
 Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager, const Entity::Type type) :
     Entity(type, LanguageManager::getString(data_.LanguageDLLName) + " (" + std::to_string(data_.ID) + ")"),
+    actions(this),
     playerId(player_->playerId),
     player(player_),
     m_unitManager(unitManager)
@@ -140,15 +142,15 @@ bool Unit::update(Time time) noexcept
         updated = annex.unit->update(time) || updated;
     }
 
-    if (m_currentAction) {
-        ActionPtr currentAction = m_currentAction;
+    if (actions.m_currentAction) {
+        ActionPtr currentAction = actions.m_currentAction;
 
         IAction::UnitState prevState = currentAction->unitState();
 
         switch(currentAction->update(time)) {
         case IAction::UpdateResult::Completed:
             DBG << "Action completed" << currentAction->type;
-            removeAction(currentAction);
+            actions.removeAction(currentAction);
             break;
         case IAction::UpdateResult::Updated:
             updated = true;
@@ -157,16 +159,16 @@ bool Unit::update(Time time) noexcept
             break;
         case IAction::UpdateResult::Failed:
             WARN << currentAction->type << "action failed";
-            m_actionQueue.clear();
-            removeAction(currentAction);
+            actions.m_actionQueue.clear();
+            actions.removeAction(currentAction);
             break;
         }
 
-        if (!m_currentAction || currentAction != m_currentAction || prevState != m_currentAction->unitState()) {
+        if (!actions.m_currentAction || currentAction != actions.m_currentAction || prevState != actions.m_currentAction->unitState()) {
             updateGraphic();
         }
-        if (!m_currentAction) {
-            checkForAutoTargets();
+        if (!actions.m_currentAction) {
+            actions.checkForAutoTargets();
         }
     }
 
@@ -398,134 +400,6 @@ bool Unit::isDead() const noexcept
     return true;
 }
 
-void Unit::checkForAutoTargets() noexcept
-{
-    if (stance != Stance::Aggressive || m_autoTargetTasks.empty() || m_currentAction) {
-        return;
-    }
-    MapPtr map = m_map.lock();
-    if (!map) {
-        WARN << "no map";
-        return;
-    }
-
-    const int los = data()->LineOfSight;
-
-    Task newTask;
-    Unit::Ptr target;
-
-
-    const int left = position().x / Constants::TILE_SIZE - los;
-    const int top = position().y / Constants::TILE_SIZE - los;
-    const int right = position().x / Constants::TILE_SIZE + los;
-    const int bottom = position().y / Constants::TILE_SIZE + los;
-
-    float closestDistance = los * Constants::TILE_SIZE;
-    const std::vector<std::weak_ptr<Entity>> entities = map->entitiesBetween(left, top, right, bottom);
-    for (size_t i=0; i<entities.size(); i++) {
-        Unit::Ptr other = Unit::fromEntity(entities[i]);
-        if (!other) {
-            continue;
-        }
-
-        if (other->id == this->id) {
-            continue;
-        }
-        if (other->playerId == UnitManager::GaiaID) {
-            // I don't think we should auto-target gaia units?
-            continue;
-        }
-
-        const float distance = other->position().distance(position());
-
-        if (distance > closestDistance) {
-            continue;
-        }
-
-        Task potentialTask;
-        potentialTask = IAction::findMatchingTask(player.lock(), other, m_autoTargetTasks);
-        if (!potentialTask.data) {
-            continue;
-        }
-
-        // TODO: should only prefer civilians (and I think only wolves? lions?)
-        // should attack others as well
-        // Maybe check combat level instead? but then suddenly we get wolves trying to find a path to ships
-        if (potentialTask.data->ActionType == genie::ActionType::Combat && data()->Class == genie::Unit::PredatorAnimal) {
-            if (other->data()->Creatable.CreatableType != genie::unit::Creatable::VillagerType) {
-                continue;
-            }
-        }
-
-        if (potentialTask.data) {
-            newTask = potentialTask;
-            target = other;
-            closestDistance = distance;
-        }
-    }
-
-    if (!newTask.data || !target) {
-        return;
-    }
-
-    DBG << "found auto task" << newTask.data->actionTypeName() << "for" << debugName;
-    IAction::assignTask(newTask, Unit::fromEntity(shared_from_this()), target);
-}
-
-std::unordered_set<Task> Unit::availableActions() noexcept
-{
-    std::unordered_set<Task> tasks;
-    for (const genie::Task &task : DataManager::Inst().getTasks(m_data->ID)) {
-
-        // TODO: some units (archery range) have a combat task, but no attacks
-        // Could be if it needs garrisoned units?
-        if (task.ActionType == genie::ActionType::Combat && m_data->Combat.Attacks.empty()) {
-            continue;
-        }
-
-        tasks.insert(Task(task, m_data->ID));
-    }
-
-    if (!m_data->Action.TaskSwapGroup) {
-        return tasks;
-    }
-
-    Player::Ptr owner = player.lock();
-    if (!owner) {
-        WARN << "Lost our player";
-        return {};
-    }
-
-    for (const genie::Unit *swappable : owner->civilization.swappableUnits(m_data->Action.TaskSwapGroup)) {
-        for (const genie::Task &task : DataManager::Inst().getTasks(swappable->ID)) {
-            if (task.ActionType == genie::ActionType::Combat && m_data->Combat.Attacks.empty()) {
-                continue;
-            }
-            tasks.insert(Task(task, swappable->ID));
-        }
-    }
-
-    return tasks;
-}
-
-Task Unit::findMatchingTask(const genie::ActionType &type, int targetUnit) noexcept
-{
-    std::unordered_set<Task> available = availableActions();
-    for (const Task &task : available) {
-        if (task.data->ActionType == type && task.data->UnitID == targetUnit) {
-            return task;
-        }
-    }
-
-    for (const Task &task : available) {
-        if (task.data->ActionType == type && task.data->UnitID == -1) { // less specific
-            return task;
-        }
-    }
-
-    return Task();
-}
-
 Size Unit::selectionSize() const noexcept
 {
     return Size(data()->OutlineSize.x * Constants::TILE_SIZE, data()->OutlineSize.y * Constants::TILE_SIZE);
@@ -596,12 +470,12 @@ void Unit::setUnitData(const genie::Unit &data_) noexcept
 
     m_renderer->setGraphic(defaultGraphics);
 
-    m_autoTargetTasks.clear();
-    for (const Task &task : availableActions()) {
+    actions.m_autoTargetTasks.clear();
+    for (const Task &task : actions.availableActions()) {
         if (!task.data->EnableTargeting) {
             continue;
         }
-        m_autoTargetTasks.insert(task);
+        actions.m_autoTargetTasks.insert(task);
     }
 }
 
@@ -639,45 +513,6 @@ float Unit::healthLeft() const noexcept
     return healthpoints / data()->HitPoints;
 }
 
-int Unit::taskGraphicId(const genie::ActionType taskType, const IAction::UnitState state)
-{
-    for (const genie::Task &task : DataManager::Inst().getTasks(m_data->ID)) {
-        if (task.ActionType != taskType/* &&
-                !(taskType == genie::Actions::GatherRebuild && task.ActionType == genie::Actions::Hunt)*/) {
-            continue;
-        }
-
-        switch(state) {
-        case IAction::Idle:
-        case IAction::Proceeding:
-            if (task.ProceedingGraphicID != -1) {
-                return task.ProceedingGraphicID;
-            }
-            break;
-        case IAction::Moving:
-            if (task.MovingGraphicID != -1) {
-                return task.MovingGraphicID;
-            }
-            break;
-        case IAction::Working:
-            if (task.WorkingGraphicID != -1) {
-                return task.WorkingGraphicID;
-            }
-            break;
-        case IAction::Carrying:
-            if (task.CarryingGraphicID != -1){
-                return task.CarryingGraphicID;
-            }
-            break;
-        default:
-            break;
-        }
-    }
-    WARN << "Failed to task graphic for task type" << taskType << "and unit state" << state;
-
-    return m_data->StandingGraphic.first;
-}
-
 void Unit::updateGraphic()
 {
     if (hitpointsLeft() <= 0 && !isDying()) {
@@ -685,20 +520,20 @@ void Unit::updateGraphic()
         return;
     }
 
-    if ((m_currentAction && m_currentAction->unitState() != IAction::Idle) || isDying()) {
+    if ((actions.m_currentAction && actions.m_currentAction->unitState() != IAction::Idle) || isDying()) {
         m_renderer->setPlaySounds(true);
     } else {
         m_renderer->setPlaySounds(false);
     }
 
-    if (!m_currentAction) {
+    if (!actions.m_currentAction) {
         m_renderer->setGraphic(defaultGraphics);
         return;
     }
 
     GraphicPtr graphic;
 
-    switch (m_currentAction->type) {
+    switch (actions.m_currentAction->type) {
     case IAction::Type::Move:
         graphic = movingGraphics;
         for (const genie::Task &task : DataManager::Inst().getTasks(m_data->ID)) {
@@ -720,7 +555,7 @@ void Unit::updateGraphic()
 
         break;
     case IAction::Type::Attack:
-        if (m_currentAction->unitState() == IAction::UnitState::Attacking) {
+        if (actions.m_currentAction->unitState() == IAction::UnitState::Attacking) {
             graphic = AssetManager::Inst()->getGraphic(data()->Combat.AttackGraphic);
             graphic->setRunOnce(true);
         } else {
@@ -728,78 +563,16 @@ void Unit::updateGraphic()
         }
         break;
     default:
-        graphic = AssetManager::Inst()->getGraphic(taskGraphicId(m_currentAction->taskType(), m_currentAction->unitState()));
+        graphic = AssetManager::Inst()->getGraphic(actions.taskGraphicId(actions.m_currentAction->taskType(), actions.m_currentAction->unitState()));
         break;
     }
 
     if (!graphic || !graphic->isValid()) {
-        DBG << "No graphic" << m_currentAction->type << debugName;
+        DBG << "No graphic" << actions.m_currentAction->type << debugName;
         graphic = defaultGraphics;
     }
 
     m_renderer->setGraphic(graphic);
-}
-
-void Unit::prependAction(const ActionPtr &action) noexcept
-{
-    m_actionQueue.push_front(std::move(m_currentAction));
-    m_currentAction = action;
-    updateGraphic();
-}
-
-void Unit::queueAction(const ActionPtr &action) noexcept
-{
-    if (!m_currentAction) {
-        setCurrentAction(action);
-    } else {
-        m_actionQueue.push_back(action);
-    }
-}
-
-void Unit::setCurrentAction(const ActionPtr &action) noexcept
-{
-    m_currentAction = action;
-
-
-    Player::Ptr owner = player.lock();
-    if (!owner) {
-        WARN << "Lost our player";
-        return;
-    }
-
-    if (action && action->requiredUnitID != -1 && action->requiredUnitID != m_data->ID) {
-        setUnitData(owner->civilization.unitData(action->requiredUnitID));
-    }
-
-    updateGraphic();
-}
-
-void Unit::removeAction(const ActionPtr &action)
-{
-    if (action == m_currentAction) {
-        if (!m_actionQueue.empty()) {
-            DBG << "changing action to queued one" << m_actionQueue.front()->type;
-            setCurrentAction(m_actionQueue.front());
-            m_actionQueue.pop_front();
-        } else {
-            setCurrentAction(nullptr);
-            DBG << "no actions queued";
-        }
-    } else {
-        // fuck stl
-        std::deque<ActionPtr>::iterator it = std::find(m_actionQueue.begin(), m_actionQueue.end(), action);
-
-        if (it != std::end(m_actionQueue)) {
-            m_actionQueue.erase(it);
-        }
-    }
-}
-
-void Unit::clearActionQueue() noexcept
-{
-    m_actionQueue.clear();
-    m_currentAction.reset();
-    updateGraphic();
 }
 
 

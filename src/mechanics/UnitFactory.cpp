@@ -81,7 +81,7 @@ void UnitFactory::handleDefaultAction(const Unit::Ptr &unit, const genie::Task &
             flyingPosition.z = 10;
             unit->setPosition(flyingPosition);
         }
-        unit->setCurrentAction(std::make_shared<ActionFly>(unit, Task(task, unit->data()->ID)));
+        unit->actions.setCurrentAction(std::make_shared<ActionFly>(unit, Task(task, unit->data()->ID)));
         break;
     }
 

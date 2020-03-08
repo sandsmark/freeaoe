@@ -28,7 +28,7 @@
 #include <vector>
 
 #include "Entity.h"
-#include "actions/IAction.h"
+#include "UnitActionHandler.h"
 #include "core/Constants.h"
 #include "core/ResourceMap.h"
 #include "core/Types.h"
@@ -114,6 +114,8 @@ struct Unit : public Entity
     // The blinking animation thing when it is selected as a target
     int targetBlinkTimeLeft = 0;
 
+    UnitActionHandler actions;
+
     static std::shared_ptr<Unit> fromEntity(const EntityPtr &entity) noexcept;
     static inline std::shared_ptr<Unit> fromEntity(const std::weak_ptr<Entity> &entity) noexcept {
         return fromEntity(entity.lock());
@@ -128,12 +130,6 @@ struct Unit : public Entity
 
     inline float angle() const noexcept { return m_angle; }
     void setAngle(const float angle) noexcept;
-
-    void prependAction(const ActionPtr &action) noexcept;
-    void queueAction(const ActionPtr &action) noexcept;
-    void setCurrentAction(const ActionPtr &action) noexcept;
-    void clearActionQueue() noexcept;
-    const ActionPtr &currentAction() const noexcept { return m_currentAction; }
 
     [[nodiscard]] static MapPos snapPositionToGrid(const MapPos &position, const MapPtr &map, const genie::Unit *data) noexcept;
 
@@ -152,11 +148,6 @@ struct Unit : public Entity
 
     virtual ScreenRect rect() const noexcept;
     virtual bool checkClick(const ScreenPos &pos) const noexcept;
-
-    bool hasAutoTargets() const noexcept { return !m_autoTargetTasks.empty(); }
-    void checkForAutoTargets() noexcept;
-    std::unordered_set<Task> availableActions() noexcept;
-    Task findMatchingTask(const genie::ActionType &m_type, int targetUnit) noexcept;
     Size selectionSize() const noexcept;
 
     virtual void setCreationProgress(float progress) noexcept;
@@ -203,20 +194,15 @@ struct Unit : public Entity
     }
 
 protected:
+    friend struct UnitActionHandler;
+
     void forEachVisibleTile(std::function<void(const int, const int)> action);
 
     Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager, const Type m_type);
-
-    void removeAction(const ActionPtr &action);
-    int taskGraphicId(const genie::ActionType taskType, const IAction::UnitState state);
     void updateGraphic();
 
     const genie::Unit *m_data = nullptr;
     GraphicPtr movingGraphics;
-    ActionPtr m_currentAction;
-    std::deque<ActionPtr> m_actionQueue;
-
-    std::unordered_set<Task> m_autoTargetTasks;
 
     float m_creationProgress = 0.f;
 

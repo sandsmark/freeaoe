@@ -188,6 +188,7 @@ set(MECHANICS_SRC
     src/mechanics/Map.cpp
     src/mechanics/Player.cpp
     src/mechanics/StateManager.cpp
+    src/mechanics/UnitActionHandler.cpp
     src/mechanics/UnitFactory.cpp
     src/mechanics/UnitManager.cpp
     src/mechanics/Unit.cpp

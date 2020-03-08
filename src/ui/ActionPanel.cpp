@@ -320,7 +320,7 @@ void ActionPanel::updateButtons()
         currentButtons.push_back(killButton);
     }*/
 
-    const std::unordered_set<Task> actions = unit->availableActions();
+    const std::unordered_set<Task> actions = unit->actions.availableActions();
     std::unordered_set<genie::ActionType> addedTypes;
     for (const Task &task : actions) {
         if (addedTypes.count(task.data->ActionType)) {
@@ -516,7 +516,7 @@ void ActionPanel::addMilitaryButtons(const std::shared_ptr<Unit> &unit)
     }
 
     // Stance buttons
-    if (unit->hasAutoTargets()) {
+    if (unit->actions.hasAutoTargets()) {
         const Unit::Stance current = unit->stance;
         InterfaceButton button;
         button.showBorder = false;
@@ -605,7 +605,7 @@ void ActionPanel::handleButtonClick(const ActionPanel::InterfaceButton &button)
             break;
         case Command::Stop:
             for (Unit::Ptr unit : m_unitManager->selected()) {
-                unit->setCurrentAction(nullptr);
+                unit->actions.setCurrentAction(nullptr);
             }
             break;
         case Command::Kill:

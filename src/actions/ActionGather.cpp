@@ -50,9 +50,9 @@ IAction::UpdateResult ActionGather::update(Time time)
         DBG << "moving to" << dropSite->position() << "to drop off, then returning to" << unit->position();
 
         // Bleh, will be fucked if there's more in the queue, but I'm lazy
-        unit->queueAction(ActionMove::moveUnitTo(unit, dropSite->position(), m_task));
-        unit->queueAction(std::make_shared<ActionDropOff>(unit, dropSite, m_task));
-        unit->queueAction(ActionMove::moveUnitTo(unit, unit->position(), m_task));
+        unit->actions.queueAction(ActionMove::moveUnitTo(unit, dropSite->position(), m_task));
+        unit->actions.queueAction(std::make_shared<ActionDropOff>(unit, dropSite, m_task));
+        unit->actions.queueAction(ActionMove::moveUnitTo(unit, unit->position(), m_task));
 
         return UpdateResult::Completed;
     }
@@ -60,7 +60,7 @@ IAction::UpdateResult ActionGather::update(Time time)
 
     if (target->healthLeft() > 0 && target->playerId != unit->playerId) {
         DBG << "Unit isn't dead, attacking first";
-        unit->prependAction(std::make_shared<ActionAttack>(unit, target, m_task));
+        unit->actions.prependAction(std::make_shared<ActionAttack>(unit, target, m_task));
         return UpdateResult::NotUpdated;
     }
 
@@ -87,12 +87,12 @@ IAction::UpdateResult ActionGather::update(Time time)
         if (dropSite) {
             DBG << "moving to" << dropSite->position() << "to drop off, then returning to" << currentPos << "to continue gathering";
 
-            unit->queueAction(ActionMove::moveUnitTo(unit, dropSite->position(), m_task));
-            unit->queueAction(std::make_shared<ActionDropOff>(unit, dropSite, m_task));
-            unit->queueAction(ActionMove::moveUnitTo(unit, currentPos, m_task));
+            unit->actions.queueAction(ActionMove::moveUnitTo(unit, dropSite->position(), m_task));
+            unit->actions.queueAction(std::make_shared<ActionDropOff>(unit, dropSite, m_task));
+            unit->actions.queueAction(ActionMove::moveUnitTo(unit, currentPos, m_task));
 
             if (target->resources[m_resourceType] > 0) {
-                unit->queueAction(std::make_shared<ActionGather>(unit, target, m_task));
+                unit->actions.queueAction(std::make_shared<ActionGather>(unit, target, m_task));
             }
         } else {
             WARN << "failed to find a drop site";
