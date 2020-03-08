@@ -1059,5 +1059,5 @@ const Task UnitManager::taskForPosition(const Unit::Ptr &unit, const ScreenPos &
         return Task();
     }
 
-    return UnitActionHandler::findMatchingTask(m_humanPlayer.lock(), target, unit->actions.availableActions());
+    return unit->actions.findTaskWithTarget(target);
 }

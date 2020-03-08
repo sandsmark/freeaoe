@@ -72,6 +72,11 @@ Task UnitActionHandler::findAnyTask(const genie::ActionType &type, int targetUni
 
 }
 
+Task UnitActionHandler::findTaskWithTarget(const std::shared_ptr<Unit> &target)
+{
+    return findMatchingTask(m_unit->player.lock(), target, availableActions());
+}
+
 Task UnitActionHandler::findMatchingTask(const std::shared_ptr<Player> ownPlayer, const std::shared_ptr<Unit> &target, const std::unordered_set<Task> &potentials)
 {
     if (!ownPlayer){
