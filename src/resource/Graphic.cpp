@@ -71,7 +71,7 @@ sf::Image Graphic::slpFrameToImage(const genie::SlpFramePtr &frame, int8_t playe
     const int height = frame->getHeight();
 
     sf::Image img;
-    if (width < 1 || height < 1) {
+    if (width < 1 || height < 1 || width >= 46340 || height >= 46340) {
         img.create(1, 1, sf::Color::Transparent);
         return img;
     }

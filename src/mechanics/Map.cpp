@@ -61,7 +61,7 @@ void Map::setupBasic() noexcept
     grass.elevation = 0;
     grass.terrainId = 0;
 
-    const size_t tileCount = cols_ * rows_;
+    const size_t tileCount = size_t(cols_) * size_t(rows_); // explicit casting to silence static analyzers
     tiles_.resize(tileCount, grass);
     m_tileUnits.resize(tileCount);
 
@@ -100,7 +100,7 @@ void Map::setupAllunitsMap() noexcept
     water.elevation = 0;
     water.terrainId = 1;
 
-    const size_t tileCount = cols_ * rows_;
+    const size_t tileCount = size_t(cols_) * size_t(rows_); // explicit cast -> silent static analyzers
     tiles_.resize(tileCount, water);
     m_tileUnits.resize(tileCount);
 
@@ -153,7 +153,15 @@ void Map::create(const genie::ScnMap &mapDescription) noexcept
     rows_ = mapDescription.width;
     cols_ = mapDescription.height;
 
-    const size_t tileCount = cols_ * rows_;
+    if (cols_ <= 0 || cols_ >= 46340) {
+        throw std::out_of_range("Map width (" + std::to_string(cols_) + ") out of range");
+    }
+
+    if (rows_ <= 0 || rows_ >= 46340) {
+        throw std::out_of_range("Map height (" + std::to_string(rows_) + ") out of range");
+    }
+
+    const size_t tileCount = size_t(cols_) * size_t(rows_); // explicit casts make static analyzers (lgtm) happy
     tiles_.resize(tileCount);
     m_tileUnits.resize(tileCount);
 
