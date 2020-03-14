@@ -536,7 +536,7 @@ void HistoryScreen::updateVisibleText()
     }
 
     int maxY = m_uiElements[TextDownButton].rect.y - m_uiElements[TextUpButton].rect.bottom() - m_uiElements[TextPositionIndicator].rect.height;
-    m_uiElements[TextPositionIndicator].rect.y = m_uiElements[TextUpButton].rect.bottom() + maxY * m_textScrollOffset / (m_textLines.size() - s_numVisibleTextLines);
+    m_uiElements[TextPositionIndicator].rect.y = m_uiElements[TextUpButton].rect.bottom() + maxY * m_textScrollOffset / int(m_textLines.size() - s_numVisibleTextLines);
 }
 
 void HistoryScreen::updateVisibleTitles()
@@ -557,6 +557,6 @@ void HistoryScreen::updateVisibleTitles()
         m_visibleTitles[i].text.setString(m_historyEntries[index].title);
     }
     int maxY = m_uiElements[TitlesDownButton].rect.y - m_uiElements[TitlesUpButton].rect.bottom() - m_uiElements[TitlesPositionIndicator].rect.height;
-    m_uiElements[TitlesPositionIndicator].rect.y = m_uiElements[TitlesUpButton].rect.bottom() + maxY * m_titleScrollOffset / (m_historyEntries.size() - s_numListEntries);
+    m_uiElements[TitlesPositionIndicator].rect.y = m_uiElements[TitlesUpButton].rect.bottom() + maxY * m_titleScrollOffset / int(m_historyEntries.size() - s_numListEntries);
 }
 
