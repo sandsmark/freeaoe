@@ -491,7 +491,7 @@ void HistoryScreen::loadFile(const std::string &filePath)
         m_textLines.push_back(std::move(currentLine));
     }
 
-    // FIXME: I'm lazy, parse good, different styling in a single line
+    // TODO: I'm lazy, parse good, different styling in a single line
     for (TextLine &line : m_textLines) {
         if (line.text.empty()) {
             continue;
