@@ -1,0 +1,4 @@
+path_classifiers:
+  library:
+    - exclude: extern/FlexLexer.h
+    - exclude: extern/miniaudio/
