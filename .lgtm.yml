@@ -1,12 +1,4 @@
 path_classifiers:
-  doc:
-    - exclude: /
-  generated:
-    - exclude: /
-  template:
-    - exclude: /
-  test:
-    - exclude: /
   library:
     - extern/FlexLexer.h
     - extern/miniaudio/
