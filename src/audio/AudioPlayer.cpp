@@ -394,6 +394,7 @@ void AudioPlayer::playStream(const std::string &filename)
     m_activeStreams[filename] = id;
 
     mp3Decoder.release();
+
 #else//macos
 #warning Sound disabled on macos because of lack of c++ support
 #endif//macos
@@ -401,6 +402,7 @@ void AudioPlayer::playStream(const std::string &filename)
 
 void AudioPlayer::stopStream(const std::string &filename)
 {
+#ifndef SHITTY_PLATFORM // macos doesn't have proper c++ support, can't be bothered to ifdef too much, so just drop everything
     if (!m_activeStreams.contains(filename)) {
         WARN << filename << "is not playing";
         return;
@@ -409,6 +411,9 @@ void AudioPlayer::stopStream(const std::string &filename)
     m_mutex.lock();
     sts_mixer_stop_voice(m_mixer.get(), m_activeStreams[filename]);
     m_mutex.unlock();
+#else//macos
+#warning Sound disabled on macos because of lack of c++ support
+#endif//macos
 }
 
 AudioPlayer &AudioPlayer::instance()
