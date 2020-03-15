@@ -39,7 +39,7 @@ static const char *s_registryKey = "InstallationDirectory";
 // I think this was for mingw or something
 #ifndef _MSC_VER
 #define WINAPI_FAMILY_PARTITION
-#endif
+#endif//_MSC_VER
 
 #include <atlbase.h>
 #include <knownfolders.h>
@@ -70,7 +70,7 @@ static std::string getRegistryString(const char *regGroup, const char *key)
 
     return std::string(outString);
 }
-#else
+#elif defined(__linux__)
 
 #include <wordexp.h>
 
@@ -223,6 +223,8 @@ static std::string getRegistryString(const std::string &regGroup, const std::str
 
     return resolvePathCaseInsensitive(util::toLowercase(path));
 }
+#else
+#warning Unsupported platform
 #endif
 
 void Config::printUsage(const std::string &programName)
