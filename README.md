@@ -76,6 +76,8 @@ To build
  - `cmake .. && make`
  - `./freeaoe`
 
+I can't get it to build on macOS, so if you manage to get it to build please open a PR.
+
 TODO (this is probably going to get outdated)
 ----
  - Proper victory screen.
