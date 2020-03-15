@@ -1,4 +1,4 @@
 path_classifiers:
   library:
     - extern/FlexLexer.h
-    - extern/miniaudio/
+    - extern/miniaudio/**/*
