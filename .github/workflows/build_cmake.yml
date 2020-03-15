@@ -30,9 +30,10 @@ jobs:
       # We'll use this as our working directory for all subsequent commands
       run: brew install gcc
 
+    - name: Uninstall old SFML 
+      run: brew uninstall --force sfml
+
     - name: Install SFML
-      # Some projects don't allow in-source building, so create a separate build directory
-      # We'll use this as our working directory for all subsequent commands
       run: brew install  --build-from-source sfml
 
     - name: fetch submodules
