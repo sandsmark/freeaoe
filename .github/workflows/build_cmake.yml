@@ -31,7 +31,10 @@ jobs:
       run: brew install gcc
 
     - name: where is vcpkg
-      run: which vcpkg
+      run: vcpkg version
+
+    - name: update vcpkg
+      run: cd /usr/local/share/vcpkg/ && git pull
 
     - name: Update vcpkg
       run: vcpkg update
