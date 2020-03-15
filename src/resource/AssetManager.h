@@ -27,6 +27,7 @@
 #include <unordered_set>
 #include <fstream>
 #include <sstream>
+#include <vector>
 
 #include <genie/Types.h>
 #include <genie/resource/Slope.h>
