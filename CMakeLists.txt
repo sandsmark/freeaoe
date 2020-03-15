@@ -12,14 +12,14 @@ set(CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 if (APPLE)
+    if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     message(WARNING "\n"
-        "#############################################################################################\n"
-        "   MacOS does not have proper C++ support, so bug reports not accepted, you're on your own\n"
-        "   Also disabling sound\n"
-        "#############################################################################################\n"
-        )
-
-    add_definitions(-DSHITTY_PLATFORM)
+            "#############################################################################################\n"
+            "   Apple does not have proper C++ support, so bug reports not accepted, you're on your own\n"
+            "   You can try installing a new version of gcc and hopefully it works.\n"
+            "#############################################################################################\n"
+            )
+    endif() # clang
 endif()
 
 project(freeaoe)
