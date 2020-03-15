@@ -239,9 +239,9 @@ void AudioPlayer::playSound(const int id, const int civilization, const float pa
     }
 
     playSample(wavPtr, pan, volume);
-#else
+#else//macos
 #warning Sound disabled on macos because of lack of c++ support
-#endif
+#endif//macos
 }
 
 
@@ -331,6 +331,7 @@ inline std::string maErrorString(const ma_result result)
 
 void AudioPlayer::playStream(const std::string &filename)
 {
+#ifndef SHITTY_PLATFORM // macos doesn't have proper c++ support, can't be bothered to ifdef too much, so just drop everything
     DBG  << AssetManager::Inst()->soundsPath() << "resolving path" << filename;
     std::string filePath = genie::util::resolvePathCaseInsensitive(AssetManager::Inst()->soundsPath() + filename);
     if (filePath.empty()) {
@@ -393,6 +394,9 @@ void AudioPlayer::playStream(const std::string &filename)
     m_activeStreams[filename] = id;
 
     mp3Decoder.release();
+#else//macos
+#warning Sound disabled on macos because of lack of c++ support
+#endif//macos
 }
 
 void AudioPlayer::stopStream(const std::string &filename)
