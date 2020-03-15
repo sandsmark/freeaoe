@@ -203,6 +203,7 @@ void AudioPlayer::playSample(const std::shared_ptr<uint8_t[]> &data, const float
 
 void AudioPlayer::playSound(const int id, const int civilization, const float pan, const float volume)
 {
+#ifndef SHITTY_PLATFORM // macos doesn't have proper c++ support, can't be bothered to ifdef too much
     const genie::Sound &sound = DataManager::Inst().getSound(id);
     if (sound.Items.empty()) {
         WARN << "no sounds";
@@ -238,6 +239,9 @@ void AudioPlayer::playSound(const int id, const int civilization, const float pa
     }
 
     playSample(wavPtr, pan, volume);
+#else
+#warning Sound disabled on macos because of lack of c++ support
+#endif
 }
 
 

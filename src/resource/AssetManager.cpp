@@ -172,6 +172,7 @@ std::shared_ptr<genie::UIFile> AssetManager::getUIFile(const std::string &name)
 
 std::shared_ptr<uint8_t[]> AssetManager::getWavPtr(uint32_t id)
 {
+#ifndef SHITTY_PLATFORM
     std::weak_ptr<uint8_t[]> weakPtr = m_wavCache[id];
     std::shared_ptr<uint8_t[]> wavPtr = weakPtr.lock();
     if (wavPtr) {
@@ -195,6 +196,10 @@ std::shared_ptr<uint8_t[]> AssetManager::getWavPtr(uint32_t id)
             return wavPtr;
         }
     }
+#else
+#warning Sound disabled on macos because of bad c++ support
+#endif
+
     return nullptr;
 }
 

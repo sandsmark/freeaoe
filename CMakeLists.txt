@@ -11,6 +11,17 @@ set (CMAKE_CXX_STANDARD 20)
 set(CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+if (APPLE)
+    message(WARNING "\n"
+        "#############################################################################################\n"
+        "   MacOS does not have proper C++ support, so bug reports not accepted, you're on your own\n"
+        "   Also disabling sound\n"
+        "#############################################################################################\n"
+        )
+
+    add_definitions(-DSHITTY_PLATFORM)
+endif()
+
 project(freeaoe)
 
 if(DEFAULT_DATA_PATH)
