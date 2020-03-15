@@ -20,7 +20,8 @@ if (APPLE)
             "#############################################################################################\n"
             )
     endif() # clang
-    add_definitions(-DSHITTY_PLATFORM)
+    add_definitions(-DSHITTY_PLATFORM -std=c++20)
+
 endif()
 
 project(freeaoe)
