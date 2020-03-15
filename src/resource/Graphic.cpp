@@ -71,12 +71,12 @@ sf::Image Graphic::slpFrameToImage(const genie::SlpFramePtr &frame, int8_t playe
     const int height = frame->getHeight();
 
     sf::Image img;
-    if (width < 1 || height < 1 || width >= 46340 || height >= 46340) {
+    if (width < 1 || height < 1 || width >= 11585 || height >= 11585) {
         img.create(1, 1, sf::Color::Transparent);
         return img;
     }
 
-    const size_t byteCount = width * height * 4;
+    const size_t byteCount = size_t(width) * size_t(height) * 4;
 
     switch(imageType) {
     case ImageType::Base:
