@@ -34,7 +34,7 @@ jobs:
       run: brew uninstall --force sfml
 
     - name: Install SFML
-      run: brew install --cc=gcc@9 --build-from-source sfml
+      run: brew install --cc=gcc-9 --build-from-source sfml
 
     - name: fetch submodules
       # Use a bash shell so we can use the same syntax for environment variable
