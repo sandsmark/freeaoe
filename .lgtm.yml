@@ -8,6 +8,5 @@ path_classifiers:
   test:
     - exclude: /
   library:
-    - exclude: /
     - extern/FlexLexer.h
     - extern/miniaudio/
