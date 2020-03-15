@@ -30,6 +30,9 @@ jobs:
       # We'll use this as our working directory for all subsequent commands
       run: brew install gcc
 
+    - name: where is vcpkg
+      run: which vcpkg
+
     - name: Update vcpkg
       run: vcpkg update
 
