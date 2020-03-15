@@ -128,7 +128,7 @@ else()
     # Somehow need this because otherwise the SFML config gets fucked
     find_package(ZLIB)
 
-    find_package(SFML COMPONENTS system window graphics REQUIRED)
+    find_package(SFML 2.5 CONFIG COMPONENTS system window graphics REQUIRED)
 endif()
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
