@@ -225,6 +225,7 @@ static std::string getRegistryString(const std::string &regGroup, const std::str
 }
 #else
 #warning Unsupported platform
+static std::string getRegistryString(const char *, const char *) return {};
 #endif
 
 void Config::printUsage(const std::string &programName)
