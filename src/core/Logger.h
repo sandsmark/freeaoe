@@ -172,6 +172,11 @@ struct LogPrinter {
         return *this;
     }
 
+#ifdef SHITTY_PLATFORM
+    // Because macos is shortbus special
+    inline LogPrinter &operator<<(const unsigned long num) { std::cout << num << separator; return *this; }
+#endif
+
     template<typename T>
     inline LogPrinter &operator<<(const std::vector<T> &vec)
     {
