@@ -55,38 +55,31 @@ static inline sf::Color convertColor(const Drawable::Color &color)
     return *reinterpret_cast<const sf::Color*>(&color);
 }
 
+// Ensure atomic creation
+namespace {
+struct Font {
+    Font(const uint8_t *data, const size_t size) {
+        font.loadFromMemory(data, size);
+    }
+
+    sf::Font font;
+};
+} // namespace
 
 const sf::Font &SfmlRenderTarget::defaultFont()
 {
-    // Ensure atomic creation
-    static struct Font {
-        Font() {
-            font.loadFromMemory(resource_Alegreya_Bold_latin_data, resource_Alegreya_Bold_latin_size);
-        }
-
-        sf::Font font;
-    } fontLoader;
-
+    static Font fontLoader(resource_Alegreya_Bold_latin_data, resource_Alegreya_Bold_latin_size);
     return fontLoader.font;
 }
 
 const sf::Font &SfmlRenderTarget::stylishFont()
 {
-    // Ensure atomic creation
-    static struct Font {
-        Font() {
-            font.loadFromMemory(resource_BerryRotunda_ttf_data, resource_BerryRotunda_ttf_size);
-        }
-
-        sf::Font font;
-    } fontLoader;
-
+    static Font fontLoader(resource_BerryRotunda_ttf_data, resource_BerryRotunda_ttf_size);
     return fontLoader.font;
 }
 
 SfmlRenderTarget::SfmlRenderTarget(const Size &size)
 {
-//    m_renderTexture = std::make_unique<sf::RenderTexture>(size);
     m_renderTexture = std::make_unique<sf::RenderTexture>();
     m_renderTexture->create(size.width, size.height);
     renderTarget_ = m_renderTexture.get();
