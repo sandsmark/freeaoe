@@ -45,6 +45,8 @@ struct AiScript : public SignalEmitter<AiScript>
     void setEscrow(const genie::ResourceType resource, float amount);
     float escrowAmount(const genie::ResourceType resource) const;
 
+    void showDebugMessage(const std::string &message);
+
 private:
     std::unordered_map<int, int> m_goals;
 };

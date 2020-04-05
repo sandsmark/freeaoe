@@ -116,5 +116,11 @@ ai::Actions::SetEscrowPercent::SetEscrowPercent(const Commodity commodity, const
 void ai::Actions::SetEscrowPercent::execute(ai::AiRule *rule)
 {
     DBG << "Setting escrow for" << m_resourceType << "to" << m_targetValue;
+    WARN << "escrow not implemented correctly";
     rule->m_owner->setEscrow(m_resourceType, m_targetValue / 100.);
+}
+
+void ai::Actions::ShowDebugMessage::execute(ai::AiRule *rule)
+{
+    rule->m_owner->showDebugMessage(m_message);
 }

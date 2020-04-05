@@ -4,6 +4,8 @@
 #include "global/EventListener.h"
 #include <genie/dat/ResourceType.h>
 
+#include <string>
+
 namespace ai {
 
 struct AiRule;
@@ -50,6 +52,16 @@ struct SetEscrowPercent : public Action
 
     genie::ResourceType m_resourceType = genie::ResourceType::InvalidResource;
     const int m_targetValue;
+};
+
+struct ShowDebugMessage : public Action
+{
+    ShowDebugMessage(const std::string &message) : m_message(message) {}
+
+    void execute(AiRule *rule) override;
+
+private:
+    const std::string m_message;
 };
 
 

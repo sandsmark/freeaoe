@@ -20,4 +20,12 @@ float AiScript::escrowAmount(const genie::ResourceType resource) const
     return 0.f;
 }
 
+void AiScript::showDebugMessage(const std::string &message)
+{
+    // TODO: for now just print it to the terminal
+    // Should probably show it on screen or separate window or something
+    WARN << " ========== AI " << m_player->name << message;
+
+}
+
 } // namespace ai

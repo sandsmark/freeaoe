@@ -382,7 +382,13 @@ std::shared_ptr<Action> ScriptLoader::createAction(const ActionType type)
 
 std::shared_ptr<Action> ScriptLoader::createAction(const ActionType type, const std::string &string)
 {
-    WARN << "unimplemented action" << type << string;
+    switch(type) {
+    case ActionType::ChatLocalToSelf:
+        return std::make_shared<Actions::ShowDebugMessage>(string);
+    default:
+        WARN << "unimplemented action" << type << string;
+    }
+
     return nullptr;
 }
 
