@@ -133,7 +133,7 @@ struct Player
         return Age(int(m_resourcesAvailable[genie::ResourceType::CurrentAge]));
     }
 
-    bool canBuildUnit(const int unitId, const bool withoutReserved = true) const;
+    bool canAffordUnit(const int unitId, const bool withoutReserved = true) const;
     void addUnit(Unit *unit);
     void removeUnit(Unit *unit);
 

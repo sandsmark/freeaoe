@@ -340,7 +340,7 @@ void Player::updateAvailableTechs()
     }
 }
 
-bool Player::canBuildUnit(const int unitId, const bool withoutReserved) const
+bool Player::canAffordUnit(const int unitId, const bool withoutReserved) const
 {
     const genie::Unit &unit = civilization.unitData(unitId);
     if (unit.ID == -1 || !unit.Enabled || unit.Creatable.TrainLocationID == -1) {

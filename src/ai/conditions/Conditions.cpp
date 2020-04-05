@@ -224,7 +224,7 @@ void CanTrainOrBuildCondition::onPlayerResourceChanged(Player *player, const gen
 bool CanTrainOrBuildCondition::checkCanBuild(const Player *player) const
 {
     for (const int id : m_typeIds) {
-        if (!player->canBuildUnit(id, m_withoutEscrow)) {
+        if (!player->canAffordUnit(id, m_withoutEscrow)) {
             continue;
         }
         const genie::Unit &data = player->civilization.unitData(id);
