@@ -5,7 +5,6 @@
 #include <SFML/Window/Event.hpp>
 #include <string>
 
-#include "TextButton.h"
 #include "core/Types.h"
 
 Dialog::Dialog(UiScreen *screen) :

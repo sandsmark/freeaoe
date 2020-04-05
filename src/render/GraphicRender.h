@@ -23,7 +23,6 @@
 
 #include <memory>
 
-struct Entity;
 class Graphic;
 using GraphicPtr = std::shared_ptr<Graphic>;
 

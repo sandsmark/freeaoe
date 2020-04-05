@@ -31,8 +31,6 @@
 #include "render/SfmlRenderTarget.h"
 #include "resource/AssetManager.h"
 #include "resource/Resource.h"
-#include "ui/Minimap.h"
-#include "ui/UiScreen.h"
 #include "ui/MouseCursor.h"
 #include "settings/input.h"
 
@@ -59,11 +57,6 @@
 #include <utility>
 
 #include <stddef.h>
-
-namespace genie {
-class ScnFile;
-}  // namespace genie
-struct Entity;
 
 #define MOUSE_MOVE_EDGE_SIZE 10
 #define CAMERA_SPEED 1.

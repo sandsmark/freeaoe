@@ -12,11 +12,9 @@
 #endif
 
 #include "grammar.gen.tab.hpp"
-#include "location.hh"
 
 namespace ai {
-
-    // forward declare to avoid an include
+    class ScriptParser;
     class ScriptLoader;
 
     class ScriptTokenizer : public yyFlexLexer {

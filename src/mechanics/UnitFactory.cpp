@@ -37,7 +37,6 @@
 #include "actions/IAction.h"
 #include "core/Logger.h"
 #include "core/ResourceMap.h"
-#include "core/Types.h"
 #include "core/Utility.h"
 #include "render/GraphicRender.h"
 #include "resource/DataManager.h"

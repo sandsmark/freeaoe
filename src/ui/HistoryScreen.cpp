@@ -41,10 +41,6 @@
 #include "resource/LanguageManager.h"
 #include "resource/Resource.h"
 
-namespace genie {
-class PalFile;
-}  // namespace genie
-
 HistoryScreen::HistoryScreen() :
     UiScreen("scr_hist.sin")
 {

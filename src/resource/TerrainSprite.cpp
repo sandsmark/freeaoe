@@ -21,8 +21,6 @@
 #include "Graphic.h"
 #include "DataManager.h"
 #include "AssetManager.h"
-#include "DataManager.h"
-#include "Graphic.h"
 #include "core/Constants.h"
 #include "core/Logger.h"
 #include "core/Types.h"
