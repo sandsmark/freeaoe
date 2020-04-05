@@ -110,7 +110,7 @@ struct Player
 
     // really only for AIs, but much more convenient to put here. So shoot me.
     // 0 - 1, % / 100
-    ResourceMap m_reserved;
+    ResourceMap m_reserved; // TODO FIXME: apparently, when e. g. gathering it stores X% in a separate escrow "account", not in the normal resourcesAvailable map
 
     bool alive = true;
     std::shared_ptr<VisibilityMap> visibility;

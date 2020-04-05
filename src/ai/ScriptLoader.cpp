@@ -427,6 +427,8 @@ std::shared_ptr<Action> ScriptLoader::createAction(const ActionType type, const 
     switch(type) {
     case ActionType::BuyCommodity:
         return std::make_shared<Actions::BuyCommodity>(commodity, 100);
+    case ActionType::ReleaseEscrow: // TODO FIXME: apparently escrow is stored in a separate account, so there can be a one-time release. For now just set escrow amount to 0...
+        return std::make_shared<Actions::SetEscrowPercent>(commodity, 0);
     default:
         WARN << "unimplemented action" << type << commodity;
         break;
@@ -442,7 +444,13 @@ std::shared_ptr<Action> ScriptLoader::createAction(const ActionType type, const 
 
 std::shared_ptr<Action> ScriptLoader::createAction(const ActionType type, const Commodity commodity, const int number)
 {
-    WARN << "unimplemented action" << type << commodity << number;
+    switch(type) {
+    case ActionType::SetEscrowPercentage:
+        return std::make_shared<Actions::SetEscrowPercent>(commodity, number);
+    default:
+        WARN << "unimplemented action" << type << commodity << number;
+        break;
+    }
     return nullptr;
 }
 

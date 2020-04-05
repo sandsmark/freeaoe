@@ -86,3 +86,35 @@ void ai::Actions::BuyCommodity::onTradingPriceChanged(const genie::ResourceType 
 
     m_tradingPrice = newPrice;
 }
+
+ai::Actions::SetEscrowPercent::SetEscrowPercent(const Commodity commodity, const int targetValue) :
+    m_targetValue(targetValue)
+{
+    switch(commodity) {
+    case Commodity::Food:
+        m_resourceType = genie::ResourceType::FoodStorage;
+        break;
+
+    case Commodity::Wood:
+        m_resourceType = genie::ResourceType::WoodStorage;
+        break;
+
+    case Commodity::Stone:
+        m_resourceType = genie::ResourceType::StoneStorage;
+        break;
+
+    case Commodity::Gold:
+        m_resourceType = genie::ResourceType::GoldStorage;
+        break;
+
+    default:
+        WARN << "Unhandled commodity for set escrow percentage" << commodity;
+        break;
+    }
+}
+
+void ai::Actions::SetEscrowPercent::execute(ai::AiRule *rule)
+{
+    DBG << "Setting escrow for" << m_resourceType << "to" << m_targetValue;
+    rule->m_owner->setEscrow(m_resourceType, m_targetValue / 100.);
+}

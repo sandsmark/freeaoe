@@ -5,19 +5,19 @@
 namespace ai
 {
 
-void AiScript::setEscrow(const genie::ResourceType resource, int amount)
+void AiScript::setEscrow(const genie::ResourceType resource, float amount)
 {
-    m_player->m_reserved[resource] = amount / 100.;
+    m_player->m_reserved[resource] = amount;
 }
 
-int AiScript::escrowAmount(const genie::ResourceType resource) const
+float AiScript::escrowAmount(const genie::ResourceType resource) const
 {
     ResourceMap::const_iterator escrowIt = m_player->m_reserved.find(resource);
     if (escrowIt != m_player->m_reserved.end()) {
-        return escrowIt->second * 100;
+        return escrowIt->second;
     }
 
-    return 0;
+    return 0.f;
 }
 
 } // namespace ai
