@@ -193,7 +193,7 @@ protected:
 
     virtual std::string blendomaticFilename() const { return "blendomatic.dat"; }
 
-    bool initializeInternal(const std::string &gamePath, const genie::GameVersion gameVersion);
+    bool initializeInternal(const std::string &dataPath, const genie::GameVersion gameVersion);
 
 private:
     DrsFileVector loadDrs(const std::vector<std::string> &filenames);

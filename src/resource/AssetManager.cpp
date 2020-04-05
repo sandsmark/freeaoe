@@ -648,7 +648,7 @@ int AssetManager::filenameID(const std::string &filename)
 size_t AssetManager::terrainCacheSize() const
 {
     size_t ret = 0;
-    for (const std::pair<uint32_t, TerrainPtr> t : terrains_) {
+    for (const std::pair<uint32_t, TerrainPtr> &t : terrains_) {
         ret += t.second->cacheSize();
     }
 

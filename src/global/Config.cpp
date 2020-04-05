@@ -96,11 +96,13 @@ std::string Config::winePath()
 
     if (std::filesystem::exists(prefixPath)) {
         return prefixPath;
-    } else if (std::filesystem::exists(defaultPath)) {
-        return defaultPath;
-    } else {
-        return {};
     }
+
+    if (std::filesystem::exists(defaultPath)) {
+        return defaultPath;
+    }
+
+    return {};
 }
 
 // Probably not the most efficient

@@ -69,7 +69,7 @@ public:
     std::shared_ptr<Action> createAction(const ActionType type, const ResearchItem research);
     std::shared_ptr<Action> createAction(const ActionType type, const Commodity commodity);
     std::shared_ptr<Action> createAction(const ActionType type, const Unit unit);
-    std::shared_ptr<Action> createAction(const ActionType type, const Commodity building, const int number);
+    std::shared_ptr<Action> createAction(const ActionType type, const Commodity commodity, const int number);
     std::shared_ptr<Action> createAction(const ActionType type, const PlayerNumberType playernumber, const int number);
     std::shared_ptr<Action> createAction(const ActionType type, const StrategicNumberName strategicNumber, const int number);
     std::shared_ptr<Action> createAction(const ActionType type, const PlayerNumberType playernumber, const Commodity commodity, const int number);

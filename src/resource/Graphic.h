@@ -125,7 +125,7 @@ public:
     Graphic(const genie::Graphic &m_data, const int id);
     virtual ~Graphic() = default;
 
-    static sf::Image slpFrameToImage(const genie::SlpFramePtr &frame, int8_t playerId, const ImageType imageType) noexcept;
+    static sf::Image slpFrameToImage(const genie::SlpFramePtr &frame, int8_t playerColor, const ImageType imageType) noexcept;
 
     //----------------------------------------------------------------------------
     /// Returns the image of the graphic.

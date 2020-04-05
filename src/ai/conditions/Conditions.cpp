@@ -431,13 +431,13 @@ bool Goal::satisfied(AiRule *owner)
     return CompareCondition::actualCompare(m_targetValue, m_comparison, m_script->goal(m_goalId));
 }
 
-TradingPrice::TradingPrice(const BuyOrSell type, const Commodity resource, const RelOp comparison, const int targetValue) :
+TradingPrice::TradingPrice(const BuyOrSell type, const Commodity commodity, const RelOp comparison, const int targetValue) :
     m_type(type),
     m_comparison(comparison),
     m_targetValue(targetValue),
     m_tradingPrice(type == Buy ? 130 : 70) // default values, should hopefully be updated immediately
 {
-    switch(resource) {
+    switch(commodity) {
     case Commodity::Food:
         m_resourceType = genie::ResourceType::FoodStorage;
         break;
@@ -451,7 +451,7 @@ TradingPrice::TradingPrice(const BuyOrSell type, const Commodity resource, const
         break;
 
     default:
-        WARN << "Unhandled commodity for trading price" << resource;
+        WARN << "Unhandled commodity for trading price" << commodity;
         break;
     }
 
