@@ -10,7 +10,7 @@ namespace ai {
 
 Condition::~Condition()
 {
-    DBG << this << "dying";
+//    DBG << this << "dying";
 }
 
 namespace Conditions {

@@ -81,4 +81,3 @@
 %type <std::shared_ptr<ai::Action>> action
 %type <std::vector<std::shared_ptr<ai::Action>>> actions // TODO: create vectors
 %type <std::shared_ptr<ai::AiRule>> rule
-%type <std::vector<std::shared_ptr<ai::AiRule>>> rules

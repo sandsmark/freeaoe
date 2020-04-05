@@ -19,7 +19,7 @@ struct AiScript;
 
 class ScriptLoader {
 public:
-    ScriptLoader(const int playerId) : m_playerId(playerId) {};
+    ScriptLoader(Player *player);
     virtual ~ScriptLoader() {};
 
     int parse(std::istream& in, std::ostream& out);
@@ -80,14 +80,10 @@ public:
     std::shared_ptr<Action> createAction(const ActionType type, const DifficultyParameter difficulty, const int number);
     std::shared_ptr<Action> createAction(const ActionType type, const PlayerNumberType playernumber, const int number1, const int number2);
 
-    std::shared_ptr<AiRule> createRule(const std::vector<std::shared_ptr<Condition>> &conditions, const std::vector<std::shared_ptr<Action>> &actions);
-
-    void addScript(const std::vector<std::shared_ptr<AiRule>> &rules);
-    std::vector<std::shared_ptr<AiScript>> scripts;
+    void addRule(const std::vector<std::shared_ptr<Condition>> &conditions, const std::vector<std::shared_ptr<Action>> &actions);
 
 private:
-    const int m_playerId;
+    std::shared_ptr<AiScript> m_script;
 };
 
 }
-

@@ -10,9 +10,16 @@
 #include "conditions/Conditions.h"
 #include "actions/Actions.h"
 
+
 namespace ai {
 
-int ScriptLoader::parse(std::istream& in, std::ostream& out) {
+ScriptLoader::ScriptLoader(Player *player) :
+    m_script(std::make_shared<AiScript>(player))
+{
+}
+
+int ScriptLoader::parse(std::istream& in, std::ostream& out)
+{
 
     ScriptTokenizer scanner {in, *this};
     ScriptParser parser {*this, scanner};
@@ -20,7 +27,7 @@ int ScriptLoader::parse(std::istream& in, std::ostream& out) {
     //parser.set_debug_level(4);
 
     int res = parser.parse();
-    DBG << "Got" << scripts.size() << "scripts";
+    DBG << "Got script";
 
     return res;
 }
@@ -46,7 +53,7 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const 
     switch (type) {
     case Fact::CanResearch:
     case Fact::CanResearchWithEscrow: // todo: handle escrow
-        return std::make_shared<Conditions::TechAvailableCondition>(age, m_playerId);
+        return std::make_shared<Conditions::TechAvailableCondition>(age, m_script->m_player->playerId);
     default:
         break;
     }
@@ -60,7 +67,7 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const 
     switch(type) {
     case Fact::CanBuild:
     case Fact::CanBuildWithEscrow: // todo; escrow
-        return std::make_shared<Conditions::CanTrainOrBuildCondition>(building, m_playerId);
+        return std::make_shared<Conditions::CanTrainOrBuildCondition>(building, m_script->m_player->playerId);
     default:
         break;
     }
@@ -73,7 +80,7 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const 
 {
     switch(type) {
     case Fact::BuildingTypeCount:
-        return std::make_shared<Conditions::UnitTypeCount>(building, comparison, number, m_playerId);
+        return std::make_shared<Conditions::UnitTypeCount>(building, comparison, number, m_script->m_player->playerId);
     case Fact::BuildingTypeCountTotal:
         return std::make_shared<Conditions::UnitTypeCount>(building, comparison, number, -1);
     default:
@@ -94,9 +101,9 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const 
 {
     switch(type) {
     case Fact::CanSellCommodity:
-        return std::make_shared<Conditions::CanTrade>(commodity, Conditions::CanTrade::Sell, m_playerId);
+        return std::make_shared<Conditions::CanTrade>(commodity, Conditions::CanTrade::Sell, m_script->m_player->playerId);
     case Fact::CanBuyCommodity:
-        return std::make_shared<Conditions::CanTrade>(commodity, Conditions::CanTrade::Buy, m_playerId);
+        return std::make_shared<Conditions::CanTrade>(commodity, Conditions::CanTrade::Buy, m_script->m_player->playerId);
     default:
         break;
     }
@@ -109,9 +116,9 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const 
 {
     switch(type) {
     case Fact::CommodityBuyingPrice:
-        return std::make_shared<Conditions::TradingPrice>(Conditions::TradingPrice::Buy, commodity, comparison, m_playerId);
+        return std::make_shared<Conditions::TradingPrice>(Conditions::TradingPrice::Buy, commodity, comparison, m_script->m_player->playerId);
     case Fact::CommoditySellingPrice:
-        return std::make_shared<Conditions::TradingPrice>(Conditions::TradingPrice::Sell, commodity, comparison, m_playerId);
+        return std::make_shared<Conditions::TradingPrice>(Conditions::TradingPrice::Sell, commodity, comparison, m_script->m_player->playerId);
     default:
         break;
     }
@@ -190,7 +197,7 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const 
 {
     switch(type) {
     case Fact::CurrentAge:
-        return std::make_shared<Conditions::ResourceValue>(genie::ResourceType::CurrentAge, comparison, int(age), m_playerId);
+        return std::make_shared<Conditions::ResourceValue>(genie::ResourceType::CurrentAge, comparison, int(age), m_script->m_player->playerId);
     default:
         break;
     }
@@ -221,7 +228,7 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const 
 {
     switch(type) {
     case Fact::UnitTypeCount:
-        return std::make_shared<Conditions::UnitTypeCount>(unit, comparison, number, m_playerId);
+        return std::make_shared<Conditions::UnitTypeCount>(unit, comparison, number, m_script->m_player->playerId);
     case Fact::UnitTypeCountTotal:
         return std::make_shared<Conditions::UnitTypeCount>(unit, comparison, number, -1);
     default:
@@ -270,7 +277,7 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const 
     case Fact::CanResearch: // todo handle cost
     case Fact::CanResearchWithEscrow: // todo: handle escrow
     case Fact::ResearchAvailable:
-        return std::make_shared<Conditions::TechAvailableCondition>(research, m_playerId);
+        return std::make_shared<Conditions::TechAvailableCondition>(research, m_script->m_player->playerId);
     default:
         break;
     }
@@ -283,7 +290,7 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const 
 {
     switch(type) {
     case Fact::CanTrain:
-        return std::make_shared<Conditions::CanTrainOrBuildCondition>(unit, m_playerId);
+        return std::make_shared<Conditions::CanTrainOrBuildCondition>(unit, m_script->m_player->playerId);
     default:
         break;
     }
@@ -303,14 +310,14 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact fact, const 
     genie::ResourceType type = genie::ResourceType::InvalidResource;
     switch(fact) {
     case Fact::PopulationHeadroom:
-        return std::make_shared<Conditions::PopulationHeadroomCondition>(comparison, number, m_playerId);
+        return std::make_shared<Conditions::PopulationHeadroomCondition>(comparison, number, m_script->m_player->playerId);
     case Fact::AttackWarboatCount:
     case Fact::AttackSoldierCount:
     case Fact::DefendWarboatCount:
     case Fact::DefendSoldierCount:
     case Fact::WarboatCount:
     case Fact::SoldierCount:
-        return std::make_shared<Conditions::CombatUnitsCount>(fact, comparison, number, m_playerId);
+        return std::make_shared<Conditions::CombatUnitsCount>(fact, comparison, number, m_script->m_player->playerId);
     case Fact::HousingHeadroom:
         type = genie::ResourceType::PopulationHeadroom;
         break;
@@ -331,7 +338,7 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact fact, const 
     }
 
     if (type != genie::ResourceType::InvalidResource) {
-        return std::make_shared<Conditions::ResourceValue>(type, comparison, number, m_playerId);
+        return std::make_shared<Conditions::ResourceValue>(type, comparison, number, m_script->m_player->playerId);
     }
 
     WARN << "unimplemented condition" << fact << comparison << number;
@@ -491,29 +498,28 @@ std::shared_ptr<Action> ScriptLoader::createAction(const ActionType type, const 
     return nullptr;
 }
 
-std::shared_ptr<AiRule> ScriptLoader::createRule(const std::vector<std::shared_ptr<Condition>> &conditions, const std::vector<std::shared_ptr<Action>> &actions)
+void ScriptLoader::addRule(const std::vector<std::shared_ptr<Condition>> &conditions, const std::vector<std::shared_ptr<Action>> &actions)
 {
-    std::shared_ptr<AiRule> ret = std::make_shared<AiRule>();
+    std::shared_ptr<AiRule> ret = std::make_shared<AiRule>(m_script.get());
     for (const std::shared_ptr<Condition> &condition : conditions) {
         ret->addCondition(condition);
     }
     for (const std::shared_ptr<Action> &action : actions) {
         ret->addAction(action);
     }
-
-    return ret;
+    m_script->rules.push_back(ret);
 }
 
-void ScriptLoader::addScript(const std::vector<std::shared_ptr<AiRule> > &rules)
-{
-    std::shared_ptr<AiScript> script = std::make_shared<AiScript>();
+//void ScriptLoader::addScript(const std::vector<std::shared_ptr<AiRule> > &rules)
+//{
+//    std::shared_ptr<AiScript> script = std::make_shared<AiScript>(m_player);
 
-    script->rules = rules;
-    for (std::shared_ptr<AiRule> &rule : script->rules) {
-        rule->m_owner = script.get();
-    }
+//    script->rules = rules;
+//    for (std::shared_ptr<AiRule> &rule : script->rules) {
+//        rule->m_owner = script.get();
+//    }
 
-    scripts.push_back(script);
-}
+//    scripts.push_back(script);
+//}
 
 } // namespace ai

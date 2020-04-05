@@ -38,12 +38,22 @@ void ai::AiRule::onConditionSatisfied()
 
 void AiRule::addCondition(const std::shared_ptr<ai::Condition> &condition)
 {
+    if (!condition) {
+        WARN << "Got null condition";
+        return;
+    }
+
     m_conditions.push_back(condition);
     condition->connect(Condition::SatisfiedChanged, this, &AiRule::onConditionSatisfied);
 }
 
 void AiRule::addAction(const std::shared_ptr<Action> &action)
 {
+    if (!action) {
+        WARN << "Got null action";
+        return;
+    }
+
     m_actions.push_back(action);
 
 }

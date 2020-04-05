@@ -18,7 +18,7 @@ void ai::Actions::SetStrategicNumber::execute(AiRule *rule)
 
 ai::Action::~Action()
 {
-    DBG << this << "dying";
+//    DBG << this << "dying";
 }
 
 void ai::Actions::DisableSelf::execute(ai::AiRule *rule)

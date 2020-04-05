@@ -1,5 +1,7 @@
 #include "ai/ScriptLoader.h"
 
+#include "mechanics/Player.h"
+
 #include <fstream> // NOLINT
 
 int main(int argc, char *argv[]) {
@@ -11,7 +13,8 @@ int main(int argc, char *argv[]) {
        std::ifstream in;
        in.open(argv[1]);
        std::cout << in.good() << std::endl;
-       ai::ScriptLoader parser(0);
+       Player player(0, 0, {});
+       ai::ScriptLoader parser(&player);
        return parser.parse(in, std::cout);
 }
 

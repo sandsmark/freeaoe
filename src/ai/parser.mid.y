@@ -2,15 +2,15 @@
 
 aiscript:
     /* Empty */
-    | rules ScriptEnd { driver.addScript($1); printf("got script\n"); }
+    | rules ScriptEnd { printf("got script\n"); }
 ;
 
 rules:
-    rule { std::vector<std::shared_ptr<ai::AiRule>> ret; ret.push_back($1); $$ = ret; printf("got single rule\n"); }
-    | rule rules { $2.push_back($1); $$ = $2; /*printf("got multiple rules\n");*/ }
+    rule { printf("got single rule\n"); }
+    | rule rules { /*printf("got multiple rules\n");*/ }
 
 rule:
-    OpenParen RuleStart conditions ConditionActionSeparator actions CloseParen { $$ = driver.createRule($3, $5); }
+    OpenParen RuleStart conditions ConditionActionSeparator actions CloseParen { driver.addRule($3, $5); }
 
 conditions:
     condition { std::vector<std::shared_ptr<ai::Condition>> ret; ret.push_back($1); $$ = ret; /* printf("got single condition\n");*/ }

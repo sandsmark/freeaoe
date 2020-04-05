@@ -800,11 +800,8 @@ namespace  ai  {
       // actions
       char dummy25[sizeof (std::vector<std::shared_ptr<ai::Action>>)];
 
-      // rules
-      char dummy26[sizeof (std::vector<std::shared_ptr<ai::AiRule>>)];
-
       // conditions
-      char dummy27[sizeof (std::vector<std::shared_ptr<ai::Condition>>)];
+      char dummy26[sizeof (std::vector<std::shared_ptr<ai::Condition>>)];
     };
 
     /// The size of the largest semantic type.
@@ -1902,19 +1899,6 @@ namespace  ai  {
       {}
 #endif
 #if 201103L <= YY_CPLUSPLUS
-      basic_symbol (typename Base::kind_type t, std::vector<std::shared_ptr<ai::AiRule>>&& v, location_type&& l)
-        : Base (t)
-        , value (std::move (v))
-        , location (std::move (l))
-      {}
-#else
-      basic_symbol (typename Base::kind_type t, const std::vector<std::shared_ptr<ai::AiRule>>& v, const location_type& l)
-        : Base (t)
-        , value (v)
-        , location (l)
-      {}
-#endif
-#if 201103L <= YY_CPLUSPLUS
       basic_symbol (typename Base::kind_type t, std::vector<std::shared_ptr<ai::Condition>>&& v, location_type&& l)
         : Base (t)
         , value (std::move (v))
@@ -2372,10 +2356,6 @@ switch (yytype)
 
       case 680: // actions
         value.template destroy< std::vector<std::shared_ptr<ai::Action>> > ();
-        break;
-
-      case 675: // rules
-        value.template destroy< std::vector<std::shared_ptr<ai::AiRule>> > ();
         break;
 
       case 677: // conditions
@@ -14507,10 +14487,6 @@ switch (yytype)
         value.move< std::vector<std::shared_ptr<ai::Action>> > (std::move (that.value));
         break;
 
-      case 675: // rules
-        value.move< std::vector<std::shared_ptr<ai::AiRule>> > (std::move (that.value));
-        break;
-
       case 677: // conditions
         value.move< std::vector<std::shared_ptr<ai::Condition>> > (std::move (that.value));
         break;
@@ -14952,10 +14928,6 @@ switch (yytype)
 
       case 680: // actions
         value.copy< std::vector<std::shared_ptr<ai::Action>> > (YY_MOVE (that.value));
-        break;
-
-      case 675: // rules
-        value.copy< std::vector<std::shared_ptr<ai::AiRule>> > (YY_MOVE (that.value));
         break;
 
       case 677: // conditions
@@ -15408,10 +15380,6 @@ switch (yytype)
         value.move< std::vector<std::shared_ptr<ai::Action>> > (YY_MOVE (s.value));
         break;
 
-      case 675: // rules
-        value.move< std::vector<std::shared_ptr<ai::AiRule>> > (YY_MOVE (s.value));
-        break;
-
       case 677: // conditions
         value.move< std::vector<std::shared_ptr<ai::Condition>> > (YY_MOVE (s.value));
         break;
@@ -15472,7 +15440,7 @@ switch (yytype)
 
 #line 9 "grammar.gen.ypp"
 } //  ai 
-#line 14456 "grammar.gen.tab.hpp"
+#line 14424 "grammar.gen.tab.hpp"
 
 
 

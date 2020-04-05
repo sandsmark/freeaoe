@@ -686,10 +686,6 @@ namespace  ai  {
         value.YY_MOVE_OR_COPY< std::vector<std::shared_ptr<ai::Action>> > (YY_MOVE (that.value));
         break;
 
-      case 675: // rules
-        value.YY_MOVE_OR_COPY< std::vector<std::shared_ptr<ai::AiRule>> > (YY_MOVE (that.value));
-        break;
-
       case 677: // conditions
         value.YY_MOVE_OR_COPY< std::vector<std::shared_ptr<ai::Condition>> > (YY_MOVE (that.value));
         break;
@@ -1131,10 +1127,6 @@ namespace  ai  {
 
       case 680: // actions
         value.move< std::vector<std::shared_ptr<ai::Action>> > (YY_MOVE (that.value));
-        break;
-
-      case 675: // rules
-        value.move< std::vector<std::shared_ptr<ai::AiRule>> > (YY_MOVE (that.value));
         break;
 
       case 677: // conditions
@@ -1580,10 +1572,6 @@ namespace  ai  {
         value.copy< std::vector<std::shared_ptr<ai::Action>> > (that.value);
         break;
 
-      case 675: // rules
-        value.copy< std::vector<std::shared_ptr<ai::AiRule>> > (that.value);
-        break;
-
       case 677: // conditions
         value.copy< std::vector<std::shared_ptr<ai::Condition>> > (that.value);
         break;
@@ -2024,10 +2012,6 @@ namespace  ai  {
 
       case 680: // actions
         value.move< std::vector<std::shared_ptr<ai::Action>> > (that.value);
-        break;
-
-      case 675: // rules
-        value.move< std::vector<std::shared_ptr<ai::AiRule>> > (that.value);
         break;
 
       case 677: // conditions
@@ -2708,10 +2692,6 @@ namespace  ai  {
         yylhs.value.emplace< std::vector<std::shared_ptr<ai::Action>> > ();
         break;
 
-      case 675: // rules
-        yylhs.value.emplace< std::vector<std::shared_ptr<ai::AiRule>> > ();
-        break;
-
       case 677: // conditions
         yylhs.value.emplace< std::vector<std::shared_ptr<ai::Condition>> > ();
         break;
@@ -2737,5011 +2717,5011 @@ namespace  ai  {
           switch (yyn)
             {
   case 3:
-#line 606 "grammar.gen.ypp"
-                      { driver.addScript(yystack_[1].value.as < std::vector<std::shared_ptr<ai::AiRule>> > ()); printf("got script\n"); }
-#line 2743 "grammar.gen.tab.cpp"
+#line 605 "grammar.gen.ypp"
+                      { printf("got script\n"); }
+#line 2723 "grammar.gen.tab.cpp"
     break;
 
   case 4:
-#line 610 "grammar.gen.ypp"
-         { std::vector<std::shared_ptr<ai::AiRule>> ret; ret.push_back(yystack_[0].value.as < std::shared_ptr<ai::AiRule> > ()); yylhs.value.as < std::vector<std::shared_ptr<ai::AiRule>> > () = ret; printf("got single rule\n"); }
-#line 2749 "grammar.gen.tab.cpp"
+#line 609 "grammar.gen.ypp"
+         { printf("got single rule\n"); }
+#line 2729 "grammar.gen.tab.cpp"
     break;
 
   case 5:
-#line 611 "grammar.gen.ypp"
-                 { yystack_[0].value.as < std::vector<std::shared_ptr<ai::AiRule>> > ().push_back(yystack_[1].value.as < std::shared_ptr<ai::AiRule> > ()); yylhs.value.as < std::vector<std::shared_ptr<ai::AiRule>> > () = yystack_[0].value.as < std::vector<std::shared_ptr<ai::AiRule>> > (); /*printf("got multiple rules\n");*/ }
-#line 2755 "grammar.gen.tab.cpp"
+#line 610 "grammar.gen.ypp"
+                 { /*printf("got multiple rules\n");*/ }
+#line 2735 "grammar.gen.tab.cpp"
     break;
 
   case 6:
-#line 614 "grammar.gen.ypp"
-                                                                               { yylhs.value.as < std::shared_ptr<ai::AiRule> > () = driver.createRule(yystack_[3].value.as < std::vector<std::shared_ptr<ai::Condition>> > (), yystack_[1].value.as < std::vector<std::shared_ptr<ai::Action>> > ()); }
-#line 2761 "grammar.gen.tab.cpp"
+#line 613 "grammar.gen.ypp"
+                                                                               { driver.addRule(yystack_[3].value.as < std::vector<std::shared_ptr<ai::Condition>> > (), yystack_[1].value.as < std::vector<std::shared_ptr<ai::Action>> > ()); }
+#line 2741 "grammar.gen.tab.cpp"
     break;
 
   case 7:
-#line 617 "grammar.gen.ypp"
+#line 616 "grammar.gen.ypp"
               { std::vector<std::shared_ptr<ai::Condition>> ret; ret.push_back(yystack_[0].value.as < std::shared_ptr<ai::Condition> > ()); yylhs.value.as < std::vector<std::shared_ptr<ai::Condition>> > () = ret; /* printf("got single condition\n");*/ }
-#line 2767 "grammar.gen.tab.cpp"
+#line 2747 "grammar.gen.tab.cpp"
     break;
 
   case 8:
-#line 618 "grammar.gen.ypp"
+#line 617 "grammar.gen.ypp"
                            { yystack_[0].value.as < std::vector<std::shared_ptr<ai::Condition>> > ().push_back(yystack_[1].value.as < std::shared_ptr<ai::Condition> > ()); yylhs.value.as < std::vector<std::shared_ptr<ai::Condition>> > () = yystack_[0].value.as < std::vector<std::shared_ptr<ai::Condition>> > (); }
-#line 2773 "grammar.gen.tab.cpp"
+#line 2753 "grammar.gen.tab.cpp"
     break;
 
   case 9:
-#line 621 "grammar.gen.ypp"
+#line 620 "grammar.gen.ypp"
                                        { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[1].value.as < std::shared_ptr<ai::Condition> > (); /*printf("condition\n");*/ }
-#line 2779 "grammar.gen.tab.cpp"
+#line 2759 "grammar.gen.tab.cpp"
     break;
 
   case 10:
-#line 624 "grammar.gen.ypp"
+#line 623 "grammar.gen.ypp"
                   { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createNotCondition(yystack_[0].value.as < std::shared_ptr<ai::Condition> > ()); /*printf("got negated condition\n");*/ }
-#line 2785 "grammar.gen.tab.cpp"
+#line 2765 "grammar.gen.tab.cpp"
     break;
 
   case 11:
-#line 625 "grammar.gen.ypp"
+#line 624 "grammar.gen.ypp"
                              { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createOrCondition(yystack_[1].value.as < std::shared_ptr<ai::Condition> > (), yystack_[0].value.as < std::shared_ptr<ai::Condition> > ()); /*printf("got multiple or conditions\n"); */ }
-#line 2791 "grammar.gen.tab.cpp"
+#line 2771 "grammar.gen.tab.cpp"
     break;
 
   case 12:
-#line 626 "grammar.gen.ypp"
+#line 625 "grammar.gen.ypp"
            { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); /*printf("got fact\n"); */ }
-#line 2797 "grammar.gen.tab.cpp"
+#line 2777 "grammar.gen.tab.cpp"
     break;
 
   case 13:
-#line 630 "grammar.gen.ypp"
+#line 629 "grammar.gen.ypp"
                  { std::vector<std::shared_ptr<ai::Action>> ret; ret.push_back(yystack_[0].value.as < std::shared_ptr<ai::Action> > ()); yylhs.value.as < std::vector<std::shared_ptr<ai::Action>> > () = ret; /*printf("got single action\n");*/ }
-#line 2803 "grammar.gen.tab.cpp"
+#line 2783 "grammar.gen.tab.cpp"
     break;
 
   case 14:
-#line 631 "grammar.gen.ypp"
+#line 630 "grammar.gen.ypp"
                            { yystack_[0].value.as < std::vector<std::shared_ptr<ai::Action>> > ().push_back(yystack_[1].value.as < std::shared_ptr<ai::Action> > ()); yylhs.value.as < std::vector<std::shared_ptr<ai::Action>> > () = yystack_[0].value.as < std::vector<std::shared_ptr<ai::Action>> > (); /*printf("got multiple actions\n");*/ }
-#line 2809 "grammar.gen.tab.cpp"
+#line 2789 "grammar.gen.tab.cpp"
     break;
 
   case 15:
-#line 634 "grammar.gen.ypp"
+#line 633 "grammar.gen.ypp"
                                   { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[1].value.as < std::shared_ptr<ai::Action> > (); /*printf("got action without arguments\n");*/ }
-#line 2815 "grammar.gen.tab.cpp"
+#line 2795 "grammar.gen.tab.cpp"
     break;
 
   case 16:
-#line 637 "grammar.gen.ypp"
+#line 636 "grammar.gen.ypp"
                 { yylhs.value.as < Age > () = Age::DarkAge; }
-#line 2821 "grammar.gen.tab.cpp"
+#line 2801 "grammar.gen.tab.cpp"
     break;
 
   case 17:
-#line 638 "grammar.gen.ypp"
+#line 637 "grammar.gen.ypp"
                   { yylhs.value.as < Age > () = Age::FeudalAge; }
-#line 2827 "grammar.gen.tab.cpp"
+#line 2807 "grammar.gen.tab.cpp"
     break;
 
   case 18:
-#line 639 "grammar.gen.ypp"
+#line 638 "grammar.gen.ypp"
                   { yylhs.value.as < Age > () = Age::CastleAge; }
-#line 2833 "grammar.gen.tab.cpp"
+#line 2813 "grammar.gen.tab.cpp"
     break;
 
   case 19:
-#line 640 "grammar.gen.ypp"
+#line 639 "grammar.gen.ypp"
                     { yylhs.value.as < Age > () = Age::ImperialAge; }
-#line 2839 "grammar.gen.tab.cpp"
+#line 2819 "grammar.gen.tab.cpp"
     break;
 
   case 20:
-#line 641 "grammar.gen.ypp"
+#line 640 "grammar.gen.ypp"
                         { yylhs.value.as < Age > () = Age::PostImperialAge; }
-#line 2845 "grammar.gen.tab.cpp"
+#line 2825 "grammar.gen.tab.cpp"
     break;
 
   case 21:
-#line 642 "grammar.gen.ypp"
+#line 641 "grammar.gen.ypp"
                      { yylhs.value.as < Age > () = Age::CastleAge; }
-#line 2851 "grammar.gen.tab.cpp"
+#line 2831 "grammar.gen.tab.cpp"
     break;
 
   case 22:
-#line 645 "grammar.gen.ypp"
+#line 644 "grammar.gen.ypp"
                           { yylhs.value.as < Building > () = Building::ArcheryRange; }
-#line 2857 "grammar.gen.tab.cpp"
+#line 2837 "grammar.gen.tab.cpp"
     break;
 
   case 23:
-#line 646 "grammar.gen.ypp"
+#line 645 "grammar.gen.ypp"
                       { yylhs.value.as < Building > () = Building::Barracks; }
-#line 2863 "grammar.gen.tab.cpp"
+#line 2843 "grammar.gen.tab.cpp"
     break;
 
   case 24:
-#line 647 "grammar.gen.ypp"
+#line 646 "grammar.gen.ypp"
                         { yylhs.value.as < Building > () = Building::Blacksmith; }
-#line 2869 "grammar.gen.tab.cpp"
+#line 2849 "grammar.gen.tab.cpp"
     break;
 
   case 25:
-#line 648 "grammar.gen.ypp"
+#line 647 "grammar.gen.ypp"
                           { yylhs.value.as < Building > () = Building::BombardTower; }
-#line 2875 "grammar.gen.tab.cpp"
+#line 2855 "grammar.gen.tab.cpp"
     break;
 
   case 26:
-#line 649 "grammar.gen.ypp"
+#line 648 "grammar.gen.ypp"
                     { yylhs.value.as < Building > () = Building::Castle; }
-#line 2881 "grammar.gen.tab.cpp"
+#line 2861 "grammar.gen.tab.cpp"
     break;
 
   case 27:
-#line 650 "grammar.gen.ypp"
+#line 649 "grammar.gen.ypp"
                   { yylhs.value.as < Building > () = Building::Dock; }
-#line 2887 "grammar.gen.tab.cpp"
+#line 2867 "grammar.gen.tab.cpp"
     break;
 
   case 28:
-#line 651 "grammar.gen.ypp"
+#line 650 "grammar.gen.ypp"
                   { yylhs.value.as < Building > () = Building::Farm; }
-#line 2893 "grammar.gen.tab.cpp"
+#line 2873 "grammar.gen.tab.cpp"
     break;
 
   case 29:
-#line 652 "grammar.gen.ypp"
+#line 651 "grammar.gen.ypp"
                       { yylhs.value.as < Building > () = Building::FishTrap; }
-#line 2899 "grammar.gen.tab.cpp"
+#line 2879 "grammar.gen.tab.cpp"
     break;
 
   case 30:
-#line 653 "grammar.gen.ypp"
+#line 652 "grammar.gen.ypp"
                         { yylhs.value.as < Building > () = Building::GuardTower; }
-#line 2905 "grammar.gen.tab.cpp"
+#line 2885 "grammar.gen.tab.cpp"
     break;
 
   case 31:
-#line 654 "grammar.gen.ypp"
+#line 653 "grammar.gen.ypp"
                    { yylhs.value.as < Building > () = Building::House; }
-#line 2911 "grammar.gen.tab.cpp"
+#line 2891 "grammar.gen.tab.cpp"
     break;
 
   case 32:
-#line 655 "grammar.gen.ypp"
+#line 654 "grammar.gen.ypp"
                   { yylhs.value.as < Building > () = Building::Keep; }
-#line 2917 "grammar.gen.tab.cpp"
+#line 2897 "grammar.gen.tab.cpp"
     break;
 
   case 33:
-#line 656 "grammar.gen.ypp"
+#line 655 "grammar.gen.ypp"
                         { yylhs.value.as < Building > () = Building::LumberCamp; }
-#line 2923 "grammar.gen.tab.cpp"
+#line 2903 "grammar.gen.tab.cpp"
     break;
 
   case 34:
-#line 657 "grammar.gen.ypp"
+#line 656 "grammar.gen.ypp"
                     { yylhs.value.as < Building > () = Building::Market; }
-#line 2929 "grammar.gen.tab.cpp"
+#line 2909 "grammar.gen.tab.cpp"
     break;
 
   case 35:
-#line 658 "grammar.gen.ypp"
+#line 657 "grammar.gen.ypp"
                   { yylhs.value.as < Building > () = Building::Mill; }
-#line 2935 "grammar.gen.tab.cpp"
+#line 2915 "grammar.gen.tab.cpp"
     break;
 
   case 36:
-#line 659 "grammar.gen.ypp"
+#line 658 "grammar.gen.ypp"
                         { yylhs.value.as < Building > () = Building::MiningCamp; }
-#line 2941 "grammar.gen.tab.cpp"
+#line 2921 "grammar.gen.tab.cpp"
     break;
 
   case 37:
-#line 660 "grammar.gen.ypp"
+#line 659 "grammar.gen.ypp"
                        { yylhs.value.as < Building > () = Building::Monastery; }
-#line 2947 "grammar.gen.tab.cpp"
+#line 2927 "grammar.gen.tab.cpp"
     break;
 
   case 38:
-#line 661 "grammar.gen.ypp"
+#line 660 "grammar.gen.ypp"
                      { yylhs.value.as < Building > () = Building::Outpost; }
-#line 2953 "grammar.gen.tab.cpp"
+#line 2933 "grammar.gen.tab.cpp"
     break;
 
   case 39:
-#line 662 "grammar.gen.ypp"
+#line 661 "grammar.gen.ypp"
                            { yylhs.value.as < Building > () = Building::SiegeWorkshop; }
-#line 2959 "grammar.gen.tab.cpp"
+#line 2939 "grammar.gen.tab.cpp"
     break;
 
   case 40:
-#line 663 "grammar.gen.ypp"
+#line 662 "grammar.gen.ypp"
                     { yylhs.value.as < Building > () = Building::Stable; }
-#line 2965 "grammar.gen.tab.cpp"
+#line 2945 "grammar.gen.tab.cpp"
     break;
 
   case 41:
-#line 664 "grammar.gen.ypp"
+#line 663 "grammar.gen.ypp"
                         { yylhs.value.as < Building > () = Building::TownCenter; }
-#line 2971 "grammar.gen.tab.cpp"
+#line 2951 "grammar.gen.tab.cpp"
     break;
 
   case 42:
-#line 665 "grammar.gen.ypp"
+#line 664 "grammar.gen.ypp"
                         { yylhs.value.as < Building > () = Building::University; }
-#line 2977 "grammar.gen.tab.cpp"
+#line 2957 "grammar.gen.tab.cpp"
     break;
 
   case 43:
-#line 666 "grammar.gen.ypp"
+#line 665 "grammar.gen.ypp"
                         { yylhs.value.as < Building > () = Building::WatchTower; }
-#line 2983 "grammar.gen.tab.cpp"
+#line 2963 "grammar.gen.tab.cpp"
     break;
 
   case 44:
-#line 667 "grammar.gen.ypp"
+#line 666 "grammar.gen.ypp"
                     { yylhs.value.as < Building > () = Building::Wonder; }
-#line 2989 "grammar.gen.tab.cpp"
+#line 2969 "grammar.gen.tab.cpp"
     break;
 
   case 45:
-#line 668 "grammar.gen.ypp"
+#line 667 "grammar.gen.ypp"
                             { yylhs.value.as < Building > () = Building::WatchTowerLine; }
-#line 2995 "grammar.gen.tab.cpp"
+#line 2975 "grammar.gen.tab.cpp"
     break;
 
   case 46:
-#line 671 "grammar.gen.ypp"
+#line 670 "grammar.gen.ypp"
                { yylhs.value.as < Civ > () = Civ::Briton; }
-#line 3001 "grammar.gen.tab.cpp"
+#line 2981 "grammar.gen.tab.cpp"
     break;
 
   case 47:
-#line 672 "grammar.gen.ypp"
+#line 671 "grammar.gen.ypp"
                   { yylhs.value.as < Civ > () = Civ::Byzantine; }
-#line 3007 "grammar.gen.tab.cpp"
+#line 2987 "grammar.gen.tab.cpp"
     break;
 
   case 48:
-#line 673 "grammar.gen.ypp"
+#line 672 "grammar.gen.ypp"
                { yylhs.value.as < Civ > () = Civ::Celtic; }
-#line 3013 "grammar.gen.tab.cpp"
+#line 2993 "grammar.gen.tab.cpp"
     break;
 
   case 49:
-#line 674 "grammar.gen.ypp"
+#line 673 "grammar.gen.ypp"
                 { yylhs.value.as < Civ > () = Civ::Chinese; }
-#line 3019 "grammar.gen.tab.cpp"
+#line 2999 "grammar.gen.tab.cpp"
     break;
 
   case 50:
-#line 675 "grammar.gen.ypp"
+#line 674 "grammar.gen.ypp"
                  { yylhs.value.as < Civ > () = Civ::Frankish; }
-#line 3025 "grammar.gen.tab.cpp"
+#line 3005 "grammar.gen.tab.cpp"
     break;
 
   case 51:
-#line 676 "grammar.gen.ypp"
+#line 675 "grammar.gen.ypp"
                { yylhs.value.as < Civ > () = Civ::Gothic; }
-#line 3031 "grammar.gen.tab.cpp"
+#line 3011 "grammar.gen.tab.cpp"
     break;
 
   case 52:
-#line 677 "grammar.gen.ypp"
+#line 676 "grammar.gen.ypp"
                  { yylhs.value.as < Civ > () = Civ::Japanese; }
-#line 3037 "grammar.gen.tab.cpp"
+#line 3017 "grammar.gen.tab.cpp"
     break;
 
   case 53:
-#line 678 "grammar.gen.ypp"
+#line 677 "grammar.gen.ypp"
                { yylhs.value.as < Civ > () = Civ::Mongol; }
-#line 3043 "grammar.gen.tab.cpp"
+#line 3023 "grammar.gen.tab.cpp"
     break;
 
   case 54:
-#line 679 "grammar.gen.ypp"
+#line 678 "grammar.gen.ypp"
                 { yylhs.value.as < Civ > () = Civ::Persian; }
-#line 3049 "grammar.gen.tab.cpp"
+#line 3029 "grammar.gen.tab.cpp"
     break;
 
   case 55:
-#line 680 "grammar.gen.ypp"
+#line 679 "grammar.gen.ypp"
                 { yylhs.value.as < Civ > () = Civ::Saracen; }
-#line 3055 "grammar.gen.tab.cpp"
+#line 3035 "grammar.gen.tab.cpp"
     break;
 
   case 56:
-#line 681 "grammar.gen.ypp"
+#line 680 "grammar.gen.ypp"
                  { yylhs.value.as < Civ > () = Civ::Teutonic; }
-#line 3061 "grammar.gen.tab.cpp"
+#line 3041 "grammar.gen.tab.cpp"
     break;
 
   case 57:
-#line 682 "grammar.gen.ypp"
+#line 681 "grammar.gen.ypp"
                 { yylhs.value.as < Civ > () = Civ::Turkish; }
-#line 3067 "grammar.gen.tab.cpp"
+#line 3047 "grammar.gen.tab.cpp"
     break;
 
   case 58:
-#line 683 "grammar.gen.ypp"
+#line 682 "grammar.gen.ypp"
                { yylhs.value.as < Civ > () = Civ::Viking; }
-#line 3073 "grammar.gen.tab.cpp"
+#line 3053 "grammar.gen.tab.cpp"
     break;
 
   case 59:
-#line 684 "grammar.gen.ypp"
+#line 683 "grammar.gen.ypp"
               { yylhs.value.as < Civ > () = Civ::MyCiv; }
-#line 3079 "grammar.gen.tab.cpp"
+#line 3059 "grammar.gen.tab.cpp"
     break;
 
   case 60:
-#line 687 "grammar.gen.ypp"
+#line 686 "grammar.gen.ypp"
                    { yylhs.value.as < Commodity > () = Commodity::Food; }
-#line 3085 "grammar.gen.tab.cpp"
+#line 3065 "grammar.gen.tab.cpp"
     break;
 
   case 61:
-#line 688 "grammar.gen.ypp"
+#line 687 "grammar.gen.ypp"
                     { yylhs.value.as < Commodity > () = Commodity::Stone; }
-#line 3091 "grammar.gen.tab.cpp"
+#line 3071 "grammar.gen.tab.cpp"
     break;
 
   case 62:
-#line 689 "grammar.gen.ypp"
+#line 688 "grammar.gen.ypp"
                    { yylhs.value.as < Commodity > () = Commodity::Wood; }
-#line 3097 "grammar.gen.tab.cpp"
+#line 3077 "grammar.gen.tab.cpp"
     break;
 
   case 63:
-#line 690 "grammar.gen.ypp"
+#line 689 "grammar.gen.ypp"
                    { yylhs.value.as < Commodity > () = Commodity::Gold; }
-#line 3103 "grammar.gen.tab.cpp"
+#line 3083 "grammar.gen.tab.cpp"
     break;
 
   case 64:
-#line 693 "grammar.gen.ypp"
+#line 692 "grammar.gen.ypp"
                             { yylhs.value.as < DifficultyLevel > () = DifficultyLevel::Easiest; }
-#line 3109 "grammar.gen.tab.cpp"
+#line 3089 "grammar.gen.tab.cpp"
     break;
 
   case 65:
-#line 694 "grammar.gen.ypp"
+#line 693 "grammar.gen.ypp"
                          { yylhs.value.as < DifficultyLevel > () = DifficultyLevel::Easy; }
-#line 3115 "grammar.gen.tab.cpp"
+#line 3095 "grammar.gen.tab.cpp"
     break;
 
   case 66:
-#line 695 "grammar.gen.ypp"
+#line 694 "grammar.gen.ypp"
                              { yylhs.value.as < DifficultyLevel > () = DifficultyLevel::Moderate; }
-#line 3121 "grammar.gen.tab.cpp"
+#line 3101 "grammar.gen.tab.cpp"
     break;
 
   case 67:
-#line 696 "grammar.gen.ypp"
+#line 695 "grammar.gen.ypp"
                          { yylhs.value.as < DifficultyLevel > () = DifficultyLevel::Hard; }
-#line 3127 "grammar.gen.tab.cpp"
+#line 3107 "grammar.gen.tab.cpp"
     break;
 
   case 68:
-#line 697 "grammar.gen.ypp"
+#line 696 "grammar.gen.ypp"
                             { yylhs.value.as < DifficultyLevel > () = DifficultyLevel::Hardest; }
-#line 3133 "grammar.gen.tab.cpp"
+#line 3113 "grammar.gen.tab.cpp"
     break;
 
   case 69:
-#line 700 "grammar.gen.ypp"
+#line 699 "grammar.gen.ypp"
                                                { yylhs.value.as < DifficultyParameter > () = DifficultyParameter::AbilityToDodgeMissiles; }
-#line 3139 "grammar.gen.tab.cpp"
+#line 3119 "grammar.gen.tab.cpp"
     break;
 
   case 70:
-#line 701 "grammar.gen.ypp"
+#line 700 "grammar.gen.ypp"
                                                   { yylhs.value.as < DifficultyParameter > () = DifficultyParameter::AbilityToMaintainDistance; }
-#line 3145 "grammar.gen.tab.cpp"
+#line 3125 "grammar.gen.tab.cpp"
     break;
 
   case 71:
-#line 704 "grammar.gen.ypp"
+#line 703 "grammar.gen.ypp"
                           { yylhs.value.as < DiplomaticStance > () = DiplomaticStance::Ally; }
-#line 3151 "grammar.gen.tab.cpp"
+#line 3131 "grammar.gen.tab.cpp"
     break;
 
   case 72:
-#line 705 "grammar.gen.ypp"
+#line 704 "grammar.gen.ypp"
                              { yylhs.value.as < DiplomaticStance > () = DiplomaticStance::Neutral; }
-#line 3157 "grammar.gen.tab.cpp"
+#line 3137 "grammar.gen.tab.cpp"
     break;
 
   case 73:
-#line 706 "grammar.gen.ypp"
+#line 705 "grammar.gen.ypp"
                            { yylhs.value.as < DiplomaticStance > () = DiplomaticStance::Enemy; }
-#line 3163 "grammar.gen.tab.cpp"
+#line 3143 "grammar.gen.tab.cpp"
     break;
 
   case 74:
-#line 709 "grammar.gen.ypp"
+#line 708 "grammar.gen.ypp"
                      { yylhs.value.as < MapSizeType > () = MapSizeType::Tiny; }
-#line 3169 "grammar.gen.tab.cpp"
+#line 3149 "grammar.gen.tab.cpp"
     break;
 
   case 75:
-#line 710 "grammar.gen.ypp"
+#line 709 "grammar.gen.ypp"
                       { yylhs.value.as < MapSizeType > () = MapSizeType::Small; }
-#line 3175 "grammar.gen.tab.cpp"
+#line 3155 "grammar.gen.tab.cpp"
     break;
 
   case 76:
-#line 711 "grammar.gen.ypp"
+#line 710 "grammar.gen.ypp"
                        { yylhs.value.as < MapSizeType > () = MapSizeType::Medium; }
-#line 3181 "grammar.gen.tab.cpp"
+#line 3161 "grammar.gen.tab.cpp"
     break;
 
   case 77:
-#line 712 "grammar.gen.ypp"
+#line 711 "grammar.gen.ypp"
                        { yylhs.value.as < MapSizeType > () = MapSizeType::Normal; }
-#line 3187 "grammar.gen.tab.cpp"
+#line 3167 "grammar.gen.tab.cpp"
     break;
 
   case 78:
-#line 713 "grammar.gen.ypp"
+#line 712 "grammar.gen.ypp"
                       { yylhs.value.as < MapSizeType > () = MapSizeType::Large; }
-#line 3193 "grammar.gen.tab.cpp"
+#line 3173 "grammar.gen.tab.cpp"
     break;
 
   case 79:
-#line 714 "grammar.gen.ypp"
+#line 713 "grammar.gen.ypp"
                       { yylhs.value.as < MapSizeType > () = MapSizeType::Giant; }
-#line 3199 "grammar.gen.tab.cpp"
+#line 3179 "grammar.gen.tab.cpp"
     break;
 
   case 80:
-#line 717 "grammar.gen.ypp"
+#line 716 "grammar.gen.ypp"
                        { yylhs.value.as < MapTypeName > () = MapTypeName::Arabia; }
-#line 3205 "grammar.gen.tab.cpp"
+#line 3185 "grammar.gen.tab.cpp"
     break;
 
   case 81:
-#line 718 "grammar.gen.ypp"
+#line 717 "grammar.gen.ypp"
                             { yylhs.value.as < MapTypeName > () = MapTypeName::Archipelago; }
-#line 3211 "grammar.gen.tab.cpp"
+#line 3191 "grammar.gen.tab.cpp"
     break;
 
   case 82:
-#line 719 "grammar.gen.ypp"
+#line 718 "grammar.gen.ypp"
                        { yylhs.value.as < MapTypeName > () = MapTypeName::Baltic; }
-#line 3217 "grammar.gen.tab.cpp"
+#line 3197 "grammar.gen.tab.cpp"
     break;
 
   case 83:
-#line 720 "grammar.gen.ypp"
+#line 719 "grammar.gen.ypp"
                             { yylhs.value.as < MapTypeName > () = MapTypeName::BlackForest; }
-#line 3223 "grammar.gen.tab.cpp"
+#line 3203 "grammar.gen.tab.cpp"
     break;
 
   case 84:
-#line 721 "grammar.gen.ypp"
+#line 720 "grammar.gen.ypp"
                         { yylhs.value.as < MapTypeName > () = MapTypeName::Coastal; }
-#line 3229 "grammar.gen.tab.cpp"
+#line 3209 "grammar.gen.tab.cpp"
     break;
 
   case 85:
-#line 722 "grammar.gen.ypp"
+#line 721 "grammar.gen.ypp"
                             { yylhs.value.as < MapTypeName > () = MapTypeName::Continental; }
-#line 3235 "grammar.gen.tab.cpp"
+#line 3215 "grammar.gen.tab.cpp"
     break;
 
   case 86:
-#line 723 "grammar.gen.ypp"
+#line 722 "grammar.gen.ypp"
                            { yylhs.value.as < MapTypeName > () = MapTypeName::CraterLake; }
-#line 3241 "grammar.gen.tab.cpp"
+#line 3221 "grammar.gen.tab.cpp"
     break;
 
   case 87:
-#line 724 "grammar.gen.ypp"
+#line 723 "grammar.gen.ypp"
                          { yylhs.value.as < MapTypeName > () = MapTypeName::Fortress; }
-#line 3247 "grammar.gen.tab.cpp"
+#line 3227 "grammar.gen.tab.cpp"
     break;
 
   case 88:
-#line 725 "grammar.gen.ypp"
+#line 724 "grammar.gen.ypp"
                          { yylhs.value.as < MapTypeName > () = MapTypeName::GoldRush; }
-#line 3253 "grammar.gen.tab.cpp"
+#line 3233 "grammar.gen.tab.cpp"
     break;
 
   case 89:
-#line 726 "grammar.gen.ypp"
+#line 725 "grammar.gen.ypp"
                          { yylhs.value.as < MapTypeName > () = MapTypeName::Highland; }
-#line 3259 "grammar.gen.tab.cpp"
+#line 3239 "grammar.gen.tab.cpp"
     break;
 
   case 90:
-#line 727 "grammar.gen.ypp"
+#line 726 "grammar.gen.ypp"
                         { yylhs.value.as < MapTypeName > () = MapTypeName::Islands; }
-#line 3265 "grammar.gen.tab.cpp"
+#line 3245 "grammar.gen.tab.cpp"
     break;
 
   case 91:
-#line 728 "grammar.gen.ypp"
+#line 727 "grammar.gen.ypp"
                               { yylhs.value.as < MapTypeName > () = MapTypeName::Mediterranean; }
-#line 3271 "grammar.gen.tab.cpp"
+#line 3251 "grammar.gen.tab.cpp"
     break;
 
   case 92:
-#line 729 "grammar.gen.ypp"
+#line 728 "grammar.gen.ypp"
                           { yylhs.value.as < MapTypeName > () = MapTypeName::Migration; }
-#line 3277 "grammar.gen.tab.cpp"
+#line 3257 "grammar.gen.tab.cpp"
     break;
 
   case 93:
-#line 730 "grammar.gen.ypp"
+#line 729 "grammar.gen.ypp"
                        { yylhs.value.as < MapTypeName > () = MapTypeName::Rivers; }
-#line 3283 "grammar.gen.tab.cpp"
+#line 3263 "grammar.gen.tab.cpp"
     break;
 
   case 94:
-#line 731 "grammar.gen.ypp"
+#line 730 "grammar.gen.ypp"
                             { yylhs.value.as < MapTypeName > () = MapTypeName::TeamIslands; }
-#line 3289 "grammar.gen.tab.cpp"
+#line 3269 "grammar.gen.tab.cpp"
     break;
 
   case 95:
-#line 732 "grammar.gen.ypp"
+#line 731 "grammar.gen.ypp"
                             { yylhs.value.as < MapTypeName > () = MapTypeName::ScenarioMap; }
-#line 3295 "grammar.gen.tab.cpp"
+#line 3275 "grammar.gen.tab.cpp"
     break;
 
   case 96:
-#line 735 "grammar.gen.ypp"
+#line 734 "grammar.gen.ypp"
                              { yylhs.value.as < PlayerNumberType > () = PlayerNumberType::AnyAlly; }
-#line 3301 "grammar.gen.tab.cpp"
+#line 3281 "grammar.gen.tab.cpp"
     break;
 
   case 97:
-#line 736 "grammar.gen.ypp"
+#line 735 "grammar.gen.ypp"
                                  { yylhs.value.as < PlayerNumberType > () = PlayerNumberType::AnyComputer; }
-#line 3307 "grammar.gen.tab.cpp"
+#line 3287 "grammar.gen.tab.cpp"
     break;
 
   case 98:
-#line 737 "grammar.gen.ypp"
+#line 736 "grammar.gen.ypp"
                                      { yylhs.value.as < PlayerNumberType > () = PlayerNumberType::AnyComputerAlly; }
-#line 3313 "grammar.gen.tab.cpp"
+#line 3293 "grammar.gen.tab.cpp"
     break;
 
   case 99:
-#line 738 "grammar.gen.ypp"
+#line 737 "grammar.gen.ypp"
                                       { yylhs.value.as < PlayerNumberType > () = PlayerNumberType::AnyComputerEnemy; }
-#line 3319 "grammar.gen.tab.cpp"
+#line 3299 "grammar.gen.tab.cpp"
     break;
 
   case 100:
-#line 739 "grammar.gen.ypp"
+#line 738 "grammar.gen.ypp"
                                         { yylhs.value.as < PlayerNumberType > () = PlayerNumberType::AnyComputerNeutral; }
-#line 3325 "grammar.gen.tab.cpp"
+#line 3305 "grammar.gen.tab.cpp"
     break;
 
   case 101:
-#line 740 "grammar.gen.ypp"
+#line 739 "grammar.gen.ypp"
                               { yylhs.value.as < PlayerNumberType > () = PlayerNumberType::AnyEnemy; }
-#line 3331 "grammar.gen.tab.cpp"
+#line 3311 "grammar.gen.tab.cpp"
     break;
 
   case 102:
-#line 741 "grammar.gen.ypp"
+#line 740 "grammar.gen.ypp"
                               { yylhs.value.as < PlayerNumberType > () = PlayerNumberType::AnyHuman; }
-#line 3337 "grammar.gen.tab.cpp"
+#line 3317 "grammar.gen.tab.cpp"
     break;
 
   case 103:
-#line 742 "grammar.gen.ypp"
+#line 741 "grammar.gen.ypp"
                                   { yylhs.value.as < PlayerNumberType > () = PlayerNumberType::AnyHumanAlly; }
-#line 3343 "grammar.gen.tab.cpp"
+#line 3323 "grammar.gen.tab.cpp"
     break;
 
   case 104:
-#line 743 "grammar.gen.ypp"
+#line 742 "grammar.gen.ypp"
                                    { yylhs.value.as < PlayerNumberType > () = PlayerNumberType::AnyHumanEnemy; }
-#line 3349 "grammar.gen.tab.cpp"
+#line 3329 "grammar.gen.tab.cpp"
     break;
 
   case 105:
-#line 744 "grammar.gen.ypp"
+#line 743 "grammar.gen.ypp"
                                      { yylhs.value.as < PlayerNumberType > () = PlayerNumberType::AnyHumanNeutral; }
-#line 3355 "grammar.gen.tab.cpp"
+#line 3335 "grammar.gen.tab.cpp"
     break;
 
   case 106:
-#line 745 "grammar.gen.ypp"
+#line 744 "grammar.gen.ypp"
                                 { yylhs.value.as < PlayerNumberType > () = PlayerNumberType::AnyNeutral; }
-#line 3361 "grammar.gen.tab.cpp"
+#line 3341 "grammar.gen.tab.cpp"
     break;
 
   case 107:
-#line 746 "grammar.gen.ypp"
+#line 745 "grammar.gen.ypp"
                                { yylhs.value.as < PlayerNumberType > () = PlayerNumberType::EveryAlly; }
-#line 3367 "grammar.gen.tab.cpp"
+#line 3347 "grammar.gen.tab.cpp"
     break;
 
   case 108:
-#line 747 "grammar.gen.ypp"
+#line 746 "grammar.gen.ypp"
                                    { yylhs.value.as < PlayerNumberType > () = PlayerNumberType::EveryComputer; }
-#line 3373 "grammar.gen.tab.cpp"
+#line 3353 "grammar.gen.tab.cpp"
     break;
 
   case 109:
-#line 748 "grammar.gen.ypp"
+#line 747 "grammar.gen.ypp"
                                 { yylhs.value.as < PlayerNumberType > () = PlayerNumberType::EveryEnemy; }
-#line 3379 "grammar.gen.tab.cpp"
+#line 3359 "grammar.gen.tab.cpp"
     break;
 
   case 110:
-#line 749 "grammar.gen.ypp"
+#line 748 "grammar.gen.ypp"
                                 { yylhs.value.as < PlayerNumberType > () = PlayerNumberType::EveryHuman; }
-#line 3385 "grammar.gen.tab.cpp"
+#line 3365 "grammar.gen.tab.cpp"
     break;
 
   case 111:
-#line 750 "grammar.gen.ypp"
+#line 749 "grammar.gen.ypp"
                                   { yylhs.value.as < PlayerNumberType > () = PlayerNumberType::EveryNeutral; }
-#line 3391 "grammar.gen.tab.cpp"
+#line 3371 "grammar.gen.tab.cpp"
     break;
 
   case 112:
-#line 751 "grammar.gen.ypp"
+#line 750 "grammar.gen.ypp"
                                     { yylhs.value.as < PlayerNumberType > () = PlayerNumberType::MyPlayerNumber; }
-#line 3397 "grammar.gen.tab.cpp"
+#line 3377 "grammar.gen.tab.cpp"
     break;
 
   case 113:
-#line 754 "grammar.gen.ypp"
+#line 753 "grammar.gen.ypp"
                    { yylhs.value.as < RelOp > () = RelOp::LessThan; }
-#line 3403 "grammar.gen.tab.cpp"
+#line 3383 "grammar.gen.tab.cpp"
     break;
 
   case 114:
-#line 755 "grammar.gen.ypp"
+#line 754 "grammar.gen.ypp"
                       { yylhs.value.as < RelOp > () = RelOp::LessOrEqual; }
-#line 3409 "grammar.gen.tab.cpp"
+#line 3389 "grammar.gen.tab.cpp"
     break;
 
   case 115:
-#line 756 "grammar.gen.ypp"
+#line 755 "grammar.gen.ypp"
                       { yylhs.value.as < RelOp > () = RelOp::GreaterThan; }
-#line 3415 "grammar.gen.tab.cpp"
+#line 3395 "grammar.gen.tab.cpp"
     break;
 
   case 116:
-#line 757 "grammar.gen.ypp"
+#line 756 "grammar.gen.ypp"
                          { yylhs.value.as < RelOp > () = RelOp::GreaterOrEqual; }
-#line 3421 "grammar.gen.tab.cpp"
+#line 3401 "grammar.gen.tab.cpp"
     break;
 
   case 117:
-#line 758 "grammar.gen.ypp"
+#line 757 "grammar.gen.ypp"
                 { yylhs.value.as < RelOp > () = RelOp::Equal; }
-#line 3427 "grammar.gen.tab.cpp"
+#line 3407 "grammar.gen.tab.cpp"
     break;
 
   case 118:
-#line 759 "grammar.gen.ypp"
+#line 758 "grammar.gen.ypp"
                    { yylhs.value.as < RelOp > () = RelOp::NotEqual; }
-#line 3433 "grammar.gen.tab.cpp"
+#line 3413 "grammar.gen.tab.cpp"
     break;
 
   case 119:
-#line 762 "grammar.gen.ypp"
+#line 761 "grammar.gen.ypp"
                             { yylhs.value.as < ResearchItem > () = ResearchItem::RiArbalest; }
-#line 3439 "grammar.gen.tab.cpp"
+#line 3419 "grammar.gen.tab.cpp"
     break;
 
   case 120:
-#line 763 "grammar.gen.ypp"
+#line 762 "grammar.gen.ypp"
                             { yylhs.value.as < ResearchItem > () = ResearchItem::RiCrossbow; }
-#line 3445 "grammar.gen.tab.cpp"
+#line 3425 "grammar.gen.tab.cpp"
     break;
 
   case 121:
-#line 764 "grammar.gen.ypp"
+#line 763 "grammar.gen.ypp"
                                    { yylhs.value.as < ResearchItem > () = ResearchItem::RiEliteSkirmisher; }
-#line 3451 "grammar.gen.tab.cpp"
+#line 3431 "grammar.gen.tab.cpp"
     break;
 
   case 122:
-#line 765 "grammar.gen.ypp"
+#line 764 "grammar.gen.ypp"
                               { yylhs.value.as < ResearchItem > () = ResearchItem::RiHandCannon; }
-#line 3457 "grammar.gen.tab.cpp"
+#line 3437 "grammar.gen.tab.cpp"
     break;
 
   case 123:
-#line 766 "grammar.gen.ypp"
+#line 765 "grammar.gen.ypp"
                                       { yylhs.value.as < ResearchItem > () = ResearchItem::RiHeavyCavalryArcher; }
-#line 3463 "grammar.gen.tab.cpp"
+#line 3443 "grammar.gen.tab.cpp"
     break;
 
   case 124:
-#line 767 "grammar.gen.ypp"
+#line 766 "grammar.gen.ypp"
                             { yylhs.value.as < ResearchItem > () = ResearchItem::RiChampion; }
-#line 3469 "grammar.gen.tab.cpp"
+#line 3449 "grammar.gen.tab.cpp"
     break;
 
   case 125:
-#line 768 "grammar.gen.ypp"
+#line 767 "grammar.gen.ypp"
                                      { yylhs.value.as < ResearchItem > () = ResearchItem::RiEliteEagleWarrior; }
-#line 3475 "grammar.gen.tab.cpp"
+#line 3455 "grammar.gen.tab.cpp"
     break;
 
   case 126:
-#line 769 "grammar.gen.ypp"
+#line 768 "grammar.gen.ypp"
                               { yylhs.value.as < ResearchItem > () = ResearchItem::RiHalberdier; }
-#line 3481 "grammar.gen.tab.cpp"
+#line 3461 "grammar.gen.tab.cpp"
     break;
 
   case 127:
-#line 770 "grammar.gen.ypp"
+#line 769 "grammar.gen.ypp"
                                  { yylhs.value.as < ResearchItem > () = ResearchItem::RiLongSwordsman; }
-#line 3487 "grammar.gen.tab.cpp"
+#line 3467 "grammar.gen.tab.cpp"
     break;
 
   case 128:
-#line 771 "grammar.gen.ypp"
+#line 770 "grammar.gen.ypp"
                              { yylhs.value.as < ResearchItem > () = ResearchItem::RiManAtArms; }
-#line 3493 "grammar.gen.tab.cpp"
+#line 3473 "grammar.gen.tab.cpp"
     break;
 
   case 129:
-#line 772 "grammar.gen.ypp"
+#line 771 "grammar.gen.ypp"
                                    { yylhs.value.as < ResearchItem > () = ResearchItem::RiParthianTactics; }
-#line 3499 "grammar.gen.tab.cpp"
+#line 3479 "grammar.gen.tab.cpp"
     break;
 
   case 130:
-#line 773 "grammar.gen.ypp"
+#line 772 "grammar.gen.ypp"
                            { yylhs.value.as < ResearchItem > () = ResearchItem::RiPikeman; }
-#line 3505 "grammar.gen.tab.cpp"
+#line 3485 "grammar.gen.tab.cpp"
     break;
 
   case 131:
-#line 774 "grammar.gen.ypp"
+#line 773 "grammar.gen.ypp"
                            { yylhs.value.as < ResearchItem > () = ResearchItem::RiSquires; }
-#line 3511 "grammar.gen.tab.cpp"
+#line 3491 "grammar.gen.tab.cpp"
     break;
 
   case 132:
-#line 775 "grammar.gen.ypp"
+#line 774 "grammar.gen.ypp"
                              { yylhs.value.as < ResearchItem > () = ResearchItem::RiThumbRing; }
-#line 3517 "grammar.gen.tab.cpp"
+#line 3497 "grammar.gen.tab.cpp"
     break;
 
   case 133:
-#line 776 "grammar.gen.ypp"
+#line 775 "grammar.gen.ypp"
                             { yylhs.value.as < ResearchItem > () = ResearchItem::RiTracking; }
-#line 3523 "grammar.gen.tab.cpp"
+#line 3503 "grammar.gen.tab.cpp"
     break;
 
   case 134:
-#line 777 "grammar.gen.ypp"
+#line 776 "grammar.gen.ypp"
                                       { yylhs.value.as < ResearchItem > () = ResearchItem::RiTwoHandedSwordsman; }
-#line 3529 "grammar.gen.tab.cpp"
+#line 3509 "grammar.gen.tab.cpp"
     break;
 
   case 135:
-#line 778 "grammar.gen.ypp"
+#line 777 "grammar.gen.ypp"
                                 { yylhs.value.as < ResearchItem > () = ResearchItem::RiBlastFurnace; }
-#line 3535 "grammar.gen.tab.cpp"
+#line 3515 "grammar.gen.tab.cpp"
     break;
 
   case 136:
-#line 779 "grammar.gen.ypp"
+#line 778 "grammar.gen.ypp"
                                { yylhs.value.as < ResearchItem > () = ResearchItem::RiBodkinArrow; }
-#line 3541 "grammar.gen.tab.cpp"
+#line 3521 "grammar.gen.tab.cpp"
     break;
 
   case 137:
-#line 780 "grammar.gen.ypp"
+#line 779 "grammar.gen.ypp"
                           { yylhs.value.as < ResearchItem > () = ResearchItem::RiBracer; }
-#line 3547 "grammar.gen.tab.cpp"
+#line 3527 "grammar.gen.tab.cpp"
     break;
 
   case 138:
-#line 781 "grammar.gen.ypp"
+#line 780 "grammar.gen.ypp"
                                 { yylhs.value.as < ResearchItem > () = ResearchItem::RiChainBarding; }
-#line 3553 "grammar.gen.tab.cpp"
+#line 3533 "grammar.gen.tab.cpp"
     break;
 
   case 139:
-#line 782 "grammar.gen.ypp"
+#line 781 "grammar.gen.ypp"
                              { yylhs.value.as < ResearchItem > () = ResearchItem::RiChainMail; }
-#line 3559 "grammar.gen.tab.cpp"
+#line 3539 "grammar.gen.tab.cpp"
     break;
 
   case 140:
-#line 783 "grammar.gen.ypp"
+#line 782 "grammar.gen.ypp"
                              { yylhs.value.as < ResearchItem > () = ResearchItem::RiFletching; }
-#line 3565 "grammar.gen.tab.cpp"
+#line 3545 "grammar.gen.tab.cpp"
     break;
 
   case 141:
-#line 784 "grammar.gen.ypp"
+#line 783 "grammar.gen.ypp"
                            { yylhs.value.as < ResearchItem > () = ResearchItem::RiForging; }
-#line 3571 "grammar.gen.tab.cpp"
+#line 3551 "grammar.gen.tab.cpp"
     break;
 
   case 142:
-#line 785 "grammar.gen.ypp"
+#line 784 "grammar.gen.ypp"
                                { yylhs.value.as < ResearchItem > () = ResearchItem::RiIronCasting; }
-#line 3577 "grammar.gen.tab.cpp"
+#line 3557 "grammar.gen.tab.cpp"
     break;
 
   case 143:
-#line 786 "grammar.gen.ypp"
+#line 785 "grammar.gen.ypp"
                                       { yylhs.value.as < ResearchItem > () = ResearchItem::RiLeatherArcherArmor; }
-#line 3583 "grammar.gen.tab.cpp"
+#line 3563 "grammar.gen.tab.cpp"
     break;
 
   case 144:
-#line 787 "grammar.gen.ypp"
+#line 786 "grammar.gen.ypp"
                                      { yylhs.value.as < ResearchItem > () = ResearchItem::RiPaddedArcherArmor; }
-#line 3589 "grammar.gen.tab.cpp"
+#line 3569 "grammar.gen.tab.cpp"
     break;
 
   case 145:
-#line 788 "grammar.gen.ypp"
+#line 787 "grammar.gen.ypp"
                                 { yylhs.value.as < ResearchItem > () = ResearchItem::RiPlateBarding; }
-#line 3595 "grammar.gen.tab.cpp"
+#line 3575 "grammar.gen.tab.cpp"
     break;
 
   case 146:
-#line 789 "grammar.gen.ypp"
+#line 788 "grammar.gen.ypp"
                              { yylhs.value.as < ResearchItem > () = ResearchItem::RiPlateMail; }
-#line 3601 "grammar.gen.tab.cpp"
+#line 3581 "grammar.gen.tab.cpp"
     break;
 
   case 147:
-#line 790 "grammar.gen.ypp"
+#line 789 "grammar.gen.ypp"
                                    { yylhs.value.as < ResearchItem > () = ResearchItem::RiRingArcherArmor; }
-#line 3607 "grammar.gen.tab.cpp"
+#line 3587 "grammar.gen.tab.cpp"
     break;
 
   case 148:
-#line 791 "grammar.gen.ypp"
+#line 790 "grammar.gen.ypp"
                                 { yylhs.value.as < ResearchItem > () = ResearchItem::RiScaleBarding; }
-#line 3613 "grammar.gen.tab.cpp"
+#line 3593 "grammar.gen.tab.cpp"
     break;
 
   case 149:
-#line 792 "grammar.gen.ypp"
+#line 791 "grammar.gen.ypp"
                              { yylhs.value.as < ResearchItem > () = ResearchItem::RiScaleMail; }
-#line 3619 "grammar.gen.tab.cpp"
+#line 3599 "grammar.gen.tab.cpp"
     break;
 
   case 150:
-#line 793 "grammar.gen.ypp"
+#line 792 "grammar.gen.ypp"
                                 { yylhs.value.as < ResearchItem > () = ResearchItem::RiConscription; }
-#line 3625 "grammar.gen.tab.cpp"
+#line 3605 "grammar.gen.tab.cpp"
     break;
 
   case 151:
-#line 794 "grammar.gen.ypp"
+#line 793 "grammar.gen.ypp"
                              { yylhs.value.as < ResearchItem > () = ResearchItem::RiHoardings; }
-#line 3631 "grammar.gen.tab.cpp"
+#line 3611 "grammar.gen.tab.cpp"
     break;
 
   case 152:
-#line 795 "grammar.gen.ypp"
+#line 794 "grammar.gen.ypp"
                            { yylhs.value.as < ResearchItem > () = ResearchItem::RiSappers; }
-#line 3637 "grammar.gen.tab.cpp"
+#line 3617 "grammar.gen.tab.cpp"
     break;
 
   case 153:
-#line 796 "grammar.gen.ypp"
+#line 795 "grammar.gen.ypp"
                                 { yylhs.value.as < ResearchItem > () = ResearchItem::RiEliteBerserk; }
-#line 3643 "grammar.gen.tab.cpp"
+#line 3623 "grammar.gen.tab.cpp"
     break;
 
   case 154:
-#line 797 "grammar.gen.ypp"
+#line 796 "grammar.gen.ypp"
                                    { yylhs.value.as < ResearchItem > () = ResearchItem::RiEliteCataphract; }
-#line 3649 "grammar.gen.tab.cpp"
+#line 3629 "grammar.gen.tab.cpp"
     break;
 
   case 155:
-#line 798 "grammar.gen.ypp"
+#line 797 "grammar.gen.ypp"
                                 { yylhs.value.as < ResearchItem > () = ResearchItem::RiEliteChuKoNu; }
-#line 3655 "grammar.gen.tab.cpp"
+#line 3635 "grammar.gen.tab.cpp"
     break;
 
   case 156:
-#line 799 "grammar.gen.ypp"
+#line 798 "grammar.gen.ypp"
                                 { yylhs.value.as < ResearchItem > () = ResearchItem::RiEliteHuskarl; }
-#line 3661 "grammar.gen.tab.cpp"
+#line 3641 "grammar.gen.tab.cpp"
     break;
 
   case 157:
-#line 800 "grammar.gen.ypp"
+#line 799 "grammar.gen.ypp"
                                   { yylhs.value.as < ResearchItem > () = ResearchItem::RiEliteJanissary; }
-#line 3667 "grammar.gen.tab.cpp"
+#line 3647 "grammar.gen.tab.cpp"
     break;
 
   case 158:
-#line 801 "grammar.gen.ypp"
+#line 800 "grammar.gen.ypp"
                                    { yylhs.value.as < ResearchItem > () = ResearchItem::RiEliteLongbowman; }
-#line 3673 "grammar.gen.tab.cpp"
+#line 3653 "grammar.gen.tab.cpp"
     break;
 
   case 159:
-#line 802 "grammar.gen.ypp"
+#line 801 "grammar.gen.ypp"
                                  { yylhs.value.as < ResearchItem > () = ResearchItem::RiEliteMameluke; }
-#line 3679 "grammar.gen.tab.cpp"
+#line 3659 "grammar.gen.tab.cpp"
     break;
 
   case 160:
-#line 803 "grammar.gen.ypp"
+#line 802 "grammar.gen.ypp"
                                  { yylhs.value.as < ResearchItem > () = ResearchItem::RiEliteMangudai; }
-#line 3685 "grammar.gen.tab.cpp"
+#line 3665 "grammar.gen.tab.cpp"
     break;
 
   case 161:
-#line 804 "grammar.gen.ypp"
+#line 803 "grammar.gen.ypp"
                                 { yylhs.value.as < ResearchItem > () = ResearchItem::RiEliteSamurai; }
-#line 3691 "grammar.gen.tab.cpp"
+#line 3671 "grammar.gen.tab.cpp"
     break;
 
   case 162:
-#line 805 "grammar.gen.ypp"
+#line 804 "grammar.gen.ypp"
                                        { yylhs.value.as < ResearchItem > () = ResearchItem::RiEliteTeutonicKnight; }
-#line 3697 "grammar.gen.tab.cpp"
+#line 3677 "grammar.gen.tab.cpp"
     break;
 
   case 163:
-#line 806 "grammar.gen.ypp"
+#line 805 "grammar.gen.ypp"
                                        { yylhs.value.as < ResearchItem > () = ResearchItem::RiEliteThrowingAxeman; }
-#line 3703 "grammar.gen.tab.cpp"
+#line 3683 "grammar.gen.tab.cpp"
     break;
 
   case 164:
-#line 807 "grammar.gen.ypp"
+#line 806 "grammar.gen.ypp"
                                     { yylhs.value.as < ResearchItem > () = ResearchItem::RiEliteWarElephant; }
-#line 3709 "grammar.gen.tab.cpp"
+#line 3689 "grammar.gen.tab.cpp"
     break;
 
   case 165:
-#line 808 "grammar.gen.ypp"
+#line 807 "grammar.gen.ypp"
                                    { yylhs.value.as < ResearchItem > () = ResearchItem::RiEliteWoadRaider; }
-#line 3715 "grammar.gen.tab.cpp"
+#line 3695 "grammar.gen.tab.cpp"
     break;
 
   case 166:
-#line 809 "grammar.gen.ypp"
+#line 808 "grammar.gen.ypp"
                                      { yylhs.value.as < ResearchItem > () = ResearchItem::RiMyUniqueEliteUnit; }
-#line 3721 "grammar.gen.tab.cpp"
+#line 3701 "grammar.gen.tab.cpp"
     break;
 
   case 167:
-#line 810 "grammar.gen.ypp"
+#line 809 "grammar.gen.ypp"
                                     { yylhs.value.as < ResearchItem > () = ResearchItem::RiMyUniqueResearch; }
-#line 3727 "grammar.gen.tab.cpp"
+#line 3707 "grammar.gen.tab.cpp"
     break;
 
   case 168:
-#line 811 "grammar.gen.ypp"
+#line 810 "grammar.gen.ypp"
                                  { yylhs.value.as < ResearchItem > () = ResearchItem::RiCannonGalleon; }
-#line 3733 "grammar.gen.tab.cpp"
+#line 3713 "grammar.gen.tab.cpp"
     break;
 
   case 169:
-#line 812 "grammar.gen.ypp"
+#line 811 "grammar.gen.ypp"
                              { yylhs.value.as < ResearchItem > () = ResearchItem::RiCareening; }
-#line 3739 "grammar.gen.tab.cpp"
+#line 3719 "grammar.gen.tab.cpp"
     break;
 
   case 170:
-#line 813 "grammar.gen.ypp"
+#line 812 "grammar.gen.ypp"
                             { yylhs.value.as < ResearchItem > () = ResearchItem::RiDeckGuns; }
-#line 3745 "grammar.gen.tab.cpp"
+#line 3725 "grammar.gen.tab.cpp"
     break;
 
   case 171:
-#line 814 "grammar.gen.ypp"
+#line 813 "grammar.gen.ypp"
                            { yylhs.value.as < ResearchItem > () = ResearchItem::RiDryDock; }
-#line 3751 "grammar.gen.tab.cpp"
+#line 3731 "grammar.gen.tab.cpp"
     break;
 
   case 172:
-#line 815 "grammar.gen.ypp"
+#line 814 "grammar.gen.ypp"
                                  { yylhs.value.as < ResearchItem > () = ResearchItem::RiEliteLongboat; }
-#line 3757 "grammar.gen.tab.cpp"
+#line 3737 "grammar.gen.tab.cpp"
     break;
 
   case 173:
-#line 816 "grammar.gen.ypp"
+#line 815 "grammar.gen.ypp"
                                 { yylhs.value.as < ResearchItem > () = ResearchItem::RiFastFireShip; }
-#line 3763 "grammar.gen.tab.cpp"
+#line 3743 "grammar.gen.tab.cpp"
     break;
 
   case 174:
-#line 817 "grammar.gen.ypp"
+#line 816 "grammar.gen.ypp"
                            { yylhs.value.as < ResearchItem > () = ResearchItem::RiGalleon; }
-#line 3769 "grammar.gen.tab.cpp"
+#line 3749 "grammar.gen.tab.cpp"
     break;
 
   case 175:
-#line 818 "grammar.gen.ypp"
+#line 817 "grammar.gen.ypp"
                                        { yylhs.value.as < ResearchItem > () = ResearchItem::RiHeavyDemolitionShip; }
-#line 3775 "grammar.gen.tab.cpp"
+#line 3755 "grammar.gen.tab.cpp"
     break;
 
   case 176:
-#line 819 "grammar.gen.ypp"
+#line 818 "grammar.gen.ypp"
                               { yylhs.value.as < ResearchItem > () = ResearchItem::RiShipwright; }
-#line 3781 "grammar.gen.tab.cpp"
+#line 3761 "grammar.gen.tab.cpp"
     break;
 
   case 177:
-#line 820 "grammar.gen.ypp"
+#line 819 "grammar.gen.ypp"
                              { yylhs.value.as < ResearchItem > () = ResearchItem::RiWarGalley; }
-#line 3787 "grammar.gen.tab.cpp"
+#line 3767 "grammar.gen.tab.cpp"
     break;
 
   case 178:
-#line 821 "grammar.gen.ypp"
+#line 820 "grammar.gen.ypp"
                           { yylhs.value.as < ResearchItem > () = ResearchItem::RiBowSaw; }
-#line 3793 "grammar.gen.tab.cpp"
+#line 3773 "grammar.gen.tab.cpp"
     break;
 
   case 179:
-#line 822 "grammar.gen.ypp"
+#line 821 "grammar.gen.ypp"
                                 { yylhs.value.as < ResearchItem > () = ResearchItem::RiDoubleBitAxe; }
-#line 3799 "grammar.gen.tab.cpp"
+#line 3779 "grammar.gen.tab.cpp"
     break;
 
   case 180:
-#line 823 "grammar.gen.ypp"
+#line 822 "grammar.gen.ypp"
                              { yylhs.value.as < ResearchItem > () = ResearchItem::RiTwoManSaw; }
-#line 3805 "grammar.gen.tab.cpp"
+#line 3785 "grammar.gen.tab.cpp"
     break;
 
   case 181:
-#line 824 "grammar.gen.ypp"
+#line 823 "grammar.gen.ypp"
                            { yylhs.value.as < ResearchItem > () = ResearchItem::RiBanking; }
-#line 3811 "grammar.gen.tab.cpp"
+#line 3791 "grammar.gen.tab.cpp"
     break;
 
   case 182:
-#line 825 "grammar.gen.ypp"
+#line 824 "grammar.gen.ypp"
                            { yylhs.value.as < ResearchItem > () = ResearchItem::RiCaravan; }
-#line 3817 "grammar.gen.tab.cpp"
+#line 3797 "grammar.gen.tab.cpp"
     break;
 
   case 183:
-#line 826 "grammar.gen.ypp"
+#line 825 "grammar.gen.ypp"
                                { yylhs.value.as < ResearchItem > () = ResearchItem::RiCartography; }
-#line 3823 "grammar.gen.tab.cpp"
+#line 3803 "grammar.gen.tab.cpp"
     break;
 
   case 184:
-#line 827 "grammar.gen.ypp"
+#line 826 "grammar.gen.ypp"
                            { yylhs.value.as < ResearchItem > () = ResearchItem::RiCoinage; }
-#line 3829 "grammar.gen.tab.cpp"
+#line 3809 "grammar.gen.tab.cpp"
     break;
 
   case 185:
-#line 828 "grammar.gen.ypp"
+#line 827 "grammar.gen.ypp"
                           { yylhs.value.as < ResearchItem > () = ResearchItem::RiGuilds; }
-#line 3835 "grammar.gen.tab.cpp"
+#line 3815 "grammar.gen.tab.cpp"
     break;
 
   case 186:
-#line 829 "grammar.gen.ypp"
+#line 828 "grammar.gen.ypp"
                                 { yylhs.value.as < ResearchItem > () = ResearchItem::RiCropRotation; }
-#line 3841 "grammar.gen.tab.cpp"
+#line 3821 "grammar.gen.tab.cpp"
     break;
 
   case 187:
-#line 830 "grammar.gen.ypp"
+#line 829 "grammar.gen.ypp"
                              { yylhs.value.as < ResearchItem > () = ResearchItem::RiHeavyPlow; }
-#line 3847 "grammar.gen.tab.cpp"
+#line 3827 "grammar.gen.tab.cpp"
     break;
 
   case 188:
-#line 831 "grammar.gen.ypp"
+#line 830 "grammar.gen.ypp"
                                { yylhs.value.as < ResearchItem > () = ResearchItem::RiHorseCollar; }
-#line 3853 "grammar.gen.tab.cpp"
+#line 3833 "grammar.gen.tab.cpp"
     break;
 
   case 189:
-#line 832 "grammar.gen.ypp"
+#line 831 "grammar.gen.ypp"
                               { yylhs.value.as < ResearchItem > () = ResearchItem::RiGoldMining; }
-#line 3859 "grammar.gen.tab.cpp"
+#line 3839 "grammar.gen.tab.cpp"
     break;
 
   case 190:
-#line 833 "grammar.gen.ypp"
+#line 832 "grammar.gen.ypp"
                                    { yylhs.value.as < ResearchItem > () = ResearchItem::RiGoldShaftMining; }
-#line 3865 "grammar.gen.tab.cpp"
+#line 3845 "grammar.gen.tab.cpp"
     break;
 
   case 191:
-#line 834 "grammar.gen.ypp"
+#line 833 "grammar.gen.ypp"
                                { yylhs.value.as < ResearchItem > () = ResearchItem::RiStoneMining; }
-#line 3871 "grammar.gen.tab.cpp"
+#line 3851 "grammar.gen.tab.cpp"
     break;
 
   case 192:
-#line 835 "grammar.gen.ypp"
+#line 834 "grammar.gen.ypp"
                                     { yylhs.value.as < ResearchItem > () = ResearchItem::RiStoneShaftMining; }
-#line 3877 "grammar.gen.tab.cpp"
+#line 3857 "grammar.gen.tab.cpp"
     break;
 
   case 193:
-#line 836 "grammar.gen.ypp"
+#line 835 "grammar.gen.ypp"
                              { yylhs.value.as < ResearchItem > () = ResearchItem::RiAtonement; }
-#line 3883 "grammar.gen.tab.cpp"
+#line 3863 "grammar.gen.tab.cpp"
     break;
 
   case 194:
-#line 837 "grammar.gen.ypp"
+#line 836 "grammar.gen.ypp"
                                  { yylhs.value.as < ResearchItem > () = ResearchItem::RiBlockPrinting; }
-#line 3889 "grammar.gen.tab.cpp"
+#line 3869 "grammar.gen.tab.cpp"
     break;
 
   case 195:
-#line 838 "grammar.gen.ypp"
+#line 837 "grammar.gen.ypp"
                          { yylhs.value.as < ResearchItem > () = ResearchItem::RiFaith; }
-#line 3895 "grammar.gen.tab.cpp"
+#line 3875 "grammar.gen.tab.cpp"
     break;
 
   case 196:
-#line 839 "grammar.gen.ypp"
+#line 838 "grammar.gen.ypp"
                           { yylhs.value.as < ResearchItem > () = ResearchItem::RiFervor; }
-#line 3901 "grammar.gen.tab.cpp"
+#line 3881 "grammar.gen.tab.cpp"
     break;
 
   case 197:
-#line 840 "grammar.gen.ypp"
+#line 839 "grammar.gen.ypp"
                                   { yylhs.value.as < ResearchItem > () = ResearchItem::RiHerbalMedicine; }
-#line 3907 "grammar.gen.tab.cpp"
+#line 3887 "grammar.gen.tab.cpp"
     break;
 
   case 198:
-#line 841 "grammar.gen.ypp"
+#line 840 "grammar.gen.ypp"
                           { yylhs.value.as < ResearchItem > () = ResearchItem::RiHeresy; }
-#line 3913 "grammar.gen.tab.cpp"
+#line 3893 "grammar.gen.tab.cpp"
     break;
 
   case 199:
-#line 842 "grammar.gen.ypp"
+#line 841 "grammar.gen.ypp"
                                 { yylhs.value.as < ResearchItem > () = ResearchItem::RiIllumination; }
-#line 3919 "grammar.gen.tab.cpp"
+#line 3899 "grammar.gen.tab.cpp"
     break;
 
   case 200:
-#line 843 "grammar.gen.ypp"
+#line 842 "grammar.gen.ypp"
                               { yylhs.value.as < ResearchItem > () = ResearchItem::RiRedemption; }
-#line 3925 "grammar.gen.tab.cpp"
+#line 3905 "grammar.gen.tab.cpp"
     break;
 
   case 201:
-#line 844 "grammar.gen.ypp"
+#line 843 "grammar.gen.ypp"
                             { yylhs.value.as < ResearchItem > () = ResearchItem::RiSanctity; }
-#line 3931 "grammar.gen.tab.cpp"
+#line 3911 "grammar.gen.tab.cpp"
     break;
 
   case 202:
-#line 845 "grammar.gen.ypp"
+#line 844 "grammar.gen.ypp"
                              { yylhs.value.as < ResearchItem > () = ResearchItem::RiTheocracy; }
-#line 3937 "grammar.gen.tab.cpp"
+#line 3917 "grammar.gen.tab.cpp"
     break;
 
   case 203:
-#line 846 "grammar.gen.ypp"
+#line 845 "grammar.gen.ypp"
                                  { yylhs.value.as < ResearchItem > () = ResearchItem::RiBombardCannon; }
-#line 3943 "grammar.gen.tab.cpp"
+#line 3923 "grammar.gen.tab.cpp"
     break;
 
   case 204:
-#line 847 "grammar.gen.ypp"
+#line 846 "grammar.gen.ypp"
                              { yylhs.value.as < ResearchItem > () = ResearchItem::RiCappedRam; }
-#line 3949 "grammar.gen.tab.cpp"
+#line 3929 "grammar.gen.tab.cpp"
     break;
 
   case 205:
-#line 848 "grammar.gen.ypp"
+#line 847 "grammar.gen.ypp"
                                  { yylhs.value.as < ResearchItem > () = ResearchItem::RiHeavyScorpion; }
-#line 3955 "grammar.gen.tab.cpp"
+#line 3935 "grammar.gen.tab.cpp"
     break;
 
   case 206:
-#line 849 "grammar.gen.ypp"
+#line 848 "grammar.gen.ypp"
                           { yylhs.value.as < ResearchItem > () = ResearchItem::RiOnager; }
-#line 3961 "grammar.gen.tab.cpp"
+#line 3941 "grammar.gen.tab.cpp"
     break;
 
   case 207:
-#line 850 "grammar.gen.ypp"
+#line 849 "grammar.gen.ypp"
                             { yylhs.value.as < ResearchItem > () = ResearchItem::RiScorpion; }
-#line 3967 "grammar.gen.tab.cpp"
+#line 3947 "grammar.gen.tab.cpp"
     break;
 
   case 208:
-#line 851 "grammar.gen.ypp"
+#line 850 "grammar.gen.ypp"
                                { yylhs.value.as < ResearchItem > () = ResearchItem::RiSiegeOnager; }
-#line 3973 "grammar.gen.tab.cpp"
+#line 3953 "grammar.gen.tab.cpp"
     break;
 
   case 209:
-#line 852 "grammar.gen.ypp"
+#line 851 "grammar.gen.ypp"
                             { yylhs.value.as < ResearchItem > () = ResearchItem::RiSiegeRam; }
-#line 3979 "grammar.gen.tab.cpp"
+#line 3959 "grammar.gen.tab.cpp"
     break;
 
   case 210:
-#line 853 "grammar.gen.ypp"
+#line 852 "grammar.gen.ypp"
                               { yylhs.value.as < ResearchItem > () = ResearchItem::RiBloodlines; }
-#line 3985 "grammar.gen.tab.cpp"
+#line 3965 "grammar.gen.tab.cpp"
     break;
 
   case 211:
-#line 854 "grammar.gen.ypp"
+#line 853 "grammar.gen.ypp"
                             { yylhs.value.as < ResearchItem > () = ResearchItem::RiCavalier; }
-#line 3991 "grammar.gen.tab.cpp"
+#line 3971 "grammar.gen.tab.cpp"
     break;
 
   case 212:
-#line 855 "grammar.gen.ypp"
+#line 854 "grammar.gen.ypp"
                               { yylhs.value.as < ResearchItem > () = ResearchItem::RiHeavyCamel; }
-#line 3997 "grammar.gen.tab.cpp"
+#line 3977 "grammar.gen.tab.cpp"
     break;
 
   case 213:
-#line 856 "grammar.gen.ypp"
+#line 855 "grammar.gen.ypp"
                              { yylhs.value.as < ResearchItem > () = ResearchItem::RiHusbandry; }
-#line 4003 "grammar.gen.tab.cpp"
+#line 3983 "grammar.gen.tab.cpp"
     break;
 
   case 214:
-#line 857 "grammar.gen.ypp"
+#line 856 "grammar.gen.ypp"
                           { yylhs.value.as < ResearchItem > () = ResearchItem::RiHussar; }
-#line 4009 "grammar.gen.tab.cpp"
+#line 3989 "grammar.gen.tab.cpp"
     break;
 
   case 215:
-#line 858 "grammar.gen.ypp"
+#line 857 "grammar.gen.ypp"
                                 { yylhs.value.as < ResearchItem > () = ResearchItem::RiLightCavalry; }
-#line 4015 "grammar.gen.tab.cpp"
+#line 3995 "grammar.gen.tab.cpp"
     break;
 
   case 216:
-#line 859 "grammar.gen.ypp"
+#line 858 "grammar.gen.ypp"
                            { yylhs.value.as < ResearchItem > () = ResearchItem::RiPaladin; }
-#line 4021 "grammar.gen.tab.cpp"
+#line 4001 "grammar.gen.tab.cpp"
     break;
 
   case 217:
-#line 860 "grammar.gen.ypp"
+#line 859 "grammar.gen.ypp"
                             { yylhs.value.as < ResearchItem > () = ResearchItem::RiHandCart; }
-#line 4027 "grammar.gen.tab.cpp"
+#line 4007 "grammar.gen.tab.cpp"
     break;
 
   case 218:
-#line 861 "grammar.gen.ypp"
+#line 860 "grammar.gen.ypp"
                         { yylhs.value.as < ResearchItem > () = ResearchItem::RiLoom; }
-#line 4033 "grammar.gen.tab.cpp"
+#line 4013 "grammar.gen.tab.cpp"
     break;
 
   case 219:
-#line 862 "grammar.gen.ypp"
+#line 861 "grammar.gen.ypp"
                               { yylhs.value.as < ResearchItem > () = ResearchItem::RiTownPatrol; }
-#line 4039 "grammar.gen.tab.cpp"
+#line 4019 "grammar.gen.tab.cpp"
     break;
 
   case 220:
-#line 863 "grammar.gen.ypp"
+#line 862 "grammar.gen.ypp"
                              { yylhs.value.as < ResearchItem > () = ResearchItem::RiTownWatch; }
-#line 4045 "grammar.gen.tab.cpp"
+#line 4025 "grammar.gen.tab.cpp"
     break;
 
   case 221:
-#line 864 "grammar.gen.ypp"
+#line 863 "grammar.gen.ypp"
                                { yylhs.value.as < ResearchItem > () = ResearchItem::RiWheelBarrow; }
-#line 4051 "grammar.gen.tab.cpp"
+#line 4031 "grammar.gen.tab.cpp"
     break;
 
   case 222:
-#line 865 "grammar.gen.ypp"
+#line 864 "grammar.gen.ypp"
                                 { yylhs.value.as < ResearchItem > () = ResearchItem::RiArchitecture; }
-#line 4057 "grammar.gen.tab.cpp"
+#line 4037 "grammar.gen.tab.cpp"
     break;
 
   case 223:
-#line 866 "grammar.gen.ypp"
+#line 865 "grammar.gen.ypp"
                               { yylhs.value.as < ResearchItem > () = ResearchItem::RiBallistics; }
-#line 4063 "grammar.gen.tab.cpp"
+#line 4043 "grammar.gen.tab.cpp"
     break;
 
   case 224:
-#line 867 "grammar.gen.ypp"
+#line 866 "grammar.gen.ypp"
                                 { yylhs.value.as < ResearchItem > () = ResearchItem::RiBombardTower; }
-#line 4069 "grammar.gen.tab.cpp"
+#line 4049 "grammar.gen.tab.cpp"
     break;
 
   case 225:
-#line 868 "grammar.gen.ypp"
+#line 867 "grammar.gen.ypp"
                              { yylhs.value.as < ResearchItem > () = ResearchItem::RiChemistry; }
-#line 4075 "grammar.gen.tab.cpp"
+#line 4055 "grammar.gen.tab.cpp"
     break;
 
   case 226:
-#line 869 "grammar.gen.ypp"
+#line 868 "grammar.gen.ypp"
                                  { yylhs.value.as < ResearchItem > () = ResearchItem::RiFortifiedWall; }
-#line 4081 "grammar.gen.tab.cpp"
+#line 4061 "grammar.gen.tab.cpp"
     break;
 
   case 227:
-#line 870 "grammar.gen.ypp"
+#line 869 "grammar.gen.ypp"
                               { yylhs.value.as < ResearchItem > () = ResearchItem::RiGuardTower; }
-#line 4087 "grammar.gen.tab.cpp"
+#line 4067 "grammar.gen.tab.cpp"
     break;
 
   case 228:
-#line 871 "grammar.gen.ypp"
+#line 870 "grammar.gen.ypp"
                               { yylhs.value.as < ResearchItem > () = ResearchItem::RiHeatedShot; }
-#line 4093 "grammar.gen.tab.cpp"
+#line 4073 "grammar.gen.tab.cpp"
     break;
 
   case 229:
-#line 872 "grammar.gen.ypp"
+#line 871 "grammar.gen.ypp"
                         { yylhs.value.as < ResearchItem > () = ResearchItem::RiKeep; }
-#line 4099 "grammar.gen.tab.cpp"
+#line 4079 "grammar.gen.tab.cpp"
     break;
 
   case 230:
-#line 873 "grammar.gen.ypp"
+#line 872 "grammar.gen.ypp"
                            { yylhs.value.as < ResearchItem > () = ResearchItem::RiMasonry; }
-#line 4105 "grammar.gen.tab.cpp"
+#line 4085 "grammar.gen.tab.cpp"
     break;
 
   case 231:
-#line 874 "grammar.gen.ypp"
+#line 873 "grammar.gen.ypp"
                                { yylhs.value.as < ResearchItem > () = ResearchItem::RiMurderHoles; }
-#line 4111 "grammar.gen.tab.cpp"
+#line 4091 "grammar.gen.tab.cpp"
     break;
 
   case 232:
-#line 875 "grammar.gen.ypp"
+#line 874 "grammar.gen.ypp"
                                   { yylhs.value.as < ResearchItem > () = ResearchItem::RiSiegeEngineers; }
-#line 4117 "grammar.gen.tab.cpp"
+#line 4097 "grammar.gen.tab.cpp"
     break;
 
   case 233:
-#line 876 "grammar.gen.ypp"
+#line 875 "grammar.gen.ypp"
                                 { yylhs.value.as < ResearchItem > () = ResearchItem::RiStonecutting; }
-#line 4123 "grammar.gen.tab.cpp"
+#line 4103 "grammar.gen.tab.cpp"
     break;
 
   case 234:
-#line 877 "grammar.gen.ypp"
+#line 876 "grammar.gen.ypp"
                                      { yylhs.value.as < ResearchItem > () = ResearchItem::MyUniqueUnitUpgrade; }
-#line 4129 "grammar.gen.tab.cpp"
+#line 4109 "grammar.gen.tab.cpp"
     break;
 
   case 235:
-#line 878 "grammar.gen.ypp"
+#line 877 "grammar.gen.ypp"
                                   { yylhs.value.as < ResearchItem > () = ResearchItem::MyUniqueResearch; }
-#line 4135 "grammar.gen.tab.cpp"
+#line 4115 "grammar.gen.tab.cpp"
     break;
 
   case 236:
-#line 881 "grammar.gen.ypp"
+#line 880 "grammar.gen.ypp"
                                        { yylhs.value.as < StartingResourcesType > () = StartingResourcesType::LowResources; }
-#line 4141 "grammar.gen.tab.cpp"
+#line 4121 "grammar.gen.tab.cpp"
     break;
 
   case 237:
-#line 882 "grammar.gen.ypp"
+#line 881 "grammar.gen.ypp"
                                           { yylhs.value.as < StartingResourcesType > () = StartingResourcesType::MediumResources; }
-#line 4147 "grammar.gen.tab.cpp"
+#line 4127 "grammar.gen.tab.cpp"
     break;
 
   case 238:
-#line 883 "grammar.gen.ypp"
+#line 882 "grammar.gen.ypp"
                                         { yylhs.value.as < StartingResourcesType > () = StartingResourcesType::HighResources; }
-#line 4153 "grammar.gen.tab.cpp"
+#line 4133 "grammar.gen.tab.cpp"
     break;
 
   case 239:
-#line 886 "grammar.gen.ypp"
+#line 885 "grammar.gen.ypp"
                                                    { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnPercentCivilianExplorers; }
-#line 4159 "grammar.gen.tab.cpp"
+#line 4139 "grammar.gen.tab.cpp"
     break;
 
   case 240:
-#line 887 "grammar.gen.ypp"
+#line 886 "grammar.gen.ypp"
                                                   { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnPercentCivilianBuilders; }
-#line 4165 "grammar.gen.tab.cpp"
+#line 4145 "grammar.gen.tab.cpp"
     break;
 
   case 241:
-#line 888 "grammar.gen.ypp"
+#line 887 "grammar.gen.ypp"
                                                    { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnPercentCivilianGatherers; }
-#line 4171 "grammar.gen.tab.cpp"
+#line 4151 "grammar.gen.tab.cpp"
     break;
 
   case 242:
-#line 889 "grammar.gen.ypp"
+#line 888 "grammar.gen.ypp"
                                                { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnCapCivilianExplorers; }
-#line 4177 "grammar.gen.tab.cpp"
+#line 4157 "grammar.gen.tab.cpp"
     break;
 
   case 243:
-#line 890 "grammar.gen.ypp"
+#line 889 "grammar.gen.ypp"
                                               { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnCapCivilianBuilders; }
-#line 4183 "grammar.gen.tab.cpp"
+#line 4163 "grammar.gen.tab.cpp"
     break;
 
   case 244:
-#line 891 "grammar.gen.ypp"
+#line 890 "grammar.gen.ypp"
                                                { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnCapCivilianGatherers; }
-#line 4189 "grammar.gen.tab.cpp"
+#line 4169 "grammar.gen.tab.cpp"
     break;
 
   case 245:
-#line 892 "grammar.gen.ypp"
+#line 891 "grammar.gen.ypp"
                                                  { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnMinimumAttackGroupSize; }
-#line 4195 "grammar.gen.tab.cpp"
+#line 4175 "grammar.gen.tab.cpp"
     break;
 
   case 246:
-#line 893 "grammar.gen.ypp"
+#line 892 "grammar.gen.ypp"
                                                { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnTotalNumberExplorers; }
-#line 4201 "grammar.gen.tab.cpp"
+#line 4181 "grammar.gen.tab.cpp"
     break;
 
   case 247:
-#line 894 "grammar.gen.ypp"
+#line 893 "grammar.gen.ypp"
                                                       { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnPercentEnemySightedResponse; }
-#line 4207 "grammar.gen.tab.cpp"
+#line 4187 "grammar.gen.tab.cpp"
     break;
 
   case 248:
-#line 895 "grammar.gen.ypp"
+#line 894 "grammar.gen.ypp"
                                                        { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnEnemySightedResponseDistance; }
-#line 4213 "grammar.gen.tab.cpp"
+#line 4193 "grammar.gen.tab.cpp"
     break;
 
   case 249:
-#line 896 "grammar.gen.ypp"
+#line 895 "grammar.gen.ypp"
                                          { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnSentryDistance; }
-#line 4219 "grammar.gen.tab.cpp"
+#line 4199 "grammar.gen.tab.cpp"
     break;
 
   case 250:
-#line 897 "grammar.gen.ypp"
+#line 896 "grammar.gen.ypp"
                                               { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnRelicReturnDistance; }
-#line 4225 "grammar.gen.tab.cpp"
+#line 4205 "grammar.gen.tab.cpp"
     break;
 
   case 251:
-#line 898 "grammar.gen.ypp"
+#line 897 "grammar.gen.ypp"
                                                  { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnMinimumDefendGroupSize; }
-#line 4231 "grammar.gen.tab.cpp"
+#line 4211 "grammar.gen.tab.cpp"
     break;
 
   case 252:
-#line 899 "grammar.gen.ypp"
+#line 898 "grammar.gen.ypp"
                                                  { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnMaximumAttackGroupSize; }
-#line 4237 "grammar.gen.tab.cpp"
+#line 4217 "grammar.gen.tab.cpp"
     break;
 
   case 253:
-#line 900 "grammar.gen.ypp"
+#line 899 "grammar.gen.ypp"
                                                  { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnMaximumDefendGroupSize; }
-#line 4243 "grammar.gen.tab.cpp"
+#line 4223 "grammar.gen.tab.cpp"
     break;
 
   case 254:
-#line 901 "grammar.gen.ypp"
+#line 900 "grammar.gen.ypp"
                                                 { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnMinimumPeaceLikeLevel; }
-#line 4249 "grammar.gen.tab.cpp"
+#line 4229 "grammar.gen.tab.cpp"
     break;
 
   case 255:
-#line 902 "grammar.gen.ypp"
+#line 901 "grammar.gen.ypp"
                                                      { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnPercentExplorationRequired; }
-#line 4255 "grammar.gen.tab.cpp"
+#line 4235 "grammar.gen.tab.cpp"
     break;
 
   case 256:
-#line 903 "grammar.gen.ypp"
+#line 902 "grammar.gen.ypp"
                                                { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnZeroPriorityDistance; }
-#line 4261 "grammar.gen.tab.cpp"
+#line 4241 "grammar.gen.tab.cpp"
     break;
 
   case 257:
-#line 904 "grammar.gen.ypp"
+#line 903 "grammar.gen.ypp"
                                                    { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnMinimumCivilianExplorers; }
-#line 4267 "grammar.gen.tab.cpp"
+#line 4247 "grammar.gen.tab.cpp"
     break;
 
   case 258:
-#line 905 "grammar.gen.ypp"
+#line 904 "grammar.gen.ypp"
                                              { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnNumberAttackGroups; }
-#line 4273 "grammar.gen.tab.cpp"
+#line 4253 "grammar.gen.tab.cpp"
     break;
 
   case 259:
-#line 906 "grammar.gen.ypp"
+#line 905 "grammar.gen.ypp"
                                              { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnNumberDefendGroups; }
-#line 4279 "grammar.gen.tab.cpp"
+#line 4259 "grammar.gen.tab.cpp"
     break;
 
   case 260:
-#line 907 "grammar.gen.ypp"
+#line 906 "grammar.gen.ypp"
                                                    { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnAttackGroupGatherSpacing; }
-#line 4285 "grammar.gen.tab.cpp"
+#line 4265 "grammar.gen.tab.cpp"
     break;
 
   case 261:
-#line 908 "grammar.gen.ypp"
+#line 907 "grammar.gen.ypp"
                                               { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnNumberExploreGroups; }
-#line 4291 "grammar.gen.tab.cpp"
+#line 4271 "grammar.gen.tab.cpp"
     break;
 
   case 262:
-#line 909 "grammar.gen.ypp"
+#line 908 "grammar.gen.ypp"
                                                   { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnMinimumExploreGroupSize; }
-#line 4297 "grammar.gen.tab.cpp"
+#line 4277 "grammar.gen.tab.cpp"
     break;
 
   case 263:
-#line 910 "grammar.gen.ypp"
+#line 909 "grammar.gen.ypp"
                                                   { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnMaximumExploreGroupSize; }
-#line 4303 "grammar.gen.tab.cpp"
+#line 4283 "grammar.gen.tab.cpp"
     break;
 
   case 264:
-#line 911 "grammar.gen.ypp"
+#line 910 "grammar.gen.ypp"
                                              { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnGoldDefendPriority; }
-#line 4309 "grammar.gen.tab.cpp"
+#line 4289 "grammar.gen.tab.cpp"
     break;
 
   case 265:
-#line 912 "grammar.gen.ypp"
+#line 911 "grammar.gen.ypp"
                                               { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnStoneDefendPriority; }
-#line 4315 "grammar.gen.tab.cpp"
+#line 4295 "grammar.gen.tab.cpp"
     break;
 
   case 266:
-#line 913 "grammar.gen.ypp"
+#line 912 "grammar.gen.ypp"
                                                { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnForageDefendPriority; }
-#line 4321 "grammar.gen.tab.cpp"
+#line 4301 "grammar.gen.tab.cpp"
     break;
 
   case 267:
-#line 914 "grammar.gen.ypp"
+#line 913 "grammar.gen.ypp"
                                               { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnRelicDefendPriority; }
-#line 4327 "grammar.gen.tab.cpp"
+#line 4307 "grammar.gen.tab.cpp"
     break;
 
   case 268:
-#line 915 "grammar.gen.ypp"
+#line 914 "grammar.gen.ypp"
                                              { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnTownDefendPriority; }
-#line 4333 "grammar.gen.tab.cpp"
+#line 4313 "grammar.gen.tab.cpp"
     break;
 
   case 269:
-#line 916 "grammar.gen.ypp"
+#line 915 "grammar.gen.ypp"
                                           { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnDefenseDistance; }
-#line 4339 "grammar.gen.tab.cpp"
+#line 4319 "grammar.gen.tab.cpp"
     break;
 
   case 270:
-#line 917 "grammar.gen.ypp"
+#line 916 "grammar.gen.ypp"
                                                  { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnNumberBoatAttackGroups; }
-#line 4345 "grammar.gen.tab.cpp"
+#line 4325 "grammar.gen.tab.cpp"
     break;
 
   case 271:
-#line 918 "grammar.gen.ypp"
+#line 917 "grammar.gen.ypp"
                                                      { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnMinimumBoatAttackGroupSize; }
-#line 4351 "grammar.gen.tab.cpp"
+#line 4331 "grammar.gen.tab.cpp"
     break;
 
   case 272:
-#line 919 "grammar.gen.ypp"
+#line 918 "grammar.gen.ypp"
                                                      { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnMaximumBoatAttackGroupSize; }
-#line 4357 "grammar.gen.tab.cpp"
+#line 4337 "grammar.gen.tab.cpp"
     break;
 
   case 273:
-#line 920 "grammar.gen.ypp"
+#line 919 "grammar.gen.ypp"
                                                   { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnNumberBoatExploreGroups; }
-#line 4363 "grammar.gen.tab.cpp"
+#line 4343 "grammar.gen.tab.cpp"
     break;
 
   case 274:
-#line 921 "grammar.gen.ypp"
+#line 920 "grammar.gen.ypp"
                                                       { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnMinimumBoatExploreGroupSize; }
-#line 4369 "grammar.gen.tab.cpp"
+#line 4349 "grammar.gen.tab.cpp"
     break;
 
   case 275:
-#line 922 "grammar.gen.ypp"
+#line 921 "grammar.gen.ypp"
                                                       { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnMaximumBoatExploreGroupSize; }
-#line 4375 "grammar.gen.tab.cpp"
+#line 4355 "grammar.gen.tab.cpp"
     break;
 
   case 276:
-#line 923 "grammar.gen.ypp"
+#line 922 "grammar.gen.ypp"
                                                  { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnNumberBoatDefendGroups; }
-#line 4381 "grammar.gen.tab.cpp"
+#line 4361 "grammar.gen.tab.cpp"
     break;
 
   case 277:
-#line 924 "grammar.gen.ypp"
+#line 923 "grammar.gen.ypp"
                                                      { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnMinimumBoatDefendGroupSize; }
-#line 4387 "grammar.gen.tab.cpp"
+#line 4367 "grammar.gen.tab.cpp"
     break;
 
   case 278:
-#line 925 "grammar.gen.ypp"
+#line 924 "grammar.gen.ypp"
                                                      { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnMaximumBoatDefendGroupSize; }
-#line 4393 "grammar.gen.tab.cpp"
+#line 4373 "grammar.gen.tab.cpp"
     break;
 
   case 279:
-#line 926 "grammar.gen.ypp"
+#line 925 "grammar.gen.ypp"
                                              { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnDockDefendPriority; }
-#line 4399 "grammar.gen.tab.cpp"
+#line 4379 "grammar.gen.tab.cpp"
     break;
 
   case 280:
-#line 927 "grammar.gen.ypp"
+#line 926 "grammar.gen.ypp"
                                                   { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnSentryDistanceVariation; }
-#line 4405 "grammar.gen.tab.cpp"
+#line 4385 "grammar.gen.tab.cpp"
     break;
 
   case 281:
-#line 928 "grammar.gen.ypp"
+#line 927 "grammar.gen.ypp"
                                           { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnMinimumTownSize; }
-#line 4411 "grammar.gen.tab.cpp"
+#line 4391 "grammar.gen.tab.cpp"
     break;
 
   case 282:
-#line 929 "grammar.gen.ypp"
+#line 928 "grammar.gen.ypp"
                                           { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnMaximumTownSize; }
-#line 4417 "grammar.gen.tab.cpp"
+#line 4397 "grammar.gen.tab.cpp"
     break;
 
   case 283:
-#line 930 "grammar.gen.ypp"
+#line 929 "grammar.gen.ypp"
                                                         { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnGroupCommanderSelectionMethod; }
-#line 4423 "grammar.gen.tab.cpp"
+#line 4403 "grammar.gen.tab.cpp"
     break;
 
   case 284:
-#line 931 "grammar.gen.ypp"
+#line 930 "grammar.gen.ypp"
                                                    { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnConsecutiveIdleUnitLimit; }
-#line 4429 "grammar.gen.tab.cpp"
+#line 4409 "grammar.gen.tab.cpp"
     break;
 
   case 285:
-#line 932 "grammar.gen.ypp"
+#line 931 "grammar.gen.ypp"
                                                    { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnTargetEvaluationDistance; }
-#line 4435 "grammar.gen.tab.cpp"
+#line 4415 "grammar.gen.tab.cpp"
     break;
 
   case 286:
-#line 933 "grammar.gen.ypp"
+#line 932 "grammar.gen.ypp"
                                                     { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnTargetEvaluationHitpoints; }
-#line 4441 "grammar.gen.tab.cpp"
+#line 4421 "grammar.gen.tab.cpp"
     break;
 
   case 287:
-#line 934 "grammar.gen.ypp"
+#line 933 "grammar.gen.ypp"
                                                            { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnTargetEvaluationDamageCapability; }
-#line 4447 "grammar.gen.tab.cpp"
+#line 4427 "grammar.gen.tab.cpp"
     break;
 
   case 288:
-#line 935 "grammar.gen.ypp"
+#line 934 "grammar.gen.ypp"
                                                 { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnTargetEvaluationKills; }
-#line 4453 "grammar.gen.tab.cpp"
+#line 4433 "grammar.gen.tab.cpp"
     break;
 
   case 289:
-#line 936 "grammar.gen.ypp"
+#line 935 "grammar.gen.ypp"
                                                         { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnTargetEvaluationAllyProximity; }
-#line 4459 "grammar.gen.tab.cpp"
+#line 4439 "grammar.gen.tab.cpp"
     break;
 
   case 290:
-#line 937 "grammar.gen.ypp"
+#line 936 "grammar.gen.ypp"
                                               { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnTargetEvaluationRof; }
-#line 4465 "grammar.gen.tab.cpp"
+#line 4445 "grammar.gen.tab.cpp"
     break;
 
   case 291:
-#line 938 "grammar.gen.ypp"
+#line 937 "grammar.gen.ypp"
                                                      { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnTargetEvaluationRandomness; }
-#line 4471 "grammar.gen.tab.cpp"
+#line 4451 "grammar.gen.tab.cpp"
     break;
 
   case 292:
-#line 939 "grammar.gen.ypp"
+#line 938 "grammar.gen.ypp"
                                           { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnCampMaxDistance; }
-#line 4477 "grammar.gen.tab.cpp"
+#line 4457 "grammar.gen.tab.cpp"
     break;
 
   case 293:
-#line 940 "grammar.gen.ypp"
+#line 939 "grammar.gen.ypp"
                                           { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnMillMaxDistance; }
-#line 4483 "grammar.gen.tab.cpp"
+#line 4463 "grammar.gen.tab.cpp"
     break;
 
   case 294:
-#line 941 "grammar.gen.ypp"
+#line 940 "grammar.gen.ypp"
                                                          { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnTargetEvaluationAttackAttempts; }
-#line 4489 "grammar.gen.tab.cpp"
+#line 4469 "grammar.gen.tab.cpp"
     break;
 
   case 295:
-#line 942 "grammar.gen.ypp"
+#line 941 "grammar.gen.ypp"
                                                 { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnTargetEvaluationRange; }
-#line 4495 "grammar.gen.tab.cpp"
+#line 4475 "grammar.gen.tab.cpp"
     break;
 
   case 296:
-#line 943 "grammar.gen.ypp"
+#line 942 "grammar.gen.ypp"
                                                 { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnDefendOverlapDistance; }
-#line 4501 "grammar.gen.tab.cpp"
+#line 4481 "grammar.gen.tab.cpp"
     break;
 
   case 297:
-#line 944 "grammar.gen.ypp"
+#line 943 "grammar.gen.ypp"
                                                       { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnScaleMinimumAttackGroupSize; }
-#line 4507 "grammar.gen.tab.cpp"
+#line 4487 "grammar.gen.tab.cpp"
     break;
 
   case 298:
-#line 945 "grammar.gen.ypp"
+#line 944 "grammar.gen.ypp"
                                                       { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnScaleMaximumAttackGroupSize; }
-#line 4513 "grammar.gen.tab.cpp"
+#line 4493 "grammar.gen.tab.cpp"
     break;
 
   case 299:
-#line 946 "grammar.gen.ypp"
+#line 945 "grammar.gen.ypp"
                                                     { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnAttackGroupSizeRandomness; }
-#line 4519 "grammar.gen.tab.cpp"
+#line 4499 "grammar.gen.tab.cpp"
     break;
 
   case 300:
-#line 947 "grammar.gen.ypp"
+#line 946 "grammar.gen.ypp"
                                            { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnScalingFrequency; }
-#line 4525 "grammar.gen.tab.cpp"
+#line 4505 "grammar.gen.tab.cpp"
     break;
 
   case 301:
-#line 948 "grammar.gen.ypp"
+#line 947 "grammar.gen.ypp"
                                                     { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnMaximumGaiaAttackResponse; }
-#line 4531 "grammar.gen.tab.cpp"
+#line 4511 "grammar.gen.tab.cpp"
     break;
 
   case 302:
-#line 949 "grammar.gen.ypp"
+#line 948 "grammar.gen.ypp"
                                          { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnBuildFrequency; }
-#line 4537 "grammar.gen.tab.cpp"
+#line 4517 "grammar.gen.tab.cpp"
     break;
 
   case 303:
-#line 950 "grammar.gen.ypp"
+#line 949 "grammar.gen.ypp"
                                                          { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnAttackSeparationTimeRandomness; }
-#line 4543 "grammar.gen.tab.cpp"
+#line 4523 "grammar.gen.tab.cpp"
     break;
 
   case 304:
-#line 951 "grammar.gen.ypp"
+#line 950 "grammar.gen.ypp"
                                              { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnAttackIntelligence; }
-#line 4549 "grammar.gen.tab.cpp"
+#line 4529 "grammar.gen.tab.cpp"
     break;
 
   case 305:
-#line 952 "grammar.gen.ypp"
+#line 951 "grammar.gen.ypp"
                                              { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnInitialAttackDelay; }
-#line 4555 "grammar.gen.tab.cpp"
+#line 4535 "grammar.gen.tab.cpp"
     break;
 
   case 306:
-#line 953 "grammar.gen.ypp"
+#line 952 "grammar.gen.ypp"
                                                   { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnSaveScenarioInformation; }
-#line 4561 "grammar.gen.tab.cpp"
+#line 4541 "grammar.gen.tab.cpp"
     break;
 
   case 307:
-#line 954 "grammar.gen.ypp"
+#line 953 "grammar.gen.ypp"
                                              { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnSpecialAttackType1; }
-#line 4567 "grammar.gen.tab.cpp"
+#line 4547 "grammar.gen.tab.cpp"
     break;
 
   case 308:
-#line 955 "grammar.gen.ypp"
+#line 954 "grammar.gen.ypp"
                                                   { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnSpecialAttackInfluence1; }
-#line 4573 "grammar.gen.tab.cpp"
+#line 4553 "grammar.gen.tab.cpp"
     break;
 
   case 309:
-#line 956 "grammar.gen.ypp"
+#line 955 "grammar.gen.ypp"
                                                       { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnMinimumWaterBodySizeForDock; }
-#line 4579 "grammar.gen.tab.cpp"
+#line 4559 "grammar.gen.tab.cpp"
     break;
 
   case 310:
-#line 957 "grammar.gen.ypp"
+#line 956 "grammar.gen.ypp"
                                                         { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnNumberBuildAttemptsBeforeSkip; }
-#line 4585 "grammar.gen.tab.cpp"
+#line 4565 "grammar.gen.tab.cpp"
     break;
 
   case 311:
-#line 958 "grammar.gen.ypp"
+#line 957 "grammar.gen.ypp"
                                              { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnMaxSkipsPerAttempt; }
-#line 4591 "grammar.gen.tab.cpp"
+#line 4571 "grammar.gen.tab.cpp"
     break;
 
   case 312:
-#line 959 "grammar.gen.ypp"
+#line 958 "grammar.gen.ypp"
                                                  { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnFoodGathererPercentage; }
-#line 4597 "grammar.gen.tab.cpp"
+#line 4577 "grammar.gen.tab.cpp"
     break;
 
   case 313:
-#line 960 "grammar.gen.ypp"
+#line 959 "grammar.gen.ypp"
                                                  { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnGoldGathererPercentage; }
-#line 4603 "grammar.gen.tab.cpp"
+#line 4583 "grammar.gen.tab.cpp"
     break;
 
   case 314:
-#line 961 "grammar.gen.ypp"
+#line 960 "grammar.gen.ypp"
                                                   { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnStoneGathererPercentage; }
-#line 4609 "grammar.gen.tab.cpp"
+#line 4589 "grammar.gen.tab.cpp"
     break;
 
   case 315:
-#line 962 "grammar.gen.ypp"
+#line 961 "grammar.gen.ypp"
                                                  { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnWoodGathererPercentage; }
-#line 4615 "grammar.gen.tab.cpp"
+#line 4595 "grammar.gen.tab.cpp"
     break;
 
   case 316:
-#line 963 "grammar.gen.ypp"
+#line 962 "grammar.gen.ypp"
                                                     { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnTargetEvaluationContinent; }
-#line 4621 "grammar.gen.tab.cpp"
+#line 4601 "grammar.gen.tab.cpp"
     break;
 
   case 317:
-#line 964 "grammar.gen.ypp"
+#line 963 "grammar.gen.ypp"
                                                       { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnTargetEvaluationSiegeWeapon; }
-#line 4627 "grammar.gen.tab.cpp"
+#line 4607 "grammar.gen.tab.cpp"
     break;
 
   case 318:
-#line 965 "grammar.gen.ypp"
+#line 964 "grammar.gen.ypp"
                                                      { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnGroupLeaderDefenseDistance; }
-#line 4633 "grammar.gen.tab.cpp"
+#line 4613 "grammar.gen.tab.cpp"
     break;
 
   case 319:
-#line 966 "grammar.gen.ypp"
+#line 965 "grammar.gen.ypp"
                                                  { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnInitialAttackDelayType; }
-#line 4639 "grammar.gen.tab.cpp"
+#line 4619 "grammar.gen.tab.cpp"
     break;
 
   case 320:
-#line 967 "grammar.gen.ypp"
+#line 966 "grammar.gen.ypp"
                                              { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnBlotExplorationMap; }
-#line 4645 "grammar.gen.tab.cpp"
+#line 4625 "grammar.gen.tab.cpp"
     break;
 
   case 321:
-#line 968 "grammar.gen.ypp"
+#line 967 "grammar.gen.ypp"
                                    { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnBlotSize; }
-#line 4651 "grammar.gen.tab.cpp"
+#line 4631 "grammar.gen.tab.cpp"
     break;
 
   case 322:
-#line 969 "grammar.gen.ypp"
+#line 968 "grammar.gen.ypp"
                                                { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnIntelligentGathering; }
-#line 4657 "grammar.gen.tab.cpp"
+#line 4637 "grammar.gen.tab.cpp"
     break;
 
   case 323:
-#line 970 "grammar.gen.ypp"
+#line 969 "grammar.gen.ypp"
                                                 { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnTaskUngroupedSoldiers; }
-#line 4663 "grammar.gen.tab.cpp"
+#line 4643 "grammar.gen.tab.cpp"
     break;
 
   case 324:
-#line 971 "grammar.gen.ypp"
+#line 970 "grammar.gen.ypp"
                                                { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnTargetEvaluationBoat; }
-#line 4669 "grammar.gen.tab.cpp"
+#line 4649 "grammar.gen.tab.cpp"
     break;
 
   case 325:
-#line 972 "grammar.gen.ypp"
+#line 971 "grammar.gen.ypp"
                                                      { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnNumberEnemyObjectsRequired; }
-#line 4675 "grammar.gen.tab.cpp"
+#line 4655 "grammar.gen.tab.cpp"
     break;
 
   case 326:
-#line 973 "grammar.gen.ypp"
+#line 972 "grammar.gen.ypp"
                                               { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnNumberMaxSkipCycles; }
-#line 4681 "grammar.gen.tab.cpp"
+#line 4661 "grammar.gen.tab.cpp"
     break;
 
   case 327:
-#line 974 "grammar.gen.ypp"
+#line 973 "grammar.gen.ypp"
                                              { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnRetaskGatherAmount; }
-#line 4687 "grammar.gen.tab.cpp"
+#line 4667 "grammar.gen.tab.cpp"
     break;
 
   case 328:
-#line 975 "grammar.gen.ypp"
+#line 974 "grammar.gen.ypp"
                                                 { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnMaxRetaskGatherAmount; }
-#line 4693 "grammar.gen.tab.cpp"
+#line 4673 "grammar.gen.tab.cpp"
     break;
 
   case 329:
-#line 976 "grammar.gen.ypp"
+#line 975 "grammar.gen.ypp"
                                                          { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnMaxBuildPlanGathererPercentage; }
-#line 4699 "grammar.gen.tab.cpp"
+#line 4679 "grammar.gen.tab.cpp"
     break;
 
   case 330:
-#line 977 "grammar.gen.ypp"
+#line 976 "grammar.gen.ypp"
                                                { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnFoodDropsiteDistance; }
-#line 4705 "grammar.gen.tab.cpp"
+#line 4685 "grammar.gen.tab.cpp"
     break;
 
   case 331:
-#line 978 "grammar.gen.ypp"
+#line 977 "grammar.gen.ypp"
                                                { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnWoodDropsiteDistance; }
-#line 4711 "grammar.gen.tab.cpp"
+#line 4691 "grammar.gen.tab.cpp"
     break;
 
   case 332:
-#line 979 "grammar.gen.ypp"
+#line 978 "grammar.gen.ypp"
                                                 { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnStoneDropsiteDistance; }
-#line 4717 "grammar.gen.tab.cpp"
+#line 4697 "grammar.gen.tab.cpp"
     break;
 
   case 333:
-#line 980 "grammar.gen.ypp"
+#line 979 "grammar.gen.ypp"
                                                { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnGoldDropsiteDistance; }
-#line 4723 "grammar.gen.tab.cpp"
+#line 4703 "grammar.gen.tab.cpp"
     break;
 
   case 334:
-#line 981 "grammar.gen.ypp"
+#line 980 "grammar.gen.ypp"
                                                      { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnInitialExplorationRequired; }
-#line 4729 "grammar.gen.tab.cpp"
+#line 4709 "grammar.gen.tab.cpp"
     break;
 
   case 335:
-#line 982 "grammar.gen.ypp"
+#line 981 "grammar.gen.ypp"
                                                 { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnRandomPlacementFactor; }
-#line 4735 "grammar.gen.tab.cpp"
+#line 4715 "grammar.gen.tab.cpp"
     break;
 
   case 336:
-#line 983 "grammar.gen.ypp"
+#line 982 "grammar.gen.ypp"
                                               { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnRequiredForestTiles; }
-#line 4741 "grammar.gen.tab.cpp"
+#line 4721 "grammar.gen.tab.cpp"
     break;
 
   case 337:
-#line 984 "grammar.gen.ypp"
+#line 983 "grammar.gen.ypp"
                                                 { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnAttackDiplomacyImpact; }
-#line 4747 "grammar.gen.tab.cpp"
+#line 4727 "grammar.gen.tab.cpp"
     break;
 
   case 338:
-#line 985 "grammar.gen.ypp"
+#line 984 "grammar.gen.ypp"
                                                  { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnPercentHalfExploration; }
-#line 4753 "grammar.gen.tab.cpp"
+#line 4733 "grammar.gen.tab.cpp"
     break;
 
   case 339:
-#line 986 "grammar.gen.ypp"
+#line 985 "grammar.gen.ypp"
                                                         { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnTargetEvaluationTimeKillRatio; }
-#line 4759 "grammar.gen.tab.cpp"
+#line 4739 "grammar.gen.tab.cpp"
     break;
 
   case 340:
-#line 987 "grammar.gen.ypp"
+#line 986 "grammar.gen.ypp"
                                                      { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnTargetEvaluationInProgress; }
-#line 4765 "grammar.gen.tab.cpp"
+#line 4745 "grammar.gen.tab.cpp"
     break;
 
   case 341:
-#line 988 "grammar.gen.ypp"
+#line 987 "grammar.gen.ypp"
                                               { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnAttackWinningPlayer; }
-#line 4771 "grammar.gen.tab.cpp"
+#line 4751 "grammar.gen.tab.cpp"
     break;
 
   case 342:
-#line 989 "grammar.gen.ypp"
+#line 988 "grammar.gen.ypp"
                                                { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnCoopShareInformation; }
-#line 4777 "grammar.gen.tab.cpp"
+#line 4757 "grammar.gen.tab.cpp"
     break;
 
   case 343:
-#line 990 "grammar.gen.ypp"
+#line 989 "grammar.gen.ypp"
                                                     { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnAttackWinningPlayerFactor; }
-#line 4783 "grammar.gen.tab.cpp"
+#line 4763 "grammar.gen.tab.cpp"
     break;
 
   case 344:
-#line 991 "grammar.gen.ypp"
+#line 990 "grammar.gen.ypp"
                                              { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnCoopShareAttacking; }
-#line 4789 "grammar.gen.tab.cpp"
+#line 4769 "grammar.gen.tab.cpp"
     break;
 
   case 345:
-#line 992 "grammar.gen.ypp"
+#line 991 "grammar.gen.ypp"
                                                      { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnCoopShareAttackingInterval; }
-#line 4795 "grammar.gen.tab.cpp"
+#line 4775 "grammar.gen.tab.cpp"
     break;
 
   case 346:
-#line 993 "grammar.gen.ypp"
+#line 992 "grammar.gen.ypp"
                                                          { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnPercentageExploreExterminators; }
-#line 4801 "grammar.gen.tab.cpp"
+#line 4781 "grammar.gen.tab.cpp"
     break;
 
   case 347:
-#line 994 "grammar.gen.ypp"
+#line 993 "grammar.gen.ypp"
                                              { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnTrackPlayerHistory; }
-#line 4807 "grammar.gen.tab.cpp"
+#line 4787 "grammar.gen.tab.cpp"
     break;
 
   case 348:
-#line 995 "grammar.gen.ypp"
+#line 994 "grammar.gen.ypp"
                                                 { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnMinimumDropsiteBuffer; }
-#line 4813 "grammar.gen.tab.cpp"
+#line 4793 "grammar.gen.tab.cpp"
     break;
 
   case 349:
-#line 996 "grammar.gen.ypp"
+#line 995 "grammar.gen.ypp"
                                                 { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnUseByTypeMaxGathering; }
-#line 4819 "grammar.gen.tab.cpp"
+#line 4799 "grammar.gen.tab.cpp"
     break;
 
   case 350:
-#line 997 "grammar.gen.ypp"
+#line 996 "grammar.gen.ypp"
                                                    { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnMinimumBoarHuntGroupSize; }
-#line 4825 "grammar.gen.tab.cpp"
+#line 4805 "grammar.gen.tab.cpp"
     break;
 
   case 351:
-#line 998 "grammar.gen.ypp"
+#line 997 "grammar.gen.ypp"
                                                   { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnMinimumAmountForTrading; }
-#line 4831 "grammar.gen.tab.cpp"
+#line 4811 "grammar.gen.tab.cpp"
     break;
 
   case 352:
-#line 999 "grammar.gen.ypp"
+#line 998 "grammar.gen.ypp"
                                                     { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnEasiestReactionPercentage; }
-#line 4837 "grammar.gen.tab.cpp"
+#line 4817 "grammar.gen.tab.cpp"
     break;
 
   case 353:
-#line 1000 "grammar.gen.ypp"
+#line 999 "grammar.gen.ypp"
                                                    { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnEasierReactionPercentage; }
-#line 4843 "grammar.gen.tab.cpp"
+#line 4823 "grammar.gen.tab.cpp"
     break;
 
   case 354:
-#line 1001 "grammar.gen.ypp"
+#line 1000 "grammar.gen.ypp"
                                                    { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnHitsBeforeAllianceChange; }
-#line 4849 "grammar.gen.tab.cpp"
+#line 4829 "grammar.gen.tab.cpp"
     break;
 
   case 355:
-#line 1002 "grammar.gen.ypp"
+#line 1001 "grammar.gen.ypp"
                                                { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnAllowCivilianDefense; }
-#line 4855 "grammar.gen.tab.cpp"
+#line 4835 "grammar.gen.tab.cpp"
     break;
 
   case 356:
-#line 1003 "grammar.gen.ypp"
+#line 1002 "grammar.gen.ypp"
                                                 { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnNumberForwardBuilders; }
-#line 4861 "grammar.gen.tab.cpp"
+#line 4841 "grammar.gen.tab.cpp"
     break;
 
   case 357:
-#line 1004 "grammar.gen.ypp"
+#line 1003 "grammar.gen.ypp"
                                                 { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnPercentAttackSoldiers; }
-#line 4867 "grammar.gen.tab.cpp"
+#line 4847 "grammar.gen.tab.cpp"
     break;
 
   case 358:
-#line 1005 "grammar.gen.ypp"
+#line 1004 "grammar.gen.ypp"
                                              { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnPercentAttackBoats; }
-#line 4873 "grammar.gen.tab.cpp"
+#line 4853 "grammar.gen.tab.cpp"
     break;
 
   case 359:
-#line 1006 "grammar.gen.ypp"
+#line 1005 "grammar.gen.ypp"
                                                        { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnDoNotScaleForDifficultyLevel; }
-#line 4879 "grammar.gen.tab.cpp"
+#line 4859 "grammar.gen.tab.cpp"
     break;
 
   case 360:
-#line 1007 "grammar.gen.ypp"
+#line 1006 "grammar.gen.ypp"
                                             { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnGroupFormDistance; }
-#line 4885 "grammar.gen.tab.cpp"
+#line 4865 "grammar.gen.tab.cpp"
     break;
 
   case 361:
-#line 1008 "grammar.gen.ypp"
+#line 1007 "grammar.gen.ypp"
                                                        { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnIgnoreAttackGroupUnderAttack; }
-#line 4891 "grammar.gen.tab.cpp"
+#line 4871 "grammar.gen.tab.cpp"
     break;
 
   case 362:
-#line 1009 "grammar.gen.ypp"
+#line 1008 "grammar.gen.ypp"
                                              { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnGatherDefenseUnits; }
-#line 4897 "grammar.gen.tab.cpp"
+#line 4877 "grammar.gen.tab.cpp"
     break;
 
   case 363:
-#line 1010 "grammar.gen.ypp"
+#line 1009 "grammar.gen.ypp"
                                                   { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnMaximumWoodDropDistance; }
-#line 4903 "grammar.gen.tab.cpp"
+#line 4883 "grammar.gen.tab.cpp"
     break;
 
   case 364:
-#line 1011 "grammar.gen.ypp"
+#line 1010 "grammar.gen.ypp"
                                                   { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnMaximumFoodDropDistance; }
-#line 4909 "grammar.gen.tab.cpp"
+#line 4889 "grammar.gen.tab.cpp"
     break;
 
   case 365:
-#line 1012 "grammar.gen.ypp"
+#line 1011 "grammar.gen.ypp"
                                                   { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnMaximumHuntDropDistance; }
-#line 4915 "grammar.gen.tab.cpp"
+#line 4895 "grammar.gen.tab.cpp"
     break;
 
   case 366:
-#line 1013 "grammar.gen.ypp"
+#line 1012 "grammar.gen.ypp"
                                                       { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnMaximumFishBoatDropDistance; }
-#line 4921 "grammar.gen.tab.cpp"
+#line 4901 "grammar.gen.tab.cpp"
     break;
 
   case 367:
-#line 1014 "grammar.gen.ypp"
+#line 1013 "grammar.gen.ypp"
                                                   { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnMaximumGoldDropDistance; }
-#line 4927 "grammar.gen.tab.cpp"
+#line 4907 "grammar.gen.tab.cpp"
     break;
 
   case 368:
-#line 1015 "grammar.gen.ypp"
+#line 1014 "grammar.gen.ypp"
                                                    { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnMaximumStoneDropDistance; }
-#line 4933 "grammar.gen.tab.cpp"
+#line 4913 "grammar.gen.tab.cpp"
     break;
 
   case 369:
-#line 1016 "grammar.gen.ypp"
+#line 1015 "grammar.gen.ypp"
                                                      { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnGatherIdleSoldiersAtCenter; }
-#line 4939 "grammar.gen.tab.cpp"
+#line 4919 "grammar.gen.tab.cpp"
     break;
 
   case 370:
-#line 1017 "grammar.gen.ypp"
+#line 1016 "grammar.gen.ypp"
                                        { yylhs.value.as < StrategicNumberName > () = StrategicNumberName::SnGarrisonRams; }
-#line 4945 "grammar.gen.tab.cpp"
+#line 4925 "grammar.gen.tab.cpp"
     break;
 
   case 371:
-#line 1020 "grammar.gen.ypp"
+#line 1019 "grammar.gen.ypp"
                   { yylhs.value.as < Unit > () = Unit::Arbalest; }
-#line 4951 "grammar.gen.tab.cpp"
+#line 4931 "grammar.gen.tab.cpp"
     break;
 
   case 372:
-#line 1021 "grammar.gen.ypp"
+#line 1020 "grammar.gen.ypp"
                 { yylhs.value.as < Unit > () = Unit::Archer; }
-#line 4957 "grammar.gen.tab.cpp"
+#line 4937 "grammar.gen.tab.cpp"
     break;
 
   case 373:
-#line 1022 "grammar.gen.ypp"
+#line 1021 "grammar.gen.ypp"
                        { yylhs.value.as < Unit > () = Unit::CavalryArcher; }
-#line 4963 "grammar.gen.tab.cpp"
+#line 4943 "grammar.gen.tab.cpp"
     break;
 
   case 374:
-#line 1023 "grammar.gen.ypp"
+#line 1022 "grammar.gen.ypp"
                      { yylhs.value.as < Unit > () = Unit::Crossbowman; }
-#line 4969 "grammar.gen.tab.cpp"
+#line 4949 "grammar.gen.tab.cpp"
     break;
 
   case 375:
-#line 1024 "grammar.gen.ypp"
+#line 1023 "grammar.gen.ypp"
                          { yylhs.value.as < Unit > () = Unit::EliteSkirmisher; }
-#line 4975 "grammar.gen.tab.cpp"
+#line 4955 "grammar.gen.tab.cpp"
     break;
 
   case 376:
-#line 1025 "grammar.gen.ypp"
+#line 1024 "grammar.gen.ypp"
                        { yylhs.value.as < Unit > () = Unit::HandCannoneer; }
-#line 4981 "grammar.gen.tab.cpp"
+#line 4961 "grammar.gen.tab.cpp"
     break;
 
   case 377:
-#line 1026 "grammar.gen.ypp"
+#line 1025 "grammar.gen.ypp"
                             { yylhs.value.as < Unit > () = Unit::HeavyCavalryArcher; }
-#line 4987 "grammar.gen.tab.cpp"
+#line 4967 "grammar.gen.tab.cpp"
     break;
 
   case 378:
-#line 1027 "grammar.gen.ypp"
+#line 1026 "grammar.gen.ypp"
                     { yylhs.value.as < Unit > () = Unit::Skirmisher; }
-#line 4993 "grammar.gen.tab.cpp"
+#line 4973 "grammar.gen.tab.cpp"
     break;
 
   case 379:
-#line 1028 "grammar.gen.ypp"
+#line 1027 "grammar.gen.ypp"
                   { yylhs.value.as < Unit > () = Unit::Champion; }
-#line 4999 "grammar.gen.tab.cpp"
+#line 4979 "grammar.gen.tab.cpp"
     break;
 
   case 380:
-#line 1029 "grammar.gen.ypp"
+#line 1028 "grammar.gen.ypp"
                       { yylhs.value.as < Unit > () = Unit::EagleWarrior; }
-#line 5005 "grammar.gen.tab.cpp"
+#line 4985 "grammar.gen.tab.cpp"
     break;
 
   case 381:
-#line 1030 "grammar.gen.ypp"
+#line 1029 "grammar.gen.ypp"
                            { yylhs.value.as < Unit > () = Unit::EliteEagleWarrior; }
-#line 5011 "grammar.gen.tab.cpp"
+#line 4991 "grammar.gen.tab.cpp"
     break;
 
   case 382:
-#line 1031 "grammar.gen.ypp"
+#line 1030 "grammar.gen.ypp"
                     { yylhs.value.as < Unit > () = Unit::Halberdier; }
-#line 5017 "grammar.gen.tab.cpp"
+#line 4997 "grammar.gen.tab.cpp"
     break;
 
   case 383:
-#line 1032 "grammar.gen.ypp"
+#line 1031 "grammar.gen.ypp"
                        { yylhs.value.as < Unit > () = Unit::LongSwordsman; }
-#line 5023 "grammar.gen.tab.cpp"
+#line 5003 "grammar.gen.tab.cpp"
     break;
 
   case 384:
-#line 1033 "grammar.gen.ypp"
+#line 1032 "grammar.gen.ypp"
                    { yylhs.value.as < Unit > () = Unit::ManAtArms; }
-#line 5029 "grammar.gen.tab.cpp"
+#line 5009 "grammar.gen.tab.cpp"
     break;
 
   case 385:
-#line 1034 "grammar.gen.ypp"
+#line 1033 "grammar.gen.ypp"
                     { yylhs.value.as < Unit > () = Unit::Militiaman; }
-#line 5035 "grammar.gen.tab.cpp"
+#line 5015 "grammar.gen.tab.cpp"
     break;
 
   case 386:
-#line 1035 "grammar.gen.ypp"
+#line 1034 "grammar.gen.ypp"
                  { yylhs.value.as < Unit > () = Unit::Pikeman; }
-#line 5041 "grammar.gen.tab.cpp"
+#line 5021 "grammar.gen.tab.cpp"
     break;
 
   case 387:
-#line 1036 "grammar.gen.ypp"
+#line 1035 "grammar.gen.ypp"
                   { yylhs.value.as < Unit > () = Unit::Spearman; }
-#line 5047 "grammar.gen.tab.cpp"
+#line 5027 "grammar.gen.tab.cpp"
     break;
 
   case 388:
-#line 1037 "grammar.gen.ypp"
+#line 1036 "grammar.gen.ypp"
                             { yylhs.value.as < Unit > () = Unit::TwoHandedSwordsman; }
-#line 5053 "grammar.gen.tab.cpp"
+#line 5033 "grammar.gen.tab.cpp"
     break;
 
   case 389:
-#line 1038 "grammar.gen.ypp"
+#line 1037 "grammar.gen.ypp"
                  { yylhs.value.as < Unit > () = Unit::Berserk; }
-#line 5059 "grammar.gen.tab.cpp"
+#line 5039 "grammar.gen.tab.cpp"
     break;
 
   case 390:
-#line 1039 "grammar.gen.ypp"
+#line 1038 "grammar.gen.ypp"
                     { yylhs.value.as < Unit > () = Unit::Cataphract; }
-#line 5065 "grammar.gen.tab.cpp"
+#line 5045 "grammar.gen.tab.cpp"
     break;
 
   case 391:
-#line 1040 "grammar.gen.ypp"
+#line 1039 "grammar.gen.ypp"
                  { yylhs.value.as < Unit > () = Unit::ChuKoNu; }
-#line 5071 "grammar.gen.tab.cpp"
+#line 5051 "grammar.gen.tab.cpp"
     break;
 
   case 392:
-#line 1041 "grammar.gen.ypp"
+#line 1040 "grammar.gen.ypp"
                       { yylhs.value.as < Unit > () = Unit::Conquistador; }
-#line 5077 "grammar.gen.tab.cpp"
+#line 5057 "grammar.gen.tab.cpp"
     break;
 
   case 393:
-#line 1042 "grammar.gen.ypp"
+#line 1041 "grammar.gen.ypp"
                       { yylhs.value.as < Unit > () = Unit::EliteBerserk; }
-#line 5083 "grammar.gen.tab.cpp"
+#line 5063 "grammar.gen.tab.cpp"
     break;
 
   case 394:
-#line 1043 "grammar.gen.ypp"
+#line 1042 "grammar.gen.ypp"
                          { yylhs.value.as < Unit > () = Unit::EliteCataphract; }
-#line 5089 "grammar.gen.tab.cpp"
+#line 5069 "grammar.gen.tab.cpp"
     break;
 
   case 395:
-#line 1044 "grammar.gen.ypp"
+#line 1043 "grammar.gen.ypp"
                       { yylhs.value.as < Unit > () = Unit::EliteChuKoNu; }
-#line 5095 "grammar.gen.tab.cpp"
+#line 5075 "grammar.gen.tab.cpp"
     break;
 
   case 396:
-#line 1045 "grammar.gen.ypp"
+#line 1044 "grammar.gen.ypp"
                            { yylhs.value.as < Unit > () = Unit::EliteConquistador; }
-#line 5101 "grammar.gen.tab.cpp"
+#line 5081 "grammar.gen.tab.cpp"
     break;
 
   case 397:
-#line 1046 "grammar.gen.ypp"
+#line 1045 "grammar.gen.ypp"
                       { yylhs.value.as < Unit > () = Unit::EliteHuskarl; }
-#line 5107 "grammar.gen.tab.cpp"
+#line 5087 "grammar.gen.tab.cpp"
     break;
 
   case 398:
-#line 1047 "grammar.gen.ypp"
+#line 1046 "grammar.gen.ypp"
                             { yylhs.value.as < Unit > () = Unit::EliteJaguarWarrior; }
-#line 5113 "grammar.gen.tab.cpp"
+#line 5093 "grammar.gen.tab.cpp"
     break;
 
   case 399:
-#line 1048 "grammar.gen.ypp"
+#line 1047 "grammar.gen.ypp"
                         { yylhs.value.as < Unit > () = Unit::EliteJanissary; }
-#line 5119 "grammar.gen.tab.cpp"
+#line 5099 "grammar.gen.tab.cpp"
     break;
 
   case 400:
-#line 1049 "grammar.gen.ypp"
+#line 1048 "grammar.gen.ypp"
                          { yylhs.value.as < Unit > () = Unit::EliteLongbowman; }
-#line 5125 "grammar.gen.tab.cpp"
+#line 5105 "grammar.gen.tab.cpp"
     break;
 
   case 401:
-#line 1050 "grammar.gen.ypp"
+#line 1049 "grammar.gen.ypp"
                        { yylhs.value.as < Unit > () = Unit::EliteMameluke; }
-#line 5131 "grammar.gen.tab.cpp"
+#line 5111 "grammar.gen.tab.cpp"
     break;
 
   case 402:
-#line 1051 "grammar.gen.ypp"
+#line 1050 "grammar.gen.ypp"
                        { yylhs.value.as < Unit > () = Unit::EliteMangudai; }
-#line 5137 "grammar.gen.tab.cpp"
+#line 5117 "grammar.gen.tab.cpp"
     break;
 
   case 403:
-#line 1052 "grammar.gen.ypp"
+#line 1051 "grammar.gen.ypp"
                            { yylhs.value.as < Unit > () = Unit::ElitePlumedArcher; }
-#line 5143 "grammar.gen.tab.cpp"
+#line 5123 "grammar.gen.tab.cpp"
     break;
 
   case 404:
-#line 1053 "grammar.gen.ypp"
+#line 1052 "grammar.gen.ypp"
                       { yylhs.value.as < Unit > () = Unit::EliteSamurai; }
-#line 5149 "grammar.gen.tab.cpp"
+#line 5129 "grammar.gen.tab.cpp"
     break;
 
   case 405:
-#line 1054 "grammar.gen.ypp"
+#line 1053 "grammar.gen.ypp"
                      { yylhs.value.as < Unit > () = Unit::EliteTarkan; }
-#line 5155 "grammar.gen.tab.cpp"
+#line 5135 "grammar.gen.tab.cpp"
     break;
 
   case 406:
-#line 1055 "grammar.gen.ypp"
+#line 1054 "grammar.gen.ypp"
                              { yylhs.value.as < Unit > () = Unit::EliteTeutonicKnight; }
-#line 5161 "grammar.gen.tab.cpp"
+#line 5141 "grammar.gen.tab.cpp"
     break;
 
   case 407:
-#line 1056 "grammar.gen.ypp"
+#line 1055 "grammar.gen.ypp"
                              { yylhs.value.as < Unit > () = Unit::EliteThrowingAxeman; }
-#line 5167 "grammar.gen.tab.cpp"
+#line 5147 "grammar.gen.tab.cpp"
     break;
 
   case 408:
-#line 1057 "grammar.gen.ypp"
+#line 1056 "grammar.gen.ypp"
                           { yylhs.value.as < Unit > () = Unit::EliteWarElephant; }
-#line 5173 "grammar.gen.tab.cpp"
+#line 5153 "grammar.gen.tab.cpp"
     break;
 
   case 409:
-#line 1058 "grammar.gen.ypp"
+#line 1057 "grammar.gen.ypp"
                        { yylhs.value.as < Unit > () = Unit::EliteWarWagon; }
-#line 5179 "grammar.gen.tab.cpp"
+#line 5159 "grammar.gen.tab.cpp"
     break;
 
   case 410:
-#line 1059 "grammar.gen.ypp"
+#line 1058 "grammar.gen.ypp"
                          { yylhs.value.as < Unit > () = Unit::EliteWoadRaider; }
-#line 5185 "grammar.gen.tab.cpp"
+#line 5165 "grammar.gen.tab.cpp"
     break;
 
   case 411:
-#line 1060 "grammar.gen.ypp"
+#line 1059 "grammar.gen.ypp"
                  { yylhs.value.as < Unit > () = Unit::Huskarl; }
-#line 5191 "grammar.gen.tab.cpp"
+#line 5171 "grammar.gen.tab.cpp"
     break;
 
   case 412:
-#line 1061 "grammar.gen.ypp"
+#line 1060 "grammar.gen.ypp"
                        { yylhs.value.as < Unit > () = Unit::JaguarWarrior; }
-#line 5197 "grammar.gen.tab.cpp"
+#line 5177 "grammar.gen.tab.cpp"
     break;
 
   case 413:
-#line 1062 "grammar.gen.ypp"
+#line 1061 "grammar.gen.ypp"
                    { yylhs.value.as < Unit > () = Unit::Janissary; }
-#line 5203 "grammar.gen.tab.cpp"
+#line 5183 "grammar.gen.tab.cpp"
     break;
 
   case 414:
-#line 1063 "grammar.gen.ypp"
+#line 1062 "grammar.gen.ypp"
                     { yylhs.value.as < Unit > () = Unit::Longbowman; }
-#line 5209 "grammar.gen.tab.cpp"
+#line 5189 "grammar.gen.tab.cpp"
     break;
 
   case 415:
-#line 1064 "grammar.gen.ypp"
+#line 1063 "grammar.gen.ypp"
                   { yylhs.value.as < Unit > () = Unit::Mameluke; }
-#line 5215 "grammar.gen.tab.cpp"
+#line 5195 "grammar.gen.tab.cpp"
     break;
 
   case 416:
-#line 1065 "grammar.gen.ypp"
+#line 1064 "grammar.gen.ypp"
                   { yylhs.value.as < Unit > () = Unit::Mangudai; }
-#line 5221 "grammar.gen.tab.cpp"
+#line 5201 "grammar.gen.tab.cpp"
     break;
 
   case 417:
-#line 1066 "grammar.gen.ypp"
+#line 1065 "grammar.gen.ypp"
                 { yylhs.value.as < Unit > () = Unit::Petard; }
-#line 5227 "grammar.gen.tab.cpp"
+#line 5207 "grammar.gen.tab.cpp"
     break;
 
   case 418:
-#line 1067 "grammar.gen.ypp"
+#line 1066 "grammar.gen.ypp"
                       { yylhs.value.as < Unit > () = Unit::PlumedArcher; }
-#line 5233 "grammar.gen.tab.cpp"
+#line 5213 "grammar.gen.tab.cpp"
     break;
 
   case 419:
-#line 1068 "grammar.gen.ypp"
+#line 1067 "grammar.gen.ypp"
                  { yylhs.value.as < Unit > () = Unit::Samurai; }
-#line 5239 "grammar.gen.tab.cpp"
+#line 5219 "grammar.gen.tab.cpp"
     break;
 
   case 420:
-#line 1069 "grammar.gen.ypp"
+#line 1068 "grammar.gen.ypp"
                 { yylhs.value.as < Unit > () = Unit::Tarkan; }
-#line 5245 "grammar.gen.tab.cpp"
+#line 5225 "grammar.gen.tab.cpp"
     break;
 
   case 421:
-#line 1070 "grammar.gen.ypp"
+#line 1069 "grammar.gen.ypp"
                         { yylhs.value.as < Unit > () = Unit::TeutonicKnight; }
-#line 5251 "grammar.gen.tab.cpp"
+#line 5231 "grammar.gen.tab.cpp"
     break;
 
   case 422:
-#line 1071 "grammar.gen.ypp"
+#line 1070 "grammar.gen.ypp"
                         { yylhs.value.as < Unit > () = Unit::ThrowingAxeman; }
-#line 5257 "grammar.gen.tab.cpp"
+#line 5237 "grammar.gen.tab.cpp"
     break;
 
   case 423:
-#line 1072 "grammar.gen.ypp"
+#line 1071 "grammar.gen.ypp"
                    { yylhs.value.as < Unit > () = Unit::Trebuchet; }
-#line 5263 "grammar.gen.tab.cpp"
+#line 5243 "grammar.gen.tab.cpp"
     break;
 
   case 424:
-#line 1073 "grammar.gen.ypp"
+#line 1072 "grammar.gen.ypp"
                      { yylhs.value.as < Unit > () = Unit::WarElephant; }
-#line 5269 "grammar.gen.tab.cpp"
+#line 5249 "grammar.gen.tab.cpp"
     break;
 
   case 425:
-#line 1074 "grammar.gen.ypp"
+#line 1073 "grammar.gen.ypp"
                   { yylhs.value.as < Unit > () = Unit::WarWagon; }
-#line 5275 "grammar.gen.tab.cpp"
+#line 5255 "grammar.gen.tab.cpp"
     break;
 
   case 426:
-#line 1075 "grammar.gen.ypp"
+#line 1074 "grammar.gen.ypp"
                     { yylhs.value.as < Unit > () = Unit::WoadRaider; }
-#line 5281 "grammar.gen.tab.cpp"
+#line 5261 "grammar.gen.tab.cpp"
     break;
 
   case 427:
-#line 1076 "grammar.gen.ypp"
+#line 1075 "grammar.gen.ypp"
                        { yylhs.value.as < Unit > () = Unit::CannonGalleon; }
-#line 5287 "grammar.gen.tab.cpp"
+#line 5267 "grammar.gen.tab.cpp"
     break;
 
   case 428:
-#line 1077 "grammar.gen.ypp"
+#line 1076 "grammar.gen.ypp"
                         { yylhs.value.as < Unit > () = Unit::DemolitionShip; }
-#line 5293 "grammar.gen.tab.cpp"
+#line 5273 "grammar.gen.tab.cpp"
     break;
 
   case 429:
-#line 1078 "grammar.gen.ypp"
+#line 1077 "grammar.gen.ypp"
                             { yylhs.value.as < Unit > () = Unit::EliteCannonGalleon; }
-#line 5299 "grammar.gen.tab.cpp"
+#line 5279 "grammar.gen.tab.cpp"
     break;
 
   case 430:
-#line 1079 "grammar.gen.ypp"
+#line 1078 "grammar.gen.ypp"
                        { yylhs.value.as < Unit > () = Unit::EliteLongboat; }
-#line 5305 "grammar.gen.tab.cpp"
+#line 5285 "grammar.gen.tab.cpp"
     break;
 
   case 431:
-#line 1080 "grammar.gen.ypp"
+#line 1079 "grammar.gen.ypp"
                          { yylhs.value.as < Unit > () = Unit::EliteTurtleShip; }
-#line 5311 "grammar.gen.tab.cpp"
+#line 5291 "grammar.gen.tab.cpp"
     break;
 
   case 432:
-#line 1081 "grammar.gen.ypp"
+#line 1080 "grammar.gen.ypp"
                       { yylhs.value.as < Unit > () = Unit::FastFireShip; }
-#line 5317 "grammar.gen.tab.cpp"
+#line 5297 "grammar.gen.tab.cpp"
     break;
 
   case 433:
-#line 1082 "grammar.gen.ypp"
+#line 1081 "grammar.gen.ypp"
                   { yylhs.value.as < Unit > () = Unit::FireShip; }
-#line 5323 "grammar.gen.tab.cpp"
+#line 5303 "grammar.gen.tab.cpp"
     break;
 
   case 434:
-#line 1083 "grammar.gen.ypp"
+#line 1082 "grammar.gen.ypp"
                      { yylhs.value.as < Unit > () = Unit::FishingShip; }
-#line 5329 "grammar.gen.tab.cpp"
+#line 5309 "grammar.gen.tab.cpp"
     break;
 
   case 435:
-#line 1084 "grammar.gen.ypp"
+#line 1083 "grammar.gen.ypp"
                  { yylhs.value.as < Unit > () = Unit::Galleon; }
-#line 5335 "grammar.gen.tab.cpp"
+#line 5315 "grammar.gen.tab.cpp"
     break;
 
   case 436:
-#line 1085 "grammar.gen.ypp"
+#line 1084 "grammar.gen.ypp"
                 { yylhs.value.as < Unit > () = Unit::Galley; }
-#line 5341 "grammar.gen.tab.cpp"
+#line 5321 "grammar.gen.tab.cpp"
     break;
 
   case 437:
-#line 1086 "grammar.gen.ypp"
+#line 1085 "grammar.gen.ypp"
                              { yylhs.value.as < Unit > () = Unit::HeavyDemolitionShip; }
-#line 5347 "grammar.gen.tab.cpp"
+#line 5327 "grammar.gen.tab.cpp"
     break;
 
   case 438:
-#line 1087 "grammar.gen.ypp"
+#line 1086 "grammar.gen.ypp"
                   { yylhs.value.as < Unit > () = Unit::Longboat; }
-#line 5353 "grammar.gen.tab.cpp"
+#line 5333 "grammar.gen.tab.cpp"
     break;
 
   case 439:
-#line 1088 "grammar.gen.ypp"
+#line 1087 "grammar.gen.ypp"
                   { yylhs.value.as < Unit > () = Unit::TradeCog; }
-#line 5359 "grammar.gen.tab.cpp"
+#line 5339 "grammar.gen.tab.cpp"
     break;
 
   case 440:
-#line 1089 "grammar.gen.ypp"
+#line 1088 "grammar.gen.ypp"
                        { yylhs.value.as < Unit > () = Unit::TransportShip; }
-#line 5365 "grammar.gen.tab.cpp"
+#line 5345 "grammar.gen.tab.cpp"
     break;
 
   case 441:
-#line 1090 "grammar.gen.ypp"
+#line 1089 "grammar.gen.ypp"
                     { yylhs.value.as < Unit > () = Unit::TurtleShip; }
-#line 5371 "grammar.gen.tab.cpp"
+#line 5351 "grammar.gen.tab.cpp"
     break;
 
   case 442:
-#line 1091 "grammar.gen.ypp"
+#line 1090 "grammar.gen.ypp"
                    { yylhs.value.as < Unit > () = Unit::WarGalley; }
-#line 5377 "grammar.gen.tab.cpp"
+#line 5357 "grammar.gen.tab.cpp"
     break;
 
   case 443:
-#line 1092 "grammar.gen.ypp"
+#line 1091 "grammar.gen.ypp"
                    { yylhs.value.as < Unit > () = Unit::TradeCart; }
-#line 5383 "grammar.gen.tab.cpp"
+#line 5363 "grammar.gen.tab.cpp"
     break;
 
   case 444:
-#line 1093 "grammar.gen.ypp"
+#line 1092 "grammar.gen.ypp"
                     { yylhs.value.as < Unit > () = Unit::Missionary; }
-#line 5389 "grammar.gen.tab.cpp"
+#line 5369 "grammar.gen.tab.cpp"
     break;
 
   case 445:
-#line 1094 "grammar.gen.ypp"
+#line 1093 "grammar.gen.ypp"
               { yylhs.value.as < Unit > () = Unit::Monk; }
-#line 5395 "grammar.gen.tab.cpp"
+#line 5375 "grammar.gen.tab.cpp"
     break;
 
   case 446:
-#line 1095 "grammar.gen.ypp"
+#line 1094 "grammar.gen.ypp"
                       { yylhs.value.as < Unit > () = Unit::BatteringRam; }
-#line 5401 "grammar.gen.tab.cpp"
+#line 5381 "grammar.gen.tab.cpp"
     break;
 
   case 447:
-#line 1096 "grammar.gen.ypp"
+#line 1095 "grammar.gen.ypp"
                        { yylhs.value.as < Unit > () = Unit::BombardCannon; }
-#line 5407 "grammar.gen.tab.cpp"
+#line 5387 "grammar.gen.tab.cpp"
     break;
 
   case 448:
-#line 1097 "grammar.gen.ypp"
+#line 1096 "grammar.gen.ypp"
                    { yylhs.value.as < Unit > () = Unit::CappedRam; }
-#line 5413 "grammar.gen.tab.cpp"
+#line 5393 "grammar.gen.tab.cpp"
     break;
 
   case 449:
-#line 1098 "grammar.gen.ypp"
+#line 1097 "grammar.gen.ypp"
                        { yylhs.value.as < Unit > () = Unit::HeavyScorpion; }
-#line 5419 "grammar.gen.tab.cpp"
+#line 5399 "grammar.gen.tab.cpp"
     break;
 
   case 450:
-#line 1099 "grammar.gen.ypp"
+#line 1098 "grammar.gen.ypp"
                   { yylhs.value.as < Unit > () = Unit::Mangonel; }
-#line 5425 "grammar.gen.tab.cpp"
+#line 5405 "grammar.gen.tab.cpp"
     break;
 
   case 451:
-#line 1100 "grammar.gen.ypp"
+#line 1099 "grammar.gen.ypp"
                 { yylhs.value.as < Unit > () = Unit::Onager; }
-#line 5431 "grammar.gen.tab.cpp"
+#line 5411 "grammar.gen.tab.cpp"
     break;
 
   case 452:
-#line 1101 "grammar.gen.ypp"
+#line 1100 "grammar.gen.ypp"
                   { yylhs.value.as < Unit > () = Unit::Scorpion; }
-#line 5437 "grammar.gen.tab.cpp"
+#line 5417 "grammar.gen.tab.cpp"
     break;
 
   case 453:
-#line 1102 "grammar.gen.ypp"
+#line 1101 "grammar.gen.ypp"
                      { yylhs.value.as < Unit > () = Unit::SiegeOnager; }
-#line 5443 "grammar.gen.tab.cpp"
+#line 5423 "grammar.gen.tab.cpp"
     break;
 
   case 454:
-#line 1103 "grammar.gen.ypp"
+#line 1102 "grammar.gen.ypp"
                   { yylhs.value.as < Unit > () = Unit::SiegeRam; }
-#line 5449 "grammar.gen.tab.cpp"
+#line 5429 "grammar.gen.tab.cpp"
     break;
 
   case 455:
-#line 1104 "grammar.gen.ypp"
+#line 1103 "grammar.gen.ypp"
                { yylhs.value.as < Unit > () = Unit::Camel; }
-#line 5455 "grammar.gen.tab.cpp"
+#line 5435 "grammar.gen.tab.cpp"
     break;
 
   case 456:
-#line 1105 "grammar.gen.ypp"
+#line 1104 "grammar.gen.ypp"
                   { yylhs.value.as < Unit > () = Unit::Cavalier; }
-#line 5461 "grammar.gen.tab.cpp"
+#line 5441 "grammar.gen.tab.cpp"
     break;
 
   case 457:
-#line 1106 "grammar.gen.ypp"
+#line 1105 "grammar.gen.ypp"
                     { yylhs.value.as < Unit > () = Unit::HeavyCamel; }
-#line 5467 "grammar.gen.tab.cpp"
+#line 5447 "grammar.gen.tab.cpp"
     break;
 
   case 458:
-#line 1107 "grammar.gen.ypp"
+#line 1106 "grammar.gen.ypp"
                 { yylhs.value.as < Unit > () = Unit::Hussar; }
-#line 5473 "grammar.gen.tab.cpp"
+#line 5453 "grammar.gen.tab.cpp"
     break;
 
   case 459:
-#line 1108 "grammar.gen.ypp"
+#line 1107 "grammar.gen.ypp"
                 { yylhs.value.as < Unit > () = Unit::Knight; }
-#line 5479 "grammar.gen.tab.cpp"
+#line 5459 "grammar.gen.tab.cpp"
     break;
 
   case 460:
-#line 1109 "grammar.gen.ypp"
+#line 1108 "grammar.gen.ypp"
                       { yylhs.value.as < Unit > () = Unit::LightCavalry; }
-#line 5485 "grammar.gen.tab.cpp"
+#line 5465 "grammar.gen.tab.cpp"
     break;
 
   case 461:
-#line 1110 "grammar.gen.ypp"
+#line 1109 "grammar.gen.ypp"
                  { yylhs.value.as < Unit > () = Unit::Paladin; }
-#line 5491 "grammar.gen.tab.cpp"
+#line 5471 "grammar.gen.tab.cpp"
     break;
 
   case 462:
-#line 1111 "grammar.gen.ypp"
+#line 1110 "grammar.gen.ypp"
                       { yylhs.value.as < Unit > () = Unit::ScoutCavalry; }
-#line 5497 "grammar.gen.tab.cpp"
+#line 5477 "grammar.gen.tab.cpp"
     break;
 
   case 463:
-#line 1112 "grammar.gen.ypp"
+#line 1111 "grammar.gen.ypp"
                   { yylhs.value.as < Unit > () = Unit::Villager; }
-#line 5503 "grammar.gen.tab.cpp"
+#line 5483 "grammar.gen.tab.cpp"
     break;
 
   case 464:
-#line 1113 "grammar.gen.ypp"
+#line 1112 "grammar.gen.ypp"
                     { yylhs.value.as < Unit > () = Unit::ArcherLine; }
-#line 5509 "grammar.gen.tab.cpp"
+#line 5489 "grammar.gen.tab.cpp"
     break;
 
   case 465:
-#line 1114 "grammar.gen.ypp"
+#line 1113 "grammar.gen.ypp"
                            { yylhs.value.as < Unit > () = Unit::CavalryArcherLine; }
-#line 5515 "grammar.gen.tab.cpp"
+#line 5495 "grammar.gen.tab.cpp"
     break;
 
   case 466:
-#line 1115 "grammar.gen.ypp"
+#line 1114 "grammar.gen.ypp"
                         { yylhs.value.as < Unit > () = Unit::SkirmisherLine; }
-#line 5521 "grammar.gen.tab.cpp"
+#line 5501 "grammar.gen.tab.cpp"
     break;
 
   case 467:
-#line 1116 "grammar.gen.ypp"
+#line 1115 "grammar.gen.ypp"
                           { yylhs.value.as < Unit > () = Unit::EagleWarriorLine; }
-#line 5527 "grammar.gen.tab.cpp"
+#line 5507 "grammar.gen.tab.cpp"
     break;
 
   case 468:
-#line 1117 "grammar.gen.ypp"
+#line 1116 "grammar.gen.ypp"
                         { yylhs.value.as < Unit > () = Unit::MilitiamanLine; }
-#line 5533 "grammar.gen.tab.cpp"
+#line 5513 "grammar.gen.tab.cpp"
     break;
 
   case 469:
-#line 1118 "grammar.gen.ypp"
+#line 1117 "grammar.gen.ypp"
                       { yylhs.value.as < Unit > () = Unit::SpearmanLine; }
-#line 5539 "grammar.gen.tab.cpp"
+#line 5519 "grammar.gen.tab.cpp"
     break;
 
   case 470:
-#line 1119 "grammar.gen.ypp"
+#line 1118 "grammar.gen.ypp"
                      { yylhs.value.as < Unit > () = Unit::BerserkLine; }
-#line 5545 "grammar.gen.tab.cpp"
+#line 5525 "grammar.gen.tab.cpp"
     break;
 
   case 471:
-#line 1120 "grammar.gen.ypp"
+#line 1119 "grammar.gen.ypp"
                         { yylhs.value.as < Unit > () = Unit::CataphractLine; }
-#line 5551 "grammar.gen.tab.cpp"
+#line 5531 "grammar.gen.tab.cpp"
     break;
 
   case 472:
-#line 1121 "grammar.gen.ypp"
+#line 1120 "grammar.gen.ypp"
                      { yylhs.value.as < Unit > () = Unit::ChuKoNuLine; }
-#line 5557 "grammar.gen.tab.cpp"
+#line 5537 "grammar.gen.tab.cpp"
     break;
 
   case 473:
-#line 1122 "grammar.gen.ypp"
+#line 1121 "grammar.gen.ypp"
                           { yylhs.value.as < Unit > () = Unit::ConquistadorLine; }
-#line 5563 "grammar.gen.tab.cpp"
+#line 5543 "grammar.gen.tab.cpp"
     break;
 
   case 474:
-#line 1123 "grammar.gen.ypp"
+#line 1122 "grammar.gen.ypp"
                      { yylhs.value.as < Unit > () = Unit::HuskarlLine; }
-#line 5569 "grammar.gen.tab.cpp"
+#line 5549 "grammar.gen.tab.cpp"
     break;
 
   case 475:
-#line 1124 "grammar.gen.ypp"
+#line 1123 "grammar.gen.ypp"
                            { yylhs.value.as < Unit > () = Unit::JaguarWarriorLine; }
-#line 5575 "grammar.gen.tab.cpp"
+#line 5555 "grammar.gen.tab.cpp"
     break;
 
   case 476:
-#line 1125 "grammar.gen.ypp"
+#line 1124 "grammar.gen.ypp"
                        { yylhs.value.as < Unit > () = Unit::JanissaryLine; }
-#line 5581 "grammar.gen.tab.cpp"
+#line 5561 "grammar.gen.tab.cpp"
     break;
 
   case 477:
-#line 1126 "grammar.gen.ypp"
+#line 1125 "grammar.gen.ypp"
                         { yylhs.value.as < Unit > () = Unit::LongbowmanLine; }
-#line 5587 "grammar.gen.tab.cpp"
+#line 5567 "grammar.gen.tab.cpp"
     break;
 
   case 478:
-#line 1127 "grammar.gen.ypp"
+#line 1126 "grammar.gen.ypp"
                       { yylhs.value.as < Unit > () = Unit::MamelukeLine; }
-#line 5593 "grammar.gen.tab.cpp"
+#line 5573 "grammar.gen.tab.cpp"
     break;
 
   case 479:
-#line 1128 "grammar.gen.ypp"
+#line 1127 "grammar.gen.ypp"
                       { yylhs.value.as < Unit > () = Unit::MangudaiLine; }
-#line 5599 "grammar.gen.tab.cpp"
+#line 5579 "grammar.gen.tab.cpp"
     break;
 
   case 480:
-#line 1129 "grammar.gen.ypp"
+#line 1128 "grammar.gen.ypp"
                           { yylhs.value.as < Unit > () = Unit::PlumedArcherLine; }
-#line 5605 "grammar.gen.tab.cpp"
+#line 5585 "grammar.gen.tab.cpp"
     break;
 
   case 481:
-#line 1130 "grammar.gen.ypp"
+#line 1129 "grammar.gen.ypp"
                      { yylhs.value.as < Unit > () = Unit::SamuraiLine; }
-#line 5611 "grammar.gen.tab.cpp"
+#line 5591 "grammar.gen.tab.cpp"
     break;
 
   case 482:
-#line 1131 "grammar.gen.ypp"
+#line 1130 "grammar.gen.ypp"
                     { yylhs.value.as < Unit > () = Unit::TarkanLine; }
-#line 5617 "grammar.gen.tab.cpp"
+#line 5597 "grammar.gen.tab.cpp"
     break;
 
   case 483:
-#line 1132 "grammar.gen.ypp"
+#line 1131 "grammar.gen.ypp"
                             { yylhs.value.as < Unit > () = Unit::TeutonicKnightLine; }
-#line 5623 "grammar.gen.tab.cpp"
+#line 5603 "grammar.gen.tab.cpp"
     break;
 
   case 484:
-#line 1133 "grammar.gen.ypp"
+#line 1132 "grammar.gen.ypp"
                             { yylhs.value.as < Unit > () = Unit::ThrowingAxemanLine; }
-#line 5629 "grammar.gen.tab.cpp"
+#line 5609 "grammar.gen.tab.cpp"
     break;
 
   case 485:
-#line 1134 "grammar.gen.ypp"
+#line 1133 "grammar.gen.ypp"
                          { yylhs.value.as < Unit > () = Unit::WarElephantLine; }
-#line 5635 "grammar.gen.tab.cpp"
+#line 5615 "grammar.gen.tab.cpp"
     break;
 
   case 486:
-#line 1135 "grammar.gen.ypp"
+#line 1134 "grammar.gen.ypp"
                       { yylhs.value.as < Unit > () = Unit::WarWagonLine; }
-#line 5641 "grammar.gen.tab.cpp"
+#line 5621 "grammar.gen.tab.cpp"
     break;
 
   case 487:
-#line 1136 "grammar.gen.ypp"
+#line 1135 "grammar.gen.ypp"
                         { yylhs.value.as < Unit > () = Unit::WoadRaiderLine; }
-#line 5647 "grammar.gen.tab.cpp"
+#line 5627 "grammar.gen.tab.cpp"
     break;
 
   case 488:
-#line 1137 "grammar.gen.ypp"
+#line 1136 "grammar.gen.ypp"
                            { yylhs.value.as < Unit > () = Unit::CannonGalleonLine; }
-#line 5653 "grammar.gen.tab.cpp"
+#line 5633 "grammar.gen.tab.cpp"
     break;
 
   case 489:
-#line 1138 "grammar.gen.ypp"
+#line 1137 "grammar.gen.ypp"
                             { yylhs.value.as < Unit > () = Unit::DemolitionShipLine; }
-#line 5659 "grammar.gen.tab.cpp"
+#line 5639 "grammar.gen.tab.cpp"
     break;
 
   case 490:
-#line 1139 "grammar.gen.ypp"
+#line 1138 "grammar.gen.ypp"
                       { yylhs.value.as < Unit > () = Unit::FireShipLine; }
-#line 5665 "grammar.gen.tab.cpp"
+#line 5645 "grammar.gen.tab.cpp"
     break;
 
   case 491:
-#line 1140 "grammar.gen.ypp"
+#line 1139 "grammar.gen.ypp"
                     { yylhs.value.as < Unit > () = Unit::GalleyLine; }
-#line 5671 "grammar.gen.tab.cpp"
+#line 5651 "grammar.gen.tab.cpp"
     break;
 
   case 492:
-#line 1141 "grammar.gen.ypp"
+#line 1140 "grammar.gen.ypp"
                       { yylhs.value.as < Unit > () = Unit::LongboatLine; }
-#line 5677 "grammar.gen.tab.cpp"
+#line 5657 "grammar.gen.tab.cpp"
     break;
 
   case 493:
-#line 1142 "grammar.gen.ypp"
+#line 1141 "grammar.gen.ypp"
                         { yylhs.value.as < Unit > () = Unit::TurtleShipLine; }
-#line 5683 "grammar.gen.tab.cpp"
+#line 5663 "grammar.gen.tab.cpp"
     break;
 
   case 494:
-#line 1143 "grammar.gen.ypp"
+#line 1142 "grammar.gen.ypp"
                           { yylhs.value.as < Unit > () = Unit::BatteringRamLine; }
-#line 5689 "grammar.gen.tab.cpp"
+#line 5669 "grammar.gen.tab.cpp"
     break;
 
   case 495:
-#line 1144 "grammar.gen.ypp"
+#line 1143 "grammar.gen.ypp"
                       { yylhs.value.as < Unit > () = Unit::MangonelLine; }
-#line 5695 "grammar.gen.tab.cpp"
+#line 5675 "grammar.gen.tab.cpp"
     break;
 
   case 496:
-#line 1145 "grammar.gen.ypp"
+#line 1144 "grammar.gen.ypp"
                       { yylhs.value.as < Unit > () = Unit::ScorpionLine; }
-#line 5701 "grammar.gen.tab.cpp"
+#line 5681 "grammar.gen.tab.cpp"
     break;
 
   case 497:
-#line 1146 "grammar.gen.ypp"
+#line 1145 "grammar.gen.ypp"
                    { yylhs.value.as < Unit > () = Unit::CamelLine; }
-#line 5707 "grammar.gen.tab.cpp"
+#line 5687 "grammar.gen.tab.cpp"
     break;
 
   case 498:
-#line 1147 "grammar.gen.ypp"
+#line 1146 "grammar.gen.ypp"
                     { yylhs.value.as < Unit > () = Unit::KnightLine; }
-#line 5713 "grammar.gen.tab.cpp"
+#line 5693 "grammar.gen.tab.cpp"
     break;
 
   case 499:
-#line 1148 "grammar.gen.ypp"
+#line 1147 "grammar.gen.ypp"
                           { yylhs.value.as < Unit > () = Unit::ScoutCavalryLine; }
-#line 5719 "grammar.gen.tab.cpp"
+#line 5699 "grammar.gen.tab.cpp"
     break;
 
   case 500:
-#line 1149 "grammar.gen.ypp"
+#line 1148 "grammar.gen.ypp"
                            { yylhs.value.as < Unit > () = Unit::MyEliteUniqueUnit; }
-#line 5725 "grammar.gen.tab.cpp"
+#line 5705 "grammar.gen.tab.cpp"
     break;
 
   case 501:
-#line 1150 "grammar.gen.ypp"
+#line 1149 "grammar.gen.ypp"
                       { yylhs.value.as < Unit > () = Unit::MyUniqueUnit; }
-#line 5731 "grammar.gen.tab.cpp"
+#line 5711 "grammar.gen.tab.cpp"
     break;
 
   case 502:
-#line 1151 "grammar.gen.ypp"
+#line 1150 "grammar.gen.ypp"
                           { yylhs.value.as < Unit > () = Unit::MyUniqueUnitLine; }
-#line 5737 "grammar.gen.tab.cpp"
+#line 5717 "grammar.gen.tab.cpp"
     break;
 
   case 503:
-#line 1154 "grammar.gen.ypp"
+#line 1153 "grammar.gen.ypp"
                                   { yylhs.value.as < VictoryConditionName > () = VictoryConditionName::Standard; }
-#line 5743 "grammar.gen.tab.cpp"
+#line 5723 "grammar.gen.tab.cpp"
     break;
 
   case 504:
-#line 1155 "grammar.gen.ypp"
+#line 1154 "grammar.gen.ypp"
                                   { yylhs.value.as < VictoryConditionName > () = VictoryConditionName::Conquest; }
-#line 5749 "grammar.gen.tab.cpp"
+#line 5729 "grammar.gen.tab.cpp"
     break;
 
   case 505:
-#line 1156 "grammar.gen.ypp"
+#line 1155 "grammar.gen.ypp"
                                    { yylhs.value.as < VictoryConditionName > () = VictoryConditionName::TimeLimit; }
-#line 5755 "grammar.gen.tab.cpp"
+#line 5735 "grammar.gen.tab.cpp"
     break;
 
   case 506:
-#line 1157 "grammar.gen.ypp"
+#line 1156 "grammar.gen.ypp"
                                { yylhs.value.as < VictoryConditionName > () = VictoryConditionName::Score; }
-#line 5761 "grammar.gen.tab.cpp"
+#line 5741 "grammar.gen.tab.cpp"
     break;
 
   case 507:
-#line 1158 "grammar.gen.ypp"
+#line 1157 "grammar.gen.ypp"
                                 { yylhs.value.as < VictoryConditionName > () = VictoryConditionName::Custom; }
-#line 5767 "grammar.gen.tab.cpp"
+#line 5747 "grammar.gen.tab.cpp"
     break;
 
   case 508:
-#line 1161 "grammar.gen.ypp"
+#line 1160 "grammar.gen.ypp"
                            { yylhs.value.as < WallType > () = WallType::FortifiedWall; }
-#line 5773 "grammar.gen.tab.cpp"
+#line 5753 "grammar.gen.tab.cpp"
     break;
 
   case 509:
-#line 1162 "grammar.gen.ypp"
+#line 1161 "grammar.gen.ypp"
                           { yylhs.value.as < WallType > () = WallType::PalisadeWall; }
-#line 5779 "grammar.gen.tab.cpp"
+#line 5759 "grammar.gen.tab.cpp"
     break;
 
   case 510:
-#line 1163 "grammar.gen.ypp"
+#line 1162 "grammar.gen.ypp"
                        { yylhs.value.as < WallType > () = WallType::StoneWall; }
-#line 5785 "grammar.gen.tab.cpp"
+#line 5765 "grammar.gen.tab.cpp"
     break;
 
   case 511:
-#line 1164 "grammar.gen.ypp"
+#line 1163 "grammar.gen.ypp"
                            { yylhs.value.as < WallType > () = WallType::StoneWallLine; }
-#line 5791 "grammar.gen.tab.cpp"
+#line 5771 "grammar.gen.tab.cpp"
     break;
 
   case 512:
-#line 1168 "grammar.gen.ypp"
+#line 1167 "grammar.gen.ypp"
                                    { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[2].value.as < ActionType > (), yystack_[1].value.as < int > (), yystack_[0].value.as < int > ()); }
-#line 5797 "grammar.gen.tab.cpp"
+#line 5777 "grammar.gen.tab.cpp"
     break;
 
   case 513:
-#line 1171 "grammar.gen.ypp"
+#line 1170 "grammar.gen.ypp"
                                              { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[2].value.as < ActionType > (), yystack_[1].value.as < PlayerNumberType > (), yystack_[0].value.as < int > ()); }
-#line 5803 "grammar.gen.tab.cpp"
+#line 5783 "grammar.gen.tab.cpp"
     break;
 
   case 514:
-#line 1174 "grammar.gen.ypp"
+#line 1173 "grammar.gen.ypp"
               { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[0].value.as < ActionType > ()); }
-#line 5809 "grammar.gen.tab.cpp"
+#line 5789 "grammar.gen.tab.cpp"
     break;
 
   case 515:
-#line 1177 "grammar.gen.ypp"
+#line 1176 "grammar.gen.ypp"
                    { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[1].value.as < ActionType > (), yystack_[0].value.as < Building > ()); }
-#line 5815 "grammar.gen.tab.cpp"
+#line 5795 "grammar.gen.tab.cpp"
     break;
 
   case 516:
-#line 1180 "grammar.gen.ypp"
+#line 1179 "grammar.gen.ypp"
                           { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[1].value.as < ActionType > (), yystack_[0].value.as < Building > ()); }
-#line 5821 "grammar.gen.tab.cpp"
+#line 5801 "grammar.gen.tab.cpp"
     break;
 
   case 517:
-#line 1183 "grammar.gen.ypp"
+#line 1182 "grammar.gen.ypp"
                      { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[1].value.as < ActionType > (), yystack_[0].value.as < int > ()); }
-#line 5827 "grammar.gen.tab.cpp"
+#line 5807 "grammar.gen.tab.cpp"
     break;
 
   case 518:
-#line 1186 "grammar.gen.ypp"
+#line 1185 "grammar.gen.ypp"
                               { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[2].value.as < ActionType > (), yystack_[1].value.as < int > (), yystack_[0].value.as < WallType > ()); }
-#line 5833 "grammar.gen.tab.cpp"
+#line 5813 "grammar.gen.tab.cpp"
     break;
 
   case 519:
-#line 1189 "grammar.gen.ypp"
+#line 1188 "grammar.gen.ypp"
                            { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[1].value.as < ActionType > (), yystack_[0].value.as < Commodity > ()); }
-#line 5839 "grammar.gen.tab.cpp"
+#line 5819 "grammar.gen.tab.cpp"
     break;
 
   case 520:
-#line 1192 "grammar.gen.ypp"
+#line 1191 "grammar.gen.ypp"
                                    { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[2].value.as < ActionType > (), yystack_[1].value.as < Commodity > (), yystack_[0].value.as < int > ()); }
-#line 5845 "grammar.gen.tab.cpp"
+#line 5825 "grammar.gen.tab.cpp"
     break;
 
   case 521:
-#line 1195 "grammar.gen.ypp"
+#line 1194 "grammar.gen.ypp"
                      { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[1].value.as < ActionType > (), yystack_[0].value.as < std::string > ()); }
-#line 5851 "grammar.gen.tab.cpp"
+#line 5831 "grammar.gen.tab.cpp"
     break;
 
   case 522:
-#line 1198 "grammar.gen.ypp"
+#line 1197 "grammar.gen.ypp"
                            { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[1].value.as < ActionType > (), yystack_[0].value.as < std::string > ()); }
-#line 5857 "grammar.gen.tab.cpp"
+#line 5837 "grammar.gen.tab.cpp"
     break;
 
   case 523:
-#line 1201 "grammar.gen.ypp"
+#line 1200 "grammar.gen.ypp"
                             { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[1].value.as < ActionType > (), yystack_[0].value.as < int > ()); }
-#line 5863 "grammar.gen.tab.cpp"
+#line 5843 "grammar.gen.tab.cpp"
     break;
 
   case 524:
-#line 1204 "grammar.gen.ypp"
+#line 1203 "grammar.gen.ypp"
                                       { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[2].value.as < ActionType > (), yystack_[1].value.as < int > (), yystack_[0].value.as < int > ()); }
-#line 5869 "grammar.gen.tab.cpp"
+#line 5849 "grammar.gen.tab.cpp"
     break;
 
   case 525:
-#line 1207 "grammar.gen.ypp"
+#line 1206 "grammar.gen.ypp"
                      { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[1].value.as < ActionType > (), yystack_[0].value.as < std::string > ()); }
-#line 5875 "grammar.gen.tab.cpp"
+#line 5855 "grammar.gen.tab.cpp"
     break;
 
   case 526:
-#line 1210 "grammar.gen.ypp"
+#line 1209 "grammar.gen.ypp"
                             { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[1].value.as < ActionType > (), yystack_[0].value.as < int > ()); }
-#line 5881 "grammar.gen.tab.cpp"
+#line 5861 "grammar.gen.tab.cpp"
     break;
 
   case 527:
-#line 1213 "grammar.gen.ypp"
+#line 1212 "grammar.gen.ypp"
                                       { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[2].value.as < ActionType > (), yystack_[1].value.as < int > (), yystack_[0].value.as < int > ()); }
-#line 5887 "grammar.gen.tab.cpp"
+#line 5867 "grammar.gen.tab.cpp"
     break;
 
   case 528:
-#line 1216 "grammar.gen.ypp"
+#line 1215 "grammar.gen.ypp"
                         { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[1].value.as < ActionType > (), yystack_[0].value.as < std::string > ()); }
-#line 5893 "grammar.gen.tab.cpp"
+#line 5873 "grammar.gen.tab.cpp"
     break;
 
   case 529:
-#line 1219 "grammar.gen.ypp"
+#line 1218 "grammar.gen.ypp"
                                { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[1].value.as < ActionType > (), yystack_[0].value.as < int > ()); }
-#line 5899 "grammar.gen.tab.cpp"
+#line 5879 "grammar.gen.tab.cpp"
     break;
 
   case 530:
-#line 1222 "grammar.gen.ypp"
+#line 1221 "grammar.gen.ypp"
                                          { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[2].value.as < ActionType > (), yystack_[1].value.as < int > (), yystack_[0].value.as < int > ()); }
-#line 5905 "grammar.gen.tab.cpp"
+#line 5885 "grammar.gen.tab.cpp"
     break;
 
   case 531:
-#line 1225 "grammar.gen.ypp"
+#line 1224 "grammar.gen.ypp"
                          { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[1].value.as < ActionType > (), yystack_[0].value.as < std::string > ()); }
-#line 5911 "grammar.gen.tab.cpp"
+#line 5891 "grammar.gen.tab.cpp"
     break;
 
   case 532:
-#line 1228 "grammar.gen.ypp"
+#line 1227 "grammar.gen.ypp"
                                 { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[1].value.as < ActionType > (), yystack_[0].value.as < int > ()); }
-#line 5917 "grammar.gen.tab.cpp"
+#line 5897 "grammar.gen.tab.cpp"
     break;
 
   case 533:
-#line 1231 "grammar.gen.ypp"
+#line 1230 "grammar.gen.ypp"
                                           { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[2].value.as < ActionType > (), yystack_[1].value.as < int > (), yystack_[0].value.as < int > ()); }
-#line 5923 "grammar.gen.tab.cpp"
+#line 5903 "grammar.gen.tab.cpp"
     break;
 
   case 534:
-#line 1234 "grammar.gen.ypp"
+#line 1233 "grammar.gen.ypp"
                                          { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[2].value.as < ActionType > (), yystack_[1].value.as < PlayerNumberType > (), yystack_[0].value.as < std::string > ()); }
-#line 5929 "grammar.gen.tab.cpp"
+#line 5909 "grammar.gen.tab.cpp"
     break;
 
   case 535:
-#line 1237 "grammar.gen.ypp"
+#line 1236 "grammar.gen.ypp"
                                                 { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[2].value.as < ActionType > (), yystack_[1].value.as < PlayerNumberType > (), yystack_[0].value.as < int > ()); }
-#line 5935 "grammar.gen.tab.cpp"
+#line 5915 "grammar.gen.tab.cpp"
     break;
 
   case 536:
-#line 1240 "grammar.gen.ypp"
+#line 1239 "grammar.gen.ypp"
                                                           { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[3].value.as < ActionType > (), yystack_[2].value.as < PlayerNumberType > (), yystack_[1].value.as < int > (), yystack_[0].value.as < int > ()); }
-#line 5941 "grammar.gen.tab.cpp"
+#line 5921 "grammar.gen.tab.cpp"
     break;
 
   case 537:
-#line 1243 "grammar.gen.ypp"
+#line 1242 "grammar.gen.ypp"
                      { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[1].value.as < ActionType > (), yystack_[0].value.as < int > ()); }
-#line 5947 "grammar.gen.tab.cpp"
+#line 5927 "grammar.gen.tab.cpp"
     break;
 
   case 538:
-#line 1246 "grammar.gen.ypp"
+#line 1245 "grammar.gen.ypp"
                                                   { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[2].value.as < ActionType > (), yystack_[1].value.as < PlayerNumberType > (), yystack_[0].value.as < Commodity > ()); }
-#line 5953 "grammar.gen.tab.cpp"
+#line 5933 "grammar.gen.tab.cpp"
     break;
 
   case 539:
-#line 1249 "grammar.gen.ypp"
+#line 1248 "grammar.gen.ypp"
                             { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[1].value.as < ActionType > (), yystack_[0].value.as < Building > ()); }
-#line 5959 "grammar.gen.tab.cpp"
+#line 5939 "grammar.gen.tab.cpp"
     break;
 
   case 540:
-#line 1252 "grammar.gen.ypp"
+#line 1251 "grammar.gen.ypp"
                     { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[1].value.as < ActionType > (), yystack_[0].value.as < Unit > ()); }
-#line 5965 "grammar.gen.tab.cpp"
+#line 5945 "grammar.gen.tab.cpp"
     break;
 
   case 541:
-#line 1255 "grammar.gen.ypp"
+#line 1254 "grammar.gen.ypp"
                 { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[0].value.as < ActionType > ()); }
-#line 5971 "grammar.gen.tab.cpp"
+#line 5951 "grammar.gen.tab.cpp"
     break;
 
   case 542:
-#line 1258 "grammar.gen.ypp"
+#line 1257 "grammar.gen.ypp"
                         { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[1].value.as < ActionType > (), yystack_[0].value.as < int > ()); }
-#line 5977 "grammar.gen.tab.cpp"
+#line 5957 "grammar.gen.tab.cpp"
     break;
 
   case 543:
-#line 1261 "grammar.gen.ypp"
+#line 1260 "grammar.gen.ypp"
               { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[0].value.as < ActionType > ()); }
-#line 5983 "grammar.gen.tab.cpp"
+#line 5963 "grammar.gen.tab.cpp"
     break;
 
   case 544:
-#line 1264 "grammar.gen.ypp"
+#line 1263 "grammar.gen.ypp"
                               { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[2].value.as < ActionType > (), yystack_[1].value.as < int > (), yystack_[0].value.as < int > ()); }
-#line 5989 "grammar.gen.tab.cpp"
+#line 5969 "grammar.gen.tab.cpp"
     break;
 
   case 545:
-#line 1267 "grammar.gen.ypp"
+#line 1266 "grammar.gen.ypp"
                                { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[1].value.as < ActionType > (), yystack_[0].value.as < int > ()); }
-#line 5995 "grammar.gen.tab.cpp"
+#line 5975 "grammar.gen.tab.cpp"
     break;
 
   case 546:
-#line 1270 "grammar.gen.ypp"
+#line 1269 "grammar.gen.ypp"
                                 { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[1].value.as < ActionType > (), yystack_[0].value.as < int > ()); }
-#line 6001 "grammar.gen.tab.cpp"
+#line 5981 "grammar.gen.tab.cpp"
     break;
 
   case 547:
-#line 1273 "grammar.gen.ypp"
+#line 1272 "grammar.gen.ypp"
                { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[1].value.as < ActionType > (), yystack_[0].value.as < std::string > ()); }
-#line 6007 "grammar.gen.tab.cpp"
+#line 5987 "grammar.gen.tab.cpp"
     break;
 
   case 548:
-#line 1276 "grammar.gen.ypp"
+#line 1275 "grammar.gen.ypp"
                     { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[1].value.as < ActionType > (), yystack_[0].value.as < int > ()); }
-#line 6013 "grammar.gen.tab.cpp"
+#line 5993 "grammar.gen.tab.cpp"
     break;
 
   case 549:
-#line 1279 "grammar.gen.ypp"
+#line 1278 "grammar.gen.ypp"
                             { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[1].value.as < ActionType > (), yystack_[0].value.as < Commodity > ()); }
-#line 6019 "grammar.gen.tab.cpp"
+#line 5999 "grammar.gen.tab.cpp"
     break;
 
   case 550:
-#line 1282 "grammar.gen.ypp"
+#line 1281 "grammar.gen.ypp"
                  { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[1].value.as < ActionType > (), yystack_[0].value.as < Age > ()); }
-#line 6025 "grammar.gen.tab.cpp"
+#line 6005 "grammar.gen.tab.cpp"
     break;
 
   case 551:
-#line 1284 "grammar.gen.ypp"
+#line 1283 "grammar.gen.ypp"
                              { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[1].value.as < ActionType > (), yystack_[0].value.as < ResearchItem > ()); }
-#line 6031 "grammar.gen.tab.cpp"
+#line 6011 "grammar.gen.tab.cpp"
     break;
 
   case 552:
-#line 1287 "grammar.gen.ypp"
+#line 1286 "grammar.gen.ypp"
            { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[0].value.as < ActionType > ()); }
-#line 6037 "grammar.gen.tab.cpp"
+#line 6017 "grammar.gen.tab.cpp"
     break;
 
   case 553:
-#line 1290 "grammar.gen.ypp"
+#line 1289 "grammar.gen.ypp"
                             { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[1].value.as < ActionType > (), yystack_[0].value.as < Commodity > ()); }
-#line 6043 "grammar.gen.tab.cpp"
+#line 6023 "grammar.gen.tab.cpp"
     break;
 
   case 554:
-#line 1293 "grammar.gen.ypp"
+#line 1292 "grammar.gen.ypp"
                                                       { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[2].value.as < ActionType > (), yystack_[1].value.as < DifficultyParameter > (), yystack_[0].value.as < int > ()); }
-#line 6049 "grammar.gen.tab.cpp"
+#line 6029 "grammar.gen.tab.cpp"
     break;
 
   case 555:
-#line 1296 "grammar.gen.ypp"
+#line 1295 "grammar.gen.ypp"
                        { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[1].value.as < ActionType > (), yystack_[0].value.as < int > ()); }
-#line 6055 "grammar.gen.tab.cpp"
+#line 6035 "grammar.gen.tab.cpp"
     break;
 
   case 556:
-#line 1299 "grammar.gen.ypp"
+#line 1298 "grammar.gen.ypp"
                                          { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[2].value.as < ActionType > (), yystack_[1].value.as < Commodity > (), yystack_[0].value.as < int > ()); }
-#line 6061 "grammar.gen.tab.cpp"
+#line 6041 "grammar.gen.tab.cpp"
     break;
 
   case 557:
-#line 1302 "grammar.gen.ypp"
+#line 1301 "grammar.gen.ypp"
                           { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[2].value.as < ActionType > (), yystack_[1].value.as < int > (), yystack_[0].value.as < int > ()); }
-#line 6067 "grammar.gen.tab.cpp"
+#line 6047 "grammar.gen.tab.cpp"
     break;
 
   case 558:
-#line 1305 "grammar.gen.ypp"
+#line 1304 "grammar.gen.ypp"
                                 { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[2].value.as < ActionType > (), yystack_[1].value.as < int > (), yystack_[0].value.as < int > ()); }
-#line 6073 "grammar.gen.tab.cpp"
+#line 6053 "grammar.gen.tab.cpp"
     break;
 
   case 559:
-#line 1308 "grammar.gen.ypp"
+#line 1307 "grammar.gen.ypp"
                      { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[1].value.as < ActionType > (), yystack_[0].value.as < int > ()); }
-#line 6079 "grammar.gen.tab.cpp"
+#line 6059 "grammar.gen.tab.cpp"
     break;
 
   case 560:
-#line 1311 "grammar.gen.ypp"
+#line 1310 "grammar.gen.ypp"
                                                 { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[2].value.as < ActionType > (), yystack_[1].value.as < PlayerNumberType > (), yystack_[0].value.as < DiplomaticStance > ()); }
-#line 6085 "grammar.gen.tab.cpp"
+#line 6065 "grammar.gen.tab.cpp"
     break;
 
   case 561:
-#line 1314 "grammar.gen.ypp"
+#line 1313 "grammar.gen.ypp"
                                                   { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[2].value.as < ActionType > (), yystack_[1].value.as < StrategicNumberName > (), yystack_[0].value.as < int > ()); }
-#line 6091 "grammar.gen.tab.cpp"
+#line 6071 "grammar.gen.tab.cpp"
     break;
 
   case 562:
-#line 1317 "grammar.gen.ypp"
+#line 1316 "grammar.gen.ypp"
         { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[0].value.as < ActionType > ()); }
-#line 6097 "grammar.gen.tab.cpp"
+#line 6077 "grammar.gen.tab.cpp"
     break;
 
   case 563:
-#line 1320 "grammar.gen.ypp"
+#line 1319 "grammar.gen.ypp"
                  { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[1].value.as < ActionType > (), yystack_[0].value.as < int > ()); }
-#line 6103 "grammar.gen.tab.cpp"
+#line 6083 "grammar.gen.tab.cpp"
     break;
 
   case 564:
-#line 1323 "grammar.gen.ypp"
+#line 1322 "grammar.gen.ypp"
                                   { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[2].value.as < ActionType > (), yystack_[1].value.as < int > (), yystack_[0].value.as < int > ()); }
-#line 6109 "grammar.gen.tab.cpp"
+#line 6089 "grammar.gen.tab.cpp"
     break;
 
   case 565:
-#line 1326 "grammar.gen.ypp"
+#line 1325 "grammar.gen.ypp"
                { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[1].value.as < ActionType > (), yystack_[0].value.as < Unit > ()); }
-#line 6115 "grammar.gen.tab.cpp"
+#line 6095 "grammar.gen.tab.cpp"
     break;
 
   case 566:
-#line 1329 "grammar.gen.ypp"
+#line 1328 "grammar.gen.ypp"
                                                       { yylhs.value.as < std::shared_ptr<ai::Action> > () = driver.createAction(yystack_[3].value.as < ActionType > (), yystack_[2].value.as < PlayerNumberType > (), yystack_[1].value.as < Commodity > (), yystack_[0].value.as < int > ()); }
-#line 6121 "grammar.gen.tab.cpp"
+#line 6101 "grammar.gen.tab.cpp"
     break;
 
   case 567:
-#line 1333 "grammar.gen.ypp"
+#line 1332 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6127 "grammar.gen.tab.cpp"
+#line 6107 "grammar.gen.tab.cpp"
     break;
 
   case 568:
-#line 1334 "grammar.gen.ypp"
+#line 1333 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6133 "grammar.gen.tab.cpp"
+#line 6113 "grammar.gen.tab.cpp"
     break;
 
   case 569:
-#line 1335 "grammar.gen.ypp"
+#line 1334 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6139 "grammar.gen.tab.cpp"
+#line 6119 "grammar.gen.tab.cpp"
     break;
 
   case 570:
-#line 1336 "grammar.gen.ypp"
+#line 1335 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6145 "grammar.gen.tab.cpp"
+#line 6125 "grammar.gen.tab.cpp"
     break;
 
   case 571:
-#line 1337 "grammar.gen.ypp"
+#line 1336 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6151 "grammar.gen.tab.cpp"
+#line 6131 "grammar.gen.tab.cpp"
     break;
 
   case 572:
-#line 1338 "grammar.gen.ypp"
+#line 1337 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6157 "grammar.gen.tab.cpp"
+#line 6137 "grammar.gen.tab.cpp"
     break;
 
   case 573:
-#line 1339 "grammar.gen.ypp"
+#line 1338 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6163 "grammar.gen.tab.cpp"
+#line 6143 "grammar.gen.tab.cpp"
     break;
 
   case 574:
-#line 1340 "grammar.gen.ypp"
+#line 1339 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6169 "grammar.gen.tab.cpp"
+#line 6149 "grammar.gen.tab.cpp"
     break;
 
   case 575:
-#line 1341 "grammar.gen.ypp"
+#line 1340 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6175 "grammar.gen.tab.cpp"
+#line 6155 "grammar.gen.tab.cpp"
     break;
 
   case 576:
-#line 1342 "grammar.gen.ypp"
+#line 1341 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6181 "grammar.gen.tab.cpp"
+#line 6161 "grammar.gen.tab.cpp"
     break;
 
   case 577:
-#line 1343 "grammar.gen.ypp"
+#line 1342 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6187 "grammar.gen.tab.cpp"
+#line 6167 "grammar.gen.tab.cpp"
     break;
 
   case 578:
-#line 1344 "grammar.gen.ypp"
+#line 1343 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6193 "grammar.gen.tab.cpp"
+#line 6173 "grammar.gen.tab.cpp"
     break;
 
   case 579:
-#line 1345 "grammar.gen.ypp"
+#line 1344 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6199 "grammar.gen.tab.cpp"
+#line 6179 "grammar.gen.tab.cpp"
     break;
 
   case 580:
-#line 1346 "grammar.gen.ypp"
+#line 1345 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6205 "grammar.gen.tab.cpp"
+#line 6185 "grammar.gen.tab.cpp"
     break;
 
   case 581:
-#line 1347 "grammar.gen.ypp"
+#line 1346 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6211 "grammar.gen.tab.cpp"
+#line 6191 "grammar.gen.tab.cpp"
     break;
 
   case 582:
-#line 1348 "grammar.gen.ypp"
+#line 1347 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6217 "grammar.gen.tab.cpp"
+#line 6197 "grammar.gen.tab.cpp"
     break;
 
   case 583:
-#line 1349 "grammar.gen.ypp"
+#line 1348 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6223 "grammar.gen.tab.cpp"
+#line 6203 "grammar.gen.tab.cpp"
     break;
 
   case 584:
-#line 1350 "grammar.gen.ypp"
+#line 1349 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6229 "grammar.gen.tab.cpp"
+#line 6209 "grammar.gen.tab.cpp"
     break;
 
   case 585:
-#line 1351 "grammar.gen.ypp"
+#line 1350 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6235 "grammar.gen.tab.cpp"
+#line 6215 "grammar.gen.tab.cpp"
     break;
 
   case 586:
-#line 1352 "grammar.gen.ypp"
+#line 1351 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6241 "grammar.gen.tab.cpp"
+#line 6221 "grammar.gen.tab.cpp"
     break;
 
   case 587:
-#line 1353 "grammar.gen.ypp"
+#line 1352 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6247 "grammar.gen.tab.cpp"
+#line 6227 "grammar.gen.tab.cpp"
     break;
 
   case 588:
-#line 1354 "grammar.gen.ypp"
+#line 1353 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6253 "grammar.gen.tab.cpp"
+#line 6233 "grammar.gen.tab.cpp"
     break;
 
   case 589:
-#line 1355 "grammar.gen.ypp"
+#line 1354 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6259 "grammar.gen.tab.cpp"
+#line 6239 "grammar.gen.tab.cpp"
     break;
 
   case 590:
-#line 1356 "grammar.gen.ypp"
+#line 1355 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6265 "grammar.gen.tab.cpp"
+#line 6245 "grammar.gen.tab.cpp"
     break;
 
   case 591:
-#line 1357 "grammar.gen.ypp"
+#line 1356 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6271 "grammar.gen.tab.cpp"
+#line 6251 "grammar.gen.tab.cpp"
     break;
 
   case 592:
-#line 1358 "grammar.gen.ypp"
+#line 1357 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6277 "grammar.gen.tab.cpp"
+#line 6257 "grammar.gen.tab.cpp"
     break;
 
   case 593:
-#line 1359 "grammar.gen.ypp"
+#line 1358 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6283 "grammar.gen.tab.cpp"
+#line 6263 "grammar.gen.tab.cpp"
     break;
 
   case 594:
-#line 1360 "grammar.gen.ypp"
+#line 1359 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6289 "grammar.gen.tab.cpp"
+#line 6269 "grammar.gen.tab.cpp"
     break;
 
   case 595:
-#line 1361 "grammar.gen.ypp"
+#line 1360 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6295 "grammar.gen.tab.cpp"
+#line 6275 "grammar.gen.tab.cpp"
     break;
 
   case 596:
-#line 1362 "grammar.gen.ypp"
+#line 1361 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6301 "grammar.gen.tab.cpp"
+#line 6281 "grammar.gen.tab.cpp"
     break;
 
   case 597:
-#line 1363 "grammar.gen.ypp"
+#line 1362 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6307 "grammar.gen.tab.cpp"
+#line 6287 "grammar.gen.tab.cpp"
     break;
 
   case 598:
-#line 1364 "grammar.gen.ypp"
+#line 1363 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6313 "grammar.gen.tab.cpp"
+#line 6293 "grammar.gen.tab.cpp"
     break;
 
   case 599:
-#line 1365 "grammar.gen.ypp"
+#line 1364 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6319 "grammar.gen.tab.cpp"
+#line 6299 "grammar.gen.tab.cpp"
     break;
 
   case 600:
-#line 1366 "grammar.gen.ypp"
+#line 1365 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6325 "grammar.gen.tab.cpp"
+#line 6305 "grammar.gen.tab.cpp"
     break;
 
   case 601:
-#line 1367 "grammar.gen.ypp"
+#line 1366 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6331 "grammar.gen.tab.cpp"
+#line 6311 "grammar.gen.tab.cpp"
     break;
 
   case 602:
-#line 1368 "grammar.gen.ypp"
+#line 1367 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6337 "grammar.gen.tab.cpp"
+#line 6317 "grammar.gen.tab.cpp"
     break;
 
   case 603:
-#line 1369 "grammar.gen.ypp"
+#line 1368 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6343 "grammar.gen.tab.cpp"
+#line 6323 "grammar.gen.tab.cpp"
     break;
 
   case 604:
-#line 1370 "grammar.gen.ypp"
+#line 1369 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6349 "grammar.gen.tab.cpp"
+#line 6329 "grammar.gen.tab.cpp"
     break;
 
   case 605:
-#line 1371 "grammar.gen.ypp"
+#line 1370 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6355 "grammar.gen.tab.cpp"
+#line 6335 "grammar.gen.tab.cpp"
     break;
 
   case 606:
-#line 1372 "grammar.gen.ypp"
+#line 1371 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6361 "grammar.gen.tab.cpp"
+#line 6341 "grammar.gen.tab.cpp"
     break;
 
   case 607:
-#line 1373 "grammar.gen.ypp"
+#line 1372 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6367 "grammar.gen.tab.cpp"
+#line 6347 "grammar.gen.tab.cpp"
     break;
 
   case 608:
-#line 1374 "grammar.gen.ypp"
+#line 1373 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6373 "grammar.gen.tab.cpp"
+#line 6353 "grammar.gen.tab.cpp"
     break;
 
   case 609:
-#line 1375 "grammar.gen.ypp"
+#line 1374 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6379 "grammar.gen.tab.cpp"
+#line 6359 "grammar.gen.tab.cpp"
     break;
 
   case 610:
-#line 1376 "grammar.gen.ypp"
+#line 1375 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6385 "grammar.gen.tab.cpp"
+#line 6365 "grammar.gen.tab.cpp"
     break;
 
   case 611:
-#line 1377 "grammar.gen.ypp"
+#line 1376 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6391 "grammar.gen.tab.cpp"
+#line 6371 "grammar.gen.tab.cpp"
     break;
 
   case 612:
-#line 1378 "grammar.gen.ypp"
+#line 1377 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6397 "grammar.gen.tab.cpp"
+#line 6377 "grammar.gen.tab.cpp"
     break;
 
   case 613:
-#line 1379 "grammar.gen.ypp"
+#line 1378 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6403 "grammar.gen.tab.cpp"
+#line 6383 "grammar.gen.tab.cpp"
     break;
 
   case 614:
-#line 1380 "grammar.gen.ypp"
+#line 1379 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6409 "grammar.gen.tab.cpp"
+#line 6389 "grammar.gen.tab.cpp"
     break;
 
   case 615:
-#line 1381 "grammar.gen.ypp"
+#line 1380 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6415 "grammar.gen.tab.cpp"
+#line 6395 "grammar.gen.tab.cpp"
     break;
 
   case 616:
-#line 1382 "grammar.gen.ypp"
+#line 1381 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6421 "grammar.gen.tab.cpp"
+#line 6401 "grammar.gen.tab.cpp"
     break;
 
   case 617:
-#line 1383 "grammar.gen.ypp"
+#line 1382 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6427 "grammar.gen.tab.cpp"
+#line 6407 "grammar.gen.tab.cpp"
     break;
 
   case 618:
-#line 1384 "grammar.gen.ypp"
+#line 1383 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6433 "grammar.gen.tab.cpp"
+#line 6413 "grammar.gen.tab.cpp"
     break;
 
   case 619:
-#line 1385 "grammar.gen.ypp"
+#line 1384 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6439 "grammar.gen.tab.cpp"
+#line 6419 "grammar.gen.tab.cpp"
     break;
 
   case 620:
-#line 1386 "grammar.gen.ypp"
+#line 1385 "grammar.gen.ypp"
     { yylhs.value.as < std::shared_ptr<ai::Action> > () = yystack_[0].value.as < std::shared_ptr<ai::Action> > (); }
-#line 6445 "grammar.gen.tab.cpp"
+#line 6425 "grammar.gen.tab.cpp"
     break;
 
   case 621:
-#line 1390 "grammar.gen.ypp"
+#line 1389 "grammar.gen.ypp"
             { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[0].value.as < Fact > ()); }
-#line 6451 "grammar.gen.tab.cpp"
+#line 6431 "grammar.gen.tab.cpp"
     break;
 
   case 622:
-#line 1393 "grammar.gen.ypp"
+#line 1392 "grammar.gen.ypp"
              { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[0].value.as < Fact > ()); }
-#line 6457 "grammar.gen.tab.cpp"
+#line 6437 "grammar.gen.tab.cpp"
     break;
 
   case 623:
-#line 1396 "grammar.gen.ypp"
+#line 1395 "grammar.gen.ypp"
                                     { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6463 "grammar.gen.tab.cpp"
+#line 6443 "grammar.gen.tab.cpp"
     break;
 
   case 624:
-#line 1399 "grammar.gen.ypp"
+#line 1398 "grammar.gen.ypp"
                                     { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6469 "grammar.gen.tab.cpp"
+#line 6449 "grammar.gen.tab.cpp"
     break;
 
   case 625:
-#line 1402 "grammar.gen.ypp"
+#line 1401 "grammar.gen.ypp"
                                { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[1].value.as < Fact > (), yystack_[0].value.as < Building > ()); }
-#line 6475 "grammar.gen.tab.cpp"
+#line 6455 "grammar.gen.tab.cpp"
     break;
 
   case 626:
-#line 1405 "grammar.gen.ypp"
+#line 1404 "grammar.gen.ypp"
                                { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6481 "grammar.gen.tab.cpp"
+#line 6461 "grammar.gen.tab.cpp"
     break;
 
   case 627:
-#line 1408 "grammar.gen.ypp"
+#line 1407 "grammar.gen.ypp"
                                     { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6487 "grammar.gen.tab.cpp"
+#line 6467 "grammar.gen.tab.cpp"
     break;
 
   case 628:
-#line 1411 "grammar.gen.ypp"
+#line 1410 "grammar.gen.ypp"
                                             { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[3].value.as < Fact > (), yystack_[2].value.as < Building > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6493 "grammar.gen.tab.cpp"
+#line 6473 "grammar.gen.tab.cpp"
     break;
 
   case 629:
-#line 1414 "grammar.gen.ypp"
+#line 1413 "grammar.gen.ypp"
                                                  { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[3].value.as < Fact > (), yystack_[2].value.as < Building > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6499 "grammar.gen.tab.cpp"
+#line 6479 "grammar.gen.tab.cpp"
     break;
 
   case 630:
-#line 1417 "grammar.gen.ypp"
+#line 1416 "grammar.gen.ypp"
                                { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[1].value.as < Fact > (), yystack_[0].value.as < Building > ()); }
-#line 6505 "grammar.gen.tab.cpp"
+#line 6485 "grammar.gen.tab.cpp"
     break;
 
   case 631:
-#line 1420 "grammar.gen.ypp"
+#line 1419 "grammar.gen.ypp"
                                           { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < int > (), yystack_[0].value.as < WallType > ()); }
-#line 6511 "grammar.gen.tab.cpp"
+#line 6491 "grammar.gen.tab.cpp"
     break;
 
   case 632:
-#line 1423 "grammar.gen.ypp"
+#line 1422 "grammar.gen.ypp"
                                    { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[1].value.as < Fact > (), yystack_[0].value.as < ResearchItem > ()); }
-#line 6517 "grammar.gen.tab.cpp"
+#line 6497 "grammar.gen.tab.cpp"
     break;
 
   case 633:
-#line 1426 "grammar.gen.ypp"
+#line 1425 "grammar.gen.ypp"
                        { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[1].value.as < Fact > (), yystack_[0].value.as < Unit > ()); }
-#line 6523 "grammar.gen.tab.cpp"
+#line 6503 "grammar.gen.tab.cpp"
     break;
 
   case 634:
-#line 1429 "grammar.gen.ypp"
+#line 1428 "grammar.gen.ypp"
                       { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[1].value.as < Fact > (), yystack_[0].value.as < Building > ()); }
-#line 6529 "grammar.gen.tab.cpp"
+#line 6509 "grammar.gen.tab.cpp"
     break;
 
   case 635:
-#line 1432 "grammar.gen.ypp"
+#line 1431 "grammar.gen.ypp"
                         { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[1].value.as < Fact > (), yystack_[0].value.as < int > ()); }
-#line 6535 "grammar.gen.tab.cpp"
+#line 6515 "grammar.gen.tab.cpp"
     break;
 
   case 636:
-#line 1435 "grammar.gen.ypp"
+#line 1434 "grammar.gen.ypp"
                                   { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[1].value.as < Fact > (), yystack_[0].value.as < int > ()); }
-#line 6541 "grammar.gen.tab.cpp"
+#line 6521 "grammar.gen.tab.cpp"
     break;
 
   case 637:
-#line 1438 "grammar.gen.ypp"
+#line 1437 "grammar.gen.ypp"
                                  { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < int > (), yystack_[0].value.as < WallType > ()); }
-#line 6547 "grammar.gen.tab.cpp"
+#line 6527 "grammar.gen.tab.cpp"
     break;
 
   case 638:
-#line 1441 "grammar.gen.ypp"
+#line 1440 "grammar.gen.ypp"
                                            { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < int > (), yystack_[0].value.as < WallType > ()); }
-#line 6553 "grammar.gen.tab.cpp"
+#line 6533 "grammar.gen.tab.cpp"
     break;
 
   case 639:
-#line 1444 "grammar.gen.ypp"
+#line 1443 "grammar.gen.ypp"
                                 { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[1].value.as < Fact > (), yystack_[0].value.as < Building > ()); }
-#line 6559 "grammar.gen.tab.cpp"
+#line 6539 "grammar.gen.tab.cpp"
     break;
 
   case 640:
-#line 1447 "grammar.gen.ypp"
+#line 1446 "grammar.gen.ypp"
                               { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[1].value.as < Fact > (), yystack_[0].value.as < Commodity > ()); }
-#line 6565 "grammar.gen.tab.cpp"
+#line 6545 "grammar.gen.tab.cpp"
     break;
 
   case 641:
-#line 1450 "grammar.gen.ypp"
+#line 1449 "grammar.gen.ypp"
                              { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[1].value.as < Fact > (), yystack_[0].value.as < ResearchItem > ()); }
-#line 6571 "grammar.gen.tab.cpp"
+#line 6551 "grammar.gen.tab.cpp"
     break;
 
   case 642:
-#line 1451 "grammar.gen.ypp"
+#line 1450 "grammar.gen.ypp"
                       { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[1].value.as < Fact > (), yystack_[0].value.as < Age > ()); }
-#line 6577 "grammar.gen.tab.cpp"
+#line 6557 "grammar.gen.tab.cpp"
     break;
 
   case 643:
-#line 1454 "grammar.gen.ypp"
+#line 1453 "grammar.gen.ypp"
                                        { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[1].value.as < Fact > (), yystack_[0].value.as < ResearchItem > ()); }
-#line 6583 "grammar.gen.tab.cpp"
+#line 6563 "grammar.gen.tab.cpp"
     break;
 
   case 644:
-#line 1455 "grammar.gen.ypp"
+#line 1454 "grammar.gen.ypp"
                                 { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[1].value.as < Fact > (), yystack_[0].value.as < Age > ()); }
-#line 6589 "grammar.gen.tab.cpp"
+#line 6569 "grammar.gen.tab.cpp"
     break;
 
   case 645:
-#line 1458 "grammar.gen.ypp"
+#line 1457 "grammar.gen.ypp"
                                { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[1].value.as < Fact > (), yystack_[0].value.as < Commodity > ()); }
-#line 6595 "grammar.gen.tab.cpp"
+#line 6575 "grammar.gen.tab.cpp"
     break;
 
   case 646:
-#line 1461 "grammar.gen.ypp"
+#line 1460 "grammar.gen.ypp"
            { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[0].value.as < Fact > ()); }
-#line 6601 "grammar.gen.tab.cpp"
+#line 6581 "grammar.gen.tab.cpp"
     break;
 
   case 647:
-#line 1464 "grammar.gen.ypp"
+#line 1463 "grammar.gen.ypp"
                      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[0].value.as < Fact > ()); }
-#line 6607 "grammar.gen.tab.cpp"
+#line 6587 "grammar.gen.tab.cpp"
     break;
 
   case 648:
-#line 1467 "grammar.gen.ypp"
+#line 1466 "grammar.gen.ypp"
                   { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[1].value.as < Fact > (), yystack_[0].value.as < Unit > ()); }
-#line 6613 "grammar.gen.tab.cpp"
+#line 6593 "grammar.gen.tab.cpp"
     break;
 
   case 649:
-#line 1470 "grammar.gen.ypp"
+#line 1469 "grammar.gen.ypp"
                             { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[1].value.as < Fact > (), yystack_[0].value.as < Unit > ()); }
-#line 6619 "grammar.gen.tab.cpp"
+#line 6599 "grammar.gen.tab.cpp"
     break;
 
   case 650:
-#line 1473 "grammar.gen.ypp"
+#line 1472 "grammar.gen.ypp"
                                                          { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[3].value.as < Fact > (), yystack_[2].value.as < PlayerNumberType > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6625 "grammar.gen.tab.cpp"
+#line 6605 "grammar.gen.tab.cpp"
     break;
 
   case 651:
-#line 1476 "grammar.gen.ypp"
+#line 1475 "grammar.gen.ypp"
                                                                       { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[4].value.as < Fact > (), yystack_[3].value.as < PlayerNumberType > (), yystack_[2].value.as < Building > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6631 "grammar.gen.tab.cpp"
+#line 6611 "grammar.gen.tab.cpp"
     break;
 
   case 652:
-#line 1479 "grammar.gen.ypp"
+#line 1478 "grammar.gen.ypp"
                                                      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[3].value.as < Fact > (), yystack_[2].value.as < PlayerNumberType > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6637 "grammar.gen.tab.cpp"
+#line 6617 "grammar.gen.tab.cpp"
     break;
 
   case 653:
-#line 1482 "grammar.gen.ypp"
+#line 1481 "grammar.gen.ypp"
                                                               { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[4].value.as < Fact > (), yystack_[3].value.as < PlayerNumberType > (), yystack_[2].value.as < Unit > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6643 "grammar.gen.tab.cpp"
+#line 6623 "grammar.gen.tab.cpp"
     break;
 
   case 654:
-#line 1485 "grammar.gen.ypp"
+#line 1484 "grammar.gen.ypp"
                   { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[0].value.as < Fact > ()); }
-#line 6649 "grammar.gen.tab.cpp"
+#line 6629 "grammar.gen.tab.cpp"
     break;
 
   case 655:
-#line 1488 "grammar.gen.ypp"
+#line 1487 "grammar.gen.ypp"
                     { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[1].value.as < Fact > (), yystack_[0].value.as < Civ > ()); }
-#line 6655 "grammar.gen.tab.cpp"
+#line 6635 "grammar.gen.tab.cpp"
     break;
 
   case 656:
-#line 1491 "grammar.gen.ypp"
+#line 1490 "grammar.gen.ypp"
                                     { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6661 "grammar.gen.tab.cpp"
+#line 6641 "grammar.gen.tab.cpp"
     break;
 
   case 657:
-#line 1494 "grammar.gen.ypp"
+#line 1493 "grammar.gen.ypp"
                                                 { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[3].value.as < Fact > (), yystack_[2].value.as < Commodity > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6667 "grammar.gen.tab.cpp"
+#line 6647 "grammar.gen.tab.cpp"
     break;
 
   case 658:
-#line 1497 "grammar.gen.ypp"
+#line 1496 "grammar.gen.ypp"
                                                  { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[3].value.as < Fact > (), yystack_[2].value.as < Commodity > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6673 "grammar.gen.tab.cpp"
+#line 6653 "grammar.gen.tab.cpp"
     break;
 
   case 659:
-#line 1500 "grammar.gen.ypp"
+#line 1499 "grammar.gen.ypp"
                          { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < Age > ()); }
-#line 6679 "grammar.gen.tab.cpp"
+#line 6659 "grammar.gen.tab.cpp"
     break;
 
   case 660:
-#line 1503 "grammar.gen.ypp"
+#line 1502 "grammar.gen.ypp"
                                 { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6685 "grammar.gen.tab.cpp"
+#line 6665 "grammar.gen.tab.cpp"
     break;
 
   case 661:
-#line 1506 "grammar.gen.ypp"
+#line 1505 "grammar.gen.ypp"
                               { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6691 "grammar.gen.tab.cpp"
+#line 6671 "grammar.gen.tab.cpp"
     break;
 
   case 662:
-#line 1509 "grammar.gen.ypp"
+#line 1508 "grammar.gen.ypp"
                    { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[0].value.as < Fact > ()); }
-#line 6697 "grammar.gen.tab.cpp"
+#line 6677 "grammar.gen.tab.cpp"
     break;
 
   case 663:
-#line 1512 "grammar.gen.ypp"
+#line 1511 "grammar.gen.ypp"
                                     { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6703 "grammar.gen.tab.cpp"
+#line 6683 "grammar.gen.tab.cpp"
     break;
 
   case 664:
-#line 1515 "grammar.gen.ypp"
+#line 1514 "grammar.gen.ypp"
                                     { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6709 "grammar.gen.tab.cpp"
+#line 6689 "grammar.gen.tab.cpp"
     break;
 
   case 665:
-#line 1518 "grammar.gen.ypp"
+#line 1517 "grammar.gen.ypp"
                                      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < DifficultyLevel > ()); }
-#line 6715 "grammar.gen.tab.cpp"
+#line 6695 "grammar.gen.tab.cpp"
     break;
 
   case 666:
-#line 1521 "grammar.gen.ypp"
+#line 1520 "grammar.gen.ypp"
                     { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[1].value.as < Fact > (), yystack_[0].value.as < int > ()); }
-#line 6721 "grammar.gen.tab.cpp"
+#line 6701 "grammar.gen.tab.cpp"
     break;
 
   case 667:
-#line 1524 "grammar.gen.ypp"
+#line 1523 "grammar.gen.ypp"
                                                { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[3].value.as < Fact > (), yystack_[2].value.as < Commodity > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6727 "grammar.gen.tab.cpp"
+#line 6707 "grammar.gen.tab.cpp"
     break;
 
   case 668:
-#line 1527 "grammar.gen.ypp"
+#line 1526 "grammar.gen.ypp"
                          { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[0].value.as < Fact > ()); }
-#line 6733 "grammar.gen.tab.cpp"
+#line 6713 "grammar.gen.tab.cpp"
     break;
 
   case 669:
-#line 1530 "grammar.gen.ypp"
+#line 1529 "grammar.gen.ypp"
                         { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[0].value.as < Fact > ()); }
-#line 6739 "grammar.gen.tab.cpp"
+#line 6719 "grammar.gen.tab.cpp"
     break;
 
   case 670:
-#line 1533 "grammar.gen.ypp"
+#line 1532 "grammar.gen.ypp"
                                         { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[3].value.as < Fact > (), yystack_[2].value.as < Commodity > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6745 "grammar.gen.tab.cpp"
+#line 6725 "grammar.gen.tab.cpp"
     break;
 
   case 671:
-#line 1536 "grammar.gen.ypp"
+#line 1535 "grammar.gen.ypp"
                                 { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < int > (), yystack_[0].value.as < int > ()); }
-#line 6751 "grammar.gen.tab.cpp"
+#line 6731 "grammar.gen.tab.cpp"
     break;
 
   case 672:
-#line 1539 "grammar.gen.ypp"
+#line 1538 "grammar.gen.ypp"
                             { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6757 "grammar.gen.tab.cpp"
+#line 6737 "grammar.gen.tab.cpp"
     break;
 
   case 673:
-#line 1542 "grammar.gen.ypp"
+#line 1541 "grammar.gen.ypp"
                           { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6763 "grammar.gen.tab.cpp"
+#line 6743 "grammar.gen.tab.cpp"
     break;
 
   case 674:
-#line 1545 "grammar.gen.ypp"
+#line 1544 "grammar.gen.ypp"
                        { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < int > (), yystack_[0].value.as < int > ()); }
-#line 6769 "grammar.gen.tab.cpp"
+#line 6749 "grammar.gen.tab.cpp"
     break;
 
   case 675:
-#line 1548 "grammar.gen.ypp"
+#line 1547 "grammar.gen.ypp"
                             { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6775 "grammar.gen.tab.cpp"
+#line 6755 "grammar.gen.tab.cpp"
     break;
 
   case 676:
-#line 1551 "grammar.gen.ypp"
+#line 1550 "grammar.gen.ypp"
                                  { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6781 "grammar.gen.tab.cpp"
+#line 6761 "grammar.gen.tab.cpp"
     break;
 
   case 677:
-#line 1554 "grammar.gen.ypp"
+#line 1553 "grammar.gen.ypp"
                                { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6787 "grammar.gen.tab.cpp"
+#line 6767 "grammar.gen.tab.cpp"
     break;
 
   case 678:
-#line 1557 "grammar.gen.ypp"
+#line 1556 "grammar.gen.ypp"
                         { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[1].value.as < Fact > (), yystack_[0].value.as < MapSizeType > ()); }
-#line 6793 "grammar.gen.tab.cpp"
+#line 6773 "grammar.gen.tab.cpp"
     break;
 
   case 679:
-#line 1560 "grammar.gen.ypp"
+#line 1559 "grammar.gen.ypp"
                         { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[1].value.as < Fact > (), yystack_[0].value.as < MapTypeName > ()); }
-#line 6799 "grammar.gen.tab.cpp"
+#line 6779 "grammar.gen.tab.cpp"
     break;
 
   case 680:
-#line 1563 "grammar.gen.ypp"
+#line 1562 "grammar.gen.ypp"
                                     { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6805 "grammar.gen.tab.cpp"
+#line 6785 "grammar.gen.tab.cpp"
     break;
 
   case 681:
-#line 1566 "grammar.gen.ypp"
+#line 1565 "grammar.gen.ypp"
                                     { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[1].value.as < Fact > (), yystack_[0].value.as < PlayerNumberType > ()); }
-#line 6811 "grammar.gen.tab.cpp"
+#line 6791 "grammar.gen.tab.cpp"
     break;
 
   case 682:
-#line 1569 "grammar.gen.ypp"
+#line 1568 "grammar.gen.ypp"
                                  { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[1].value.as < Fact > (), yystack_[0].value.as < PlayerNumberType > ()); }
-#line 6817 "grammar.gen.tab.cpp"
+#line 6797 "grammar.gen.tab.cpp"
     break;
 
   case 683:
-#line 1572 "grammar.gen.ypp"
+#line 1571 "grammar.gen.ypp"
                                   { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[1].value.as < Fact > (), yystack_[0].value.as < PlayerNumberType > ()); }
-#line 6823 "grammar.gen.tab.cpp"
+#line 6803 "grammar.gen.tab.cpp"
     break;
 
   case 684:
-#line 1575 "grammar.gen.ypp"
+#line 1574 "grammar.gen.ypp"
                                   { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[1].value.as < Fact > (), yystack_[0].value.as < PlayerNumberType > ()); }
-#line 6829 "grammar.gen.tab.cpp"
+#line 6809 "grammar.gen.tab.cpp"
     break;
 
   case 685:
-#line 1578 "grammar.gen.ypp"
+#line 1577 "grammar.gen.ypp"
                                     { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[1].value.as < Fact > (), yystack_[0].value.as < PlayerNumberType > ()); }
-#line 6835 "grammar.gen.tab.cpp"
+#line 6815 "grammar.gen.tab.cpp"
     break;
 
   case 686:
-#line 1581 "grammar.gen.ypp"
+#line 1580 "grammar.gen.ypp"
                                  { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[1].value.as < Fact > (), yystack_[0].value.as < PlayerNumberType > ()); }
-#line 6841 "grammar.gen.tab.cpp"
+#line 6821 "grammar.gen.tab.cpp"
     break;
 
   case 687:
-#line 1584 "grammar.gen.ypp"
+#line 1583 "grammar.gen.ypp"
                                                        { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[3].value.as < Fact > (), yystack_[2].value.as < PlayerNumberType > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6847 "grammar.gen.tab.cpp"
+#line 6827 "grammar.gen.tab.cpp"
     break;
 
   case 688:
-#line 1587 "grammar.gen.ypp"
+#line 1586 "grammar.gen.ypp"
                                                                     { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[4].value.as < Fact > (), yystack_[3].value.as < PlayerNumberType > (), yystack_[2].value.as < Building > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6853 "grammar.gen.tab.cpp"
+#line 6833 "grammar.gen.tab.cpp"
     break;
 
   case 689:
-#line 1590 "grammar.gen.ypp"
+#line 1589 "grammar.gen.ypp"
                                     { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < PlayerNumberType > (), yystack_[0].value.as < Civ > ()); }
-#line 6859 "grammar.gen.tab.cpp"
+#line 6839 "grammar.gen.tab.cpp"
     break;
 
   case 690:
-#line 1593 "grammar.gen.ypp"
+#line 1592 "grammar.gen.ypp"
                                                             { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[3].value.as < Fact > (), yystack_[2].value.as < PlayerNumberType > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6865 "grammar.gen.tab.cpp"
+#line 6845 "grammar.gen.tab.cpp"
     break;
 
   case 691:
-#line 1596 "grammar.gen.ypp"
+#line 1595 "grammar.gen.ypp"
                                                  { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[3].value.as < Fact > (), yystack_[2].value.as < PlayerNumberType > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < Age > ()); }
-#line 6871 "grammar.gen.tab.cpp"
+#line 6851 "grammar.gen.tab.cpp"
     break;
 
   case 692:
-#line 1599 "grammar.gen.ypp"
+#line 1598 "grammar.gen.ypp"
                                                         { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[3].value.as < Fact > (), yystack_[2].value.as < PlayerNumberType > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6877 "grammar.gen.tab.cpp"
+#line 6857 "grammar.gen.tab.cpp"
     break;
 
   case 693:
-#line 1602 "grammar.gen.ypp"
+#line 1601 "grammar.gen.ypp"
                                                             { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[3].value.as < Fact > (), yystack_[2].value.as < PlayerNumberType > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6883 "grammar.gen.tab.cpp"
+#line 6863 "grammar.gen.tab.cpp"
     break;
 
   case 694:
-#line 1605 "grammar.gen.ypp"
+#line 1604 "grammar.gen.ypp"
                                                     { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[3].value.as < Fact > (), yystack_[2].value.as < PlayerNumberType > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6889 "grammar.gen.tab.cpp"
+#line 6869 "grammar.gen.tab.cpp"
     break;
 
   case 695:
-#line 1608 "grammar.gen.ypp"
+#line 1607 "grammar.gen.ypp"
                                                { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[3].value.as < Fact > (), yystack_[2].value.as < PlayerNumberType > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6895 "grammar.gen.tab.cpp"
+#line 6875 "grammar.gen.tab.cpp"
     break;
 
   case 696:
-#line 1611 "grammar.gen.ypp"
+#line 1610 "grammar.gen.ypp"
                                                     { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < PlayerNumberType > (), yystack_[0].value.as < DiplomaticStance > ()); }
-#line 6901 "grammar.gen.tab.cpp"
+#line 6881 "grammar.gen.tab.cpp"
     break;
 
   case 697:
-#line 1614 "grammar.gen.ypp"
+#line 1613 "grammar.gen.ypp"
                                                            { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[4].value.as < Fact > (), yystack_[3].value.as < PlayerNumberType > (), yystack_[2].value.as < Commodity > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6907 "grammar.gen.tab.cpp"
+#line 6887 "grammar.gen.tab.cpp"
     break;
 
   case 698:
-#line 1617 "grammar.gen.ypp"
+#line 1616 "grammar.gen.ypp"
                                                                  { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[4].value.as < Fact > (), yystack_[3].value.as < PlayerNumberType > (), yystack_[2].value.as < Commodity > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6913 "grammar.gen.tab.cpp"
+#line 6893 "grammar.gen.tab.cpp"
     break;
 
   case 699:
-#line 1620 "grammar.gen.ypp"
+#line 1619 "grammar.gen.ypp"
                                                    { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[3].value.as < Fact > (), yystack_[2].value.as < PlayerNumberType > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6919 "grammar.gen.tab.cpp"
+#line 6899 "grammar.gen.tab.cpp"
     break;
 
   case 700:
-#line 1623 "grammar.gen.ypp"
+#line 1622 "grammar.gen.ypp"
                                                             { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[4].value.as < Fact > (), yystack_[3].value.as < PlayerNumberType > (), yystack_[2].value.as < Unit > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6925 "grammar.gen.tab.cpp"
+#line 6905 "grammar.gen.tab.cpp"
     break;
 
   case 701:
-#line 1626 "grammar.gen.ypp"
+#line 1625 "grammar.gen.ypp"
                             { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6931 "grammar.gen.tab.cpp"
+#line 6911 "grammar.gen.tab.cpp"
     break;
 
   case 702:
-#line 1629 "grammar.gen.ypp"
+#line 1628 "grammar.gen.ypp"
                                { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6937 "grammar.gen.tab.cpp"
+#line 6917 "grammar.gen.tab.cpp"
     break;
 
   case 703:
-#line 1632 "grammar.gen.ypp"
+#line 1631 "grammar.gen.ypp"
                                     { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6943 "grammar.gen.tab.cpp"
+#line 6923 "grammar.gen.tab.cpp"
     break;
 
   case 704:
-#line 1635 "grammar.gen.ypp"
+#line 1634 "grammar.gen.ypp"
                               { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6949 "grammar.gen.tab.cpp"
+#line 6929 "grammar.gen.tab.cpp"
     break;
 
   case 705:
-#line 1638 "grammar.gen.ypp"
+#line 1637 "grammar.gen.ypp"
                  { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[0].value.as < Fact > ()); }
-#line 6955 "grammar.gen.tab.cpp"
+#line 6935 "grammar.gen.tab.cpp"
     break;
 
   case 706:
-#line 1641 "grammar.gen.ypp"
+#line 1640 "grammar.gen.ypp"
                                    { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[1].value.as < Fact > (), yystack_[0].value.as < ResearchItem > ()); }
-#line 6961 "grammar.gen.tab.cpp"
+#line 6941 "grammar.gen.tab.cpp"
     break;
 
   case 707:
-#line 1644 "grammar.gen.ypp"
+#line 1643 "grammar.gen.ypp"
                                    { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[1].value.as < Fact > (), yystack_[0].value.as < ResearchItem > ()); }
-#line 6967 "grammar.gen.tab.cpp"
+#line 6947 "grammar.gen.tab.cpp"
     break;
 
   case 708:
-#line 1647 "grammar.gen.ypp"
+#line 1646 "grammar.gen.ypp"
                             { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[1].value.as < Fact > (), yystack_[0].value.as < Commodity > ()); }
-#line 6973 "grammar.gen.tab.cpp"
+#line 6953 "grammar.gen.tab.cpp"
     break;
 
   case 709:
-#line 1650 "grammar.gen.ypp"
+#line 1649 "grammar.gen.ypp"
                              { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < int > (), yystack_[0].value.as < int > ()); }
-#line 6979 "grammar.gen.tab.cpp"
+#line 6959 "grammar.gen.tab.cpp"
     break;
 
   case 710:
-#line 1653 "grammar.gen.ypp"
+#line 1652 "grammar.gen.ypp"
                          { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[0].value.as < Fact > ()); }
-#line 6985 "grammar.gen.tab.cpp"
+#line 6965 "grammar.gen.tab.cpp"
     break;
 
   case 711:
-#line 1656 "grammar.gen.ypp"
+#line 1655 "grammar.gen.ypp"
                               { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 6991 "grammar.gen.tab.cpp"
+#line 6971 "grammar.gen.tab.cpp"
     break;
 
   case 712:
-#line 1659 "grammar.gen.ypp"
+#line 1658 "grammar.gen.ypp"
                                                    { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < PlayerNumberType > (), yystack_[0].value.as < DiplomaticStance > ()); }
-#line 6997 "grammar.gen.tab.cpp"
+#line 6977 "grammar.gen.tab.cpp"
     break;
 
   case 713:
-#line 1662 "grammar.gen.ypp"
+#line 1661 "grammar.gen.ypp"
                           { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < Age > ()); }
-#line 7003 "grammar.gen.tab.cpp"
+#line 6983 "grammar.gen.tab.cpp"
     break;
 
   case 714:
-#line 1665 "grammar.gen.ypp"
+#line 1664 "grammar.gen.ypp"
                                                   { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < StartingResourcesType > ()); }
-#line 7009 "grammar.gen.tab.cpp"
+#line 6989 "grammar.gen.tab.cpp"
     break;
 
   case 715:
-#line 1668 "grammar.gen.ypp"
+#line 1667 "grammar.gen.ypp"
                              { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 7015 "grammar.gen.tab.cpp"
+#line 6995 "grammar.gen.tab.cpp"
     break;
 
   case 716:
-#line 1671 "grammar.gen.ypp"
+#line 1670 "grammar.gen.ypp"
                                                      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[3].value.as < Fact > (), yystack_[2].value.as < StrategicNumberName > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 7021 "grammar.gen.tab.cpp"
+#line 7001 "grammar.gen.tab.cpp"
     break;
 
   case 717:
-#line 1674 "grammar.gen.ypp"
+#line 1673 "grammar.gen.ypp"
                                           { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < PlayerNumberType > (), yystack_[0].value.as < int > ()); }
-#line 7027 "grammar.gen.tab.cpp"
+#line 7007 "grammar.gen.tab.cpp"
     break;
 
   case 718:
-#line 1677 "grammar.gen.ypp"
+#line 1676 "grammar.gen.ypp"
                           { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[1].value.as < Fact > (), yystack_[0].value.as < int > ()); }
-#line 7033 "grammar.gen.tab.cpp"
+#line 7013 "grammar.gen.tab.cpp"
     break;
 
   case 719:
-#line 1680 "grammar.gen.ypp"
+#line 1679 "grammar.gen.ypp"
                     { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[0].value.as < Fact > ()); }
-#line 7039 "grammar.gen.tab.cpp"
+#line 7019 "grammar.gen.tab.cpp"
     break;
 
   case 720:
-#line 1683 "grammar.gen.ypp"
+#line 1682 "grammar.gen.ypp"
                        { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[1].value.as < Fact > (), yystack_[0].value.as < Unit > ()); }
-#line 7045 "grammar.gen.tab.cpp"
+#line 7025 "grammar.gen.tab.cpp"
     break;
 
   case 721:
-#line 1686 "grammar.gen.ypp"
+#line 1685 "grammar.gen.ypp"
                            { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 7051 "grammar.gen.tab.cpp"
+#line 7031 "grammar.gen.tab.cpp"
     break;
 
   case 722:
-#line 1689 "grammar.gen.ypp"
+#line 1688 "grammar.gen.ypp"
                                 { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 7057 "grammar.gen.tab.cpp"
+#line 7037 "grammar.gen.tab.cpp"
     break;
 
   case 723:
-#line 1692 "grammar.gen.ypp"
+#line 1691 "grammar.gen.ypp"
                                     { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[3].value.as < Fact > (), yystack_[2].value.as < Unit > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 7063 "grammar.gen.tab.cpp"
+#line 7043 "grammar.gen.tab.cpp"
     break;
 
   case 724:
-#line 1695 "grammar.gen.ypp"
+#line 1694 "grammar.gen.ypp"
                                          { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[3].value.as < Fact > (), yystack_[2].value.as < Unit > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 7069 "grammar.gen.tab.cpp"
+#line 7049 "grammar.gen.tab.cpp"
     break;
 
   case 725:
-#line 1698 "grammar.gen.ypp"
+#line 1697 "grammar.gen.ypp"
                                           { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[1].value.as < Fact > (), yystack_[0].value.as < VictoryConditionName > ()); }
-#line 7075 "grammar.gen.tab.cpp"
+#line 7055 "grammar.gen.tab.cpp"
     break;
 
   case 726:
-#line 1701 "grammar.gen.ypp"
+#line 1700 "grammar.gen.ypp"
                                                 { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[3].value.as < Fact > (), yystack_[2].value.as < int > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 7081 "grammar.gen.tab.cpp"
+#line 7061 "grammar.gen.tab.cpp"
     break;
 
   case 727:
-#line 1704 "grammar.gen.ypp"
+#line 1703 "grammar.gen.ypp"
                                                 { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[3].value.as < Fact > (), yystack_[2].value.as < int > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 7087 "grammar.gen.tab.cpp"
+#line 7067 "grammar.gen.tab.cpp"
     break;
 
   case 728:
-#line 1707 "grammar.gen.ypp"
+#line 1706 "grammar.gen.ypp"
                               { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 7093 "grammar.gen.tab.cpp"
+#line 7073 "grammar.gen.tab.cpp"
     break;
 
   case 729:
-#line 1710 "grammar.gen.ypp"
+#line 1709 "grammar.gen.ypp"
                             { yylhs.value.as < std::shared_ptr<ai::Condition> > () = driver.createCondition(yystack_[2].value.as < Fact > (), yystack_[1].value.as < RelOp > (), yystack_[0].value.as < int > ()); }
-#line 7099 "grammar.gen.tab.cpp"
+#line 7079 "grammar.gen.tab.cpp"
     break;
 
   case 730:
-#line 1713 "grammar.gen.ypp"
+#line 1712 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7105 "grammar.gen.tab.cpp"
+#line 7085 "grammar.gen.tab.cpp"
     break;
 
   case 731:
-#line 1714 "grammar.gen.ypp"
+#line 1713 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7111 "grammar.gen.tab.cpp"
+#line 7091 "grammar.gen.tab.cpp"
     break;
 
   case 732:
-#line 1715 "grammar.gen.ypp"
+#line 1714 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7117 "grammar.gen.tab.cpp"
+#line 7097 "grammar.gen.tab.cpp"
     break;
 
   case 733:
-#line 1716 "grammar.gen.ypp"
+#line 1715 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7123 "grammar.gen.tab.cpp"
+#line 7103 "grammar.gen.tab.cpp"
     break;
 
   case 734:
-#line 1717 "grammar.gen.ypp"
+#line 1716 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7129 "grammar.gen.tab.cpp"
+#line 7109 "grammar.gen.tab.cpp"
     break;
 
   case 735:
-#line 1718 "grammar.gen.ypp"
+#line 1717 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7135 "grammar.gen.tab.cpp"
+#line 7115 "grammar.gen.tab.cpp"
     break;
 
   case 736:
-#line 1719 "grammar.gen.ypp"
+#line 1718 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7141 "grammar.gen.tab.cpp"
+#line 7121 "grammar.gen.tab.cpp"
     break;
 
   case 737:
-#line 1720 "grammar.gen.ypp"
+#line 1719 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7147 "grammar.gen.tab.cpp"
+#line 7127 "grammar.gen.tab.cpp"
     break;
 
   case 738:
-#line 1721 "grammar.gen.ypp"
+#line 1720 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7153 "grammar.gen.tab.cpp"
+#line 7133 "grammar.gen.tab.cpp"
     break;
 
   case 739:
-#line 1722 "grammar.gen.ypp"
+#line 1721 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7159 "grammar.gen.tab.cpp"
+#line 7139 "grammar.gen.tab.cpp"
     break;
 
   case 740:
-#line 1723 "grammar.gen.ypp"
+#line 1722 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7165 "grammar.gen.tab.cpp"
+#line 7145 "grammar.gen.tab.cpp"
     break;
 
   case 741:
-#line 1724 "grammar.gen.ypp"
+#line 1723 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7171 "grammar.gen.tab.cpp"
+#line 7151 "grammar.gen.tab.cpp"
     break;
 
   case 742:
-#line 1725 "grammar.gen.ypp"
+#line 1724 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7177 "grammar.gen.tab.cpp"
+#line 7157 "grammar.gen.tab.cpp"
     break;
 
   case 743:
-#line 1726 "grammar.gen.ypp"
+#line 1725 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7183 "grammar.gen.tab.cpp"
+#line 7163 "grammar.gen.tab.cpp"
     break;
 
   case 744:
-#line 1727 "grammar.gen.ypp"
+#line 1726 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7189 "grammar.gen.tab.cpp"
+#line 7169 "grammar.gen.tab.cpp"
     break;
 
   case 745:
-#line 1728 "grammar.gen.ypp"
+#line 1727 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7195 "grammar.gen.tab.cpp"
+#line 7175 "grammar.gen.tab.cpp"
     break;
 
   case 746:
-#line 1729 "grammar.gen.ypp"
+#line 1728 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7201 "grammar.gen.tab.cpp"
+#line 7181 "grammar.gen.tab.cpp"
     break;
 
   case 747:
-#line 1730 "grammar.gen.ypp"
+#line 1729 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7207 "grammar.gen.tab.cpp"
+#line 7187 "grammar.gen.tab.cpp"
     break;
 
   case 748:
-#line 1731 "grammar.gen.ypp"
+#line 1730 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7213 "grammar.gen.tab.cpp"
+#line 7193 "grammar.gen.tab.cpp"
     break;
 
   case 749:
-#line 1732 "grammar.gen.ypp"
+#line 1731 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7219 "grammar.gen.tab.cpp"
+#line 7199 "grammar.gen.tab.cpp"
     break;
 
   case 750:
-#line 1733 "grammar.gen.ypp"
+#line 1732 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7225 "grammar.gen.tab.cpp"
+#line 7205 "grammar.gen.tab.cpp"
     break;
 
   case 751:
-#line 1734 "grammar.gen.ypp"
+#line 1733 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7231 "grammar.gen.tab.cpp"
+#line 7211 "grammar.gen.tab.cpp"
     break;
 
   case 752:
-#line 1735 "grammar.gen.ypp"
+#line 1734 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7237 "grammar.gen.tab.cpp"
+#line 7217 "grammar.gen.tab.cpp"
     break;
 
   case 753:
-#line 1736 "grammar.gen.ypp"
+#line 1735 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7243 "grammar.gen.tab.cpp"
+#line 7223 "grammar.gen.tab.cpp"
     break;
 
   case 754:
-#line 1737 "grammar.gen.ypp"
+#line 1736 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7249 "grammar.gen.tab.cpp"
+#line 7229 "grammar.gen.tab.cpp"
     break;
 
   case 755:
-#line 1738 "grammar.gen.ypp"
+#line 1737 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7255 "grammar.gen.tab.cpp"
+#line 7235 "grammar.gen.tab.cpp"
     break;
 
   case 756:
-#line 1739 "grammar.gen.ypp"
+#line 1738 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7261 "grammar.gen.tab.cpp"
+#line 7241 "grammar.gen.tab.cpp"
     break;
 
   case 757:
-#line 1740 "grammar.gen.ypp"
+#line 1739 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7267 "grammar.gen.tab.cpp"
+#line 7247 "grammar.gen.tab.cpp"
     break;
 
   case 758:
-#line 1741 "grammar.gen.ypp"
+#line 1740 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7273 "grammar.gen.tab.cpp"
+#line 7253 "grammar.gen.tab.cpp"
     break;
 
   case 759:
-#line 1742 "grammar.gen.ypp"
+#line 1741 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7279 "grammar.gen.tab.cpp"
+#line 7259 "grammar.gen.tab.cpp"
     break;
 
   case 760:
-#line 1743 "grammar.gen.ypp"
+#line 1742 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7285 "grammar.gen.tab.cpp"
+#line 7265 "grammar.gen.tab.cpp"
     break;
 
   case 761:
-#line 1744 "grammar.gen.ypp"
+#line 1743 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7291 "grammar.gen.tab.cpp"
+#line 7271 "grammar.gen.tab.cpp"
     break;
 
   case 762:
-#line 1745 "grammar.gen.ypp"
+#line 1744 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7297 "grammar.gen.tab.cpp"
+#line 7277 "grammar.gen.tab.cpp"
     break;
 
   case 763:
-#line 1746 "grammar.gen.ypp"
+#line 1745 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7303 "grammar.gen.tab.cpp"
+#line 7283 "grammar.gen.tab.cpp"
     break;
 
   case 764:
-#line 1747 "grammar.gen.ypp"
+#line 1746 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7309 "grammar.gen.tab.cpp"
+#line 7289 "grammar.gen.tab.cpp"
     break;
 
   case 765:
-#line 1748 "grammar.gen.ypp"
+#line 1747 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7315 "grammar.gen.tab.cpp"
+#line 7295 "grammar.gen.tab.cpp"
     break;
 
   case 766:
-#line 1749 "grammar.gen.ypp"
+#line 1748 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7321 "grammar.gen.tab.cpp"
+#line 7301 "grammar.gen.tab.cpp"
     break;
 
   case 767:
-#line 1750 "grammar.gen.ypp"
+#line 1749 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7327 "grammar.gen.tab.cpp"
+#line 7307 "grammar.gen.tab.cpp"
     break;
 
   case 768:
-#line 1751 "grammar.gen.ypp"
+#line 1750 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7333 "grammar.gen.tab.cpp"
+#line 7313 "grammar.gen.tab.cpp"
     break;
 
   case 769:
-#line 1752 "grammar.gen.ypp"
+#line 1751 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7339 "grammar.gen.tab.cpp"
+#line 7319 "grammar.gen.tab.cpp"
     break;
 
   case 770:
-#line 1753 "grammar.gen.ypp"
+#line 1752 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7345 "grammar.gen.tab.cpp"
+#line 7325 "grammar.gen.tab.cpp"
     break;
 
   case 771:
-#line 1754 "grammar.gen.ypp"
+#line 1753 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7351 "grammar.gen.tab.cpp"
+#line 7331 "grammar.gen.tab.cpp"
     break;
 
   case 772:
-#line 1755 "grammar.gen.ypp"
+#line 1754 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7357 "grammar.gen.tab.cpp"
+#line 7337 "grammar.gen.tab.cpp"
     break;
 
   case 773:
-#line 1756 "grammar.gen.ypp"
+#line 1755 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7363 "grammar.gen.tab.cpp"
+#line 7343 "grammar.gen.tab.cpp"
     break;
 
   case 774:
-#line 1757 "grammar.gen.ypp"
+#line 1756 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7369 "grammar.gen.tab.cpp"
+#line 7349 "grammar.gen.tab.cpp"
     break;
 
   case 775:
-#line 1758 "grammar.gen.ypp"
+#line 1757 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7375 "grammar.gen.tab.cpp"
+#line 7355 "grammar.gen.tab.cpp"
     break;
 
   case 776:
-#line 1759 "grammar.gen.ypp"
+#line 1758 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7381 "grammar.gen.tab.cpp"
+#line 7361 "grammar.gen.tab.cpp"
     break;
 
   case 777:
-#line 1760 "grammar.gen.ypp"
+#line 1759 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7387 "grammar.gen.tab.cpp"
+#line 7367 "grammar.gen.tab.cpp"
     break;
 
   case 778:
-#line 1761 "grammar.gen.ypp"
+#line 1760 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7393 "grammar.gen.tab.cpp"
+#line 7373 "grammar.gen.tab.cpp"
     break;
 
   case 779:
-#line 1762 "grammar.gen.ypp"
+#line 1761 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7399 "grammar.gen.tab.cpp"
+#line 7379 "grammar.gen.tab.cpp"
     break;
 
   case 780:
-#line 1763 "grammar.gen.ypp"
+#line 1762 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7405 "grammar.gen.tab.cpp"
+#line 7385 "grammar.gen.tab.cpp"
     break;
 
   case 781:
-#line 1764 "grammar.gen.ypp"
+#line 1763 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7411 "grammar.gen.tab.cpp"
+#line 7391 "grammar.gen.tab.cpp"
     break;
 
   case 782:
-#line 1765 "grammar.gen.ypp"
+#line 1764 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7417 "grammar.gen.tab.cpp"
+#line 7397 "grammar.gen.tab.cpp"
     break;
 
   case 783:
-#line 1766 "grammar.gen.ypp"
+#line 1765 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7423 "grammar.gen.tab.cpp"
+#line 7403 "grammar.gen.tab.cpp"
     break;
 
   case 784:
-#line 1767 "grammar.gen.ypp"
+#line 1766 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7429 "grammar.gen.tab.cpp"
+#line 7409 "grammar.gen.tab.cpp"
     break;
 
   case 785:
-#line 1768 "grammar.gen.ypp"
+#line 1767 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7435 "grammar.gen.tab.cpp"
+#line 7415 "grammar.gen.tab.cpp"
     break;
 
   case 786:
-#line 1769 "grammar.gen.ypp"
+#line 1768 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7441 "grammar.gen.tab.cpp"
+#line 7421 "grammar.gen.tab.cpp"
     break;
 
   case 787:
-#line 1770 "grammar.gen.ypp"
+#line 1769 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7447 "grammar.gen.tab.cpp"
+#line 7427 "grammar.gen.tab.cpp"
     break;
 
   case 788:
-#line 1771 "grammar.gen.ypp"
+#line 1770 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7453 "grammar.gen.tab.cpp"
+#line 7433 "grammar.gen.tab.cpp"
     break;
 
   case 789:
-#line 1772 "grammar.gen.ypp"
+#line 1771 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7459 "grammar.gen.tab.cpp"
+#line 7439 "grammar.gen.tab.cpp"
     break;
 
   case 790:
-#line 1773 "grammar.gen.ypp"
+#line 1772 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7465 "grammar.gen.tab.cpp"
+#line 7445 "grammar.gen.tab.cpp"
     break;
 
   case 791:
-#line 1774 "grammar.gen.ypp"
+#line 1773 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7471 "grammar.gen.tab.cpp"
+#line 7451 "grammar.gen.tab.cpp"
     break;
 
   case 792:
-#line 1775 "grammar.gen.ypp"
+#line 1774 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7477 "grammar.gen.tab.cpp"
+#line 7457 "grammar.gen.tab.cpp"
     break;
 
   case 793:
-#line 1776 "grammar.gen.ypp"
+#line 1775 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7483 "grammar.gen.tab.cpp"
+#line 7463 "grammar.gen.tab.cpp"
     break;
 
   case 794:
-#line 1777 "grammar.gen.ypp"
+#line 1776 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7489 "grammar.gen.tab.cpp"
+#line 7469 "grammar.gen.tab.cpp"
     break;
 
   case 795:
-#line 1778 "grammar.gen.ypp"
+#line 1777 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7495 "grammar.gen.tab.cpp"
+#line 7475 "grammar.gen.tab.cpp"
     break;
 
   case 796:
-#line 1779 "grammar.gen.ypp"
+#line 1778 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7501 "grammar.gen.tab.cpp"
+#line 7481 "grammar.gen.tab.cpp"
     break;
 
   case 797:
-#line 1780 "grammar.gen.ypp"
+#line 1779 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7507 "grammar.gen.tab.cpp"
+#line 7487 "grammar.gen.tab.cpp"
     break;
 
   case 798:
-#line 1781 "grammar.gen.ypp"
+#line 1780 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7513 "grammar.gen.tab.cpp"
+#line 7493 "grammar.gen.tab.cpp"
     break;
 
   case 799:
-#line 1782 "grammar.gen.ypp"
+#line 1781 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7519 "grammar.gen.tab.cpp"
+#line 7499 "grammar.gen.tab.cpp"
     break;
 
   case 800:
-#line 1783 "grammar.gen.ypp"
+#line 1782 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7525 "grammar.gen.tab.cpp"
+#line 7505 "grammar.gen.tab.cpp"
     break;
 
   case 801:
-#line 1784 "grammar.gen.ypp"
+#line 1783 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7531 "grammar.gen.tab.cpp"
+#line 7511 "grammar.gen.tab.cpp"
     break;
 
   case 802:
-#line 1785 "grammar.gen.ypp"
+#line 1784 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7537 "grammar.gen.tab.cpp"
+#line 7517 "grammar.gen.tab.cpp"
     break;
 
   case 803:
-#line 1786 "grammar.gen.ypp"
+#line 1785 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7543 "grammar.gen.tab.cpp"
+#line 7523 "grammar.gen.tab.cpp"
     break;
 
   case 804:
-#line 1787 "grammar.gen.ypp"
+#line 1786 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7549 "grammar.gen.tab.cpp"
+#line 7529 "grammar.gen.tab.cpp"
     break;
 
   case 805:
-#line 1788 "grammar.gen.ypp"
+#line 1787 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7555 "grammar.gen.tab.cpp"
+#line 7535 "grammar.gen.tab.cpp"
     break;
 
   case 806:
-#line 1789 "grammar.gen.ypp"
+#line 1788 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7561 "grammar.gen.tab.cpp"
+#line 7541 "grammar.gen.tab.cpp"
     break;
 
   case 807:
-#line 1790 "grammar.gen.ypp"
+#line 1789 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7567 "grammar.gen.tab.cpp"
+#line 7547 "grammar.gen.tab.cpp"
     break;
 
   case 808:
-#line 1791 "grammar.gen.ypp"
+#line 1790 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7573 "grammar.gen.tab.cpp"
+#line 7553 "grammar.gen.tab.cpp"
     break;
 
   case 809:
-#line 1792 "grammar.gen.ypp"
+#line 1791 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7579 "grammar.gen.tab.cpp"
+#line 7559 "grammar.gen.tab.cpp"
     break;
 
   case 810:
-#line 1793 "grammar.gen.ypp"
+#line 1792 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7585 "grammar.gen.tab.cpp"
+#line 7565 "grammar.gen.tab.cpp"
     break;
 
   case 811:
-#line 1794 "grammar.gen.ypp"
+#line 1793 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7591 "grammar.gen.tab.cpp"
+#line 7571 "grammar.gen.tab.cpp"
     break;
 
   case 812:
-#line 1795 "grammar.gen.ypp"
+#line 1794 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7597 "grammar.gen.tab.cpp"
+#line 7577 "grammar.gen.tab.cpp"
     break;
 
   case 813:
-#line 1796 "grammar.gen.ypp"
+#line 1795 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7603 "grammar.gen.tab.cpp"
+#line 7583 "grammar.gen.tab.cpp"
     break;
 
   case 814:
-#line 1797 "grammar.gen.ypp"
+#line 1796 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7609 "grammar.gen.tab.cpp"
+#line 7589 "grammar.gen.tab.cpp"
     break;
 
   case 815:
-#line 1798 "grammar.gen.ypp"
+#line 1797 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7615 "grammar.gen.tab.cpp"
+#line 7595 "grammar.gen.tab.cpp"
     break;
 
   case 816:
-#line 1799 "grammar.gen.ypp"
+#line 1798 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7621 "grammar.gen.tab.cpp"
+#line 7601 "grammar.gen.tab.cpp"
     break;
 
   case 817:
-#line 1800 "grammar.gen.ypp"
+#line 1799 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7627 "grammar.gen.tab.cpp"
+#line 7607 "grammar.gen.tab.cpp"
     break;
 
   case 818:
-#line 1801 "grammar.gen.ypp"
+#line 1800 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7633 "grammar.gen.tab.cpp"
+#line 7613 "grammar.gen.tab.cpp"
     break;
 
   case 819:
-#line 1802 "grammar.gen.ypp"
+#line 1801 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7639 "grammar.gen.tab.cpp"
+#line 7619 "grammar.gen.tab.cpp"
     break;
 
   case 820:
-#line 1803 "grammar.gen.ypp"
+#line 1802 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7645 "grammar.gen.tab.cpp"
+#line 7625 "grammar.gen.tab.cpp"
     break;
 
   case 821:
-#line 1804 "grammar.gen.ypp"
+#line 1803 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7651 "grammar.gen.tab.cpp"
+#line 7631 "grammar.gen.tab.cpp"
     break;
 
   case 822:
-#line 1805 "grammar.gen.ypp"
+#line 1804 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7657 "grammar.gen.tab.cpp"
+#line 7637 "grammar.gen.tab.cpp"
     break;
 
   case 823:
-#line 1806 "grammar.gen.ypp"
+#line 1805 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7663 "grammar.gen.tab.cpp"
+#line 7643 "grammar.gen.tab.cpp"
     break;
 
   case 824:
-#line 1807 "grammar.gen.ypp"
+#line 1806 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7669 "grammar.gen.tab.cpp"
+#line 7649 "grammar.gen.tab.cpp"
     break;
 
   case 825:
-#line 1808 "grammar.gen.ypp"
+#line 1807 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7675 "grammar.gen.tab.cpp"
+#line 7655 "grammar.gen.tab.cpp"
     break;
 
   case 826:
-#line 1809 "grammar.gen.ypp"
+#line 1808 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7681 "grammar.gen.tab.cpp"
+#line 7661 "grammar.gen.tab.cpp"
     break;
 
   case 827:
-#line 1810 "grammar.gen.ypp"
+#line 1809 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7687 "grammar.gen.tab.cpp"
+#line 7667 "grammar.gen.tab.cpp"
     break;
 
   case 828:
-#line 1811 "grammar.gen.ypp"
+#line 1810 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7693 "grammar.gen.tab.cpp"
+#line 7673 "grammar.gen.tab.cpp"
     break;
 
   case 829:
-#line 1812 "grammar.gen.ypp"
+#line 1811 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7699 "grammar.gen.tab.cpp"
+#line 7679 "grammar.gen.tab.cpp"
     break;
 
   case 830:
-#line 1813 "grammar.gen.ypp"
+#line 1812 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7705 "grammar.gen.tab.cpp"
+#line 7685 "grammar.gen.tab.cpp"
     break;
 
   case 831:
-#line 1814 "grammar.gen.ypp"
+#line 1813 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7711 "grammar.gen.tab.cpp"
+#line 7691 "grammar.gen.tab.cpp"
     break;
 
   case 832:
-#line 1815 "grammar.gen.ypp"
+#line 1814 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7717 "grammar.gen.tab.cpp"
+#line 7697 "grammar.gen.tab.cpp"
     break;
 
   case 833:
-#line 1816 "grammar.gen.ypp"
+#line 1815 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7723 "grammar.gen.tab.cpp"
+#line 7703 "grammar.gen.tab.cpp"
     break;
 
   case 834:
-#line 1817 "grammar.gen.ypp"
+#line 1816 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7729 "grammar.gen.tab.cpp"
+#line 7709 "grammar.gen.tab.cpp"
     break;
 
   case 835:
-#line 1818 "grammar.gen.ypp"
+#line 1817 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7735 "grammar.gen.tab.cpp"
+#line 7715 "grammar.gen.tab.cpp"
     break;
 
   case 836:
-#line 1819 "grammar.gen.ypp"
+#line 1818 "grammar.gen.ypp"
      { yylhs.value.as < std::shared_ptr<ai::Condition> > () = yystack_[0].value.as < std::shared_ptr<ai::Condition> > (); }
-#line 7741 "grammar.gen.tab.cpp"
+#line 7721 "grammar.gen.tab.cpp"
     break;
 
 
-#line 7745 "grammar.gen.tab.cpp"
+#line 7725 "grammar.gen.tab.cpp"
 
             default:
               break;
@@ -9300,90 +9280,90 @@ namespace  ai  {
   const short
   ScriptParser::yyrline_[] =
   {
-       0,   604,   604,   606,   610,   611,   614,   617,   618,   621,
-     624,   625,   626,   630,   631,   634,   637,   638,   639,   640,
-     641,   642,   645,   646,   647,   648,   649,   650,   651,   652,
-     653,   654,   655,   656,   657,   658,   659,   660,   661,   662,
-     663,   664,   665,   666,   667,   668,   671,   672,   673,   674,
-     675,   676,   677,   678,   679,   680,   681,   682,   683,   684,
-     687,   688,   689,   690,   693,   694,   695,   696,   697,   700,
-     701,   704,   705,   706,   709,   710,   711,   712,   713,   714,
-     717,   718,   719,   720,   721,   722,   723,   724,   725,   726,
-     727,   728,   729,   730,   731,   732,   735,   736,   737,   738,
-     739,   740,   741,   742,   743,   744,   745,   746,   747,   748,
-     749,   750,   751,   754,   755,   756,   757,   758,   759,   762,
-     763,   764,   765,   766,   767,   768,   769,   770,   771,   772,
-     773,   774,   775,   776,   777,   778,   779,   780,   781,   782,
-     783,   784,   785,   786,   787,   788,   789,   790,   791,   792,
-     793,   794,   795,   796,   797,   798,   799,   800,   801,   802,
-     803,   804,   805,   806,   807,   808,   809,   810,   811,   812,
-     813,   814,   815,   816,   817,   818,   819,   820,   821,   822,
-     823,   824,   825,   826,   827,   828,   829,   830,   831,   832,
-     833,   834,   835,   836,   837,   838,   839,   840,   841,   842,
-     843,   844,   845,   846,   847,   848,   849,   850,   851,   852,
-     853,   854,   855,   856,   857,   858,   859,   860,   861,   862,
-     863,   864,   865,   866,   867,   868,   869,   870,   871,   872,
-     873,   874,   875,   876,   877,   878,   881,   882,   883,   886,
-     887,   888,   889,   890,   891,   892,   893,   894,   895,   896,
-     897,   898,   899,   900,   901,   902,   903,   904,   905,   906,
-     907,   908,   909,   910,   911,   912,   913,   914,   915,   916,
-     917,   918,   919,   920,   921,   922,   923,   924,   925,   926,
-     927,   928,   929,   930,   931,   932,   933,   934,   935,   936,
-     937,   938,   939,   940,   941,   942,   943,   944,   945,   946,
-     947,   948,   949,   950,   951,   952,   953,   954,   955,   956,
-     957,   958,   959,   960,   961,   962,   963,   964,   965,   966,
-     967,   968,   969,   970,   971,   972,   973,   974,   975,   976,
-     977,   978,   979,   980,   981,   982,   983,   984,   985,   986,
-     987,   988,   989,   990,   991,   992,   993,   994,   995,   996,
-     997,   998,   999,  1000,  1001,  1002,  1003,  1004,  1005,  1006,
-    1007,  1008,  1009,  1010,  1011,  1012,  1013,  1014,  1015,  1016,
-    1017,  1020,  1021,  1022,  1023,  1024,  1025,  1026,  1027,  1028,
-    1029,  1030,  1031,  1032,  1033,  1034,  1035,  1036,  1037,  1038,
-    1039,  1040,  1041,  1042,  1043,  1044,  1045,  1046,  1047,  1048,
-    1049,  1050,  1051,  1052,  1053,  1054,  1055,  1056,  1057,  1058,
-    1059,  1060,  1061,  1062,  1063,  1064,  1065,  1066,  1067,  1068,
-    1069,  1070,  1071,  1072,  1073,  1074,  1075,  1076,  1077,  1078,
-    1079,  1080,  1081,  1082,  1083,  1084,  1085,  1086,  1087,  1088,
-    1089,  1090,  1091,  1092,  1093,  1094,  1095,  1096,  1097,  1098,
-    1099,  1100,  1101,  1102,  1103,  1104,  1105,  1106,  1107,  1108,
-    1109,  1110,  1111,  1112,  1113,  1114,  1115,  1116,  1117,  1118,
-    1119,  1120,  1121,  1122,  1123,  1124,  1125,  1126,  1127,  1128,
-    1129,  1130,  1131,  1132,  1133,  1134,  1135,  1136,  1137,  1138,
-    1139,  1140,  1141,  1142,  1143,  1144,  1145,  1146,  1147,  1148,
-    1149,  1150,  1151,  1154,  1155,  1156,  1157,  1158,  1161,  1162,
-    1163,  1164,  1168,  1171,  1174,  1177,  1180,  1183,  1186,  1189,
-    1192,  1195,  1198,  1201,  1204,  1207,  1210,  1213,  1216,  1219,
-    1222,  1225,  1228,  1231,  1234,  1237,  1240,  1243,  1246,  1249,
-    1252,  1255,  1258,  1261,  1264,  1267,  1270,  1273,  1276,  1279,
-    1282,  1284,  1287,  1290,  1293,  1296,  1299,  1302,  1305,  1308,
-    1311,  1314,  1317,  1320,  1323,  1326,  1329,  1333,  1334,  1335,
-    1336,  1337,  1338,  1339,  1340,  1341,  1342,  1343,  1344,  1345,
-    1346,  1347,  1348,  1349,  1350,  1351,  1352,  1353,  1354,  1355,
-    1356,  1357,  1358,  1359,  1360,  1361,  1362,  1363,  1364,  1365,
-    1366,  1367,  1368,  1369,  1370,  1371,  1372,  1373,  1374,  1375,
-    1376,  1377,  1378,  1379,  1380,  1381,  1382,  1383,  1384,  1385,
-    1386,  1390,  1393,  1396,  1399,  1402,  1405,  1408,  1411,  1414,
-    1417,  1420,  1423,  1426,  1429,  1432,  1435,  1438,  1441,  1444,
-    1447,  1450,  1451,  1454,  1455,  1458,  1461,  1464,  1467,  1470,
-    1473,  1476,  1479,  1482,  1485,  1488,  1491,  1494,  1497,  1500,
-    1503,  1506,  1509,  1512,  1515,  1518,  1521,  1524,  1527,  1530,
-    1533,  1536,  1539,  1542,  1545,  1548,  1551,  1554,  1557,  1560,
-    1563,  1566,  1569,  1572,  1575,  1578,  1581,  1584,  1587,  1590,
-    1593,  1596,  1599,  1602,  1605,  1608,  1611,  1614,  1617,  1620,
-    1623,  1626,  1629,  1632,  1635,  1638,  1641,  1644,  1647,  1650,
-    1653,  1656,  1659,  1662,  1665,  1668,  1671,  1674,  1677,  1680,
-    1683,  1686,  1689,  1692,  1695,  1698,  1701,  1704,  1707,  1710,
-    1713,  1714,  1715,  1716,  1717,  1718,  1719,  1720,  1721,  1722,
-    1723,  1724,  1725,  1726,  1727,  1728,  1729,  1730,  1731,  1732,
-    1733,  1734,  1735,  1736,  1737,  1738,  1739,  1740,  1741,  1742,
-    1743,  1744,  1745,  1746,  1747,  1748,  1749,  1750,  1751,  1752,
-    1753,  1754,  1755,  1756,  1757,  1758,  1759,  1760,  1761,  1762,
-    1763,  1764,  1765,  1766,  1767,  1768,  1769,  1770,  1771,  1772,
-    1773,  1774,  1775,  1776,  1777,  1778,  1779,  1780,  1781,  1782,
-    1783,  1784,  1785,  1786,  1787,  1788,  1789,  1790,  1791,  1792,
-    1793,  1794,  1795,  1796,  1797,  1798,  1799,  1800,  1801,  1802,
-    1803,  1804,  1805,  1806,  1807,  1808,  1809,  1810,  1811,  1812,
-    1813,  1814,  1815,  1816,  1817,  1818,  1819
+       0,   603,   603,   605,   609,   610,   613,   616,   617,   620,
+     623,   624,   625,   629,   630,   633,   636,   637,   638,   639,
+     640,   641,   644,   645,   646,   647,   648,   649,   650,   651,
+     652,   653,   654,   655,   656,   657,   658,   659,   660,   661,
+     662,   663,   664,   665,   666,   667,   670,   671,   672,   673,
+     674,   675,   676,   677,   678,   679,   680,   681,   682,   683,
+     686,   687,   688,   689,   692,   693,   694,   695,   696,   699,
+     700,   703,   704,   705,   708,   709,   710,   711,   712,   713,
+     716,   717,   718,   719,   720,   721,   722,   723,   724,   725,
+     726,   727,   728,   729,   730,   731,   734,   735,   736,   737,
+     738,   739,   740,   741,   742,   743,   744,   745,   746,   747,
+     748,   749,   750,   753,   754,   755,   756,   757,   758,   761,
+     762,   763,   764,   765,   766,   767,   768,   769,   770,   771,
+     772,   773,   774,   775,   776,   777,   778,   779,   780,   781,
+     782,   783,   784,   785,   786,   787,   788,   789,   790,   791,
+     792,   793,   794,   795,   796,   797,   798,   799,   800,   801,
+     802,   803,   804,   805,   806,   807,   808,   809,   810,   811,
+     812,   813,   814,   815,   816,   817,   818,   819,   820,   821,
+     822,   823,   824,   825,   826,   827,   828,   829,   830,   831,
+     832,   833,   834,   835,   836,   837,   838,   839,   840,   841,
+     842,   843,   844,   845,   846,   847,   848,   849,   850,   851,
+     852,   853,   854,   855,   856,   857,   858,   859,   860,   861,
+     862,   863,   864,   865,   866,   867,   868,   869,   870,   871,
+     872,   873,   874,   875,   876,   877,   880,   881,   882,   885,
+     886,   887,   888,   889,   890,   891,   892,   893,   894,   895,
+     896,   897,   898,   899,   900,   901,   902,   903,   904,   905,
+     906,   907,   908,   909,   910,   911,   912,   913,   914,   915,
+     916,   917,   918,   919,   920,   921,   922,   923,   924,   925,
+     926,   927,   928,   929,   930,   931,   932,   933,   934,   935,
+     936,   937,   938,   939,   940,   941,   942,   943,   944,   945,
+     946,   947,   948,   949,   950,   951,   952,   953,   954,   955,
+     956,   957,   958,   959,   960,   961,   962,   963,   964,   965,
+     966,   967,   968,   969,   970,   971,   972,   973,   974,   975,
+     976,   977,   978,   979,   980,   981,   982,   983,   984,   985,
+     986,   987,   988,   989,   990,   991,   992,   993,   994,   995,
+     996,   997,   998,   999,  1000,  1001,  1002,  1003,  1004,  1005,
+    1006,  1007,  1008,  1009,  1010,  1011,  1012,  1013,  1014,  1015,
+    1016,  1019,  1020,  1021,  1022,  1023,  1024,  1025,  1026,  1027,
+    1028,  1029,  1030,  1031,  1032,  1033,  1034,  1035,  1036,  1037,
+    1038,  1039,  1040,  1041,  1042,  1043,  1044,  1045,  1046,  1047,
+    1048,  1049,  1050,  1051,  1052,  1053,  1054,  1055,  1056,  1057,
+    1058,  1059,  1060,  1061,  1062,  1063,  1064,  1065,  1066,  1067,
+    1068,  1069,  1070,  1071,  1072,  1073,  1074,  1075,  1076,  1077,
+    1078,  1079,  1080,  1081,  1082,  1083,  1084,  1085,  1086,  1087,
+    1088,  1089,  1090,  1091,  1092,  1093,  1094,  1095,  1096,  1097,
+    1098,  1099,  1100,  1101,  1102,  1103,  1104,  1105,  1106,  1107,
+    1108,  1109,  1110,  1111,  1112,  1113,  1114,  1115,  1116,  1117,
+    1118,  1119,  1120,  1121,  1122,  1123,  1124,  1125,  1126,  1127,
+    1128,  1129,  1130,  1131,  1132,  1133,  1134,  1135,  1136,  1137,
+    1138,  1139,  1140,  1141,  1142,  1143,  1144,  1145,  1146,  1147,
+    1148,  1149,  1150,  1153,  1154,  1155,  1156,  1157,  1160,  1161,
+    1162,  1163,  1167,  1170,  1173,  1176,  1179,  1182,  1185,  1188,
+    1191,  1194,  1197,  1200,  1203,  1206,  1209,  1212,  1215,  1218,
+    1221,  1224,  1227,  1230,  1233,  1236,  1239,  1242,  1245,  1248,
+    1251,  1254,  1257,  1260,  1263,  1266,  1269,  1272,  1275,  1278,
+    1281,  1283,  1286,  1289,  1292,  1295,  1298,  1301,  1304,  1307,
+    1310,  1313,  1316,  1319,  1322,  1325,  1328,  1332,  1333,  1334,
+    1335,  1336,  1337,  1338,  1339,  1340,  1341,  1342,  1343,  1344,
+    1345,  1346,  1347,  1348,  1349,  1350,  1351,  1352,  1353,  1354,
+    1355,  1356,  1357,  1358,  1359,  1360,  1361,  1362,  1363,  1364,
+    1365,  1366,  1367,  1368,  1369,  1370,  1371,  1372,  1373,  1374,
+    1375,  1376,  1377,  1378,  1379,  1380,  1381,  1382,  1383,  1384,
+    1385,  1389,  1392,  1395,  1398,  1401,  1404,  1407,  1410,  1413,
+    1416,  1419,  1422,  1425,  1428,  1431,  1434,  1437,  1440,  1443,
+    1446,  1449,  1450,  1453,  1454,  1457,  1460,  1463,  1466,  1469,
+    1472,  1475,  1478,  1481,  1484,  1487,  1490,  1493,  1496,  1499,
+    1502,  1505,  1508,  1511,  1514,  1517,  1520,  1523,  1526,  1529,
+    1532,  1535,  1538,  1541,  1544,  1547,  1550,  1553,  1556,  1559,
+    1562,  1565,  1568,  1571,  1574,  1577,  1580,  1583,  1586,  1589,
+    1592,  1595,  1598,  1601,  1604,  1607,  1610,  1613,  1616,  1619,
+    1622,  1625,  1628,  1631,  1634,  1637,  1640,  1643,  1646,  1649,
+    1652,  1655,  1658,  1661,  1664,  1667,  1670,  1673,  1676,  1679,
+    1682,  1685,  1688,  1691,  1694,  1697,  1700,  1703,  1706,  1709,
+    1712,  1713,  1714,  1715,  1716,  1717,  1718,  1719,  1720,  1721,
+    1722,  1723,  1724,  1725,  1726,  1727,  1728,  1729,  1730,  1731,
+    1732,  1733,  1734,  1735,  1736,  1737,  1738,  1739,  1740,  1741,
+    1742,  1743,  1744,  1745,  1746,  1747,  1748,  1749,  1750,  1751,
+    1752,  1753,  1754,  1755,  1756,  1757,  1758,  1759,  1760,  1761,
+    1762,  1763,  1764,  1765,  1766,  1767,  1768,  1769,  1770,  1771,
+    1772,  1773,  1774,  1775,  1776,  1777,  1778,  1779,  1780,  1781,
+    1782,  1783,  1784,  1785,  1786,  1787,  1788,  1789,  1790,  1791,
+    1792,  1793,  1794,  1795,  1796,  1797,  1798,  1799,  1800,  1801,
+    1802,  1803,  1804,  1805,  1806,  1807,  1808,  1809,  1810,  1811,
+    1812,  1813,  1814,  1815,  1816,  1817,  1818
   };
 
   // Print the state stack on the debug stream.
@@ -9418,9 +9398,9 @@ namespace  ai  {
 
 #line 9 "grammar.gen.ypp"
 } //  ai 
-#line 9422 "grammar.gen.tab.cpp"
+#line 9402 "grammar.gen.tab.cpp"
 
-#line 1821 "grammar.gen.ypp"
+#line 1820 "grammar.gen.ypp"
 
 
 #ifdef PARSER_TEST

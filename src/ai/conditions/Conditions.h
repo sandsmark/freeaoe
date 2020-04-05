@@ -154,7 +154,7 @@ struct ResourceValue : public Condition
 {
     ResourceValue(const genie::ResourceType type, const RelOp comparison, const int targetValue, int playerId);
     ~ResourceValue() {
-        DBG << "Resource value dying" << m_type << m_targetValue;
+//        DBG << "Resource value dying" << m_type << m_targetValue;
     }
 
     void onPlayerResourceChanged(Player *player, const genie::ResourceType type, float newValue) override
