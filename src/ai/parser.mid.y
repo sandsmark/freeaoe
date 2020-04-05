@@ -17,10 +17,10 @@ conditions:
     | condition conditions { $$ = driver.createAndCondition($1, $2); } /*printf("got multiple conditions\n");*/ }
 
 condition:
-    OpenParen conditiontype CloseParen { /*printf("condition\n");*/ }
+    OpenParen conditiontype CloseParen { $$ = $2; /*printf("condition\n");*/ }
 
 conditiontype:
-    Not condition { /*printf("got negated condition\n");*/ }
+    Not condition { $$ = driver.createNotCondition($2); /*printf("got negated condition\n");*/ }
     | Or condition condition { $$ = driver.createOrCondition($2, $3); /*printf("got multiple or conditions\n"); */ }
     | fact { $$ = $1; /*printf("got fact\n"); */ }
 

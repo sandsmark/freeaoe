@@ -57,7 +57,7 @@ public:
 
     std::shared_ptr<Condition> createAndCondition(std::shared_ptr<Condition> &condition1, std::shared_ptr<Condition> &condition2);
     std::shared_ptr<Condition> createOrCondition(std::shared_ptr<Condition> &condition1, std::shared_ptr<Condition> &condition2);
-    std::shared_ptr<Condition> createNotCondition(const RelOp type, std::shared_ptr<Condition> &condition);
+    std::shared_ptr<Condition> createNotCondition(std::shared_ptr<Condition> &condition);
 
     std::shared_ptr<Action> createAction(const ActionType type);
     std::shared_ptr<Action> createAction(const ActionType type, const std::string &string);

@@ -348,9 +348,9 @@ std::shared_ptr<Condition> ScriptLoader::createOrCondition(std::shared_ptr<Condi
     return std::make_shared<Conditions::OrCondition>(condition1, condition2);
 }
 
-std::shared_ptr<Condition> ScriptLoader::createNotCondition(const RelOp type, std::shared_ptr<Condition> &condition)
+std::shared_ptr<Condition> ScriptLoader::createNotCondition(std::shared_ptr<Condition> &condition)
 {
-    WARN << "unimplemented not condition" << type;
+    WARN << "unimplemented not condition for" << condition.get();
     return nullptr;
 }
 
