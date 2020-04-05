@@ -289,3 +289,35 @@ void ai::Actions::SetGoal::execute(ai::AiRule *rule)
 {
     rule->m_owner->setGoal(m_goalId, m_number);
 }
+
+ai::Actions::Research::Research(const ai::ResearchItem research) :
+    m_researchId(researchId(research))
+{
+}
+
+ai::Actions::Research::Research(const ai::Age age) :
+    m_researchId(researchId(age))
+{
+}
+
+void ai::Actions::Research::execute(ai::AiRule *rule)
+{
+    Player *player = rule->m_owner->m_player;
+    if (!player->canAffordResearch(m_researchId)) {
+        WARN << "Tried to research without enough resources";
+        return;
+    }
+
+    const genie::Tech *tech = &player->civilization.tech(m_researchId);
+    const int researchLocation = tech->ResearchLocation;
+    for (::Unit *unit : player->findUnitsByTypeID(researchLocation)) {
+        if (!unit->isBuilding()) {
+            DBG << "Can only research at buildings for now, sorry";
+            continue;
+        }
+        ::Building *building = static_cast<::Building*>(unit);
+        building->enqueueProduceResearch(tech);
+        return;
+    }
+    WARN << "Failed to find a location to produce";
+}

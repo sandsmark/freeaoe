@@ -107,6 +107,17 @@ struct SetGoal : public Action
     const int m_number;
 };
 
+struct Research : public Action
+{
+    Research(const ResearchItem research);
+    Research(const Age age);
+
+    void execute(AiRule *rule) override;
+
+private:
+    const int m_researchId;
+};
+
 } //namespace Actions
 
 } //namespace ai

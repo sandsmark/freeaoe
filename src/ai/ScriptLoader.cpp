@@ -421,7 +421,13 @@ std::shared_ptr<Action> ScriptLoader::createAction(const ActionType type, const 
 
 std::shared_ptr<Action> ScriptLoader::createAction(const ActionType type, const Age age)
 {
-    WARN << "unimplemented action" << type << age;
+    switch(type) {
+    case ActionType::Research:
+        return std::make_shared<Actions::Research>(age);
+    default:
+        WARN << "unimplemented action" << type << age;
+        break;
+    }
     return nullptr;
 }
 
@@ -440,7 +446,13 @@ std::shared_ptr<Action> ScriptLoader::createAction(const ActionType type, const 
 
 std::shared_ptr<Action> ScriptLoader::createAction(const ActionType type, const ResearchItem research)
 {
-    WARN << "unimplemented action" << type << research;
+    switch(type) {
+    case ActionType::Research:
+        return std::make_shared<Actions::Research>(research);
+    default:
+        WARN << "unimplemented action" << type << research;
+        break;
+    }
     return nullptr;
 }
 
