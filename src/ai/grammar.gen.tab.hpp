@@ -1,8 +1,8 @@
-// A Bison parser, made by GNU Bison 3.4.2.
+// A Bison parser, made by GNU Bison 3.5.3.
 
 // Skeleton interface for Bison LALR(1) parsers in C++
 
-// Copyright (C) 2002-2015, 2018-2019 Free Software Foundation, Inc.
+// Copyright (C) 2002-2015, 2018-2020 Free Software Foundation, Inc.
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -43,7 +43,7 @@
 
 #ifndef YY_YY_GRAMMAR_GEN_TAB_HPP_INCLUDED
 # define YY_YY_GRAMMAR_GEN_TAB_HPP_INCLUDED
-// //                    "%code requires" blocks.
+// "%code requires" blocks.
 #line 21 "grammar.gen.ypp"
 
     #include "gen/enums.h"
@@ -109,28 +109,26 @@
 #endif
 # include "location.hh"
 #include <typeinfo>
-#ifndef YYASSERT
+#ifndef YY_ASSERT
 # include <cassert>
-# define YYASSERT assert
+# define YY_ASSERT assert
 #endif
 
 
-#ifndef YY_ATTRIBUTE
-# if (defined __GNUC__                                               \
-      && (2 < __GNUC__ || (__GNUC__ == 2 && 96 <= __GNUC_MINOR__)))  \
-     || defined __SUNPRO_C && 0x5110 <= __SUNPRO_C
-#  define YY_ATTRIBUTE(Spec) __attribute__(Spec)
+#ifndef YY_ATTRIBUTE_PURE
+# if defined __GNUC__ && 2 < __GNUC__ + (96 <= __GNUC_MINOR__)
+#  define YY_ATTRIBUTE_PURE __attribute__ ((__pure__))
 # else
-#  define YY_ATTRIBUTE(Spec) /* empty */
+#  define YY_ATTRIBUTE_PURE
 # endif
 #endif
 
-#ifndef YY_ATTRIBUTE_PURE
-# define YY_ATTRIBUTE_PURE   YY_ATTRIBUTE ((__pure__))
-#endif
-
 #ifndef YY_ATTRIBUTE_UNUSED
-# define YY_ATTRIBUTE_UNUSED YY_ATTRIBUTE ((__unused__))
+# if defined __GNUC__ && 2 < __GNUC__ + (7 <= __GNUC_MINOR__)
+#  define YY_ATTRIBUTE_UNUSED __attribute__ ((__unused__))
+# else
+#  define YY_ATTRIBUTE_UNUSED
+# endif
 #endif
 
 /* Suppress unused-variable warnings by "using" E.  */
@@ -142,11 +140,11 @@
 
 #if defined __GNUC__ && ! defined __ICC && 407 <= __GNUC__ * 100 + __GNUC_MINOR__
 /* Suppress an incorrect diagnostic about yylval being uninitialized.  */
-# define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN \
-    _Pragma ("GCC diagnostic push") \
-    _Pragma ("GCC diagnostic ignored \"-Wuninitialized\"")\
+# define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN                            \
+    _Pragma ("GCC diagnostic push")                                     \
+    _Pragma ("GCC diagnostic ignored \"-Wuninitialized\"")              \
     _Pragma ("GCC diagnostic ignored \"-Wmaybe-uninitialized\"")
-# define YY_IGNORE_MAYBE_UNINITIALIZED_END \
+# define YY_IGNORE_MAYBE_UNINITIALIZED_END      \
     _Pragma ("GCC diagnostic pop")
 #else
 # define YY_INITIAL_VALUE(Value) Value
@@ -159,6 +157,27 @@
 # define YY_INITIAL_VALUE(Value) /* Nothing. */
 #endif
 
+#if defined __cplusplus && defined __GNUC__ && ! defined __ICC && 6 <= __GNUC__
+# define YY_IGNORE_USELESS_CAST_BEGIN                          \
+    _Pragma ("GCC diagnostic push")                            \
+    _Pragma ("GCC diagnostic ignored \"-Wuseless-cast\"")
+# define YY_IGNORE_USELESS_CAST_END            \
+    _Pragma ("GCC diagnostic pop")
+#endif
+#ifndef YY_IGNORE_USELESS_CAST_BEGIN
+# define YY_IGNORE_USELESS_CAST_BEGIN
+# define YY_IGNORE_USELESS_CAST_END
+#endif
+
+# ifndef YY_CAST
+#  ifdef __cplusplus
+#   define YY_CAST(Type, Val) static_cast<Type> (Val)
+#   define YY_REINTERPRET_CAST(Type, Val) reinterpret_cast<Type> (Val)
+#  else
+#   define YY_CAST(Type, Val) ((Type) (Val))
+#   define YY_REINTERPRET_CAST(Type, Val) ((Type) (Val))
+#  endif
+# endif
 # ifndef YY_NULLPTR
 #  if defined __cplusplus
 #   if 201103L <= __cplusplus
@@ -178,7 +197,7 @@
 
 #line 9 "grammar.gen.ypp"
 namespace  ai  {
-#line 182 "grammar.gen.tab.hpp"
+#line 201 "grammar.gen.tab.hpp"
 
 
 
@@ -210,14 +229,14 @@ namespace  ai  {
     semantic_type (YY_RVREF (T) t)
       : yytypeid_ (&typeid (T))
     {
-      YYASSERT (sizeof (T) <= size);
+      YY_ASSERT (sizeof (T) <= size);
       new (yyas_<T> ()) T (YY_MOVE (t));
     }
 
     /// Destruction, allowed only if empty.
     ~semantic_type () YY_NOEXCEPT
     {
-      YYASSERT (!yytypeid_);
+      YY_ASSERT (!yytypeid_);
     }
 
 # if 201103L <= YY_CPLUSPLUS
@@ -226,8 +245,8 @@ namespace  ai  {
     T&
     emplace (U&&... u)
     {
-      YYASSERT (!yytypeid_);
-      YYASSERT (sizeof (T) <= size);
+      YY_ASSERT (!yytypeid_);
+      YY_ASSERT (sizeof (T) <= size);
       yytypeid_ = & typeid (T);
       return *new (yyas_<T> ()) T (std::forward <U>(u)...);
     }
@@ -237,8 +256,8 @@ namespace  ai  {
     T&
     emplace ()
     {
-      YYASSERT (!yytypeid_);
-      YYASSERT (sizeof (T) <= size);
+      YY_ASSERT (!yytypeid_);
+      YY_ASSERT (sizeof (T) <= size);
       yytypeid_ = & typeid (T);
       return *new (yyas_<T> ()) T ();
     }
@@ -248,8 +267,8 @@ namespace  ai  {
     T&
     emplace (const T& t)
     {
-      YYASSERT (!yytypeid_);
-      YYASSERT (sizeof (T) <= size);
+      YY_ASSERT (!yytypeid_);
+      YY_ASSERT (sizeof (T) <= size);
       yytypeid_ = & typeid (T);
       return *new (yyas_<T> ()) T (t);
     }
@@ -278,9 +297,9 @@ namespace  ai  {
     T&
     as () YY_NOEXCEPT
     {
-      YYASSERT (yytypeid_);
-      YYASSERT (*yytypeid_ == typeid (T));
-      YYASSERT (sizeof (T) <= size);
+      YY_ASSERT (yytypeid_);
+      YY_ASSERT (*yytypeid_ == typeid (T));
+      YY_ASSERT (sizeof (T) <= size);
       return *yyas_<T> ();
     }
 
@@ -289,9 +308,9 @@ namespace  ai  {
     const T&
     as () const YY_NOEXCEPT
     {
-      YYASSERT (yytypeid_);
-      YYASSERT (*yytypeid_ == typeid (T));
-      YYASSERT (sizeof (T) <= size);
+      YY_ASSERT (yytypeid_);
+      YY_ASSERT (*yytypeid_ == typeid (T));
+      YY_ASSERT (sizeof (T) <= size);
       return *yyas_<T> ();
     }
 
@@ -307,8 +326,8 @@ namespace  ai  {
     void
     swap (self_type& that) YY_NOEXCEPT
     {
-      YYASSERT (yytypeid_);
-      YYASSERT (*yytypeid_ == *that.yytypeid_);
+      YY_ASSERT (yytypeid_);
+      YY_ASSERT (*yytypeid_ == *that.yytypeid_);
       std::swap (as<T> (), that.as<T> ());
     }
 
@@ -659,6 +678,7 @@ namespace  ai  {
       // action
       char dummy21[sizeof (std::shared_ptr<ai::Action>)];
 
+      // conditions
       // condition
       // conditiontype
       // trueval
@@ -1505,7 +1525,7 @@ namespace  ai  {
     enum { empty_symbol = -2 };
 
     /// Internal symbol number for tokens (subsumed by symbol_number_type).
-    typedef unsigned short token_number_type;
+    typedef short token_number_type;
 
     /// A complete symbol.
     ///
@@ -2165,6 +2185,7 @@ switch (yytype)
         value.template destroy< std::shared_ptr<ai::Action> > ();
         break;
 
+      case 677: // conditions
       case 678: // condition
       case 679: // conditiontype
       case 754: // trueval
@@ -2339,9 +2360,6 @@ switch (yytype)
       /// \a empty when empty.
       symbol_number_type type_get () const YY_NOEXCEPT;
 
-      /// The token.
-      token_type token () const YY_NOEXCEPT;
-
       /// The symbol type.
       /// \a empty_symbol when empty.
       /// An int, not token_number_type, to be able to store empty_symbol.
@@ -2362,527 +2380,1085 @@ switch (yytype)
       symbol_type (int tok, location_type l)
         : super_type(token_type (tok), std::move (l))
       {
-        YYASSERT (tok == token::ScriptEnd || tok == token::OpenParen || tok == token::CloseParen || tok == token::RuleStart || tok == token::ConditionActionSeparator || tok == token::Not || tok == token::Or || tok == token::LoadIfDefined || tok == token::Else || tok == token::EndIf || tok == token::Space || tok == token::NewLine || tok == token::AgeDarkAge || tok == token::AgeFeudalAge || tok == token::AgeCastleAge || tok == token::AgeImperialAge || tok == token::AgePostImperialAge || tok == token::BuildingArcheryRange || tok == token::BuildingBarracks || tok == token::BuildingBlacksmith || tok == token::BuildingBombardTower || tok == token::BuildingCastle || tok == token::BuildingDock || tok == token::BuildingFarm || tok == token::BuildingFishTrap || tok == token::BuildingGuardTower || tok == token::BuildingHouse || tok == token::BuildingKeep || tok == token::BuildingLumberCamp || tok == token::BuildingMarket || tok == token::BuildingMill || tok == token::BuildingMiningCamp || tok == token::BuildingMonastery || tok == token::BuildingOutpost || tok == token::BuildingSiegeWorkshop || tok == token::BuildingStable || tok == token::BuildingTownCenter || tok == token::BuildingUniversity || tok == token::BuildingWatchTower || tok == token::BuildingWonder || tok == token::BuildingWatchTowerLine || tok == token::CivBriton || tok == token::CivByzantine || tok == token::CivCeltic || tok == token::CivChinese || tok == token::CivFrankish || tok == token::CivGothic || tok == token::CivJapanese || tok == token::CivMongol || tok == token::CivPersian || tok == token::CivSaracen || tok == token::CivTeutonic || tok == token::CivTurkish || tok == token::CivViking || tok == token::CivMyCiv || tok == token::CommodityFood || tok == token::CommodityStone || tok == token::CommodityWood || tok == token::CommodityGold || tok == token::DifficultyLevelEasiest || tok == token::DifficultyLevelEasy || tok == token::DifficultyLevelModerate || tok == token::DifficultyLevelHard || tok == token::DifficultyLevelHardest || tok == token::DifficultyParameterAbilityToDodgeMissiles || tok == token::DifficultyParameterAbilityToMaintainDistance || tok == token::DiplomaticStanceAlly || tok == token::DiplomaticStanceNeutral || tok == token::DiplomaticStanceEnemy || tok == token::MapSizeTypeTiny || tok == token::MapSizeTypeSmall || tok == token::MapSizeTypeMedium || tok == token::MapSizeTypeNormal || tok == token::MapSizeTypeLarge || tok == token::MapSizeTypeGiant || tok == token::MapTypeNameArabia || tok == token::MapTypeNameArchipelago || tok == token::MapTypeNameBaltic || tok == token::MapTypeNameBlackForest || tok == token::MapTypeNameCoastal || tok == token::MapTypeNameContinental || tok == token::MapTypeNameCraterLake || tok == token::MapTypeNameFortress || tok == token::MapTypeNameGoldRush || tok == token::MapTypeNameHighland || tok == token::MapTypeNameIslands || tok == token::MapTypeNameMediterranean || tok == token::MapTypeNameMigration || tok == token::MapTypeNameRivers || tok == token::MapTypeNameTeamIslands || tok == token::MapTypeNameScenarioMap || tok == token::PlayerNumberTypeAnyAlly || tok == token::PlayerNumberTypeAnyComputer || tok == token::PlayerNumberTypeAnyComputerAlly || tok == token::PlayerNumberTypeAnyComputerEnemy || tok == token::PlayerNumberTypeAnyComputerNeutral || tok == token::PlayerNumberTypeAnyEnemy || tok == token::PlayerNumberTypeAnyHuman || tok == token::PlayerNumberTypeAnyHumanAlly || tok == token::PlayerNumberTypeAnyHumanEnemy || tok == token::PlayerNumberTypeAnyHumanNeutral || tok == token::PlayerNumberTypeAnyNeutral || tok == token::PlayerNumberTypeEveryAlly || tok == token::PlayerNumberTypeEveryComputer || tok == token::PlayerNumberTypeEveryEnemy || tok == token::PlayerNumberTypeEveryHuman || tok == token::PlayerNumberTypeEveryNeutral || tok == token::PlayerNumberTypeMyPlayerNumber || tok == token::RelOpLessThan || tok == token::RelOpLessOrEqual || tok == token::RelOpGreaterThan || tok == token::RelOpGreaterOrEqual || tok == token::RelOpEqual || tok == token::RelOpNotEqual || tok == token::ResearchItemRiArbalest || tok == token::ResearchItemRiCrossbow || tok == token::ResearchItemRiEliteSkirmisher || tok == token::ResearchItemRiHandCannon || tok == token::ResearchItemRiHeavyCavalryArcher || tok == token::ResearchItemRiChampion || tok == token::ResearchItemRiEliteEagleWarrior || tok == token::ResearchItemRiHalberdier || tok == token::ResearchItemRiLongSwordsman || tok == token::ResearchItemRiManAtArms || tok == token::ResearchItemRiParthianTactics || tok == token::ResearchItemRiPikeman || tok == token::ResearchItemRiSquires || tok == token::ResearchItemRiThumbRing || tok == token::ResearchItemRiTracking || tok == token::ResearchItemRiTwoHandedSwordsman || tok == token::ResearchItemRiBlastFurnace || tok == token::ResearchItemRiBodkinArrow || tok == token::ResearchItemRiBracer || tok == token::ResearchItemRiChainBarding || tok == token::ResearchItemRiChainMail || tok == token::ResearchItemRiFletching || tok == token::ResearchItemRiForging || tok == token::ResearchItemRiIronCasting || tok == token::ResearchItemRiLeatherArcherArmor || tok == token::ResearchItemRiPaddedArcherArmor || tok == token::ResearchItemRiPlateBarding || tok == token::ResearchItemRiPlateMail || tok == token::ResearchItemRiRingArcherArmor || tok == token::ResearchItemRiScaleBarding || tok == token::ResearchItemRiScaleMail || tok == token::ResearchItemRiConscription || tok == token::ResearchItemRiHoardings || tok == token::ResearchItemRiSappers || tok == token::ResearchItemRiEliteBerserk || tok == token::ResearchItemRiEliteCataphract || tok == token::ResearchItemRiEliteChuKoNu || tok == token::ResearchItemRiEliteHuskarl || tok == token::ResearchItemRiEliteJanissary || tok == token::ResearchItemRiEliteLongbowman || tok == token::ResearchItemRiEliteMameluke || tok == token::ResearchItemRiEliteMangudai || tok == token::ResearchItemRiEliteSamurai || tok == token::ResearchItemRiEliteTeutonicKnight || tok == token::ResearchItemRiEliteThrowingAxeman || tok == token::ResearchItemRiEliteWarElephant || tok == token::ResearchItemRiEliteWoadRaider || tok == token::ResearchItemRiMyUniqueEliteUnit || tok == token::ResearchItemRiMyUniqueResearch || tok == token::ResearchItemRiCannonGalleon || tok == token::ResearchItemRiCareening || tok == token::ResearchItemRiDeckGuns || tok == token::ResearchItemRiDryDock || tok == token::ResearchItemRiEliteLongboat || tok == token::ResearchItemRiFastFireShip || tok == token::ResearchItemRiGalleon || tok == token::ResearchItemRiHeavyDemolitionShip || tok == token::ResearchItemRiShipwright || tok == token::ResearchItemRiWarGalley || tok == token::ResearchItemRiBowSaw || tok == token::ResearchItemRiDoubleBitAxe || tok == token::ResearchItemRiTwoManSaw || tok == token::ResearchItemRiBanking || tok == token::ResearchItemRiCaravan || tok == token::ResearchItemRiCartography || tok == token::ResearchItemRiCoinage || tok == token::ResearchItemRiGuilds || tok == token::ResearchItemRiCropRotation || tok == token::ResearchItemRiHeavyPlow || tok == token::ResearchItemRiHorseCollar || tok == token::ResearchItemRiGoldMining || tok == token::ResearchItemRiGoldShaftMining || tok == token::ResearchItemRiStoneMining || tok == token::ResearchItemRiStoneShaftMining || tok == token::ResearchItemRiAtonement || tok == token::ResearchItemRiBlockPrinting || tok == token::ResearchItemRiFaith || tok == token::ResearchItemRiFervor || tok == token::ResearchItemRiHerbalMedicine || tok == token::ResearchItemRiHeresy || tok == token::ResearchItemRiIllumination || tok == token::ResearchItemRiRedemption || tok == token::ResearchItemRiSanctity || tok == token::ResearchItemRiTheocracy || tok == token::ResearchItemRiBombardCannon || tok == token::ResearchItemRiCappedRam || tok == token::ResearchItemRiHeavyScorpion || tok == token::ResearchItemRiOnager || tok == token::ResearchItemRiScorpion || tok == token::ResearchItemRiSiegeOnager || tok == token::ResearchItemRiSiegeRam || tok == token::ResearchItemRiBloodlines || tok == token::ResearchItemRiCavalier || tok == token::ResearchItemRiHeavyCamel || tok == token::ResearchItemRiHusbandry || tok == token::ResearchItemRiHussar || tok == token::ResearchItemRiLightCavalry || tok == token::ResearchItemRiPaladin || tok == token::ResearchItemRiHandCart || tok == token::ResearchItemRiLoom || tok == token::ResearchItemRiTownPatrol || tok == token::ResearchItemRiTownWatch || tok == token::ResearchItemRiWheelBarrow || tok == token::ResearchItemRiArchitecture || tok == token::ResearchItemRiBallistics || tok == token::ResearchItemRiBombardTower || tok == token::ResearchItemRiChemistry || tok == token::ResearchItemRiFortifiedWall || tok == token::ResearchItemRiGuardTower || tok == token::ResearchItemRiHeatedShot || tok == token::ResearchItemRiKeep || tok == token::ResearchItemRiMasonry || tok == token::ResearchItemRiMurderHoles || tok == token::ResearchItemRiSiegeEngineers || tok == token::ResearchItemRiStonecutting || tok == token::ResearchItemMyUniqueUnitUpgrade || tok == token::ResearchItemMyUniqueResearch || tok == token::StartingResourcesTypeLowResources || tok == token::StartingResourcesTypeMediumResources || tok == token::StartingResourcesTypeHighResources || tok == token::StrategicNumberNameSnPercentCivilianExplorers || tok == token::StrategicNumberNameSnPercentCivilianBuilders || tok == token::StrategicNumberNameSnPercentCivilianGatherers || tok == token::StrategicNumberNameSnCapCivilianExplorers || tok == token::StrategicNumberNameSnCapCivilianBuilders || tok == token::StrategicNumberNameSnCapCivilianGatherers || tok == token::StrategicNumberNameSnMinimumAttackGroupSize || tok == token::StrategicNumberNameSnTotalNumberExplorers || tok == token::StrategicNumberNameSnPercentEnemySightedResponse || tok == token::StrategicNumberNameSnEnemySightedResponseDistance || tok == token::StrategicNumberNameSnSentryDistance || tok == token::StrategicNumberNameSnRelicReturnDistance || tok == token::StrategicNumberNameSnMinimumDefendGroupSize || tok == token::StrategicNumberNameSnMaximumAttackGroupSize || tok == token::StrategicNumberNameSnMaximumDefendGroupSize || tok == token::StrategicNumberNameSnMinimumPeaceLikeLevel || tok == token::StrategicNumberNameSnPercentExplorationRequired || tok == token::StrategicNumberNameSnZeroPriorityDistance || tok == token::StrategicNumberNameSnMinimumCivilianExplorers || tok == token::StrategicNumberNameSnNumberAttackGroups || tok == token::StrategicNumberNameSnNumberDefendGroups || tok == token::StrategicNumberNameSnAttackGroupGatherSpacing || tok == token::StrategicNumberNameSnNumberExploreGroups || tok == token::StrategicNumberNameSnMinimumExploreGroupSize || tok == token::StrategicNumberNameSnMaximumExploreGroupSize || tok == token::StrategicNumberNameSnGoldDefendPriority || tok == token::StrategicNumberNameSnStoneDefendPriority || tok == token::StrategicNumberNameSnForageDefendPriority || tok == token::StrategicNumberNameSnRelicDefendPriority || tok == token::StrategicNumberNameSnTownDefendPriority || tok == token::StrategicNumberNameSnDefenseDistance || tok == token::StrategicNumberNameSnNumberBoatAttackGroups || tok == token::StrategicNumberNameSnMinimumBoatAttackGroupSize || tok == token::StrategicNumberNameSnMaximumBoatAttackGroupSize || tok == token::StrategicNumberNameSnNumberBoatExploreGroups || tok == token::StrategicNumberNameSnMinimumBoatExploreGroupSize || tok == token::StrategicNumberNameSnMaximumBoatExploreGroupSize || tok == token::StrategicNumberNameSnNumberBoatDefendGroups || tok == token::StrategicNumberNameSnMinimumBoatDefendGroupSize || tok == token::StrategicNumberNameSnMaximumBoatDefendGroupSize || tok == token::StrategicNumberNameSnDockDefendPriority || tok == token::StrategicNumberNameSnSentryDistanceVariation || tok == token::StrategicNumberNameSnMinimumTownSize || tok == token::StrategicNumberNameSnMaximumTownSize || tok == token::StrategicNumberNameSnGroupCommanderSelectionMethod || tok == token::StrategicNumberNameSnConsecutiveIdleUnitLimit || tok == token::StrategicNumberNameSnTargetEvaluationDistance || tok == token::StrategicNumberNameSnTargetEvaluationHitpoints || tok == token::StrategicNumberNameSnTargetEvaluationDamageCapability || tok == token::StrategicNumberNameSnTargetEvaluationKills || tok == token::StrategicNumberNameSnTargetEvaluationAllyProximity || tok == token::StrategicNumberNameSnTargetEvaluationRof || tok == token::StrategicNumberNameSnTargetEvaluationRandomness || tok == token::StrategicNumberNameSnCampMaxDistance || tok == token::StrategicNumberNameSnMillMaxDistance || tok == token::StrategicNumberNameSnTargetEvaluationAttackAttempts || tok == token::StrategicNumberNameSnTargetEvaluationRange || tok == token::StrategicNumberNameSnDefendOverlapDistance || tok == token::StrategicNumberNameSnScaleMinimumAttackGroupSize || tok == token::StrategicNumberNameSnScaleMaximumAttackGroupSize || tok == token::StrategicNumberNameSnAttackGroupSizeRandomness || tok == token::StrategicNumberNameSnScalingFrequency || tok == token::StrategicNumberNameSnMaximumGaiaAttackResponse || tok == token::StrategicNumberNameSnBuildFrequency || tok == token::StrategicNumberNameSnAttackSeparationTimeRandomness || tok == token::StrategicNumberNameSnAttackIntelligence || tok == token::StrategicNumberNameSnInitialAttackDelay || tok == token::StrategicNumberNameSnSaveScenarioInformation || tok == token::StrategicNumberNameSnSpecialAttackType1 || tok == token::StrategicNumberNameSnSpecialAttackInfluence1 || tok == token::StrategicNumberNameSnMinimumWaterBodySizeForDock || tok == token::StrategicNumberNameSnNumberBuildAttemptsBeforeSkip || tok == token::StrategicNumberNameSnMaxSkipsPerAttempt || tok == token::StrategicNumberNameSnFoodGathererPercentage || tok == token::StrategicNumberNameSnGoldGathererPercentage || tok == token::StrategicNumberNameSnStoneGathererPercentage || tok == token::StrategicNumberNameSnWoodGathererPercentage || tok == token::StrategicNumberNameSnTargetEvaluationContinent || tok == token::StrategicNumberNameSnTargetEvaluationSiegeWeapon || tok == token::StrategicNumberNameSnGroupLeaderDefenseDistance || tok == token::StrategicNumberNameSnInitialAttackDelayType || tok == token::StrategicNumberNameSnBlotExplorationMap || tok == token::StrategicNumberNameSnBlotSize || tok == token::StrategicNumberNameSnIntelligentGathering || tok == token::StrategicNumberNameSnTaskUngroupedSoldiers || tok == token::StrategicNumberNameSnTargetEvaluationBoat || tok == token::StrategicNumberNameSnNumberEnemyObjectsRequired || tok == token::StrategicNumberNameSnNumberMaxSkipCycles || tok == token::StrategicNumberNameSnRetaskGatherAmount || tok == token::StrategicNumberNameSnMaxRetaskGatherAmount || tok == token::StrategicNumberNameSnMaxBuildPlanGathererPercentage || tok == token::StrategicNumberNameSnFoodDropsiteDistance || tok == token::StrategicNumberNameSnWoodDropsiteDistance || tok == token::StrategicNumberNameSnStoneDropsiteDistance || tok == token::StrategicNumberNameSnGoldDropsiteDistance || tok == token::StrategicNumberNameSnInitialExplorationRequired || tok == token::StrategicNumberNameSnRandomPlacementFactor || tok == token::StrategicNumberNameSnRequiredForestTiles || tok == token::StrategicNumberNameSnAttackDiplomacyImpact || tok == token::StrategicNumberNameSnPercentHalfExploration || tok == token::StrategicNumberNameSnTargetEvaluationTimeKillRatio || tok == token::StrategicNumberNameSnTargetEvaluationInProgress || tok == token::StrategicNumberNameSnAttackWinningPlayer || tok == token::StrategicNumberNameSnCoopShareInformation || tok == token::StrategicNumberNameSnAttackWinningPlayerFactor || tok == token::StrategicNumberNameSnCoopShareAttacking || tok == token::StrategicNumberNameSnCoopShareAttackingInterval || tok == token::StrategicNumberNameSnPercentageExploreExterminators || tok == token::StrategicNumberNameSnTrackPlayerHistory || tok == token::StrategicNumberNameSnMinimumDropsiteBuffer || tok == token::StrategicNumberNameSnUseByTypeMaxGathering || tok == token::StrategicNumberNameSnMinimumBoarHuntGroupSize || tok == token::StrategicNumberNameSnMinimumAmountForTrading || tok == token::StrategicNumberNameSnEasiestReactionPercentage || tok == token::StrategicNumberNameSnEasierReactionPercentage || tok == token::StrategicNumberNameSnHitsBeforeAllianceChange || tok == token::StrategicNumberNameSnAllowCivilianDefense || tok == token::StrategicNumberNameSnNumberForwardBuilders || tok == token::StrategicNumberNameSnPercentAttackSoldiers || tok == token::StrategicNumberNameSnPercentAttackBoats || tok == token::StrategicNumberNameSnDoNotScaleForDifficultyLevel || tok == token::StrategicNumberNameSnGroupFormDistance || tok == token::StrategicNumberNameSnIgnoreAttackGroupUnderAttack || tok == token::StrategicNumberNameSnGatherDefenseUnits || tok == token::StrategicNumberNameSnMaximumWoodDropDistance || tok == token::StrategicNumberNameSnMaximumFoodDropDistance || tok == token::StrategicNumberNameSnMaximumHuntDropDistance || tok == token::StrategicNumberNameSnMaximumFishBoatDropDistance || tok == token::StrategicNumberNameSnMaximumGoldDropDistance || tok == token::StrategicNumberNameSnMaximumStoneDropDistance || tok == token::StrategicNumberNameSnGatherIdleSoldiersAtCenter || tok == token::StrategicNumberNameSnGarrisonRams || tok == token::UnitArbalest || tok == token::UnitArcher || tok == token::UnitCavalryArcher || tok == token::UnitCrossbowman || tok == token::UnitEliteSkirmisher || tok == token::UnitHandCannoneer || tok == token::UnitHeavyCavalryArcher || tok == token::UnitSkirmisher || tok == token::UnitChampion || tok == token::UnitEagleWarrior || tok == token::UnitEliteEagleWarrior || tok == token::UnitHalberdier || tok == token::UnitLongSwordsman || tok == token::UnitManAtArms || tok == token::UnitMilitiaman || tok == token::UnitPikeman || tok == token::UnitSpearman || tok == token::UnitTwoHandedSwordsman || tok == token::UnitBerserk || tok == token::UnitCataphract || tok == token::UnitChuKoNu || tok == token::UnitConquistador || tok == token::UnitEliteBerserk || tok == token::UnitEliteCataphract || tok == token::UnitEliteChuKoNu || tok == token::UnitEliteConquistador || tok == token::UnitEliteHuskarl || tok == token::UnitEliteJaguarWarrior || tok == token::UnitEliteJanissary || tok == token::UnitEliteLongbowman || tok == token::UnitEliteMameluke || tok == token::UnitEliteMangudai || tok == token::UnitElitePlumedArcher || tok == token::UnitEliteSamurai || tok == token::UnitEliteTarkan || tok == token::UnitEliteTeutonicKnight || tok == token::UnitEliteThrowingAxeman || tok == token::UnitEliteWarElephant || tok == token::UnitEliteWarWagon || tok == token::UnitEliteWoadRaider || tok == token::UnitHuskarl || tok == token::UnitJaguarWarrior || tok == token::UnitJanissary || tok == token::UnitLongbowman || tok == token::UnitMameluke || tok == token::UnitMangudai || tok == token::UnitPetard || tok == token::UnitPlumedArcher || tok == token::UnitSamurai || tok == token::UnitTarkan || tok == token::UnitTeutonicKnight || tok == token::UnitThrowingAxeman || tok == token::UnitTrebuchet || tok == token::UnitWarElephant || tok == token::UnitWarWagon || tok == token::UnitWoadRaider || tok == token::UnitCannonGalleon || tok == token::UnitDemolitionShip || tok == token::UnitEliteCannonGalleon || tok == token::UnitEliteLongboat || tok == token::UnitEliteTurtleShip || tok == token::UnitFastFireShip || tok == token::UnitFireShip || tok == token::UnitFishingShip || tok == token::UnitGalleon || tok == token::UnitGalley || tok == token::UnitHeavyDemolitionShip || tok == token::UnitLongboat || tok == token::UnitTradeCog || tok == token::UnitTransportShip || tok == token::UnitTurtleShip || tok == token::UnitWarGalley || tok == token::UnitTradeCart || tok == token::UnitMissionary || tok == token::UnitMonk || tok == token::UnitBatteringRam || tok == token::UnitBombardCannon || tok == token::UnitCappedRam || tok == token::UnitHeavyScorpion || tok == token::UnitMangonel || tok == token::UnitOnager || tok == token::UnitScorpion || tok == token::UnitSiegeOnager || tok == token::UnitSiegeRam || tok == token::UnitCamel || tok == token::UnitCavalier || tok == token::UnitHeavyCamel || tok == token::UnitHussar || tok == token::UnitKnight || tok == token::UnitLightCavalry || tok == token::UnitPaladin || tok == token::UnitScoutCavalry || tok == token::UnitVillager || tok == token::UnitArcherLine || tok == token::UnitCavalryArcherLine || tok == token::UnitSkirmisherLine || tok == token::UnitEagleWarriorLine || tok == token::UnitMilitiamanLine || tok == token::UnitSpearmanLine || tok == token::UnitBerserkLine || tok == token::UnitCataphractLine || tok == token::UnitChuKoNuLine || tok == token::UnitConquistadorLine || tok == token::UnitHuskarlLine || tok == token::UnitJaguarWarriorLine || tok == token::UnitJanissaryLine || tok == token::UnitLongbowmanLine || tok == token::UnitMamelukeLine || tok == token::UnitMangudaiLine || tok == token::UnitPlumedArcherLine || tok == token::UnitSamuraiLine || tok == token::UnitTarkanLine || tok == token::UnitTeutonicKnightLine || tok == token::UnitThrowingAxemanLine || tok == token::UnitWarElephantLine || tok == token::UnitWarWagonLine || tok == token::UnitWoadRaiderLine || tok == token::UnitCannonGalleonLine || tok == token::UnitDemolitionShipLine || tok == token::UnitFireShipLine || tok == token::UnitGalleyLine || tok == token::UnitLongboatLine || tok == token::UnitTurtleShipLine || tok == token::UnitBatteringRamLine || tok == token::UnitMangonelLine || tok == token::UnitScorpionLine || tok == token::UnitCamelLine || tok == token::UnitKnightLine || tok == token::UnitScoutCavalryLine || tok == token::UnitMyEliteUniqueUnit || tok == token::UnitMyUniqueUnit || tok == token::UnitMyUniqueUnitLine || tok == token::VictoryConditionNameStandard || tok == token::VictoryConditionNameConquest || tok == token::VictoryConditionNameTimeLimit || tok == token::VictoryConditionNameScore || tok == token::VictoryConditionNameCustom || tok == token::WallTypeFortifiedWall || tok == token::WallTypePalisadeWall || tok == token::WallTypeStoneWall || tok == token::WallTypeStoneWallLine);
+        YY_ASSERT (tok == token::ScriptEnd || tok == token::OpenParen || tok ==
+                token::CloseParen || tok == token::RuleStart || tok ==
+                token::ConditionActionSeparator || tok == token::Not || tok ==
+                token::Or || tok == token::LoadIfDefined || tok == token::Else
+                || tok == token::EndIf || tok == token::Space || tok ==
+                token::NewLine || tok == token::AgeDarkAge || tok ==
+                token::AgeFeudalAge || tok == token::AgeCastleAge || tok ==
+                token::AgeImperialAge || tok == token::AgePostImperialAge ||
+                tok == token::BuildingArcheryRange || tok ==
+                token::BuildingBarracks || tok == token::BuildingBlacksmith ||
+                tok == token::BuildingBombardTower || tok ==
+                token::BuildingCastle || tok == token::BuildingDock || tok ==
+                token::BuildingFarm || tok == token::BuildingFishTrap || tok ==
+                token::BuildingGuardTower || tok == token::BuildingHouse || tok
+                == token::BuildingKeep || tok == token::BuildingLumberCamp ||
+                tok == token::BuildingMarket || tok == token::BuildingMill ||
+                tok == token::BuildingMiningCamp || tok ==
+                token::BuildingMonastery || tok == token::BuildingOutpost ||
+                tok == token::BuildingSiegeWorkshop || tok ==
+                token::BuildingStable || tok == token::BuildingTownCenter ||
+                tok == token::BuildingUniversity || tok ==
+                token::BuildingWatchTower || tok == token::BuildingWonder ||
+                tok == token::BuildingWatchTowerLine || tok == token::CivBriton
+                || tok == token::CivByzantine || tok == token::CivCeltic || tok
+                == token::CivChinese || tok == token::CivFrankish || tok ==
+                token::CivGothic || tok == token::CivJapanese || tok ==
+                token::CivMongol || tok == token::CivPersian || tok ==
+                token::CivSaracen || tok == token::CivTeutonic || tok ==
+                token::CivTurkish || tok == token::CivViking || tok ==
+                token::CivMyCiv || tok == token::CommodityFood || tok ==
+                token::CommodityStone || tok == token::CommodityWood || tok ==
+                token::CommodityGold || tok == token::DifficultyLevelEasiest ||
+                tok == token::DifficultyLevelEasy || tok ==
+                token::DifficultyLevelModerate || tok ==
+                token::DifficultyLevelHard || tok ==
+                token::DifficultyLevelHardest || tok ==
+                token::DifficultyParameterAbilityToDodgeMissiles || tok ==
+                token::DifficultyParameterAbilityToMaintainDistance || tok ==
+                token::DiplomaticStanceAlly || tok ==
+                token::DiplomaticStanceNeutral || tok ==
+                token::DiplomaticStanceEnemy || tok == token::MapSizeTypeTiny
+                || tok == token::MapSizeTypeSmall || tok ==
+                token::MapSizeTypeMedium || tok == token::MapSizeTypeNormal ||
+                tok == token::MapSizeTypeLarge || tok ==
+                token::MapSizeTypeGiant || tok == token::MapTypeNameArabia ||
+                tok == token::MapTypeNameArchipelago || tok ==
+                token::MapTypeNameBaltic || tok ==
+                token::MapTypeNameBlackForest || tok ==
+                token::MapTypeNameCoastal || tok ==
+                token::MapTypeNameContinental || tok ==
+                token::MapTypeNameCraterLake || tok ==
+                token::MapTypeNameFortress || tok == token::MapTypeNameGoldRush
+                || tok == token::MapTypeNameHighland || tok ==
+                token::MapTypeNameIslands || tok ==
+                token::MapTypeNameMediterranean || tok ==
+                token::MapTypeNameMigration || tok == token::MapTypeNameRivers
+                || tok == token::MapTypeNameTeamIslands || tok ==
+                token::MapTypeNameScenarioMap || tok ==
+                token::PlayerNumberTypeAnyAlly || tok ==
+                token::PlayerNumberTypeAnyComputer || tok ==
+                token::PlayerNumberTypeAnyComputerAlly || tok ==
+                token::PlayerNumberTypeAnyComputerEnemy || tok ==
+                token::PlayerNumberTypeAnyComputerNeutral || tok ==
+                token::PlayerNumberTypeAnyEnemy || tok ==
+                token::PlayerNumberTypeAnyHuman || tok ==
+                token::PlayerNumberTypeAnyHumanAlly || tok ==
+                token::PlayerNumberTypeAnyHumanEnemy || tok ==
+                token::PlayerNumberTypeAnyHumanNeutral || tok ==
+                token::PlayerNumberTypeAnyNeutral || tok ==
+                token::PlayerNumberTypeEveryAlly || tok ==
+                token::PlayerNumberTypeEveryComputer || tok ==
+                token::PlayerNumberTypeEveryEnemy || tok ==
+                token::PlayerNumberTypeEveryHuman || tok ==
+                token::PlayerNumberTypeEveryNeutral || tok ==
+                token::PlayerNumberTypeMyPlayerNumber || tok ==
+                token::RelOpLessThan || tok == token::RelOpLessOrEqual || tok
+                == token::RelOpGreaterThan || tok == token::RelOpGreaterOrEqual
+                || tok == token::RelOpEqual || tok == token::RelOpNotEqual ||
+                tok == token::ResearchItemRiArbalest || tok ==
+                token::ResearchItemRiCrossbow || tok ==
+                token::ResearchItemRiEliteSkirmisher || tok ==
+                token::ResearchItemRiHandCannon || tok ==
+                token::ResearchItemRiHeavyCavalryArcher || tok ==
+                token::ResearchItemRiChampion || tok ==
+                token::ResearchItemRiEliteEagleWarrior || tok ==
+                token::ResearchItemRiHalberdier || tok ==
+                token::ResearchItemRiLongSwordsman || tok ==
+                token::ResearchItemRiManAtArms || tok ==
+                token::ResearchItemRiParthianTactics || tok ==
+                token::ResearchItemRiPikeman || tok ==
+                token::ResearchItemRiSquires || tok ==
+                token::ResearchItemRiThumbRing || tok ==
+                token::ResearchItemRiTracking || tok ==
+                token::ResearchItemRiTwoHandedSwordsman || tok ==
+                token::ResearchItemRiBlastFurnace || tok ==
+                token::ResearchItemRiBodkinArrow || tok ==
+                token::ResearchItemRiBracer || tok ==
+                token::ResearchItemRiChainBarding || tok ==
+                token::ResearchItemRiChainMail || tok ==
+                token::ResearchItemRiFletching || tok ==
+                token::ResearchItemRiForging || tok ==
+                token::ResearchItemRiIronCasting || tok ==
+                token::ResearchItemRiLeatherArcherArmor || tok ==
+                token::ResearchItemRiPaddedArcherArmor || tok ==
+                token::ResearchItemRiPlateBarding || tok ==
+                token::ResearchItemRiPlateMail || tok ==
+                token::ResearchItemRiRingArcherArmor || tok ==
+                token::ResearchItemRiScaleBarding || tok ==
+                token::ResearchItemRiScaleMail || tok ==
+                token::ResearchItemRiConscription || tok ==
+                token::ResearchItemRiHoardings || tok ==
+                token::ResearchItemRiSappers || tok ==
+                token::ResearchItemRiEliteBerserk || tok ==
+                token::ResearchItemRiEliteCataphract || tok ==
+                token::ResearchItemRiEliteChuKoNu || tok ==
+                token::ResearchItemRiEliteHuskarl || tok ==
+                token::ResearchItemRiEliteJanissary || tok ==
+                token::ResearchItemRiEliteLongbowman || tok ==
+                token::ResearchItemRiEliteMameluke || tok ==
+                token::ResearchItemRiEliteMangudai || tok ==
+                token::ResearchItemRiEliteSamurai || tok ==
+                token::ResearchItemRiEliteTeutonicKnight || tok ==
+                token::ResearchItemRiEliteThrowingAxeman || tok ==
+                token::ResearchItemRiEliteWarElephant || tok ==
+                token::ResearchItemRiEliteWoadRaider || tok ==
+                token::ResearchItemRiMyUniqueEliteUnit || tok ==
+                token::ResearchItemRiMyUniqueResearch || tok ==
+                token::ResearchItemRiCannonGalleon || tok ==
+                token::ResearchItemRiCareening || tok ==
+                token::ResearchItemRiDeckGuns || tok ==
+                token::ResearchItemRiDryDock || tok ==
+                token::ResearchItemRiEliteLongboat || tok ==
+                token::ResearchItemRiFastFireShip || tok ==
+                token::ResearchItemRiGalleon || tok ==
+                token::ResearchItemRiHeavyDemolitionShip || tok ==
+                token::ResearchItemRiShipwright || tok ==
+                token::ResearchItemRiWarGalley || tok ==
+                token::ResearchItemRiBowSaw || tok ==
+                token::ResearchItemRiDoubleBitAxe || tok ==
+                token::ResearchItemRiTwoManSaw || tok ==
+                token::ResearchItemRiBanking || tok ==
+                token::ResearchItemRiCaravan || tok ==
+                token::ResearchItemRiCartography || tok ==
+                token::ResearchItemRiCoinage || tok ==
+                token::ResearchItemRiGuilds || tok ==
+                token::ResearchItemRiCropRotation || tok ==
+                token::ResearchItemRiHeavyPlow || tok ==
+                token::ResearchItemRiHorseCollar || tok ==
+                token::ResearchItemRiGoldMining || tok ==
+                token::ResearchItemRiGoldShaftMining || tok ==
+                token::ResearchItemRiStoneMining || tok ==
+                token::ResearchItemRiStoneShaftMining || tok ==
+                token::ResearchItemRiAtonement || tok ==
+                token::ResearchItemRiBlockPrinting || tok ==
+                token::ResearchItemRiFaith || tok ==
+                token::ResearchItemRiFervor || tok ==
+                token::ResearchItemRiHerbalMedicine || tok ==
+                token::ResearchItemRiHeresy || tok ==
+                token::ResearchItemRiIllumination || tok ==
+                token::ResearchItemRiRedemption || tok ==
+                token::ResearchItemRiSanctity || tok ==
+                token::ResearchItemRiTheocracy || tok ==
+                token::ResearchItemRiBombardCannon || tok ==
+                token::ResearchItemRiCappedRam || tok ==
+                token::ResearchItemRiHeavyScorpion || tok ==
+                token::ResearchItemRiOnager || tok ==
+                token::ResearchItemRiScorpion || tok ==
+                token::ResearchItemRiSiegeOnager || tok ==
+                token::ResearchItemRiSiegeRam || tok ==
+                token::ResearchItemRiBloodlines || tok ==
+                token::ResearchItemRiCavalier || tok ==
+                token::ResearchItemRiHeavyCamel || tok ==
+                token::ResearchItemRiHusbandry || tok ==
+                token::ResearchItemRiHussar || tok ==
+                token::ResearchItemRiLightCavalry || tok ==
+                token::ResearchItemRiPaladin || tok ==
+                token::ResearchItemRiHandCart || tok ==
+                token::ResearchItemRiLoom || tok ==
+                token::ResearchItemRiTownPatrol || tok ==
+                token::ResearchItemRiTownWatch || tok ==
+                token::ResearchItemRiWheelBarrow || tok ==
+                token::ResearchItemRiArchitecture || tok ==
+                token::ResearchItemRiBallistics || tok ==
+                token::ResearchItemRiBombardTower || tok ==
+                token::ResearchItemRiChemistry || tok ==
+                token::ResearchItemRiFortifiedWall || tok ==
+                token::ResearchItemRiGuardTower || tok ==
+                token::ResearchItemRiHeatedShot || tok ==
+                token::ResearchItemRiKeep || tok ==
+                token::ResearchItemRiMasonry || tok ==
+                token::ResearchItemRiMurderHoles || tok ==
+                token::ResearchItemRiSiegeEngineers || tok ==
+                token::ResearchItemRiStonecutting || tok ==
+                token::ResearchItemMyUniqueUnitUpgrade || tok ==
+                token::ResearchItemMyUniqueResearch || tok ==
+                token::StartingResourcesTypeLowResources || tok ==
+                token::StartingResourcesTypeMediumResources || tok ==
+                token::StartingResourcesTypeHighResources || tok ==
+                token::StrategicNumberNameSnPercentCivilianExplorers || tok ==
+                token::StrategicNumberNameSnPercentCivilianBuilders || tok ==
+                token::StrategicNumberNameSnPercentCivilianGatherers || tok ==
+                token::StrategicNumberNameSnCapCivilianExplorers || tok ==
+                token::StrategicNumberNameSnCapCivilianBuilders || tok ==
+                token::StrategicNumberNameSnCapCivilianGatherers || tok ==
+                token::StrategicNumberNameSnMinimumAttackGroupSize || tok ==
+                token::StrategicNumberNameSnTotalNumberExplorers || tok ==
+                token::StrategicNumberNameSnPercentEnemySightedResponse || tok
+                == token::StrategicNumberNameSnEnemySightedResponseDistance ||
+                tok == token::StrategicNumberNameSnSentryDistance || tok ==
+                token::StrategicNumberNameSnRelicReturnDistance || tok ==
+                token::StrategicNumberNameSnMinimumDefendGroupSize || tok ==
+                token::StrategicNumberNameSnMaximumAttackGroupSize || tok ==
+                token::StrategicNumberNameSnMaximumDefendGroupSize || tok ==
+                token::StrategicNumberNameSnMinimumPeaceLikeLevel || tok ==
+                token::StrategicNumberNameSnPercentExplorationRequired || tok
+                == token::StrategicNumberNameSnZeroPriorityDistance || tok ==
+                token::StrategicNumberNameSnMinimumCivilianExplorers || tok ==
+                token::StrategicNumberNameSnNumberAttackGroups || tok ==
+                token::StrategicNumberNameSnNumberDefendGroups || tok ==
+                token::StrategicNumberNameSnAttackGroupGatherSpacing || tok ==
+                token::StrategicNumberNameSnNumberExploreGroups || tok ==
+                token::StrategicNumberNameSnMinimumExploreGroupSize || tok ==
+                token::StrategicNumberNameSnMaximumExploreGroupSize || tok ==
+                token::StrategicNumberNameSnGoldDefendPriority || tok ==
+                token::StrategicNumberNameSnStoneDefendPriority || tok ==
+                token::StrategicNumberNameSnForageDefendPriority || tok ==
+                token::StrategicNumberNameSnRelicDefendPriority || tok ==
+                token::StrategicNumberNameSnTownDefendPriority || tok ==
+                token::StrategicNumberNameSnDefenseDistance || tok ==
+                token::StrategicNumberNameSnNumberBoatAttackGroups || tok ==
+                token::StrategicNumberNameSnMinimumBoatAttackGroupSize || tok
+                == token::StrategicNumberNameSnMaximumBoatAttackGroupSize ||
+                tok == token::StrategicNumberNameSnNumberBoatExploreGroups ||
+                tok == token::StrategicNumberNameSnMinimumBoatExploreGroupSize
+                || tok ==
+                token::StrategicNumberNameSnMaximumBoatExploreGroupSize || tok
+                == token::StrategicNumberNameSnNumberBoatDefendGroups || tok ==
+                token::StrategicNumberNameSnMinimumBoatDefendGroupSize || tok
+                == token::StrategicNumberNameSnMaximumBoatDefendGroupSize ||
+                tok == token::StrategicNumberNameSnDockDefendPriority || tok ==
+                token::StrategicNumberNameSnSentryDistanceVariation || tok ==
+                token::StrategicNumberNameSnMinimumTownSize || tok ==
+                token::StrategicNumberNameSnMaximumTownSize || tok ==
+                token::StrategicNumberNameSnGroupCommanderSelectionMethod ||
+                tok == token::StrategicNumberNameSnConsecutiveIdleUnitLimit ||
+                tok == token::StrategicNumberNameSnTargetEvaluationDistance ||
+                tok == token::StrategicNumberNameSnTargetEvaluationHitpoints ||
+                tok ==
+                token::StrategicNumberNameSnTargetEvaluationDamageCapability ||
+                tok == token::StrategicNumberNameSnTargetEvaluationKills || tok
+                == token::StrategicNumberNameSnTargetEvaluationAllyProximity ||
+                tok == token::StrategicNumberNameSnTargetEvaluationRof || tok
+                == token::StrategicNumberNameSnTargetEvaluationRandomness ||
+                tok == token::StrategicNumberNameSnCampMaxDistance || tok ==
+                token::StrategicNumberNameSnMillMaxDistance || tok ==
+                token::StrategicNumberNameSnTargetEvaluationAttackAttempts ||
+                tok == token::StrategicNumberNameSnTargetEvaluationRange || tok
+                == token::StrategicNumberNameSnDefendOverlapDistance || tok ==
+                token::StrategicNumberNameSnScaleMinimumAttackGroupSize || tok
+                == token::StrategicNumberNameSnScaleMaximumAttackGroupSize ||
+                tok == token::StrategicNumberNameSnAttackGroupSizeRandomness ||
+                tok == token::StrategicNumberNameSnScalingFrequency || tok ==
+                token::StrategicNumberNameSnMaximumGaiaAttackResponse || tok ==
+                token::StrategicNumberNameSnBuildFrequency || tok ==
+                token::StrategicNumberNameSnAttackSeparationTimeRandomness ||
+                tok == token::StrategicNumberNameSnAttackIntelligence || tok ==
+                token::StrategicNumberNameSnInitialAttackDelay || tok ==
+                token::StrategicNumberNameSnSaveScenarioInformation || tok ==
+                token::StrategicNumberNameSnSpecialAttackType1 || tok ==
+                token::StrategicNumberNameSnSpecialAttackInfluence1 || tok ==
+                token::StrategicNumberNameSnMinimumWaterBodySizeForDock || tok
+                == token::StrategicNumberNameSnNumberBuildAttemptsBeforeSkip ||
+                tok == token::StrategicNumberNameSnMaxSkipsPerAttempt || tok ==
+                token::StrategicNumberNameSnFoodGathererPercentage || tok ==
+                token::StrategicNumberNameSnGoldGathererPercentage || tok ==
+                token::StrategicNumberNameSnStoneGathererPercentage || tok ==
+                token::StrategicNumberNameSnWoodGathererPercentage || tok ==
+                token::StrategicNumberNameSnTargetEvaluationContinent || tok ==
+                token::StrategicNumberNameSnTargetEvaluationSiegeWeapon || tok
+                == token::StrategicNumberNameSnGroupLeaderDefenseDistance ||
+                tok == token::StrategicNumberNameSnInitialAttackDelayType ||
+                tok == token::StrategicNumberNameSnBlotExplorationMap || tok ==
+                token::StrategicNumberNameSnBlotSize || tok ==
+                token::StrategicNumberNameSnIntelligentGathering || tok ==
+                token::StrategicNumberNameSnTaskUngroupedSoldiers || tok ==
+                token::StrategicNumberNameSnTargetEvaluationBoat || tok ==
+                token::StrategicNumberNameSnNumberEnemyObjectsRequired || tok
+                == token::StrategicNumberNameSnNumberMaxSkipCycles || tok ==
+                token::StrategicNumberNameSnRetaskGatherAmount || tok ==
+                token::StrategicNumberNameSnMaxRetaskGatherAmount || tok ==
+                token::StrategicNumberNameSnMaxBuildPlanGathererPercentage ||
+                tok == token::StrategicNumberNameSnFoodDropsiteDistance || tok
+                == token::StrategicNumberNameSnWoodDropsiteDistance || tok ==
+                token::StrategicNumberNameSnStoneDropsiteDistance || tok ==
+                token::StrategicNumberNameSnGoldDropsiteDistance || tok ==
+                token::StrategicNumberNameSnInitialExplorationRequired || tok
+                == token::StrategicNumberNameSnRandomPlacementFactor || tok ==
+                token::StrategicNumberNameSnRequiredForestTiles || tok ==
+                token::StrategicNumberNameSnAttackDiplomacyImpact || tok ==
+                token::StrategicNumberNameSnPercentHalfExploration || tok ==
+                token::StrategicNumberNameSnTargetEvaluationTimeKillRatio ||
+                tok == token::StrategicNumberNameSnTargetEvaluationInProgress
+                || tok == token::StrategicNumberNameSnAttackWinningPlayer ||
+                tok == token::StrategicNumberNameSnCoopShareInformation || tok
+                == token::StrategicNumberNameSnAttackWinningPlayerFactor || tok
+                == token::StrategicNumberNameSnCoopShareAttacking || tok ==
+                token::StrategicNumberNameSnCoopShareAttackingInterval || tok
+                == token::StrategicNumberNameSnPercentageExploreExterminators
+                || tok == token::StrategicNumberNameSnTrackPlayerHistory || tok
+                == token::StrategicNumberNameSnMinimumDropsiteBuffer || tok ==
+                token::StrategicNumberNameSnUseByTypeMaxGathering || tok ==
+                token::StrategicNumberNameSnMinimumBoarHuntGroupSize || tok ==
+                token::StrategicNumberNameSnMinimumAmountForTrading || tok ==
+                token::StrategicNumberNameSnEasiestReactionPercentage || tok ==
+                token::StrategicNumberNameSnEasierReactionPercentage || tok ==
+                token::StrategicNumberNameSnHitsBeforeAllianceChange || tok ==
+                token::StrategicNumberNameSnAllowCivilianDefense || tok ==
+                token::StrategicNumberNameSnNumberForwardBuilders || tok ==
+                token::StrategicNumberNameSnPercentAttackSoldiers || tok ==
+                token::StrategicNumberNameSnPercentAttackBoats || tok ==
+                token::StrategicNumberNameSnDoNotScaleForDifficultyLevel || tok
+                == token::StrategicNumberNameSnGroupFormDistance || tok ==
+                token::StrategicNumberNameSnIgnoreAttackGroupUnderAttack || tok
+                == token::StrategicNumberNameSnGatherDefenseUnits || tok ==
+                token::StrategicNumberNameSnMaximumWoodDropDistance || tok ==
+                token::StrategicNumberNameSnMaximumFoodDropDistance || tok ==
+                token::StrategicNumberNameSnMaximumHuntDropDistance || tok ==
+                token::StrategicNumberNameSnMaximumFishBoatDropDistance || tok
+                == token::StrategicNumberNameSnMaximumGoldDropDistance || tok
+                == token::StrategicNumberNameSnMaximumStoneDropDistance || tok
+                == token::StrategicNumberNameSnGatherIdleSoldiersAtCenter ||
+                tok == token::StrategicNumberNameSnGarrisonRams || tok ==
+                token::UnitArbalest || tok == token::UnitArcher || tok ==
+                token::UnitCavalryArcher || tok == token::UnitCrossbowman ||
+                tok == token::UnitEliteSkirmisher || tok ==
+                token::UnitHandCannoneer || tok ==
+                token::UnitHeavyCavalryArcher || tok == token::UnitSkirmisher
+                || tok == token::UnitChampion || tok == token::UnitEagleWarrior
+                || tok == token::UnitEliteEagleWarrior || tok ==
+                token::UnitHalberdier || tok == token::UnitLongSwordsman || tok
+                == token::UnitManAtArms || tok == token::UnitMilitiaman || tok
+                == token::UnitPikeman || tok == token::UnitSpearman || tok ==
+                token::UnitTwoHandedSwordsman || tok == token::UnitBerserk ||
+                tok == token::UnitCataphract || tok == token::UnitChuKoNu ||
+                tok == token::UnitConquistador || tok ==
+                token::UnitEliteBerserk || tok == token::UnitEliteCataphract ||
+                tok == token::UnitEliteChuKoNu || tok ==
+                token::UnitEliteConquistador || tok == token::UnitEliteHuskarl
+                || tok == token::UnitEliteJaguarWarrior || tok ==
+                token::UnitEliteJanissary || tok == token::UnitEliteLongbowman
+                || tok == token::UnitEliteMameluke || tok ==
+                token::UnitEliteMangudai || tok == token::UnitElitePlumedArcher
+                || tok == token::UnitEliteSamurai || tok ==
+                token::UnitEliteTarkan || tok == token::UnitEliteTeutonicKnight
+                || tok == token::UnitEliteThrowingAxeman || tok ==
+                token::UnitEliteWarElephant || tok == token::UnitEliteWarWagon
+                || tok == token::UnitEliteWoadRaider || tok ==
+                token::UnitHuskarl || tok == token::UnitJaguarWarrior || tok ==
+                token::UnitJanissary || tok == token::UnitLongbowman || tok ==
+                token::UnitMameluke || tok == token::UnitMangudai || tok ==
+                token::UnitPetard || tok == token::UnitPlumedArcher || tok ==
+                token::UnitSamurai || tok == token::UnitTarkan || tok ==
+                token::UnitTeutonicKnight || tok == token::UnitThrowingAxeman
+                || tok == token::UnitTrebuchet || tok == token::UnitWarElephant
+                || tok == token::UnitWarWagon || tok == token::UnitWoadRaider
+                || tok == token::UnitCannonGalleon || tok ==
+                token::UnitDemolitionShip || tok ==
+                token::UnitEliteCannonGalleon || tok ==
+                token::UnitEliteLongboat || tok == token::UnitEliteTurtleShip
+                || tok == token::UnitFastFireShip || tok == token::UnitFireShip
+                || tok == token::UnitFishingShip || tok == token::UnitGalleon
+                || tok == token::UnitGalley || tok ==
+                token::UnitHeavyDemolitionShip || tok == token::UnitLongboat ||
+                tok == token::UnitTradeCog || tok == token::UnitTransportShip
+                || tok == token::UnitTurtleShip || tok == token::UnitWarGalley
+                || tok == token::UnitTradeCart || tok == token::UnitMissionary
+                || tok == token::UnitMonk || tok == token::UnitBatteringRam ||
+                tok == token::UnitBombardCannon || tok == token::UnitCappedRam
+                || tok == token::UnitHeavyScorpion || tok ==
+                token::UnitMangonel || tok == token::UnitOnager || tok ==
+                token::UnitScorpion || tok == token::UnitSiegeOnager || tok ==
+                token::UnitSiegeRam || tok == token::UnitCamel || tok ==
+                token::UnitCavalier || tok == token::UnitHeavyCamel || tok ==
+                token::UnitHussar || tok == token::UnitKnight || tok ==
+                token::UnitLightCavalry || tok == token::UnitPaladin || tok ==
+                token::UnitScoutCavalry || tok == token::UnitVillager || tok ==
+                token::UnitArcherLine || tok == token::UnitCavalryArcherLine ||
+                tok == token::UnitSkirmisherLine || tok ==
+                token::UnitEagleWarriorLine || tok == token::UnitMilitiamanLine
+                || tok == token::UnitSpearmanLine || tok ==
+                token::UnitBerserkLine || tok == token::UnitCataphractLine ||
+                tok == token::UnitChuKoNuLine || tok ==
+                token::UnitConquistadorLine || tok == token::UnitHuskarlLine ||
+                tok == token::UnitJaguarWarriorLine || tok ==
+                token::UnitJanissaryLine || tok == token::UnitLongbowmanLine ||
+                tok == token::UnitMamelukeLine || tok ==
+                token::UnitMangudaiLine || tok == token::UnitPlumedArcherLine
+                || tok == token::UnitSamuraiLine || tok ==
+                token::UnitTarkanLine || tok == token::UnitTeutonicKnightLine
+                || tok == token::UnitThrowingAxemanLine || tok ==
+                token::UnitWarElephantLine || tok == token::UnitWarWagonLine ||
+                tok == token::UnitWoadRaiderLine || tok ==
+                token::UnitCannonGalleonLine || tok ==
+                token::UnitDemolitionShipLine || tok == token::UnitFireShipLine
+                || tok == token::UnitGalleyLine || tok ==
+                token::UnitLongboatLine || tok == token::UnitTurtleShipLine ||
+                tok == token::UnitBatteringRamLine || tok ==
+                token::UnitMangonelLine || tok == token::UnitScorpionLine ||
+                tok == token::UnitCamelLine || tok == token::UnitKnightLine ||
+                tok == token::UnitScoutCavalryLine || tok ==
+                token::UnitMyEliteUniqueUnit || tok == token::UnitMyUniqueUnit
+                || tok == token::UnitMyUniqueUnitLine || tok ==
+                token::VictoryConditionNameStandard || tok ==
+                token::VictoryConditionNameConquest || tok ==
+                token::VictoryConditionNameTimeLimit || tok ==
+                token::VictoryConditionNameScore || tok ==
+                token::VictoryConditionNameCustom || tok ==
+                token::WallTypeFortifiedWall || tok ==
+                token::WallTypePalisadeWall || tok == token::WallTypeStoneWall
+                || tok == token::WallTypeStoneWallLine);
       }
 #else
       symbol_type (int tok, const location_type& l)
         : super_type(token_type (tok), l)
       {
-        YYASSERT (	
-			tok == token::ScriptEnd || 
-			tok == token::OpenParen || 
-			tok == token::CloseParen || 
-			tok == token::RuleStart || 
-			tok == token::ConditionActionSeparator || 
-			tok == token::Not || 
-			tok == token::Or || 
-			tok == token::LoadIfDefined || 
-			tok == token::Else || 
-			tok == token::EndIf || 
-			tok == token::Space || 
-			tok == token::NewLine || 
-			tok == token::AgeDarkAge || 
-			tok == token::AgeFeudalAge || 
-			tok == token::AgeCastleAge || 
-			tok == token::AgeImperialAge || 
-			tok == token::AgePostImperialAge || 
-			tok == token::BuildingArcheryRange || 
-			tok == token::BuildingBarracks || 
-			tok == token::BuildingBlacksmith || 
-			tok == token::BuildingBombardTower || 
-			tok == token::BuildingCastle || 
-			tok == token::BuildingDock || 
-			tok == token::BuildingFarm || 
-			tok == token::BuildingFishTrap || 
-			tok == token::BuildingGuardTower || 
-			tok == token::BuildingHouse || 
-			tok == token::BuildingKeep || 
-			tok == token::BuildingLumberCamp || 
-			tok == token::BuildingMarket || 
-			tok == token::BuildingMill || 
-			tok == token::BuildingMiningCamp || 
-			tok == token::BuildingMonastery || 
-			tok == token::BuildingOutpost || 
-			tok == token::BuildingSiegeWorkshop || 
-			tok == token::BuildingStable || 
-			tok == token::BuildingTownCenter || 
-			tok == token::BuildingUniversity || 
-			tok == token::BuildingWatchTower || 
-			tok == token::BuildingWonder || 
-			tok == token::BuildingWatchTowerLine || 
-			tok == token::CivBriton || 
-			tok == token::CivByzantine || 
-			tok == token::CivCeltic || 
-			tok == token::CivChinese || 
-			tok == token::CivFrankish ||
-			tok == token::CivGothic ||
-			tok == token::CivJapanese ||
-			tok == token::CivMongol ||
-			tok == token::CivPersian || 
-			tok == token::CivSaracen || 
-			tok == token::CivTeutonic || 
-			tok == token::CivTurkish ||
-			tok == token::CivViking || 
-			tok == token::CivMyCiv || 
-			tok == token::CommodityFood ||
-			tok == token::CommodityStone || 
-			tok == token::CommodityWood || 
-			tok == token::CommodityGold || 
-			tok == token::DifficultyLevelEasiest || 
-			tok == token::DifficultyLevelEasy || 
-			tok == token::DifficultyLevelModerate ||
-			tok == token::DifficultyLevelHard || 
-			tok == token::DifficultyLevelHardest ||
-			tok == token::DifficultyParameterAbilityToDodgeMissiles || 
-			tok == token::DifficultyParameterAbilityToMaintainDistance ||
-			tok == token::DiplomaticStanceAlly || 
-			tok == token::DiplomaticStanceNeutral ||
-			tok == token::DiplomaticStanceEnemy || 
-			tok == token::MapSizeTypeTiny ||
-			tok == token::MapSizeTypeSmall ||
-			tok == token::MapSizeTypeMedium ||
-			tok == token::MapSizeTypeNormal ||
-			tok == token::MapSizeTypeLarge || 
-			tok == token::MapSizeTypeGiant || 
-			tok == token::MapTypeNameArabia ||
-			tok == token::MapTypeNameArchipelago || 
-			tok == token::MapTypeNameBaltic ||
-			tok == token::MapTypeNameBlackForest ||
-			tok == token::MapTypeNameCoastal ||
-			tok == token::MapTypeNameContinental || 
-			tok == token::MapTypeNameCraterLake || 
-			tok == token::MapTypeNameFortress || 
-			tok == token::MapTypeNameGoldRush || 
-			tok == token::MapTypeNameHighland || 
-			tok == token::MapTypeNameIslands || 
-			tok == token::MapTypeNameMediterranean || 
-			tok == token::MapTypeNameMigration || 
-			tok == token::MapTypeNameRivers ||
-			tok == token::MapTypeNameTeamIslands || 
-			tok == token::MapTypeNameScenarioMap || 
-			tok == token::PlayerNumberTypeAnyAlly ||
-			tok == token::PlayerNumberTypeAnyComputer ||
-			tok == token::PlayerNumberTypeAnyComputerAlly ||
-			tok == token::PlayerNumberTypeAnyComputerEnemy ||
-			tok == token::PlayerNumberTypeAnyComputerNeutral || 
-			tok == token::PlayerNumberTypeAnyEnemy || 
-			tok == token::PlayerNumberTypeAnyHuman || 
-			tok == token::PlayerNumberTypeAnyHumanAlly || 
-			tok == token::PlayerNumberTypeAnyHumanEnemy || 
-			tok == token::PlayerNumberTypeAnyHumanNeutral ||
-			tok == token::PlayerNumberTypeAnyNeutral || 
-			tok == token::PlayerNumberTypeEveryAlly || 
-			tok == token::PlayerNumberTypeEveryComputer ||
-			tok == token::PlayerNumberTypeEveryEnemy || 
-			tok == token::PlayerNumberTypeEveryHuman || 
-			tok == token::PlayerNumberTypeEveryNeutral ||
-			tok == token::PlayerNumberTypeMyPlayerNumber ||
-			tok == token::RelOpLessThan || 
-			tok == token::RelOpLessOrEqual ||
-			tok == token::RelOpGreaterThan || 
-			tok == token::RelOpGreaterOrEqual ||
-			tok == token::RelOpEqual || 
-			tok == token::RelOpNotEqual || 
-			tok == token::ResearchItemRiArbalest || 
-			tok == token::ResearchItemRiCrossbow ||
-			tok == token::ResearchItemRiEliteSkirmisher ||
-			tok == token::ResearchItemRiHandCannon ||
-			tok == token::ResearchItemRiHeavyCavalryArcher ||
-			tok == token::ResearchItemRiChampion || 
-			tok == token::ResearchItemRiEliteEagleWarrior || 
-			tok == token::ResearchItemRiHalberdier || 
-			tok == token::ResearchItemRiLongSwordsman || 
-			tok == token::ResearchItemRiManAtArms ||
-			tok == token::ResearchItemRiParthianTactics ||
-			tok == token::ResearchItemRiPikeman ||
-			tok == token::ResearchItemRiSquires || 
-			tok == token::ResearchItemRiThumbRing ||
-			tok == token::ResearchItemRiTracking || 
-			tok == token::ResearchItemRiTwoHandedSwordsman ||
-			tok == token::ResearchItemRiBlastFurnace || 
-			tok == token::ResearchItemRiBodkinArrow ||
-			tok == token::ResearchItemRiBracer || 
-			tok == token::ResearchItemRiChainBarding || 
-			tok == token::ResearchItemRiChainMail || 
-			tok == token::ResearchItemRiFletching || 
-			tok == token::ResearchItemRiForging || 
-			tok == token::ResearchItemRiIronCasting || 
-			tok == token::ResearchItemRiLeatherArcherArmor ||
-			tok == token::ResearchItemRiPaddedArcherArmor ||
-			tok == token::ResearchItemRiPlateBarding || 
-			tok == token::ResearchItemRiPlateMail ||
-			tok == token::ResearchItemRiRingArcherArmor || 
-			tok == token::ResearchItemRiScaleBarding || 
-			tok == token::ResearchItemRiScaleMail ||
-			tok == token::ResearchItemRiConscription ||
-			tok == token::ResearchItemRiHoardings || 
-			tok == token::ResearchItemRiSappers || 
-			tok == token::ResearchItemRiEliteBerserk ||
-			tok == token::ResearchItemRiEliteCataphract ||
-			tok == token::ResearchItemRiEliteChuKoNu ||
-			tok == token::ResearchItemRiEliteHuskarl ||
-			tok == token::ResearchItemRiEliteJanissary ||
-			tok == token::ResearchItemRiEliteLongbowman ||
-			tok == token::ResearchItemRiEliteMameluke || 
-			tok == token::ResearchItemRiEliteMangudai ||
-			tok == token::ResearchItemRiEliteSamurai ||
-			tok == token::ResearchItemRiEliteTeutonicKnight || tok == token::ResearchItemRiEliteThrowingAxeman || tok == token::ResearchItemRiEliteWarElephant || tok == token::ResearchItemRiEliteWoadRaider || tok == token::ResearchItemRiMyUniqueEliteUnit || tok == token::ResearchItemRiMyUniqueResearch || tok == token::ResearchItemRiCannonGalleon || tok == token::ResearchItemRiCareening || tok == token::ResearchItemRiDeckGuns || tok == token::ResearchItemRiDryDock || tok == token::ResearchItemRiEliteLongboat || tok == token::ResearchItemRiFastFireShip || tok == token::ResearchItemRiGalleon || tok == token::ResearchItemRiHeavyDemolitionShip || tok == token::ResearchItemRiShipwright || tok == token::ResearchItemRiWarGalley || tok == token::ResearchItemRiBowSaw || tok == token::ResearchItemRiDoubleBitAxe || tok == token::ResearchItemRiTwoManSaw || tok == token::ResearchItemRiBanking || tok == token::ResearchItemRiCaravan || tok == token::ResearchItemRiCartography || tok == token::ResearchItemRiCoinage || tok == token::ResearchItemRiGuilds || tok == token::ResearchItemRiCropRotation || tok == token::ResearchItemRiHeavyPlow || tok == token::ResearchItemRiHorseCollar || tok == token::ResearchItemRiGoldMining || tok == token::ResearchItemRiGoldShaftMining || tok == token::ResearchItemRiStoneMining || tok == token::ResearchItemRiStoneShaftMining || tok == token::ResearchItemRiAtonement || tok == token::ResearchItemRiBlockPrinting || tok == token::ResearchItemRiFaith || tok == token::ResearchItemRiFervor || tok == token::ResearchItemRiHerbalMedicine || tok == token::ResearchItemRiHeresy || tok == token::ResearchItemRiIllumination || tok == token::ResearchItemRiRedemption || tok == token::ResearchItemRiSanctity || tok == token::ResearchItemRiTheocracy || tok == token::ResearchItemRiBombardCannon || tok == token::ResearchItemRiCappedRam || tok == token::ResearchItemRiHeavyScorpion || tok == token::ResearchItemRiOnager || tok == token::ResearchItemRiScorpion || 
-			tok == token::ResearchItemRiSiegeOnager || 
-			tok == token::ResearchItemRiSiegeRam ||
-			tok == token::ResearchItemRiBloodlines ||
-			tok == token::ResearchItemRiCavalier ||
-			tok == token::ResearchItemRiHeavyCamel ||
-			tok == token::ResearchItemRiHusbandry || 
-			tok == token::ResearchItemRiHussar ||
-			tok == token::ResearchItemRiLightCavalry ||
-			tok == token::ResearchItemRiPaladin ||
-			tok == token::ResearchItemRiHandCart || 
-			tok == token::ResearchItemRiLoom || 
-			tok == token::ResearchItemRiTownPatrol || 
-			tok == token::ResearchItemRiTownWatch || 
-			tok == token::ResearchItemRiWheelBarrow || 
-			tok == token::ResearchItemRiArchitecture ||
-			tok == token::ResearchItemRiBallistics || 
-			tok == token::ResearchItemRiBombardTower ||
-			tok == token::ResearchItemRiChemistry ||
-			tok == token::ResearchItemRiFortifiedWall ||
-			tok == token::ResearchItemRiGuardTower || 
-			tok == token::ResearchItemRiHeatedShot ||
-			tok == token::ResearchItemRiKeep ||
-			tok == token::ResearchItemRiMasonry || 
-			tok == token::ResearchItemRiMurderHoles ||
-			tok == token::ResearchItemRiSiegeEngineers ||
-			tok == token::ResearchItemRiStonecutting || 
-			tok == token::ResearchItemMyUniqueUnitUpgrade || 
-			tok == token::ResearchItemMyUniqueResearch || 
-			tok == token::StartingResourcesTypeLowResources || 
-			tok == token::StartingResourcesTypeMediumResources || 
-			tok == token::StartingResourcesTypeHighResources || 
-			tok == token::StrategicNumberNameSnPercentCivilianExplorers || 
-			tok == token::StrategicNumberNameSnPercentCivilianBuilders || 
-			tok == token::StrategicNumberNameSnPercentCivilianGatherers ||
-			tok == token::StrategicNumberNameSnCapCivilianExplorers || 
-			tok == token::StrategicNumberNameSnCapCivilianBuilders || 
-			tok == token::StrategicNumberNameSnCapCivilianGatherers || 
-			tok == token::StrategicNumberNameSnMinimumAttackGroupSize || 
-			tok == token::StrategicNumberNameSnTotalNumberExplorers || 
-			tok == token::StrategicNumberNameSnPercentEnemySightedResponse || 
-			tok == token::StrategicNumberNameSnEnemySightedResponseDistance ||
-			tok == token::StrategicNumberNameSnSentryDistance || 
-			tok == token::StrategicNumberNameSnRelicReturnDistance || 
-			tok == token::StrategicNumberNameSnMinimumDefendGroupSize || 
-			tok == token::StrategicNumberNameSnMaximumAttackGroupSize || 
-			tok == token::StrategicNumberNameSnMaximumDefendGroupSize || 
-			tok == token::StrategicNumberNameSnMinimumPeaceLikeLevel || 
-			tok == token::StrategicNumberNameSnPercentExplorationRequired || 
-			tok == token::StrategicNumberNameSnZeroPriorityDistance || 
-			tok == token::StrategicNumberNameSnMinimumCivilianExplorers ||
-			tok == token::StrategicNumberNameSnNumberAttackGroups || 
-			tok == token::StrategicNumberNameSnNumberDefendGroups ||
-			tok == token::StrategicNumberNameSnAttackGroupGatherSpacing ||
-			tok == token::StrategicNumberNameSnNumberExploreGroups || 
-			tok == token::StrategicNumberNameSnMinimumExploreGroupSize || 
-			tok == token::StrategicNumberNameSnMaximumExploreGroupSize || 
-			tok == token::StrategicNumberNameSnGoldDefendPriority || 
-			tok == token::StrategicNumberNameSnStoneDefendPriority || 
-			tok == token::StrategicNumberNameSnForageDefendPriority ||
-			tok == token::StrategicNumberNameSnRelicDefendPriority || 
-			tok == token::StrategicNumberNameSnTownDefendPriority ||
-			tok == token::StrategicNumberNameSnDefenseDistance ||
-			tok == token::StrategicNumberNameSnNumberBoatAttackGroups || 
-			tok == token::StrategicNumberNameSnMinimumBoatAttackGroupSize ||
-			tok == token::StrategicNumberNameSnMaximumBoatAttackGroupSize ||
-			tok == token::StrategicNumberNameSnNumberBoatExploreGroups || 
-			tok == token::StrategicNumberNameSnMinimumBoatExploreGroupSize ||
-			tok == token::StrategicNumberNameSnMaximumBoatExploreGroupSize ||
-			tok == token::StrategicNumberNameSnNumberBoatDefendGroups || 
-			tok == token::StrategicNumberNameSnMinimumBoatDefendGroupSize ||
-			tok == token::StrategicNumberNameSnMaximumBoatDefendGroupSize || 
-			tok == token::StrategicNumberNameSnDockDefendPriority ||
-			tok == token::StrategicNumberNameSnSentryDistanceVariation ||
-			tok == token::StrategicNumberNameSnMinimumTownSize || 
-			tok == token::StrategicNumberNameSnMaximumTownSize || 
-			tok == token::StrategicNumberNameSnGroupCommanderSelectionMethod ||
-			tok == token::StrategicNumberNameSnConsecutiveIdleUnitLimit ||
-			tok == token::StrategicNumberNameSnTargetEvaluationDistance || 
-			tok == token::StrategicNumberNameSnTargetEvaluationHitpoints || 
-			tok == token::StrategicNumberNameSnTargetEvaluationDamageCapability || 
-			tok == token::StrategicNumberNameSnTargetEvaluationKills ||
-			tok == token::StrategicNumberNameSnTargetEvaluationAllyProximity ||
-			tok == token::StrategicNumberNameSnTargetEvaluationRof ||
-			tok == token::StrategicNumberNameSnTargetEvaluationRandomness || 
-			tok == token::StrategicNumberNameSnCampMaxDistance || 
-			tok == token::StrategicNumberNameSnMillMaxDistance ||
-			tok == token::StrategicNumberNameSnTargetEvaluationAttackAttempts ||
-			tok == token::StrategicNumberNameSnTargetEvaluationRange || 
-			tok == token::StrategicNumberNameSnDefendOverlapDistance || 
-			tok == token::StrategicNumberNameSnScaleMinimumAttackGroupSize ||
-			tok == token::StrategicNumberNameSnScaleMaximumAttackGroupSize ||
-			tok == token::StrategicNumberNameSnAttackGroupSizeRandomness || 
-			tok == token::StrategicNumberNameSnScalingFrequency || 
-			tok == token::StrategicNumberNameSnMaximumGaiaAttackResponse || 
-			tok == token::StrategicNumberNameSnBuildFrequency || 
-			tok == token::StrategicNumberNameSnAttackSeparationTimeRandomness ||
-			tok == token::StrategicNumberNameSnAttackIntelligence ||
-			tok == token::StrategicNumberNameSnInitialAttackDelay ||
-			tok == token::StrategicNumberNameSnSaveScenarioInformation || 
-			tok == token::StrategicNumberNameSnSpecialAttackType1 || 
-			tok == token::StrategicNumberNameSnSpecialAttackInfluence1 ||
-			tok == token::StrategicNumberNameSnMinimumWaterBodySizeForDock ||
-			tok == token::StrategicNumberNameSnNumberBuildAttemptsBeforeSkip ||
-			tok == token::StrategicNumberNameSnMaxSkipsPerAttempt || 
-			tok == token::StrategicNumberNameSnFoodGathererPercentage || 
-			tok == token::StrategicNumberNameSnGoldGathererPercentage ||
-			tok == token::StrategicNumberNameSnStoneGathererPercentage || 
-			tok == token::StrategicNumberNameSnWoodGathererPercentage || 
-			tok == token::StrategicNumberNameSnTargetEvaluationContinent || 
-			tok == token::StrategicNumberNameSnTargetEvaluationSiegeWeapon || 
-			tok == token::StrategicNumberNameSnGroupLeaderDefenseDistance ||
-			tok == token::StrategicNumberNameSnInitialAttackDelayType || 
-			tok == token::StrategicNumberNameSnBlotExplorationMap || 
-			tok == token::StrategicNumberNameSnBlotSize || 
-			tok == token::StrategicNumberNameSnIntelligentGathering || 
-			tok == token::StrategicNumberNameSnTaskUngroupedSoldiers || 
-			tok == token::StrategicNumberNameSnTargetEvaluationBoat || 
-			tok == token::StrategicNumberNameSnNumberEnemyObjectsRequired || 
-			tok == token::StrategicNumberNameSnNumberMaxSkipCycles || 
-			tok == token::StrategicNumberNameSnRetaskGatherAmount || 
-			tok == token::StrategicNumberNameSnMaxRetaskGatherAmount || 
-			tok == token::StrategicNumberNameSnMaxBuildPlanGathererPercentage ||
-			tok == token::StrategicNumberNameSnFoodDropsiteDistance || 
-			tok == token::StrategicNumberNameSnWoodDropsiteDistance ||
-			tok == token::StrategicNumberNameSnStoneDropsiteDistance ||
-			tok == token::StrategicNumberNameSnGoldDropsiteDistance || 
-			tok == token::StrategicNumberNameSnInitialExplorationRequired ||
-			tok == token::StrategicNumberNameSnRandomPlacementFactor ||
-			tok == token::StrategicNumberNameSnRequiredForestTiles || 
-			tok == token::StrategicNumberNameSnAttackDiplomacyImpact || 
-			tok == token::StrategicNumberNameSnPercentHalfExploration || 
-			tok == token::StrategicNumberNameSnTargetEvaluationTimeKillRatio ||
-			tok == token::StrategicNumberNameSnTargetEvaluationInProgress || 
-			tok == token::StrategicNumberNameSnAttackWinningPlayer || 
-			tok == token::StrategicNumberNameSnCoopShareInformation || 
-			tok == token::StrategicNumberNameSnAttackWinningPlayerFactor || 
-			tok == token::StrategicNumberNameSnCoopShareAttacking || 
-			tok == token::StrategicNumberNameSnCoopShareAttackingInterval || 
-			tok == token::StrategicNumberNameSnPercentageExploreExterminators ||
-			tok == token::StrategicNumberNameSnTrackPlayerHistory ||
-			tok == token::StrategicNumberNameSnMinimumDropsiteBuffer || 
-			tok == token::StrategicNumberNameSnUseByTypeMaxGathering ||
-			tok == token::StrategicNumberNameSnMinimumBoarHuntGroupSize || 
-			tok == token::StrategicNumberNameSnMinimumAmountForTrading || 
-			tok == token::StrategicNumberNameSnEasiestReactionPercentage ||
-			tok == token::StrategicNumberNameSnEasierReactionPercentage || 
-			tok == token::StrategicNumberNameSnHitsBeforeAllianceChange || 
-			tok == token::StrategicNumberNameSnAllowCivilianDefense || 
-			tok == token::StrategicNumberNameSnNumberForwardBuilders || 
-			tok == token::StrategicNumberNameSnPercentAttackSoldiers || 
-			tok == token::StrategicNumberNameSnPercentAttackBoats || 
-			tok == token::StrategicNumberNameSnDoNotScaleForDifficultyLevel || 
-			tok == token::StrategicNumberNameSnGroupFormDistance || 
-			tok == token::StrategicNumberNameSnIgnoreAttackGroupUnderAttack || 
-			tok == token::StrategicNumberNameSnGatherDefenseUnits ||
-			tok == token::StrategicNumberNameSnMaximumWoodDropDistance || 
-			tok == token::StrategicNumberNameSnMaximumFoodDropDistance ||
-			tok == token::StrategicNumberNameSnMaximumHuntDropDistance ||
-			tok == token::StrategicNumberNameSnMaximumFishBoatDropDistance ||
-			tok == token::StrategicNumberNameSnMaximumGoldDropDistance || 
-			tok == token::StrategicNumberNameSnMaximumStoneDropDistance ||
-			tok == token::StrategicNumberNameSnGatherIdleSoldiersAtCenter || 
-			tok == token::StrategicNumberNameSnGarrisonRams || 
-			tok == token::UnitArbalest || 
-			tok == token::UnitArcher || 
-			tok == token::UnitCavalryArcher ||
-			tok == token::UnitCrossbowman || 
-			tok == token::UnitEliteSkirmisher || 
-			tok == token::UnitHandCannoneer || 
-			tok == token::UnitHeavyCavalryArcher || 
-			tok == token::UnitSkirmisher ||
-			tok == token::UnitChampion || 
-			tok == token::UnitEagleWarrior ||
-			tok == token::UnitEliteEagleWarrior ||
-			tok == token::UnitHalberdier || 
-			tok == token::UnitLongSwordsman || 
-			tok == token::UnitManAtArms ||
-			tok == token::UnitMilitiaman ||
-			tok == token::UnitPikeman || 
-			tok == token::UnitSpearman || 
-			tok == token::UnitTwoHandedSwordsman || 
-			tok == token::UnitBerserk || 
-			tok == token::UnitCataphract || 
-			tok == token::UnitChuKoNu || 
-			tok == token::UnitConquistador || 
-			tok == token::UnitEliteBerserk || 
-			tok == token::UnitEliteCataphract ||
-			tok == token::UnitEliteChuKoNu ||
-			tok == token::UnitEliteConquistador || 
-			tok == token::UnitEliteHuskarl || 
-			tok == token::UnitEliteJaguarWarrior || 
-			tok == token::UnitEliteJanissary || 
-			tok == token::UnitEliteLongbowman ||
-			tok == token::UnitEliteMameluke || 
-			tok == token::UnitEliteMangudai || 
-			tok == token::UnitElitePlumedArcher || 
-			tok == token::UnitEliteSamurai ||
-			tok == token::UnitEliteTarkan || 
-			tok == token::UnitEliteTeutonicKnight ||
-			tok == token::UnitEliteThrowingAxeman || 
-			tok == token::UnitEliteWarElephant ||
-			tok == token::UnitEliteWarWagon || 
-			tok == token::UnitEliteWoadRaider || 
-			tok == token::UnitHuskarl ||
-			tok == token::UnitJaguarWarrior || 
-			tok == token::UnitJanissary || 
-			tok == token::UnitLongbowman || 
-			tok == token::UnitMameluke || 
-			tok == token::UnitMangudai || 
-			tok == token::UnitPetard || 
-			tok == token::UnitPlumedArcher || 
-			tok == token::UnitSamurai || 
-			tok == token::UnitTarkan || 
-			tok == token::UnitTeutonicKnight || 
-			tok == token::UnitThrowingAxeman || 
-			tok == token::UnitTrebuchet || 
-			tok == token::UnitWarElephant || 
-			tok == token::UnitWarWagon || 
-			tok == token::UnitWoadRaider || 
-			tok == token::UnitCannonGalleon ||
-			tok == token::UnitDemolitionShip || 
-			tok == token::UnitEliteCannonGalleon || 
-			tok == token::UnitEliteLongboat || 
-			tok == token::UnitEliteTurtleShip || 
-			tok == token::UnitFastFireShip || 
-			tok == token::UnitFireShip || 
-			tok == token::UnitFishingShip ||
-			tok == token::UnitGalleon || 
-			tok == token::UnitGalley || 
-			tok == token::UnitHeavyDemolitionShip ||
-			tok == token::UnitLongboat || 
-			tok == token::UnitTradeCog || 
-			tok == token::UnitTransportShip || 
-			tok == token::UnitTurtleShip || 
-			tok == token::UnitWarGalley || 
-			tok == token::UnitTradeCart || 
-			tok == token::UnitMissionary || 
-			tok == token::UnitMonk || 
-			tok == token::UnitBatteringRam || 
-			tok == token::UnitBombardCannon || 
-			tok == token::UnitCappedRam || 
-			tok == token::UnitHeavyScorpion || 
-			tok == token::UnitMangonel || 
-			tok == token::UnitOnager || 
-			tok == token::UnitScorpion || 
-			tok == token::UnitSiegeOnager ||
-			tok == token::UnitSiegeRam ||
-			tok == token::UnitCamel ||
-			tok == token::UnitCavalier ||
-			tok == token::UnitHeavyCamel ||
-			tok == token::UnitHussar || 
-			tok == token::UnitKnight || 
-			tok == token::UnitLightCavalry || 
-			tok == token::UnitPaladin || 
-			tok == token::UnitScoutCavalry ||
-			tok == token::UnitVillager || 
-			tok == token::UnitArcherLine || 
-			tok == token::UnitCavalryArcherLine ||
-			tok == token::UnitSkirmisherLine || 
-			tok == token::UnitEagleWarriorLine || 
-			tok == token::UnitMilitiamanLine || 
-			tok == token::UnitSpearmanLine || 
-			tok == token::UnitBerserkLine || 
-			tok == token::UnitCataphractLine || 
-			tok == token::UnitChuKoNuLine ||
-			tok == token::UnitConquistadorLine ||
-			tok == token::UnitHuskarlLine || 
-			tok == token::UnitJaguarWarriorLine || 
-			tok == token::UnitJanissaryLine || 
-			tok == token::UnitLongbowmanLine || 
-			tok == token::UnitMamelukeLine ||
-			tok == token::UnitMangudaiLine || 
-			tok == token::UnitPlumedArcherLine ||
-			tok == token::UnitSamuraiLine || 
-			tok == token::UnitTarkanLine ||
-			tok == token::UnitTeutonicKnightLine ||
-			tok == token::UnitThrowingAxemanLine || 
-			tok == token::UnitWarElephantLine || 
-			tok == token::UnitWarWagonLine || 
-			tok == token::UnitWoadRaiderLine || 
-			tok == token::UnitCannonGalleonLine || 
-			tok == token::UnitDemolitionShipLine || 
-			tok == token::UnitFireShipLine || 
-			tok == token::UnitGalleyLine || 
-			tok == token::UnitLongboatLine || 
-			tok == token::UnitTurtleShipLine || 
-			tok == token::UnitBatteringRamLine ||
-			tok == token::UnitMangonelLine || 
-			tok == token::UnitScorpionLine || 
-			tok == token::UnitCamelLine || 
-			tok == token::UnitKnightLine || 
-			tok == token::UnitScoutCavalryLine || 
-			tok == token::UnitMyEliteUniqueUnit ||
-			tok == token::UnitMyUniqueUnit || 
-			tok == token::UnitMyUniqueUnitLine ||
-			tok == token::VictoryConditionNameStandard ||
-			tok == token::VictoryConditionNameConquest ||
-			tok == token::VictoryConditionNameTimeLimit ||
-			tok == token::VictoryConditionNameScore ||
-			tok == token::VictoryConditionNameCustom ||
-			tok == token::WallTypeFortifiedWall || 
-			tok == token::WallTypePalisadeWall || 
-			tok == token::WallTypeStoneWall || 
-			tok == token::WallTypeStoneWallLine);
+        YY_ASSERT (tok == token::ScriptEnd || tok == token::OpenParen || tok ==
+                token::CloseParen || tok == token::RuleStart || tok ==
+                token::ConditionActionSeparator || tok == token::Not || tok ==
+                token::Or || tok == token::LoadIfDefined || tok == token::Else
+                || tok == token::EndIf || tok == token::Space || tok ==
+                token::NewLine || tok == token::AgeDarkAge || tok ==
+                token::AgeFeudalAge || tok == token::AgeCastleAge || tok ==
+                token::AgeImperialAge || tok == token::AgePostImperialAge ||
+                tok == token::BuildingArcheryRange || tok ==
+                token::BuildingBarracks || tok == token::BuildingBlacksmith ||
+                tok == token::BuildingBombardTower || tok ==
+                token::BuildingCastle || tok == token::BuildingDock || tok ==
+                token::BuildingFarm || tok == token::BuildingFishTrap || tok ==
+                token::BuildingGuardTower || tok == token::BuildingHouse || tok
+                == token::BuildingKeep || tok == token::BuildingLumberCamp ||
+                tok == token::BuildingMarket || tok == token::BuildingMill ||
+                tok == token::BuildingMiningCamp || tok ==
+                token::BuildingMonastery || tok == token::BuildingOutpost ||
+                tok == token::BuildingSiegeWorkshop || tok ==
+                token::BuildingStable || tok == token::BuildingTownCenter ||
+                tok == token::BuildingUniversity || tok ==
+                token::BuildingWatchTower || tok == token::BuildingWonder ||
+                tok == token::BuildingWatchTowerLine || tok == token::CivBriton
+                || tok == token::CivByzantine || tok == token::CivCeltic || tok
+                == token::CivChinese || tok == token::CivFrankish || tok ==
+                token::CivGothic || tok == token::CivJapanese || tok ==
+                token::CivMongol || tok == token::CivPersian || tok ==
+                token::CivSaracen || tok == token::CivTeutonic || tok ==
+                token::CivTurkish || tok == token::CivViking || tok ==
+                token::CivMyCiv || tok == token::CommodityFood || tok ==
+                token::CommodityStone || tok == token::CommodityWood || tok ==
+                token::CommodityGold || tok == token::DifficultyLevelEasiest ||
+                tok == token::DifficultyLevelEasy || tok ==
+                token::DifficultyLevelModerate || tok ==
+                token::DifficultyLevelHard || tok ==
+                token::DifficultyLevelHardest || tok ==
+                token::DifficultyParameterAbilityToDodgeMissiles || tok ==
+                token::DifficultyParameterAbilityToMaintainDistance || tok ==
+                token::DiplomaticStanceAlly || tok ==
+                token::DiplomaticStanceNeutral || tok ==
+                token::DiplomaticStanceEnemy || tok == token::MapSizeTypeTiny
+                || tok == token::MapSizeTypeSmall || tok ==
+                token::MapSizeTypeMedium || tok == token::MapSizeTypeNormal ||
+                tok == token::MapSizeTypeLarge || tok ==
+                token::MapSizeTypeGiant || tok == token::MapTypeNameArabia ||
+                tok == token::MapTypeNameArchipelago || tok ==
+                token::MapTypeNameBaltic || tok ==
+                token::MapTypeNameBlackForest || tok ==
+                token::MapTypeNameCoastal || tok ==
+                token::MapTypeNameContinental || tok ==
+                token::MapTypeNameCraterLake || tok ==
+                token::MapTypeNameFortress || tok == token::MapTypeNameGoldRush
+                || tok == token::MapTypeNameHighland || tok ==
+                token::MapTypeNameIslands || tok ==
+                token::MapTypeNameMediterranean || tok ==
+                token::MapTypeNameMigration || tok == token::MapTypeNameRivers
+                || tok == token::MapTypeNameTeamIslands || tok ==
+                token::MapTypeNameScenarioMap || tok ==
+                token::PlayerNumberTypeAnyAlly || tok ==
+                token::PlayerNumberTypeAnyComputer || tok ==
+                token::PlayerNumberTypeAnyComputerAlly || tok ==
+                token::PlayerNumberTypeAnyComputerEnemy || tok ==
+                token::PlayerNumberTypeAnyComputerNeutral || tok ==
+                token::PlayerNumberTypeAnyEnemy || tok ==
+                token::PlayerNumberTypeAnyHuman || tok ==
+                token::PlayerNumberTypeAnyHumanAlly || tok ==
+                token::PlayerNumberTypeAnyHumanEnemy || tok ==
+                token::PlayerNumberTypeAnyHumanNeutral || tok ==
+                token::PlayerNumberTypeAnyNeutral || tok ==
+                token::PlayerNumberTypeEveryAlly || tok ==
+                token::PlayerNumberTypeEveryComputer || tok ==
+                token::PlayerNumberTypeEveryEnemy || tok ==
+                token::PlayerNumberTypeEveryHuman || tok ==
+                token::PlayerNumberTypeEveryNeutral || tok ==
+                token::PlayerNumberTypeMyPlayerNumber || tok ==
+                token::RelOpLessThan || tok == token::RelOpLessOrEqual || tok
+                == token::RelOpGreaterThan || tok == token::RelOpGreaterOrEqual
+                || tok == token::RelOpEqual || tok == token::RelOpNotEqual ||
+                tok == token::ResearchItemRiArbalest || tok ==
+                token::ResearchItemRiCrossbow || tok ==
+                token::ResearchItemRiEliteSkirmisher || tok ==
+                token::ResearchItemRiHandCannon || tok ==
+                token::ResearchItemRiHeavyCavalryArcher || tok ==
+                token::ResearchItemRiChampion || tok ==
+                token::ResearchItemRiEliteEagleWarrior || tok ==
+                token::ResearchItemRiHalberdier || tok ==
+                token::ResearchItemRiLongSwordsman || tok ==
+                token::ResearchItemRiManAtArms || tok ==
+                token::ResearchItemRiParthianTactics || tok ==
+                token::ResearchItemRiPikeman || tok ==
+                token::ResearchItemRiSquires || tok ==
+                token::ResearchItemRiThumbRing || tok ==
+                token::ResearchItemRiTracking || tok ==
+                token::ResearchItemRiTwoHandedSwordsman || tok ==
+                token::ResearchItemRiBlastFurnace || tok ==
+                token::ResearchItemRiBodkinArrow || tok ==
+                token::ResearchItemRiBracer || tok ==
+                token::ResearchItemRiChainBarding || tok ==
+                token::ResearchItemRiChainMail || tok ==
+                token::ResearchItemRiFletching || tok ==
+                token::ResearchItemRiForging || tok ==
+                token::ResearchItemRiIronCasting || tok ==
+                token::ResearchItemRiLeatherArcherArmor || tok ==
+                token::ResearchItemRiPaddedArcherArmor || tok ==
+                token::ResearchItemRiPlateBarding || tok ==
+                token::ResearchItemRiPlateMail || tok ==
+                token::ResearchItemRiRingArcherArmor || tok ==
+                token::ResearchItemRiScaleBarding || tok ==
+                token::ResearchItemRiScaleMail || tok ==
+                token::ResearchItemRiConscription || tok ==
+                token::ResearchItemRiHoardings || tok ==
+                token::ResearchItemRiSappers || tok ==
+                token::ResearchItemRiEliteBerserk || tok ==
+                token::ResearchItemRiEliteCataphract || tok ==
+                token::ResearchItemRiEliteChuKoNu || tok ==
+                token::ResearchItemRiEliteHuskarl || tok ==
+                token::ResearchItemRiEliteJanissary || tok ==
+                token::ResearchItemRiEliteLongbowman || tok ==
+                token::ResearchItemRiEliteMameluke || tok ==
+                token::ResearchItemRiEliteMangudai || tok ==
+                token::ResearchItemRiEliteSamurai || tok ==
+                token::ResearchItemRiEliteTeutonicKnight || tok ==
+                token::ResearchItemRiEliteThrowingAxeman || tok ==
+                token::ResearchItemRiEliteWarElephant || tok ==
+                token::ResearchItemRiEliteWoadRaider || tok ==
+                token::ResearchItemRiMyUniqueEliteUnit || tok ==
+                token::ResearchItemRiMyUniqueResearch || tok ==
+                token::ResearchItemRiCannonGalleon || tok ==
+                token::ResearchItemRiCareening || tok ==
+                token::ResearchItemRiDeckGuns || tok ==
+                token::ResearchItemRiDryDock || tok ==
+                token::ResearchItemRiEliteLongboat || tok ==
+                token::ResearchItemRiFastFireShip || tok ==
+                token::ResearchItemRiGalleon || tok ==
+                token::ResearchItemRiHeavyDemolitionShip || tok ==
+                token::ResearchItemRiShipwright || tok ==
+                token::ResearchItemRiWarGalley || tok ==
+                token::ResearchItemRiBowSaw || tok ==
+                token::ResearchItemRiDoubleBitAxe || tok ==
+                token::ResearchItemRiTwoManSaw || tok ==
+                token::ResearchItemRiBanking || tok ==
+                token::ResearchItemRiCaravan || tok ==
+                token::ResearchItemRiCartography || tok ==
+                token::ResearchItemRiCoinage || tok ==
+                token::ResearchItemRiGuilds || tok ==
+                token::ResearchItemRiCropRotation || tok ==
+                token::ResearchItemRiHeavyPlow || tok ==
+                token::ResearchItemRiHorseCollar || tok ==
+                token::ResearchItemRiGoldMining || tok ==
+                token::ResearchItemRiGoldShaftMining || tok ==
+                token::ResearchItemRiStoneMining || tok ==
+                token::ResearchItemRiStoneShaftMining || tok ==
+                token::ResearchItemRiAtonement || tok ==
+                token::ResearchItemRiBlockPrinting || tok ==
+                token::ResearchItemRiFaith || tok ==
+                token::ResearchItemRiFervor || tok ==
+                token::ResearchItemRiHerbalMedicine || tok ==
+                token::ResearchItemRiHeresy || tok ==
+                token::ResearchItemRiIllumination || tok ==
+                token::ResearchItemRiRedemption || tok ==
+                token::ResearchItemRiSanctity || tok ==
+                token::ResearchItemRiTheocracy || tok ==
+                token::ResearchItemRiBombardCannon || tok ==
+                token::ResearchItemRiCappedRam || tok ==
+                token::ResearchItemRiHeavyScorpion || tok ==
+                token::ResearchItemRiOnager || tok ==
+                token::ResearchItemRiScorpion || tok ==
+                token::ResearchItemRiSiegeOnager || tok ==
+                token::ResearchItemRiSiegeRam || tok ==
+                token::ResearchItemRiBloodlines || tok ==
+                token::ResearchItemRiCavalier || tok ==
+                token::ResearchItemRiHeavyCamel || tok ==
+                token::ResearchItemRiHusbandry || tok ==
+                token::ResearchItemRiHussar || tok ==
+                token::ResearchItemRiLightCavalry || tok ==
+                token::ResearchItemRiPaladin || tok ==
+                token::ResearchItemRiHandCart || tok ==
+                token::ResearchItemRiLoom || tok ==
+                token::ResearchItemRiTownPatrol || tok ==
+                token::ResearchItemRiTownWatch || tok ==
+                token::ResearchItemRiWheelBarrow || tok ==
+                token::ResearchItemRiArchitecture || tok ==
+                token::ResearchItemRiBallistics || tok ==
+                token::ResearchItemRiBombardTower || tok ==
+                token::ResearchItemRiChemistry || tok ==
+                token::ResearchItemRiFortifiedWall || tok ==
+                token::ResearchItemRiGuardTower || tok ==
+                token::ResearchItemRiHeatedShot || tok ==
+                token::ResearchItemRiKeep || tok ==
+                token::ResearchItemRiMasonry || tok ==
+                token::ResearchItemRiMurderHoles || tok ==
+                token::ResearchItemRiSiegeEngineers || tok ==
+                token::ResearchItemRiStonecutting || tok ==
+                token::ResearchItemMyUniqueUnitUpgrade || tok ==
+                token::ResearchItemMyUniqueResearch || tok ==
+                token::StartingResourcesTypeLowResources || tok ==
+                token::StartingResourcesTypeMediumResources || tok ==
+                token::StartingResourcesTypeHighResources || tok ==
+                token::StrategicNumberNameSnPercentCivilianExplorers || tok ==
+                token::StrategicNumberNameSnPercentCivilianBuilders || tok ==
+                token::StrategicNumberNameSnPercentCivilianGatherers || tok ==
+                token::StrategicNumberNameSnCapCivilianExplorers || tok ==
+                token::StrategicNumberNameSnCapCivilianBuilders || tok ==
+                token::StrategicNumberNameSnCapCivilianGatherers || tok ==
+                token::StrategicNumberNameSnMinimumAttackGroupSize || tok ==
+                token::StrategicNumberNameSnTotalNumberExplorers || tok ==
+                token::StrategicNumberNameSnPercentEnemySightedResponse || tok
+                == token::StrategicNumberNameSnEnemySightedResponseDistance ||
+                tok == token::StrategicNumberNameSnSentryDistance || tok ==
+                token::StrategicNumberNameSnRelicReturnDistance || tok ==
+                token::StrategicNumberNameSnMinimumDefendGroupSize || tok ==
+                token::StrategicNumberNameSnMaximumAttackGroupSize || tok ==
+                token::StrategicNumberNameSnMaximumDefendGroupSize || tok ==
+                token::StrategicNumberNameSnMinimumPeaceLikeLevel || tok ==
+                token::StrategicNumberNameSnPercentExplorationRequired || tok
+                == token::StrategicNumberNameSnZeroPriorityDistance || tok ==
+                token::StrategicNumberNameSnMinimumCivilianExplorers || tok ==
+                token::StrategicNumberNameSnNumberAttackGroups || tok ==
+                token::StrategicNumberNameSnNumberDefendGroups || tok ==
+                token::StrategicNumberNameSnAttackGroupGatherSpacing || tok ==
+                token::StrategicNumberNameSnNumberExploreGroups || tok ==
+                token::StrategicNumberNameSnMinimumExploreGroupSize || tok ==
+                token::StrategicNumberNameSnMaximumExploreGroupSize || tok ==
+                token::StrategicNumberNameSnGoldDefendPriority || tok ==
+                token::StrategicNumberNameSnStoneDefendPriority || tok ==
+                token::StrategicNumberNameSnForageDefendPriority || tok ==
+                token::StrategicNumberNameSnRelicDefendPriority || tok ==
+                token::StrategicNumberNameSnTownDefendPriority || tok ==
+                token::StrategicNumberNameSnDefenseDistance || tok ==
+                token::StrategicNumberNameSnNumberBoatAttackGroups || tok ==
+                token::StrategicNumberNameSnMinimumBoatAttackGroupSize || tok
+                == token::StrategicNumberNameSnMaximumBoatAttackGroupSize ||
+                tok == token::StrategicNumberNameSnNumberBoatExploreGroups ||
+                tok == token::StrategicNumberNameSnMinimumBoatExploreGroupSize
+                || tok ==
+                token::StrategicNumberNameSnMaximumBoatExploreGroupSize || tok
+                == token::StrategicNumberNameSnNumberBoatDefendGroups || tok ==
+                token::StrategicNumberNameSnMinimumBoatDefendGroupSize || tok
+                == token::StrategicNumberNameSnMaximumBoatDefendGroupSize ||
+                tok == token::StrategicNumberNameSnDockDefendPriority || tok ==
+                token::StrategicNumberNameSnSentryDistanceVariation || tok ==
+                token::StrategicNumberNameSnMinimumTownSize || tok ==
+                token::StrategicNumberNameSnMaximumTownSize || tok ==
+                token::StrategicNumberNameSnGroupCommanderSelectionMethod ||
+                tok == token::StrategicNumberNameSnConsecutiveIdleUnitLimit ||
+                tok == token::StrategicNumberNameSnTargetEvaluationDistance ||
+                tok == token::StrategicNumberNameSnTargetEvaluationHitpoints ||
+                tok ==
+                token::StrategicNumberNameSnTargetEvaluationDamageCapability ||
+                tok == token::StrategicNumberNameSnTargetEvaluationKills || tok
+                == token::StrategicNumberNameSnTargetEvaluationAllyProximity ||
+                tok == token::StrategicNumberNameSnTargetEvaluationRof || tok
+                == token::StrategicNumberNameSnTargetEvaluationRandomness ||
+                tok == token::StrategicNumberNameSnCampMaxDistance || tok ==
+                token::StrategicNumberNameSnMillMaxDistance || tok ==
+                token::StrategicNumberNameSnTargetEvaluationAttackAttempts ||
+                tok == token::StrategicNumberNameSnTargetEvaluationRange || tok
+                == token::StrategicNumberNameSnDefendOverlapDistance || tok ==
+                token::StrategicNumberNameSnScaleMinimumAttackGroupSize || tok
+                == token::StrategicNumberNameSnScaleMaximumAttackGroupSize ||
+                tok == token::StrategicNumberNameSnAttackGroupSizeRandomness ||
+                tok == token::StrategicNumberNameSnScalingFrequency || tok ==
+                token::StrategicNumberNameSnMaximumGaiaAttackResponse || tok ==
+                token::StrategicNumberNameSnBuildFrequency || tok ==
+                token::StrategicNumberNameSnAttackSeparationTimeRandomness ||
+                tok == token::StrategicNumberNameSnAttackIntelligence || tok ==
+                token::StrategicNumberNameSnInitialAttackDelay || tok ==
+                token::StrategicNumberNameSnSaveScenarioInformation || tok ==
+                token::StrategicNumberNameSnSpecialAttackType1 || tok ==
+                token::StrategicNumberNameSnSpecialAttackInfluence1 || tok ==
+                token::StrategicNumberNameSnMinimumWaterBodySizeForDock || tok
+                == token::StrategicNumberNameSnNumberBuildAttemptsBeforeSkip ||
+                tok == token::StrategicNumberNameSnMaxSkipsPerAttempt || tok ==
+                token::StrategicNumberNameSnFoodGathererPercentage || tok ==
+                token::StrategicNumberNameSnGoldGathererPercentage || tok ==
+                token::StrategicNumberNameSnStoneGathererPercentage || tok ==
+                token::StrategicNumberNameSnWoodGathererPercentage || tok ==
+                token::StrategicNumberNameSnTargetEvaluationContinent || tok ==
+                token::StrategicNumberNameSnTargetEvaluationSiegeWeapon || tok
+                == token::StrategicNumberNameSnGroupLeaderDefenseDistance ||
+                tok == token::StrategicNumberNameSnInitialAttackDelayType ||
+                tok == token::StrategicNumberNameSnBlotExplorationMap || tok ==
+                token::StrategicNumberNameSnBlotSize || tok ==
+                token::StrategicNumberNameSnIntelligentGathering || tok ==
+                token::StrategicNumberNameSnTaskUngroupedSoldiers || tok ==
+                token::StrategicNumberNameSnTargetEvaluationBoat || tok ==
+                token::StrategicNumberNameSnNumberEnemyObjectsRequired || tok
+                == token::StrategicNumberNameSnNumberMaxSkipCycles || tok ==
+                token::StrategicNumberNameSnRetaskGatherAmount || tok ==
+                token::StrategicNumberNameSnMaxRetaskGatherAmount || tok ==
+                token::StrategicNumberNameSnMaxBuildPlanGathererPercentage ||
+                tok == token::StrategicNumberNameSnFoodDropsiteDistance || tok
+                == token::StrategicNumberNameSnWoodDropsiteDistance || tok ==
+                token::StrategicNumberNameSnStoneDropsiteDistance || tok ==
+                token::StrategicNumberNameSnGoldDropsiteDistance || tok ==
+                token::StrategicNumberNameSnInitialExplorationRequired || tok
+                == token::StrategicNumberNameSnRandomPlacementFactor || tok ==
+                token::StrategicNumberNameSnRequiredForestTiles || tok ==
+                token::StrategicNumberNameSnAttackDiplomacyImpact || tok ==
+                token::StrategicNumberNameSnPercentHalfExploration || tok ==
+                token::StrategicNumberNameSnTargetEvaluationTimeKillRatio ||
+                tok == token::StrategicNumberNameSnTargetEvaluationInProgress
+                || tok == token::StrategicNumberNameSnAttackWinningPlayer ||
+                tok == token::StrategicNumberNameSnCoopShareInformation || tok
+                == token::StrategicNumberNameSnAttackWinningPlayerFactor || tok
+                == token::StrategicNumberNameSnCoopShareAttacking || tok ==
+                token::StrategicNumberNameSnCoopShareAttackingInterval || tok
+                == token::StrategicNumberNameSnPercentageExploreExterminators
+                || tok == token::StrategicNumberNameSnTrackPlayerHistory || tok
+                == token::StrategicNumberNameSnMinimumDropsiteBuffer || tok ==
+                token::StrategicNumberNameSnUseByTypeMaxGathering || tok ==
+                token::StrategicNumberNameSnMinimumBoarHuntGroupSize || tok ==
+                token::StrategicNumberNameSnMinimumAmountForTrading || tok ==
+                token::StrategicNumberNameSnEasiestReactionPercentage || tok ==
+                token::StrategicNumberNameSnEasierReactionPercentage || tok ==
+                token::StrategicNumberNameSnHitsBeforeAllianceChange || tok ==
+                token::StrategicNumberNameSnAllowCivilianDefense || tok ==
+                token::StrategicNumberNameSnNumberForwardBuilders || tok ==
+                token::StrategicNumberNameSnPercentAttackSoldiers || tok ==
+                token::StrategicNumberNameSnPercentAttackBoats || tok ==
+                token::StrategicNumberNameSnDoNotScaleForDifficultyLevel || tok
+                == token::StrategicNumberNameSnGroupFormDistance || tok ==
+                token::StrategicNumberNameSnIgnoreAttackGroupUnderAttack || tok
+                == token::StrategicNumberNameSnGatherDefenseUnits || tok ==
+                token::StrategicNumberNameSnMaximumWoodDropDistance || tok ==
+                token::StrategicNumberNameSnMaximumFoodDropDistance || tok ==
+                token::StrategicNumberNameSnMaximumHuntDropDistance || tok ==
+                token::StrategicNumberNameSnMaximumFishBoatDropDistance || tok
+                == token::StrategicNumberNameSnMaximumGoldDropDistance || tok
+                == token::StrategicNumberNameSnMaximumStoneDropDistance || tok
+                == token::StrategicNumberNameSnGatherIdleSoldiersAtCenter ||
+                tok == token::StrategicNumberNameSnGarrisonRams || tok ==
+                token::UnitArbalest || tok == token::UnitArcher || tok ==
+                token::UnitCavalryArcher || tok == token::UnitCrossbowman ||
+                tok == token::UnitEliteSkirmisher || tok ==
+                token::UnitHandCannoneer || tok ==
+                token::UnitHeavyCavalryArcher || tok == token::UnitSkirmisher
+                || tok == token::UnitChampion || tok == token::UnitEagleWarrior
+                || tok == token::UnitEliteEagleWarrior || tok ==
+                token::UnitHalberdier || tok == token::UnitLongSwordsman || tok
+                == token::UnitManAtArms || tok == token::UnitMilitiaman || tok
+                == token::UnitPikeman || tok == token::UnitSpearman || tok ==
+                token::UnitTwoHandedSwordsman || tok == token::UnitBerserk ||
+                tok == token::UnitCataphract || tok == token::UnitChuKoNu ||
+                tok == token::UnitConquistador || tok ==
+                token::UnitEliteBerserk || tok == token::UnitEliteCataphract ||
+                tok == token::UnitEliteChuKoNu || tok ==
+                token::UnitEliteConquistador || tok == token::UnitEliteHuskarl
+                || tok == token::UnitEliteJaguarWarrior || tok ==
+                token::UnitEliteJanissary || tok == token::UnitEliteLongbowman
+                || tok == token::UnitEliteMameluke || tok ==
+                token::UnitEliteMangudai || tok == token::UnitElitePlumedArcher
+                || tok == token::UnitEliteSamurai || tok ==
+                token::UnitEliteTarkan || tok == token::UnitEliteTeutonicKnight
+                || tok == token::UnitEliteThrowingAxeman || tok ==
+                token::UnitEliteWarElephant || tok == token::UnitEliteWarWagon
+                || tok == token::UnitEliteWoadRaider || tok ==
+                token::UnitHuskarl || tok == token::UnitJaguarWarrior || tok ==
+                token::UnitJanissary || tok == token::UnitLongbowman || tok ==
+                token::UnitMameluke || tok == token::UnitMangudai || tok ==
+                token::UnitPetard || tok == token::UnitPlumedArcher || tok ==
+                token::UnitSamurai || tok == token::UnitTarkan || tok ==
+                token::UnitTeutonicKnight || tok == token::UnitThrowingAxeman
+                || tok == token::UnitTrebuchet || tok == token::UnitWarElephant
+                || tok == token::UnitWarWagon || tok == token::UnitWoadRaider
+                || tok == token::UnitCannonGalleon || tok ==
+                token::UnitDemolitionShip || tok ==
+                token::UnitEliteCannonGalleon || tok ==
+                token::UnitEliteLongboat || tok == token::UnitEliteTurtleShip
+                || tok == token::UnitFastFireShip || tok == token::UnitFireShip
+                || tok == token::UnitFishingShip || tok == token::UnitGalleon
+                || tok == token::UnitGalley || tok ==
+                token::UnitHeavyDemolitionShip || tok == token::UnitLongboat ||
+                tok == token::UnitTradeCog || tok == token::UnitTransportShip
+                || tok == token::UnitTurtleShip || tok == token::UnitWarGalley
+                || tok == token::UnitTradeCart || tok == token::UnitMissionary
+                || tok == token::UnitMonk || tok == token::UnitBatteringRam ||
+                tok == token::UnitBombardCannon || tok == token::UnitCappedRam
+                || tok == token::UnitHeavyScorpion || tok ==
+                token::UnitMangonel || tok == token::UnitOnager || tok ==
+                token::UnitScorpion || tok == token::UnitSiegeOnager || tok ==
+                token::UnitSiegeRam || tok == token::UnitCamel || tok ==
+                token::UnitCavalier || tok == token::UnitHeavyCamel || tok ==
+                token::UnitHussar || tok == token::UnitKnight || tok ==
+                token::UnitLightCavalry || tok == token::UnitPaladin || tok ==
+                token::UnitScoutCavalry || tok == token::UnitVillager || tok ==
+                token::UnitArcherLine || tok == token::UnitCavalryArcherLine ||
+                tok == token::UnitSkirmisherLine || tok ==
+                token::UnitEagleWarriorLine || tok == token::UnitMilitiamanLine
+                || tok == token::UnitSpearmanLine || tok ==
+                token::UnitBerserkLine || tok == token::UnitCataphractLine ||
+                tok == token::UnitChuKoNuLine || tok ==
+                token::UnitConquistadorLine || tok == token::UnitHuskarlLine ||
+                tok == token::UnitJaguarWarriorLine || tok ==
+                token::UnitJanissaryLine || tok == token::UnitLongbowmanLine ||
+                tok == token::UnitMamelukeLine || tok ==
+                token::UnitMangudaiLine || tok == token::UnitPlumedArcherLine
+                || tok == token::UnitSamuraiLine || tok ==
+                token::UnitTarkanLine || tok == token::UnitTeutonicKnightLine
+                || tok == token::UnitThrowingAxemanLine || tok ==
+                token::UnitWarElephantLine || tok == token::UnitWarWagonLine ||
+                tok == token::UnitWoadRaiderLine || tok ==
+                token::UnitCannonGalleonLine || tok ==
+                token::UnitDemolitionShipLine || tok == token::UnitFireShipLine
+                || tok == token::UnitGalleyLine || tok ==
+                token::UnitLongboatLine || tok == token::UnitTurtleShipLine ||
+                tok == token::UnitBatteringRamLine || tok ==
+                token::UnitMangonelLine || tok == token::UnitScorpionLine ||
+                tok == token::UnitCamelLine || tok == token::UnitKnightLine ||
+                tok == token::UnitScoutCavalryLine || tok ==
+                token::UnitMyEliteUniqueUnit || tok == token::UnitMyUniqueUnit
+                || tok == token::UnitMyUniqueUnitLine || tok ==
+                token::VictoryConditionNameStandard || tok ==
+                token::VictoryConditionNameConquest || tok ==
+                token::VictoryConditionNameTimeLimit || tok ==
+                token::VictoryConditionNameScore || tok ==
+                token::VictoryConditionNameCustom || tok ==
+                token::WallTypeFortifiedWall || tok ==
+                token::WallTypePalisadeWall || tok == token::WallTypeStoneWall
+                || tok == token::WallTypeStoneWallLine);
       }
 #endif
 #if 201103L <= YY_CPLUSPLUS
       symbol_type (int tok, ActionType v, location_type l)
         : super_type(token_type (tok), std::move (v), std::move (l))
       {
-        YYASSERT (tok == token::AcknowledgeEvent || tok == token::AcknowledgeTaunt || tok == token::AttackNow || tok == token::Build || tok == token::BuildForward || tok == token::BuildGate || tok == token::BuildWall || tok == token::BuyCommodity || tok == token::CcAddResource || tok == token::ChatLocal || tok == token::ChatLocalToSelf || tok == token::ChatLocalUsingId || tok == token::ChatLocalUsingRange || tok == token::ChatToAll || tok == token::ChatToAllies || tok == token::ChatToAlliesUsingId || tok == token::ChatToAlliesUsingRange || tok == token::ChatToAllUsingId || tok == token::ChatToAllUsingRange || tok == token::ChatToEnemies || tok == token::ChatToEnemiesUsingId || tok == token::ChatToEnemiesUsingRange || tok == token::ChatToPlayer || tok == token::ChatToPlayerUsingId || tok == token::ChatToPlayerUsingRange || tok == token::ChatTrace || tok == token::ClearTributeMemory || tok == token::DeleteBuilding || tok == token::DeleteUnit || tok == token::DisableSelf || tok == token::DisableTimer || tok == token::DoNothing || tok == token::EnableTimer || tok == token::EnableWallPlacement || tok == token::GenerateRandomNumber || tok == token::Log || tok == token::LogTrace || tok == token::ReleaseEscrow || tok == token::Research || tok == token::Resign || tok == token::SellCommodity || tok == token::SetDifficultyParameter || tok == token::SetDoctrine || tok == token::SetEscrowPercentage || tok == token::SetGoal || tok == token::SetSharedGoal || tok == token::SetSignal || tok == token::SetStance || tok == token::SetStrategicNumber || tok == token::Spy || tok == token::Taunt || tok == token::TauntUsingRange || tok == token::Train || tok == token::TributeToPlayer);
+        YY_ASSERT (tok == token::AcknowledgeEvent || tok ==
+                token::AcknowledgeTaunt || tok == token::AttackNow || tok ==
+                token::Build || tok == token::BuildForward || tok ==
+                token::BuildGate || tok == token::BuildWall || tok ==
+                token::BuyCommodity || tok == token::CcAddResource || tok ==
+                token::ChatLocal || tok == token::ChatLocalToSelf || tok ==
+                token::ChatLocalUsingId || tok == token::ChatLocalUsingRange ||
+                tok == token::ChatToAll || tok == token::ChatToAllies || tok ==
+                token::ChatToAlliesUsingId || tok ==
+                token::ChatToAlliesUsingRange || tok == token::ChatToAllUsingId
+                || tok == token::ChatToAllUsingRange || tok ==
+                token::ChatToEnemies || tok == token::ChatToEnemiesUsingId ||
+                tok == token::ChatToEnemiesUsingRange || tok ==
+                token::ChatToPlayer || tok == token::ChatToPlayerUsingId || tok
+                == token::ChatToPlayerUsingRange || tok == token::ChatTrace ||
+                tok == token::ClearTributeMemory || tok ==
+                token::DeleteBuilding || tok == token::DeleteUnit || tok ==
+                token::DisableSelf || tok == token::DisableTimer || tok ==
+                token::DoNothing || tok == token::EnableTimer || tok ==
+                token::EnableWallPlacement || tok ==
+                token::GenerateRandomNumber || tok == token::Log || tok ==
+                token::LogTrace || tok == token::ReleaseEscrow || tok ==
+                token::Research || tok == token::Resign || tok ==
+                token::SellCommodity || tok == token::SetDifficultyParameter ||
+                tok == token::SetDoctrine || tok == token::SetEscrowPercentage
+                || tok == token::SetGoal || tok == token::SetSharedGoal || tok
+                == token::SetSignal || tok == token::SetStance || tok ==
+                token::SetStrategicNumber || tok == token::Spy || tok ==
+                token::Taunt || tok == token::TauntUsingRange || tok ==
+                token::Train || tok == token::TributeToPlayer);
       }
 #else
       symbol_type (int tok, const ActionType& v, const location_type& l)
         : super_type(token_type (tok), v, l)
       {
-        YYASSERT (tok == token::AcknowledgeEvent || tok == token::AcknowledgeTaunt || tok == token::AttackNow || tok == token::Build || tok == token::BuildForward || tok == token::BuildGate || tok == token::BuildWall || tok == token::BuyCommodity || tok == token::CcAddResource || tok == token::ChatLocal || tok == token::ChatLocalToSelf || tok == token::ChatLocalUsingId || tok == token::ChatLocalUsingRange || tok == token::ChatToAll || tok == token::ChatToAllies || tok == token::ChatToAlliesUsingId || tok == token::ChatToAlliesUsingRange || tok == token::ChatToAllUsingId || tok == token::ChatToAllUsingRange || tok == token::ChatToEnemies || tok == token::ChatToEnemiesUsingId || tok == token::ChatToEnemiesUsingRange || tok == token::ChatToPlayer || tok == token::ChatToPlayerUsingId || tok == token::ChatToPlayerUsingRange || tok == token::ChatTrace || tok == token::ClearTributeMemory || tok == token::DeleteBuilding || tok == token::DeleteUnit || tok == token::DisableSelf || tok == token::DisableTimer || tok == token::DoNothing || tok == token::EnableTimer || tok == token::EnableWallPlacement || tok == token::GenerateRandomNumber || tok == token::Log || tok == token::LogTrace || tok == token::ReleaseEscrow || tok == token::Research || tok == token::Resign || tok == token::SellCommodity || tok == token::SetDifficultyParameter || tok == token::SetDoctrine || tok == token::SetEscrowPercentage || tok == token::SetGoal || tok == token::SetSharedGoal || tok == token::SetSignal || tok == token::SetStance || tok == token::SetStrategicNumber || tok == token::Spy || tok == token::Taunt || tok == token::TauntUsingRange || tok == token::Train || tok == token::TributeToPlayer);
+        YY_ASSERT (tok == token::AcknowledgeEvent || tok ==
+                token::AcknowledgeTaunt || tok == token::AttackNow || tok ==
+                token::Build || tok == token::BuildForward || tok ==
+                token::BuildGate || tok == token::BuildWall || tok ==
+                token::BuyCommodity || tok == token::CcAddResource || tok ==
+                token::ChatLocal || tok == token::ChatLocalToSelf || tok ==
+                token::ChatLocalUsingId || tok == token::ChatLocalUsingRange ||
+                tok == token::ChatToAll || tok == token::ChatToAllies || tok ==
+                token::ChatToAlliesUsingId || tok ==
+                token::ChatToAlliesUsingRange || tok == token::ChatToAllUsingId
+                || tok == token::ChatToAllUsingRange || tok ==
+                token::ChatToEnemies || tok == token::ChatToEnemiesUsingId ||
+                tok == token::ChatToEnemiesUsingRange || tok ==
+                token::ChatToPlayer || tok == token::ChatToPlayerUsingId || tok
+                == token::ChatToPlayerUsingRange || tok == token::ChatTrace ||
+                tok == token::ClearTributeMemory || tok ==
+                token::DeleteBuilding || tok == token::DeleteUnit || tok ==
+                token::DisableSelf || tok == token::DisableTimer || tok ==
+                token::DoNothing || tok == token::EnableTimer || tok ==
+                token::EnableWallPlacement || tok ==
+                token::GenerateRandomNumber || tok == token::Log || tok ==
+                token::LogTrace || tok == token::ReleaseEscrow || tok ==
+                token::Research || tok == token::Resign || tok ==
+                token::SellCommodity || tok == token::SetDifficultyParameter ||
+                tok == token::SetDoctrine || tok == token::SetEscrowPercentage
+                || tok == token::SetGoal || tok == token::SetSharedGoal || tok
+                == token::SetSignal || tok == token::SetStance || tok ==
+                token::SetStrategicNumber || tok == token::Spy || tok ==
+                token::Taunt || tok == token::TauntUsingRange || tok ==
+                token::Train || tok == token::TributeToPlayer);
       }
 #endif
 #if 201103L <= YY_CPLUSPLUS
       symbol_type (int tok, Fact v, location_type l)
         : super_type(token_type (tok), std::move (v), std::move (l))
       {
-        YYASSERT (tok == token::AttackSoldierCount || tok == token::AttackWarboatCount || tok == token::BuildingAvailable || tok == token::BuildingCount || tok == token::BuildingCountTotal || tok == token::BuildingTypeCount || tok == token::BuildingTypeCountTotal || tok == token::CanAffordBuilding || tok == token::CanAffordCompleteWall || tok == token::CanAffordResearch || tok == token::CanAffordUnit || tok == token::CanBuild || tok == token::CanBuildGate || tok == token::CanBuildGateWithEscrow || tok == token::CanBuildWall || tok == token::CanBuildWallWithEscrow || tok == token::CanBuildWithEscrow || tok == token::CanBuyCommodity || tok == token::CanResearch || tok == token::CanResearchWithEscrow || tok == token::CanSellCommodity || tok == token::CanSpy || tok == token::CanSpyWithEscrow || tok == token::CanTrain || tok == token::CanTrainWithEscrow || tok == token::CcPlayersBuildingCount || tok == token::CcPlayersBuildingTypeCount || tok == token::CcPlayersUnitCount || tok == token::CcPlayersUnitTypeCount || tok == token::CheatsEnabled || tok == token::CivilianPopulation || tok == token::CivSelected || tok == token::CommodityBuyingPrice || tok == token::CommoditySellingPrice || tok == token::CurrentAge || tok == token::CurrentAgeTime || tok == token::CurrentScore || tok == token::DeathMatchGame || tok == token::DefendSoldierCount || tok == token::DefendWarboatCount || tok == token::Difficulty || tok == token::Doctrine || tok == token::DropsiteMinDistance || tok == token::EnemyBuildingsInTown || tok == token::EnemyCapturedRelics || tok == token::EscrowAmount || tok == token::EventDetected || tok == token::Falseval || tok == token::FoodAmount || tok == token::GameTime || tok == token::Goal || tok == token::GoldAmount || tok == token::HousingHeadroom || tok == token::IdleFarmCount || tok == token::MapSize || tok == token::MapType || tok == token::MilitaryPopulation || tok == token::PlayerComputer || tok == token::PlayerHuman || tok == token::PlayerInGame || tok == token::PlayerNumber || tok == token::PlayerResigned || tok == token::PlayersBuildingCount || tok == token::PlayersBuildingTypeCount || tok == token::PlayersCiv || tok == token::PlayersCivilianPopulation || tok == token::PlayersCurrentAge || tok == token::PlayersCurrentAgeTime || tok == token::PlayersMilitaryPopulation || tok == token::PlayersPopulation || tok == token::PlayersScore || tok == token::PlayersStance || tok == token::PlayersTribute || tok == token::PlayersTributeMemory || tok == token::PlayersUnitCount || tok == token::PlayersUnitTypeCount || tok == token::PlayerValid || tok == token::Population || tok == token::PopulationCap || tok == token::PopulationHeadroom || tok == token::RandomNumber || tok == token::RegicideGame || tok == token::ResearchAvailable || tok == token::ResearchCompleted || tok == token::ResourceFound || tok == token::SharedGoal || tok == token::SheepAndForageTooFar || tok == token::SoldierCount || tok == token::StanceToward || tok == token::StartingAge || tok == token::StartingResources || tok == token::StoneAmount || tok == token::StrategicNumber || tok == token::TauntDetected || tok == token::TimerTriggered || tok == token::TownUnderAttack || tok == token::Trueval || tok == token::UnitAvailable || tok == token::UnitCount || tok == token::UnitCountTotal || tok == token::UnitTypeCount || tok == token::UnitTypeCountTotal || tok == token::VictoryCondition || tok == token::WallCompletedPercentage || tok == token::WallInvisiblePercentage || tok == token::WarboatCount || tok == token::WoodAmount);
+        YY_ASSERT (tok == token::AttackSoldierCount || tok ==
+                token::AttackWarboatCount || tok == token::BuildingAvailable ||
+                tok == token::BuildingCount || tok == token::BuildingCountTotal
+                || tok == token::BuildingTypeCount || tok ==
+                token::BuildingTypeCountTotal || tok ==
+                token::CanAffordBuilding || tok == token::CanAffordCompleteWall
+                || tok == token::CanAffordResearch || tok ==
+                token::CanAffordUnit || tok == token::CanBuild || tok ==
+                token::CanBuildGate || tok == token::CanBuildGateWithEscrow ||
+                tok == token::CanBuildWall || tok ==
+                token::CanBuildWallWithEscrow || tok ==
+                token::CanBuildWithEscrow || tok == token::CanBuyCommodity ||
+                tok == token::CanResearch || tok ==
+                token::CanResearchWithEscrow || tok == token::CanSellCommodity
+                || tok == token::CanSpy || tok == token::CanSpyWithEscrow ||
+                tok == token::CanTrain || tok == token::CanTrainWithEscrow ||
+                tok == token::CcPlayersBuildingCount || tok ==
+                token::CcPlayersBuildingTypeCount || tok ==
+                token::CcPlayersUnitCount || tok ==
+                token::CcPlayersUnitTypeCount || tok == token::CheatsEnabled ||
+                tok == token::CivilianPopulation || tok == token::CivSelected
+                || tok == token::CommodityBuyingPrice || tok ==
+                token::CommoditySellingPrice || tok == token::CurrentAge || tok
+                == token::CurrentAgeTime || tok == token::CurrentScore || tok
+                == token::DeathMatchGame || tok == token::DefendSoldierCount ||
+                tok == token::DefendWarboatCount || tok == token::Difficulty ||
+                tok == token::Doctrine || tok == token::DropsiteMinDistance ||
+                tok == token::EnemyBuildingsInTown || tok ==
+                token::EnemyCapturedRelics || tok == token::EscrowAmount || tok
+                == token::EventDetected || tok == token::Falseval || tok ==
+                token::FoodAmount || tok == token::GameTime || tok ==
+                token::Goal || tok == token::GoldAmount || tok ==
+                token::HousingHeadroom || tok == token::IdleFarmCount || tok ==
+                token::MapSize || tok == token::MapType || tok ==
+                token::MilitaryPopulation || tok == token::PlayerComputer ||
+                tok == token::PlayerHuman || tok == token::PlayerInGame || tok
+                == token::PlayerNumber || tok == token::PlayerResigned || tok
+                == token::PlayersBuildingCount || tok ==
+                token::PlayersBuildingTypeCount || tok == token::PlayersCiv ||
+                tok == token::PlayersCivilianPopulation || tok ==
+                token::PlayersCurrentAge || tok == token::PlayersCurrentAgeTime
+                || tok == token::PlayersMilitaryPopulation || tok ==
+                token::PlayersPopulation || tok == token::PlayersScore || tok
+                == token::PlayersStance || tok == token::PlayersTribute || tok
+                == token::PlayersTributeMemory || tok ==
+                token::PlayersUnitCount || tok == token::PlayersUnitTypeCount
+                || tok == token::PlayerValid || tok == token::Population || tok
+                == token::PopulationCap || tok == token::PopulationHeadroom ||
+                tok == token::RandomNumber || tok == token::RegicideGame || tok
+                == token::ResearchAvailable || tok == token::ResearchCompleted
+                || tok == token::ResourceFound || tok == token::SharedGoal ||
+                tok == token::SheepAndForageTooFar || tok ==
+                token::SoldierCount || tok == token::StanceToward || tok ==
+                token::StartingAge || tok == token::StartingResources || tok ==
+                token::StoneAmount || tok == token::StrategicNumber || tok ==
+                token::TauntDetected || tok == token::TimerTriggered || tok ==
+                token::TownUnderAttack || tok == token::Trueval || tok ==
+                token::UnitAvailable || tok == token::UnitCount || tok ==
+                token::UnitCountTotal || tok == token::UnitTypeCount || tok ==
+                token::UnitTypeCountTotal || tok == token::VictoryCondition ||
+                tok == token::WallCompletedPercentage || tok ==
+                token::WallInvisiblePercentage || tok == token::WarboatCount ||
+                tok == token::WoodAmount);
       }
 #else
       symbol_type (int tok, const Fact& v, const location_type& l)
         : super_type(token_type (tok), v, l)
       {
-        YYASSERT (tok == token::AttackSoldierCount || tok == token::AttackWarboatCount || tok == token::BuildingAvailable || tok == token::BuildingCount || tok == token::BuildingCountTotal || tok == token::BuildingTypeCount || tok == token::BuildingTypeCountTotal || tok == token::CanAffordBuilding || tok == token::CanAffordCompleteWall || tok == token::CanAffordResearch || tok == token::CanAffordUnit || tok == token::CanBuild || tok == token::CanBuildGate || tok == token::CanBuildGateWithEscrow || tok == token::CanBuildWall || tok == token::CanBuildWallWithEscrow || tok == token::CanBuildWithEscrow || tok == token::CanBuyCommodity || tok == token::CanResearch || tok == token::CanResearchWithEscrow || tok == token::CanSellCommodity || tok == token::CanSpy || tok == token::CanSpyWithEscrow || tok == token::CanTrain || tok == token::CanTrainWithEscrow || tok == token::CcPlayersBuildingCount || tok == token::CcPlayersBuildingTypeCount || tok == token::CcPlayersUnitCount || tok == token::CcPlayersUnitTypeCount || tok == token::CheatsEnabled || tok == token::CivilianPopulation || tok == token::CivSelected || tok == token::CommodityBuyingPrice || tok == token::CommoditySellingPrice || tok == token::CurrentAge || tok == token::CurrentAgeTime || tok == token::CurrentScore || tok == token::DeathMatchGame || tok == token::DefendSoldierCount || tok == token::DefendWarboatCount || tok == token::Difficulty || tok == token::Doctrine || tok == token::DropsiteMinDistance || tok == token::EnemyBuildingsInTown || tok == token::EnemyCapturedRelics || tok == token::EscrowAmount || tok == token::EventDetected || tok == token::Falseval || tok == token::FoodAmount || tok == token::GameTime || tok == token::Goal || tok == token::GoldAmount || tok == token::HousingHeadroom || tok == token::IdleFarmCount || tok == token::MapSize || tok == token::MapType || tok == token::MilitaryPopulation || tok == token::PlayerComputer || tok == token::PlayerHuman || tok == token::PlayerInGame || tok == token::PlayerNumber || tok == token::PlayerResigned || tok == token::PlayersBuildingCount || tok == token::PlayersBuildingTypeCount || tok == token::PlayersCiv || tok == token::PlayersCivilianPopulation || tok == token::PlayersCurrentAge || tok == token::PlayersCurrentAgeTime || tok == token::PlayersMilitaryPopulation || tok == token::PlayersPopulation || tok == token::PlayersScore || tok == token::PlayersStance || tok == token::PlayersTribute || tok == token::PlayersTributeMemory || tok == token::PlayersUnitCount || tok == token::PlayersUnitTypeCount || tok == token::PlayerValid || tok == token::Population || tok == token::PopulationCap || tok == token::PopulationHeadroom || tok == token::RandomNumber || tok == token::RegicideGame || tok == token::ResearchAvailable || tok == token::ResearchCompleted || tok == token::ResourceFound || tok == token::SharedGoal || tok == token::SheepAndForageTooFar || tok == token::SoldierCount || tok == token::StanceToward || tok == token::StartingAge || tok == token::StartingResources || tok == token::StoneAmount || tok == token::StrategicNumber || tok == token::TauntDetected || tok == token::TimerTriggered || tok == token::TownUnderAttack || tok == token::Trueval || tok == token::UnitAvailable || tok == token::UnitCount || tok == token::UnitCountTotal || tok == token::UnitTypeCount || tok == token::UnitTypeCountTotal || tok == token::VictoryCondition || tok == token::WallCompletedPercentage || tok == token::WallInvisiblePercentage || tok == token::WarboatCount || tok == token::WoodAmount);
+        YY_ASSERT (tok == token::AttackSoldierCount || tok ==
+                token::AttackWarboatCount || tok == token::BuildingAvailable ||
+                tok == token::BuildingCount || tok == token::BuildingCountTotal
+                || tok == token::BuildingTypeCount || tok ==
+                token::BuildingTypeCountTotal || tok ==
+                token::CanAffordBuilding || tok == token::CanAffordCompleteWall
+                || tok == token::CanAffordResearch || tok ==
+                token::CanAffordUnit || tok == token::CanBuild || tok ==
+                token::CanBuildGate || tok == token::CanBuildGateWithEscrow ||
+                tok == token::CanBuildWall || tok ==
+                token::CanBuildWallWithEscrow || tok ==
+                token::CanBuildWithEscrow || tok == token::CanBuyCommodity ||
+                tok == token::CanResearch || tok ==
+                token::CanResearchWithEscrow || tok == token::CanSellCommodity
+                || tok == token::CanSpy || tok == token::CanSpyWithEscrow ||
+                tok == token::CanTrain || tok == token::CanTrainWithEscrow ||
+                tok == token::CcPlayersBuildingCount || tok ==
+                token::CcPlayersBuildingTypeCount || tok ==
+                token::CcPlayersUnitCount || tok ==
+                token::CcPlayersUnitTypeCount || tok == token::CheatsEnabled ||
+                tok == token::CivilianPopulation || tok == token::CivSelected
+                || tok == token::CommodityBuyingPrice || tok ==
+                token::CommoditySellingPrice || tok == token::CurrentAge || tok
+                == token::CurrentAgeTime || tok == token::CurrentScore || tok
+                == token::DeathMatchGame || tok == token::DefendSoldierCount ||
+                tok == token::DefendWarboatCount || tok == token::Difficulty ||
+                tok == token::Doctrine || tok == token::DropsiteMinDistance ||
+                tok == token::EnemyBuildingsInTown || tok ==
+                token::EnemyCapturedRelics || tok == token::EscrowAmount || tok
+                == token::EventDetected || tok == token::Falseval || tok ==
+                token::FoodAmount || tok == token::GameTime || tok ==
+                token::Goal || tok == token::GoldAmount || tok ==
+                token::HousingHeadroom || tok == token::IdleFarmCount || tok ==
+                token::MapSize || tok == token::MapType || tok ==
+                token::MilitaryPopulation || tok == token::PlayerComputer ||
+                tok == token::PlayerHuman || tok == token::PlayerInGame || tok
+                == token::PlayerNumber || tok == token::PlayerResigned || tok
+                == token::PlayersBuildingCount || tok ==
+                token::PlayersBuildingTypeCount || tok == token::PlayersCiv ||
+                tok == token::PlayersCivilianPopulation || tok ==
+                token::PlayersCurrentAge || tok == token::PlayersCurrentAgeTime
+                || tok == token::PlayersMilitaryPopulation || tok ==
+                token::PlayersPopulation || tok == token::PlayersScore || tok
+                == token::PlayersStance || tok == token::PlayersTribute || tok
+                == token::PlayersTributeMemory || tok ==
+                token::PlayersUnitCount || tok == token::PlayersUnitTypeCount
+                || tok == token::PlayerValid || tok == token::Population || tok
+                == token::PopulationCap || tok == token::PopulationHeadroom ||
+                tok == token::RandomNumber || tok == token::RegicideGame || tok
+                == token::ResearchAvailable || tok == token::ResearchCompleted
+                || tok == token::ResourceFound || tok == token::SharedGoal ||
+                tok == token::SheepAndForageTooFar || tok ==
+                token::SoldierCount || tok == token::StanceToward || tok ==
+                token::StartingAge || tok == token::StartingResources || tok ==
+                token::StoneAmount || tok == token::StrategicNumber || tok ==
+                token::TauntDetected || tok == token::TimerTriggered || tok ==
+                token::TownUnderAttack || tok == token::Trueval || tok ==
+                token::UnitAvailable || tok == token::UnitCount || tok ==
+                token::UnitCountTotal || tok == token::UnitTypeCount || tok ==
+                token::UnitTypeCountTotal || tok == token::VictoryCondition ||
+                tok == token::WallCompletedPercentage || tok ==
+                token::WallInvisiblePercentage || tok == token::WarboatCount ||
+                tok == token::WoodAmount);
       }
 #endif
 #if 201103L <= YY_CPLUSPLUS
       symbol_type (int tok, int v, location_type l)
         : super_type(token_type (tok), std::move (v), std::move (l))
       {
-        YYASSERT (tok == token::Number);
+        YY_ASSERT (tok == token::Number);
       }
 #else
       symbol_type (int tok, const int& v, const location_type& l)
         : super_type(token_type (tok), v, l)
       {
-        YYASSERT (tok == token::Number);
+        YY_ASSERT (tok == token::Number);
       }
 #endif
 #if 201103L <= YY_CPLUSPLUS
       symbol_type (int tok, std::string v, location_type l)
         : super_type(token_type (tok), std::move (v), std::move (l))
       {
-        YYASSERT (tok == token::String || tok == token::SymbolName);
+        YY_ASSERT (tok == token::String || tok == token::SymbolName);
       }
 #else
       symbol_type (int tok, const std::string& v, const location_type& l)
         : super_type(token_type (tok), v, l)
       {
-        YYASSERT (tok == token::String || tok == token::SymbolName);
+        YY_ASSERT (tok == token::String || tok == token::SymbolName);
       }
 #endif
     };
@@ -12994,8 +13570,8 @@ switch (yytype)
     ScriptParser (const ScriptParser&);
     ScriptParser& operator= (const ScriptParser&);
 
-    /// State numbers.
-    typedef int state_type;
+    /// Stored state numbers (used for stacks).
+    typedef short state_type;
 
     /// Generate an error message.
     /// \param yystate   the state where the error occurred.
@@ -13006,7 +13582,7 @@ switch (yytype)
     /// Compute post-reduction state.
     /// \param yystate   the current state
     /// \param yysym     the nonterminal to push on the stack
-    state_type yy_lr_goto_state_ (state_type yystate, int yysym);
+    static state_type yy_lr_goto_state_ (state_type yystate, int yysym);
 
     /// Whether the given \c yypact_ value indicates a defaulted state.
     /// \param yyvalue   the value to check
@@ -13020,40 +13596,42 @@ switch (yytype)
     static const signed char yytable_ninf_;
 
     /// Convert a scanner token number \a t to a symbol number.
-    static token_number_type yytranslate_ (token_type t);
+    /// In theory \a t should be a token_type, but character literals
+    /// are valid, yet not members of the token_type enum.
+    static token_number_type yytranslate_ (int t);
 
     // Tables.
-  // YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
-  // STATE-NUM.
-  static const short yypact_[];
+    // YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
+    // STATE-NUM.
+    static const short yypact_[];
 
-  // YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
-  // Performed when YYTABLE does not specify something else to do.  Zero
-  // means the default is an error.
-  static const unsigned short yydefact_[];
+    // YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
+    // Performed when YYTABLE does not specify something else to do.  Zero
+    // means the default is an error.
+    static const short yydefact_[];
 
-  // YYPGOTO[NTERM-NUM].
-  static const short yypgoto_[];
+    // YYPGOTO[NTERM-NUM].
+    static const short yypgoto_[];
 
-  // YYDEFGOTO[NTERM-NUM].
-  static const short yydefgoto_[];
+    // YYDEFGOTO[NTERM-NUM].
+    static const short yydefgoto_[];
 
-  // YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
-  // positive, shift that token.  If negative, reduce the rule whose
-  // number is the opposite.  If YYTABLE_NINF, syntax error.
-  static const unsigned short yytable_[];
+    // YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
+    // positive, shift that token.  If negative, reduce the rule whose
+    // number is the opposite.  If YYTABLE_NINF, syntax error.
+    static const short yytable_[];
 
-  static const short yycheck_[];
+    static const short yycheck_[];
 
-  // YYSTOS[STATE-NUM] -- The (internal number of the) accessing
-  // symbol of state STATE-NUM.
-  static const unsigned short yystos_[];
+    // YYSTOS[STATE-NUM] -- The (internal number of the) accessing
+    // symbol of state STATE-NUM.
+    static const short yystos_[];
 
-  // YYR1[YYN] -- Symbol number of symbol that rule YYN derives.
-  static const unsigned short yyr1_[];
+    // YYR1[YYN] -- Symbol number of symbol that rule YYN derives.
+    static const short yyr1_[];
 
-  // YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.
-  static const unsigned char yyr2_[];
+    // YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.
+    static const signed char yyr2_[];
 
 
     /// Convert the symbol name \a n to a form suitable for a diagnostic.
@@ -13063,8 +13641,8 @@ switch (yytype)
     /// For a symbol, its name in clear.
     static const char* const yytname_[];
 #if YYDEBUG
-  // YYRLINE[YYN] -- Source line where rule number YYN was defined.
-  static const unsigned short yyrline_[];
+    // YYRLINE[YYN] -- Source line where rule number YYN was defined.
+    static const short yyrline_[];
     /// Report on the debug stream that the rule \a r is going to be reduced.
     virtual void yy_reduce_print_ (int r);
     /// Print the state stack on the debug stream.
@@ -13116,7 +13694,8 @@ switch (yytype)
       symbol_number_type type_get () const YY_NOEXCEPT;
 
       /// The state number used to denote an empty symbol.
-      enum { empty_state = -1 };
+      /// We use the initial state, as it does not have a value.
+      enum { empty_state = 0 };
 
       /// The state.
       /// \a empty when empty.
@@ -13138,6 +13717,10 @@ switch (yytype)
       /// Assignment, needed by push_back by some old implementations.
       /// Moves the contents of that.
       stack_symbol_type& operator= (stack_symbol_type& that);
+
+      /// Assignment, needed by push_back by other implementations.
+      /// Needed by some other old implementations.
+      stack_symbol_type& operator= (const stack_symbol_type& that);
 #endif
     };
 
@@ -13150,6 +13733,7 @@ switch (yytype)
       typedef typename S::reverse_iterator iterator;
       typedef typename S::const_reverse_iterator const_iterator;
       typedef typename S::size_type size_type;
+      typedef typename std::ptrdiff_t index_type;
 
       stack (size_type n = 200)
         : seq_ (n)
@@ -13158,37 +13742,19 @@ switch (yytype)
       /// Random access.
       ///
       /// Index 0 returns the topmost element.
-      T&
-      operator[] (size_type i)
-      {
-        return seq_[size () - 1 - i];
-      }
-
-      /// Random access.
-      ///
-      /// Index 0 returns the topmost element.
-      T&
-      operator[] (int i)
-      {
-        return operator[] (size_type (i));
-      }
-
-      /// Random access.
-      ///
-      /// Index 0 returns the topmost element.
       const T&
-      operator[] (size_type i) const
+      operator[] (index_type i) const
       {
-        return seq_[size () - 1 - i];
+        return seq_[size_type (size () - 1 - i)];
       }
 
       /// Random access.
       ///
       /// Index 0 returns the topmost element.
-      const T&
-      operator[] (int i) const
+      T&
+      operator[] (index_type i)
       {
-        return operator[] (size_type (i));
+        return seq_[size_type (size () - 1 - i)];
       }
 
       /// Steal the contents of \a t.
@@ -13203,7 +13769,7 @@ switch (yytype)
 
       /// Pop elements from the stack.
       void
-      pop (int n = 1) YY_NOEXCEPT
+      pop (std::ptrdiff_t n = 1) YY_NOEXCEPT
       {
         for (; 0 < n; --n)
           seq_.pop_back ();
@@ -13217,10 +13783,16 @@ switch (yytype)
       }
 
       /// Number of elements on the stack.
-      size_type
+      index_type
       size () const YY_NOEXCEPT
       {
-        return seq_.size ();
+        return index_type (seq_.size ());
+      }
+
+      std::ptrdiff_t
+      ssize () const YY_NOEXCEPT
+      {
+        return std::ptrdiff_t (size ());
       }
 
       /// Iterator on top of the stack (going downwards).
@@ -13241,20 +13813,20 @@ switch (yytype)
       class slice
       {
       public:
-        slice (const stack& stack, int range)
+        slice (const stack& stack, index_type range)
           : stack_ (stack)
           , range_ (range)
         {}
 
         const T&
-        operator[] (int i) const
+        operator[] (index_type i) const
         {
           return stack_[range_ - i];
         }
 
       private:
         const stack& stack_;
-        int range_;
+        index_type range_;
       };
 
     private:
@@ -13289,6 +13861,10 @@ switch (yytype)
     /// Pop \a n symbols from the stack.
     void yypop_ (int n = 1);
 
+    /// Some specific tokens.
+    static const token_number_type yy_error_token_ = 1;
+    static const token_number_type yy_undef_token_ = 2;
+
     /// Constants.
     enum
     {
@@ -13296,8 +13872,6 @@ switch (yytype)
       yylast_ = 1560,     ///< Last index in yytable_.
       yynnts_ = 189,  ///< Number of nonterminal symbols.
       yyfinal_ = 6, ///< Termination state number.
-      yyterror_ = 1,
-      yyerrcode_ = 256,
       yyntokens_ = 673  ///< Number of tokens.
     };
 
@@ -13309,7 +13883,7 @@ switch (yytype)
 
   inline
   ScriptParser::token_number_type
-  ScriptParser::yytranslate_ (token_type t)
+  ScriptParser::yytranslate_ (int t)
   {
     // YYTRANSLATE[TOKEN-NUM] -- Symbol number corresponding to
     // TOKEN-NUM as returned by yylex.
@@ -13411,15 +13985,14 @@ switch (yytype)
      655,   656,   657,   658,   659,   660,   661,   662,   663,   664,
      665,   666,   667,   668,   669,   670,   671,   672
     };
-    const unsigned user_token_number_max_ = 927;
-    const token_number_type undef_token_ = 2;
+    const int user_token_number_max_ = 927;
 
-    if (static_cast<int> (t) <= yyeof_)
+    if (t <= 0)
       return yyeof_;
-    else if (static_cast<unsigned> (t) <= user_token_number_max_)
+    else if (t <= user_token_number_max_)
       return translate_table[t];
     else
-      return undef_token_;
+      return yy_undef_token_;
   }
 
   // basic_symbol.
@@ -13730,6 +14303,7 @@ switch (yytype)
         value.move< std::shared_ptr<ai::Action> > (std::move (that.value));
         break;
 
+      case 677: // conditions
       case 678: // condition
       case 679: // conditiontype
       case 754: // trueval
@@ -14161,6 +14735,7 @@ switch (yytype)
         value.copy< std::shared_ptr<ai::Action> > (YY_MOVE (that.value));
         break;
 
+      case 677: // conditions
       case 678: // condition
       case 679: // conditiontype
       case 754: // trueval
@@ -14599,6 +15174,7 @@ switch (yytype)
         value.move< std::shared_ptr<ai::Action> > (YY_MOVE (s.value));
         break;
 
+      case 677: // conditions
       case 678: // condition
       case 679: // conditiontype
       case 754: // trueval
@@ -14771,91 +15347,9 @@ switch (yytype)
     return type;
   }
 
-  inline
-  ScriptParser::token_type
-  ScriptParser::by_type::token () const YY_NOEXCEPT
-  {
-    // YYTOKNUM[NUM] -- (External) token number corresponding to the
-    // (internal) symbol number NUM (which must be that of a token).  */
-    static
-    const unsigned short
-    yytoken_number_[] =
-    {
-       0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
-     265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
-     275,   276,   277,   278,   279,   280,   281,   282,   283,   284,
-     285,   286,   287,   288,   289,   290,   291,   292,   293,   294,
-     295,   296,   297,   298,   299,   300,   301,   302,   303,   304,
-     305,   306,   307,   308,   309,   310,   311,   312,   313,   314,
-     315,   316,   317,   318,   319,   320,   321,   322,   323,   324,
-     325,   326,   327,   328,   329,   330,   331,   332,   333,   334,
-     335,   336,   337,   338,   339,   340,   341,   342,   343,   344,
-     345,   346,   347,   348,   349,   350,   351,   352,   353,   354,
-     355,   356,   357,   358,   359,   360,   361,   362,   363,   364,
-     365,   366,   367,   368,   369,   370,   371,   372,   373,   374,
-     375,   376,   377,   378,   379,   380,   381,   382,   383,   384,
-     385,   386,   387,   388,   389,   390,   391,   392,   393,   394,
-     395,   396,   397,   398,   399,   400,   401,   402,   403,   404,
-     405,   406,   407,   408,   409,   410,   411,   412,   413,   414,
-     415,   416,   417,   418,   419,   420,   421,   422,   423,   424,
-     425,   426,   427,   428,   429,   430,   431,   432,   433,   434,
-     435,   436,   437,   438,   439,   440,   441,   442,   443,   444,
-     445,   446,   447,   448,   449,   450,   451,   452,   453,   454,
-     455,   456,   457,   458,   459,   460,   461,   462,   463,   464,
-     465,   466,   467,   468,   469,   470,   471,   472,   473,   474,
-     475,   476,   477,   478,   479,   480,   481,   482,   483,   484,
-     485,   486,   487,   488,   489,   490,   491,   492,   493,   494,
-     495,   496,   497,   498,   499,   500,   501,   502,   503,   504,
-     505,   506,   507,   508,   509,   510,   511,   512,   513,   514,
-     515,   516,   517,   518,   519,   520,   521,   522,   523,   524,
-     525,   526,   527,   528,   529,   530,   531,   532,   533,   534,
-     535,   536,   537,   538,   539,   540,   541,   542,   543,   544,
-     545,   546,   547,   548,   549,   550,   551,   552,   553,   554,
-     555,   556,   557,   558,   559,   560,   561,   562,   563,   564,
-     565,   566,   567,   568,   569,   570,   571,   572,   573,   574,
-     575,   576,   577,   578,   579,   580,   581,   582,   583,   584,
-     585,   586,   587,   588,   589,   590,   591,   592,   593,   594,
-     595,   596,   597,   598,   599,   600,   601,   602,   603,   604,
-     605,   606,   607,   608,   609,   610,   611,   612,   613,   614,
-     615,   616,   617,   618,   619,   620,   621,   622,   623,   624,
-     625,   626,   627,   628,   629,   630,   631,   632,   633,   634,
-     635,   636,   637,   638,   639,   640,   641,   642,   643,   644,
-     645,   646,   647,   648,   649,   650,   651,   652,   653,   654,
-     655,   656,   657,   658,   659,   660,   661,   662,   663,   664,
-     665,   666,   667,   668,   669,   670,   671,   672,   673,   674,
-     675,   676,   677,   678,   679,   680,   681,   682,   683,   684,
-     685,   686,   687,   688,   689,   690,   691,   692,   693,   694,
-     695,   696,   697,   698,   699,   700,   701,   702,   703,   704,
-     705,   706,   707,   708,   709,   710,   711,   712,   713,   714,
-     715,   716,   717,   718,   719,   720,   721,   722,   723,   724,
-     725,   726,   727,   728,   729,   730,   731,   732,   733,   734,
-     735,   736,   737,   738,   739,   740,   741,   742,   743,   744,
-     745,   746,   747,   748,   749,   750,   751,   752,   753,   754,
-     755,   756,   757,   758,   759,   760,   761,   762,   763,   764,
-     765,   766,   767,   768,   769,   770,   771,   772,   773,   774,
-     775,   776,   777,   778,   779,   780,   781,   782,   783,   784,
-     785,   786,   787,   788,   789,   790,   791,   792,   793,   794,
-     795,   796,   797,   798,   799,   800,   801,   802,   803,   804,
-     805,   806,   807,   808,   809,   810,   811,   812,   813,   814,
-     815,   816,   817,   818,   819,   820,   821,   822,   823,   824,
-     825,   826,   827,   828,   829,   830,   831,   832,   833,   834,
-     835,   836,   837,   838,   839,   840,   841,   842,   843,   844,
-     845,   846,   847,   848,   849,   850,   851,   852,   853,   854,
-     855,   856,   857,   858,   859,   860,   861,   862,   863,   864,
-     865,   866,   867,   868,   869,   870,   871,   872,   873,   874,
-     875,   876,   877,   878,   879,   880,   881,   882,   883,   884,
-     885,   886,   887,   888,   889,   890,   891,   892,   893,   894,
-     895,   896,   897,   898,   899,   900,   901,   902,   903,   904,
-     905,   906,   907,   908,   909,   910,   911,   912,   913,   914,
-     915,   916,   917,   918,   919,   920,   921,   922,   923,   924,
-     925,   926,   927
-    };
-    return token_type (yytoken_number_[type]);
-  }
-
 #line 9 "grammar.gen.ypp"
 } //  ai 
-#line 14397 "grammar.gen.tab.hpp"
+#line 14333 "grammar.gen.tab.hpp"
 
 
 
