@@ -505,7 +505,7 @@ bool EscrowAmount::satisfied(AiRule *owner)
         m_script->connect(AiScript::EscrowChanged, this, &EscrowAmount::onEscrowChanged);
     }
 
-    return CompareCondition::actualCompare(m_targetValue, m_comparison, m_script->escrowAmount(m_resourceType) * m_script->m_player->resourcesAvailable(m_resourceType));
+    return CompareCondition::actualCompare(m_targetValue, m_comparison, m_script->escrowAmount(m_resourceType));
 }
 
 TradingPrice::TradingPrice(const BuyOrSell type, const Commodity commodity, const RelOp comparison, const int targetValue) :
