@@ -178,6 +178,19 @@ void Player::setAge(const Age age)
     applyTechEffect(civilization.startingResource(effectResourceType));
 }
 
+bool Player::canAffordResearch(const int researchId) const
+{
+    const genie::Tech &research = DataManager::Inst().getTech(researchId);
+    for (const genie::Tech::ResearchResourceCost &cost : research.ResourceCosts) {
+        const genie::ResourceType resourceType = genie::ResourceType(cost.Type);
+        if (resourcesAvailable(resourceType) < cost.Amount) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 void Player::addUnit(Unit *unit)
 {
     for (const genie::Unit::ResourceStorage &res : unit->data()->ResourceStorages) {

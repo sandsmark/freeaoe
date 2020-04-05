@@ -255,14 +255,16 @@ struct CanTrainOrBuildCondition : public Condition
 
 struct TechAvailableCondition : public Condition
 {
-    TechAvailableCondition(ResearchItem tech, int playerId);
-    TechAvailableCondition(Age targetAge, int playerId);
+    TechAvailableCondition(ResearchItem tech, int playerId, bool withEscrow);
+    TechAvailableCondition(Age targetAge, int playerId, bool withEscrow);
 
     const int m_playerId;
     const int m_techId;
+    const bool m_withEscrow;
 
     bool m_isSatisfied = false;
     void onResearchCompleted(Player *player, int researchId) override;
+    void onPlayerResourceChanged(Player *player, const genie::ResourceType resourceType, float newValue) override;
 
     bool satisfied(AiRule *owner) override;
 };

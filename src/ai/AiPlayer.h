@@ -30,6 +30,7 @@ struct AiPlayer : public Player
 
     // meh, duplicating code ish
     bool canAffordUnitWithEscrow(const int unitId) const;
+    bool canAffordResearchWithEscrow(const int researchId) const;
 };
 
 #endif // AIPLAYER_H

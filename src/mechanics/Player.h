@@ -129,6 +129,7 @@ struct Player
     inline Age currentAge() {
         return Age(int(m_resourcesAvailable[genie::ResourceType::CurrentAge]));
     }
+    bool canAffordResearch(const int researchId) const;
 
     bool canAffordUnit(const int unitId) const;
     void addUnit(Unit *unit);

@@ -1,5 +1,6 @@
 #include "AiPlayer.h"
 
+#include "resource/DataManager.h"
 
 void AiPlayer::addResource(const genie::ResourceType type, float amount)
 {
@@ -50,4 +51,18 @@ bool AiPlayer::canAffordUnitWithEscrow(const int unitId) const
     }
 
     return true;
+}
+
+bool AiPlayer::canAffordResearchWithEscrow(const int researchId) const
+{
+    const genie::Tech &research = DataManager::Inst().getTech(researchId);
+    for (const genie::Tech::ResearchResourceCost &cost : research.ResourceCosts) {
+        const genie::ResourceType resourceType = genie::ResourceType(cost.Type);
+        if (resourcesAvailableWithEscrow(resourceType) < cost.Amount) {
+            return false;
+        }
+    }
+
+    return true;
+
 }

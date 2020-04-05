@@ -52,8 +52,9 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const 
 {
     switch (type) {
     case Fact::CanResearch: // todo: handle cost
+        return std::make_shared<Conditions::TechAvailableCondition>(age, m_script->m_player->playerId, false);
     case Fact::CanResearchWithEscrow: // todo: handle escrow
-        return std::make_shared<Conditions::TechAvailableCondition>(age, m_script->m_player->playerId);
+        return std::make_shared<Conditions::TechAvailableCondition>(age, m_script->m_player->playerId, true);
     default:
         break;
     }
@@ -277,10 +278,11 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const 
 std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const ResearchItem research)
 {
     switch (type) {
-    case Fact::CanResearch: // todo: handle cost
     case Fact::CanResearchWithEscrow: // todo: handle escrow
+        return std::make_shared<Conditions::TechAvailableCondition>(research, m_script->m_player->playerId, true);
+    case Fact::CanResearch: // todo: handle cost
     case Fact::ResearchAvailable:
-        return std::make_shared<Conditions::TechAvailableCondition>(research, m_script->m_player->playerId);
+        return std::make_shared<Conditions::TechAvailableCondition>(research, m_script->m_player->playerId, false);
     default:
         break;
     }

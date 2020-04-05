@@ -248,9 +248,10 @@ bool CanTrainOrBuildCondition::checkCanBuild(const AiPlayer *player) const
 
 }
 
-TechAvailableCondition::TechAvailableCondition(ResearchItem tech, int playerId) :
+TechAvailableCondition::TechAvailableCondition(ResearchItem tech, int playerId, bool withEscrow) :
     m_playerId(playerId),
-    m_techId(researchId(tech))
+    m_techId(researchId(tech)),
+    m_withEscrow(withEscrow)
 {
     if (m_techId == -1) {
         WARN << "Unhandled tech" << tech;
@@ -258,31 +259,40 @@ TechAvailableCondition::TechAvailableCondition(ResearchItem tech, int playerId) 
     EventManager::registerListener(this, EventManager::ResearchComplete);
 }
 
-TechAvailableCondition::TechAvailableCondition(Age targetAge, int playerId) :
+TechAvailableCondition::TechAvailableCondition(Age targetAge, int playerId, bool withEscrow) :
     m_playerId(playerId),
-    m_techId(researchId(targetAge))
+    m_techId(researchId(targetAge)),
+    m_withEscrow(withEscrow)
 {
     if (m_techId == -1) {
         WARN << "Unhandled age" << targetAge;
     }
     EventManager::registerListener(this, EventManager::ResearchComplete);
+    EventManager::registerListener(this, EventManager::PlayerResourceChanged);
 }
 
 void TechAvailableCondition::onResearchCompleted(Player *player, int researchId)
 {
-    bool satisfied = player->researchAvailable(m_techId);
-    if (satisfied == m_isSatisfied) {
-        return;
-    }
+    // meh not efficient who cares
+    emit(SatisfiedChanged);
+}
 
-    m_isSatisfied = satisfied;
+void TechAvailableCondition::onPlayerResourceChanged(Player *player, const genie::ResourceType resourceType, float newValue)
+{
+    // meh not efficient who cares FIXME TODO I guess
     emit(SatisfiedChanged);
 }
 
 bool TechAvailableCondition::satisfied(AiRule *owner)
 {
-    m_isSatisfied = owner->m_owner->m_player->researchAvailable(m_techId);
-    return m_isSatisfied;
+    AiPlayer *player = owner->m_owner->m_player;
+    bool canAfford = false;
+    if (m_withEscrow) {
+        canAfford = player->canAffordResearchWithEscrow(m_techId);
+    } else {
+        canAfford = player->canAffordResearch(m_techId);
+    }
+    return player->researchAvailable(m_techId) && canAfford;
 }
 
 CombatUnitsCount::CombatUnitsCount(Fact type, const RelOp comparison, int targetNumber, const int playerId) :
