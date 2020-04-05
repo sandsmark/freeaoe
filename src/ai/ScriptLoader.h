@@ -8,7 +8,7 @@
 #include <memory>
 #include <vector>
 
-struct Player;
+struct AiPlayer;
 
 namespace ai {
 
@@ -19,7 +19,7 @@ struct AiScript;
 
 class ScriptLoader {
 public:
-    ScriptLoader(Player *player);
+    ScriptLoader(AiPlayer *player);
     virtual ~ScriptLoader() {};
 
     int parse(std::istream& in, std::ostream& out);

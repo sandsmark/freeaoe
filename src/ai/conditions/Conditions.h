@@ -8,7 +8,7 @@
 #include "core/Logger.h"
 
 #include "global/EventListener.h"
-#include "mechanics/Player.h"
+#include "ai/AiPlayer.h"
 
 #include <genie/dat/ResourceUsage.h>
 
@@ -245,12 +245,11 @@ struct CanTrainOrBuildCondition : public Condition
     bool satisfied(AiRule *owner) override {
         return checkCanBuild(owner->m_owner->m_player);
     }
-    bool checkCanBuild(const Player *player) const;
+    bool checkCanBuild(const AiPlayer *player) const;
 
     const int m_playerId;
     std::unordered_set<int> m_typeIds;
-    std::unordered_set<int> m_builderTypeIds;
-    bool m_isSatisfied = false;
+//    bool m_isSatisfied = false;
     bool m_withoutEscrow = false;
 };
 

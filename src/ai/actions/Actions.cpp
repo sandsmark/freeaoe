@@ -3,11 +3,11 @@
 #include "ai/AiRule.h"
 #include "ai/AiScript.h"
 #include "ai/EnumLogDefs.h"
+#include "ai/AiPlayer.h"
 #include "ai/Ids.h"
 
 #include "core/Logger.h"
 #include "global/EventManager.h"
-#include "mechanics/Player.h"
 #include "mechanics/Unit.h"
 #include "mechanics/Building.h"
 
@@ -121,6 +121,39 @@ void ai::Actions::SetEscrowPercent::execute(ai::AiRule *rule)
     DBG << "Setting escrow for" << m_resourceType << "to" << m_targetValue;
     WARN << "escrow not implemented correctly";
     rule->m_owner->setEscrow(m_resourceType, m_targetValue / 100.);
+}
+
+ai::Actions::ReleaseEscrow::ReleaseEscrow(const ai::Commodity commodity)
+{
+    switch(commodity) {
+    case Commodity::Food:
+        m_resourceType = genie::ResourceType::FoodStorage;
+        break;
+
+    case Commodity::Wood:
+        m_resourceType = genie::ResourceType::WoodStorage;
+        break;
+
+    case Commodity::Stone:
+        m_resourceType = genie::ResourceType::StoneStorage;
+        break;
+
+    case Commodity::Gold:
+        m_resourceType = genie::ResourceType::GoldStorage;
+        break;
+
+    default:
+        WARN << "Unhandled commodity for release escrow" << commodity;
+        break;
+    }
+}
+
+void ai::Actions::ReleaseEscrow::execute(ai::AiRule *rule)
+{
+    AiPlayer *player = rule->m_owner->m_player;
+    const float newAmount = player->resourcesAvailableWithEscrow(m_resourceType);
+    player->m_reserves[m_resourceType] = 0;
+    player->setAvailableResource(m_resourceType, newAmount);
 }
 
 void ai::Actions::ShowDebugMessage::execute(ai::AiRule *rule)

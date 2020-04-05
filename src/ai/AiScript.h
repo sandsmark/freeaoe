@@ -9,7 +9,7 @@
 #include <unordered_map>
 #include <vector>
 
-struct Player;
+struct AiPlayer;
 
 namespace ai {
 
@@ -22,7 +22,7 @@ struct AiScript : public SignalEmitter<AiScript>
         EscrowChanged
     };
 
-    AiScript(Player *player) : m_player(player) { }
+    AiScript(AiPlayer *player) : m_player(player) { }
     AiScript() = delete;
 
     std::unordered_map<StrategicNumberName, int> strategicNumbers;
@@ -30,7 +30,7 @@ struct AiScript : public SignalEmitter<AiScript>
     std::vector<std::shared_ptr<AiRule>> rules;
 
 
-    Player *m_player = nullptr;
+    AiPlayer *m_player = nullptr;
 
     void setGoal(int goalId, int value) {
         if (m_goals.count(goalId) && value == m_goals[goalId]) {

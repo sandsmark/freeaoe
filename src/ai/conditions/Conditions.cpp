@@ -5,6 +5,7 @@
 
 #include "ai/Ids.h"
 #include "ai/EnumLogDefs.h"
+#include "ai/AiPlayer.h"
 
 namespace ai {
 
@@ -212,20 +213,26 @@ void CanTrainOrBuildCondition::onPlayerResourceChanged(Player *player, const gen
         break;
     }
 
-    bool satisfied = checkCanBuild(player);
-    if (satisfied == m_isSatisfied) {
-        return;
-    }
+//    bool satisfied = checkCanBuild(player);
+//    if (satisfied == m_isSatisfied) {
+//        return;
+//    }
 
-    m_isSatisfied = satisfied;
+//    m_isSatisfied = satisfied;
     emit(SatisfiedChanged);
 }
 
-bool CanTrainOrBuildCondition::checkCanBuild(const Player *player) const
+bool CanTrainOrBuildCondition::checkCanBuild(const AiPlayer *player) const
 {
     for (const int id : m_typeIds) {
-        if (!player->canAffordUnit(id, m_withoutEscrow)) {
-            continue;
+        if (m_withoutEscrow) {
+            if (!player->canAffordUnitWithEscrow(id)) {
+                continue;
+            }
+        } else {
+            if (!player->canAffordUnit(id)) {
+                continue;
+            }
         }
         const genie::Unit &data = player->civilization.unitData(id);
         int16_t trainlocationId = data.Creatable.TrainLocationID;

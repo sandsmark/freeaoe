@@ -54,6 +54,14 @@ struct SetEscrowPercent : public Action
     const int m_targetValue;
 };
 
+struct ReleaseEscrow : public Action
+{
+    ReleaseEscrow(const Commodity commodity);
+    void execute(AiRule *rule) override;
+
+    genie::ResourceType m_resourceType = genie::ResourceType::InvalidResource;
+};
+
 struct ShowDebugMessage : public Action
 {
     ShowDebugMessage(const std::string &message) : m_message(message) {}

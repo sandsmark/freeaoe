@@ -159,6 +159,7 @@ set(AI_SRC
     src/ai/actions/Actions.cpp
     src/ai/conditions/Conditions.cpp
     src/ai/Ids.cpp
+    src/ai/AiPlayer.cpp
     )
 
 set(CORE_SRC

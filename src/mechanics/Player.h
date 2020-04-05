@@ -108,14 +108,11 @@ struct Player
         ImperialAge
     };
 
-    // really only for AIs, but much more convenient to put here. So shoot me.
-    // 0 - 1, % / 100
-    ResourceMap m_reserved; // TODO FIXME: apparently, when e. g. gathering it stores X% in a separate escrow "account", not in the normal resourcesAvailable map
-
     bool alive = true;
     std::shared_ptr<VisibilityMap> visibility;
 
     Player(const int id, const int civId, const ResourceMap &startingResources = {});
+    virtual ~Player() = default;
     const int playerId;
     int playerColor = 0;
 
@@ -133,7 +130,7 @@ struct Player
         return Age(int(m_resourcesAvailable[genie::ResourceType::CurrentAge]));
     }
 
-    bool canAffordUnit(const int unitId, const bool withoutReserved = true) const;
+    bool canAffordUnit(const int unitId) const;
     void addUnit(Unit *unit);
     void removeUnit(Unit *unit);
 
@@ -146,7 +143,7 @@ struct Player
     void removeResource(const genie::ResourceType type, float amount) {
         setAvailableResource(type, m_resourcesAvailable[type] - amount);
     }
-    void addResource(const genie::ResourceType type, float amount) {
+    virtual void addResource(const genie::ResourceType type, float amount) {
         setAvailableResource(type, m_resourcesAvailable[type] + amount);
     }
     void setAvailableResource(const genie::ResourceType type, float newValue);

@@ -13,7 +13,7 @@
 
 namespace ai {
 
-ScriptLoader::ScriptLoader(Player *player) :
+ScriptLoader::ScriptLoader(AiPlayer *player) :
     m_script(std::make_shared<AiScript>(player))
 {
 }
