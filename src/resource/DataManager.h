@@ -36,7 +36,6 @@ class Tech;
 class Terrain;
 class TerrainBlock;
 class TerrainRestriction;
-class Unit;
 }  // namespace genie
 
 //------------------------------------------------------------------------------

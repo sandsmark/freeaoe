@@ -18,12 +18,8 @@
 
 #pragma once
 
-#include "core/ResourceMap.h"
-
 #include "ISampleGame.h"
 #include "core/ResourceMap.h"
-#include "mechanics/Map.h"
-#include "mechanics/Player.h"
 
 class UnitManager;
 

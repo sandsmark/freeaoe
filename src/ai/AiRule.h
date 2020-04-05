@@ -1,7 +1,5 @@
 #pragma once
 
-#include "gen/enums.h"
-
 #include <memory>
 #include <vector>
 

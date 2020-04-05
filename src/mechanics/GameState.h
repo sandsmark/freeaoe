@@ -21,7 +21,8 @@
 #include "IState.h"
 
 #include "core/ResourceMap.h"
-#include "ScenarioController.h"
+
+#include "global/EventListener.h"
 
 #include <memory>
 #include <vector>
@@ -30,6 +31,7 @@
 struct Player;
 class Map;
 class UnitManager;
+class ScenarioController;
 
 typedef std::shared_ptr<Map> MapPtr;
 

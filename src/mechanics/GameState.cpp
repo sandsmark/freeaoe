@@ -19,6 +19,8 @@
 #include "GameState.h"
 
 #include "UnitFactory.h"
+#include "ScenarioController.h"
+
 #include <Engine.h>
 #include "render/SfmlRenderTarget.h"
 #include "resource/DataManager.h"

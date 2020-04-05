@@ -31,8 +31,6 @@
 #include <genie/Types.h>
 #include <genie/resource/Slope.h>
 
-class ColorPalette;
-class BinaFile;
 class TerrainSprite;
 class Graphic;
 

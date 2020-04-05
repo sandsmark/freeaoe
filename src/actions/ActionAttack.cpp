@@ -18,12 +18,6 @@
 #include <algorithm>
 #include <vector>
 
-namespace genie {
-namespace unit {
-class AttackOrArmor;
-}  // namespace unit
-}  // namespace genie
-
 ActionAttack::ActionAttack(const Unit::Ptr &attacker, const Task &task) :
     IAction(IAction::Type::Attack, attacker, task),
     m_targetUnit(task.target)

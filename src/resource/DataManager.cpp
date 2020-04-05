@@ -18,6 +18,8 @@
 
 #include "DataManager.h"
 
+#include "LanguageManager.h"
+
 #include <genie/dat/PlayerColour.h>
 #include <genie/dat/Research.h>
 #include <genie/dat/Sound.h>
@@ -25,23 +27,20 @@
 #include <genie/dat/TerrainBlock.h>
 #include <genie/dat/TerrainRestriction.h>
 #include <genie/dat/Unit.h>
+
+#include "genie/dat/Civ.h"
+#include "genie/dat/Graphic.h"
+#include "genie/dat/Terrain.h"
+
+
 #include <filesystem>
 #include <map>
 #include <memory>
 #include <unordered_map>
 #include <utility>
 
-#include "genie/dat/Civ.h"
-#include "genie/dat/Graphic.h"
-#include "genie/dat/Terrain.h"
-
-#include "LanguageManager.h"
-
-#include <filesystem>
-
 
 // Because I like to return const refs, and also do error checking
-static const genie::Unit nullUnit;
 static const genie::Tech nullTech;
 static const genie::Civ nullCiv;
 static const genie::Effect nullEffect;

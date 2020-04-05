@@ -20,14 +20,8 @@
 
 #include "core/Types.h"
 #include "mechanics/StateManager.h"
-#include "render/MapRenderer.h"
-#include "ui/ActionPanel.h"
-#include "ui/Dialog.h"
-#include "ui/IconButton.h"
-#include "ui/Minimap.h"
-#include "ui/NumberLabel.h"
-#include "ui/UiScreen.h"
-#include "ui/UnitInfoPanel.h"
+
+#include "render/IRenderTarget.h"
 
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/Texture.hpp>
@@ -38,7 +32,16 @@
 #include <vector>
 
 class GameState;
+class MapRenderer;
+class ActionPanel;
 class SfmlRenderTarget;
+class Dialog;
+class IconButton;
+class Minimap;
+struct NumberLabel;
+class UiScreen;
+class UnitInfoPanel;
+
 namespace genie {
 class ScnFile;
 }  // namespace genie

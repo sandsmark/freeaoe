@@ -26,9 +26,19 @@
 #include "mechanics/Player.h"
 #include "mechanics/ScenarioController.h"
 #include "mechanics/UnitManager.h"
-#include "render/Camera.h"
 
+#include "render/Camera.h"
 #include "render/SfmlRenderTarget.h"
+#include "render/MapRenderer.h"
+
+#include "ui/ActionPanel.h"
+#include "ui/Dialog.h"
+#include "ui/IconButton.h"
+#include "ui/Minimap.h"
+#include "ui/NumberLabel.h"
+#include "ui/UiScreen.h"
+#include "ui/UnitInfoPanel.h"
+
 #include "resource/AssetManager.h"
 #include "resource/Resource.h"
 #include "ui/MouseCursor.h"

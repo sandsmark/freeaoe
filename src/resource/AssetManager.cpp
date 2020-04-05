@@ -24,14 +24,13 @@
 #include "TerrainSprite.h"
 #include "Graphic.h"
 
-#include <core/Utility.h>
+#include "core/Utility.h"
 #include <genie/resource/DrsFile.h>
 #include <genie/resource/PalFile.h>
 #include <genie/resource/UIFile.h>
 #include <genie/resource/BlendomaticFile.h>
 #include <genie/resource/SlpTemplate.h>
 #include <genie/resource/EdgeFiles.h>
-#include <core/Utility.h>
 
 #include <filesystem>
 #include <fstream>

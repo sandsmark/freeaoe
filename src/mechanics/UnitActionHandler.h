@@ -8,6 +8,7 @@
 #include <unordered_set>
 
 using ActionPtr = std::shared_ptr<IAction>;
+struct Player;
 
 struct UnitActionHandler
 {

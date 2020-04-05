@@ -7,7 +7,6 @@
 #include <unordered_map>
 #include <vector>
 
-class UnitManager;
 struct Player;
 
 namespace ai {

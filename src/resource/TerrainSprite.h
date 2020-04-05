@@ -29,16 +29,12 @@
 #include <string>
 #include <unordered_map>
 
-namespace sf {
-class Texture;
-}  // namespace sf
 class TerrainSprite;
 typedef std::shared_ptr<TerrainSprite> TerrainPtr;
 
 namespace genie {
 class SlpFile;
 using SlpFilePtr = std::shared_ptr<SlpFile>;
-class Terrain;
 }
 
 class TerrainSprite

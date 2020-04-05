@@ -1,7 +1,8 @@
 #pragma once
 
-#include "ai/AiScript.h"
 #include "ai/AiRule.h"
+#include "ai/AiScript.h"
+#include "ai/gen/enums.h"
 
 #include "core/SignalEmitter.h"
 #include "core/Logger.h"
@@ -11,6 +12,8 @@
 #include <genie/dat/ResourceUsage.h>
 
 namespace ai {
+
+struct AiScript;
 
 struct Condition : public EventListener, public SignalEmitter<Condition> {
     enum Signals {

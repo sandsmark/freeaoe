@@ -26,9 +26,6 @@
 
 struct Unit;
 struct Task;
-class Map;
-class UnitManager;
-struct Player;
 
 namespace genie {
 class Task;

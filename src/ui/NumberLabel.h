@@ -1,12 +1,11 @@
 #pragma once
 
-#include "core/Types.h"
-
 #include <SFML/Graphics/Text.hpp>
 
 #include <memory>
 
 class IRenderTarget;
+struct ScreenPos;
 
 struct NumberLabel
 {

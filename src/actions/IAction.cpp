@@ -27,7 +27,6 @@
 #include "ActionBuild.h"
 #include "ActionGather.h"
 #include "ActionMove.h"
-#include "actions/IAction.h"
 #include "core/Logger.h"
 #include "global/EventManager.h"
 #include "mechanics/Player.h"

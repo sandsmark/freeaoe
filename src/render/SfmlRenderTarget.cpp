@@ -38,11 +38,6 @@
 #include <memory>
 #include <SFML/Graphics/CircleShape.hpp>
 
-namespace sf {
-class Drawable;
-class Image;
-}  // namespace sf
-
 Drawable::Image::Ptr Drawable::Image::null = std::make_shared<SfmlImage>();
 
 #define SCALE 1.
