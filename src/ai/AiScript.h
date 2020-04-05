@@ -3,6 +3,8 @@
 #include "ai/gen/enums.h"
 #include "core/SignalEmitter.h"
 
+#include <genie/dat/ResourceType.h>
+
 #include <memory>
 #include <unordered_map>
 #include <vector>
@@ -16,7 +18,8 @@ struct AiRule;
 struct AiScript : public SignalEmitter<AiScript>
 {
     enum Signals {
-        GoalChanged
+        GoalChanged,
+        EscrowChanged
     };
 
     AiScript(Player *player) : m_player(player) { }
@@ -38,6 +41,9 @@ struct AiScript : public SignalEmitter<AiScript>
     }
 
     int goal(int goalId) { return m_goals[goalId]; }
+
+    void setEscrow(const genie::ResourceType resource, int amount);
+    int escrowAmount(const genie::ResourceType resource) const;
 
 private:
     std::unordered_map<int, int> m_goals;

@@ -6,6 +6,7 @@
 
 #include "core/SignalEmitter.h"
 #include "core/Logger.h"
+
 #include "global/EventListener.h"
 #include "mechanics/Player.h"
 
@@ -237,8 +238,8 @@ struct PopulationHeadroomCondition : public Condition
 
 struct CanTrainOrBuildCondition : public Condition
 {
-    CanTrainOrBuildCondition(const Unit type, const int playerId);
-    CanTrainOrBuildCondition(const Building type, const int playerId);
+    CanTrainOrBuildCondition(const Unit type, const int playerId, bool withoutEscrow);
+    CanTrainOrBuildCondition(const Building type, const int playerId, bool withoutEscrow);
 
     void onPlayerResourceChanged(Player *player, const genie::ResourceType resourceType, float newValue) override;
     bool satisfied(AiRule *owner) override {
@@ -249,6 +250,7 @@ struct CanTrainOrBuildCondition : public Condition
     const int m_playerId;
     std::unordered_set<int> m_typeIds;
     bool m_isSatisfied = false;
+    bool m_withoutEscrow = false;
 };
 
 struct TechAvailableCondition : public Condition
@@ -298,6 +300,22 @@ struct Goal : public Condition
     AiScript *m_script = nullptr;
 
     bool satisfied(AiRule *owner) override;
+};
+
+struct EscrowAmount : public Condition
+{
+    EscrowAmount(const Commodity commodity, const RelOp comparison, const int targetValue);
+    bool satisfied(AiRule *owner) override;
+
+    const RelOp m_comparison;
+    const int m_targetValue;
+    genie::ResourceType m_resourceType = genie::ResourceType::InvalidResource;
+
+    void onEscrowChanged() {
+        emit (SatisfiedChanged); // don't check anything, the satisfied check is cheap anyways
+    }
+
+    AiScript *m_script = nullptr;
 };
 
 struct TradingPrice : public Condition

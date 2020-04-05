@@ -51,7 +51,7 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type)
 std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const Age age)
 {
     switch (type) {
-    case Fact::CanResearch:
+    case Fact::CanResearch: // todo: handle cost
     case Fact::CanResearchWithEscrow: // todo: handle escrow
         return std::make_shared<Conditions::TechAvailableCondition>(age, m_script->m_player->playerId);
     default:
@@ -66,8 +66,9 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const 
 {
     switch(type) {
     case Fact::CanBuild:
-    case Fact::CanBuildWithEscrow: // todo; escrow
-        return std::make_shared<Conditions::CanTrainOrBuildCondition>(building, m_script->m_player->playerId);
+        return std::make_shared<Conditions::CanTrainOrBuildCondition>(building, m_script->m_player->playerId, true);
+    case Fact::CanBuildWithEscrow:
+        return std::make_shared<Conditions::CanTrainOrBuildCondition>(building, m_script->m_player->playerId, false);
     default:
         break;
     }
@@ -119,6 +120,8 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const 
         return std::make_shared<Conditions::TradingPrice>(Conditions::TradingPrice::Buy, commodity, comparison, m_script->m_player->playerId);
     case Fact::CommoditySellingPrice:
         return std::make_shared<Conditions::TradingPrice>(Conditions::TradingPrice::Sell, commodity, comparison, m_script->m_player->playerId);
+    case Fact::EscrowAmount:
+        return std::make_shared<Conditions::EscrowAmount>(commodity, comparison, number);
     default:
         break;
     }
@@ -274,7 +277,7 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const 
 std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const ResearchItem research)
 {
     switch (type) {
-    case Fact::CanResearch: // todo handle cost
+    case Fact::CanResearch: // todo: handle cost
     case Fact::CanResearchWithEscrow: // todo: handle escrow
     case Fact::ResearchAvailable:
         return std::make_shared<Conditions::TechAvailableCondition>(research, m_script->m_player->playerId);
@@ -290,7 +293,7 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const 
 {
     switch(type) {
     case Fact::CanTrain:
-        return std::make_shared<Conditions::CanTrainOrBuildCondition>(unit, m_script->m_player->playerId);
+        return std::make_shared<Conditions::CanTrainOrBuildCondition>(unit, m_script->m_player->playerId, false);
     default:
         break;
     }

@@ -169,15 +169,17 @@ void PopulationHeadroomCondition::onPlayerResourceChanged(Player *player, const 
     emit(SatisfiedChanged);
 }
 
-CanTrainOrBuildCondition::CanTrainOrBuildCondition(const Unit type, const int playerId) :
-    m_playerId(playerId)
+CanTrainOrBuildCondition::CanTrainOrBuildCondition(const Unit type, const int playerId, bool withoutEscrow) :
+    m_playerId(playerId),
+    m_withoutEscrow(withoutEscrow)
 {
     m_typeIds = unitIds(type);
     EventManager::registerListener(this, EventManager::PlayerResourceChanged);
 }
 
-CanTrainOrBuildCondition::CanTrainOrBuildCondition(const Building type, const int playerId) :
-    m_playerId(playerId)
+CanTrainOrBuildCondition::CanTrainOrBuildCondition(const Building type, const int playerId, bool withoutEscrow) :
+    m_playerId(playerId),
+    m_withoutEscrow(withoutEscrow)
 {
     m_typeIds = unitIds(type);
     EventManager::registerListener(this, EventManager::PlayerResourceChanged);
@@ -222,7 +224,7 @@ void CanTrainOrBuildCondition::onPlayerResourceChanged(Player *player, const gen
 bool CanTrainOrBuildCondition::checkCanBuild(const Player *player) const
 {
     for (const int id : m_typeIds) {
-        if (player->canBuildUnit(id)) {
+        if (player->canBuildUnit(id, m_withoutEscrow)) {
             return true;
         }
     }
@@ -437,6 +439,49 @@ bool Goal::satisfied(AiRule *owner)
     return CompareCondition::actualCompare(m_targetValue, m_comparison, m_script->goal(m_goalId));
 }
 
+EscrowAmount::EscrowAmount(const Commodity commodity, const RelOp comparison, const int targetValue) :
+    m_comparison(comparison),
+    m_targetValue(targetValue)
+{
+    switch(commodity) {
+    case Commodity::Food:
+        m_resourceType = genie::ResourceType::FoodStorage;
+        break;
+
+    case Commodity::Wood:
+        m_resourceType = genie::ResourceType::WoodStorage;
+        break;
+
+    case Commodity::Stone:
+        m_resourceType = genie::ResourceType::StoneStorage;
+        break;
+
+    case Commodity::Gold:
+        m_resourceType = genie::ResourceType::GoldStorage;
+        break;
+
+    default:
+        WARN << "Unhandled commodity for escrow amount" << commodity;
+        break;
+    }
+}
+
+bool EscrowAmount::satisfied(AiRule *owner)
+{
+    // hackish, TODO: fixme pass in script
+    if (owner->m_owner != m_script) {
+        if (m_script) {
+            // never going to happen, but meh
+            m_script->disconnect(this);
+        }
+
+        m_script = owner->m_owner;
+        m_script->connect(AiScript::EscrowChanged, this, &EscrowAmount::onEscrowChanged);
+    }
+
+    return CompareCondition::actualCompare(m_targetValue, m_comparison, m_script->escrowAmount(m_resourceType) * m_script->m_player->resourcesAvailable(m_resourceType));
+}
+
 TradingPrice::TradingPrice(const BuyOrSell type, const Commodity commodity, const RelOp comparison, const int targetValue) :
     m_type(type),
     m_comparison(comparison),
@@ -462,7 +507,6 @@ TradingPrice::TradingPrice(const BuyOrSell type, const Commodity commodity, cons
     }
 
     EventManager::registerListener(this, EventManager::TradingPriceChanged);
-
 }
 
 void TradingPrice::onTradingPriceChanged(const genie::ResourceType type, const int newPrice)

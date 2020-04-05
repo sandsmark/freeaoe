@@ -108,6 +108,10 @@ struct Player
         ImperialAge
     };
 
+    // really only for AIs, but much more convenient to put here. So shoot me.
+    // 0 - 1, % / 100
+    ResourceMap m_reserved;
+
     bool alive = true;
     std::shared_ptr<VisibilityMap> visibility;
 
@@ -129,7 +133,7 @@ struct Player
         return Age(int(m_resourcesAvailable[genie::ResourceType::CurrentAge]));
     }
 
-    bool canBuildUnit(const int unitId) const;
+    bool canBuildUnit(const int unitId, const bool withoutReserved = true) const;
     void addUnit(Unit *unit);
     void removeUnit(Unit *unit);
 
@@ -152,6 +156,7 @@ struct Player
         if (it == m_resourcesAvailable.end()) {
             return 0.f;
         }
+
         return it->second;
     }
 

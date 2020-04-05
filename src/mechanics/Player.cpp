@@ -327,7 +327,7 @@ void Player::updateAvailableTechs()
     }
 }
 
-bool Player::canBuildUnit(const int unitId) const
+bool Player::canBuildUnit(const int unitId, const bool withoutReserved) const
 {
     const genie::Unit &unit = civilization.unitData(unitId);
     if (unit.ID == -1 || !unit.Enabled || unit.Creatable.TrainLocationID == -1) {
@@ -346,7 +346,17 @@ bool Player::canBuildUnit(const int unitId) const
         default:
             continue;
         }
-        int available = resourcesAvailable(genie::ResourceType(res.Type)) - resourcesUsed(genie::ResourceType(res.Type));
+
+        const genie::ResourceType resourceType = genie::ResourceType(res.Type);
+        float escrow = 0.f;
+        if (!withoutReserved) {
+            ResourceMap::const_iterator escrowIt = m_reserved.find(resourceType);
+            if (escrowIt != m_reserved.end()) {
+                escrow = escrowIt->second;
+            }
+        }
+
+        int available = resourcesAvailable(genie::ResourceType(resourceType)) * (1.f - escrow) - resourcesUsed(genie::ResourceType(res.Type));
         if (available < res.Amount) {
             DBG << unit.Name << "Not affordable" << available << res.Amount;
             return false;
@@ -359,7 +369,14 @@ bool Player::canBuildUnit(const int unitId) const
         }
 
         const genie::ResourceType type = genie::ResourceType(cost.Type);
-        if (resourcesAvailable(type) < cost.Amount) {
+        float escrow = 0.f;
+        if (!withoutReserved) {
+            ResourceMap::const_iterator escrowIt = m_reserved.find(type);
+            if (escrowIt != m_reserved.end()) {
+                escrow = escrowIt->second;
+            }
+        }
+        if (resourcesAvailable(type) * (1.f - escrow) < cost.Amount) {
             return false;
         }
     }
