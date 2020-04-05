@@ -215,3 +215,22 @@ protected:
 };
 
 
+inline LogPrinter operator <<(LogPrinter os, const Unit::Stance &stance)
+{
+    const char *separator = os.separator;
+    os.separator = "";
+
+    os << "Unit::Stance::";
+
+    switch(stance) {
+    case Unit::Stance::Aggressive: os << "Aggressive"; break;
+    case Unit::Stance::Defensive: os << "Defensive"; break;
+    case Unit::Stance::StandGround: os << "StandGround"; break;
+    case Unit::Stance::NoAttack: os << "NoAttack"; break;
+    }
+
+    os << separator;
+    os.separator = separator;
+
+    return os;
+}
