@@ -337,6 +337,12 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact fact, const 
     return nullptr;
 }
 
+std::shared_ptr<Condition> ScriptLoader::createAndCondition(std::shared_ptr<Condition> &condition1, std::shared_ptr<Condition> &condition2)
+{
+    WARN << "Creating and condition for" << condition1.get() << condition2.get();
+    return std::make_shared<Conditions::AndCondition>(condition1, condition2);
+}
+
 std::shared_ptr<Condition> ScriptLoader::createOrCondition(std::shared_ptr<Condition> &condition1, std::shared_ptr<Condition> &condition2)
 {
     return std::make_shared<Conditions::OrCondition>(condition1, condition2);

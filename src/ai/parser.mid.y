@@ -13,8 +13,8 @@ rule:
     OpenParen RuleStart conditions ConditionActionSeparator actions CloseParen { printf("got rule\n====\n\n"); }
 
 conditions:
-    condition {  /*printf("got single condition\n"); */ }
-    | condition conditions {  /*printf("got multiple conditions\n");*/ }
+    condition { $$ = $1; /* printf("got single condition\n");*/ }
+    | condition conditions { $$ = driver.createAndCondition($1, $2); } /*printf("got multiple conditions\n");*/ }
 
 condition:
     OpenParen conditiontype CloseParen { /*printf("condition\n");*/ }

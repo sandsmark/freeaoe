@@ -31,6 +31,45 @@ struct ConstantCondition : public Condition
     const bool value;
 };
 
+struct AndCondition : public Condition
+{
+    AndCondition(const std::shared_ptr<Condition> &subcondition1, const std::shared_ptr<Condition> &subcondition2) :
+        m_subcondition1(subcondition1),
+        m_subcondition2(subcondition2)
+    {
+        if (!m_subcondition1) {
+            WARN << "and missing first condition!";
+            m_subcondition1 = std::make_shared<ConstantCondition>(true);
+        }
+
+        if (!m_subcondition2) {
+            WARN << "and missing second condition!";
+            m_subcondition2 = std::make_shared<ConstantCondition>(true);
+        }
+
+        m_subcondition1->connect(SatisfiedChanged, this, &AndCondition::onSubconditionSatisfiedChanged);
+        m_subcondition2->connect(SatisfiedChanged, this, &AndCondition::onSubconditionSatisfiedChanged);
+    }
+
+    ~AndCondition() {
+        m_subcondition1->disconnect(this);
+        m_subcondition2->disconnect(this);
+    }
+
+    void onSubconditionSatisfiedChanged()
+    {
+        emit(SatisfiedChanged);
+    }
+
+
+    bool satisfied(AiRule *owner) override
+    {
+        return m_subcondition1->satisfied(owner) && m_subcondition2->satisfied(owner);
+    }
+
+    std::shared_ptr<Condition> m_subcondition1, m_subcondition2;
+};
+
 struct OrCondition : public Condition
 {
     OrCondition(const std::shared_ptr<Condition> &subcondition1, const std::shared_ptr<Condition> &subcondition2) :
@@ -110,7 +149,10 @@ struct CompareCondition : public Condition
 
 struct ResourceValue : public Condition
 {
-    ResourceValue(const genie::ResourceType m_type, const RelOp comparison, const int targetValue, int playerId);
+    ResourceValue(const genie::ResourceType type, const RelOp comparison, const int targetValue, int playerId);
+    ~ResourceValue() {
+        DBG << "Resource value dying" << m_type << m_targetValue;
+    }
 
     void onPlayerResourceChanged(Player *player, const genie::ResourceType type, float newValue) override
     {
