@@ -5,6 +5,7 @@
 #include <genie/dat/ResourceType.h>
 
 #include <string>
+#include <unordered_set>
 
 namespace ai {
 
@@ -79,9 +80,10 @@ struct TrainUnit : public Action
     void execute(AiRule *rule) override;
 
 private:
-    const int m_unitId;
-};
+    bool tryBuild(Player *player, int unitId);
 
+    const std::unordered_set<int> m_unitIds;
+};
 
 } //namespace Actions
 

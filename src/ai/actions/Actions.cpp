@@ -162,33 +162,44 @@ void ai::Actions::ShowDebugMessage::execute(ai::AiRule *rule)
 }
 
 ai::Actions::TrainUnit::TrainUnit(const ai::Unit unit) :
-    m_unitId(ai::unitId(unit))
+    m_unitIds(ai::unitIds(unit))
 {
 }
 
 void ai::Actions::TrainUnit::execute(ai::AiRule *rule)
 {
     Player *player = rule->m_owner->m_player;
-    const genie::Unit &data = player->civilization.unitData(m_unitId);
+    for (const int id : m_unitIds) {
+        if (tryBuild(player, id)) {
+            return;
+        }
+    }
+}
+
+bool ai::Actions::TrainUnit::tryBuild(Player *player, int unitId)
+{
+    const genie::Unit &data = player->civilization.unitData(unitId);
     int16_t trainlocationId = data.Creatable.TrainLocationID;
     if (trainlocationId < 0) {
         WARN << "Failed to find unit where" << data.Name << "is created";
-        return;
+        return false;
     }
 
     // TODO: shared_ptr
     ::Unit *creator = player->findUnitByTypeID(trainlocationId);
     if (!creator) {
         WARN << "failed to find a training location for" << data.Name;
-        return;
+        return false;
     }
 
     if (!creator->isBuilding()) {
         WARN << "for now only buildings can create units..";
         DBG << "fixme in case there's some other units that can train units";
-        return;
+        return false;
     }
 
     ::Building *building = static_cast<::Building*>(creator);
     building->enqueueProduceUnit(&data); // yeah yeah pointers lol
+
+    return true;
 }
