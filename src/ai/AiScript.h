@@ -19,9 +19,6 @@ struct AiScript : public SignalEmitter<AiScript>
         GoalChanged
     };
 
-    AiScript(Player *player);
-    AiScript() = delete;
-
     std::unordered_map<StrategicNumberName, int> strategicNumbers;
 
     std::vector<std::shared_ptr<AiRule>> rules;

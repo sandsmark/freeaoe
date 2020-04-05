@@ -75,6 +75,10 @@
 
 %type <std::shared_ptr<ai::Condition>> conditiontype
 %type <std::shared_ptr<ai::Condition>> condition
+%type <std::vector<std::shared_ptr<ai::Condition>>> conditions // TODO create vectors
 %type <std::shared_ptr<ai::Condition>> fact
 %type <std::shared_ptr<ai::Action>> singleaction
 %type <std::shared_ptr<ai::Action>> action
+%type <std::vector<std::shared_ptr<ai::Action>>> actions // TODO: create vectors
+%type <std::shared_ptr<ai::AiRule>> rule
+%type <std::vector<std::shared_ptr<ai::AiRule>>> rules

@@ -14,6 +14,15 @@ AiRule::~AiRule()
 
 void ai::AiRule::onConditionSatisfied()
 {
+    if (!m_owner) {
+        WARN << "No script set for rule!";
+        return;
+    }
+    if (!m_owner->m_player) {
+        WARN << "Script does not have a player set!";
+        return;
+    }
+
     for (const std::shared_ptr<Condition> &condition : m_conditions) {
         if (!condition->satisfied(this)) {
             return;

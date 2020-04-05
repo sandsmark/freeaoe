@@ -20,6 +20,7 @@ int ScriptLoader::parse(std::istream& in, std::ostream& out) {
     //parser.set_debug_level(4);
 
     int res = parser.parse();
+    DBG << "Got" << scripts.size() << "scripts";
 
     return res;
 }
@@ -490,6 +491,29 @@ std::shared_ptr<Action> ScriptLoader::createAction(const ActionType type, const 
     return nullptr;
 }
 
-Condition::~Condition() { }
+std::shared_ptr<AiRule> ScriptLoader::createRule(const std::vector<std::shared_ptr<Condition>> &conditions, const std::vector<std::shared_ptr<Action>> &actions)
+{
+    std::shared_ptr<AiRule> ret = std::make_shared<AiRule>();
+    for (const std::shared_ptr<Condition> &condition : conditions) {
+        ret->addCondition(condition);
+    }
+    for (const std::shared_ptr<Action> &action : actions) {
+        ret->addAction(action);
+    }
+
+    return ret;
+}
+
+void ScriptLoader::addScript(const std::vector<std::shared_ptr<AiRule> > &rules)
+{
+    std::shared_ptr<AiScript> script = std::make_shared<AiScript>();
+
+    script->rules = rules;
+    for (std::shared_ptr<AiRule> &rule : script->rules) {
+        rule->m_owner = script.get();
+    }
+
+    scripts.push_back(script);
+}
 
 } // namespace ai

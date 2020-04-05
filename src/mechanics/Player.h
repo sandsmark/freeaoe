@@ -165,7 +165,7 @@ struct Player
 
     static constexpr int UngroupedGroupID = 0;
     const std::unordered_set<Unit*> &unitsInGroup(int group) {
-        if (group >= m_unitGroups.size()) {
+        if (size_t(group) >= m_unitGroups.size()) {
             WARN << "invalid group" << group;
             static const std::unordered_set<Unit*> nullgroup;
             return nullgroup;

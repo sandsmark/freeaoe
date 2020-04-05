@@ -2,12 +2,11 @@
 
 #include "ai/gen/enums.h"
 
-#include "ai/gen/enums.h"
-
 #include <string>
 #include <map>
 #include <iostream>
 #include <memory>
+#include <vector>
 
 struct Player;
 
@@ -15,6 +14,8 @@ namespace ai {
 
 struct Condition;
 struct Action;
+struct AiRule;
+struct AiScript;
 
 class ScriptLoader {
 public:
@@ -78,6 +79,11 @@ public:
     std::shared_ptr<Action> createAction(const ActionType type, const PlayerNumberType playernumber, const Commodity commodity);
     std::shared_ptr<Action> createAction(const ActionType type, const DifficultyParameter difficulty, const int number);
     std::shared_ptr<Action> createAction(const ActionType type, const PlayerNumberType playernumber, const int number1, const int number2);
+
+    std::shared_ptr<AiRule> createRule(const std::vector<std::shared_ptr<Condition>> &conditions, const std::vector<std::shared_ptr<Action>> &actions);
+
+    void addScript(const std::vector<std::shared_ptr<AiRule>> &rules);
+    std::vector<std::shared_ptr<AiScript>> scripts;
 
 private:
     const int m_playerId;

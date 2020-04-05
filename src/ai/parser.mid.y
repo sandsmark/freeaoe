@@ -2,19 +2,19 @@
 
 aiscript:
     /* Empty */
-    | rules ScriptEnd { printf("got script\n"); }
+    | rules ScriptEnd { driver.addScript($1); printf("got script\n"); }
 ;
 
 rules:
-    rule { printf("got single rule\n"); }
-    | rule rules { /*printf("got multiple rules\n");*/ }
+    rule { std::vector<std::shared_ptr<ai::AiRule>> ret; ret.push_back($1); $$ = ret; printf("got single rule\n"); }
+    | rule rules { $2.push_back($1); $$ = $2; /*printf("got multiple rules\n");*/ }
 
 rule:
-    OpenParen RuleStart conditions ConditionActionSeparator actions CloseParen { printf("got rule\n====\n\n"); }
+    OpenParen RuleStart conditions ConditionActionSeparator actions CloseParen { $$ = driver.createRule($3, $5); }
 
 conditions:
-    condition { $$ = $1; /* printf("got single condition\n");*/ }
-    | condition conditions { $$ = driver.createAndCondition($1, $2); } /*printf("got multiple conditions\n");*/ }
+    condition { std::vector<std::shared_ptr<ai::Condition>> ret; ret.push_back($1); $$ = ret; /* printf("got single condition\n");*/ }
+    | condition conditions { $2.push_back($1); $$ = $2; } /*printf("got multiple conditions\n");*/
 
 condition:
     OpenParen conditiontype CloseParen { $$ = $2; /*printf("condition\n");*/ }
@@ -26,8 +26,8 @@ conditiontype:
 
 
 actions:
-    singleaction {  /*printf("got single action\n");*/ }
-    | singleaction actions {  /*printf("got multiple actions\n");*/ }
+    singleaction { std::vector<std::shared_ptr<ai::Action>> ret; ret.push_back($1); $$ = ret; /*printf("got single action\n");*/ }
+    | singleaction actions { $2.push_back($1); $$ = $2; /*printf("got multiple actions\n");*/ }
 
 singleaction:
       OpenParen action CloseParen { $$ = $2; /*printf("got action without arguments\n");*/ }

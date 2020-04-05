@@ -1,3 +1,6 @@
+%top{
+#include <stdint.h>
+}
 %{
     #include "gen/enums.h"
 %}
