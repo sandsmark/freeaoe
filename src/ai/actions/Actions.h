@@ -96,6 +96,17 @@ private:
 
     const std::unordered_set<int> m_unitIds;
 };
+
+
+struct SetGoal : public Action
+{
+    SetGoal(int goalId, int number);
+    void execute(AiRule *rule) override;
+
+    const int m_goalId;
+    const int m_number;
+};
+
 } //namespace Actions
 
 } //namespace ai

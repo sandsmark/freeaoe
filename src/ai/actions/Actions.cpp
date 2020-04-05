@@ -278,3 +278,14 @@ bool ai::Actions::BuildBuilding::tryBuild(Player *player, int unitId)
 
     return true;
 }
+
+ai::Actions::SetGoal::SetGoal(int goalId, int number) :
+    m_goalId(goalId),
+    m_number(number)
+{
+}
+
+void ai::Actions::SetGoal::execute(ai::AiRule *rule)
+{
+    rule->m_owner->setGoal(m_goalId, m_number);
+}
