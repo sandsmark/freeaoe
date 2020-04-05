@@ -6,30 +6,17 @@ freeaoe
 freeaoe is a project to write a free engine capable of running Age of Empires 2
 (and other Genie games like SW:GB eventually).
 
-This is mostly a single-person pet project, so if you want a more serious project,
-try [openage](https://openage.sft.mx/).
+The project is still in early development. But you can load and play scenarios,
+show the history screen, move around, attack, build and stuff.  There are some
+screenshots in the [doc/](doc/) folder.
 
-The project is still in early development, but we can load basically all the
-original data, and you can build, move around, load and play scenarios, show
-the history screen and stuff. There are some screenshots in the [doc/](doc/)
-folder.
+It (obviously) needs the original data files, but it works with the data
+files from the trial version (e. g. from Archive.org).
 
-It (obviously) needs the original data files, but it should work with the data
-files from the trial version (it's available e. g. from Archive.org).
-
-It uses the same [library](https://github.com/sandsmark/genieutils) as [AGE
-(Advanced Genie Editor)](https://github.com/Tapsa/AGE), so it should be able to
-handle anything that can be edited by that (and therefore basically all
-community content created for AoE2). Because of this it doesn't need to unpack
-or convert anything, all data files are used as is.
-
-This repo is originally a fork of https://github.com/apreiml/freeaoe, but
-because a lot of stuff doesn't like working on forked repos it is now created
-as a separate repo.
 
 Windows
 -------
-Automated windows builds can be [downloaded from AppVeyor](https://ci.appveyor.com/project/sandsmark/freeaoe/build/artifacts).
+Automated Windows builds can be [downloaded from AppVeyor](https://ci.appveyor.com/project/sandsmark/freeaoe/build/artifacts).
 
 There is no installation, it's just a zip file with a standalone .exe that you
 run.
@@ -41,6 +28,7 @@ AppVeyor to find the older versions).
 
 Caveat emptor; I don't have any Windows installation to test with, but it
 works fine in Wine.
+
 
 Running
 -------
@@ -55,8 +43,6 @@ If you don't have it installed there's a nice button in that dialog which opens
 can download the trial version of AoC. It doesn't have the higher resolution
 graphics e. g. for the UI, though, so I highly recommend getting an original CD
 with the full version.
-
-
 
 On Linux it parses the Wine registry file to try to find the installation,
 otherwise you get the same dialog (but with a handy button to go directly to
@@ -76,7 +62,27 @@ To build
  - `cmake .. && make`
  - `./freeaoe`
 
-I can't get it to build on macOS, so if you manage to get it to build please open a PR.
+I can't get it to build on macOS (and I don't have any Apple machines), so if
+you manage to get it to build please open a PR. It seems like Apple ships a
+really outdated version of Clang that doesn't support modern C++.
+
+
+Misc
+----
+
+This is mostly a single-person pet project, so if you want a more serious project,
+try [openage](https://openage.sft.mx/).
+
+It uses the same [library](https://github.com/sandsmark/genieutils) as [AGE
+(Advanced Genie Editor)](https://github.com/sandsmark/AGE), so it should be able to
+handle anything that can be edited by that (and therefore basically all
+community content created for AoE2). Because of this it doesn't need to unpack
+or convert anything, all data files are used as is.
+
+This repo is originally a fork of https://github.com/apreiml/freeaoe, but
+because a lot of stuff doesn't like working on forked repos it is now created
+as a separate repo.
+
 
 TODO (this is probably going to get outdated)
 ----
@@ -89,8 +95,7 @@ TODO (this is probably going to get outdated)
  - Performance (especially the path finding).
  - Various refactoring (move VisibilityMap out into separate file, rendering of units out from UnitManager, etc.)
  - Fix edges of walls when dragging.
- - AI script actions (only implemented are set-strategic-number and disable-self).
- - AI script conditions, missing for SAMPLEAI.PER:
+ - Rest of AI script actions and conditions:
     - town-under-attack
     - cc-players-unit-type-count (AI cheat)
     - game-time
@@ -98,11 +103,9 @@ TODO (this is probably going to get outdated)
     - difficulty
     - dropsite-min-distance
     - resource-found
-    - escrow-amount (also need to implement escrow in general)
     - players-stance
 
 Wishlist/low priority:
- - Rewrite AI script parsing without any parser generators/libraries (it's a trivial grammar, and there are no good parser generators in existence).
  - Proper support for new terrain graphics (Rise of the Rajas stopped shipping the old ones).
  - Map analysis stuff (for RMS and AI).
 
@@ -219,4 +222,8 @@ Compared to other reimplementations as much as possible is fetched from the data
     * Unit outline sizes.
     * Fog of war.
     * Camera moving.
+ * AI scripts (partial)
+   * Can fully parse scripts, with all tokens recognised.
+   * Most conditions implemented.
+   * Most actions implemented.
 

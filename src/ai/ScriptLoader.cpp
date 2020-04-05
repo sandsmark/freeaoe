@@ -559,17 +559,4 @@ void ScriptLoader::addRule(const std::vector<std::shared_ptr<Condition>> &condit
     }
     m_script->rules.push_back(ret);
 }
-
-//void ScriptLoader::addScript(const std::vector<std::shared_ptr<AiRule> > &rules)
-//{
-//    std::shared_ptr<AiScript> script = std::make_shared<AiScript>(m_player);
-
-//    script->rules = rules;
-//    for (std::shared_ptr<AiRule> &rule : script->rules) {
-//        rule->m_owner = script.get();
-//    }
-
-//    scripts.push_back(script);
-//}
-
 } // namespace ai
