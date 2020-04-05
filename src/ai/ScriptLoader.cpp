@@ -67,9 +67,9 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const 
 {
     switch(type) {
     case Fact::CanBuild:
-        return std::make_shared<Conditions::CanTrainOrBuildCondition>(building, m_script->m_player->playerId, true);
-    case Fact::CanBuildWithEscrow:
         return std::make_shared<Conditions::CanTrainOrBuildCondition>(building, m_script->m_player->playerId, false);
+    case Fact::CanBuildWithEscrow:
+        return std::make_shared<Conditions::CanTrainOrBuildCondition>(building, m_script->m_player->playerId, true);
     default:
         break;
     }

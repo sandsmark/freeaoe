@@ -238,8 +238,8 @@ struct PopulationHeadroomCondition : public Condition
 
 struct CanTrainOrBuildCondition : public Condition
 {
-    CanTrainOrBuildCondition(const Unit type, const int playerId, bool withoutEscrow);
-    CanTrainOrBuildCondition(const Building type, const int playerId, bool withoutEscrow);
+    CanTrainOrBuildCondition(const Unit type, const int playerId, bool withEscrow);
+    CanTrainOrBuildCondition(const Building type, const int playerId, bool withEscrow);
 
     void onPlayerResourceChanged(Player *player, const genie::ResourceType resourceType, float newValue) override;
     bool satisfied(AiRule *owner) override {
@@ -250,7 +250,7 @@ struct CanTrainOrBuildCondition : public Condition
     const int m_playerId;
     std::unordered_set<int> m_typeIds;
 //    bool m_isSatisfied = false;
-    bool m_withoutEscrow = false;
+    bool m_withEscrow = false;
 };
 
 struct TechAvailableCondition : public Condition

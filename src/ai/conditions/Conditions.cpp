@@ -170,17 +170,17 @@ void PopulationHeadroomCondition::onPlayerResourceChanged(Player *player, const 
     emit(SatisfiedChanged);
 }
 
-CanTrainOrBuildCondition::CanTrainOrBuildCondition(const Unit type, const int playerId, bool withoutEscrow) :
+CanTrainOrBuildCondition::CanTrainOrBuildCondition(const Unit type, const int playerId, bool withEscrow) :
     m_playerId(playerId),
-    m_withoutEscrow(withoutEscrow)
+    m_withEscrow(withEscrow)
 {
     m_typeIds = unitIds(type);
     EventManager::registerListener(this, EventManager::PlayerResourceChanged);
 }
 
-CanTrainOrBuildCondition::CanTrainOrBuildCondition(const Building type, const int playerId, bool withoutEscrow) :
+CanTrainOrBuildCondition::CanTrainOrBuildCondition(const Building type, const int playerId, bool withEscrow) :
     m_playerId(playerId),
-    m_withoutEscrow(withoutEscrow)
+    m_withEscrow(withEscrow)
 {
     m_typeIds = unitIds(type);
     EventManager::registerListener(this, EventManager::PlayerResourceChanged);
@@ -225,7 +225,7 @@ void CanTrainOrBuildCondition::onPlayerResourceChanged(Player *player, const gen
 bool CanTrainOrBuildCondition::checkCanBuild(const AiPlayer *player) const
 {
     for (const int id : m_typeIds) {
-        if (m_withoutEscrow) {
+        if (m_withEscrow) {
             if (!player->canAffordUnitWithEscrow(id)) {
                 continue;
             }
