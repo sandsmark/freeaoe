@@ -57,10 +57,9 @@ struct LogPrinter
         m_funcName(funcName),
         m_filename(filename),
         m_linenum(linenum),
-        m_refs(new int)
+        m_refs(std::make_shared<int>(1))
     {
         separator = " ";
-        *m_refs = 1;
 
 #ifndef _MSC_VER
         std::cout <<  "\033[0;37m"<< className << " ";
@@ -80,10 +79,9 @@ struct LogPrinter
     }
 
     LogPrinter() :
-        m_refs(new int)
+        m_refs(std::make_shared<int>(1))
     {
         separator = " ";
-        *m_refs = 1;
     }
 
     LogPrinter(const LogPrinter &other) :
@@ -136,8 +134,6 @@ struct LogPrinter
                       << m_funcName << " "
                       << m_filename << ":" << m_linenum
                       << ")\033[0m" << std::endl;
-
-            delete m_refs;
         }
     }
 
@@ -147,7 +143,7 @@ private:
     const char *m_funcName = nullptr;
     const char *m_filename = nullptr;
     const int m_linenum = 0;
-    int *m_refs = nullptr;
+    std::shared_ptr<int> m_refs = nullptr;
 };
 
 #ifdef _MSC_VER
