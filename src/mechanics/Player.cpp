@@ -297,6 +297,19 @@ void Player::setAvailableResource(const genie::ResourceType type, float newValue
     EventManager::playerResourceChanged(this, type, newValue);
 }
 
+Unit *Player::findUnitByTypeID(const int type) const
+{
+    for (Unit *unit : m_units) {
+        if (unit->data()->ID == type) {
+            return unit;
+        }
+    }
+
+    WARN << "Does not have a unit of type" << type;
+
+    return nullptr;
+}
+
 void Player::updateAvailableTechs()
 {
     m_currentlyAvailableTechs.clear();

@@ -3,10 +3,13 @@
 #include "ai/AiRule.h"
 #include "ai/AiScript.h"
 #include "ai/EnumLogDefs.h"
+#include "ai/Ids.h"
 
 #include "core/Logger.h"
 #include "global/EventManager.h"
 #include "mechanics/Player.h"
+#include "mechanics/Unit.h"
+#include "mechanics/Building.h"
 
 
 #include <algorithm>
@@ -123,4 +126,36 @@ void ai::Actions::SetEscrowPercent::execute(ai::AiRule *rule)
 void ai::Actions::ShowDebugMessage::execute(ai::AiRule *rule)
 {
     rule->m_owner->showDebugMessage(m_message);
+}
+
+ai::Actions::TrainUnit::TrainUnit(const ai::Unit unit) :
+    m_unitId(ai::unitId(unit))
+{
+}
+
+void ai::Actions::TrainUnit::execute(ai::AiRule *rule)
+{
+    Player *player = rule->m_owner->m_player;
+    const genie::Unit &data = player->civilization.unitData(m_unitId);
+    int16_t trainlocationId = data.Creatable.TrainLocationID;
+    if (trainlocationId < 0) {
+        WARN << "Failed to find unit where" << data.Name << "is created";
+        return;
+    }
+
+    // TODO: shared_ptr
+    ::Unit *creator = player->findUnitByTypeID(trainlocationId);
+    if (!creator) {
+        WARN << "failed to find a training location for" << data.Name;
+        return;
+    }
+
+    if (!creator->isBuilding()) {
+        WARN << "for now only buildings can create units..";
+        DBG << "fixme in case there's some other units that can train units";
+        return;
+    }
+
+    ::Building *building = static_cast<::Building*>(creator);
+    building->enqueueProduceUnit(&data); // yeah yeah pointers lol
 }

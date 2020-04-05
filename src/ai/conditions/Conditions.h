@@ -249,6 +249,7 @@ struct CanTrainOrBuildCondition : public Condition
 
     const int m_playerId;
     std::unordered_set<int> m_typeIds;
+    std::unordered_set<int> m_builderTypeIds;
     bool m_isSatisfied = false;
     bool m_withoutEscrow = false;
 };

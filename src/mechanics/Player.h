@@ -181,6 +181,8 @@ struct Player
     }
     int unitGroupCount() const { return m_unitGroups.size(); }
 
+    Unit *findUnitByTypeID(const int type) const;
+
 private:
     void updateAvailableTechs();
 

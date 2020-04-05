@@ -64,6 +64,16 @@ private:
     const std::string m_message;
 };
 
+struct TrainUnit : public Action
+{
+    TrainUnit(const Unit unit);
+
+    void execute(AiRule *rule) override;
+
+private:
+    const int m_unitId;
+};
+
 
 } //namespace Actions
 

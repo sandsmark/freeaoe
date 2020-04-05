@@ -224,8 +224,17 @@ void CanTrainOrBuildCondition::onPlayerResourceChanged(Player *player, const gen
 bool CanTrainOrBuildCondition::checkCanBuild(const Player *player) const
 {
     for (const int id : m_typeIds) {
-        if (player->canBuildUnit(id, m_withoutEscrow)) {
-            return true;
+        if (!player->canBuildUnit(id, m_withoutEscrow)) {
+            continue;
+        }
+        const genie::Unit &data = player->civilization.unitData(id);
+        int16_t trainlocationId = data.Creatable.TrainLocationID;
+        if (trainlocationId < 0) {
+            WARN << "Failed to find unit where" << data.Name << "is created";
+            continue;
+        }
+        if (!player->findUnitByTypeID(trainlocationId)) {
+            continue;
         }
     }
     return false;

@@ -158,6 +158,7 @@ set(AI_SRC
     src/ai/ScriptLoader.cpp
     src/ai/actions/Actions.cpp
     src/ai/conditions/Conditions.cpp
+    src/ai/Ids.cpp
     )
 
 set(CORE_SRC
