@@ -170,7 +170,7 @@ int main(int argc, char **argv) try
 
             if (button == HomeScreen::Button::Singleplayer) {
                 if (home.getGameType() != HomeScreen::GameTypeChoice::Campaign) {
-                    continue;
+                    break;
                 }
 
                 try {
@@ -183,11 +183,12 @@ int main(int argc, char **argv) try
                     cpxFile.load();
 
                     scenarioFile = cpxFile.getScnFile(0);
+                    break;
                 } catch (const std::exception &error) {
                     WARN << "Failed to load" << ":" << error.what();
                 }
 
-                continue;
+                break;
             }
 
             if (config.getValue("scenario-file").empty()) {
@@ -199,6 +200,7 @@ int main(int argc, char **argv) try
                 scenarioFile->load(config.getValue("scenario-file"));
             } catch (const std::exception &error) {
                 WARN << "Failed to load" << config.getValue("scenario-file") << ":" << error.what();
+                continue;
             }
             break;
         }
