@@ -37,8 +37,8 @@ void Dialog::render(std::shared_ptr<sf::RenderWindow> &renderTarget)
     const int allButtonsHeight = ChoicesCount * (buttonHeight + buttonMargin);
 
 
-    const int x = windowCenter.x - buttonWidth/2;
-    int y = windowCenter.y - allButtonsHeight / 2;
+    const int x = windowCenter.x - buttonWidth / 2.f;
+    int y = windowCenter.y - allButtonsHeight / 2.f;
 
     for (int i=0; i<ChoicesCount; i++) {
         m_buttons[i].rect.x = x;

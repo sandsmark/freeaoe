@@ -29,8 +29,8 @@
 #include <genie/dat/unit/DamageGraphic.h>
 #include <genie/dat/unit/Moving.h>
 #include <genie/dat/UnitCommand.h>
-#include <math.h>
-#include <stddef.h>
+#include <cmath>
+#include <cstddef>
 #include <iterator>
 #include <map>
 #include <string>
@@ -193,7 +193,7 @@ MapPos Unit::snapPositionToGrid(const MapPos &position, const MapPtr &map, const
     return newPos;
 }
 
-const std::vector<const genie::Unit *> Unit::creatableUnits() noexcept
+std::vector<const genie::Unit *> Unit::creatableUnits() noexcept
 {
     if (creationProgress() < 1.) {
         return {};
@@ -486,7 +486,7 @@ Size Unit::clearanceSize() const noexcept
     return Size(data()->Size.x * Constants::TILE_SIZE, data()->Size.y * Constants::TILE_SIZE);
 }
 
-void Unit::forEachVisibleTile(std::function<void (const int, const int)> action)
+void Unit::forEachVisibleTile(const std::function<void (const int, const int)> &action)
 {
     const int los = data()->LineOfSight;
     const int tileXOffset = position().x / Constants::TILE_SIZE;

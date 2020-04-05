@@ -5,7 +5,6 @@
 #include <genie/dat/TechageEffect.h>
 #include <genie/dat/Unit.h>
 #include <genie/dat/ResourceUsage.h>
-#include <stdint.h>
 #include <utility>
 #include <vector>
 

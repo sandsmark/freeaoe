@@ -511,14 +511,24 @@ CanTrade::CanTrade(const Commodity resource, const CanTrade::BuyOrSell type, con
 
 void CanTrade::onPlayerResourceChanged(Player *player, const genie::ResourceType type, float newValue)
 {
-    if (m_type == Sell && type == m_resourceType) {
-        return;
-    } else if (m_type == Buy && type != genie::ResourceType::GoldStorage) {
+    if (player->playerId != m_playerId) {
         return;
     }
 
-    if (player->playerId != m_playerId) {
-        return;
+    switch(m_type) {
+    case Sell:
+        if (type != m_resourceType) {
+            return;
+        }
+        break;
+    case Buy:
+        if (type != genie::ResourceType::GoldStorage) {
+            return;
+        }
+        break;
+    default:
+        WARN << "Invalid cantrade rule";
+        break;
     }
 
     m_resourceAvailable = newValue;

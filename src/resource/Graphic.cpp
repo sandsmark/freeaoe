@@ -346,7 +346,11 @@ float Graphic::orientationToAngle(float orientation) const noexcept
 {
     float angle = 2. * M_PI * orientation / m_data.AngleCount;
     angle = fmod(- angle - M_PI_2, 2*M_PI);
-    if (angle < 0) angle += 2*M_PI;
+
+    if (angle < 0) {
+        angle += 2*M_PI;
+    }
+
     return angle;
 }
 

@@ -604,12 +604,12 @@ void ActionPanel::handleButtonClick(const ActionPanel::InterfaceButton &button)
             m_currentPage = 0;
             break;
         case Command::Stop:
-            for (Unit::Ptr unit : m_unitManager->selected()) {
+            for (const Unit::Ptr &unit : m_unitManager->selected()) {
                 unit->actions.clearActionQueue();
             }
             break;
         case Command::Kill:
-            for (Unit::Ptr unit : m_unitManager->selected()) {
+            for (const Unit::Ptr &unit : m_unitManager->selected()) {
                 unit->kill();
             }
             break;
@@ -627,7 +627,7 @@ ScreenPos ActionPanel::buttonPosition(const int index) const
     ScreenPos position;
     position.x = index % 5;
     position.x = (position.x) * 50 + 55;
-    position.y = index / 5;
+    position.y = index / 5.f;
     position.y *= 50;
     position.y += m_renderTarget->getSize().height  - 170;
     return position;

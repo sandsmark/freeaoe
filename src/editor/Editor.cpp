@@ -48,8 +48,8 @@ bool Editor::init()
     m_exitButton.text = "Not implemented, click to exit";
     m_exitButton.rect.width = 300;
     m_exitButton.rect.height = 50;
-    m_exitButton.rect.x = m_background.getSize().x/2 - m_exitButton.rect.width/2;
-    m_exitButton.rect.y = m_background.getSize().y/2 - m_exitButton.rect.height/2;
+    m_exitButton.rect.x = m_background.getSize().x / 2.f - m_exitButton.rect.width / 2.f;
+    m_exitButton.rect.y = m_background.getSize().y / 2.f - m_exitButton.rect.height / 2.f;
 
     return true;
 }

@@ -17,7 +17,7 @@ struct UnitActionHandler
 
     Task findAnyTask(const genie::ActionType &type, int targetUnit) noexcept;
     Task findTaskWithTarget(const std::shared_ptr<Unit> &target);
-    static Task findMatchingTask(const std::shared_ptr<Player> ownPlayer, const std::shared_ptr<Unit> &target, const std::unordered_set<Task> &potentials);
+    static Task findMatchingTask(const std::shared_ptr<Player> &ownPlayer, const std::shared_ptr<Unit> &target, const std::unordered_set<Task> &potentials);
 
     bool hasAutoTargets() const noexcept { return !m_autoTargetTasks.empty(); }
     Task checkForAutoTargets() noexcept;

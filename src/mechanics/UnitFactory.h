@@ -36,13 +36,13 @@ class UnitFactory
 public:
     static UnitFactory &Inst();
 
-    std::shared_ptr<Unit> duplicateUnit(const std::shared_ptr<Unit> &other);
-    std::shared_ptr<Unit> createUnit(const int ID, const std::shared_ptr<Player> &owner, UnitManager &unitManager);
-    std::shared_ptr<DecayingEntity> createCorpseFor(const std::shared_ptr<Unit> &unit);
+    static std::shared_ptr<Unit> duplicateUnit(const std::shared_ptr<Unit> &other);
+    static std::shared_ptr<Unit> createUnit(const int ID, const std::shared_ptr<Player> &owner, UnitManager &unitManager);
+    static std::shared_ptr<DecayingEntity> createCorpseFor(const std::shared_ptr<Unit> &unit);
 
 private:
     UnitFactory() = default;
 
-    void handleDefaultAction(const std::shared_ptr<Unit> &unit, const genie::Task &task);
+    static void handleDefaultAction(const std::shared_ptr<Unit> &unit, const genie::Task &task);
 };
 

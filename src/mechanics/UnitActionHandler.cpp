@@ -77,7 +77,7 @@ Task UnitActionHandler::findTaskWithTarget(const std::shared_ptr<Unit> &target)
     return findMatchingTask(m_unit->player.lock(), target, availableActions());
 }
 
-Task UnitActionHandler::findMatchingTask(const std::shared_ptr<Player> ownPlayer, const std::shared_ptr<Unit> &target, const std::unordered_set<Task> &potentials)
+Task UnitActionHandler::findMatchingTask(const std::shared_ptr<Player> &ownPlayer, const std::shared_ptr<Unit> &target, const std::unordered_set<Task> &potentials)
 {
     if (!ownPlayer){
         WARN << "no player passed for task finding";
@@ -195,8 +195,8 @@ Task UnitActionHandler::checkForAutoTargets() noexcept
 
     float closestDistance = los * Constants::TILE_SIZE;
     const std::vector<std::weak_ptr<Entity>> entities = map->entitiesBetween(left, top, right, bottom);
-    for (size_t i=0; i<entities.size(); i++) {
-        Unit::Ptr other = Unit::fromEntity(entities[i]);
+    for (const std::weak_ptr<Entity> &entity : entities) {
+        Unit::Ptr other = Unit::fromEntity(entity);
         if (!other) {
             continue;
         }

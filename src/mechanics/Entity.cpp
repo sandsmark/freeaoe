@@ -24,7 +24,7 @@
 #include "Map.h"
 #include "render/GraphicRender.h"
 
-#include <stddef.h>
+#include <cstddef>
 #include <cmath>
 #include <memory>
 #include <string>

@@ -55,14 +55,12 @@ void Missile::setBlastType(const BlastType type, const float radius) noexcept
     m_blastType = type;
 
     switch(type) {
+    case DamageResources:
+    case DamageTrees:
+    case DamageTargetOnly:
+        break;
     case DamageNearby:
         m_blastRadius = radius;
-        break;
-    case DamageResources:
-        break;
-    case DamageTrees:
-        break;
-    case DamageTargetOnly:
         break;
     default:
         m_blastType = DamageTargetOnly;

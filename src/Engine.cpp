@@ -56,7 +56,7 @@
 #include <algorithm>
 #include <utility>
 
-#include <stddef.h>
+#include <cstddef>
 
 #define MOUSE_MOVE_EDGE_SIZE 10
 #define CAMERA_SPEED 1.
@@ -486,8 +486,8 @@ Engine::Engine()
     m_mainScreen = std::make_unique<UiScreen>("dlg_men.sin");
 }
 
-// Just to make the crappy gcc unique_ptr implementation work
-Engine::~Engine() { }
+// Just to make the crappy gcc unique_ptr implementation work, we can't use = default
+Engine::~Engine() { } // NOLINT
 
 bool Engine::setup(const std::shared_ptr<genie::ScnFile> &scenario)
 {

@@ -41,9 +41,9 @@ void Farm::setCreationProgress(float progress) noexcept
 
     if (progress >= data()->Creatable.TrainTime) {
         setTerrain(FarmFinished);
-    } else if (progress >= 2 * data()->Creatable.TrainTime / 3) {
+    } else if (progress >= 2.f * data()->Creatable.TrainTime / 3.f) {
         setTerrain(FarmConstruct2);
-    } else if (progress > data()->Creatable.TrainTime / 3) {
+    } else if (progress > data()->Creatable.TrainTime / 3.f) {
         setTerrain(FarmConstruct1);
     } else {
         setTerrain(FarmConstruct0);

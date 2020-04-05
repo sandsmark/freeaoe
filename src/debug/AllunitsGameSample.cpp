@@ -77,15 +77,12 @@ void AllunitsGameSample::addHumanUnits()
 
     int pos = 0;
 
-    for (int i = 0; i< units.size(); i++)
-    {
-        int unitID = units.at(i);
-
+    for (const int unitID : units) {
         int x = (pos % 5) * dx + baseX;
         int y = (pos / 5) * dy + baseY;
 
         WARN << "::::: createUnit" << unitID;
-        Unit::Ptr unit = UnitFactory::Inst().createUnit(unitID, m_humanPlayer, *unitManager_);
+        Unit::Ptr unit = UnitFactory::createUnit(unitID, m_humanPlayer, *unitManager_);
         unitManager_->add(unit, MapPos(x, y, 0));
 
         pos++;
@@ -96,17 +93,17 @@ void AllunitsGameSample::addEnemyUnits()
 {
     Unit::Ptr unit;
 
-    unit = UnitFactory::Inst().createUnit(74, m_enemyPlayer, *unitManager_);
+    unit = UnitFactory::createUnit(74, m_enemyPlayer, *unitManager_);
     unitManager_->add(unit, MapPos(48*12, 48*20, 0));
-    unit = UnitFactory::Inst().createUnit(74, m_enemyPlayer, *unitManager_);
+    unit = UnitFactory::createUnit(74, m_enemyPlayer, *unitManager_);
     unitManager_->add(unit, MapPos(48*11, 48*20, 0));
 
-    unit = UnitFactory::Inst().createUnit(358, m_enemyPlayer, *unitManager_);
+    unit = UnitFactory::createUnit(358, m_enemyPlayer, *unitManager_);
     unitManager_->add(unit, MapPos(48*9, 48*20, 0));
 }
 
 void AllunitsGameSample::addEnemyBuildings()
 {
-    Unit::Ptr unit = UnitFactory::Inst().createUnit(Unit::Dock, m_enemyPlayer, *unitManager_);
+    Unit::Ptr unit = UnitFactory::createUnit(Unit::Dock, m_enemyPlayer, *unitManager_);
     unitManager_->add(unit, MapPos(48*15, 48*20, 0));
 }

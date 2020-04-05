@@ -255,7 +255,7 @@ void GameState::setupScenario()
 
         for (const genie::ScnUnit &scnunit : scenario_->playerUnits[playerNum].units) {
             MapPos unitPos((scnunit.positionY) * Constants::TILE_SIZE, (scnunit.positionX) * Constants::TILE_SIZE, scnunit.positionZ * DataManager::Inst().terrainBlock().ElevHeight);
-            Unit::Ptr unit = UnitFactory::Inst().createUnit(scnunit.objectID, player, *m_unitManager);
+            Unit::Ptr unit = UnitFactory::createUnit(scnunit.objectID, player, *m_unitManager);
             unit->spawnId = scnunit.spawnID;
             m_unitManager->add(unit, unitPos);
 
@@ -298,6 +298,6 @@ void GameState::setupGame(const GameType /*gameType*/)
     m_players.push_back(m_humanPlayer);
     m_players.push_back(sampleGameSetup->getEnemyPlayer());
 
-    MapPos cameraPos(map_->pixelWidth() / 2, map_->pixelHeight()  / 2);
+    MapPos cameraPos(map_->pixelWidth() / 2.f, map_->pixelHeight()  / 2.f);
     renderTarget_->camera()->setTargetPosition(cameraPos);
 }

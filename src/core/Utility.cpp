@@ -1,7 +1,7 @@
 #include "Utility.h"
 
-#include <errno.h>
-#include <stdlib.h>
+#include <cerrno>
+#include <cstdlib>
 #include <filesystem>
 
 #include "Logger.h"
@@ -35,7 +35,7 @@ bool util::openUrl(const std::string &url, std::string *error)
     const std::string escapedUrl = "$'" + stringReplace(url, "'", "\'") + "'";
     const std::string command = "xdg-open " + escapedUrl;
 
-    int ret = system(command.c_str());
+    int ret = system(command.c_str()); // NOLINT
     if (errno) {
         if (error) {
             *error = "Error: " + std::string(strerror(errno)) + "(" + std::to_string(ret) + ")";

@@ -135,7 +135,7 @@ struct Unit : public Entity
 
     bool update(Time time) noexcept override;
 
-    const std::vector<const genie::Unit *> creatableUnits() noexcept;
+    std::vector<const genie::Unit *> creatableUnits() noexcept;
 
     static std::shared_ptr<Building> asBuilding(const Unit::Ptr &unit) noexcept;
     static std::shared_ptr<Building> asBuilding(const std::weak_ptr<Unit> &unit) noexcept;
@@ -197,7 +197,7 @@ struct Unit : public Entity
 protected:
     friend struct UnitActionHandler;
 
-    void forEachVisibleTile(std::function<void(const int, const int)> action);
+    void forEachVisibleTile(const std::function<void(const int, const int)> &action);
 
     Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager, const Type m_type);
     void updateGraphic();

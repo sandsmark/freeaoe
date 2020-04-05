@@ -4,8 +4,6 @@
 
 #include "core/Types.h"
 
-struct MapPos;
-
 EventManager::EventManager()
 {
 

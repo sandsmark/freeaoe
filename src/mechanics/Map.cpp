@@ -41,15 +41,6 @@ Map::Map() //: map_txt_(0)
 //    DBG << DataManager::Inst().datFile().TerrainBlock.TileSizes.size();
 }
 
-Map::~Map()
-{
-    /*
-  for (NodeMap::iterator it = nodes_.begin();
-       it != nodes_.end(); it ++)
-       delete it->second;
-  */
-}
-
 void Map::setupBasic() noexcept
 {
     cols_ = 22;

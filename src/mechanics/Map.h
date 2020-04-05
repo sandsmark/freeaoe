@@ -70,7 +70,6 @@ public:
    */
 
     Map();
-    virtual ~Map();
 
     void setupBasic() noexcept;
     void setupAllunitsMap() noexcept;
