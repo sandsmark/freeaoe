@@ -16,7 +16,10 @@ void ai::Actions::SetStrategicNumber::execute(AiRule *rule)
     rule->m_owner->strategicNumbers[m_strategicNumber] = m_targetValue;
 }
 
-ai::Action::~Action() { }
+ai::Action::~Action()
+{
+    DBG << this << "dying";
+}
 
 void ai::Actions::DisableSelf::execute(ai::AiRule *rule)
 {

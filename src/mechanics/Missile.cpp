@@ -232,9 +232,7 @@ bool Missile::update(Time time) noexcept
         hitUnits.push_back(closestUnit);
     }
 
-    if (!m_data.Missile.HitMode) {
-        die();
-    } else if (m_distanceLeft <= 0) {
+    if (!m_data.Missile.HitMode || m_distanceLeft <= 0) {
         die();
     }
 

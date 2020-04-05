@@ -117,9 +117,6 @@ Drawable::Color Minimap::unitColor(const std::shared_ptr<Unit> &unit)
     }
 
     switch(m_mode) {
-    case MinimapMode::Normal:
-        //TODO
-        break;
     case MinimapMode::Diplomatic:
         if (unit->playerId == UnitManager::GaiaID) {
             return Drawable::Color(128, 192, 128);
@@ -129,9 +126,8 @@ Drawable::Color Minimap::unitColor(const std::shared_ptr<Unit> &unit)
             return Drawable::Red;
         }
         break;
-    case MinimapMode::Economic:
-        //TODO
-        break;
+    case MinimapMode::Economic: //TODO
+    case MinimapMode::Normal: //TODO
     default:
         break;
     }

@@ -741,7 +741,7 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
     }
 
 
-    MapRect targetRect(MapPos(endX-coarseness/2, endY-coarseness/2), Size(maxDistance / coarseness + coarseness, maxDistance / coarseness + coarseness));
+    MapRect targetRect(MapPos(endX-coarseness / 2, endY-coarseness/2), Size(maxDistance / coarseness + coarseness, maxDistance / coarseness + coarseness));
     const Unit::Ptr targetUnit = m_targetUnit.lock();
     if (targetUnit) {
         const Size size = targetUnit->clearanceSize() / coarseness;
@@ -1012,7 +1012,7 @@ void ActionMove::updatePath() noexcept
                 break;
             }
 
-            mapUnits.push_back(std::move(mapUnit));
+            mapUnits.push_back(mapUnit);
         }
         DBG << mapUnits.size();
     }

@@ -43,7 +43,7 @@ bool FileDialog::setup(int width, int height)
 
     const Size buttonSize(250, 50);
 
-    m_fileList = std::make_unique<ListView>(ScreenRect(ScreenPos(width/2 - width*3/8, 55), Size(width*3/4, 550)), m_renderTarget);
+    m_fileList = std::make_unique<ListView>(ScreenRect(ScreenPos(width / 2.f - width * 3.f/8.f, 55), Size(width * 3.f/4.f, 550)), m_renderTarget);
     m_fileList->setCurrentPath(std::filesystem::current_path().string());
 
     m_okButton = std::make_unique<Button>("OK", ScreenRect(ScreenPos(m_fileList->rect().x, 700), buttonSize), m_renderTarget);
@@ -136,7 +136,7 @@ void FileDialog::setErrorString(const std::string &error) noexcept
     m_errorText = std::make_unique<sf::Text>("Failed to load game data: " + error, SfmlRenderTarget::defaultFont());
     m_errorText->setCharacterSize(17);
     const int textWidth = m_errorText->getLocalBounds().width;
-    m_errorText->setPosition(m_renderWindow->getSize().x/2 - textWidth/2, 25);
+    m_errorText->setPosition(m_renderWindow->getSize().x/2.f - textWidth/2.f, 25);
     m_errorText->setFillColor(sf::Color(255, 128, 128));
 }
 
@@ -148,8 +148,8 @@ Button::Button(const std::string &text, const ScreenRect &rect, const IRenderTar
     m_text->pointSize = 24;
     const int textWidth = m_text->size().width;
     const int textHeight = m_text->size().height;
-    m_text->position.x = m_rect.x + (m_rect.width/2 - textWidth/2);
-    m_text->position.y = m_rect.y + (m_rect.height/2 - textHeight);
+    m_text->position.x = m_rect.x + (m_rect.width / 2. - textWidth / 2.);
+    m_text->position.y = m_rect.y + (m_rect.height / 2. - textHeight);
 
     m_background.borderSize = 2;
     m_background.rect = m_rect;
