@@ -323,6 +323,19 @@ Unit *Player::findUnitByTypeID(const int type) const
     return nullptr;
 }
 
+std::vector<Unit *> Player::findUnitsByTypeID(const int type) const
+{
+    std::vector<Unit*> ret;
+    for (Unit *unit : m_units) {
+        if (unit->data()->ID == type) {
+            ret.push_back(unit);
+        }
+    }
+
+    return ret;
+
+}
+
 void Player::updateAvailableTechs()
 {
     m_currentlyAvailableTechs.clear();

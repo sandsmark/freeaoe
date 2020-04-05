@@ -14,7 +14,7 @@ UnitActionHandler::UnitActionHandler(Unit *unit) :
 
 }
 
-std::unordered_set<Task> UnitActionHandler::availableActions() noexcept
+std::unordered_set<Task> UnitActionHandler::availableActions() const noexcept
 {
      const genie::Unit *data = m_unit->m_data;
 

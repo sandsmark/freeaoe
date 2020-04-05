@@ -10,6 +10,8 @@
 #include "global/EventManager.h"
 #include "mechanics/Unit.h"
 #include "mechanics/Building.h"
+#include "mechanics/UnitFactory.h"
+#include "mechanics/UnitManager.h"
 
 
 #include <algorithm>
@@ -170,13 +172,13 @@ void ai::Actions::TrainUnit::execute(ai::AiRule *rule)
 {
     Player *player = rule->m_owner->m_player;
     for (const int id : m_unitIds) {
-        if (tryBuild(player, id)) {
+        if (tryTrain(player, id)) {
             return;
         }
     }
 }
 
-bool ai::Actions::TrainUnit::tryBuild(Player *player, int unitId)
+bool ai::Actions::TrainUnit::tryTrain(Player *player, int unitId)
 {
     const genie::Unit &data = player->civilization.unitData(unitId);
     int16_t trainlocationId = data.Creatable.TrainLocationID;
@@ -200,6 +202,79 @@ bool ai::Actions::TrainUnit::tryBuild(Player *player, int unitId)
 
     ::Building *building = static_cast<::Building*>(creator);
     building->enqueueProduceUnit(&data); // yeah yeah pointers lol
+
+    return true;
+}
+
+ai::Actions::BuildBuilding::BuildBuilding(const ai::Building building) :
+    m_unitIds(unitIds(building))
+{
+
+}
+
+void ai::Actions::BuildBuilding::execute(ai::AiRule *rule)
+{
+    Player *player = rule->m_owner->m_player;
+    for (const int id : m_unitIds) {
+        if (tryBuild(player, id)) {
+            return;
+        }
+    }
+}
+
+bool ai::Actions::BuildBuilding::tryBuild(Player *player, int unitId)
+{
+    if (!player->canAffordUnit(unitId)) {
+        return false;
+    }
+
+    const genie::Unit &data = player->civilization.unitData(unitId);
+    int16_t builderId = data.Creatable.TrainLocationID;
+    if (builderId < 0) {
+        WARN << "Failed to find unit where" << data.Name << "is created";
+        return false;
+    }
+
+    // TODO: shared_ptr
+    std::vector<::Unit *> builders = player->findUnitsByTypeID(builderId);
+    if (builders.empty()) {
+        WARN << "failed to find a builder for" << data.Name;
+        return false;
+    }
+    ::Unit *builder = nullptr;
+    Task task;
+
+    for (::Unit *unit : builders) {
+        for (const Task &potential : unit->actions.availableActions()) {
+            if (potential.data->ActionType == genie::ActionType::Build) {
+                task = potential;
+                break;
+            }
+        }
+        if (!task.data) {
+            continue;
+        }
+
+        builder = unit;
+        break;
+    }
+
+    if (!builder) {
+        WARN << "Failed to find builder for" << data.Name;
+        return false;
+    }
+
+    ::Unit::Ptr unit = UnitFactory::Inst().createUnit(unitId, builder->player.lock(), builder->unitManager());
+    ::Building::Ptr buildingToPlace = ::Unit::asBuilding(unit);
+
+    // TODO: find proper placement, for now just place it by the builder
+    MapPos pos = builder->position() + unit->clearanceSize() * 1.1; // meh, just some spacing
+    builder->unitManager().add(unit, pos);
+
+    buildingToPlace->setCreationProgress(0);
+
+    task.target = buildingToPlace;
+    IAction::assignTask(task, ::Unit::fromEntity(builder->shared_from_this())); // HACKKC fixme proper shared_ptr everywhere pls todo
 
     return true;
 }

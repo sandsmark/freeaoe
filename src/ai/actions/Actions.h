@@ -80,11 +80,22 @@ struct TrainUnit : public Action
     void execute(AiRule *rule) override;
 
 private:
-    bool tryBuild(Player *player, int unitId);
+    bool tryTrain(Player *player, int unitId);
 
     const std::unordered_set<int> m_unitIds;
 };
 
+struct BuildBuilding : public Action
+{
+    BuildBuilding(const Building building);
+
+    void execute(AiRule *rule) override;
+
+private:
+    bool tryBuild(Player *player, int unitId);
+
+    const std::unordered_set<int> m_unitIds;
+};
 } //namespace Actions
 
 } //namespace ai

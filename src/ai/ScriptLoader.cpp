@@ -420,7 +420,14 @@ std::shared_ptr<Action> ScriptLoader::createAction(const ActionType type, const 
 
 std::shared_ptr<Action> ScriptLoader::createAction(const ActionType type, const Building building)
 {
-    WARN << "unimplemented action" << type << building;
+    switch(type) {
+    case ActionType::Build:
+        return std::make_shared<Actions::BuildBuilding>(building);
+    default:
+        WARN << "unimplemented action" << type << building;
+        break;
+    }
+
     return nullptr;
 }
 

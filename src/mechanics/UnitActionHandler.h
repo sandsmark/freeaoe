@@ -14,7 +14,7 @@ struct UnitActionHandler
 {
     UnitActionHandler(Unit *unit);
 
-    std::unordered_set<Task> availableActions() noexcept;
+    std::unordered_set<Task> availableActions() const noexcept;
 
     Task findAnyTask(const genie::ActionType &type, int targetUnit) noexcept;
     Task findTaskWithTarget(const std::shared_ptr<Unit> &target);
