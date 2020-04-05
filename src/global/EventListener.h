@@ -82,6 +82,12 @@ protected:
     virtual void onPlayerResourceChanged(Player *player, const genie::ResourceType type, float newValue)
         { (void)player; }
 
+    virtual void onResourceBought(const genie::ResourceType type, const int amount)
+        { (void)type; (void)amount; }
+
+    virtual void onResourceSold(const genie::ResourceType type, const int amount)
+        { (void)type; (void)amount; }
+
     virtual void onTradingPriceChanged(const genie::ResourceType type, const int newPrice)
         { (void)type; (void)newPrice; }
 };

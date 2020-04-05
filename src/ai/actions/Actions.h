@@ -1,6 +1,8 @@
 #pragma once
 
 #include "ai/gen/enums.h"
+#include "global/EventListener.h"
+#include <genie/dat/ResourceType.h>
 
 namespace ai {
 
@@ -26,6 +28,19 @@ struct SetStrategicNumber : public Action
 struct DisableSelf : public Action
 {
     void execute(AiRule *rule) override;
+};
+
+struct BuyCommodity : public Action, EventListener
+{
+    BuyCommodity(const Commodity commodity, const int amount);
+
+    void execute(AiRule *rule) override;
+    void onTradingPriceChanged(const genie::ResourceType type, const int newPrice);
+
+private:
+    genie::ResourceType m_resourceType = genie::ResourceType::InvalidResource;
+    int m_tradingPrice = 100;
+    int m_amount;
 };
 
 

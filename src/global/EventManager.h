@@ -51,6 +51,8 @@ public:
         PlayerResourceChanged,
 
         TradingPriceChanged,
+        ResourceBought,
+        ResourceSold,
 
         EventTypeCount
     };
@@ -83,6 +85,8 @@ public:
 
     static void playerResourceChanged(Player *player, const genie::ResourceType type, const float newValue);
 
+    static void resourceBought(const genie::ResourceType type, const int amount);
+    static void resourceSold(const genie::ResourceType type, const int amount);
     static void tradingPriceChanged(const genie::ResourceType type, const int newPrice);
 
 private:

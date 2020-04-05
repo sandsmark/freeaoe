@@ -61,7 +61,7 @@ class SfmlRenderTarget;
 //------------------------------------------------------------------------------
 /// State where the game is processed
 //
-class GameState : public IState
+class GameState : public IState, public EventListener
 {
 public:
     enum class Result {
@@ -98,8 +98,8 @@ public:
     int sellPrice(const genie::ResourceType type) { return (0.7 * m_tradingPrices[type]); }
     int buyPrice(const genie::ResourceType type) { return (1.3 * m_tradingPrices[type]); }
 
-    void onResourceBought(const genie::ResourceType type);
-    void onResourceSold(const genie::ResourceType type);
+    void onResourceBought(const genie::ResourceType type, const int amount) override;
+    void onResourceSold(const genie::ResourceType type, const int amount) override;
 
     void setTradingPrice(const genie::ResourceType type, const int newPrice);
 
@@ -126,7 +126,7 @@ private:
 
     std::unique_ptr<ScenarioController> m_scenarioController;
 
-    ResourceMap m_tradingPrices = {
+    std::unordered_map<genie::ResourceType, int> m_tradingPrices = {
         { genie::ResourceType::FoodStorage, 100 },
         { genie::ResourceType::WoodStorage, 100 },
         { genie::ResourceType::StoneStorage, 100 }

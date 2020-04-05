@@ -135,6 +135,16 @@ void EventManager::playerResourceChanged(Player *player, const genie::ResourceTy
     call(PlayerResourceChanged, [=](EventListener *l) { l->onPlayerResourceChanged(player, type, newValue); });
 }
 
+void EventManager::resourceBought(const genie::ResourceType type, const int amount)
+{
+    call(ResourceBought, [=](EventListener *l) { l->onResourceBought(type, amount); });
+}
+
+void EventManager::resourceSold(const genie::ResourceType type, const int amount)
+{
+    call(ResourceSold, [=](EventListener *l) { l->onResourceSold(type, amount); });
+}
+
 void EventManager::tradingPriceChanged(const genie::ResourceType type, const int newPrice)
 {
     call(TradingPriceChanged, [=](EventListener *l) { l->onTradingPriceChanged(type, newPrice); });

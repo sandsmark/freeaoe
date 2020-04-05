@@ -102,6 +102,9 @@ GameState::GameState(const std::shared_ptr<SfmlRenderTarget> &renderTarget)
     m_unitManager = std::make_shared<UnitManager>();
     renderTarget_ = renderTarget;
     m_scenarioController = std::make_unique<ScenarioController>(this);
+
+    EventManager::registerListener(this, EventManager::ResourceBought);
+    EventManager::registerListener(this, EventManager::ResourceSold);
 }
 
 GameState::~GameState()
@@ -181,16 +184,16 @@ void GameState::onPlayerWin(int playerId)
     }
 }
 
-void GameState::onResourceBought(const genie::ResourceType type)
+void GameState::onResourceBought(const genie::ResourceType type, const int amount)
 {
-    m_tradingPrices[type] += 2;
+    m_tradingPrices[type] = std::clamp(20, m_tradingPrices[type] + 2 * amount / 100, 9999);
 
     EventManager::tradingPriceChanged(type, m_tradingPrices[type]);
 }
 
-void GameState::onResourceSold(const genie::ResourceType type)
+void GameState::onResourceSold(const genie::ResourceType type, const int amount)
 {
-    m_tradingPrices[type] -= 2;
+    m_tradingPrices[type] = std::clamp(20, m_tradingPrices[type] - 2 * amount / 100, 9999);
 
     EventManager::tradingPriceChanged(type, m_tradingPrices[type]);
 }

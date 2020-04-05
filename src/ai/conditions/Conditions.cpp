@@ -555,9 +555,9 @@ void CanTrade::actualCheck()
 
     // idk I think this is right lol, math is hard
     if (m_type == Buy) {
-        canTrade = m_resourceAvailable > m_tradingPrice * 1.3;
+        canTrade = m_resourceAvailable >= m_tradingPrice * 1.3;
     } else {
-        canTrade = m_resourceAvailable * 0.7 > m_tradingPrice;
+        canTrade = m_resourceAvailable * 0.7 >= m_tradingPrice;
     }
 
     if (canTrade == m_isSatisfied) {

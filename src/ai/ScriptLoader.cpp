@@ -413,7 +413,13 @@ std::shared_ptr<Action> ScriptLoader::createAction(const ActionType type, const 
 
 std::shared_ptr<Action> ScriptLoader::createAction(const ActionType type, const Commodity commodity)
 {
-    WARN << "unimplemented action" << type << commodity;
+    switch(type) {
+    case ActionType::BuyCommodity:
+        return std::make_shared<Actions::BuyCommodity>(commodity, 100);
+    default:
+        WARN << "unimplemented action" << type << commodity;
+        break;
+    }
     return nullptr;
 }
 
