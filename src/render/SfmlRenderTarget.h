@@ -30,6 +30,8 @@ class RenderTarget;
 class Sprite;
 class Texture;
 class Text;
+class RenderWindow;
+class Event;
 }
 
 struct SfmlImage : public Drawable::Image
@@ -53,6 +55,34 @@ struct SfmlText : public Drawable::Text
 
     float lineSpacing() override;
     Size size() override;
+};
+
+struct SfmlWindow : public Window
+{
+    void resize(const Size newSize) override;
+    Size size() override;
+    std::shared_ptr<IRenderTarget> createRenderTarget() override;
+
+    ScreenPos mapToLocal(const ScreenPos pos) override;
+
+    bool isOpen() const override;
+    void close() override;
+    void update() override;
+
+    std::shared_ptr<Event> waitEvent() override;
+    std::shared_ptr<Event> pollEvent() override;
+
+    std::unique_ptr<sf::RenderWindow> window;
+
+private:
+    std::shared_ptr<Window::MouseEvent> createMouseEvent(const sf::Event &sfEvent);
+    std::shared_ptr<Window::Event> convertEvent(const sf::Event &event);
+
+    bool m_altPressed = false;
+    bool m_ctrlPressed = false;
+    bool m_shiftPressed = false;
+    ScreenPos m_mousePos;
+    MouseEvent::Button m_pressedMouseButton = MouseEvent::NoButton;
 };
 
 class SfmlRenderTarget : public IRenderTarget
@@ -79,8 +109,10 @@ public:
     //----------------------------------------------------------------------------
     void draw(const sf::Drawable &shape) override;
     void draw(const sf::Sprite &sprite) override;
+    void draw(const sf::Sprite &sprite, const sf::BlendMode &blendMode) override;
 
     void draw(const ScreenRect &rect, const Drawable::Color &fillColor, const Drawable::Color &outlineColor = Drawable::Transparent, const float outlineSize = 1.) override;
+    void draw(const std::shared_ptr<IRenderTarget> &renderTarget, const sf::BlendMode &blendMode) override;
 
     void draw(const Drawable::Rect &rect) override;
     void draw(const Drawable::Circle &circle) override;

@@ -30,7 +30,7 @@
 
 #include "core/Types.h"
 
-class SfmlRenderTarget;
+class IRenderTarget;
 class UnitManager;
 namespace sf {
 class Event;
@@ -44,7 +44,7 @@ typedef std::unordered_set<std::shared_ptr<Unit>> UnitSet;
 class UnitInfoPanel : public IState
 {
 public:
-    UnitInfoPanel(const std::shared_ptr<SfmlRenderTarget> &renderTarget);
+    UnitInfoPanel(const std::shared_ptr<IRenderTarget> &renderTarget);
 
     void setUnitManager(const std::shared_ptr<UnitManager> &unitManager);
 
@@ -97,7 +97,7 @@ private:
 
     std::array<StatItem, StatItem::TypeCount> m_statItems;
 
-    std::shared_ptr<SfmlRenderTarget> m_renderTarget;
+    std::shared_ptr<IRenderTarget> m_renderTarget;
     std::weak_ptr<UnitManager> m_unitManager;
     UnitSet m_selectedUnits;
     bool m_dirty = true;

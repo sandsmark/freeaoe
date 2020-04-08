@@ -59,7 +59,7 @@ class Tech;
 
 UnitManager::UnitManager()
 {
-    m_outlineOverlay = std::make_unique<sf::RenderTexture>();
+//    m_outlineOverlay = std::make_unique<sf::RenderTexture>();
 }
 
 UnitManager::~UnitManager()
@@ -190,7 +190,7 @@ bool UnitManager::update(Time time)
     return updated;
 }
 
-void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, const std::vector<std::weak_ptr<Entity>> &visible)
+void UnitManager::render(const std::shared_ptr<IRenderTarget> &renderTarget, const std::vector<std::weak_ptr<Entity>> &visible)
 {
     Player::Ptr humanPlayer = m_humanPlayer.lock();
     if (!humanPlayer) {
@@ -200,8 +200,8 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
 
     CameraPtr camera = renderTarget->camera();
 
-    if (Size(m_outlineOverlay->getSize()) != renderTarget->getSize()) {
-        m_outlineOverlay->create(renderTarget->getSize().width, renderTarget->getSize().height);
+    if (!m_outlineOverlay || Size(m_outlineOverlay->getSize()) != renderTarget->getSize()) {
+        m_outlineOverlay = renderTarget->createTextureTarget(renderTarget->getSize());
     }
 
     if (camera->targetPosition() != m_previousCameraPos) {// || m_outlineOverlay->getSize().x == 0) {
@@ -237,7 +237,7 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
             if (visibility == VisibilityMap::Visible) {
                 entity->isVisible = true;
                 visibleUnits.push_back(unit);
-                entity->renderer().render(*renderTarget->renderTarget_, camera->absoluteScreenPos(entity->position()), RenderType::Shadow);
+                entity->renderer().render(renderTarget, camera->absoluteScreenPos(entity->position()), RenderType::Shadow);
 
                 continue;
             }
@@ -248,7 +248,7 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
 
             entity->isVisible = true;
 
-            entity->renderer().render(*renderTarget->renderTarget_, camera->absoluteScreenPos(entity->position()), RenderType::InTheShadows);
+            entity->renderer().render(renderTarget, camera->absoluteScreenPos(entity->position()), RenderType::InTheShadows);
 
             continue;
         }
@@ -263,7 +263,7 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
 
             MapPos shadowPosition = entity->position();
             shadowPosition.z = m_map->elevationAt(shadowPosition);
-            entity->renderer().render(*renderTarget->renderTarget_, camera->absoluteScreenPos(shadowPosition), RenderType::Shadow);
+            entity->renderer().render(renderTarget, camera->absoluteScreenPos(shadowPosition), RenderType::Shadow);
 
             visibleMissiles.push_back(missile);
 
@@ -272,9 +272,9 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
 
         if (entity->isDecayingEntity() || entity->isDoppleganger()) {
             if (visibility == VisibilityMap::Visible) {
-                entity->renderer().render(*renderTarget->renderTarget_, camera->absoluteScreenPos(entity->position()), RenderType::Base);
+                entity->renderer().render(renderTarget, camera->absoluteScreenPos(entity->position()), RenderType::Base);
             } else {
-                entity->renderer().render(*renderTarget->renderTarget_, camera->absoluteScreenPos(entity->position()), RenderType::InTheShadows);
+                entity->renderer().render(renderTarget, camera->absoluteScreenPos(entity->position()), RenderType::InTheShadows);
             }
 
             entity->isVisible = true;
@@ -283,14 +283,14 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
     std::sort(visibleUnits.begin(), visibleUnits.end(), MapPositionSorter());
 
 
-    m_outlineOverlay->clear(sf::Color::Transparent);
+    m_outlineOverlay->clear(Drawable::Transparent);
 
     for (const Unit::Ptr &unit : visibleUnits) {
         const ScreenPos unitPosition = camera->absoluteScreenPos(unit->position());
         if (!(unit->data()->OcclusionMode & genie::Unit::OccludeOthers)) {
-            unit->renderer().render(*m_outlineOverlay, unitPosition, RenderType::Outline);
+            unit->renderer().render(m_outlineOverlay, unitPosition, RenderType::Outline);
         } else {
-            unit->renderer().render(*m_outlineOverlay, unitPosition, RenderType::BuildingAlpha);
+            unit->renderer().render(m_outlineOverlay, unitPosition, RenderType::BuildingAlpha);
 
         }
     }
@@ -393,7 +393,7 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
         }
 
         const ScreenPos pos = renderTarget->camera()->absoluteScreenPos(unit->position());
-        unit->renderer().render(*renderTarget->renderTarget_, pos, RenderType::Base);
+        unit->renderer().render(renderTarget, pos, RenderType::Base);
 
 
 #if defined(DEBUG)
@@ -420,8 +420,8 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
 
     { // this is a bit wrong, on bright buildings it's almost not visible, but haven't found a better solution other than writing a custom shader
         sf::Sprite sprite;
-        sprite.setTexture(m_outlineOverlay->getTexture());
-        renderTarget->renderTarget_->draw(sprite, sf::BlendAdd);
+//        sprite.setTexture(m_outlineOverlay->getTexture());
+        renderTarget->draw(m_outlineOverlay, sf::BlendAdd);
     }
 
 #if defined(DEBUG)
@@ -447,12 +447,12 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
     }
 #endif
 
-    m_moveTargetMarker->renderer().render(*renderTarget->renderTarget_,
+    m_moveTargetMarker->renderer().render(renderTarget,
                                           renderTarget->camera()->absoluteScreenPos(m_moveTargetMarker->position()),
                                           RenderType::Base);
 
     for (const Missile::Ptr &missile : visibleMissiles) {
-        missile->renderer().render(*renderTarget->renderTarget_, renderTarget->camera()->absoluteScreenPos(missile->position()), RenderType::Base);
+        missile->renderer().render(renderTarget, renderTarget->camera()->absoluteScreenPos(missile->position()), RenderType::Base);
     }
 
     if (m_state == State::PlacingBuilding || m_state == State::PlacingWall) {
@@ -483,7 +483,7 @@ void UnitManager::render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, 
 
         for (const UnplacedBuilding &building : m_buildingsToPlace) {
             building.graphic->setOrientation(building.orientation);
-            building.graphic->render(*renderTarget->renderTarget_,
+            building.graphic->render(renderTarget,
                                         renderTarget->camera()->absoluteScreenPos(building.position),
                                         building.canPlace ? RenderType::ConstructAvailable : RenderType::ConstructUnavailable);
         }

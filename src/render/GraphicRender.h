@@ -31,9 +31,7 @@ class GraphicRender;
 class Graphic;
 typedef std::shared_ptr<Graphic> GraphicPtr;
 
-namespace sf {
-class RenderTarget;
-}
+class IRenderTarget;
 
 enum class RenderType {
     Shadow,
@@ -85,7 +83,7 @@ public:
     bool update(Time time, const bool isVisible) noexcept;
     inline bool isValid() const noexcept;
 
-    virtual void render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType renderpass) noexcept;
+    virtual void render(const std::shared_ptr<IRenderTarget> &renderTarget, const ScreenPos screenPos, const RenderType renderpass) noexcept;
 
     void setPlayerColor(int playerColor) noexcept;
     void setCivId(int civId) noexcept { m_civId = civId; }

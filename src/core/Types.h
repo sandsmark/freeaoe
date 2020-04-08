@@ -303,6 +303,11 @@ struct ScreenPos {
         y(size.height)
     {}
 
+    ScreenPos(const sf::Vector2f &v) :
+        x(v.x),
+        y(v.y)
+    {}
+
     ScreenPos(const sf::Vector2i &v) :
         x(v.x),
         y(v.y)
@@ -319,6 +324,10 @@ struct ScreenPos {
 
     inline operator sf::Vector2f() const {
         return sf::Vector2f(x, y);
+    }
+
+    inline operator sf::Vector2i() const {
+        return sf::Vector2i(x, y);
     }
 
     inline bool operator!=(const sf::Vector2f &other) const {

@@ -104,29 +104,16 @@ void Engine::start()
         bool updated = false;
 
         // Process events
-        sf::Event event;
-        while (renderWindow_->pollEvent(event)) {
+//        sf::Event event;
+        std::shared_ptr<Window::Event> event;
+        while ((event = renderWindow_->pollEvent())) {
             // Close window : exit
-            if (event.type == sf::Event::Closed) {
+            if (event->type == Window::Event::Quit) {
                 renderWindow_->close();
             }
 
-            if (event.type == sf::Event::MouseButtonPressed || event.type == sf::Event::MouseButtonReleased) {
-                sf::Vector2f mappedPos = renderWindow_->mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
-                event.mouseButton.x = mappedPos.x;
-                event.mouseButton.y = mappedPos.y;
-                mousePos = ScreenPos(mappedPos);
-            }
-
-            if (event.type == sf::Event::MouseMoved) {
-                sf::Vector2f mappedPos = renderWindow_->mapPixelToCoords(sf::Vector2i(event.mouseMove.x, event.mouseMove.y));
-                event.mouseMove.x = mappedPos.x;
-                event.mouseMove.y = mappedPos.y;
-                mousePos = ScreenPos(mappedPos);
-            }
-
             if (!handleEvent(event, state)) {
-//                state->handleEvent(event);
+                state->handleEvent(event);
             }
 
             updated = true;
@@ -142,7 +129,7 @@ void Engine::start()
                     m_resultOverlay.setString("You were defeated."); // TODO: don't remember the exact text
                 }
                 const ScreenRect labelRect = m_resultOverlay.getLocalBounds();
-                const Size windowSize = renderWindow_->getSize();
+                const Size windowSize = renderWindow_->size();
 
                 m_resultOverlay.setPosition(windowSize.width / 2 - labelRect.width / 2, windowSize.height / 2 - labelRect.height / 2);
             }
@@ -163,7 +150,7 @@ void Engine::start()
 
         if (updated) {
             // Clear screen
-            renderWindow_->clear(sf::Color::Green);
+            renderTarget_->clear(Drawable::Green);
             m_mapRenderer->display();
 
             std::vector<std::weak_ptr<Entity>> visibleEntities;
@@ -177,7 +164,7 @@ void Engine::start()
             state->draw();
 
             if (m_currentDialog) {
-                m_currentDialog->render(renderWindow_);
+                m_currentDialog->render(renderWindow_, renderTarget_);
             }
 
             if (state->result != GameState::Result::Running) {
@@ -195,7 +182,7 @@ void Engine::start()
             }
 
             // Update the window
-            renderWindow_->display();
+            renderWindow_->update();
         } else {
             sf::sleep(sf::milliseconds(1000 / 60));
         }
@@ -314,7 +301,7 @@ void Engine::drawUi()
     m_stoneLabel->render();
     m_populationLabel->render();
 
-    renderWindow_->draw(fps_label_);
+    renderTarget_->draw(fps_label_);
 
     const Time currentTime = GameClock.getElapsedTime().asMilliseconds();
     for (const MessageLine &messageLine : m_visibleText) {
@@ -327,7 +314,7 @@ void Engine::drawUi()
     m_mouseCursor->render();
 }
 
-bool Engine::handleEvent(const sf::Event &event, const std::shared_ptr<GameState> &state)
+bool Engine::handleEvent(const std::shared_ptr<Window::Event> &event, const std::shared_ptr<GameState> &state)
 {
     if (m_currentDialog) {
         Dialog::Choice choice = m_currentDialog->handleEvent(event);
@@ -507,8 +494,7 @@ Engine::~Engine() { } // NOLINT
 
 bool Engine::setup(const std::shared_ptr<genie::ScnFile> &scenario)
 {
-    renderWindow_ = std::make_unique<sf::RenderWindow>(sf::VideoMode(1280, 1024), "freeaoe", sf::Style::None);
-    renderWindow_->setFramerateLimit(60);
+    renderWindow_ = Window::createWindow(Size(1280, 1024), "freeaoe");
 
     m_mainScreen->setRenderWindow(renderWindow_);
     m_mainScreen->init();
@@ -516,9 +502,6 @@ bool Engine::setup(const std::shared_ptr<genie::ScnFile> &scenario)
     renderTarget_ = std::make_shared<SfmlRenderTarget>(*renderWindow_);
 
     m_mouseCursor = std::make_unique<MouseCursor>(renderTarget_);
-    if (m_mouseCursor->isValid()) {
-        renderWindow_->setMouseCursorVisible(false);
-    }
 
     m_woodLabel = std::make_unique<NumberLabel>(renderTarget_);
     m_foodLabel = std::make_unique<NumberLabel>(renderTarget_);
@@ -570,7 +553,7 @@ bool Engine::setup(const std::shared_ptr<genie::ScnFile> &scenario)
         uiSize = Size(640, 480);
     }
 
-    renderWindow_->setSize(uiSize);
+    renderWindow_->resize(uiSize);
     renderTarget_->setSize(uiSize);
 
     m_resultOverlay.setFillColor(sf::Color::White);

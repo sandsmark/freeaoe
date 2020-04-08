@@ -1,6 +1,5 @@
 #include "Dialog.h"
 
-#include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Window/Event.hpp>
 #include <string>
@@ -19,9 +18,9 @@ Dialog::Dialog(UiScreen *screen) :
 
 }
 
-void Dialog::render(std::shared_ptr<sf::RenderWindow> &renderTarget)
+void Dialog::render(const std::shared_ptr<Window> &window, const std::shared_ptr<IRenderTarget> &renderTarget)
 {
-    Size windowSize = renderTarget->getSize();
+    Size windowSize = window->size();
     Size textureSize(295, 300); //background.getSize(); can't use the actual size, because of the shadow...
     const ScreenPos windowCenter(windowSize.width / 2, windowSize.height / 2);
     ScreenPos position(windowCenter.x - textureSize.width/2, windowCenter.y - textureSize.height/2);
@@ -52,15 +51,20 @@ void Dialog::render(std::shared_ptr<sf::RenderWindow> &renderTarget)
     }
 }
 
-Dialog::Choice Dialog::handleEvent(const sf::Event &event)
+Dialog::Choice Dialog::handleEvent(const std::shared_ptr<Window::Event> &event)
 {
-    if (event.type == sf::Event::MouseButtonReleased) {
-        const ScreenPos mousePos(event.mouseButton.x, event.mouseButton.y);
+    Window::MouseEvent::Ptr mouseEvent = Window::Event::asMouseEvent(event);
+
+    if (!mouseEvent) {
+        return Invalid;
+    }
+
+    if (event->type == Window::Event::MouseReleased) {
         Choice choice = Invalid;
         for (int i=0; i<ChoicesCount; i++) {
             m_buttons[i].pressed = false;
 
-            if (m_buttons[i].rect.contains(mousePos)) {
+            if (m_buttons[i].rect.contains(mouseEvent->position)) {
                 choice = Choice(i);
             }
         }
@@ -72,12 +76,11 @@ Dialog::Choice Dialog::handleEvent(const sf::Event &event)
 
         return m_pressedButton;
     }
-    if (event.type != sf::Event::MouseButtonPressed) {
+    if (event->type != Window::Event::MousePressed) {
         return Invalid;
     }
-    const ScreenPos mousePos(event.mouseButton.x, event.mouseButton.y);
     for (int i=0; i<ChoicesCount; i++) {
-        if (m_buttons[i].rect.contains(mousePos)) {
+        if (m_buttons[i].rect.contains(mouseEvent->position)) {
             m_pressedButton = Choice(i);
             m_buttons[i].pressed = true;
         } else {

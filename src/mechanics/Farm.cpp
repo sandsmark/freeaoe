@@ -1,6 +1,5 @@
 #include "Farm.h"
 
-#include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <genie/Types.h>
 #include <genie/dat/Unit.h>
@@ -18,6 +17,7 @@
 #include "core/Utility.h"
 #include "resource/AssetManager.h"
 #include "resource/Graphic.h"
+#include "render/IRenderTarget.h"
 
 class UnitManager;
 struct Player;
@@ -131,7 +131,7 @@ FarmRender::FarmRender(const Size &size) :
     m_unavailableTexture.loadFromImage(Graphic::slpFrameToImage(frame, 0, ImageType::ConstructionUnavailable));
 }
 
-void FarmRender::render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType pass) noexcept
+void FarmRender::render(const std::shared_ptr<IRenderTarget> &renderTarget, const ScreenPos screenPos, const RenderType pass) noexcept
 {
     sf::Sprite sprite;
     if (pass == RenderType::ConstructAvailable) {
@@ -152,7 +152,7 @@ void FarmRender::render(sf::RenderTarget &renderTarget, const ScreenPos screenPo
         for (int y = -m_size.height; y < m_size.height; y++) {
             const ScreenPos offset = MapPos(x*tileWidth, y*tileHeight).toScreen();
             sprite.setPosition(pos + offset);
-            renderTarget.draw(sprite);
+            renderTarget->draw(sprite);
         }
     }
 }

@@ -29,6 +29,7 @@ class Texture;
 class Shape;
 class Image;
 class Color;
+class BlendMode; // TODO kill me
 }
 
 namespace genie{
@@ -36,6 +37,8 @@ class SlpFrame;
 class PalFile;
 typedef std::shared_ptr<SlpFrame> SlpFramePtr;
 }
+
+class IRenderTarget;
 
 struct Camera;
 using CameraPtr = std::shared_ptr<Camera>;
@@ -122,12 +125,7 @@ private:
     friend class IRenderTarget;
 };
 
-}
-
-struct Window
-{
-
-};
+}//namespace Drawable
 
 struct TextureTarget
 {
@@ -160,6 +158,7 @@ public:
     /// TODO: Remove sf:: from api
     virtual void draw(const sf::Drawable &shape) = 0;
     virtual void draw(const sf::Sprite &sprite) = 0;
+    virtual void draw(const sf::Sprite &sprite, const sf::BlendMode &blendMode) = 0;
 
 //    virtual void draw(const ScreenRect &rect, const sf::Color &fillColor, const sf::Color &outlineColor = sf::Color::Transparent, const float outlineSize = 1.) = 0;
     virtual void draw(const ScreenRect &rect, const Drawable::Color &fillColor, const Drawable::Color &outlineColor = Drawable::Transparent, const float outlineSize = 1.) = 0;
@@ -174,6 +173,7 @@ public:
     virtual void draw(const Drawable::Rect &rect) = 0;
     virtual void draw(const Drawable::Circle &circle) = 0;
     virtual void draw(const std::shared_ptr<IRenderTarget> &renderTarget, const ScreenPos &pos = ScreenPos(0, 0)) = 0;
+    virtual void draw(const std::shared_ptr<IRenderTarget> &renderTarget, const sf::BlendMode &blendMode) = 0;
 
     virtual Drawable::Image::Ptr createImage(const Size &size, const uint8_t *pixels) = 0;
     Drawable::Image::Ptr convertFrameToImage(const genie::SlpFramePtr &frame);
@@ -191,6 +191,135 @@ public:
 protected:
     CameraPtr m_camera;
 };
+using IRenderTargetPtr = std::shared_ptr<IRenderTarget>;
 
-typedef std::shared_ptr<IRenderTarget> IRenderTargetPtr;
+struct Window
+{
+    struct KeyEvent;
+    struct MouseEvent;
+    struct MouseScrollEvent;
 
+    struct Event {
+        using Ptr = std::shared_ptr<Event>;
+
+        const enum Type {
+            Invalid = -1,
+            Quit,
+            KeyPressed,
+            KeyReleased,
+            MousePressed,
+            MouseReleased,
+            MouseMoved,
+            MouseScroll,
+        } type = Invalid;
+
+        bool isMouseEvent() const {
+            return (type == MousePressed || type == MouseReleased || type == MouseMoved);
+        }
+        bool isKeyboardEvent() const {
+            return (type == KeyPressed || type == KeyReleased);
+        }
+        bool isScrollEVent() const {
+            return (type == MouseScroll);
+        }
+
+        static std::shared_ptr<KeyEvent> asKeyboardEvent(const std::shared_ptr<Event> &event) {
+            if (!event || !event->isKeyboardEvent()) {
+                return nullptr;
+            }
+            return static_pointer_cast<KeyEvent>(event);
+        }
+        static std::shared_ptr<MouseEvent> asMouseEvent(const std::shared_ptr<Event> &event) {
+            if (!event || !event->isMouseEvent()) {
+                return nullptr;
+            }
+            return static_pointer_cast<MouseEvent>(event);
+        }
+        static std::shared_ptr<MouseScrollEvent> asScrollEvent(const std::shared_ptr<Event> &event) {
+            if (!event || !event->isScrollEVent()) {
+                return nullptr;
+            }
+            return static_pointer_cast<MouseScrollEvent>(event);
+        }
+
+
+    protected:
+        Event(const Type _type) : type(_type) {}
+    };
+
+    struct KeyEvent : public Event {
+        using Ptr = std::shared_ptr<KeyEvent>;
+
+        const enum Key {
+            Invalid = -1,
+            Left,
+            Right,
+            Up,
+            Down
+        } key;
+        const bool isPressed = false;
+
+    private:
+        friend struct Window;
+
+        KeyEvent(const Event::Type type, const Key key_) : Event(type),
+            key(key_)
+        {}
+    };
+
+    struct MouseEvent : public Event {
+        using Ptr = std::shared_ptr<MouseEvent>;
+
+        ScreenPos position;
+
+        const enum Modifier {
+            NoModifier = 0,
+            Alt = 1 << 0,
+            Ctrl = 1 << 1,
+            Shift = 1 << 2
+        } modifiers;
+        const enum Button {
+            NoButton = 0,
+            LeftButton = 1 << 0,
+            RightButton = 1 << 1,
+            MiddleButton = 1 << 2
+        } button;
+
+    private:
+        friend struct Window;
+        MouseEvent(const Event::Type type_, const ScreenPos pos, const Modifier modifiers_, const Button button_) : Event(type_),
+            position(pos),
+            modifiers(modifiers_),
+            button(button_)
+        { }
+    };
+
+    struct MouseScrollEvent : public Event {
+        using Ptr = std::shared_ptr<MouseScrollEvent>;
+
+        const ScreenPos position;
+        const int amount;
+    private:
+        friend struct Window;
+
+        MouseScrollEvent(const ScreenPos pos, const int amount_) : Event(Event::MouseScroll),
+          position(pos),
+          amount(amount_)
+        { }
+    };
+
+    static std::shared_ptr<Window> createWindow(const Size size, const std::string &title);
+
+    virtual Size size() = 0;
+    virtual void resize(const Size newSize) = 0;
+    virtual std::shared_ptr<IRenderTarget> createRenderTarget() = 0;
+
+    virtual bool isOpen() const = 0;
+    virtual void close() = 0;
+    virtual void update() = 0;
+
+    virtual ScreenPos mapToLocal(const ScreenPos pos) = 0;
+
+    virtual std::shared_ptr<Event> waitEvent() = 0;
+    virtual std::shared_ptr<Event> pollEvent() = 0;
+};

@@ -30,6 +30,8 @@ namespace genie {
 class UIFile;
 }
 
+struct Window;
+
 class UiScreen
 {
 public:
@@ -44,7 +46,7 @@ public:
     virtual bool handleMouseEvent(const sf::Event &event) { (void)event; return false; }
     virtual void handleKeyEvent(const sf::Event &) {}
 
-    void setRenderWindow(const std::shared_ptr<sf::RenderWindow> &renderWindow);
+    void setRenderWindow(const std::shared_ptr<Window> &renderWindow);
 
 protected:
     friend struct TextButton;
@@ -68,7 +70,7 @@ protected:
 
     std::string m_uiFileName;
     std::shared_ptr<genie::UIFile> m_uiFile;
-    std::shared_ptr<sf::RenderWindow> m_renderWindow;
+    std::shared_ptr<Window> m_renderWindow;
     sf::Texture m_background;
 };
 

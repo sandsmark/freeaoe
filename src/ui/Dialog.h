@@ -8,12 +8,15 @@
 #include <array>
 #include <memory>
 
+#include "render/IRenderTarget.h"
+
 struct TextButton;
 
 namespace sf {
 class Event;
-class RenderWindow;
 }
+
+class IRenderTarget;
 
 class UiScreen;
 
@@ -32,8 +35,8 @@ struct Dialog
 
     Dialog(UiScreen *screen);
 
-    void render(std::shared_ptr<sf::RenderWindow> &renderTarget);
-    Choice handleEvent(const sf::Event &event);
+    void render(const std::shared_ptr<Window> &window, const std::shared_ptr<IRenderTarget> &renderTarget);
+    Choice handleEvent(const std::shared_ptr<Window::Event> &event);
 
     sf::Texture background;
     UiScreen *m_screen;

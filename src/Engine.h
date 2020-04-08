@@ -80,7 +80,7 @@ private:
     void loadUiOverlay();
     void drawUi();
     bool updateCamera(const std::shared_ptr<GameState> &state);
-    bool handleEvent(const sf::Event &event, const std::shared_ptr<GameState> &state);
+    bool handleEvent(const std::shared_ptr<Window::Event> &event, const std::shared_ptr<GameState> &state);
     bool handleKeyEvent(const sf::Event &event, const std::shared_ptr<GameState> &state);
     bool handleMouseMove(const sf::Event &event, const std::shared_ptr<GameState> &state);
     bool handleMousePress(const sf::Event &event, const std::shared_ptr<GameState> &state);
@@ -88,8 +88,8 @@ private:
     void showMenu();
     bool updateUi(const std::shared_ptr<GameState> &state);
 
-    std::shared_ptr<sf::RenderWindow> renderWindow_;
-    std::shared_ptr<SfmlRenderTarget> renderTarget_;
+    std::shared_ptr<Window> renderWindow_;
+    std::shared_ptr<IRenderTarget> renderTarget_;
     std::unique_ptr<Dialog> m_currentDialog;
 
     std::unique_ptr<UiScreen> m_mainScreen;

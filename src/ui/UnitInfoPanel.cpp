@@ -37,12 +37,11 @@
 #include "mechanics/Player.h"
 #include "mechanics/Unit.h"
 #include "mechanics/UnitManager.h"
-#include "render/SfmlRenderTarget.h"
 #include "resource/AssetManager.h"
 #include "resource/LanguageManager.h"
 #include "resource/Resource.h"
 
-UnitInfoPanel::UnitInfoPanel(const std::shared_ptr<SfmlRenderTarget> &renderTarget) :
+UnitInfoPanel::UnitInfoPanel(const std::shared_ptr<IRenderTarget> &renderTarget) :
     m_renderTarget(renderTarget)
 {
 

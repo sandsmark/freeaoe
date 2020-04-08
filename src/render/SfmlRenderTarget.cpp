@@ -34,6 +34,8 @@
 #include <SFML/Graphics/View.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/System/Vector2.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Window/Event.hpp>
 
 #include <memory>
 #include <SFML/Graphics/CircleShape.hpp>
@@ -152,6 +154,11 @@ void SfmlRenderTarget::draw(const sf::Sprite &sprite)
 //    transform.rotate(sprite.getRotation());//.scale(sprite.getScale());
 
     renderTarget_->draw(toDraw, transform);
+}
+
+void SfmlRenderTarget::draw(const sf::Sprite &sprite, const sf::BlendMode &blendMode)
+{
+    renderTarget_->draw(sprite, blendMode);
 }
 
 void SfmlRenderTarget::draw(const ScreenRect &rect, const Drawable::Color &fillColor, const Drawable::Color &outlineColor, const float outlineSize)
@@ -293,6 +300,28 @@ void SfmlRenderTarget::draw(const std::shared_ptr<IRenderTarget> &renderTarget, 
     draw(sfmlRenderTarget->m_renderTexture->getTexture(), pos);
 }
 
+void SfmlRenderTarget::draw(const std::shared_ptr<IRenderTarget> &renderTarget, const sf::BlendMode &blendMode)
+{
+    if (!renderTarget) {
+        WARN << "can't render null render target";
+        return;
+    }
+
+    const std::shared_ptr<const SfmlRenderTarget> sfmlRenderTarget = std::static_pointer_cast<const SfmlRenderTarget>(renderTarget);
+
+    if (!sfmlRenderTarget->m_renderTexture) {
+        return;
+    }
+
+    sfmlRenderTarget->m_renderTexture->display();
+
+    sf::Sprite sprite;
+    sprite.setTexture(sfmlRenderTarget->m_renderTexture->getTexture());
+    sprite.setScale(SCALE, SCALE);
+    sprite.setPosition(ScreenPos(0, 0));
+    draw(sprite, blendMode);
+}
+
 
 Drawable::Text::Ptr SfmlRenderTarget::createText()
 {
@@ -364,4 +393,167 @@ Size SfmlText::size()
 
     const sf::FloatRect bounds = text->getLocalBounds();
     return Size(bounds.width, bounds.height);
+}
+
+std::shared_ptr<Window> Window::createWindow(const Size size, const std::string &title)
+{
+    std::shared_ptr<SfmlWindow> ret = std::make_shared<SfmlWindow>();
+    ret->window = std::make_unique<sf::RenderWindow>(sf::VideoMode(size.width, size.height), title, sf::Style::None);
+    ret->window->setFramerateLimit(60);
+    ret->window->setMouseCursorVisible(false);
+    ret->window->setSize(size);
+    ret->window->setView(sf::View(sf::FloatRect(0, 0, size.width, size.height)));
+    return ret;
+}
+
+void SfmlWindow::resize(const Size newSize)
+{
+    window->setSize(newSize);
+    window->setView(sf::View(sf::FloatRect(0, 0, newSize.width, newSize.height)));
+}
+
+Size SfmlWindow::size()
+{
+    return window->getSize();
+}
+
+std::shared_ptr<IRenderTarget> SfmlWindow::createRenderTarget()
+{
+    std::shared_ptr<SfmlRenderTarget> ret = std::make_shared<SfmlRenderTarget>(*this);
+
+    return ret;
+}
+
+ScreenPos SfmlWindow::mapToLocal(const ScreenPos pos)
+{
+}
+
+bool SfmlWindow::isOpen() const
+{
+    return window->isOpen();
+}
+
+void SfmlWindow::close()
+{
+    window->close();
+}
+
+void SfmlWindow::update()
+{
+    window->display();
+}
+
+static Window::KeyEvent::Key convertKey(const sf::Keyboard::Key sfKey)
+{
+    switch(sfKey)  {
+    case sf::Keyboard::Up:      return Window::KeyEvent::Up;
+    case sf::Keyboard::Down:    return Window::KeyEvent::Down;
+    case sf::Keyboard::Left:    return Window::KeyEvent::Left;
+    case sf::Keyboard::Right:   return Window::KeyEvent::Right;
+    default:                    return Window::KeyEvent::Invalid;
+    };
+}
+
+std::shared_ptr<Window::MouseEvent> SfmlWindow::createMouseEvent(const sf::Event &sfEvent)
+{
+    Window::Event::Type type;
+    switch(sfEvent.type) {
+    case sf::Event::MouseButtonReleased:
+        type = Window::Event::MouseReleased;
+        break;
+    case sf::Event::MouseButtonPressed:
+        type = Window::Event::MousePressed;
+        break;
+    case sf::Event::MouseMoved:
+        type = Window::Event::MouseMoved;
+        break;
+    default:
+        type = Window::Event::Invalid;
+        break;
+    }
+
+    if (sfEvent.type == sf::Event::MouseMoved) {
+        m_mousePos.x = sfEvent.mouseMove.x;
+        m_mousePos.y = sfEvent.mouseMove.y;
+        m_mousePos = window->mapPixelToCoords(m_mousePos);
+    } else {
+        m_mousePos.x = sfEvent.mouseButton.x;
+        m_mousePos.y = sfEvent.mouseButton.y;
+
+        m_mousePos = window->mapPixelToCoords(m_mousePos);
+
+        if (sfEvent.type == sf::Event::MouseButtonPressed) {
+            switch(sfEvent.mouseButton.button) {
+            case sf::Mouse::Left: m_pressedMouseButton = Window::MouseEvent::LeftButton; break;
+            case sf::Mouse::Right: m_pressedMouseButton = Window::MouseEvent::RightButton; break;
+            case sf::Mouse::Middle: m_pressedMouseButton = Window::MouseEvent::MiddleButton; break;
+            default: break;
+            }
+        } else {
+            m_pressedMouseButton = Window::MouseEvent::NoButton;
+        }
+    }
+
+    int modifier = Window::MouseEvent::NoModifier;
+    if (m_altPressed) {
+        modifier |= Window::MouseEvent::Alt;
+    }
+
+    if (m_ctrlPressed) {
+        modifier |= Window::MouseEvent::Ctrl;
+    }
+
+    if (m_shiftPressed) {
+        modifier |= Window::MouseEvent::Shift;
+    }
+
+    return std::make_shared<Window::MouseEvent>(type, m_mousePos, modifier, m_pressedMouseButton);
+}
+
+std::shared_ptr<Window::Event> SfmlWindow::convertEvent(const sf::Event &event)
+{
+    switch(event.type) {
+    case sf::Event::Closed:
+        return std::make_shared<Event>(Window::Event::Quit);
+    case sf::Event::KeyReleased:
+        m_altPressed = event.key.alt;
+        m_ctrlPressed = event.key.control;
+        m_shiftPressed = event.key.shift;
+        return std::make_shared<KeyEvent>(Window::Event::KeyReleased, convertKey(event.key.code));
+
+    case sf::Event::KeyPressed:
+        m_altPressed = event.key.alt;
+        m_ctrlPressed = event.key.control;
+        m_shiftPressed = event.key.shift;
+        return std::make_shared<KeyEvent>(Window::Event::KeyPressed, convertKey(event.key.code));
+
+    case sf::Event::MouseButtonReleased:
+    case sf::Event::MouseMoved:
+    case sf::Event::MouseButtonPressed:
+        return createMouseEvent(event);
+    case sf::Event::MouseWheelScrolled:
+        m_mousePos.x = event.mouseWheel.x;
+        m_mousePos.y = event.mouseWheel.y;
+        return std::make_shared<MouseScrollEvent>(m_mousePos, event.mouseWheel.delta);
+    default:
+        return std::make_shared<Event>();
+    }
+    return nullptr;
+}
+
+std::shared_ptr<Window::Event> SfmlWindow::waitEvent()
+{
+    sf::Event event;
+    window->waitEvent(event);
+    return convertEvent(event);
+}
+
+std::shared_ptr<Window::Event> SfmlWindow::pollEvent()
+{
+    sf::Event event;
+    if (!window->pollEvent(event)) {
+        return nullptr;
+    }
+
+    return convertEvent(event);
 }

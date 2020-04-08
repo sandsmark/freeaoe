@@ -22,7 +22,7 @@
 
 #include "Unit.h"
 
-class SfmlRenderTarget;
+class IRenderTarget;
 
 struct Player;
 struct Building;
@@ -114,7 +114,7 @@ public:
     void setHumanPlayer(const std::shared_ptr<Player> &player) { m_humanPlayer = player; }
 
     bool update(Time time);
-    void render(const std::shared_ptr<SfmlRenderTarget> &renderTarget, const std::vector<std::weak_ptr<Entity> > &visible);
+    void render(const std::shared_ptr<IRenderTarget> &renderTarget, const std::vector<std::weak_ptr<Entity> > &visible);
 
     bool onLeftClick(const ScreenPos &screenPos, const CameraPtr &camera);
     void onRightClick(const ScreenPos &screenPos, const CameraPtr &camera);
@@ -167,7 +167,7 @@ private:
 
     UnitSet m_selectedUnits;
     MapPtr m_map;
-    std::unique_ptr<sf::RenderTexture> m_outlineOverlay;
+    std::shared_ptr<IRenderTarget> m_outlineOverlay;
     MoveTargetMarker::Ptr m_moveTargetMarker;
 
     std::vector<UnplacedBuilding> m_buildingsToPlace;

@@ -20,6 +20,7 @@
 #include "core/Types.h"
 #include "resource/AssetManager.h"
 #include "resource/Resource.h"
+#include "render/IRenderTarget.h"
 
 #include <genie/resource/Color.h>
 #include <genie/resource/PalFile.h>
@@ -106,9 +107,8 @@ bool UiScreen::init()
 
         const int width = backgroundFrame->getWidth();
         const int height = backgroundFrame->getHeight();
-        m_renderWindow = std::make_shared<sf::RenderWindow>(sf::VideoMode(width, height), "freeaoe");
-        m_renderWindow->setSize(sf::Vector2u(width, height));
-        m_renderWindow->setView(sf::View(sf::FloatRect(0, 0, width, height)));
+        m_renderWindow = Window::createWindow(Size(width, height), "freeaoe");
+        m_renderWindow->resize(Size(width, height));
 
         DBG << backgroundFrame->getWidth() << backgroundFrame->getHeight();
         m_background.loadFromImage(Resource::convertFrameToImage(backgroundFrame, palette));
@@ -118,7 +118,7 @@ bool UiScreen::init()
     return true;
 }
 
-void UiScreen::setRenderWindow(const std::shared_ptr<sf::RenderWindow> &renderWindow)
+void UiScreen::setRenderWindow(const std::shared_ptr<Window> &renderWindow)
 {
     m_renderWindow = renderWindow;
 }
@@ -130,8 +130,9 @@ bool UiScreen::run()
 
     while (m_renderWindow->isOpen()) {
         // Process events
-        sf::Event event;
-        if (!m_renderWindow->waitEvent(event)) {
+//        sf::Event event;
+        Window::Event event;
+        if (!m_renderWindow->waitEvent(&event)) {
             WARN << "failed to get event";
             break;
         }
