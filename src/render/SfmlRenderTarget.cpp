@@ -338,6 +338,7 @@ void SfmlRenderTarget::draw(const Drawable::Text::Ptr &text)
             sfmlText->text->setPosition(text->position);
         }
     }
+
     renderTarget_->draw(*sfmlText->text);
 }
 
@@ -347,9 +348,18 @@ SfmlText::SfmlText()
 
 }
 
+float SfmlText::lineSpacing()
+{
+    return text->getFont()->getLineSpacing(pointSize);
+}
+
 Size SfmlText::size()
 {
-    text->setString(string);
+    if (!string.empty()) {
+        text->setString(string);
+    } else {
+        text->setString("M"); // dummy
+    }
     text->setCharacterSize(pointSize);
 
     const sf::FloatRect bounds = text->getLocalBounds();

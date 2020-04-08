@@ -207,9 +207,11 @@ void Engine::start()
 void Engine::addMessage(const std::string &message)
 {
     for (int i=0; i<s_numMessagesLines - 1; i++) {
-        m_visibleText[i].setString(m_visibleText[i+1].getString());
+        m_visibleText[i].text->string = m_visibleText[i+1].text->string;
+        m_visibleText[i].endTime = m_visibleText[i+1].endTime;
     }
-    m_visibleText[s_numMessagesLines - 1].setString(message);
+    m_visibleText[s_numMessagesLines - 1].text->string = message;
+    m_visibleText[s_numMessagesLines - 1].endTime = GameClock.getElapsedTime().asMilliseconds() + s_messageTimeout;
 }
 
 void Engine::showStartScreen()
@@ -314,8 +316,12 @@ void Engine::drawUi()
 
     renderWindow_->draw(fps_label_);
 
-    for (sf::Text &messageLine : m_visibleText) {
-        renderWindow_->draw(messageLine);
+    const Time currentTime = GameClock.getElapsedTime().asMilliseconds();
+    for (const MessageLine &messageLine : m_visibleText) {
+        if (messageLine.endTime < currentTime) {
+            continue;
+        }
+        renderTarget_->draw(messageLine.text);
     }
 
     m_mouseCursor->render();
@@ -587,16 +593,18 @@ bool Engine::setup(const std::shared_ptr<genie::ScnFile> &scenario)
 
     loadTopButtons();
 
-    const sf::Font &font = SfmlRenderTarget::defaultFont();
     int posY = 30;
     for (int i=0; i<s_numMessagesLines; i++) {
-        m_visibleText[i].setFont(font);
-        m_visibleText[i].setCharacterSize(14);
-        m_visibleText[i].setPosition(5, posY);
-        m_visibleText[i].setOutlineColor(sf::Color::Black);
-        m_visibleText[i].setOutlineThickness(2);
-        m_visibleText[i].setFillColor(sf::Color::White);
-        posY += font.getLineSpacing(13);
+        Drawable::Text::Ptr text = renderTarget_->createText();
+        text->pointSize = 14;
+        text->position.x = 5;
+        text->position.y = posY;
+        text->outlineColor = Drawable::Black;
+        text->color = Drawable::White;
+
+        posY += text->lineSpacing();
+
+        m_visibleText[i].text = text;
     }
 
     return true;

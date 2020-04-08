@@ -109,6 +109,8 @@ struct Text
     Color color = Black;
     Color outlineColor = Transparent;
 
+    virtual float lineSpacing() = 0;
+
     virtual Size size() = 0;
 
     virtual ~Text() = default;

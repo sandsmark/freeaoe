@@ -51,6 +51,7 @@ struct SfmlText : public Drawable::Text
     ScreenPos lastPos;
     Alignment lastAlignment = AlignLeft;
 
+    float lineSpacing() override;
     Size size() override;
 };
 

@@ -62,6 +62,7 @@ class Engine
 {
 public:
     static const int s_numMessagesLines = 15;
+    static const Time s_messageTimeout = 30000; // 30 seconds, I don't remember what it really is
 
     static const sf::Clock GameClock;
 
@@ -118,7 +119,11 @@ private:
     std::unique_ptr<UnitInfoPanel> m_unitInfoPanel;
     std::unique_ptr<MapRenderer> m_mapRenderer;
 
-    std::array<sf::Text, s_numMessagesLines> m_visibleText;
+    struct MessageLine {
+        Drawable::Text::Ptr text;
+        Time endTime = 0;
+    };
+    std::array<MessageLine, s_numMessagesLines> m_visibleText;
 
     Drawable::Image::Ptr m_uiOverlay;
 
