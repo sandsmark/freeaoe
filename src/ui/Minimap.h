@@ -32,7 +32,7 @@ public:
     void setVisibilityMap(const std::shared_ptr<VisibilityMap> &visibilityMap);
 
     bool init() override;
-    bool handleEvent(sf::Event event) override;
+    bool handleEvent(const Window::Event::Ptr &event) override;
     void mouseExited() { m_mousePressed = false; }
     bool update(Time time) override;
     void draw() override;

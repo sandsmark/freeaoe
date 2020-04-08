@@ -216,6 +216,9 @@ struct Window
         bool isMouseEvent() const {
             return (type == MousePressed || type == MouseReleased || type == MouseMoved);
         }
+        bool isMouseButtonEvent() const {
+            return (type == MousePressed || type == MouseReleased);
+        }
         bool isKeyboardEvent() const {
             return (type == KeyPressed || type == KeyReleased);
         }
@@ -287,6 +290,7 @@ struct Window
 
     private:
         friend struct Window;
+        friend class SfmlWindow;
         MouseEvent(const Event::Type type_, const ScreenPos pos, const Modifier modifiers_, const Button button_) : Event(type_),
             position(pos),
             modifiers(modifiers_),
@@ -298,13 +302,15 @@ struct Window
         using Ptr = std::shared_ptr<MouseScrollEvent>;
 
         const ScreenPos position;
-        const int amount;
+        const int deltaX; // SFML only supports one direction, unfortunately
+        const int deltaY;
     private:
         friend struct Window;
 
-        MouseScrollEvent(const ScreenPos pos, const int amount_) : Event(Event::MouseScroll),
+        MouseScrollEvent(const ScreenPos pos, const int dx, const int dy) : Event(Event::MouseScroll),
           position(pos),
-          amount(amount_)
+          deltaX(dx),
+          deltaY(dy)
         { }
     };
 
@@ -317,8 +323,6 @@ struct Window
     virtual bool isOpen() const = 0;
     virtual void close() = 0;
     virtual void update() = 0;
-
-    virtual ScreenPos mapToLocal(const ScreenPos pos) = 0;
 
     virtual std::shared_ptr<Event> waitEvent() = 0;
     virtual std::shared_ptr<Event> pollEvent() = 0;

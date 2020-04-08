@@ -152,9 +152,9 @@ bool UnitInfoPanel::init()
     return true;
 }
 
-bool UnitInfoPanel::handleEvent(sf::Event event)
+bool UnitInfoPanel::handleEvent(const Window::Event::Ptr &event)
 {
-    if (event.type != sf::Event::MouseButtonPressed) {
+    if (event->type != Window::Event::MousePressed) {
         return false;
     }
 
@@ -162,8 +162,9 @@ bool UnitInfoPanel::handleEvent(sf::Event event)
         return false;
     }
 
-    ScreenPos mousePos(event.mouseButton.x, event.mouseButton.y);
-    if (!rect().contains(mousePos)) {
+    Window::MouseEvent::Ptr mouseEvent = Window::Event::asMouseEvent(event);
+
+    if (!rect().contains(mouseEvent->position)) {
         return false;
     }
 
@@ -171,7 +172,7 @@ bool UnitInfoPanel::handleEvent(sf::Event event)
     int clickedButton = -1;
     for (size_t i=0; i<m_unitButtons.size(); i++) {
         const Button &button = m_unitButtons[i];
-        if (button.rect.contains(mousePos)) {
+        if (button.rect.contains(mouseEvent->position)) {
             clickedButton = i;
             break;
         }

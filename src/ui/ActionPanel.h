@@ -20,7 +20,6 @@ struct Unit;
 struct Player;
 using PlayerPtr = std::shared_ptr<Player>;
 
-class SfmlRenderTarget;
 class UnitManager;
 namespace genie {
 class Unit;
@@ -235,11 +234,11 @@ public:
         Undefined
     };
 
-    ActionPanel(const std::shared_ptr<SfmlRenderTarget> &renderTarget);
+    ActionPanel(const std::shared_ptr<IRenderTarget> &renderTarget);
     ActionPanel() = delete;
 
     bool init() override;
-    bool handleEvent(sf::Event event) override;
+    bool handleEvent(const Window::Event::Ptr &event) override;
     bool update(Time time) override;
     void draw() override;
 
@@ -290,7 +289,7 @@ private:
     ScreenPos buttonPosition(const int index) const;
     ScreenRect buttonRect(const int index) const;
 
-    std::shared_ptr<SfmlRenderTarget> m_renderTarget;
+    std::shared_ptr<IRenderTarget> m_renderTarget;
     std::shared_ptr<UnitManager> m_unitManager;
     PlayerPtr m_humanPlayer;
     ScreenRect m_rect;

@@ -49,7 +49,7 @@ public:
     void setUnitManager(const std::shared_ptr<UnitManager> &unitManager);
 
     bool init() override;
-    bool handleEvent(sf::Event event) override;
+    bool handleEvent(const Window::Event::Ptr &event) override;
     bool update(Time time) override;
     void draw() override;
 

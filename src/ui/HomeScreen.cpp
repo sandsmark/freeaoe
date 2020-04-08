@@ -258,7 +258,7 @@ void HomeScreen::render()
         }
 
         sprite.setPosition(pos);
-        m_renderWindow->draw(sprite);
+        m_renderTarget->draw(sprite);
 
     }
     for (int i=0; i<Button::TypeCount; i++) {
@@ -268,7 +268,7 @@ void HomeScreen::render()
         pos.y -= 3 * textRect.height / 4;
 
         m_buttons[i].text.setPosition(pos);
-        m_renderWindow->draw(m_buttons[i].text);
+        m_renderTarget->draw(m_buttons[i].text);
     }
 
     switch (m_selectedButton) {
@@ -281,12 +281,12 @@ void HomeScreen::render()
     case -1:
         break;
     default:
-        m_renderWindow->draw(m_todoText);
+        m_renderTarget->draw(m_todoText);
         break;
     }
 
-    m_renderWindow->draw(m_versionText);
-    m_renderWindow->draw(m_description);
+    m_renderTarget->draw(m_versionText);
+    m_renderTarget->draw(m_description);
 }
 
 bool HomeScreen::handleMouseEvent(const sf::Event &event)

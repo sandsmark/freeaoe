@@ -103,8 +103,9 @@ private:
     using UiScreen::init;
 
     void render() override;
-    bool handleMouseEvent(const sf::Event &event) override;
-    void handleKeyEvent(const sf::Event &event) override;
+    bool handleMouseEvent(const Window::MouseEvent::Ptr &event) override;
+    void handleKeyEvent(const Window::KeyEvent::Ptr &event) override;
+    void handleScrollEvent(const Window::MouseScrollEvent::Ptr &event) override;
     void loadFile(const std::string &filePath);
 
     void updateVisibleText();

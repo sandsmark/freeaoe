@@ -9,6 +9,7 @@
 #include "mechanics/Unit.h"
 #include "mechanics/UnitManager.h"
 #include "render/Camera.h"
+#include "render/IRenderTarget.h"
 #include "resource/AssetManager.h"
 #include "resource/DataManager.h"
 
@@ -18,7 +19,6 @@
 #include <genie/resource/Color.h>
 #include <genie/resource/PalFile.h>
 
-#include <SFML/Window/Event.hpp>
 
 #include <algorithm>
 #include <functional>
@@ -144,24 +144,23 @@ bool Minimap::init()
     return m_terrainTexture != nullptr;
 }
 
-bool Minimap::handleEvent(sf::Event event)
+bool Minimap::handleEvent(const Window::Event::Ptr &event)
 {
-    ScreenPos pos;
-    if (event.type == sf::Event::MouseButtonPressed || event.type == sf::Event::MouseButtonReleased) {
-        pos = ScreenPos(event.mouseButton.x, event.mouseButton.y);
-    } else if (event.type == sf::Event::MouseMoved && m_mousePressed) {
-        pos = ScreenPos(event.mouseMove.x, event.mouseMove.y);
-    } else {
+    Window::MouseEvent::Ptr mouseEvent = Window::Event::asMouseEvent(event);
+    if (!mouseEvent) {
         return false;
     }
 
-    if (event.type == sf::Event::MouseButtonPressed && m_rect.contains(pos)) {
+    ScreenPos pos = mouseEvent->position;
+
+    if (event->type == Window::Event::MousePressed && m_rect.contains(pos)) {
         m_mousePressed = true;
-    } else if (event.type == sf::Event::MouseButtonReleased && m_mousePressed) {
+    } else if (event->type == Window::Event::MouseReleased && m_mousePressed) {
         m_mousePressed = false;
         return true;
     }
 
+    // Eat all mouse events until released again
     if (!m_rect.contains(pos)) {
         return m_mousePressed;
     }

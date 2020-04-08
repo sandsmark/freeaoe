@@ -20,7 +20,6 @@
 #include "core/Types.h"
 #include "resource/AssetManager.h"
 #include "resource/Resource.h"
-#include "render/IRenderTarget.h"
 
 #include <genie/resource/Color.h>
 #include <genie/resource/PalFile.h>
@@ -121,6 +120,7 @@ bool UiScreen::init()
 void UiScreen::setRenderWindow(const std::shared_ptr<Window> &renderWindow)
 {
     m_renderWindow = renderWindow;
+    m_renderTarget = m_renderWindow->createRenderTarget();
 }
 
 bool UiScreen::run()
@@ -131,41 +131,43 @@ bool UiScreen::run()
     while (m_renderWindow->isOpen()) {
         // Process events
 //        sf::Event event;
-        Window::Event event;
-        if (!m_renderWindow->waitEvent(&event)) {
+        Window::Event::Ptr event = m_renderWindow->waitEvent();
+        if (!event) {
             WARN << "failed to get event";
             break;
         }
 
-        if (event.type == sf::Event::Closed) {
+        if (event->type == Window::Event::Quit) {
             return false;
         }
 
-        if (event.type == sf::Event::MouseButtonPressed || event.type == sf::Event::MouseButtonReleased) {
-            sf::Vector2f mappedPos = m_renderWindow->mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
-            event.mouseButton.x = mappedPos.x;
-            event.mouseButton.y = mappedPos.y;
+//        if (event.type == sf::Event::MouseButtonPressed || event.type == sf::Event::MouseButtonReleased) {
+//            sf::Vector2f mappedPos = m_renderWindow->mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
+//            event.mouseButton.x = mappedPos.x;
+//            event.mouseButton.y = mappedPos.y;
+//        }
+
+//        if (event.type == sf::Event::MouseMoved) {
+//            sf::Vector2f mappedPos = m_renderWindow->mapPixelToCoords(sf::Vector2i(event.mouseMove.x, event.mouseMove.y));
+//            event.mouseMove.x = mappedPos.x;
+//            event.mouseMove.y = mappedPos.y;
+//        }
+
+        if (event->isKeyboardEvent()) {
+            handleKeyEvent(Window::Event::asKeyboardEvent(event));
+        } else  if (event->isMouseEvent()) {
+            if (handleMouseEvent(Window::Event::asMouseEvent(event))) {
+                m_renderWindow->close();
+                continue;
+            }
+        } else  if (event->isScrollEVent()) {
+            handleScrollEvent(Window::Event::asScrollEvent(event));
         }
 
-        if (event.type == sf::Event::MouseMoved) {
-            sf::Vector2f mappedPos = m_renderWindow->mapPixelToCoords(sf::Vector2i(event.mouseMove.x, event.mouseMove.y));
-            event.mouseMove.x = mappedPos.x;
-            event.mouseMove.y = mappedPos.y;
-        }
-
-        if (event.type == sf::Event::KeyPressed) {
-            handleKeyEvent(event);
-        }
-
-        if (handleMouseEvent(event)) {
-            m_renderWindow->close();
-            continue;
-        }
-
-        m_renderWindow->clear(sf::Color::Black);
-        m_renderWindow->draw(sprite);
+        m_renderTarget->clear(Drawable::Black);
+        m_renderTarget->draw(sprite);
         render();
-        m_renderWindow->display();
+        m_renderWindow->update();
     }
 
     return true;

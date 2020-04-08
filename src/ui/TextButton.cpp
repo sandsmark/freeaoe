@@ -31,7 +31,7 @@ void TextButton::drawLine(const ScreenPos &from, const ScreenPos &to, const sf::
     shape.setPosition(from.x, from.y);
 
     shape.setFillColor(color);
-    screen->m_renderWindow->draw(shape);
+    screen->m_renderTarget->draw(shape);
 }
 
 void TextButton::render(UiScreen *screen)
@@ -42,7 +42,7 @@ void TextButton::render(UiScreen *screen)
     background.setFillColor(sf::Color(0, 0, 0, screen->m_buttonOpacity * 255));
     background.setSize(rect.size());
     background.setPosition(rect.topLeft());
-    screen->m_renderWindow->draw(background);
+    screen->m_renderTarget->draw(background);
 
     sf::Color outer1 = screen->m_bevelColor1c;
     sf::Color middle1 = screen->m_bevelColor1b;
@@ -95,5 +95,5 @@ void TextButton::render(UiScreen *screen)
 
     m_text.setPosition(textPosition);
 
-    screen->m_renderWindow->draw(m_text);
+    screen->m_renderTarget->draw(m_text);
 }

@@ -21,7 +21,7 @@ public:
 
     void render() override;
     bool init() override;
-    bool handleMouseEvent(const sf::Event &event) override;
+    bool handleMouseEvent(const Window::MouseEvent::Ptr &event) override;
 
 private:
     TextButton m_exitButton;

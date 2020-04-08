@@ -81,10 +81,10 @@ private:
     void drawUi();
     bool updateCamera(const std::shared_ptr<GameState> &state);
     bool handleEvent(const std::shared_ptr<Window::Event> &event, const std::shared_ptr<GameState> &state);
-    bool handleKeyEvent(const sf::Event &event, const std::shared_ptr<GameState> &state);
-    bool handleMouseMove(const sf::Event &event, const std::shared_ptr<GameState> &state);
-    bool handleMousePress(const sf::Event &event, const std::shared_ptr<GameState> &state);
-    bool handleMouseRelease(const sf::Event &event, const std::shared_ptr<GameState> &state);
+    bool handleKeyEvent(const std::shared_ptr<Window::KeyEvent> &event, const std::shared_ptr<GameState> &state);
+    bool handleMouseMove(const Window::MouseEvent::Ptr &event, const std::shared_ptr<GameState> &state);
+    bool handleMousePress(const Window::MouseEvent::Ptr &event, const std::shared_ptr<GameState> &state);
+    bool handleMouseRelease(const Window::MouseEvent::Ptr &event, const std::shared_ptr<GameState> &state);
     void showMenu();
     bool updateUi(const std::shared_ptr<GameState> &state);
 

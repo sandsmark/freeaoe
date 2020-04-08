@@ -419,13 +419,9 @@ Size SfmlWindow::size()
 
 std::shared_ptr<IRenderTarget> SfmlWindow::createRenderTarget()
 {
-    std::shared_ptr<SfmlRenderTarget> ret = std::make_shared<SfmlRenderTarget>(*this);
+    std::shared_ptr<SfmlRenderTarget> ret = std::make_shared<SfmlRenderTarget>(size());
 
     return ret;
-}
-
-ScreenPos SfmlWindow::mapToLocal(const ScreenPos pos)
-{
 }
 
 bool SfmlWindow::isOpen() const
@@ -507,7 +503,7 @@ std::shared_ptr<Window::MouseEvent> SfmlWindow::createMouseEvent(const sf::Event
         modifier |= Window::MouseEvent::Shift;
     }
 
-    return std::make_shared<Window::MouseEvent>(type, m_mousePos, modifier, m_pressedMouseButton);
+    return std::shared_ptr<Window::MouseEvent>(new Window::MouseEvent(type, m_mousePos, Window::MouseEvent::Modifier(modifier), m_pressedMouseButton));
 }
 
 std::shared_ptr<Window::Event> SfmlWindow::convertEvent(const sf::Event &event)
@@ -534,7 +530,7 @@ std::shared_ptr<Window::Event> SfmlWindow::convertEvent(const sf::Event &event)
     case sf::Event::MouseWheelScrolled:
         m_mousePos.x = event.mouseWheel.x;
         m_mousePos.y = event.mouseWheel.y;
-        return std::make_shared<MouseScrollEvent>(m_mousePos, event.mouseWheel.delta);
+        return std::make_shared<MouseScrollEvent>(m_mousePos, event.mouseWheel.delta, event.mouseWheel.delta);
     default:
         return std::make_shared<Event>();
     }

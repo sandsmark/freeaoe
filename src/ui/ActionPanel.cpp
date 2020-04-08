@@ -20,12 +20,12 @@
 #include "mechanics/Player.h"
 #include "mechanics/Unit.h"
 #include "mechanics/UnitManager.h"
-#include "render/SfmlRenderTarget.h"
+#include "render/IRenderTarget.h"
 #include "resource/AssetManager.h"
 #include "resource/LanguageManager.h"
 #include "resource/Resource.h"
 
-ActionPanel::ActionPanel(const std::shared_ptr<SfmlRenderTarget> &renderTarget) :
+ActionPanel::ActionPanel(const std::shared_ptr<IRenderTarget> &renderTarget) :
     m_renderTarget(renderTarget)
 {
 }
@@ -93,13 +93,15 @@ bool ActionPanel::init()
     return true;
 }
 
-bool ActionPanel::handleEvent(sf::Event event)
+bool ActionPanel::handleEvent(const Window::Event::Ptr &event)
 {
-    if (event.type != sf::Event::MouseButtonPressed && event.type != sf::Event::MouseButtonReleased) {
+    if (!event->isMouseButtonEvent()) {
         return false;
     }
-    ScreenPos mousePos(event.mouseButton.x, event.mouseButton.y);
-    if (!rect().contains(mousePos)) {
+
+    Window::MouseEvent::Ptr mouseEvent = Window::Event::asMouseEvent(event);
+
+    if (!rect().contains(mouseEvent->position)) {
         releaseButtons();
         return false;
     }
@@ -109,7 +111,7 @@ bool ActionPanel::handleEvent(sf::Event event)
             continue;
         }
 
-        if (!buttonRect(button.index).contains(mousePos)) {
+        if (!buttonRect(button.index).contains(mouseEvent->position)) {
             if (button.pressed) {
                 m_dirty = true;
             }
@@ -118,14 +120,14 @@ bool ActionPanel::handleEvent(sf::Event event)
             continue;
         }
         if (button.type == InterfaceButton::AttackStance) {
-            if (event.type == sf::Event::MouseButtonPressed) {
+            if (event->type == Window::Event::MousePressed) {
                 handleButtonClick(button);
             }
 
             break;
         }
 
-        if (event.type == sf::Event::MouseButtonPressed) {
+        if (event->type == Window::Event::MousePressed) {
             if (button.pressed) {
                 m_dirty = true;
             }

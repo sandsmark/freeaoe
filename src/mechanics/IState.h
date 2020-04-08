@@ -19,7 +19,7 @@
 
 #include "core/Types.h"
 
-#include <SFML/Window/Event.hpp>
+#include "render/IRenderTarget.h"
 
 class IState
 {
@@ -30,7 +30,7 @@ public:
     virtual bool init() = 0;
 
     //----------------------------------------------------------------------------
-    virtual bool handleEvent(sf::Event /*event*/) { return false; }
+    virtual bool handleEvent(const Window::Event::Ptr &/*event*/) { return false; }
 
     //----------------------------------------------------------------------------
     /// Update game state before drawin

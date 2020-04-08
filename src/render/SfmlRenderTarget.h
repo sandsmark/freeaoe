@@ -63,8 +63,6 @@ struct SfmlWindow : public Window
     Size size() override;
     std::shared_ptr<IRenderTarget> createRenderTarget() override;
 
-    ScreenPos mapToLocal(const ScreenPos pos) override;
-
     bool isOpen() const override;
     void close() override;
     void update() override;

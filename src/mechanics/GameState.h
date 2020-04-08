@@ -55,10 +55,7 @@ enum class GameType {
     WonderRace
 };
 
-namespace sf {
-class RenderTarget;
-}
-class SfmlRenderTarget;
+class IRenderTarget;
 
 //------------------------------------------------------------------------------
 /// State where the game is processed
@@ -75,7 +72,7 @@ public:
 
     static std::unordered_map<GameType, ResourceMap> defaultStartingResources;
 
-    GameState(const std::shared_ptr<SfmlRenderTarget> &renderTarget);
+    GameState(const std::shared_ptr<IRenderTarget> &renderTarget);
     virtual ~GameState();
 
     void setScenario(const std::shared_ptr<genie::ScnFile> &scenario);
@@ -111,7 +108,7 @@ private:
 
     GameState(const GameState &other) = delete;
 
-    std::shared_ptr<SfmlRenderTarget> renderTarget_;
+    std::shared_ptr<IRenderTarget> renderTarget_;
 
     std::shared_ptr<UnitManager> m_unitManager;
 

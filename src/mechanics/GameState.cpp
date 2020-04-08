@@ -99,7 +99,7 @@ std::unordered_map<GameType, ResourceMap> GameState::defaultStartingResources = 
     },
 };
 
-GameState::GameState(const std::shared_ptr<SfmlRenderTarget> &renderTarget)
+GameState::GameState(const std::shared_ptr<IRenderTarget> &renderTarget)
 {
     m_unitManager = std::make_shared<UnitManager>();
     renderTarget_ = renderTarget;

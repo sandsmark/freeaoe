@@ -224,15 +224,15 @@ void Engine::showStartScreen()
     sf::Sprite sprite;
     sprite.setTexture(loadingScreen);
     sprite.setPosition(0, 0);
-    sprite.setScale(renderWindow_->getSize().x / float(loadingScreen.getSize().x),
-                    renderWindow_->getSize().y / float(loadingScreen.getSize().y));
+    sprite.setScale(renderWindow_->size().width / float(loadingScreen.getSize().x),
+                    renderWindow_->size().height / float(loadingScreen.getSize().y));
     renderTarget_->draw(sprite);
-    renderWindow_->display();
+    renderWindow_->update();
 }
 
 void Engine::loadTopButtons()
 {
-    float x = renderWindow_->getSize().x - 5;
+    float x = renderWindow_->size().width - 5;
     for (int i=0; i<IconButton::ButtonsCount; i++) {
         std::unique_ptr<IconButton> button = std::make_unique<IconButton>(renderTarget_);
 
@@ -337,40 +337,46 @@ bool Engine::handleEvent(const std::shared_ptr<Window::Event> &event, const std:
         return true;
     }
 
-    switch(event.type) {
-    case sf::Event::KeyPressed:
-        return handleKeyEvent(event, state);
-    case sf::Event::MouseButtonPressed:
-        return handleMousePress(event, state);
-    case sf::Event::MouseButtonReleased:
-        return handleMouseRelease(event, state);
-    case sf::Event::MouseMoved:
-        return handleMouseMove(event, state);
-    default:
-        break;
+    if (event->isKeyboardEvent()) {
+        return handleKeyEvent(Window::Event::asKeyboardEvent(event), state);
+    }
+
+    if (event->isMouseEvent()) {
+        Window::MouseEvent::Ptr mouseEvent = Window::Event::asMouseEvent(event);
+        switch(event->type) {
+        case Window::Event::MousePressed:
+            return handleMousePress(mouseEvent, state);
+        case Window::Event::MouseReleased:
+            return handleMouseRelease(mouseEvent, state);
+        case Window::Event::MouseMoved:
+            return handleMouseMove(mouseEvent, state);
+        default:
+            WARN << "Invalid mouse event" << event->type;
+            break;
+        }
     }
 
     return false;
 }
 
-bool Engine::handleKeyEvent(const sf::Event &event, const std::shared_ptr<GameState> &state)
+bool Engine::handleKeyEvent(const std::shared_ptr<Window::KeyEvent> &event, const std::shared_ptr<GameState> &state)
 {
     ScreenPos cameraScreenPos = renderTarget_->camera()->targetPosition().toScreen();
 
-    switch(event.key.code) {
-    case sf::Keyboard::Left:
+    switch(event->key) {
+    case Window::KeyEvent::Left:
         cameraScreenPos.x -= 20;
         break;
 
-    case sf::Keyboard::Right:
+    case Window::KeyEvent::Right:
         cameraScreenPos.x += 20;
         break;
 
-    case sf::Keyboard::Down:
+    case Window::KeyEvent::Down:
         cameraScreenPos.y -= 20;
         break;
 
-    case sf::Keyboard::Up:
+    case Window::KeyEvent::Up:
         cameraScreenPos.y += 20;
         break;
 
@@ -386,72 +392,68 @@ bool Engine::handleKeyEvent(const sf::Event &event, const std::shared_ptr<GameSt
 
 }
 
-bool Engine::handleMouseMove(const sf::Event &event, const std::shared_ptr<GameState> &state)
+bool Engine::handleMouseMove(const Window::MouseEvent::Ptr &event, const std::shared_ptr<GameState> &state)
 {
-    const ScreenPos mousePos = ScreenPos(event.mouseMove.x, event.mouseMove.y);
     bool handled = false;
 
-    if (mousePos.x < MOUSE_MOVE_EDGE_SIZE) {
+    if (event->position.x < MOUSE_MOVE_EDGE_SIZE) {
         m_cameraDeltaX = -1;
         handled = true;
-    } else if (mousePos.x > renderTarget_->getSize().width - MOUSE_MOVE_EDGE_SIZE) {
+    } else if (event->position.x > renderTarget_->getSize().width - MOUSE_MOVE_EDGE_SIZE) {
         m_cameraDeltaX = 1;
         handled = true;
     } else {
         m_cameraDeltaX = 0;
     }
 
-    if (mousePos.y < MOUSE_MOVE_EDGE_SIZE) {
+    if (event->position.y < MOUSE_MOVE_EDGE_SIZE) {
         m_cameraDeltaY = 1;
         handled = true;
-    } else if (mousePos.y > renderTarget_->getSize().height - MOUSE_MOVE_EDGE_SIZE) {
+    } else if (event->position.y > renderTarget_->getSize().height - MOUSE_MOVE_EDGE_SIZE) {
         m_cameraDeltaY = -1;
         handled = true;
     } else {
         m_cameraDeltaY = 0;
     }
 
-    if (mousePos.y < 800) {
+    if (event->position.y < 800) {
         if (m_selecting) {
-            m_selectionCurr = mousePos;
+            m_selectionCurr = event->position;
             handled = true;
         } else {
-            state->unitManager()->onMouseMove(renderTarget_->camera()->absoluteMapPos(mousePos));
+            state->unitManager()->onMouseMove(renderTarget_->camera()->absoluteMapPos(event->position));
         }
     }
 
     return handled;
 }
 
-bool Engine::handleMousePress(const sf::Event &event, const std::shared_ptr<GameState> &state)
+bool Engine::handleMousePress(const Window::MouseEvent::Ptr &event, const std::shared_ptr<GameState> &state)
 {
-    const ScreenPos mousePos(event.mouseButton.x, event.mouseButton.y);
     bool updated = false;
     for (const std::unique_ptr<IconButton> &button : m_buttons) {
-        updated = button->onMousePressed(mousePos) || updated;
+        updated = button->onMousePressed(event->position) || updated;
     }
     if (updated) {
         return true;
     }
 
-    if (mousePos.y < 800 && event.mouseButton.button == sf::Mouse::Button::Left) {
-        if (state->unitManager()->onLeftClick(ScreenPos(event.mouseButton.x, event.mouseButton.y), renderTarget_->camera())) {
+    if (event->position.y < 800 && event->button == Window::MouseEvent::LeftButton) {
+        if (state->unitManager()->onLeftClick(event->position, renderTarget_->camera())) {
             return true;
         }
 
-        m_selectionStart = mousePos;
-        m_selectionCurr = mousePos + ScreenPos(1, 1);
+        m_selectionStart = event->position;
+        m_selectionCurr = event->position + ScreenPos(1, 1);
         m_selecting = true;
     }
 
     return true;
 }
 
-bool Engine::handleMouseRelease(const sf::Event &event, const std::shared_ptr<GameState> &state)
+bool Engine::handleMouseRelease(const Window::MouseEvent::Ptr &event, const std::shared_ptr<GameState> &state)
 {
-    const ScreenPos mousePos(event.mouseButton.x, event.mouseButton.y);
-
-    if (mousePos.y < 800 && event.mouseButton.button == sf::Mouse::Button::Left) {
+    if (event->position.y < 800 && event->button == Window::MouseEvent::LeftButton) {
         if (state->unitManager()->onMouseRelease()) {
             return true;
         }
@@ -459,7 +461,7 @@ bool Engine::handleMouseRelease(const sf::Event &event, const std::shared_ptr<Ga
 
     IconButton::Type clickedButton = IconButton::Invalid;
     for (const std::unique_ptr<IconButton> &button : m_buttons) {
-        if (button->onMouseReleased(mousePos)) {
+        if (button->onMouseReleased(event->position)) {
             clickedButton = button->type();
         }
     }
@@ -470,14 +472,14 @@ bool Engine::handleMouseRelease(const sf::Event &event, const std::shared_ptr<Ga
         return true;
     }
 
-    if (event.mouseButton.button == sf::Mouse::Button::Left && m_selecting) {
+    if (m_selecting && event->button == Window::MouseEvent::LeftButton) {
         state->unitManager()->selectUnits(m_selectionRect, renderTarget_->camera());
         m_selectionRect = ScreenRect();
         m_selecting = false;
         return true;
     }
-    if (event.mouseButton.button == sf::Mouse::Button::Right) {
-        state->unitManager()->onRightClick(mousePos, renderTarget_->camera());
+    if (event->button == Window::MouseEvent::RightButton) {
+        state->unitManager()->onRightClick(event->position, renderTarget_->camera());
     }
 
     return false;
@@ -499,7 +501,7 @@ bool Engine::setup(const std::shared_ptr<genie::ScnFile> &scenario)
     m_mainScreen->setRenderWindow(renderWindow_);
     m_mainScreen->init();
 
-    renderTarget_ = std::make_shared<SfmlRenderTarget>(*renderWindow_);
+    renderTarget_ = renderWindow_->createRenderTarget();
 
     m_mouseCursor = std::make_unique<MouseCursor>(renderTarget_);
 

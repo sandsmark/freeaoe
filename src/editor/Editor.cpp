@@ -54,16 +54,15 @@ bool Editor::init()
     return true;
 }
 
-bool Editor::handleMouseEvent(const sf::Event &event)
+bool Editor::handleMouseEvent(const Window::MouseEvent::Ptr &event)
 {
-    if (event.type == sf::Event::MouseButtonPressed) {
-        ScreenPos mousePos(event.mouseButton.x, event.mouseButton.y);
-        if (m_exitButton.rect.contains(mousePos)) {
+    if (event->type == Window::Event::MousePressed) {
+        if (m_exitButton.rect.contains(event->position)) {
             m_exitButton.pressed = true;
         }
     }
 
-    if (event.type == sf::Event::MouseButtonReleased) {
+    if (event->type == Window::Event::MouseReleased) {
         if (m_exitButton.pressed) {
             return true;
         }

@@ -20,6 +20,7 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <memory>
 #include <string>
+#include "render/IRenderTarget.h"
 
 namespace sf {
 class Event;
@@ -43,8 +44,9 @@ public:
     bool run();
 
     virtual void render() {}
-    virtual bool handleMouseEvent(const sf::Event &event) { (void)event; return false; }
-    virtual void handleKeyEvent(const sf::Event &) {}
+    virtual bool handleMouseEvent(const Window::MouseEvent::Ptr &event) { (void)event; return false; }
+    virtual void handleKeyEvent(const Window::KeyEvent::Ptr &) {}
+    virtual void handleScrollEvent(const Window::MouseScrollEvent::Ptr &) {}
 
     void setRenderWindow(const std::shared_ptr<Window> &renderWindow);
 
@@ -71,6 +73,7 @@ protected:
     std::string m_uiFileName;
     std::shared_ptr<genie::UIFile> m_uiFile;
     std::shared_ptr<Window> m_renderWindow;
+    std::shared_ptr<IRenderTarget> m_renderTarget;
     sf::Texture m_background;
 };
 
