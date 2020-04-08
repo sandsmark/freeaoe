@@ -240,21 +240,8 @@ const Drawable::Image::Ptr &TerrainSprite::pngTexture(const MapTile &tile, const
         }
 
     }
-    DBG << minAlpha << maxAlpha;
     m_textures[tile] = renderer->createImage(Size(subRect.width, subRect.height), pixelsBuf.data());
-    DBG << m_textures[tile].get();
     return m_textures[tile];
-//        sf::Image image;
-//        image.create(subRect.width, subRect.height, pixels);
-//        m_textures[tile] = loadFromImage(image);
-
-//     sf::Texture &texture = m_textures[tile];
-
-//    sf::Sprite sprite(texture);
-//    sprite.rotate(45);
-//    sprite.scale(1, 0.5);
-//    sprite.move(48.5, 0);
-//    return sprite;
 }
 
 #endif//PNG_TERRAIN_TEXTURES
