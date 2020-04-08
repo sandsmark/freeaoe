@@ -627,7 +627,7 @@ ScreenPos ActionPanel::buttonPosition(const int index) const
     ScreenPos position;
     position.x = index % 5;
     position.x = (position.x) * 50 + 55;
-    position.y = index / 5.f;
+    position.y = index / 5;
     position.y *= 50;
     position.y += m_renderTarget->getSize().height  - 170;
     return position;
