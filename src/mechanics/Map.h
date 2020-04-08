@@ -74,7 +74,7 @@ public:
     void setupBasic() noexcept;
     void setupAllunitsMap() noexcept;
 
-    void create(const genie::ScnMap &mapDescription) noexcept;
+    void create(const genie::ScnMap &mapDescription);
 
     inline int rowCount() const noexcept { return rows_; }
     inline int columnCount() const noexcept { return cols_; }

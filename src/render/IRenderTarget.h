@@ -86,6 +86,8 @@ struct Image
 
     Size size;
 
+    virtual bool isValid() const = 0;
+
 protected:
     Image() {}
 

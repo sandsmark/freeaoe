@@ -64,20 +64,21 @@ TerrainSprite::TerrainSprite(unsigned int id_) : id(id_)
     }
 
     m_slp = AssetManager::Inst()->getSlp(data->SLP);
+
 #if PNG_TERRAIN_TEXTURES
     if (!m_slp) {
-        DBG << m_data->Name2;
+        DBG << data->Name2;
         const std::string pngFolder = AssetManager::Inst()->assetsPath() + "/terrain/textures/";
 
         // Resolves case because windows is retard case insensitive
-        m_pngPath = AssetManager::findFile(m_data->Name2 + "_00_color.png", pngFolder);
+        m_pngPath = AssetManager::findFile(data->Name2 + "_00_color.png", pngFolder);
         if (m_pngPath.empty()) {
-            DBG << "failed to find terrain SLP by ID and failed to find PNG texture" << m_data.Name << m_data.Name << m_data.Enabled;
+            DBG << "failed to find terrain SLP by ID and failed to find PNG texture" << data->Name << data->Name << data->Enabled;
             return;
         }
         DBG << "Found PNG file" << m_pngPath;
         m_isPng = true;
-        DBG << m_data->TerrainDimensions.first << m_data.TerrainDimensions.second;
+        DBG << data->TerrainDimensions.first << data->TerrainDimensions.second;
     }
 #endif
 
@@ -117,8 +118,154 @@ uint8_t TerrainSprite::blendMode(const uint8_t ownMode, const uint8_t neighborMo
 
 
 
+#if PNG_TERRAIN_TEXTURES
+const Drawable::Image::Ptr &TerrainSprite::pngTexture(const MapTile &tile, const IRenderTargetPtr &renderer)
+{
+    if (!m_isPng) {
+        WARN << "is not png?";
+        return Drawable::Image::null;
+    }
+
+    const std::unordered_map<MapTile, Drawable::Image::Ptr>::iterator it = m_textures.find(tile);
+    if (it != m_textures.end() && it->second) {
+        return it->second;
+    }
+
+    sf::Image sourceImage;
+    sourceImage.loadFromFile(m_pngPath);
+
+
+    const int cols = sourceImage.getSize().x / 64;
+
+    sf::IntRect subRect;
+    subRect.width = Constants::TILE_SIZE_HORIZONTAL;
+    subRect.height = Constants::TILE_SIZE_VERTICAL;
+    subRect.left = (tile.frame % cols) * 64;
+    subRect.top = (tile.frame / cols) * 64;
+
+    // First generate an alpha mask that we use to blend the two frames below
+    std::vector<uint8_t> pixelsBuf(subRect.width * subRect.height * 4, 0);
+    uint8_t *pixels = pixelsBuf.data();
+    const sf::Uint8 *sourcePixels = sourceImage.getPixelsPtr();
+    Vector2u sourceSize = sourceImage.getSize();
+
+    uint8_t widths[49];
+    uint8_t size = 1;
+    uint8_t leftEdge[49];
+    for(int i = 0; i < 25; i++){
+        widths[i] = size;
+        widths[48-i] = size;
+        leftEdge[i] = Constants::TILE_SIZE_HORIZONTAL/2 - size/2;
+        leftEdge[48 - i] = Constants::TILE_SIZE_HORIZONTAL/2 - size/2;
+        size += 4;
+    }
+
+    for (int y = 0; y<Constants::TILE_SIZE_VERTICAL; y++) {
+        for (int x = 0; x<widths[y]; x++) {
+            const int index = (y * Constants::TILE_SIZE_HORIZONTAL + x + leftEdge[y]) * 4;
+            ScreenPos sourcePos = MapPos(x, y).toScreen() ;
+            sourcePos += ScreenPos(Constants::TILE_SIZE_HORIZONTAL, Constants::TILE_SIZE_VERTICAL);
+            if (sourcePos.x < 0 || sourcePos.x >= sourceSize.x) {
+                continue;
+            }
+            if (sourcePos.y < 0 || sourcePos.y >= sourceSize.y) {
+                continue;
+            }
+            const int sourceIndex = (sourcePos.y * sourceSize.x + sourcePos.x) * 4;
+            pixels[index + 0] = sourcePixels[sourceIndex + 0];
+            pixels[index + 1] = sourcePixels[sourceIndex + 1];
+            pixels[index + 2] = sourcePixels[sourceIndex + 2];
+            pixels[index + 3] = 255;
+        }
+    }
+
+    sourcePixels = sourceImage.getPixelsPtr();
+
+    const std::string pngFolder = AssetManager::Inst()->assetsPath() + "/terrain/textures/";
+    float maxAlpha = 0.f;
+    float minAlpha = 1.f;
+    for (const Blend &tileBlend : tile.blends) {
+        const genie::BlendMode &blendMode = AssetManager::Inst()->getBlendmode(tileBlend.blendMode);
+        std::vector<float> alphamask(subRect.width * subRect.height, 1.);
+        if (blendMode.pixelCount >= alphamask.size()) {
+            WARN << "Invalid alphamask";
+            break;
+        }
+
+        for (unsigned i=0; i < Blend::BlendTileCount; i++) {
+            if ((tileBlend.bits & (1u << i)) == 0) {
+                continue;
+            }
+
+            for (size_t j=0; j<blendMode.alphaValues[i].size(); j++) {
+                alphamask[j] = std::min(alphamask[j], blendMode.alphaValues[i][j] / 128.f);
+                maxAlpha = std::max(alphamask[j], maxAlpha);
+                minAlpha = std::min(alphamask[j], minAlpha);
+            }
+        }
+
+        const genie::Terrain *data = &DataManager::Inst().getTerrain(tileBlend.terrainId);
+        const std::string blendPngPath = AssetManager::findFile(data->Name2 + "_00_color.png", pngFolder);
+        sf::Image blendSourceImage;
+        blendSourceImage.loadFromFile(blendPngPath);
+        if (!blendSourceImage.getSize().x) {
+            WARN << "Invalid blend" << blendPngPath << tileBlend.terrainId;
+            continue;
+        }
+        Vector2u blendSourceSize = blendSourceImage.getSize();
+        const sf::Uint8 *blendSourcePixels = blendSourceImage.getPixelsPtr();
+
+        int alphaOffset = 0;
+        for (int y = 0; y<Constants::TILE_SIZE_VERTICAL; y++) {
+            for (int x = 0; x<widths[y]; x++) {
+                const int index = (y * Constants::TILE_SIZE_HORIZONTAL + x + leftEdge[y]) * 4;
+                ScreenPos sourcePos = MapPos(x, y).toScreen() ;
+                sourcePos += ScreenPos(Constants::TILE_SIZE_HORIZONTAL, Constants::TILE_SIZE_VERTICAL);
+                if (sourcePos.x < 0 || sourcePos.x >= blendSourceSize.x) {
+                    continue;
+                }
+                if (sourcePos.y < 0 || sourcePos.y >= blendSourceSize.y) {
+                    continue;
+                }
+                const int sourceIndex = (sourcePos.y * sourceSize.x + sourcePos.x) * 4;
+                const float alpha = alphamask[alphaOffset];
+                pixels[index + 0] = (blendSourcePixels[sourceIndex + 0] * (1. - alpha)) + (sourcePixels[sourceIndex + 0] *( alpha));
+                pixels[index + 1] = (blendSourcePixels[sourceIndex + 1] * (1. - alpha)) + (sourcePixels[sourceIndex + 1] *( alpha));
+                pixels[index + 2] = (blendSourcePixels[sourceIndex + 2] * (1. - alpha)) + (sourcePixels[sourceIndex + 2] *( alpha));
+//                pixels[index + 0] = (blendSourcePixels[sourceIndex + 0] * (1. - alpha)) + (pixels[index + 2] *( alpha));
+//                pixels[index + 1] = (blendSourcePixels[sourceIndex + 1] * (1. - alpha)) + (pixels[index + 2] *( alpha));
+//                pixels[index + 2] = (blendSourcePixels[sourceIndex + 2] * (1. - alpha)) + (pixels[index + 2] *( alpha));
+                alphaOffset++;
+            }
+        }
+
+    }
+    DBG << minAlpha << maxAlpha;
+    m_textures[tile] = renderer->createImage(Size(subRect.width, subRect.height), pixelsBuf.data());
+    DBG << m_textures[tile].get();
+    return m_textures[tile];
+//        sf::Image image;
+//        image.create(subRect.width, subRect.height, pixels);
+//        m_textures[tile] = loadFromImage(image);
+
+//     sf::Texture &texture = m_textures[tile];
+
+//    sf::Sprite sprite(texture);
+//    sprite.rotate(45);
+//    sprite.scale(1, 0.5);
+//    sprite.move(48.5, 0);
+//    return sprite;
+}
+
+#endif//PNG_TERRAIN_TEXTURES
+
 const Drawable::Image::Ptr &TerrainSprite::texture(const MapTile &tile, const IRenderTargetPtr &renderer)
 {
+#if PNG_TERRAIN_TEXTURES
+    if (m_isPng) {
+        return pngTexture(tile, renderer);
+    }
+#endif
     // The original graphics code in aoe was apparently hand-written assembly according to people on the internet,
     // and since I'm too lazy and too dumb to optimize this properly we just cache heavily instead
     const std::unordered_map<MapTile, Drawable::Image::Ptr>::const_iterator it = m_textures.find(tile);
@@ -279,87 +426,6 @@ const Drawable::Image::Ptr &TerrainSprite::texture(const MapTile &tile, const IR
     return m_textures[tile];
 }
 
-#if PNG_TERRAIN_TEXTURES
-sf::Sprite TerrainSprite::sprite(const MapTile &tile, const IRenderTargetPtr &renderer) noexcept
-{
-    if (!m_isPng) {
-        return sf::Sprite(texture(tile, renderer));
-    }
-
-    const std::unordered_map<MapTile, Drawable::Image::Ptr>::const_iterator it = m_textures.find(tile);
-    if (it == m_textures.end()) {
-        sf::Image sourceImage;
-        sourceImage.loadFromFile(m_pngPath);
-
-
-        const int cols = sourceImage.getSize().x / 64;
-
-        sf::IntRect subRect;
-        subRect.width = Constants::TILE_SIZE_HORIZONTAL;
-        subRect.height = Constants::TILE_SIZE_VERTICAL;
-        subRect.left = (tile.frame % cols) * 64;
-        subRect.top = (tile.frame / cols) * 64;
-
-        // First generate an alpha mask that we use to blend the two frames below
-        std::vector<uint8_t> alphamask(subRect.width * subRect.height, 255);
-        for (const Blend &tileBlend : tile.blends) {
-            const genie::BlendMode &blendMode = AssetManager::Inst()->getBlendmode(tileBlend.blendMode);
-            if (blendMode.pixelCount >= alphamask.size()) {
-                WARN << "Invalid alphamask";
-                break;
-            }
-
-            for (unsigned i=0; i < Blend::BlendTileCount; i++) {
-                if ((tileBlend.bits & (1u << i)) == 0) {
-                    continue;
-                }
-
-                for (size_t j=0; j<blendMode.alphaValues[i].size(); j++) {
-                    alphamask[j] = std::min(alphamask[j], blendMode.alphaValues[i][j]);
-                }
-            }
-        }
-        std::vector<Uint8> pixelsBuf(subRect.width * subRect.height * 4, 0);
-        uint8_t *pixels = reinterpret_cast<uint8_t*>(pixelsBuf.data());
-        const sf::Uint8 *sourcePixels = sourceImage.getPixelsPtr();
-
-
-        uint8_t widths[49];
-        uint8_t size = 1;
-        uint8_t leftEdge[49];
-        for(int i = 0; i < 25; i++){
-            widths[i] = size;
-            widths[48-i] = size;
-            leftEdge[i] = Constants::TILE_SIZE_HORIZONTAL/2 - size/2;
-            leftEdge[48 - i] = Constants::TILE_SIZE_HORIZONTAL/2 - size/2;
-            size += 4;
-        }
-
-        for (int y = 0; y<Constants::TILE_SIZE_VERTICAL; y++) {
-            for (int x = 0; x<widths[y]; x++) {
-                const int index = (y * Constants::TILE_SIZE_HORIZONTAL + x + leftEdge[y]) * 4;
-                const int sourceIndex = ((y + subRect.top) * sourceImage.getSize().x + (x + subRect.left)) * 4;
-                pixels[index + 0] = sourcePixels[sourceIndex + 0];
-                pixels[index + 1] = sourcePixels[sourceIndex + 1];
-                pixels[index + 2] = sourcePixels[sourceIndex + 2];
-                pixels[index + 3] = 255;
-            }
-        }
-        sf::Image image;
-        image.create(subRect.width, subRect.height, pixels);
-        m_textures[tile] = rend loadFromImage(image);
-    }
-
-     sf::Texture &texture = m_textures[tile];
-
-    sf::Sprite sprite(texture);
-//    sprite.rotate(45);
-//    sprite.scale(1, 0.5);
-//    sprite.move(48.5, 0);
-    return sprite;
-}
-#endif
-
 bool TerrainSprite::isValid() const noexcept
 {
 #if PNG_TERRAIN_TEXTURES
@@ -370,6 +436,7 @@ bool TerrainSprite::isValid() const noexcept
 
     return m_slp != nullptr;
 }
+
 
 #define ALPHA_MASK 0xff000000
 

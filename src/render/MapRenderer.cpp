@@ -225,8 +225,14 @@ void MapRenderer::updateTexture()
                 m_textureTarget->draw(invalidIndicator);
                 continue;
             }
+            const Drawable::Image::Ptr &tileTexture = terrain->texture(mapTile, m_textureTarget);
+            if (!tileTexture->isValid()) {
+                invalidIndicator.center = spos + ScreenPos(Constants::TILE_SIZE_HORIZONTAL/2, Constants::TILE_SIZE_VERTICAL/2);
+                m_textureTarget->draw(invalidIndicator);
+                continue;
+            }
 
-            m_textureTarget->draw(terrain->texture(mapTile, m_textureTarget), spos);
+            m_textureTarget->draw(tileTexture, spos);
 //                invalidIndicator.setPosition(spos);
 //                m_textureTarget.draw(invalidIndicator);
 //            m_textureTarget.draw(terrain->texture(mapTile), spos);

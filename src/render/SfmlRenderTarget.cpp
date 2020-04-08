@@ -249,6 +249,10 @@ void SfmlRenderTarget::draw(const Drawable::Image::Ptr &image, const ScreenPos &
     }
 
     const std::shared_ptr<const SfmlImage> sfmlImage = std::static_pointer_cast<const SfmlImage>(image);
+    if (IS_UNLIKELY(!sfmlImage->texture)) {
+//        WARN << "Null image!";
+        return;
+    }
 
     sf::Sprite sprite;
     sprite.setTexture(*sfmlImage->texture);

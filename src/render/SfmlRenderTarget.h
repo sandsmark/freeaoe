@@ -36,6 +36,10 @@ struct SfmlImage : public Drawable::Image
 {
     SfmlImage() {}
 
+    bool isValid() const override {
+        return texture != nullptr;
+    }
+
     std::unique_ptr<sf::Texture> texture;
 };
 

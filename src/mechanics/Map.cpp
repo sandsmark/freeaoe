@@ -135,7 +135,7 @@ void Map::setupAllunitsMap() noexcept
     elevate(5, 14, 1, 1);
 }
 
-void Map::create(const genie::ScnMap &mapDescription) noexcept
+void Map::create(const genie::ScnMap &mapDescription)
 {
     DBG << "tile count:" << mapDescription.tiles.size();
     DBG << "size:" << mapDescription.width << "x" << mapDescription.height;

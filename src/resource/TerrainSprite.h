@@ -37,6 +37,8 @@ class SlpFile;
 using SlpFilePtr = std::shared_ptr<SlpFile>;
 }
 
+#define PNG_TERRAIN_TEXTURES 1
+
 class TerrainSprite
 {
 public:
@@ -48,10 +50,6 @@ public:
     virtual ~TerrainSprite();
 
     static uint8_t blendMode(const uint8_t ownMode, const uint8_t neighborMode) noexcept;
-
-    inline int coordinatesToFrame(int x, int y) const noexcept {
-        return (y % m_tileSquareCount) + (x % m_tileSquareCount) * m_tileSquareCount;
-    }
 
 #if PNG_TERRAIN_TEXTURES
     inline int coordinatesToFrame(int x, int y) const noexcept {
@@ -66,14 +64,19 @@ public:
             return (y % tileSquareCount) + (x % tileSquareCount) * tileSquareCount;
         }
     }
-    sf::Sprite sprite(const MapTile &tile, const IRenderTargetPtr &renderer) noexcept;
+    const Drawable::Image::Ptr &pngTexture(const MapTile &tile, const IRenderTargetPtr &renderer);
+
+    const Drawable::Image::Ptr &texture(const MapTile &tile, const IRenderTargetPtr &renderer);
+#else
+    inline int coordinatesToFrame(int x, int y) const noexcept {
+        return (y % m_tileSquareCount) + (x % m_tileSquareCount) * m_tileSquareCount;
+    }
+
 #endif
 
     bool isValid() const noexcept;
 
     size_t cacheSize() const { return m_textures.size(); }
-
-    const Drawable::Image::Ptr &texture(const MapTile &tile, const IRenderTargetPtr &renderer);
 
 private:
     void addOutline(uint32_t *pixels, const int width, const int height) noexcept;
