@@ -25,7 +25,6 @@ NB: If Appveyor says there's no artifact available it's probably because it's
 building the latest version, just give it a few moments (or click around in
 AppVeyor to find the older versions).
 
-
 Caveat emptor; I don't have any Windows installation to test with, but it
 works fine in Wine.
 
