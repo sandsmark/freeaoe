@@ -152,7 +152,7 @@ public:
     void onCombatantUnitsMoved() { m_unitsMoved = true; }
 
 private:
-    void onResearchCompleted(Player */*player*/, int /*researchId*/) override { m_availableActionsChanged = true; }
+    void onResearchCompleted(Player * /*player*/, int /*researchId*/) override { m_availableActionsChanged = true; }
 
     void updateBuildingToPlace();
     void placeBuilding(const UnplacedBuilding &building);

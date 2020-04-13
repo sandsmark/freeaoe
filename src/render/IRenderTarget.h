@@ -29,7 +29,7 @@ class Texture;
 class Shape;
 class Image;
 class Color;
-class BlendMode;
+struct BlendMode;
 }
 
 namespace genie{
