@@ -40,7 +40,7 @@ IAction::IAction(const Type type_, const std::shared_ptr<Unit> &unit, const Task
 {
 }
 
-void IAction::assignTask(const Task &task, const std::shared_ptr<Unit> &unit)
+void IAction::assignTask(const Task &task, const std::shared_ptr<Unit> &unit, const AssignType assignType)
 {
     if (!task.data) {
         WARN << "no task data";
@@ -54,6 +54,10 @@ void IAction::assignTask(const Task &task, const std::shared_ptr<Unit> &unit)
         if (!target) {
             DBG << "Can't build nothing";
             return;
+        }
+
+        if (assignType == AssignType::Now) {
+            unit->actions.clearActionQueue();
         }
 
         unit->actions.queueAction(ActionMove::moveUnitTo(unit, target->position(), task));
@@ -76,6 +80,10 @@ void IAction::assignTask(const Task &task, const std::shared_ptr<Unit> &unit)
             DBG << "Can't gather from nothing";
             return;
         }
+        if (assignType == AssignType::Now) {
+            unit->actions.clearActionQueue();
+        }
+
         unit->actions.queueAction(ActionMove::moveUnitTo(unit, task));
         ActionPtr gatherAction = std::make_shared<ActionGather>(unit, task);
         gatherAction->requiredUnitID = task.unitId;
@@ -85,6 +93,10 @@ void IAction::assignTask(const Task &task, const std::shared_ptr<Unit> &unit)
     case genie::ActionType::Combat: {
         if (target) {
             DBG << "attacking" << target->debugName;
+        }
+
+        if (assignType == AssignType::Now) {
+            unit->actions.clearActionQueue();
         }
 
         ActionPtr combatAction = std::make_shared<ActionAttack>(unit, task);

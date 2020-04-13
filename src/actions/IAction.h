@@ -82,12 +82,17 @@ public:
         Failed
     };
 
+    enum class AssignType {
+        Now,
+        Queue
+    };
+
     const Type type = Type::None;
 
     virtual UnitState unitState() const { return UnitState::Idle; }
     virtual genie::ActionType taskType() const = 0;
 
-    static void assignTask(const Task &task, const std::shared_ptr<Unit> &unit);
+    static void assignTask(const Task &task, const std::shared_ptr<Unit> &unit, const AssignType assignType);
 
     virtual ~IAction();
 

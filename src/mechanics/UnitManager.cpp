@@ -119,7 +119,7 @@ bool UnitManager::update(Time time)
             if (!task.data) {
                 continue;
             }
-            IAction::assignTask(task, unit);
+            IAction::assignTask(task, unit, IAction::AssignType::Now);
         }
     }
 
@@ -586,10 +586,9 @@ void UnitManager::onRightClick(const ScreenPos &screenPos, const CameraPtr &came
             AudioPlayer::instance().playSound(unit->data()->Action.AttackSound, humanPlayer->civilization.id());
         }
 
-        unit->actions.clearActionQueue();
         Unit::Ptr target = unitAt(screenPos, camera);
         task.target = target;
-        IAction::assignTask(task, unit);
+        IAction::assignTask(task, unit, IAction::AssignType::Now);
         if (target) {
             target->targetBlinkTimeLeft = 3000; // 3s
         }
@@ -1032,10 +1031,8 @@ void UnitManager::placeBuilding(const UnplacedBuilding &building)
             continue;
         }
 
-        // TODO: should clear this elsewhere, otherwise it just gets queued up
-//        unit->clearActionQueue();
         task.target = buildingToPlace;
-        IAction::assignTask(task, unit);
+        IAction::assignTask(task, unit, IAction::AssignType::Now);
     }
 }
 
