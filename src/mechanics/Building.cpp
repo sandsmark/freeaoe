@@ -41,7 +41,7 @@ bool Building::enqueueProduceUnit(const genie::Unit *data) noexcept
         return false;
     }
 
-    if (!owner->canAffordUnit(data->ID)) {
+    if (!owner->canAffordUnit(data->ID)) { // also checks housing TODO: make this more obvious
         DBG << "Can't afford" << data->Name;
         return false;
     }

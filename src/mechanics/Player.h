@@ -132,6 +132,8 @@ struct Player
     bool canAffordResearch(const int researchId) const;
 
     bool canAffordUnit(const int unitId) const;
+    void payForUnit(const int unitId);
+
     void addUnit(Unit *unit);
     void removeUnit(Unit *unit);
 
@@ -183,6 +185,8 @@ struct Player
     std::vector<Unit*> findUnitsByTypeID(const int type) const;
 
 private:
+    ResourceMap resourceCosts(const genie::Unit &unit) const;
+
     void updateAvailableTechs();
 
     // group 0 == ungrouped

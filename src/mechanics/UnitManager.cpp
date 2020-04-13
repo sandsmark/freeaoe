@@ -1004,6 +1004,13 @@ void UnitManager::placeBuilding(const UnplacedBuilding &building)
         return;
     }
 
+    if (!humanPlayer->canAffordUnit(building.unitID)) {
+        WARN << "Player can't afford this";
+        return;
+    }
+
+    humanPlayer->payForUnit(building.unitID);
+
     buildingToPlace->isVisible = true;
     add(buildingToPlace, building.position);
     buildingToPlace->setCreationProgress(0);

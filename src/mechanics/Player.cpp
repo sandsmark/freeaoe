@@ -366,12 +366,9 @@ void Player::updateAvailableTechs()
     }
 }
 
-bool Player::canAffordUnit(const int unitId) const
+ResourceMap Player::resourceCosts(const genie::Unit &unit) const
 {
-    const genie::Unit &unit = civilization.unitData(unitId);
-    if (unit.ID == -1 || !unit.Enabled || unit.Creatable.TrainLocationID == -1) {
-        return false;
-    }
+    ResourceMap ret;
 
     for (const genie::Unit::ResourceStorage &res : unit.ResourceStorages) {
         if (res.Type == -1) {
@@ -387,26 +384,48 @@ bool Player::canAffordUnit(const int unitId) const
         }
 
         const genie::ResourceType resourceType = genie::ResourceType(res.Type);
-
-        int available = resourcesAvailable(genie::ResourceType(resourceType)) - resourcesUsed(genie::ResourceType(res.Type));
-        if (available < res.Amount) {
-            DBG << unit.Name << "Not affordable" << available << res.Amount;
-            return false;
-        }
+        ret[resourceType] += res.Amount;
     }
 
     for (const genie::Resource<short, short> &cost : unit.Creatable.ResourceCosts) {
         if (!cost.Paid) {
             continue;
         }
-
         const genie::ResourceType type = genie::ResourceType(cost.Type);
-        if (resourcesAvailable(type) < cost.Amount) {
+        ret[type] += cost.Amount;
+    }
+
+    return ret;
+}
+
+bool Player::canAffordUnit(const int unitId) const
+{
+    const genie::Unit &unit = civilization.unitData(unitId);
+    if (unit.ID == -1 || !unit.Enabled || unit.Creatable.TrainLocationID == -1) {
+        return false;
+    }
+
+    for (const std::pair<const genie::ResourceType, float> &cost : resourceCosts(unit)) {
+        const int available = resourcesAvailable(cost.first) - resourcesUsed(cost.first);
+        if (available < cost.second) {
             return false;
         }
     }
 
     return true;
+}
+
+void Player::payForUnit(const int unitId)
+{
+    const genie::Unit &unit = civilization.unitData(unitId);
+    if (unit.ID == -1 || !unit.Enabled || unit.Creatable.TrainLocationID == -1) {
+        WARN << "can't pay for invalid unit" << unitId;
+        return;
+    }
+
+    for (const std::pair<const genie::ResourceType, float> &cost : resourceCosts(unit)) {
+        removeResource(cost.first, cost.second);
+    }
 }
 
 namespace {
