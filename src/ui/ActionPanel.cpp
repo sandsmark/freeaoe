@@ -364,13 +364,12 @@ void ActionPanel::updateButtons()
         return;
     }
 
-    // Still prefer Definitive Edition Way. Simple Delete button. Always felt it takes unnecessary Index space. I think I will do Attack Move first. Then do simple waypoint behaviour?
-    /*if (unit->data()->Type >= genie::Unit::MovingType && unit->data()->Type < genie::Unit::BuildingType) {
+    if (unit->data()->Type >= genie::Unit::MovingType && unit->data()->Type < genie::Unit::BuildingType) {
         InterfaceButton killButton;
         killButton.action = Command::Kill;
         killButton.index = 3;
         currentButtons.push_back(killButton);
-    }*/
+    }
 
     const std::unordered_set<Task> actions = unit->actions.availableActions();
     std::unordered_set<genie::ActionType> addedTypes;
