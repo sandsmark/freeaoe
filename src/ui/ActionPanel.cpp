@@ -16,7 +16,6 @@
 
 #include "actions/IAction.h"
 #include "core/Logger.h"
-#include "global/EventManager.h"
 #include "mechanics/Civilization.h"
 #include "mechanics/Player.h"
 #include "mechanics/Unit.h"
@@ -28,10 +27,13 @@
 ActionPanel::ActionPanel(const std::shared_ptr<SfmlRenderTarget> &renderTarget) :
     m_renderTarget(renderTarget)
 {
-    EventManager::registerListener(this, EventManager::PlayerResourceChanged);
-    EventManager::registerListener(this, EventManager::UnitSelected);
-    EventManager::registerListener(this, EventManager::UnitDeselected);
-    EventManager::registerListener(this, EventManager::ResearchComplete);
+}
+
+ActionPanel::~ActionPanel()
+{
+    if (m_unitManager) {
+        m_unitManager->disconnect(this);
+    }
 }
 
 
@@ -225,6 +227,13 @@ void ActionPanel::setUnitManager(const std::shared_ptr<UnitManager> &unitManager
     if (unitManager == m_unitManager) {
         return;
     }
+    if (m_unitManager) {
+        m_unitManager->disconnect(this);
+    }
+
+    if (unitManager) {
+        unitManager->connect(UnitManager::ActionsChanged, this, &ActionPanel::onActionsChanged);
+    }
     m_unitManager = unitManager;
 }
 
@@ -308,30 +317,6 @@ const std::string &ActionPanel::helpTextId(const ActionPanel::Command icon)
     }
 
     return LanguageManager::Inst()->getString(helpTextIds.at(icon));
-}
-
-void ActionPanel::onUnitSelected(Unit *unit)
-{
-    if (unit->player.lock() == m_humanPlayer) {
-        m_buttonsDirty = true;
-    }
-}
-
-void ActionPanel::onUnitDeselected(const Unit *unit)
-{
-    if (unit->player.lock() == m_humanPlayer) {
-        m_buttonsDirty = true;
-    }
-}
-
-void ActionPanel::onResearchCompleted(Player *player, int research)
-{
-    (void)research;
-
-    // Might have gotten new units to construct
-    if (player == m_humanPlayer.get()) {
-        m_buttonsDirty = true;
-    }
 }
 
 void ActionPanel::onPlayerResourceChanged(Player *player, const genie::ResourceType type, float newValue)

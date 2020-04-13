@@ -90,9 +90,12 @@ struct MapPositionSorter
 typedef std::vector<std::shared_ptr<Unit>> UnitVector;
 typedef std::unordered_set<std::shared_ptr<Unit>> UnitSet;
 
-class UnitManager : public EventListener
+class UnitManager : public EventListener, public SignalEmitter<UnitManager>
 {
 public:
+    enum Signals {
+        ActionsChanged
+    };
     static constexpr int GaiaID = 0;
 
     enum class State {

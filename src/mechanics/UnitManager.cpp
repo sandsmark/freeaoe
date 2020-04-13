@@ -60,6 +60,7 @@ class Tech;
 UnitManager::UnitManager()
 {
     EventManager::registerListener(this, EventManager::ResearchComplete);
+//    EventManager::registerListener(this, EventManager::PlayerResourceChanged); // TODO auto actions that cost things
 }
 
 UnitManager::~UnitManager()
@@ -837,6 +838,8 @@ void UnitManager::updateAvailableActions()
     for (const Unit::Ptr &unit : m_selectedUnits) {
         m_currentActions.merge(unit->actions.availableActions());
     }
+
+    emit(ActionsChanged);
 }
 
 void UnitManager::setSelectedUnits(const UnitSet &units)

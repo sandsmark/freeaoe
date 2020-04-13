@@ -239,6 +239,7 @@ public:
 
     ActionPanel(const std::shared_ptr<SfmlRenderTarget> &renderTarget);
     ActionPanel() = delete;
+    ~ActionPanel();
 
     bool init() override;
     bool handleEvent(sf::Event event) override;
@@ -256,9 +257,7 @@ public:
     static const std::string &helpTextId(const Command icon);
 
 private:
-    void onUnitSelected(Unit *unit) override;
-    void onUnitDeselected(const Unit *unit) override;
-    void onResearchCompleted(Player *player, int researchId) override;
+    void onActionsChanged() { m_buttonsDirty = true; }
     void onPlayerResourceChanged(Player *player, const genie::ResourceType type, float newValue) override;
 
     struct InterfaceButton {
