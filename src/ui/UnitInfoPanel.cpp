@@ -42,7 +42,7 @@
 #include "resource/LanguageManager.h"
 #include "resource/Resource.h"
 
-UnitInfoPanel::UnitInfoPanel(const std::shared_ptr<SfmlRenderTarget> &renderTarget) :
+UnitInfoPanel::UnitInfoPanel(const std::shared_ptr<IRenderTarget> &renderTarget) :
     m_renderTarget(renderTarget)
 {
 
@@ -64,10 +64,10 @@ bool UnitInfoPanel::init()
     }
 
     for (int i=0; i<StatItem::TypeCount; i++) {
-        m_statItems[i].icon.loadFromImage(Resource::convertFrameToImage(iconsSlp->getFrame(i)));
-        m_statItems[i].text.setFont(SfmlRenderTarget::defaultFont());
-        m_statItems[i].text.setFillColor(sf::Color::Black);
-        m_statItems[i].text.setCharacterSize(12);
+
+        m_statItems[i].icon = m_renderTarget->convertFrameToImage(iconsSlp->getFrame(i));
+        m_statItems[i].text = m_renderTarget->createText();
+        m_statItems[i].text->pointSize = 12;
     }
 
     // Unit icons
@@ -78,7 +78,7 @@ bool UnitInfoPanel::init()
     }
     m_unitIcons.resize(unitIconsSlp->getFrameCount());
     for (size_t i=0; i<unitIconsSlp->getFrameCount(); i++) {
-        m_unitIcons[i].loadFromImage(Resource::convertFrameToImage(unitIconsSlp->getFrame(i)));
+        m_unitIcons[i] = m_renderTarget->convertFrameToImage(unitIconsSlp->getFrame(i));
     }
 
     // Building icons
@@ -89,7 +89,7 @@ bool UnitInfoPanel::init()
     }
     m_buildingIcons.resize(buildingIconsSlp->getFrameCount());
     for (size_t i=0; i<buildingIconsSlp->getFrameCount(); i++) {
-        m_buildingIcons[i].loadFromImage(Resource::convertFrameToImage(buildingIconsSlp->getFrame(i)));
+        m_buildingIcons[i] = m_renderTarget->convertFrameToImage(buildingIconsSlp->getFrame(i));
     }
 
     // Tech/research icons
@@ -100,7 +100,7 @@ bool UnitInfoPanel::init()
     }
     m_researchIcons.resize(techIconsSlp->getFrameCount());
     for (size_t i=0; i<techIconsSlp->getFrameCount(); i++) {
-        m_researchIcons[i].loadFromImage(Resource::convertFrameToImage(techIconsSlp->getFrame(i)));
+        m_researchIcons[i] = m_renderTarget->convertFrameToImage(techIconsSlp->getFrame(i));
     }
 
     genie::SlpFilePtr haloSlp = AssetManager::Inst()->getSlp("unithalo.shp", AssetManager::ResourceType::Interface);
@@ -282,7 +282,7 @@ void UnitInfoPanel::drawSingleUnit()
         }
 
         m_renderTarget->draw(m_buildingIcons[iconId], pos);
-        size = Size(m_buildingIcons[iconId].getSize());
+        size = m_buildingIcons[iconId]->size;
     } else {
         if (iconId > m_unitIcons.size()) {
             WARN << "out of bounds unit icon" << iconId;
@@ -290,7 +290,7 @@ void UnitInfoPanel::drawSingleUnit()
         }
 
         m_renderTarget->draw(m_unitIcons[iconId], pos);
-        size = Size(m_unitIcons[iconId].getSize());
+        size = m_unitIcons[iconId]->size;
     }
 
     pos.y += size.height + 2;
@@ -316,10 +316,10 @@ void UnitInfoPanel::drawSingleUnit()
         Building::Ptr building = Unit::asBuilding(unit);
         StatItem &item = m_statItems[StatItem::GarrisonCapacity];
         m_renderTarget->draw(item.icon, ScreenPos(pos));
-        item.text.setPosition(ScreenPos(rightX, pos.y));
-        item.text.setString(std::to_string(building->garrisonedUnits) + '/' + std::to_string(unit->data()->GarrisonCapacity));
+        item.text->position = ScreenPos(rightX, pos.y);
+        item.text->string = std::to_string(building->garrisonedUnits) + '/' + std::to_string(unit->data()->GarrisonCapacity);
         m_renderTarget->draw(item.text);
-        pos.y += item.icon.getSize().y + 5;
+        pos.y += item.icon->size.height + 5;
     }
 
 
@@ -337,10 +337,10 @@ void UnitInfoPanel::drawSingleUnit()
     if (meleeAttack || pierceAttack) {
         StatItem &item = m_statItems[StatItem::Damage];
         m_renderTarget->draw(item.icon, ScreenPos(pos));
-        item.text.setPosition(ScreenPos(rightX, pos.y));
-        item.text.setString(std::to_string(std::max(pierceAttack, meleeAttack)));
+        item.text->position = ScreenPos(rightX, pos.y);
+        item.text->string = std::to_string(std::max(pierceAttack, meleeAttack));
         m_renderTarget->draw(item.text);
-        pos.y += item.icon.getSize().y + 5;
+        pos.y += item.icon->size.height + 5;
     }
 
     if (unit->data()->Type < genie::Unit::BuildingType) {
@@ -358,62 +358,62 @@ void UnitInfoPanel::drawSingleUnit()
         if (meleeArmor || pierceArmor) {
             StatItem &item = m_statItems[StatItem::Armor];
             m_renderTarget->draw(item.icon, ScreenPos(pos));
-            item.text.setPosition(ScreenPos(rightX, pos.y));
-            item.text.setString(std::to_string(meleeArmor) + '/' + std::to_string(pierceArmor));
+            item.text->position = ScreenPos(rightX, pos.y);
+            item.text->string = std::to_string(meleeArmor) + '/' + std::to_string(pierceArmor);
             m_renderTarget->draw(item.text);
 
-            pos.y += item.icon.getSize().y + 5;
+            pos.y += item.icon->size.height + 5;
         }
     }
 
     if (unit->data()->Combat.MaxRange > 0) {
         StatItem &item = m_statItems[StatItem::AttackRange];
         m_renderTarget->draw(item.icon, ScreenPos(pos));
-        item.text.setPosition(ScreenPos(rightX, pos.y));
-        item.text.setString(std::to_string(int(unit->data()->Combat.MaxRange)));
+        item.text->position = ScreenPos(rightX, pos.y);
+        item.text->string = std::to_string(int(unit->data()->Combat.MaxRange));
         m_renderTarget->draw(item.text);
 
-        pos.y += item.icon.getSize().y + 5;
+        pos.y += item.icon->size.height + 5;
     }
 
     if (unit->resources[genie::ResourceType::WoodStorage] > 0) {
         StatItem &item = m_statItems[StatItem::CarryingWoodAmount];
         m_renderTarget->draw(item.icon, ScreenPos(pos));
-        item.text.setPosition(ScreenPos(rightX, pos.y));
-        item.text.setString(std::to_string(int(unit->resources[genie::ResourceType::WoodStorage] )));
+        item.text->position = ScreenPos(rightX, pos.y);
+        item.text->string = std::to_string(int(unit->resources[genie::ResourceType::WoodStorage] ));
         m_renderTarget->draw(item.text);
 
-        pos.y += item.icon.getSize().y + 5;
+        pos.y += item.icon->size.height + 5;
     }
 
     if (unit->resources[genie::ResourceType::StoneStorage] > 0) {
         StatItem &item = m_statItems[StatItem::CarryingStoneAmount];
         m_renderTarget->draw(item.icon, ScreenPos(pos));
-        item.text.setPosition(ScreenPos(rightX, pos.y));
-        item.text.setString(std::to_string(int(unit->resources[genie::ResourceType::StoneStorage])));
+        item.text->position = ScreenPos(rightX, pos.y);
+        item.text->string = std::to_string(int(unit->resources[genie::ResourceType::StoneStorage]));
         m_renderTarget->draw(item.text);
 
-        pos.y += item.icon.getSize().y + 5;
+        pos.y += item.icon->size.height + 5;
     }
 
     if (unit->resources[genie::ResourceType::FoodStorage] > 0) {
         StatItem &item = m_statItems[StatItem::CarryingFoodAmount];
         m_renderTarget->draw(item.icon, ScreenPos(pos));
-        item.text.setPosition(ScreenPos(rightX, pos.y));
-        item.text.setString(std::to_string(int(unit->resources[genie::ResourceType::FoodStorage])));
+        item.text->position = ScreenPos(rightX, pos.y);
+        item.text->string = std::to_string(int(unit->resources[genie::ResourceType::FoodStorage]));
         m_renderTarget->draw(item.text);
 
-        pos.y += item.icon.getSize().y + 5;
+        pos.y += item.icon->size.height + 5;
     }
 
     if (unit->resources[genie::ResourceType::GoldStorage] > 0) {
         StatItem &item = m_statItems[StatItem::CarryingGoldAmount];
         m_renderTarget->draw(item.icon, ScreenPos(pos));
-        item.text.setPosition(ScreenPos(rightX, pos.y));
-        item.text.setString(std::to_string(int(unit->resources[genie::ResourceType::GoldStorage])));
+        item.text->position = ScreenPos(rightX, pos.y);
+        item.text->string = std::to_string(int(unit->resources[genie::ResourceType::GoldStorage]));
         m_renderTarget->draw(item.text);
 
-        pos.y += item.icon.getSize().y + 5;
+        pos.y += item.icon->size.height + 5;
     }
 }
 
@@ -433,7 +433,7 @@ void UnitInfoPanel::drawMultipleUnits()
         bevelRect.setSize(Size(button.rect.width, button.rect.width));
         m_renderTarget->draw(bevelRect);
 
-        m_renderTarget->draw(button.sprite);
+        m_renderTarget->draw(button.sprite, button.rect.topLeft());
     }
 
 }
@@ -469,17 +469,16 @@ void UnitInfoPanel::updateSelectedUnitButtons()
                 continue;
             }
 
-            button.sprite.setTexture(m_buildingIcons[iconId]);
+            button.sprite = m_buildingIcons[iconId];
         } else {
             if (iconId > m_unitIcons.size()) {
                 WARN << "out of bounds unit icon" << iconId;
                 continue;
             }
 
-            button.sprite.setTexture(m_unitIcons[iconId]);
+            button.sprite = m_unitIcons[iconId];
         }
 
-        button.sprite.setPosition(pos);
         button.rect = ScreenRect(pos, iconSize);
         button.unit = unit;
 
@@ -497,15 +496,14 @@ void UnitInfoPanel::drawConstructionInfo(const std::shared_ptr<Building> &buildi
 {
     m_unitButtons.clear();
 
-    const sf::Texture &icon = building->isResearching() ? m_researchIcons.at(building->productIcon(0)) : m_unitIcons.at(building->productIcon(0));
-    const Size iconSize = icon.getSize();
+    const Drawable::Image::Ptr &icon = building->isResearching() ? m_researchIcons.at(building->productIcon(0)) : m_unitIcons.at(building->productIcon(0));
+    const Size iconSize = icon->size;
     ScreenPos pos = rect().center();
     pos.x -= iconSize.width;
     pos.y -= iconSize.height/2;
 
     Button button;
-    button.sprite.setTexture(icon);
-    button.sprite.setPosition(pos);
+    button.sprite = icon;
     button.rect = ScreenRect(pos, iconSize);
     m_unitButtons.push_back(std::move(button));
 
@@ -533,12 +531,11 @@ void UnitInfoPanel::drawConstructionInfo(const std::shared_ptr<Building> &buildi
     pos.x = rect().center().x - iconSize.width;
     pos.y = rect().center().y + iconSize.height / 2 + 4;
     for (size_t i = 1; i<building->productionQueueLength(); i++) {
-        const sf::Texture &icon = m_unitIcons.at(building->productIcon(i));
-        const Size iconSize = icon.getSize();
+        const Drawable::Image::Ptr &icon = m_unitIcons.at(building->productIcon(i));
+        const Size iconSize = icon->size;
 
         Button button;
-        button.sprite.setTexture(icon);
-        button.sprite.setPosition(pos);
+        button.sprite = icon;
         button.rect = ScreenRect(pos, iconSize);
         m_unitButtons.push_back(std::move(button));
 

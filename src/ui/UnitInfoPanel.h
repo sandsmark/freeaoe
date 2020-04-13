@@ -21,7 +21,8 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/Texture.hpp>
-#include <mechanics/IState.h>
+#include "render/IRenderTarget.h"
+#include "mechanics/IState.h"
 #include <algorithm>
 #include <array>
 #include <memory>
@@ -30,7 +31,7 @@
 
 #include "core/Types.h"
 
-class SfmlRenderTarget;
+class IRenderTarget;
 class UnitManager;
 namespace sf {
 class Event;
@@ -44,7 +45,7 @@ typedef std::unordered_set<std::shared_ptr<Unit>> UnitSet;
 class UnitInfoPanel : public IState
 {
 public:
-    UnitInfoPanel(const std::shared_ptr<SfmlRenderTarget> &renderTarget);
+    UnitInfoPanel(const std::shared_ptr<IRenderTarget> &renderTarget);
 
     void setUnitManager(const std::shared_ptr<UnitManager> &unitManager);
 
@@ -83,13 +84,13 @@ private:
         };
 
         bool visible = false;
-        sf::Text text;
-        sf::Texture icon;
+        Drawable::Text::Ptr text;
+        Drawable::Image::Ptr icon;
     };
 
     struct Button {
         ScreenRect rect;
-        sf::Sprite sprite;
+        Drawable::Image::Ptr sprite;
         std::shared_ptr<Unit> unit;
     };
 
@@ -97,7 +98,7 @@ private:
 
     std::array<StatItem, StatItem::TypeCount> m_statItems;
 
-    std::shared_ptr<SfmlRenderTarget> m_renderTarget;
+    std::shared_ptr<IRenderTarget> m_renderTarget;
     std::weak_ptr<UnitManager> m_unitManager;
     UnitSet m_selectedUnits;
     bool m_dirty = true;
@@ -116,9 +117,9 @@ private:
 
     sf::Texture m_currentIcon;
 
-    std::vector<sf::Texture> m_unitIcons;
-    std::vector<sf::Texture> m_buildingIcons;
-    std::vector<sf::Texture> m_researchIcons;
+    std::vector<Drawable::Image::Ptr> m_unitIcons;
+    std::vector<Drawable::Image::Ptr> m_buildingIcons;
+    std::vector<Drawable::Image::Ptr> m_researchIcons;
 
     sf::Texture m_unitHalo;
 
