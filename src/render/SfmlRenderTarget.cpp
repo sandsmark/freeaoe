@@ -256,7 +256,7 @@ void SfmlRenderTarget::draw(const Drawable::Image::Ptr &image, const ScreenPos &
 
     sf::Sprite sprite;
     sprite.setTexture(*sfmlImage->texture);
-    sprite.setScale(SCALE, SCALE);
+    sprite.setScale(SCALE * image->scaleX, SCALE * image->scaleY);
     sprite.setPosition(position);
 
     renderTarget_->draw(sprite);

@@ -86,6 +86,8 @@ struct Image
 
     Size size;
 
+    float scaleX = 1.f, scaleY = 1.f;
+
     virtual bool isValid() const = 0;
 
 protected:

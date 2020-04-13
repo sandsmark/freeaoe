@@ -228,18 +228,15 @@ void Engine::showStartScreen()
         return;
     }
 
-    sf::Texture loadingScreen;
-    loadingScreen.loadFromImage(Resource::convertFrameToImage(
+    Drawable::Image::Ptr loadingScreen = renderTarget_->convertFrameToImage(
                                     loadingImageFile->getFrame(0),
                                     AssetManager::Inst()->getPalette(uiFile->paletteFile.id)
-                                    ));
+                                    );
 
-    sf::Sprite sprite;
-    sprite.setTexture(loadingScreen);
-    sprite.setPosition(0, 0);
-    sprite.setScale(renderWindow_->getSize().x / float(loadingScreen.getSize().x),
-                    renderWindow_->getSize().y / float(loadingScreen.getSize().y));
-    renderTarget_->draw(sprite);
+    loadingScreen->scaleX = renderWindow_->getSize().x / float(loadingScreen->size.width);
+    loadingScreen->scaleY = renderWindow_->getSize().y / float(loadingScreen->size.height);
+
+    renderTarget_->draw(loadingScreen, ScreenPos(0, 0));
     renderWindow_->display();
 }
 
