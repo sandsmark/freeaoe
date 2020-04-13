@@ -350,7 +350,7 @@ bool GraphicRender::checkClick(const ScreenPos &pos) const noexcept
 void GraphicRender::setOrientation(int orientation) noexcept
 {
     if (!m_graphic) {
-        WARN << "no graphic!";
+//        WARN << "no graphic!"; TODO: once Farm can start reusing Graphic this should be enabled
         return;
     }
 
