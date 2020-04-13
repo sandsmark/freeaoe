@@ -73,6 +73,14 @@ const sf::Font &SfmlRenderTarget::stylishFont()
     return fontLoader.font;
 }
 
+
+////////////////////////
+
+bool SfmlImage::isValid() const
+{
+    return texture != nullptr;
+}
+
 SfmlRenderTarget::SfmlRenderTarget(const Size &size)
 {
     m_renderTexture = std::make_unique<sf::RenderTexture>();
@@ -152,6 +160,30 @@ void SfmlRenderTarget::draw(const sf::Sprite &sprite)
 //    transform.rotate(sprite.getRotation());//.scale(sprite.getScale());
 
     renderTarget_->draw(toDraw, transform);
+}
+
+void SfmlRenderTarget::draw(const sf::Sprite &sprite, const sf::BlendMode &blendMode)
+{
+    renderTarget_->draw(sprite, blendMode);
+}
+
+void SfmlRenderTarget::draw(const std::shared_ptr<IRenderTarget> &renderTarget, const sf::BlendMode &blendMode)
+{
+    if (!renderTarget) {
+        WARN << "can't render null render target";
+        return;
+    }
+
+    const std::shared_ptr<const SfmlRenderTarget> sfmlRenderTarget = std::static_pointer_cast<const SfmlRenderTarget>(renderTarget);
+
+    if (!sfmlRenderTarget->m_renderTexture) {
+        return;
+    }
+
+    sfmlRenderTarget->m_renderTexture->display();
+    sf::Sprite sprite;
+    sprite.setTexture(sfmlRenderTarget->m_renderTexture->getTexture());
+    draw(sprite, blendMode);
 }
 
 void SfmlRenderTarget::draw(const ScreenRect &rect, const Drawable::Color &fillColor, const Drawable::Color &outlineColor, const float outlineSize)

@@ -11,9 +11,6 @@ class UnitManager;
 namespace genie {
 class Unit;
 }  // namespace genie
-namespace sf {
-class RenderTarget;
-}  // namespace sf
 struct Player;
 
 class FarmRender : public GraphicRender
@@ -21,7 +18,7 @@ class FarmRender : public GraphicRender
 public:
     FarmRender(const Size &size);
 
-    void render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType pass) noexcept override;
+    void render(IRenderTarget &renderTarget, const ScreenPos screenPos, const RenderType pass) noexcept override;
 
 private:
     sf::Texture m_availableTexture;

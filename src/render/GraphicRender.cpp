@@ -19,7 +19,6 @@
 #include "GraphicRender.h"
 
 #include <SFML/Graphics/BlendMode.hpp>
-#include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/System/Vector2.hpp>
@@ -33,7 +32,7 @@
 #include "audio/AudioPlayer.h"
 #include "core/Logger.h"
 #include "core/Types.h"
-#include "render/GraphicRender.h"
+#include "render/IRenderTarget.h"
 #include "resource/Graphic.h"
 
 bool GraphicRender::update(Time time, const bool isVisible) noexcept
@@ -110,12 +109,12 @@ inline bool GraphicRender::isValid() const noexcept
     return m_graphic && m_graphic->isValid();
 }
 
-void GraphicRender::render(sf::RenderTarget &renderTarget, const ScreenPos screenPos, const RenderType renderpass) noexcept
+void GraphicRender::render(IRenderTarget &renderTarget, const ScreenPos screenPos, const RenderType renderpass) noexcept
 {
     if (m_frameChanged && m_playSounds) {
         m_frameChanged = false;
 
-        const ScreenPos screenCenter = ScreenPos(renderTarget.getSize().x/2., renderTarget.getSize().y/2.);
+        const ScreenPos screenCenter = ScreenPos(renderTarget.getSize().width/2., renderTarget.getSize().height/2.);
         const float pan = (screenPos.x - screenCenter.x) / screenCenter.x;
         const float maxDistance = screenCenter.distanceTo(ScreenPos(0, 0));
         const float volume = (maxDistance - screenCenter.distanceTo(screenPos)) / maxDistance;

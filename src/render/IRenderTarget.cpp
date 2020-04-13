@@ -74,3 +74,7 @@ Drawable::Image::Ptr IRenderTarget::convertFrameToImage(const genie::SlpFramePtr
 
     return createImage(Size(width, height), pixels);
 }
+
+Drawable::Text::~Text() {  }
+
+Drawable::Image::~Image() {  }

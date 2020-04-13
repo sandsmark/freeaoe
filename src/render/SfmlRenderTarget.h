@@ -36,9 +36,7 @@ struct SfmlImage : public Drawable::Image
 {
     SfmlImage() {}
 
-    bool isValid() const override {
-        return texture != nullptr;
-    }
+    bool isValid() const override; // out of line or vtable will be emitted in every unit
 
     std::unique_ptr<sf::Texture> texture;
 };
@@ -79,6 +77,8 @@ public:
     //----------------------------------------------------------------------------
     void draw(const sf::Drawable &shape) override;
     void draw(const sf::Sprite &sprite) override;
+    void draw(const sf::Sprite &sprite, const sf::BlendMode &blendMode) override;
+    void draw(const std::shared_ptr<IRenderTarget> &renderTarget, const sf::BlendMode &blendMode) override;
 
     void draw(const ScreenRect &rect, const Drawable::Color &fillColor, const Drawable::Color &outlineColor = Drawable::Transparent, const float outlineSize = 1.) override;
 

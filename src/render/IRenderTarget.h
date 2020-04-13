@@ -29,6 +29,7 @@ class Texture;
 class Shape;
 class Image;
 class Color;
+class BlendMode;
 }
 
 namespace genie{
@@ -90,6 +91,7 @@ struct Image
 
     virtual bool isValid() const = 0;
 
+    virtual ~Image();
 protected:
     Image() {}
 
@@ -115,7 +117,7 @@ struct Text
 
     virtual Size size() = 0;
 
-    virtual ~Text() = default;
+    virtual ~Text();
 
 protected:
     Text() {}
@@ -162,9 +164,11 @@ public:
     /// TODO: Remove sf:: from api
     virtual void draw(const sf::Drawable &shape) = 0;
     virtual void draw(const sf::Sprite &sprite) = 0;
+    virtual void draw(const sf::Sprite &sprite, const sf::BlendMode &blendMode) = 0;
 
 //    virtual void draw(const ScreenRect &rect, const sf::Color &fillColor, const sf::Color &outlineColor = sf::Color::Transparent, const float outlineSize = 1.) = 0;
     virtual void draw(const ScreenRect &rect, const Drawable::Color &fillColor, const Drawable::Color &outlineColor = Drawable::Transparent, const float outlineSize = 1.) = 0;
+    virtual void draw(const std::shared_ptr<IRenderTarget> &renderTarget, const sf::BlendMode &blendMode) = 0;
 
     //----------------------------------------------------------------------------
     /// Displays frame.
@@ -180,6 +184,7 @@ public:
     virtual Drawable::Image::Ptr createImage(const Size &size, const uint8_t *pixels) = 0;
     Drawable::Image::Ptr convertFrameToImage(const genie::SlpFramePtr &frame);
     Drawable::Image::Ptr convertFrameToImage(const genie::SlpFramePtr &frame, const genie::PalFile &palette, const int playerId = -1);
+
     virtual void draw(const Drawable::Image::Ptr &image, const ScreenPos &position) = 0;
 
     virtual std::shared_ptr<IRenderTarget> createTextureTarget(const Size &size) = 0;
