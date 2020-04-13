@@ -16,10 +16,6 @@
 */
 #include "UnitInfoPanel.h"
 
-#include <SFML/Graphics/Color.hpp>
-#include <SFML/Graphics/Rect.hpp>
-#include <SFML/System/Vector2.hpp>
-#include <SFML/Window/Event.hpp>
 #include <genie/dat/Unit.h>
 #include <genie/dat/ResourceUsage.h>
 #include <genie/dat/unit/AttackOrArmor.h>
@@ -37,7 +33,6 @@
 #include "mechanics/Player.h"
 #include "mechanics/Unit.h"
 #include "mechanics/UnitManager.h"
-#include "render/SfmlRenderTarget.h"
 #include "resource/AssetManager.h"
 #include "resource/LanguageManager.h"
 #include "resource/Resource.h"
@@ -108,7 +103,7 @@ bool UnitInfoPanel::init()
         WARN << "couldn't load halo";
         return false;
     }
-    m_unitHalo.loadFromImage(Resource::convertFrameToImage(haloSlp->getFrame(0)));
+    m_unitHalo = m_renderTarget->convertFrameToImage(haloSlp->getFrame(0));
 
     // Building icons
     genie::SlpFilePtr progressbarSlp = AssetManager::Inst()->getSlp("sundial.shp", AssetManager::ResourceType::Interface);
@@ -118,37 +113,33 @@ bool UnitInfoPanel::init()
     }
     m_progressBars.resize(progressbarSlp->getFrameCount());
     for (size_t i=0; i<progressbarSlp->getFrameCount(); i++) {
-        m_progressBars[i].loadFromImage(Resource::convertFrameToImage(progressbarSlp->getFrame(i)));
+        m_progressBars[i] = m_renderTarget->convertFrameToImage(progressbarSlp->getFrame(i));
     }
 
     // Labels
-    m_name.setFont(SfmlRenderTarget::defaultFont());
-    m_civilizationName.setFont(SfmlRenderTarget::defaultFont());
-    m_playerName.setFont(SfmlRenderTarget::defaultFont());
-    m_hpText.setFont(SfmlRenderTarget::defaultFont());
-    m_productionUpperText.setFont(SfmlRenderTarget::defaultFont());
-    m_productionBottomText.setFont(SfmlRenderTarget::defaultFont());
+    m_name = m_renderTarget->createText();
+    m_name->pointSize = 17;
+    m_name->position = rect().topLeft();
 
-    m_name.setFillColor(sf::Color::Black);
-    m_civilizationName.setFillColor(sf::Color::Black);
-    m_playerName.setFillColor(sf::Color::Black);
-    m_hpText.setFillColor(sf::Color::Black);
-    m_productionUpperText.setFillColor(sf::Color::Black);
-    m_productionBottomText.setFillColor(sf::Color::Black);
+    m_civilizationName = m_renderTarget->createText();
+    m_civilizationName->pointSize = 15;
 
-    m_name.setCharacterSize(17);
-    m_civilizationName.setCharacterSize(15);
-    m_playerName.setCharacterSize(15);
-    m_hpText.setCharacterSize(12);
-    m_productionUpperText.setCharacterSize(12);
-    m_productionBottomText.setCharacterSize(12);
+    m_playerName = m_renderTarget->createText();
+    m_playerName->pointSize = 15;
 
-    m_name.setPosition(rect().topLeft());
+    m_hpText = m_renderTarget->createText();
+    m_hpText->pointSize = 12;
+
+    m_productionUpperText = m_renderTarget->createText();
+    m_productionUpperText->pointSize = 12;
+
+    m_productionBottomText = m_renderTarget->createText();
+    m_productionBottomText->pointSize = 12;
 
 
     // HP bar
-    m_hpRedRect.setFillColor(sf::Color::Red);
-    m_hpGreenRect.setFillColor(sf::Color::Green);
+    m_hpRedRect.fillColor = Drawable::Red;
+    m_hpGreenRect.fillColor = Drawable::Green;
 
     return true;
 }
@@ -249,21 +240,21 @@ void UnitInfoPanel::drawSingleUnit()
         drawConstructionInfo(building);
     } else {
         std::shared_ptr<Player> player = unit->player.lock();
-        m_civilizationName.setString(player->civilization.name());
-        m_playerName.setString(player->name);
+        m_civilizationName->string = player->civilization.name();
+        m_playerName->string = player->name;
 
-        m_civilizationName.setPosition(rect().center() - ScreenPos(0, m_civilizationName.getLocalBounds().height + m_playerName.getLocalBounds().height + 10));
-        m_playerName.setPosition(rect().center() - ScreenPos(0, m_playerName.getLocalBounds().height));
+        m_civilizationName->position = (rect().center() - ScreenPos(0, m_civilizationName->size().height + m_playerName->size().height + 10));
+        m_playerName->position = (rect().center() - ScreenPos(0, m_playerName->size().height));
 
         m_renderTarget->draw(m_civilizationName);
         m_renderTarget->draw(m_playerName);
     }
 
     ScreenPos pos = rect().topLeft();
-    m_name.setString(LanguageManager::getString(unit->data()->LanguageDLLName));
-    m_name.setPosition(pos);
+    m_name->string = LanguageManager::getString(unit->data()->LanguageDLLName);
+    m_name->position = pos;
     m_renderTarget->draw(m_name);
-    pos.y += m_name.getLocalBounds().height +  m_name.getLocalBounds().top + 5;
+    pos.y += m_name->size().height + 5;
 
     const int16_t iconId = unit->data()->IconID;
     if (iconId < 0) {
@@ -298,16 +289,16 @@ void UnitInfoPanel::drawSingleUnit()
     int rightX = pos.x + size.width + 2;
 
     // Hitpoints indicator
-    m_hpRedRect.setPosition(pos);
-    m_hpGreenRect.setPosition(pos);
+    m_hpRedRect.rect.setTopLeft(pos);
+    m_hpGreenRect.rect.setTopLeft(pos);
     size.height = 5;
-    m_hpRedRect.setSize(size);
-    m_hpGreenRect.setSize(Size(size.width * unit->healthLeft(), size.height));
+    m_hpRedRect.rect.setSize(size);
+    m_hpGreenRect.rect.setSize(Size(size.width * unit->healthLeft(), size.height));
     m_renderTarget->draw(m_hpRedRect);
     m_renderTarget->draw(m_hpGreenRect);
 
-    m_hpText.setString(std::to_string(int(unit->hitpointsLeft())) + '/' + std::to_string(unit->data()->HitPoints));
-    m_hpText.setPosition(rightX, pos.y - m_hpText.getLocalBounds().height * 3 / 4);
+    m_hpText->string = std::to_string(int(unit->hitpointsLeft())) + '/' + std::to_string(unit->data()->HitPoints);
+    m_hpText->position = ScreenPos(rightX, pos.y - m_hpText->size().height * 3 / 4);
     m_renderTarget->draw(m_hpText);
 
     pos.y += size.height + 5;
@@ -420,17 +411,17 @@ void UnitInfoPanel::drawSingleUnit()
 void UnitInfoPanel::drawMultipleUnits()
 {
     // TODO refactor into common function
-    sf::RectangleShape bevelRect;
+    Drawable::Rect bevelRect;
 
     for (const Button &button : m_unitButtons) {
-        bevelRect.setFillColor(sf::Color(192, 192, 192));
-        bevelRect.setPosition(button.rect.x - 2, button.rect.y - 2);
-        bevelRect.setSize(Size(button.rect.width + 2, button.rect.width + 2));
+        bevelRect.fillColor = Drawable::Color(192, 192, 192);
+        bevelRect.rect.setTopLeft(button.rect.x - 2, button.rect.y - 2);
+        bevelRect.rect.setSize(Size(button.rect.width + 2, button.rect.width + 2));
         m_renderTarget->draw(bevelRect);
 
-        bevelRect.setFillColor(sf::Color(64, 64, 64));
-        bevelRect.setPosition(button.rect.x + 0, button.rect.y + 0);
-        bevelRect.setSize(Size(button.rect.width, button.rect.width));
+        bevelRect.fillColor = Drawable::Color(64, 64, 64);
+        bevelRect.rect.setTopLeft(button.rect.x + 0, button.rect.y + 0);
+        bevelRect.rect.setSize(Size(button.rect.width, button.rect.width));
         m_renderTarget->draw(bevelRect);
 
         m_renderTarget->draw(button.sprite, button.rect.topLeft());
@@ -509,21 +500,21 @@ void UnitInfoPanel::drawConstructionInfo(const std::shared_ptr<Building> &buildi
 
     pos.x += iconSize.width + 2;
     pos.y -= 4;
-    m_productionUpperText.setPosition(pos);
+    m_productionUpperText->position = pos;
     if (building->isResearching()) {
-        m_productionUpperText.setString("Researching - " + std::to_string(int(building->productionProgress() * 100)) + "%");
+        m_productionUpperText->string = "Researching - " + std::to_string(int(building->productionProgress() * 100)) + "%";
     } else {
-        m_productionUpperText.setString("Building - " + std::to_string(int(building->productionProgress() * 100)) + "%");
+        m_productionUpperText->string = "Building - " + std::to_string(int(building->productionProgress() * 100)) + "%";
     }
     m_renderTarget->draw(m_productionUpperText);
 
-    pos.y += m_productionUpperText.getLocalBounds().height;
-    m_productionBottomText.setPosition(pos);
-    m_productionBottomText.setString(building->currentProductName());
+    pos.y += m_productionUpperText->size().height;
+    m_productionBottomText->position = pos;
+    m_productionBottomText->string = building->currentProductName();
     m_renderTarget->draw(m_productionBottomText);
 
     // To get the width of the progress bar
-    pos.y += m_productionBottomText.getLocalBounds().height + 4;
+    pos.y += m_productionBottomText->size().height + 4;
     const size_t currentProgressBar = m_progressBars.size() * building->productionProgress();
     m_renderTarget->draw(m_progressBars[currentProgressBar], pos);
 //    DBG << building->productionProgress();

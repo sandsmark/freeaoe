@@ -17,10 +17,6 @@
 #ifndef UNITINFOPANEL_H
 #define UNITINFOPANEL_H
 
-#include <SFML/Graphics/RectangleShape.hpp>
-#include <SFML/Graphics/Sprite.hpp>
-#include <SFML/Graphics/Text.hpp>
-#include <SFML/Graphics/Texture.hpp>
 #include "render/IRenderTarget.h"
 #include "mechanics/IState.h"
 #include <algorithm>
@@ -33,9 +29,6 @@
 
 class IRenderTarget;
 class UnitManager;
-namespace sf {
-class Event;
-}  // namespace sf
 struct Building;
 struct Unit;
 
@@ -103,27 +96,27 @@ private:
     UnitSet m_selectedUnits;
     bool m_dirty = true;
 
-    sf::Text m_name;
-    sf::Text m_civilizationName;
-    sf::Text m_playerName;
+    Drawable::Text::Ptr m_name;
+    Drawable::Text::Ptr m_civilizationName;
+    Drawable::Text::Ptr m_playerName;
 
-    sf::Text m_productionUpperText;
-    sf::Text m_productionBottomText;
+    Drawable::Text::Ptr m_productionUpperText;
+    Drawable::Text::Ptr m_productionBottomText;
 
-    sf::Text m_hpText;
+    Drawable::Text::Ptr m_hpText;
 
-    sf::RectangleShape m_hpGreenRect;
-    sf::RectangleShape m_hpRedRect;
+    Drawable::Rect m_hpGreenRect;
+    Drawable::Rect m_hpRedRect;
 
-    sf::Texture m_currentIcon;
+    Drawable::Image::Ptr m_currentIcon;
 
     std::vector<Drawable::Image::Ptr> m_unitIcons;
     std::vector<Drawable::Image::Ptr> m_buildingIcons;
     std::vector<Drawable::Image::Ptr> m_researchIcons;
 
-    sf::Texture m_unitHalo;
+    Drawable::Image::Ptr m_unitHalo;
 
-    std::vector<sf::Texture> m_progressBars;
+    std::vector<Drawable::Image::Ptr> m_progressBars;
 };
 
 #endif // UNITINFOPANEL_H

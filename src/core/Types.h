@@ -489,6 +489,11 @@ struct ScreenRect
         y = pos.y;
     }
 
+    void setTopLeft(const float newX, const float newY) {
+        x = newX;
+        y = newY;
+    }
+
     inline ScreenRect &operator +=(const ScreenRect& other)
     {
         float x1 = std::min(x, other.x);
