@@ -65,9 +65,9 @@ Unit::Ptr UnitFactory::duplicateUnit(const Unit::Ptr &other)
     return createUnit(other->data()->ID, owner, other->unitManager());
 }
 
-void UnitFactory::handleDefaultAction(const Unit::Ptr &unit, const genie::Task &task)
+void UnitFactory::handleDefaultAction(const Unit::Ptr &unit, const Task &task)
 {
-    switch(task.ActionType) {
+    switch(task.data->ActionType) {
     case genie::ActionType::Fly: {
         MapPos flyingPosition = unit->position();
 
@@ -80,7 +80,7 @@ void UnitFactory::handleDefaultAction(const Unit::Ptr &unit, const genie::Task &
             flyingPosition.z = 10;
             unit->setPosition(flyingPosition);
         }
-        unit->actions.setCurrentAction(std::make_shared<ActionFly>(unit, Task(task, unit->data()->ID)));
+        unit->actions.queueAction(std::make_shared<ActionFly>(unit, task));
         break;
     }
 
@@ -89,7 +89,7 @@ void UnitFactory::handleDefaultAction(const Unit::Ptr &unit, const genie::Task &
     case genie::ActionType::GetAutoConverted:
         break;
     default:
-        WARN << "unhandled default action" << task.actionTypeName() << "for" << unit->debugName;
+        WARN << "unhandled default action" << task.data->actionTypeName() << "for" << unit->debugName;
     }
 
 }
@@ -150,15 +150,12 @@ Unit::Ptr UnitFactory::createUnit(const int ID, const Player::Ptr &owner, UnitMa
         }
     }
 
-    const std::vector<genie::Task>  &taskList = DataManager::Inst().getTasks(ID);
-    if (gunit.Action.DefaultTaskID >= 0 && gunit.Action.DefaultTaskID < taskList.size()) {
-        handleDefaultAction(unit, taskList[gunit.Action.DefaultTaskID]);
-    } else {
-        for (const genie::Task &task : taskList) {
-            if (task.IsDefault) {
-                handleDefaultAction(unit, task);
-                break;
-            }
+    for (const Task &task : unit->actions.availableActions()) {
+        if (task.taskId == gunit.Action.DefaultTaskID) {
+            handleDefaultAction(unit, task);
+        } else if (task.data->IsDefault) {
+            handleDefaultAction(unit, task);
+            continue;
         }
     }
 

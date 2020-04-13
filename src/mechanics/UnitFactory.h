@@ -27,9 +27,7 @@ struct Unit;
 struct DecayingEntity;
 class UnitManager;
 
-namespace genie {
-class Task;
-}
+struct Task;
 
 class UnitFactory
 {
@@ -43,6 +41,6 @@ public:
 private:
     UnitFactory() = default;
 
-    static void handleDefaultAction(const std::shared_ptr<Unit> &unit, const genie::Task &task);
+    static void handleDefaultAction(const std::shared_ptr<Unit> &unit, const Task &task);
 };
 
