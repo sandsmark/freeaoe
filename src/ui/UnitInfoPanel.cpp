@@ -138,8 +138,12 @@ bool UnitInfoPanel::init()
 
 
     // HP bar
+    m_hpRedRect.filled = true;
     m_hpRedRect.fillColor = Drawable::Red;
+    m_hpRedRect.borderColor = Drawable::Transparent;
+    m_hpGreenRect.filled = true;
     m_hpGreenRect.fillColor = Drawable::Green;
+    m_hpGreenRect.borderColor = Drawable::Transparent;
 
     return true;
 }
