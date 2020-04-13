@@ -425,6 +425,7 @@ void Unit::setPosition(const MapPos &pos, const bool initial) noexcept
 
     Player::Ptr owner = player.lock();
 
+    // TODO merf, don't really want this to happen here, maybe use events?
     if (!initial && owner) {
         forEachVisibleTile([&](const int tileX, const int tileY) {
             owner->visibility->removeUnitLookingAt(tileX, tileY);
