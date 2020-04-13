@@ -59,6 +59,7 @@ class Tech;
 
 UnitManager::UnitManager()
 {
+    EventManager::registerListener(this, EventManager::ResearchComplete);
 }
 
 UnitManager::~UnitManager()
@@ -121,6 +122,11 @@ bool UnitManager::update(Time time)
             }
             IAction::assignTask(task, unit, IAction::AssignType::Now);
         }
+    }
+
+    if (m_availableActionsChanged) {
+        m_availableActionsChanged = false;
+        updateAvailableActions();
     }
 
     // Update missiles (siege rockthings, arrows, etc.)
@@ -824,18 +830,23 @@ void UnitManager::setMap(const MapPtr &map)
     m_map = map;
 }
 
-void UnitManager::setSelectedUnits(const UnitSet &units)
+void UnitManager::updateAvailableActions()
 {
-    m_selectedUnits = units;
     m_currentActions.clear();
-    m_buildingsToPlace.clear();
-
-    if (units.empty()) {
-        return;
-    }
 
     for (const Unit::Ptr &unit : m_selectedUnits) {
         m_currentActions.merge(unit->actions.availableActions());
+    }
+}
+
+void UnitManager::setSelectedUnits(const UnitSet &units)
+{
+    m_selectedUnits = units;
+    m_buildingsToPlace.clear();
+    m_availableActionsChanged = true;
+
+    if (units.empty()) {
+        return;
     }
 
     // Not sure what is the actual correct behavior here:

@@ -22,6 +22,7 @@
 
 #include "Unit.h"
 
+#include "global/EventListener.h"
 #include "render/IRenderTarget.h"
 
 struct Player;
@@ -89,7 +90,7 @@ struct MapPositionSorter
 typedef std::vector<std::shared_ptr<Unit>> UnitVector;
 typedef std::unordered_set<std::shared_ptr<Unit>> UnitSet;
 
-class UnitManager
+class UnitManager : public EventListener
 {
 public:
     static constexpr int GaiaID = 0;
@@ -151,8 +152,11 @@ public:
     void onCombatantUnitsMoved() { m_unitsMoved = true; }
 
 private:
+    void onResearchCompleted(Player */*player*/, int /*researchId*/) override { m_availableActionsChanged = true; }
+
     void updateBuildingToPlace();
     void placeBuilding(const UnplacedBuilding &building);
+    void updateAvailableActions();
 
     State m_state = State::Default;
 
@@ -174,6 +178,8 @@ private:
     MapPos m_wallPlacingStart;
 
     bool m_unitsMoved = true;
+
+    bool m_availableActionsChanged = true; // Because we might get a bunch of events in a single update, do it only once
 
     MapPos m_previousCameraPos;
     std::weak_ptr<Player> m_humanPlayer;
