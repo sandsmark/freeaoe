@@ -24,6 +24,7 @@ struct Building : public Unit
     typedef std::shared_ptr<Building> Ptr;
 
     Building(const genie::Unit &data_, const std::shared_ptr<Player> &player, UnitManager &unitManager);
+    ~Building();
 
     int garrisonedUnits = 0;
     int constructors = 0;

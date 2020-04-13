@@ -28,6 +28,21 @@ Building::Building(const genie::Unit &data_, const std::shared_ptr<Player> &play
 
 }
 
+Building::~Building()
+{
+    Player::Ptr owner = player.lock();
+    if (owner) {
+        for (const std::unique_ptr<Product> &toAbort : m_productionQueue) {
+            for (const std::pair<const genie::ResourceType, float> &cost : toAbort->cost) {
+                owner->addResource(cost.first, cost.second);
+            }
+        }
+        m_productionQueue.clear();
+    } else {
+        WARN << "Can't give player resources back when gone";
+    }
+}
+
 bool Building::enqueueProduceUnit(const genie::Unit *data) noexcept
 {
     if (!data) {
