@@ -1009,7 +1009,11 @@ void UnitManager::placeBuilding(const UnplacedBuilding &building)
     add(buildingToPlace, building.position);
     buildingToPlace->setCreationProgress(0);
     DBG << building.orientation;
-    unit->setAngle(building.graphic->graphic()->orientationToAngle(building.orientation));
+    if (building.graphic->graphic()) {
+        unit->setAngle(building.graphic->graphic()->orientationToAngle(building.orientation));
+    } else {
+        WARN << "No graphic set for" << buildingToPlace->debugName;
+    }
     DBG << unit->angle();
 
     for (const Unit::Ptr &unit : m_selectedUnits) {
