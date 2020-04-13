@@ -205,7 +205,7 @@ void SfmlRenderTarget::display()
 }
 
 
-Drawable::Image::Ptr SfmlRenderTarget::createImage(const Size &size, const uint8_t *bytes)
+Drawable::Image::Ptr SfmlRenderTarget::createImage(const Size &size, const uint8_t *bytes) const
 {
     std::shared_ptr<SfmlImage> ret = std::make_shared<SfmlImage>();
     sf::Image image;

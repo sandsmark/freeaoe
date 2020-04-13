@@ -424,6 +424,10 @@ bool GraphicRender::GraphicDelta::validForAngle(const float angle) const noexcep
     if (angleToDrawOn < 0) {
         return true;
     }
+    if (!graphic->m_graphic) {
+        WARN << "no graphic for delta!";
+        return false;
+    }
 
     return graphic->m_graphic->angleToOrientation(angle) == angleToDrawOn;
 }

@@ -21,6 +21,8 @@
 #include "core/Logger.h"
 #include "core/Types.h"
 
+#include "render/IRenderTarget.h"
+
 #include <genie/dat/Graphic.h>
 #include <SFML/Graphics/Texture.hpp>
 
@@ -127,6 +129,8 @@ public:
 
     static sf::Image slpFrameToImage(const genie::SlpFramePtr &frame, int8_t playerColor, const ImageType imageType) noexcept;
 
+    static Drawable::Image::Ptr slpFrameToImage(const IRenderTarget &renderTarget, const genie::SlpFramePtr &frame, int8_t playerColor, const ImageType imageType) noexcept;
+
     //----------------------------------------------------------------------------
     /// Returns the image of the graphic.
     ///
@@ -194,6 +198,9 @@ public:
     }
 
     float orientationToAngle(float orientation) const noexcept;
+
+    const genie::SlpFramePtr &getSlpFrame(uint32_t frame_num) const noexcept;
+
 private:
     const genie::SlpFramePtr &getFrame(uint32_t frame_num, float angle) const noexcept;
 

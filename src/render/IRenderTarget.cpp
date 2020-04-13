@@ -18,7 +18,7 @@ Drawable::Image::Ptr IRenderTarget::convertFrameToImage(const genie::SlpFramePtr
     return convertFrameToImage(frame, AssetManager::Inst()->getPalette(50500));
 }
 
-Drawable::Image::Ptr IRenderTarget::convertFrameToImage(const genie::SlpFramePtr &frame, const genie::PalFile &palette, const int playerId)
+Drawable::Image::Ptr IRenderTarget::convertFrameToImage(const genie::SlpFramePtr &frame, const genie::PalFile &palette, const int playerId) const
 {
     if (!frame) {
         return createImage(Size(), nullptr);
@@ -28,6 +28,10 @@ Drawable::Image::Ptr IRenderTarget::convertFrameToImage(const genie::SlpFramePtr
     const uint32_t height = frame->getHeight();
     const genie::SlpFrameData &frameData = frame->img_data;
     const int area = width * height;
+    if (area == 0) {
+        WARN << "Invalid SLP frame";
+        return createImage(Size(), nullptr);
+    }
 
     if (frame->is32bit()) {
         TIME_THIS;

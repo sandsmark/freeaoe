@@ -115,32 +115,42 @@ void Farm::setTerrain(const Farm::TerrainTypes terrainToSet) noexcept
 FarmRender::FarmRender(const Size &size) :
     m_size(size)
 {
-    genie::SlpFilePtr slpFile = AssetManager::Inst()->getSlp(15023);
+    genie::SlpFilePtr slpFile = AssetManager::Inst()->getSlp(graphicId);
     if (!slpFile) {
         WARN << "failed to get slp for farm";
         return;
     }
 
-    const genie::SlpFramePtr frame = slpFile->getFrame(0);
-    if (!frame) {
+    m_frame = slpFile->getFrame(0);
+    if (!m_frame) {
         WARN << "failed to get farm frame";
         return;
     }
-
-    m_availableTexture.loadFromImage(Graphic::slpFrameToImage(frame, 0, ImageType::Construction));
-    m_unavailableTexture.loadFromImage(Graphic::slpFrameToImage(frame, 0, ImageType::ConstructionUnavailable));
 }
 
 void FarmRender::render(IRenderTarget &renderTarget, const ScreenPos screenPos, const RenderType pass) noexcept
 {
-    sf::Sprite sprite;
+    if (!m_frame) {
+        return;
+    }
+
+    Drawable::Image::Ptr texture;
     if (pass == RenderType::ConstructAvailable) {
-        sprite.setTexture(m_availableTexture);
+        if (!m_availableTexture) {
+            m_availableTexture = Graphic::slpFrameToImage(renderTarget, m_frame, 0, ImageType::Construction);
+        }
+
+        texture = m_availableTexture;
     } else if (pass == RenderType::ConstructUnavailable) {
-        sprite.setTexture(m_unavailableTexture);
+        if (!m_unavailableTexture) {
+            m_unavailableTexture = Graphic::slpFrameToImage(renderTarget, m_frame, 0, ImageType::ConstructionUnavailable);
+        }
+        texture = m_unavailableTexture;
     } else {
         return;
     }
+
+    assert(texture);
 
 
     const ScreenPos pos = screenPos - ScreenPos(Constants::TILE_SIZE_HORIZONTAL / 2., Constants::TILE_SIZE_VERTICAL / 2.);
@@ -151,8 +161,7 @@ void FarmRender::render(IRenderTarget &renderTarget, const ScreenPos screenPos, 
     for (int x = -m_size.width; x < m_size.width; x++) {
         for (int y = -m_size.height; y < m_size.height; y++) {
             const ScreenPos offset = MapPos(x*tileWidth, y*tileHeight).toScreen();
-            sprite.setPosition(pos + offset);
-            renderTarget.draw(sprite);
+            renderTarget.draw(texture, pos + offset);
         }
     }
 }

@@ -85,7 +85,7 @@ public:
     void draw(const Drawable::Rect &rect) override;
     void draw(const Drawable::Circle &circle) override;
 
-    Drawable::Image::Ptr createImage(const Size &size, const uint8_t *bytes) override;
+    Drawable::Image::Ptr createImage(const Size &size, const uint8_t *bytes) const override;
     void draw(const Drawable::Image::Ptr &image, const ScreenPos &position) override;
     void draw(const std::shared_ptr<IRenderTarget> &renderTarget, const ScreenPos &pos = ScreenPos(0, 0)) override;
 

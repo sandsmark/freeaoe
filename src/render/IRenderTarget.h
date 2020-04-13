@@ -181,9 +181,9 @@ public:
     virtual void draw(const Drawable::Circle &circle) = 0;
     virtual void draw(const std::shared_ptr<IRenderTarget> &renderTarget, const ScreenPos &pos = ScreenPos(0, 0)) = 0;
 
-    virtual Drawable::Image::Ptr createImage(const Size &size, const uint8_t *pixels) = 0;
+    virtual Drawable::Image::Ptr createImage(const Size &size, const uint8_t *pixels) const = 0;
     Drawable::Image::Ptr convertFrameToImage(const genie::SlpFramePtr &frame);
-    Drawable::Image::Ptr convertFrameToImage(const genie::SlpFramePtr &frame, const genie::PalFile &palette, const int playerId = -1);
+    Drawable::Image::Ptr convertFrameToImage(const genie::SlpFramePtr &frame, const genie::PalFile &palette, const int playerId = -1) const;
 
     virtual void draw(const Drawable::Image::Ptr &image, const ScreenPos &position) = 0;
 
