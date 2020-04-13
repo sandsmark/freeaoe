@@ -38,8 +38,6 @@ Building::~Building()
             }
         }
         m_productionQueue.clear();
-    } else {
-        WARN << "Can't give player resources back when gone";
     }
 }
 
