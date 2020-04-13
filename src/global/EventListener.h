@@ -80,7 +80,7 @@ protected:
         { (void)player; (void)unit; }
 
     virtual void onPlayerResourceChanged(Player *player, const genie::ResourceType type, float newValue)
-        { (void)player; }
+        { (void)player; (void)type; (void)newValue; }
 
     virtual void onResourceBought(const genie::ResourceType type, const int amount)
         { (void)type; (void)amount; }
