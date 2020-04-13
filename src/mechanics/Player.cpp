@@ -388,9 +388,6 @@ ResourceMap Player::resourcesNeeded(const genie::Unit &unit) const
     }
 
     for (const genie::Resource<short, short> &cost : unit.Creatable.ResourceCosts) {
-        if (!cost.Paid) {
-            continue;
-        }
         const genie::ResourceType type = genie::ResourceType(cost.Type);
         ret[type] += cost.Amount;
     }
