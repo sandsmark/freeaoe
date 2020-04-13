@@ -145,7 +145,7 @@ public:
     IRenderTarget();
 
     //----------------------------------------------------------------------------
-    virtual ~IRenderTarget() {}
+    virtual ~IRenderTarget();
 
     //----------------------------------------------------------------------------
     virtual Size getSize(void) const = 0;
