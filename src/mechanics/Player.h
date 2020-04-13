@@ -185,7 +185,7 @@ struct Player
     std::vector<Unit*> findUnitsByTypeID(const int type) const;
 
 private:
-    ResourceMap resourceCosts(const genie::Unit &unit) const;
+    ResourceMap resourcesNeeded(const genie::Unit &unit) const;
 
     void updateAvailableTechs();
 

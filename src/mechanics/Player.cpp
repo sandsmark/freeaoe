@@ -366,7 +366,7 @@ void Player::updateAvailableTechs()
     }
 }
 
-ResourceMap Player::resourceCosts(const genie::Unit &unit) const
+ResourceMap Player::resourcesNeeded(const genie::Unit &unit) const
 {
     ResourceMap ret;
 
@@ -405,7 +405,7 @@ bool Player::canAffordUnit(const int unitId) const
         return false;
     }
 
-    for (const std::pair<const genie::ResourceType, float> &cost : resourceCosts(unit)) {
+    for (const std::pair<const genie::ResourceType, float> &cost : resourcesNeeded(unit)) {
         const int available = resourcesAvailable(cost.first) - resourcesUsed(cost.first);
         if (available < cost.second) {
             return false;
@@ -423,8 +423,12 @@ void Player::payForUnit(const int unitId)
         return;
     }
 
-    for (const std::pair<const genie::ResourceType, float> &cost : resourceCosts(unit)) {
-        removeResource(cost.first, cost.second);
+    for (const genie::Resource<short, short> &cost : unit.Creatable.ResourceCosts) {
+        if (!cost.Paid) {
+            continue;
+        }
+        const genie::ResourceType type = genie::ResourceType(cost.Type);
+        removeResource(type, cost.Amount);
     }
 }
 
