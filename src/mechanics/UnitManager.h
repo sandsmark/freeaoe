@@ -179,3 +179,21 @@ private:
     std::weak_ptr<Player> m_humanPlayer;
 };
 
+inline LogPrinter operator <<(LogPrinter os, const UnitManager::State state)
+{
+    const char *separator = os.separator;
+    os.separator = "";
+
+    os << "UnitManager::State::";
+    switch(state) {
+    case UnitManager::State::Default: os << "Default"; break;
+    case UnitManager::State::PlacingWall: os << "PlacingWall"; break;
+    case UnitManager::State::PlacingBuilding: os << "PlacingBuilding"; break;
+    case UnitManager::State::SelectingAttackTarget: os << "SelectingAttackTarget"; break;
+    }
+
+    os << separator;
+    os.separator = separator;
+
+    return os;
+}

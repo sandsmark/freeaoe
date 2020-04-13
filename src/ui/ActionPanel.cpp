@@ -16,10 +16,10 @@
 
 #include "actions/IAction.h"
 #include "core/Logger.h"
+#include "global/EventManager.h"
 #include "mechanics/Civilization.h"
 #include "mechanics/Player.h"
 #include "mechanics/Unit.h"
-#include "mechanics/UnitManager.h"
 #include "render/SfmlRenderTarget.h"
 #include "resource/AssetManager.h"
 #include "resource/LanguageManager.h"
@@ -28,6 +28,10 @@
 ActionPanel::ActionPanel(const std::shared_ptr<SfmlRenderTarget> &renderTarget) :
     m_renderTarget(renderTarget)
 {
+    EventManager::registerListener(this, EventManager::PlayerResourceChanged);
+    EventManager::registerListener(this, EventManager::UnitSelected);
+    EventManager::registerListener(this, EventManager::UnitDeselected);
+    EventManager::registerListener(this, EventManager::ResearchComplete);
 }
 
 
@@ -145,8 +149,14 @@ bool ActionPanel::handleEvent(sf::Event event)
 
 bool ActionPanel::update(Time /*time*/)
 {
-    if (m_unitManager->selected() != m_selectedUnits) {
+    if (m_buttonsDirty) {
         m_selectedUnits = m_unitManager->selected();
+        updateButtons();
+        m_dirty = true;
+    }
+
+    if (m_unitManagerState != m_unitManager->state()) {
+        m_unitManagerState = m_unitManager->state();
         updateButtons();
         m_dirty = true;
     }
@@ -300,10 +310,52 @@ const std::string &ActionPanel::helpTextId(const ActionPanel::Command icon)
     return LanguageManager::Inst()->getString(helpTextIds.at(icon));
 }
 
+void ActionPanel::onUnitSelected(Unit *unit)
+{
+    if (unit->player.lock() == m_humanPlayer) {
+        m_buttonsDirty = true;
+    }
+}
+
+void ActionPanel::onUnitDeselected(const Unit *unit)
+{
+    if (unit->player.lock() == m_humanPlayer) {
+        m_buttonsDirty = true;
+    }
+}
+
+void ActionPanel::onResearchCompleted(Player *player, int research)
+{
+    (void)research;
+
+    // Might have gotten new units to construct
+    if (player == m_humanPlayer.get()) {
+        m_buttonsDirty = true;
+    }
+}
+
+void ActionPanel::onPlayerResourceChanged(Player *player, const genie::ResourceType type, float newValue)
+{
+    (void)type;
+    (void)newValue;
+
+    // Might afford new units or not afford units
+    if (player == m_humanPlayer.get()) {
+        m_buttonsDirty = true;
+    }
+}
+
 void ActionPanel::updateButtons()
 {
+    m_buttonsDirty = false;
+
     currentButtons.clear();
+
     if (m_selectedUnits.empty()) {
+        return;
+    }
+    if (m_unitManagerState != UnitManager::State::Default) {
+        DBG << "unit manager state" << m_unitManagerState;
         return;
     }
 
@@ -562,6 +614,7 @@ void ActionPanel::handleButtonClick(const ActionPanel::InterfaceButton &button)
 {
     if (button.type == InterfaceButton::CreateBuilding) {
         m_unitManager->startPlaceBuilding(button.unit->ID, m_humanPlayer);
+        currentButtons.clear();
         return;
     } else if (button.type == InterfaceButton::CreateUnit) {
         m_unitManager->enqueueProduceUnit(button.unit, m_selectedUnits);

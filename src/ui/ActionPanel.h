@@ -1,8 +1,10 @@
 #pragma once
 
 #include "core/Types.h"
+#include "global/EventListener.h"
 
 #include "mechanics/IState.h"
+#include "mechanics/UnitManager.h"
 #include <SFML/Graphics/Texture.hpp>
 
 #include <memory>
@@ -38,7 +40,7 @@ class Tech;
 class Unit;
 }
 
-class ActionPanel : public IState
+class ActionPanel : public IState, public EventListener
 {
 public:
     enum class Technology {
@@ -254,6 +256,11 @@ public:
     static const std::string &helpTextId(const Command icon);
 
 private:
+    void onUnitSelected(Unit *unit) override;
+    void onUnitDeselected(const Unit *unit) override;
+    void onResearchCompleted(Player *player, int researchId) override;
+    void onPlayerResourceChanged(Player *player, const genie::ResourceType type, float newValue) override;
+
     struct InterfaceButton {
         enum Type {
             CreateUnit,
@@ -304,9 +311,11 @@ private:
     int m_buttonOffset = 0;
 
     UnitSet m_selectedUnits;
+    UnitManager::State m_unitManagerState = UnitManager::State::Default;
 
     std::vector<InterfaceButton> currentButtons;
     bool m_dirty = true;
+    bool m_buttonsDirty = true;
 };
 
 inline std::ostream &operator <<(std::ostream &os, const ActionPanel::Command &cmd) {
