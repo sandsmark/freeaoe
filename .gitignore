@@ -15,15 +15,6 @@ CMakeSettings.json
 doc/html/
 doc/latex/
 
-# thor files
-extern/thor/*.txt
-extern/thor/.svn/
-extern/thor/doc/
-extern/thor/examples/
-extern/thor/include/
-extern/thor/src/
-
-
 raw.dat
 
 CMakeCache.txt

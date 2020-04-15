@@ -81,7 +81,7 @@ endif()
 ##################
 
 if(WIN32)
-    include_directories(extern/genieutils/extern/win-iconv/)
+    include_directories(src/extern/genieutils/extern/win-iconv/)
     add_definitions(-DNTDDI_VERSION=NTDDI_WINBLUE)
 endif()
 
@@ -124,29 +124,29 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 # TODO: proper find_packages
-if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/extern/miniaudio/miniaudio.h)
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/src/extern/miniaudio/miniaudio.h)
     message(STATUS "Using bundled miniaudio")
-    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/extern/)
+    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/extern/)
 endif()
 
 # TODO: proper find_packages
-if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/extern/genieutils/include/genie/Types.h)
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/src/extern/genieutils/include/genie/Types.h)
     message(STATUS "Using bundled genieutils")
-    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/extern/genieutils/include/)
+    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/extern/genieutils/include/)
 
     set(GUTILS_STATIC True)
-    add_subdirectory(extern/genieutils)
+    add_subdirectory(src/extern/genieutils)
 endif()
 
 
 include_directories(
     src/
-    extern/
+    src/extern/
     ${PROJECT_BINARY_DIR}
   )
 
 
-add_subdirectory(tools/resgen)
+add_subdirectory(src/tools/resgen)
 add_resource(FONT_ALEGREYA fonts/Alegreya/Alegreya-Bold.latin)
 add_resource(FONT_BERRYROTUNDA fonts/BerryRotunda/BerryRotunda.ttf)
 
@@ -304,10 +304,10 @@ add_executable(freeaoe src/main.cpp $<TARGET_OBJECTS:freeaoe_common>)
 target_link_libraries(freeaoe ${ALL_LIBRARIES})
 install(TARGETS freeaoe DESTINATION bin)
 
-add_executable(test test/main.cpp $<TARGET_OBJECTS:freeaoe_common>)
+add_executable(test src/test/main.cpp $<TARGET_OBJECTS:freeaoe_common>)
 target_link_libraries(test ${ALL_LIBRARIES})
 
-add_executable(ai-test test/ai-test.cpp $<TARGET_OBJECTS:freeaoe_common>)
+add_executable(ai-test src/test/ai-test.cpp $<TARGET_OBJECTS:freeaoe_common>)
 target_link_libraries(ai-test ${ALL_LIBRARIES})
 
 if (ENABLE_SANITIZERS)

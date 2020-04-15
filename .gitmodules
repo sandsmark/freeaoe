@@ -1,9 +1,9 @@
 [submodule "extern/genieutils"]
-	path = extern/genieutils
+	path = src/extern/genieutils
 	url = https://github.com/sandsmark/genieutils.git
 [submodule "extern/geniedoc"]
 	path = doc/geniedoc
 	url = https://github.com/aap/geniedoc.git
 [submodule "extern/miniaudio"]
-	path = extern/miniaudio
+	path = src/extern/miniaudio
 	url = https://github.com/dr-soft/miniaudio.git
