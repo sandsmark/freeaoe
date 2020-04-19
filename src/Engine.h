@@ -41,6 +41,7 @@ class Minimap;
 struct NumberLabel;
 class UiScreen;
 class UnitInfoPanel;
+class UnitsRenderer;
 
 namespace genie {
 class ScnFile;
@@ -93,6 +94,7 @@ private:
     std::unique_ptr<Dialog> m_currentDialog;
 
     std::unique_ptr<UiScreen> m_mainScreen;
+    std::unique_ptr<UnitsRenderer> m_unitsRenderer;
 
     StateManager state_manager_;
 

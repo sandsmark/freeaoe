@@ -30,6 +30,7 @@
 #include "render/Camera.h"
 #include "render/SfmlRenderTarget.h"
 #include "render/MapRenderer.h"
+#include "render/UnitsRenderer.h"
 
 #include "ui/ActionPanel.h"
 #include "ui/Dialog.h"
@@ -97,6 +98,9 @@ void Engine::start()
             m_actionPanel->setUnitManager(state->unitManager());
             m_actionPanel->setHumanPlayer(state->humanPlayer());
             m_unitInfoPanel->setUnitManager(state->unitManager());
+
+            m_unitsRenderer->setUnitManager(state->unitManager());
+            m_unitsRenderer->setVisibilityMap(state->humanPlayer()->visibility);
         }
 
         const int renderStart = GameClock.getElapsedTime().asMilliseconds();
@@ -172,7 +176,7 @@ void Engine::start()
                                                             m_mapRenderer->lastVisibleColumn(),
                                                             m_mapRenderer->lastVisibleRow());
 
-            state->unitManager()->render(renderTarget_, visibleEntities);
+            m_unitsRenderer->render(renderTarget_, visibleEntities);
 
             state->draw();
 
@@ -522,6 +526,8 @@ bool Engine::setup(const std::shared_ptr<genie::ScnFile> &scenario)
     m_goldLabel = std::make_unique<NumberLabel>(renderTarget_);
     m_stoneLabel = std::make_unique<NumberLabel>(renderTarget_);
     m_populationLabel = std::make_unique<NumberLabel>(renderTarget_);
+
+    m_unitsRenderer = std::make_unique<UnitsRenderer>();
 
     m_woodLabel->setPosition({75, 5});
     m_foodLabel->setPosition({153, 5});

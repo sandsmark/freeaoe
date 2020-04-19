@@ -118,7 +118,6 @@ public:
     void setHumanPlayer(const std::shared_ptr<Player> &player) { m_humanPlayer = player; }
 
     bool update(Time time);
-    void render(const std::shared_ptr<IRenderTarget> &renderTarget, const std::vector<std::weak_ptr<Entity> > &visible);
 
     bool onLeftClick(const ScreenPos &screenPos, const CameraPtr &camera);
     void onRightClick(const ScreenPos &screenPos, const CameraPtr &camera);
@@ -133,6 +132,10 @@ public:
     const UnitSet &selected() const { return m_selectedUnits; }
 
     const UnitVector &units() const { return m_units; }
+    const std::unordered_set<std::shared_ptr<Missile>> &missiles() const { return m_missiles; }
+    const std::unordered_set<DecayingEntity::Ptr> &decayingEntities() const { return m_decayingEntities; }
+    const std::vector<UnplacedBuilding> &buildingsToPlace() const { return m_buildingsToPlace; }
+    const MoveTargetMarker::Ptr &moveTargetMarker() const { return m_moveTargetMarker; }
 
     void startPlaceBuilding(const int unitId, const std::shared_ptr<Player> &player);
     void enqueueProduceUnit(const genie::Unit *unitData, const UnitSet &producers);
@@ -169,13 +172,12 @@ private:
     std::unordered_set<std::shared_ptr<Missile>> m_missiles;
     std::unordered_set<DecayingEntity::Ptr> m_decayingEntities;
     UnitVector m_units;
+    MoveTargetMarker::Ptr m_moveTargetMarker;
     UnitSet m_unitsWithActions;
     std::unordered_set<Task> m_currentActions;
 
     UnitSet m_selectedUnits;
     MapPtr m_map;
-    std::shared_ptr<IRenderTarget> m_outlineOverlay;
-    MoveTargetMarker::Ptr m_moveTargetMarker;
 
     std::vector<UnplacedBuilding> m_buildingsToPlace;
     MapPos m_wallPlacingStart;
@@ -184,7 +186,6 @@ private:
 
     bool m_availableActionsChanged = true; // Because we might get a bunch of events in a single update, do it only once
 
-    MapPos m_previousCameraPos;
     std::weak_ptr<Player> m_humanPlayer;
 };
 

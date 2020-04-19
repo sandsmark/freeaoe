@@ -216,6 +216,7 @@ set(RENDER_SRC
     src/render/IRenderTarget.cpp
     src/render/MapRenderer.cpp
     src/render/SfmlRenderTarget.cpp
+    src/render/UnitsRenderer.cpp
     )
 
 set(SERVER_SRC
