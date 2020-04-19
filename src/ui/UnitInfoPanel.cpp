@@ -244,6 +244,11 @@ void UnitInfoPanel::drawSingleUnit()
         drawConstructionInfo(building);
     } else {
         std::shared_ptr<Player> player = unit->player().lock();
+        if (!player) {
+            WARN << "Unit missing player";
+            return;
+        }
+
         m_civilizationName->string = player->civilization.name();
         m_playerName->string = player->name;
 
