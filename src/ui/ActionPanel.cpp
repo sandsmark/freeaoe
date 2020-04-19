@@ -239,10 +239,11 @@ void ActionPanel::setUnitManager(const std::shared_ptr<UnitManager> &unitManager
 
 void ActionPanel::setHumanPlayer(const Player::Ptr &player)
 {
-    if (player == m_humanPlayer) {
+    if (player->playerId == m_humanPlayerId) {
         return;
     }
 
+    m_humanPlayerId = player->playerId;
     m_humanPlayer = player;
 }
 
@@ -325,7 +326,7 @@ void ActionPanel::onPlayerResourceChanged(Player *player, const genie::ResourceT
     (void)newValue;
 
     // Might afford new units or not afford units
-    if (player == m_humanPlayer.get()) {
+    if (player->playerId == m_humanPlayerId) {
         m_buttonsDirty = true;
     }
 }
@@ -345,7 +346,12 @@ void ActionPanel::updateButtons()
     }
 
     Unit::Ptr unit = *m_selectedUnits.begin();
-    if (unit->player.lock() != m_humanPlayer) {
+    Player::Ptr owner = unit->player().lock();
+    if (!owner) {
+        WARN << "Unit without owner";
+        return;
+    }
+    if (owner->playerId != m_humanPlayerId) {
         return;
     }
 
@@ -425,7 +431,17 @@ void ActionPanel::updateButtons()
 void ActionPanel::addCreateButtons(const std::shared_ptr<Unit> &unit)
 {
     m_currentPage = 0;
-    const std::vector<const genie::Unit *> creatableUnits = unit->creatableUnits();
+
+    if (unit->creationProgress() < 1.) {
+        return;
+    }
+
+    Player::Ptr humanPlayer = m_humanPlayer.lock();
+    if (!humanPlayer) {
+        WARN << "Player-less unit";
+        return;
+    }
+    const std::vector<const genie::Unit *> creatableUnits = humanPlayer->civilization.creatableUnits(unit->data()->ID);
 
     if (creatableUnits.empty()) {
         return;
@@ -470,7 +486,7 @@ void ActionPanel::addCreateButtons(const std::shared_ptr<Unit> &unit)
 
 void ActionPanel::addResearchButtons(const std::shared_ptr<Unit> &unit)
 {
-    Player::Ptr player = unit->player.lock();
+    Player::Ptr player = unit->player().lock();
     if (!player) {
         WARN << "Player-less unit";
         return;
@@ -597,7 +613,7 @@ void ActionPanel::addMilitaryButtons(const std::shared_ptr<Unit> &unit)
 void ActionPanel::handleButtonClick(const ActionPanel::InterfaceButton &button)
 {
     if (button.type == InterfaceButton::CreateBuilding) {
-        m_unitManager->startPlaceBuilding(button.unit->ID, m_humanPlayer);
+        m_unitManager->startPlaceBuilding(button.unit->ID, m_humanPlayer.lock());
         currentButtons.clear();
         return;
     } else if (button.type == InterfaceButton::CreateUnit) {

@@ -118,9 +118,9 @@ Drawable::Color Minimap::unitColor(const std::shared_ptr<Unit> &unit)
 
     switch(m_mode) {
     case MinimapMode::Diplomatic:
-        if (unit->playerId == UnitManager::GaiaID) {
+        if (unit->playerId() == UnitManager::GaiaID) {
             return Drawable::Color(128, 192, 128);
-        } else if (unit->playerId == 1) { ///TODO fixme get the human player
+        } else if (unit->playerId() == 1) { ///TODO fixme get the human player
             return Drawable::Blue;
         } else {
             return Drawable::Red;
@@ -293,7 +293,7 @@ bool Minimap::update(Time /*time*/)
             if (visibility == VisibilityMap::Unexplored) {
                 continue;
             }
-            if (visibility == VisibilityMap::Explored && unit->playerId != UnitManager::GaiaID) {
+            if (visibility == VisibilityMap::Explored && unit->playerId() != UnitManager::GaiaID) {
                 continue;
             }
 

@@ -66,8 +66,8 @@ std::shared_ptr<Unit> Unit::fromEntity(const EntityPtr &entity) noexcept
 Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager) :
     Entity(Type::Unit, LanguageManager::getString(data_.LanguageDLLName) + " (" + std::to_string(data_.ID) + ")"),
     actions(this),
-    playerId(player_->playerId),
-    player(player_),
+    m_playerId(player_->playerId),
+    m_player(player_),
     m_unitManager(unitManager)
 {
     m_renderer->setPlayerColor(player_->playerColor);
@@ -82,8 +82,8 @@ Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, Uni
 Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager, const Entity::Type type) :
     Entity(type, LanguageManager::getString(data_.LanguageDLLName) + " (" + std::to_string(data_.ID) + ")"),
     actions(this),
-    playerId(player_->playerId),
-    player(player_),
+    m_playerId(player_->playerId),
+    m_player(player_),
     m_unitManager(unitManager)
 {
     m_renderer->setPlayerColor(player_->playerColor);
@@ -96,7 +96,7 @@ Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, Uni
 
 Unit::~Unit()
 {
-    Player::Ptr owner = player.lock();
+    Player::Ptr owner = m_player.lock();
     if (owner) {
         // TODO: don't do that here
         forEachVisibleTile([&](const int tileX, const int tileY) {
@@ -194,20 +194,6 @@ MapPos Unit::snapPositionToGrid(const MapPos &position, const MapPtr &map, const
     return newPos;
 }
 
-std::vector<const genie::Unit *> Unit::creatableUnits() noexcept
-{
-    if (creationProgress() < 1.) {
-        return {};
-    }
-
-    Player::Ptr owner = player.lock();
-    if (!owner) {
-        WARN << "Lost our player";
-        return {};
-    }
-    return owner->civilization.creatableUnits(m_data->ID);
-}
-
 std::shared_ptr<Building> Unit::asBuilding(const Unit::Ptr &unit) noexcept
 {
     if (!unit) {
@@ -223,6 +209,12 @@ std::shared_ptr<Building> Unit::asBuilding(const Unit::Ptr &unit) noexcept
 std::shared_ptr<Building> Unit::asBuilding(const std::weak_ptr<Unit> &unit) noexcept
 {
     return asBuilding(unit.lock());
+}
+
+void Unit::setPlayer(const std::shared_ptr<Player> &player)
+{
+    m_player = player;
+    m_playerId = player->playerId;
 }
 
 ScreenRect Unit::rect() const noexcept
@@ -350,7 +342,7 @@ void Unit::kill() noexcept
     m_renderer->setSprite(m_data->DyingGraphic);
 
     if (data()->DyingSound != -1) {
-        Player::Ptr owner = player.lock();
+        Player::Ptr owner = m_player.lock();
         if (owner) {
             AudioPlayer::instance().playSound(data()->DyingSound, owner->civilization.id());
         }
@@ -423,7 +415,7 @@ void Unit::setPosition(const MapPos &pos, const bool initial) noexcept
         return;
     }
 
-    Player::Ptr owner = player.lock();
+    Player::Ptr owner = player().lock();
 
     // TODO merf, don't really want this to happen here, maybe use events?
     if (!initial && owner) {

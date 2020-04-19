@@ -30,7 +30,7 @@ Building::Building(const genie::Unit &data_, const std::shared_ptr<Player> &play
 
 Building::~Building()
 {
-    Player::Ptr owner = player.lock();
+    Player::Ptr owner = player().lock();
     if (owner) {
         for (const std::unique_ptr<Product> &toAbort : m_productionQueue) {
             for (const std::pair<const genie::ResourceType, float> &cost : toAbort->cost) {
@@ -48,7 +48,7 @@ bool Building::enqueueProduceUnit(const genie::Unit *data) noexcept
         return false;
     }
 
-    Player::Ptr owner = player.lock();
+    Player::Ptr owner = player().lock();
     if (!owner) {
         WARN << "building owner went away";
         return false;
@@ -92,7 +92,7 @@ bool Building::enqueueProduceResearch(const genie::Tech *data) noexcept
         return false;
     }
 
-    Player::Ptr owner = player.lock();
+    Player::Ptr owner = player().lock();
     if (!owner) {
         WARN << "building owner went away";
         return false;
@@ -150,7 +150,7 @@ void Building::abortProduction(size_t index) noexcept
         return;
     }
 
-    Player::Ptr owner = player.lock();
+    Player::Ptr owner = player().lock();
     if (!owner) {
         WARN << "building owner went away";
         return;
@@ -320,7 +320,7 @@ bool Building::canPlace(const MapPos &position, const MapPtr &map, const genie::
 
 void Building::finalizeUnit() noexcept
 {
-    Player::Ptr owner = player.lock();
+    Player::Ptr owner = player().lock();
     if (!owner) {
         WARN << "owner went away";
         return;
@@ -332,7 +332,7 @@ void Building::finalizeUnit() noexcept
     Unit::Ptr unit = UnitFactory::Inst().createUnit(m_currentProduct->unit->ID, owner, m_unitManager);
     m_unitManager.add(unit, waypoint);
 
-    Player::Ptr player = unit->player.lock();
+    Player::Ptr player = unit->player().lock();
     if (player) {
         AudioPlayer::instance().playSound(unit->data()->TrainSound, player->civilization.id());
     } else {
@@ -344,7 +344,7 @@ void Building::finalizeUnit() noexcept
 
 void Building::finalizeResearch() noexcept
 {
-    Player::Ptr owner = player.lock();
+    Player::Ptr owner = player().lock();
     if (!owner) {
         WARN << "building owner went away";
         return;
@@ -360,7 +360,7 @@ void Building::attemptStartProduction() noexcept
         return;
     }
 
-    Player::Ptr owner = player.lock();
+    Player::Ptr owner = player().lock();
     if (!owner) {
         WARN << "building owner went away";
         return;

@@ -223,11 +223,11 @@ bool UnitManager::onLeftClick(const ScreenPos &screenPos, const CameraPtr &camer
         DBG << "Selecting attack target";
         MapPos targetPos = camera->absoluteMapPos(screenPos);
         Unit::Ptr targetUnit = unitAt(screenPos, camera);
-        if (targetUnit && targetUnit->playerId == humanPlayer->playerId) {
+        if (targetUnit && targetUnit->playerId() == humanPlayer->playerId) {
             targetUnit.reset();
         }
         for (const Unit::Ptr &unit : m_selectedUnits) {
-            if (unit->playerId != humanPlayer->playerId) {
+            if (unit->playerId() != humanPlayer->playerId) {
                 continue;
             }
 
@@ -273,7 +273,7 @@ void UnitManager::onRightClick(const ScreenPos &screenPos, const CameraPtr &came
     // Thanks task swap group satan
     bool foundTasks = false;
     for (const Unit::Ptr &unit : m_selectedUnits) {
-        if (unit->playerId != humanPlayer->playerId) {
+        if (unit->playerId() != humanPlayer->playerId) {
             continue;
         }
         Task task = taskForPosition(unit, screenPos, camera);
@@ -303,7 +303,7 @@ void UnitManager::onRightClick(const ScreenPos &screenPos, const CameraPtr &came
 
     bool movedSomeone = false;
     for (const Unit::Ptr &unit : m_selectedUnits) {
-        if (unit->playerId != humanPlayer->playerId) {
+        if (unit->playerId() != humanPlayer->playerId) {
             continue;
         }
 
@@ -457,7 +457,7 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
         if (isClick && !unit->checkClick(selectionRect.bottomRight() - absoluteUnitPosition)) {
             continue;
         }
-        hasHumanPlayer = hasHumanPlayer || unit->playerId == humanPlayer->playerId;
+        hasHumanPlayer = hasHumanPlayer || unit->playerId() == humanPlayer->playerId;
 
         requiredInteraction = std::max(unit->data()->InteractionMode, requiredInteraction);
         containedUnits.push_back(unit);
@@ -469,7 +469,7 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
         if (unit->data()->InteractionMode < requiredInteraction) {
             continue;
         }
-        if (hasHumanPlayer && unit->playerId != humanPlayer->playerId) {
+        if (hasHumanPlayer && unit->playerId() != humanPlayer->playerId) {
             //continue;
         }
 
@@ -579,6 +579,11 @@ void UnitManager::setSelectedUnits(const UnitSet &units)
 
 void UnitManager::startPlaceBuilding(const int unitId, const std::shared_ptr<Player> &player)
 {
+    if (!player) {
+        WARN << "Can't place building without player!";
+        return;
+    }
+
     DBG << "starting to place unit" << unitId;
     m_buildingsToPlace.clear();
 
@@ -731,7 +736,7 @@ void UnitManager::placeBuilding(const UnplacedBuilding &building)
     DBG << unit->angle();
 
     for (const Unit::Ptr &unit : m_selectedUnits) {
-        if (unit->playerId != humanPlayer->playerId) {
+        if (unit->playerId() != humanPlayer->playerId) {
             continue;
         }
 
@@ -759,7 +764,7 @@ void UnitManager::playSound(const Unit::Ptr &unit)
         return;
     }
 
-    Player::Ptr player = unit->player.lock();
+    Player::Ptr player = unit->player().lock();
     if (player) {
         AudioPlayer::instance().playSound(id, player->civilization.id());
     } else {

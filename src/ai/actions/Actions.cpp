@@ -264,7 +264,7 @@ bool ai::Actions::BuildBuilding::tryBuild(Player *player, int unitId)
         return false;
     }
 
-    ::Unit::Ptr unit = UnitFactory::Inst().createUnit(unitId, builder->player.lock(), builder->unitManager());
+    ::Unit::Ptr unit = UnitFactory::Inst().createUnit(unitId, builder->player().lock(), builder->unitManager());
     ::Building::Ptr buildingToPlace = ::Unit::asBuilding(unit);
 
     // TODO: find proper placement, for now just place it by the builder

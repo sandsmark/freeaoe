@@ -298,7 +298,8 @@ private:
 
     std::shared_ptr<SfmlRenderTarget> m_renderTarget;
     std::shared_ptr<UnitManager> m_unitManager;
-    PlayerPtr m_humanPlayer;
+    std::weak_ptr<Player> m_humanPlayer;
+    int m_humanPlayerId = -1;
     ScreenRect m_rect;
 
     std::unordered_map<Command, sf::Texture> m_commandIcons;

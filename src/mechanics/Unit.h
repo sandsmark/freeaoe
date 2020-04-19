@@ -135,14 +135,14 @@ struct Unit : public Entity
 
     bool update(Time time) noexcept override;
 
-    std::vector<const genie::Unit *> creatableUnits() noexcept;
-
     static std::shared_ptr<Building> asBuilding(const Unit::Ptr &unit) noexcept;
     static std::shared_ptr<Building> asBuilding(const std::weak_ptr<Unit> &unit) noexcept;
 
+    int playerId() const { return m_playerId; }
+    const std::weak_ptr<Player> &player() const { return m_player; }
+    void setPlayer(const std::shared_ptr<Player> &player);
+
     bool selected = false;
-    int playerId;
-    std::weak_ptr<Player> player;
     std::vector<Annex> annexes;
 
     ResourceMap resources;
@@ -204,6 +204,9 @@ protected:
 
     const genie::Unit *m_data = nullptr;
     SpritePtr movingGraphics;
+
+    int m_playerId = -1;
+    std::weak_ptr<Player> m_player;
 
     float m_creationProgress = 0.f;
 

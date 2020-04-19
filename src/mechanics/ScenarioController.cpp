@@ -616,7 +616,7 @@ bool ScenarioController::Condition::checkUnitMatching(const Unit *unit) const
     }
 
     if (data.sourcePlayer > -1) {
-        if (unit->playerId != data.sourcePlayer) {
+        if (unit->playerId() != data.sourcePlayer) {
             return false;
         }
     }
@@ -645,7 +645,7 @@ bool ScenarioController::checkUnitMatchingEffect(const std::shared_ptr<Unit> &un
     }
 
     if (effect.sourcePlayer > -1) {
-        if (unit->playerId != effect.sourcePlayer) {
+        if (unit->playerId() != effect.sourcePlayer) {
             return false;
         }
     }

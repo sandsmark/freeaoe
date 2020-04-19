@@ -243,7 +243,7 @@ void UnitInfoPanel::drawSingleUnit()
     if (building && building->isProducing()) {
         drawConstructionInfo(building);
     } else {
-        std::shared_ptr<Player> player = unit->player.lock();
+        std::shared_ptr<Player> player = unit->player().lock();
         m_civilizationName->string = player->civilization.name();
         m_playerName->string = player->name;
 

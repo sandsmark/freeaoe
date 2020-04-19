@@ -34,7 +34,7 @@ std::unordered_set<Task> UnitActionHandler::availableActions() const noexcept
         return tasks;
     }
 
-    Player::Ptr owner = m_unit->player.lock();
+    Player::Ptr owner = m_unit->player().lock();
     if (!owner) {
         WARN << "Lost our player";
         return {};
@@ -74,7 +74,7 @@ Task UnitActionHandler::findAnyTask(const genie::ActionType &type, int targetUni
 
 Task UnitActionHandler::findTaskWithTarget(const std::shared_ptr<Unit> &target)
 {
-    return findMatchingTask(m_unit->player.lock(), target, availableActions());
+    return findMatchingTask(m_unit->player().lock(), target, availableActions());
 }
 
 Task UnitActionHandler::findMatchingTask(const std::shared_ptr<Player> &ownPlayer, const std::shared_ptr<Unit> &target, const std::unordered_set<Task> &potentials)
@@ -88,32 +88,32 @@ Task UnitActionHandler::findMatchingTask(const std::shared_ptr<Player> &ownPlaye
 
         switch (action->TargetDiplomacy) {
         case genie::Task::TargetSelf:
-            if (target->playerId != ownPlayer->playerId) {
+            if (target->playerId() != ownPlayer->playerId) {
                 continue;
             }
             break;
         case genie::Task::TargetNeutralsEnemies: // TODO: neutrals
-            if (target->playerId == ownPlayer->playerId) {
+            if (target->playerId() == ownPlayer->playerId) {
                 continue;
             }
             break;
 
         case genie::Task::TargetGaiaOnly:
-            if (target->playerId != UnitManager::GaiaID) {
+            if (target->playerId() != UnitManager::GaiaID) {
                 continue;
             }
             break;
         case genie::Task::TargetSelfAllyGaia:
-            if (target->playerId != ownPlayer->playerId && target->playerId != UnitManager::GaiaID && !ownPlayer->isAllied(target->playerId)) {
+            if (target->playerId() != ownPlayer->playerId && target->playerId() != UnitManager::GaiaID && !ownPlayer->isAllied(target->playerId())) {
                 continue;
             }
             break;
         case genie::Task::TargetGaiaNeutralEnemies:
         case genie::Task::TargetOthers:
-            if (target->playerId == ownPlayer->playerId) {
+            if (target->playerId() == ownPlayer->playerId) {
                 continue;
             }
-            if (ownPlayer->isAllied(target->playerId)) {
+            if (ownPlayer->isAllied(target->playerId())) {
                 continue;
             }
             break;
@@ -153,7 +153,7 @@ Task UnitActionHandler::findMatchingTask(const std::shared_ptr<Player> &ownPlaye
         if (action->TargetDiplomacy != genie::Task::TargetGaiaNeutralEnemies && action->TargetDiplomacy != genie::Task::TargetNeutralsEnemies) {
             continue;
         }
-        if (ownPlayer->playerId == target->playerId) {
+        if (ownPlayer->playerId == target->playerId()) {
             continue;
         }
 
@@ -204,7 +204,7 @@ Task UnitActionHandler::checkForAutoTargets() noexcept
         if (other->id == m_unit->id) {
             continue;
         }
-        if (other->playerId == UnitManager::GaiaID) {
+        if (other->playerId() == UnitManager::GaiaID) {
             // I don't think we should auto-target gaia units?
             continue;
         }
@@ -216,7 +216,7 @@ Task UnitActionHandler::checkForAutoTargets() noexcept
         }
 
         Task potentialTask;
-        potentialTask = findMatchingTask(m_unit->player.lock(), other, m_autoTargetTasks);
+        potentialTask = findMatchingTask(m_unit->player().lock(), other, m_autoTargetTasks);
         if (!potentialTask.data) {
             continue;
         }
@@ -336,7 +336,7 @@ void UnitActionHandler::setCurrentAction(const ActionPtr &action) noexcept
     m_currentAction = action;
 
 
-    Player::Ptr owner = m_unit->player.lock();
+    Player::Ptr owner = m_unit->player().lock();
     if (!owner) {
         WARN << "Lost our player";
         return;

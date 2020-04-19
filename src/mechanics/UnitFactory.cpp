@@ -56,7 +56,7 @@ Unit::Ptr UnitFactory::duplicateUnit(const Unit::Ptr &other)
         WARN << "can't duplicate null unit";
         return nullptr;
     }
-    Player::Ptr owner = other->player.lock();
+    Player::Ptr owner = other->player().lock();
     if (!owner) {
         WARN << "can't duplicate unit without owner";
         return nullptr;
@@ -169,7 +169,7 @@ DecayingEntity::Ptr UnitFactory::createCorpseFor(const Unit::Ptr &unit)
         return nullptr;
     }
 
-    Player::Ptr owner = unit->player.lock();
+    Player::Ptr owner = unit->player().lock();
     if (!owner) {
         WARN << "no owner for corpse";
         return nullptr;

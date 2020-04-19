@@ -75,7 +75,7 @@ void UnitTypeCount::onUnitCreated(::Unit *unit)
     if (!m_typeIds.count(unit->data()->ID)) {
         return;
     }
-    if (m_playerId != -1 && unit->playerId != m_playerId) {
+    if (m_playerId != -1 && unit->playerId() != m_playerId) {
         return;
     }
     m_unitCount++;
@@ -87,7 +87,7 @@ void UnitTypeCount::onUnitDying(::Unit *unit)
     if (!m_typeIds.count(unit->data()->ID)) {
         return;
     }
-    if (m_playerId != -1 && unit->playerId != m_playerId) {
+    if (m_playerId != -1 && unit->playerId() != m_playerId) {
         return;
     }
     m_unitCount--;
@@ -313,7 +313,7 @@ bool Conditions::CombatUnitsCount::satisfied(AiRule *owner)
 
 void ai::Conditions::CombatUnitsCount::onUnitChangedGroup(::Unit *unit, int oldGroup, int newGroup)
 {
-    if (unit->playerId != m_playerId) {
+    if (unit->playerId() != m_playerId) {
         return;
     }
 
@@ -332,7 +332,7 @@ void ai::Conditions::CombatUnitsCount::onUnitChangedGroup(::Unit *unit, int oldG
     }
 
 
-    Player::Ptr player = unit->player.lock();
+    Player::Ptr player = unit->player().lock();
     if (!player) {
         WARN << "unit without player!";
         emit(SatisfiedChanged);// just in case

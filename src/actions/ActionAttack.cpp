@@ -28,7 +28,7 @@ ActionAttack::ActionAttack(const Unit::Ptr &attacker, const Task &task) :
         return;
     }
     m_targetPosition = target->position();
-    if (target->playerId == attacker->playerId) {
+    if (target->playerId() == attacker->playerId()) {
         m_targetUnit.reset();
     }
 }
@@ -157,7 +157,7 @@ void ActionAttack::spawnMissiles(const Unit::Ptr &source, const int unitId, cons
     const std::array<float, 3> &spawnArea = source->data()->Creatable.ProjectileSpawningArea;
     DBG << source->data()->Combat.AccuracyPercent << source->data()->Creatable.SecondaryProjectileUnit;
 
-    Player::Ptr owner = source->player.lock();
+    Player::Ptr owner = source->player().lock();
     if (!owner) {
         WARN << "no owning player";
         return;

@@ -52,7 +52,7 @@ IAction::UpdateResult ActionGather::update(Time time)
     }
 
 
-    if (target->healthLeft() > 0 && target->playerId != unit->playerId) {
+    if (target->healthLeft() > 0 && target->playerId() != unit->playerId()) {
         DBG << "Unit isn't dead, attacking first";
         unit->actions.prependAction(std::make_shared<ActionAttack>(unit, m_task));
         return UpdateResult::NotUpdated;
@@ -82,7 +82,7 @@ IAction::UpdateResult ActionGather::update(Time time)
 
     float amount = unit->data()->Action.WorkRate * m_task.data->WorkValue1;
     if (m_task.data->ResourceMultiplier >= 0) {
-        Player::Ptr player = unit->player.lock();
+        Player::Ptr player = unit->player().lock();
         if (!player) {
             WARN << "player gone";
             return UpdateResult::Completed;
@@ -202,7 +202,7 @@ IAction::UpdateResult ActionDropOff::update(Time /*time*/)
         return UpdateResult::Completed;
     }
 
-    Player::Ptr targetPlayer = target->player.lock();
+    Player::Ptr targetPlayer = target->player().lock();
     if (!targetPlayer) {
         WARN << "player gone";
         return UpdateResult::Completed;

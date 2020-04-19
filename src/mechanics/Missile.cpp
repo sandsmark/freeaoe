@@ -26,10 +26,10 @@
 
 Missile::Missile(const genie::Unit &data, const Unit::Ptr &sourceUnit, const MapPos &target, const Unit::Ptr &targetUnit) :
     Entity(Type::Missile, LanguageManager::getString(data.LanguageDLLName) + " (" + std::to_string(data.ID) + ")"),
-    playerId(sourceUnit->playerId),
+    playerId(sourceUnit->playerId()),
     m_sourceUnit(sourceUnit),
     m_targetUnit(targetUnit),
-    m_player(sourceUnit->player),
+    m_player(sourceUnit->player()),
     m_unitManager(sourceUnit->unitManager()),
     m_data(data),
     m_targetPosition(target)
@@ -242,7 +242,7 @@ bool Missile::update(Time time) noexcept
             continue;
         }
 
-        if (m_data.Missile.HitMode && hitUnit->playerId == playerId) {
+        if (m_data.Missile.HitMode && hitUnit->playerId() == playerId) {
             continue;
         }
 
