@@ -15,7 +15,7 @@ struct Player;
 
 class FarmRender : public GraphicRender
 {
-    static constexpr int graphicId = 15023; // magic id
+    static constexpr int spriteId = 15023; // magic id
 
 public:
     FarmRender(const Size &size);

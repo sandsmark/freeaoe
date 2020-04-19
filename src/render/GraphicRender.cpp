@@ -33,7 +33,7 @@
 #include "core/Logger.h"
 #include "core/Types.h"
 #include "render/IRenderTarget.h"
-#include "resource/Graphic.h"
+#include "resource/Sprite.h"
 
 bool GraphicRender::update(Time time, const bool isVisible) noexcept
 {
@@ -55,17 +55,17 @@ bool GraphicRender::update(Time time, const bool isVisible) noexcept
         }
     }
 
-    if (!m_graphic) {
+    if (!m_sprite) {
         return updated;
     }
-    if (!m_graphic->framerate()) {
+    if (!m_sprite->framerate()) {
         return updated;
     }
 
-    const bool isAtEnd = m_currentFrame >= m_graphic->frameCount() - 1;
+    const bool isAtEnd = m_currentFrame >= m_sprite->frameCount() - 1;
 
     // Just let it run out if we're not visible
-    if (isAtEnd && (m_graphic->runOnce() || !isVisible)) {
+    if (isAtEnd && (m_sprite->runOnce() || !isVisible)) {
         return updated;
     }
 
@@ -73,15 +73,15 @@ bool GraphicRender::update(Time time, const bool isVisible) noexcept
 
     Time elapsed = time - m_lastFrameTime;
 
-    if (isAtEnd && elapsed < m_graphic->replayDelay() / 0.0015) {
+    if (isAtEnd && elapsed < m_sprite->replayDelay() / 0.0015) {
         return updated;
     }
 
     if (m_lastFrameTime == 0) {
         m_lastFrameTime = time;
         newFrame = 0;
-    } else if (elapsed > m_graphic->framerate() / 0.0015) {
-        if (newFrame < m_graphic->frameCount() - 1) {
+    } else if (elapsed > m_sprite->framerate() / 0.0015) {
+        if (newFrame < m_sprite->frameCount() - 1) {
             newFrame++;
         } else {
             newFrame = 0;
@@ -106,7 +106,7 @@ bool GraphicRender::update(Time time, const bool isVisible) noexcept
 
 inline bool GraphicRender::isValid() const noexcept
 {
-    return m_graphic && m_graphic->isValid();
+    return m_sprite && m_sprite->isValid();
 }
 
 void GraphicRender::render(IRenderTarget &renderTarget, const ScreenPos screenPos, const RenderType renderpass) noexcept
@@ -129,22 +129,22 @@ void GraphicRender::render(IRenderTarget &renderTarget, const ScreenPos screenPo
         delta.graphic->render(renderTarget, screenPos + delta.offset, renderpass);
     }
 
-    if (m_graphic && m_graphic->isValid()) {
+    if (m_sprite && m_sprite->isValid()) {
         sf::Sprite sprite;
         sf::BlendMode blendMode;
 
         switch(renderpass) {
         case RenderType::Base:
-            sprite.setTexture(m_graphic->texture(m_currentFrame, m_angle, m_playerColor, ImageType::Base));
+            sprite.setTexture(m_sprite->texture(m_currentFrame, m_angle, m_playerColor, ImageType::Base));
             break;
         case RenderType::BuildingAlpha:
-            sprite.setTexture(m_graphic->texture(m_currentFrame, m_angle, m_playerColor, ImageType::Base));
+            sprite.setTexture(m_sprite->texture(m_currentFrame, m_angle, m_playerColor, ImageType::Base));
             blendMode = sf::BlendAdd;
             blendMode.colorSrcFactor = sf::BlendMode::Zero;
             blendMode.colorDstFactor = sf::BlendMode::Zero;
             break;
         case RenderType::Outline:
-            sprite.setTexture(m_graphic->texture(m_currentFrame, m_angle, m_playerColor, ImageType::Outline));
+            sprite.setTexture(m_sprite->texture(m_currentFrame, m_angle, m_playerColor, ImageType::Outline));
             blendMode.alphaSrcFactor = sf::BlendMode::Zero;
             blendMode.alphaEquation = sf::BlendMode::Add;
             blendMode.alphaDstFactor = sf::BlendMode::DstAlpha;
@@ -154,20 +154,20 @@ void GraphicRender::render(IRenderTarget &renderTarget, const ScreenPos screenPo
             blendMode.colorDstFactor = sf::BlendMode::Zero;
             break;
         case RenderType::ConstructAvailable:
-            sprite.setTexture(m_graphic->texture(m_currentFrame, m_angle, m_playerColor, ImageType::Construction));
+            sprite.setTexture(m_sprite->texture(m_currentFrame, m_angle, m_playerColor, ImageType::Construction));
             break;
         case RenderType::Shadow:
-            sprite.setTexture(m_graphic->texture(m_currentFrame, m_angle, m_playerColor, ImageType::Shadow));
+            sprite.setTexture(m_sprite->texture(m_currentFrame, m_angle, m_playerColor, ImageType::Shadow));
             break;
         case RenderType::ConstructUnavailable:
-            sprite.setTexture(m_graphic->texture(m_currentFrame, m_angle, m_playerColor, ImageType::ConstructionUnavailable));
+            sprite.setTexture(m_sprite->texture(m_currentFrame, m_angle, m_playerColor, ImageType::ConstructionUnavailable));
             break;
         case RenderType::InTheShadows:
-            sprite.setTexture(m_graphic->texture(m_currentFrame, m_angle, m_playerColor, ImageType::InTheShadows));
+            sprite.setTexture(m_sprite->texture(m_currentFrame, m_angle, m_playerColor, ImageType::InTheShadows));
             break;
         }
 
-        sprite.setPosition(screenPos - m_graphic->getHotspot(m_currentFrame, m_angle));
+        sprite.setPosition(screenPos - m_sprite->getHotspot(m_currentFrame, m_angle));
         renderTarget.draw(sprite, blendMode);
     }
 
@@ -190,25 +190,25 @@ void GraphicRender::setPlayerColor(int playerColor) noexcept
     }
 }
 
-void GraphicRender::setDamageOverlay(const int graphicId) noexcept
+void GraphicRender::setDamageOverlay(const int spriteId) noexcept
 {
-    if (graphicId < 0) {
+    if (spriteId < 0) {
         m_damageOverlay.reset();
         return;
     }
 
-    if (m_damageOverlay && graphicId == m_damageOverlay->graphic()->graphicId) {
+    if (m_damageOverlay && spriteId == m_damageOverlay->sprite()->m_spriteId) {
         return;
     }
 
-    GraphicPtr graphic = AssetManager::Inst()->getGraphic(graphicId);
+    SpritePtr graphic = AssetManager::Inst()->getGraphic(spriteId);
     if (!graphic) {
-        WARN << "Failed to find damage graphic" << graphicId;
+        WARN << "Failed to find damage graphic" << spriteId;
         return;
     }
 
     if (!graphic->isValid()) {
-        WARN << "Invalid damage graphic" << graphicId;
+        WARN << "Invalid damage graphic" << spriteId;
         return;
     }
 
@@ -219,34 +219,34 @@ void GraphicRender::setDamageOverlay(const int graphicId) noexcept
     m_damageOverlay->setPlayerColor(m_playerColor);
     m_damageOverlay->setCivId(m_civId);
     m_damageOverlay->setAngle(m_angle);
-    m_damageOverlay->setGraphic(graphic);
+    m_damageOverlay->setSprite(graphic);
 }
 
-bool GraphicRender::setGraphic(const int &graphicId) noexcept
+bool GraphicRender::setSprite(const int &spriteId) noexcept
 {
-    return setGraphic(AssetManager::Inst()->getGraphic(graphicId));
+    return setSprite(AssetManager::Inst()->getGraphic(spriteId));
 }
 
-bool GraphicRender::setGraphic(const GraphicPtr &graphic) noexcept
+bool GraphicRender::setSprite(const SpritePtr &sprite) noexcept
 {
-    if (graphic == m_graphic) {
+    if (sprite == m_sprite) {
         return true;
     }
 
     m_damageOverlay.reset();
 
-    m_graphic = graphic;
+    m_sprite = sprite;
     m_currentFrame = 0;
     m_currentSound = 0;
     m_frameChanged = true;
     m_deltas.clear();
 
-    if (!graphic) {
+    if (!sprite) {
         WARN << "no graphic";
         return false;
     }
 
-    for (const genie::GraphicDelta &deltaData : graphic->deltas()) {
+    for (const genie::GraphicDelta &deltaData : sprite->deltas()) {
         if (deltaData.GraphicID < 0) {
             continue;
         }
@@ -258,8 +258,8 @@ bool GraphicRender::setGraphic(const GraphicPtr &graphic) noexcept
         delta.graphic->setAngle(m_angle);
 
         // Don't use setGraphic, to avoid recursive adding of deltas
-        delta.graphic->m_graphic = AssetManager::Inst()->getGraphic(deltaData.GraphicID);
-        if (!delta.graphic->m_graphic->isValid()) {
+        delta.graphic->m_sprite = AssetManager::Inst()->getGraphic(deltaData.GraphicID);
+        if (!delta.graphic->m_sprite->isValid()) {
             continue;
         }
         delta.angleToDrawOn = deltaData.DisplayAngle;
@@ -274,12 +274,12 @@ bool GraphicRender::setGraphic(const GraphicPtr &graphic) noexcept
     return true;
 }
 
-int GraphicRender::graphicId() const noexcept
+int GraphicRender::spriteId() const noexcept
 {
-    if (!m_graphic) {
+    if (!m_sprite) {
         return -1;
     }
-    return m_graphic->frameCount();
+    return m_sprite->frameCount();
 }
 
 ScreenRect GraphicRender::rect() const noexcept
@@ -289,10 +289,10 @@ ScreenRect GraphicRender::rect() const noexcept
     }
 
     ScreenRect ret;
-    const ScreenPos hotspot = m_graphic->getHotspot(m_currentFrame, m_angle);
+    const ScreenPos hotspot = m_sprite->getHotspot(m_currentFrame, m_angle);
     ret.x = -hotspot.x;
     ret.y = -hotspot.y;
-    const sf::Vector2u size = m_graphic->size(m_currentFrame, m_angle);
+    const sf::Vector2u size = m_sprite->size(m_currentFrame, m_angle);
     ret.width = size.x;
     ret.height = size.y;
 
@@ -324,9 +324,9 @@ bool GraphicRender::checkClick(const ScreenPos &pos) const noexcept
     if (!isValid()) {
         return false;
     }
-    const ScreenPos correctedPos = pos + m_graphic->getHotspot(m_currentFrame, m_angle);
+    const ScreenPos correctedPos = pos + m_sprite->getHotspot(m_currentFrame, m_angle);
 
-    if (m_graphic->checkClick(correctedPos, m_currentFrame, m_angle)) {
+    if (m_sprite->checkClick(correctedPos, m_currentFrame, m_angle)) {
         return true;
     }
 
@@ -335,7 +335,7 @@ bool GraphicRender::checkClick(const ScreenPos &pos) const noexcept
             continue;
         }
 
-        if (delta.angleToDrawOn >= 0 && delta.graphic->m_graphic->angleToOrientation(m_angle) != delta.angleToDrawOn) {
+        if (delta.angleToDrawOn >= 0 && delta.graphic->m_sprite->angleToOrientation(m_angle) != delta.angleToDrawOn) {
             continue;
         }
 
@@ -349,12 +349,12 @@ bool GraphicRender::checkClick(const ScreenPos &pos) const noexcept
 
 void GraphicRender::setOrientation(int orientation) noexcept
 {
-    if (!m_graphic) {
+    if (!m_sprite) {
 //        WARN << "no graphic!"; TODO: once Farm can start reusing Graphic this should be enabled
         return;
     }
 
-    setAngle(m_graphic->orientationToAngle(orientation));
+    setAngle(m_sprite->orientationToAngle(orientation));
 }
 
 void GraphicRender::setAngle(float angle) noexcept
@@ -372,7 +372,7 @@ void GraphicRender::setAngle(float angle) noexcept
 
 int GraphicRender::frameCount() const noexcept
 {
-    return m_graphic ? m_graphic->frameCount() : 0;
+    return m_sprite ? m_sprite->frameCount() : 0;
 }
 
 void GraphicRender::setCurrentFrame(int frame) noexcept
@@ -397,15 +397,15 @@ void GraphicRender::maybePlaySound(const float pan, const float volume) noexcept
         return;
     }
 
-    if (m_graphic->sound() != -1 && m_currentFrame == 1) {
-        AudioPlayer::instance().playSound(m_graphic->sound(), m_civId, pan, volume);
+    if (m_sprite->sound() != -1 && m_currentFrame == 1) {
+        AudioPlayer::instance().playSound(m_sprite->sound(), m_civId, pan, volume);
     }
 
-    if (!m_graphic->hasSounds()) {
+    if (!m_sprite->hasSounds()) {
         return;
     }
 
-    const genie::GraphicAngleSound angleSound = m_graphic->soundForAngle(m_angle);
+    const genie::GraphicAngleSound angleSound = m_sprite->soundForAngle(m_angle);
     if (angleSound.FrameNum == m_currentFrame) {
         AudioPlayer::instance().playSound(angleSound.SoundID, m_civId, pan, volume);
     }
@@ -424,10 +424,10 @@ bool GraphicRender::GraphicDelta::validForAngle(const float angle) const noexcep
     if (angleToDrawOn < 0) {
         return true;
     }
-    if (!graphic->m_graphic) {
+    if (!graphic->m_sprite) {
         WARN << "no graphic for delta!";
         return false;
     }
 
-    return graphic->m_graphic->angleToOrientation(angle) == angleToDrawOn;
+    return graphic->m_sprite->angleToOrientation(angle) == angleToDrawOn;
 }

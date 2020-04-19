@@ -49,7 +49,7 @@
 #include "resource/AssetManager.h"
 #include "resource/DataManager.h"
 #include "resource/LanguageManager.h"
-#include "resource/Graphic.h"
+#include "resource/Sprite.h"
 #include "render/GraphicRender.h"
 
 std::shared_ptr<Unit> Unit::fromEntity(const EntityPtr &entity) noexcept
@@ -263,9 +263,9 @@ void Unit::setCreationProgress(float progress) noexcept
 {
     if (m_data->Type == genie::Unit::BuildingType) {
         if (m_creationProgress < m_data->Creatable.TrainTime && progress >= m_data->Creatable.TrainTime) {
-            m_renderer->setGraphic(defaultGraphics);
+            m_renderer->setSprite(defaultGraphics);
         } else if (m_creationProgress == m_data->Creatable.TrainTime && progress < m_data->Creatable.TrainTime) {
-            m_renderer->setGraphic(m_data->Building.ConstructionGraphicID);
+            m_renderer->setSprite(m_data->Building.ConstructionGraphicID);
         }
     }
 
@@ -334,7 +334,7 @@ void Unit::takeDamage(const genie::unit::AttackOrArmor &attack, const float dama
                 m_renderer->setDamageOverlay(graphic->GraphicID);
                 break;
             case genie::unit::DamageGraphic::ReplaceGraphic:
-                m_renderer->setGraphic(graphic->GraphicID);
+                m_renderer->setSprite(graphic->GraphicID);
                 break;
             }
         }
@@ -347,7 +347,7 @@ void Unit::kill() noexcept
     m_damageTaken = data()->HitPoints;
 
     m_renderer->setPlaySounds(true);
-    m_renderer->setGraphic(m_data->DyingGraphic);
+    m_renderer->setSprite(m_data->DyingGraphic);
 
     if (data()->DyingSound != -1) {
         Player::Ptr owner = player.lock();
@@ -472,7 +472,7 @@ void Unit::setUnitData(const genie::Unit &data_) noexcept
         WARN << "Failed to load default graphics";
     }
 
-    m_renderer->setGraphic(defaultGraphics);
+    m_renderer->setSprite(defaultGraphics);
 
     actions.m_autoTargetTasks.clear();
     for (const Task &task : actions.availableActions()) {
@@ -520,7 +520,7 @@ float Unit::healthLeft() const noexcept
 void Unit::updateGraphic()
 {
     if (hitpointsLeft() <= 0 && !isDying()) {
-        m_renderer->setGraphic(m_data->DyingGraphic);
+        m_renderer->setSprite(m_data->DyingGraphic);
         return;
     }
 
@@ -531,11 +531,11 @@ void Unit::updateGraphic()
     }
 
     if (!actions.m_currentAction) {
-        m_renderer->setGraphic(defaultGraphics);
+        m_renderer->setSprite(defaultGraphics);
         return;
     }
 
-    GraphicPtr graphic;
+    SpritePtr graphic;
 
     switch (actions.m_currentAction->type) {
     case IAction::Type::Move:
@@ -576,7 +576,7 @@ void Unit::updateGraphic()
         graphic = defaultGraphics;
     }
 
-    m_renderer->setGraphic(graphic);
+    m_renderer->setSprite(graphic);
 }
 
 

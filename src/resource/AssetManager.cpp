@@ -22,7 +22,7 @@
 #include "DataManager.h"
 #include "core/Logger.h"
 #include "TerrainSprite.h"
-#include "Graphic.h"
+#include "Sprite.h"
 
 #include "core/Utility.h"
 #include <genie/resource/DrsFile.h>
@@ -163,14 +163,14 @@ genie::SlpFilePtr AssetManager::getSlp(uint32_t id, const ResourceType type)
 }
 
 //------------------------------------------------------------------------------
-GraphicPtr AssetManager::getGraphic(uint32_t id)
+SpritePtr AssetManager::getGraphic(uint32_t id)
 {
-    GraphicPtr graph;
+    SpritePtr graph;
 
     if (graphics_.find(id) != graphics_.end()) {
         graph = graphics_[id];
     } else {
-        graph = std::make_shared<Graphic>(DataManager::Inst().getGraphic(id), id);
+        graph = std::make_shared<Sprite>(DataManager::Inst().getGraphic(id), id);
 
         graphics_[id] = graph;
     }

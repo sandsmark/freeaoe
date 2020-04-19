@@ -32,7 +32,7 @@
 #include <genie/resource/Slope.h>
 
 class TerrainSprite;
-class Graphic;
+class Sprite;
 
 namespace genie {
 class DrsFile;
@@ -64,8 +64,8 @@ using BlkEdgeFile = genie::EdgeFile<47>;
 using BlkEdgeFilePtr = std::shared_ptr<BlkEdgeFile>;
 
 // ours
-using GraphicPtr = std::shared_ptr<Graphic>;
-using GraphicMap = std::unordered_map<uint32_t, GraphicPtr>;
+using SpritePtr = std::shared_ptr<Sprite>;
+using GraphicMap = std::unordered_map<uint32_t, SpritePtr>;
 using TerrainPtr = std::shared_ptr<TerrainSprite>;
 using TerrainMap = std::unordered_map<uint32_t, TerrainPtr>;
 
@@ -152,7 +152,7 @@ public:
     /// @param id id of the resource
     /// @return ImagePtr pointing to the object
     //
-    GraphicPtr getGraphic(uint32_t id);
+    SpritePtr getGraphic(uint32_t id);
 
     //----------------------------------------------------------------------------
     /// Get a Terrain resource object.

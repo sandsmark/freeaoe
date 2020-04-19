@@ -25,7 +25,7 @@
 #include "mechanics/UnitFactory.h"
 #include "mechanics/UnitManager.h"
 #include "render/GraphicRender.h"
-#include "resource/Graphic.h"
+#include "resource/Sprite.h"
 #include "render/Camera.h"
 
 void BasicGameSample::setupMap()
@@ -81,12 +81,12 @@ void BasicGameSample::addHumanWalls()
     };
 
     addWall(4, 4, 0);
-    unit->setAngle(unit->renderer().graphic()->orientationToAngle(0));
-    addWall(5, 4, unit->renderer().graphic()->orientationToAngle(1));
-    addWall(6, 4, unit->renderer().graphic()->orientationToAngle(2));
-    addWall(7, 4, unit->renderer().graphic()->orientationToAngle(3));
-    addWall(8, 4, unit->renderer().graphic()->orientationToAngle(4));
-    addWall(9, 4, unit->renderer().graphic()->orientationToAngle(5));
+    unit->setAngle(unit->renderer().sprite()->orientationToAngle(0));
+    addWall(5, 4, unit->renderer().sprite()->orientationToAngle(1));
+    addWall(6, 4, unit->renderer().sprite()->orientationToAngle(2));
+    addWall(7, 4, unit->renderer().sprite()->orientationToAngle(3));
+    addWall(8, 4, unit->renderer().sprite()->orientationToAngle(4));
+    addWall(9, 4, unit->renderer().sprite()->orientationToAngle(5));
 }
 
 void BasicGameSample::addHumanUnits()

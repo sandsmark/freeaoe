@@ -20,7 +20,7 @@
 
 #include "IRenderTarget.h"
 
-#include "resource/Graphic.h"
+#include "resource/Sprite.h"
 
 namespace sf {
 class Drawable;

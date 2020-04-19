@@ -76,14 +76,14 @@ inline LogPrinter &operator <<(LogPrinter &os, const ImageType &type) {
     return os;
 }
 
-struct GraphicState {
+struct SpriteState {
     uint32_t frame = 0;
     int angle = 0;
     int8_t playerColor = 0;
     ImageType type = ImageType::Base;
     bool flipped = false;
 
-    bool operator==(const GraphicState &other) const noexcept {
+    bool operator==(const SpriteState &other) const noexcept {
         return frame == other.frame &&
                angle == other.angle &&
                playerColor == other.playerColor &&
@@ -93,9 +93,9 @@ struct GraphicState {
 };
 
 namespace std {
-template<> struct hash<GraphicState>
+template<> struct hash<SpriteState>
 {
-    size_t operator()(const GraphicState b) const noexcept {
+    size_t operator()(const SpriteState b) const noexcept {
         return hash<uint32_t>()(b.frame) ^
                hash<int>()(b.angle) ^
                hash<uint8_t>()(b.playerColor) ^
@@ -112,20 +112,20 @@ template<> struct hash<GraphicState>
 /// the graphic.
 // TODO: Player mask, outline
 //
-class Graphic
+class Sprite
 {
 public:
     static const sf::Texture nullImage;
 
-    const int graphicId = -1;
+    const int m_spriteId = -1;
 
     //----------------------------------------------------------------------------
     /// Constructor
     ///
     /// @param id Id of the graphic struct in .dat file.
     //
-    Graphic(const genie::Graphic &m_data, const int id);
-    virtual ~Graphic() = default;
+    Sprite(const genie::Graphic &m_data, const int id);
+    virtual ~Sprite() = default;
 
     static sf::Image slpFrameToImage(const genie::SlpFramePtr &frame, int8_t playerColor, const ImageType imageType) noexcept;
 
@@ -212,11 +212,11 @@ private:
 
     genie::SlpFilePtr slp_;
 
-    std::unordered_map<GraphicState, sf::Texture> m_cache;
+    std::unordered_map<SpriteState, sf::Texture> m_cache;
 
     const genie::Graphic &m_data;
     bool m_runOnce = false;
 };
 
-typedef std::shared_ptr<Graphic> GraphicPtr;
+typedef std::shared_ptr<Sprite> SpritePtr;
 

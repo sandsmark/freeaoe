@@ -18,7 +18,7 @@
 
 #include "TerrainSprite.h"
 
-#include "Graphic.h"
+#include "Sprite.h"
 #include "DataManager.h"
 #include "AssetManager.h"
 #include "core/Constants.h"

@@ -34,11 +34,11 @@ struct Entity;
 struct MoveTargetMarker;
 struct Missile;
 class GraphicRender;
-class Graphic;
+class Sprite;
 
 typedef std::shared_ptr<Map> MapPtr;
 typedef std::shared_ptr<Entity> EntityPtr;
-typedef std::shared_ptr<Graphic> GraphicPtr;
+typedef std::shared_ptr<Sprite> SpritePtr;
 
 /// The most basic class thing, has a position on a map and can be rendered
 struct Entity : std::enable_shared_from_this<Entity>, SignalEmitter<Entity>
@@ -84,7 +84,7 @@ protected:
     Entity(const Type type_, const std::string &name);
 
     std::unique_ptr<GraphicRender> m_renderer;
-    GraphicPtr defaultGraphics;
+    SpritePtr defaultGraphics;
     std::weak_ptr<Map> m_map;
 
 private:

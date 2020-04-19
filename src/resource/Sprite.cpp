@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "Graphic.h"
+#include "Sprite.h"
 
 #include <SFML/Config.hpp>
 #include <SFML/Graphics/Color.hpp>
@@ -41,11 +41,11 @@ namespace genie {
 class GraphicAngleSound;
 }  // namespace genie
 
-const sf::Texture Graphic::nullImage;
+const sf::Texture Sprite::nullImage;
 
 //------------------------------------------------------------------------------
-Graphic::Graphic(const genie::Graphic &data, const int id) :
-    graphicId(id),
+Sprite::Sprite(const genie::Graphic &data, const int id) :
+    m_spriteId(id),
     m_data(data),
     m_runOnce(data.SequenceType & genie::Graphic::SequenceOnce)
 {
@@ -63,7 +63,7 @@ Graphic::Graphic(const genie::Graphic &data, const int id) :
     }
 }
 
-sf::Image Graphic::slpFrameToImage(const genie::SlpFramePtr &frame, int8_t playerColor, const ImageType imageType) noexcept
+sf::Image Sprite::slpFrameToImage(const genie::SlpFramePtr &frame, int8_t playerColor, const ImageType imageType) noexcept
 {
     const genie::PalFile &palette = AssetManager::Inst()->getPalette(50500);
     const genie::SlpFrameData &frameData = frame->img_data;
@@ -200,7 +200,7 @@ sf::Image Graphic::slpFrameToImage(const genie::SlpFramePtr &frame, int8_t playe
     return img;
 }
 
-Drawable::Image::Ptr Graphic::slpFrameToImage(const IRenderTarget &renderTarget, const genie::SlpFramePtr &frame, int8_t playerColor, const ImageType imageType) noexcept
+Drawable::Image::Ptr Sprite::slpFrameToImage(const IRenderTarget &renderTarget, const genie::SlpFramePtr &frame, int8_t playerColor, const ImageType imageType) noexcept
 {
     if (!frame) {
         WARN << "Invalid SLP frame!";
@@ -356,13 +356,13 @@ Drawable::Image::Ptr Graphic::slpFrameToImage(const IRenderTarget &renderTarget,
 
 }
 
-const sf::Texture &Graphic::texture(uint32_t frameNum, float angleRadians, int8_t playerColor, const ImageType imageType) noexcept
+const sf::Texture &Sprite::texture(uint32_t frameNum, float angleRadians, int8_t playerColor, const ImageType imageType) noexcept
 {
     if (!slp_) {
         return nullImage;
     }
 
-    GraphicState state;
+    SpriteState state;
     state.frame = frameNum;
     state.playerColor = playerColor;
     state.type = imageType;
@@ -392,7 +392,7 @@ const sf::Texture &Graphic::texture(uint32_t frameNum, float angleRadians, int8_
 
 }
 
-Size Graphic::size(uint32_t frame_num, float angle) const noexcept
+Size Sprite::size(uint32_t frame_num, float angle) const noexcept
 {
     if (!slp_) {
         return Size(0, 0);
@@ -403,7 +403,7 @@ Size Graphic::size(uint32_t frame_num, float angle) const noexcept
     return Size(frame->getWidth(), frame->getHeight());
 }
 
-ScreenRect Graphic::rect(uint32_t frame_num, float angle) const noexcept
+ScreenRect Sprite::rect(uint32_t frame_num, float angle) const noexcept
 {
     ScreenRect ret;
     const ScreenPos hotspot = getHotspot(frame_num, angle);
@@ -417,7 +417,7 @@ ScreenRect Graphic::rect(uint32_t frame_num, float angle) const noexcept
 }
 
 //------------------------------------------------------------------------------
-ScreenPos Graphic::getHotspot(uint32_t frame_num, float angle) const noexcept
+ScreenPos Sprite::getHotspot(uint32_t frame_num, float angle) const noexcept
 {
     if (!slp_) {
         return ScreenPos();
@@ -438,7 +438,7 @@ ScreenPos Graphic::getHotspot(uint32_t frame_num, float angle) const noexcept
     return ScreenPos(hot_spot_x, frame->hotspot_y);
 }
 
-bool Graphic::checkClick(const ScreenPos &pos, uint32_t frame_num, float angle) const noexcept
+bool Sprite::checkClick(const ScreenPos &pos, uint32_t frame_num, float angle) const noexcept
 {
     if (!slp_) {
         return false;
@@ -488,7 +488,7 @@ bool Graphic::checkClick(const ScreenPos &pos, uint32_t frame_num, float angle) 
 
 
 
-const genie::GraphicAngleSound &Graphic::soundForAngle(float angle) const noexcept
+const genie::GraphicAngleSound &Sprite::soundForAngle(float angle) const noexcept
 {
     const int orientation = angleToOrientation(angle);
     return m_data.AngleSounds[orientation % m_data.AngleSounds.size()];
@@ -498,7 +498,7 @@ const genie::GraphicAngleSound &Graphic::soundForAngle(float angle) const noexce
 
 
 
-float Graphic::orientationToAngle(float orientation) const noexcept
+float Sprite::orientationToAngle(float orientation) const noexcept
 {
     float angle = 2. * M_PI * orientation / m_data.AngleCount;
     angle = fmod(- angle - M_PI_2, 2*M_PI);
@@ -510,18 +510,18 @@ float Graphic::orientationToAngle(float orientation) const noexcept
     return angle;
 }
 
-const genie::SlpFramePtr &Graphic::getSlpFrame(uint32_t frame_num) const noexcept
+const genie::SlpFramePtr &Sprite::getSlpFrame(uint32_t frame_num) const noexcept
 {
     return slp_->getFrame(frame_num);
 
 }
 
-const genie::SlpFramePtr &Graphic::getFrame(uint32_t frame_num, float angle) const noexcept
+const genie::SlpFramePtr &Sprite::getFrame(uint32_t frame_num, float angle) const noexcept
 {
     return slp_->getFrame(calcFrameInfo(frame_num, angle).frameNum);
 }
 
-Graphic::FrameInfo Graphic::calcFrameInfo(uint32_t num, float angle) const noexcept
+Sprite::FrameInfo Sprite::calcFrameInfo(uint32_t num, float angle) const noexcept
 {
     FrameInfo ret;
 

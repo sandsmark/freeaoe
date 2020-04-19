@@ -45,8 +45,8 @@ class AttackOrArmor;
 struct Building;
 struct Player;
 
-class Graphic;
-using GraphicPtr = std::shared_ptr<Graphic>;
+class Sprite;
+using SpritePtr = std::shared_ptr<Sprite>;
 
 struct Unit : public Entity
 {
@@ -203,7 +203,7 @@ protected:
     void updateGraphic();
 
     const genie::Unit *m_data = nullptr;
-    GraphicPtr movingGraphics;
+    SpritePtr movingGraphics;
 
     float m_creationProgress = 0.f;
 

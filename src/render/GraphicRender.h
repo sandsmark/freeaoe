@@ -23,14 +23,11 @@
 
 #include <memory>
 
-class Graphic;
-using GraphicPtr = std::shared_ptr<Graphic>;
+class Sprite;
+using SpritePtr = std::shared_ptr<Sprite>;
 
 class GraphicRender;
 class IRenderTarget;
-
-class Graphic;
-typedef std::shared_ptr<Graphic> GraphicPtr;
 
 enum class RenderType {
     Shadow,
@@ -87,12 +84,12 @@ public:
     void setPlayerColor(int playerColor) noexcept;
     void setCivId(int civId) noexcept { m_civId = civId; }
 
-    void setDamageOverlay(const int graphicId) noexcept;
+    void setDamageOverlay(const int spriteId) noexcept;
 
-    bool setGraphic(const int &graphicId) noexcept;
-    bool setGraphic(const GraphicPtr &graphic) noexcept;
-    inline const GraphicPtr &graphic() const noexcept { return m_graphic; }
-    int graphicId() const noexcept;
+    bool setSprite(const int &spriteId) noexcept;
+    bool setSprite(const SpritePtr &sprite) noexcept;
+    inline const SpritePtr &sprite() const noexcept { return m_sprite; }
+    int spriteId() const noexcept;
 
     ScreenRect rect() const noexcept;
     bool checkClick(const ScreenPos &pos) const noexcept;
@@ -128,7 +125,7 @@ private:
 
     int m_currentFrame = 0;
     float m_angle = 0;
-    GraphicPtr m_graphic;
+    SpritePtr m_sprite;
 
     std::unique_ptr<GraphicRender> m_damageOverlay;
 

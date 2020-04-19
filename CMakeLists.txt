@@ -175,7 +175,7 @@ set(GLOBAL_SRC
 
 set(RESOURCE_SRC
     src/resource/DataManager.cpp
-    src/resource/Graphic.cpp
+    src/resource/Sprite.cpp
     src/resource/LanguageManager.cpp
     src/resource/Resource.cpp
     src/resource/AssetManager.cpp

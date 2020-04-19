@@ -20,7 +20,7 @@
 #include "mechanics/Player.h"
 #include "mechanics/UnitManager.h"
 #include "resource/AssetManager.h"
-#include "resource/Graphic.h"
+#include "resource/Sprite.h"
 #include "resource/LanguageManager.h"
 #include "render/GraphicRender.h"
 
@@ -39,7 +39,7 @@ Missile::Missile(const genie::Unit &data, const Unit::Ptr &sourceUnit, const Map
     sourceUnit->activeMissiles++;
     DBG << "Firing at" << target;
     defaultGraphics = AssetManager::Inst()->getGraphic(data.StandingGraphic.first);
-    m_renderer->setGraphic(defaultGraphics);
+    m_renderer->setSprite(defaultGraphics);
 }
 
 Missile::~Missile()
@@ -267,7 +267,7 @@ bool Missile::isExploding() const noexcept
 void Missile::die()
 {
     m_isFlying = false;
-    m_renderer->setGraphic(m_data.DyingGraphic);
+    m_renderer->setSprite(m_data.DyingGraphic);
 
     Player::Ptr player = m_player.lock();
     if (player && m_data.DyingSound != -1) {

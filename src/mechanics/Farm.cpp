@@ -16,7 +16,7 @@
 #include "core/ResourceMap.h"
 #include "core/Utility.h"
 #include "resource/AssetManager.h"
-#include "resource/Graphic.h"
+#include "resource/Sprite.h"
 #include "render/IRenderTarget.h"
 
 class UnitManager;
@@ -26,7 +26,7 @@ Farm::Farm(const genie::Unit &data_, const std::shared_ptr<Player> &player_, Uni
     Building(data_, player_, unitManager),
     m_farmRenderer(Size(data_.Size))
 {
-    if (!m_farmRenderer.setGraphic(defaultGraphics)) {
+    if (!m_farmRenderer.setSprite(defaultGraphics)) {
         WARN << "Failed to set graphic";
     }
 }
@@ -115,7 +115,7 @@ void Farm::setTerrain(const Farm::TerrainTypes terrainToSet) noexcept
 FarmRender::FarmRender(const Size &size) :
     m_size(size)
 {
-    genie::SlpFilePtr slpFile = AssetManager::Inst()->getSlp(graphicId);
+    genie::SlpFilePtr slpFile = AssetManager::Inst()->getSlp(spriteId);
     if (!slpFile) {
         WARN << "failed to get slp for farm";
         return;
@@ -137,13 +137,13 @@ void FarmRender::render(IRenderTarget &renderTarget, const ScreenPos screenPos, 
     Drawable::Image::Ptr texture;
     if (pass == RenderType::ConstructAvailable) {
         if (!m_availableTexture) {
-            m_availableTexture = Graphic::slpFrameToImage(renderTarget, m_frame, 0, ImageType::Construction);
+            m_availableTexture = Sprite::slpFrameToImage(renderTarget, m_frame, 0, ImageType::Construction);
         }
 
         texture = m_availableTexture;
     } else if (pass == RenderType::ConstructUnavailable) {
         if (!m_unavailableTexture) {
-            m_unavailableTexture = Graphic::slpFrameToImage(renderTarget, m_frame, 0, ImageType::ConstructionUnavailable);
+            m_unavailableTexture = Sprite::slpFrameToImage(renderTarget, m_frame, 0, ImageType::ConstructionUnavailable);
         }
         texture = m_unavailableTexture;
     } else {

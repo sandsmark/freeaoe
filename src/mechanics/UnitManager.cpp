@@ -34,21 +34,12 @@
 #include "core/Utility.h"
 #include "global/EventManager.h"
 #include "mechanics/Player.h"
-#include "render/SfmlRenderTarget.h"
+#include "resource/Sprite.h"
 #include "Map.h"
 
 #include <genie/Types.h>
 #include <genie/dat/Unit.h>
 #include <genie/dat/unit/Action.h>
-
-#include <SFML/Graphics/BlendMode.hpp>
-#include <SFML/Graphics/CircleShape.hpp>
-#include <SFML/Graphics/Color.hpp>
-#include <SFML/Graphics/RectangleShape.hpp>
-#include <SFML/Graphics/RenderTarget.hpp>
-#include <SFML/Graphics/Sprite.hpp>
-#include <SFML/System/Vector2.hpp>
-#include <SFML/Graphics/RenderTexture.hpp>
 
 #include <algorithm>
 #include <utility>
@@ -601,7 +592,7 @@ void UnitManager::startPlaceBuilding(const int unitId, const std::shared_ptr<Pla
         toPlace.graphic = std::make_shared<FarmRender>(Size(toPlace.data->Size));
     } else {
         toPlace.graphic = std::make_shared<GraphicRender>();
-        toPlace.graphic->setGraphic(toPlace.data->StandingGraphic.first);
+        toPlace.graphic->setSprite(toPlace.data->StandingGraphic.first);
     }
 
     m_buildingsToPlace.push_back(std::move(toPlace));
@@ -732,8 +723,8 @@ void UnitManager::placeBuilding(const UnplacedBuilding &building)
     add(buildingToPlace, building.position);
     buildingToPlace->setCreationProgress(0);
     DBG << building.orientation;
-    if (building.graphic->graphic()) {
-        unit->setAngle(building.graphic->graphic()->orientationToAngle(building.orientation));
+    if (building.graphic->sprite()) {
+        unit->setAngle(building.graphic->sprite()->orientationToAngle(building.orientation));
     } else {
         WARN << "No graphic set for" << buildingToPlace->debugName;
     }
