@@ -464,14 +464,14 @@ void UnitInfoPanel::updateSelectedUnitButtons()
         }
         Button button;
         if (unit->data()->Type == genie::Unit::BuildingType) {
-            if (iconId > m_buildingIcons.size()) {
+            if (iconId >= m_buildingIcons.size()) {
                 WARN << "out of bounds building icon" << iconId;
                 continue;
             }
 
             button.sprite = m_buildingIcons[iconId];
         } else {
-            if (iconId > m_unitIcons.size()) {
+            if (iconId >= m_unitIcons.size()) {
                 WARN << "out of bounds unit icon" << iconId;
                 continue;
             }
