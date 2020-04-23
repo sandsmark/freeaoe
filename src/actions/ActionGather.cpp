@@ -75,8 +75,6 @@ IAction::UpdateResult ActionGather::update(Time time)
         }
 
         return maybeDropOff(unit);
-
-        return UpdateResult::Completed;
     }
 
 

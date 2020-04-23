@@ -26,7 +26,7 @@ struct Building : public Unit
     Building(const genie::Unit &data_, const std::shared_ptr<Player> &player, UnitManager &unitManager);
     ~Building();
 
-    int garrisonedUnits = 0;
+    std::vector<std::weak_ptr<Unit>> garrisonedUnits;
     int constructors = 0;
 
     bool enqueueProduceUnit(const genie::Unit *data) noexcept;

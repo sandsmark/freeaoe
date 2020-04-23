@@ -207,6 +207,7 @@ set(ACTIONS_SRC
     src/actions/ActionGather.cpp
     src/actions/ActionMove.cpp
     src/actions/ActionFly.cpp
+    src/actions/ActionGarrison.cpp
     )
 
 set(RENDER_SRC

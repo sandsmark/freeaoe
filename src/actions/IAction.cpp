@@ -27,6 +27,7 @@
 #include "ActionBuild.h"
 #include "ActionGather.h"
 #include "ActionMove.h"
+#include "ActionGarrison.h"
 #include "core/Logger.h"
 #include "global/EventManager.h"
 #include "mechanics/Player.h"
@@ -56,7 +57,8 @@ void IAction::assignTask(const Task &task, const std::shared_ptr<Unit> &unit, co
             return;
         }
 
-        if (assignType == AssignType::Now) {
+        // need to check this in each action because some actions are okay with no target, and others not
+        if (assignType == AssignType::Replace) {
             unit->actions.clearActionQueue();
         }
 
@@ -80,7 +82,7 @@ void IAction::assignTask(const Task &task, const std::shared_ptr<Unit> &unit, co
             DBG << "Can't gather from nothing";
             return;
         }
-        if (assignType == AssignType::Now) {
+        if (assignType == AssignType::Replace) {
             unit->actions.clearActionQueue();
         }
 
@@ -95,7 +97,7 @@ void IAction::assignTask(const Task &task, const std::shared_ptr<Unit> &unit, co
             DBG << "attacking" << target->debugName;
         }
 
-        if (assignType == AssignType::Now) {
+        if (assignType == AssignType::Replace) {
             unit->actions.clearActionQueue();
         }
 
@@ -104,7 +106,19 @@ void IAction::assignTask(const Task &task, const std::shared_ptr<Unit> &unit, co
         unit->actions.queueAction(combatAction);
         break;
     }
+    case genie::ActionType::Garrison: {
+        ActionPtr action = std::make_shared<ActionGarrison>(unit, task);
+
+        if (assignType == AssignType::Replace) {
+            unit->actions.clearActionQueue();
+        }
+
+        unit->actions.queueAction(action);
+
+        break;
+    }
     default:
+        WARN << "Unhandled action type" << task.data->actionTypeName();
         return;
     }
 

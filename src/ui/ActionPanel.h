@@ -318,155 +318,85 @@ private:
     bool m_buttonsDirty = true;
 };
 
-inline std::ostream &operator <<(std::ostream &os, const ActionPanel::Command &cmd) {
+inline LogPrinter &operator <<(LogPrinter &os, const ActionPanel::Command &cmd)
+{
     os << "ActionPanel::Command(" << int(cmd);
-//    switch (cmd) {
-//        case Cancel:
-//            os << "Cancel"; break;
-//        case AbortPatrol:
-//            os << "AbortPatrol"; break;
-//        case Ungarrison:
-//            os << "Ungarrison"; break;
-//        case Stop:
-//            os << "Stop"; break;
-//        case Group:
-//            os << "Group"; break;
-//        case Ungroup:
-//            os << "Ungroup"; break;
-//        case Patrol:
-//            os << "Patrol"; break;
-//        case Guard:
-//            os << "Guard"; break;
-//        case Follow:
-//            os << "Follow"; break;
-//        case Aggressive:
-//            os << "Aggressive"; break;
-//        case Defensive:
-//            os << "Defensive"; break;
-//        case StandGround:
-//            os << "StandGround"; break;
-//        case Pack:
-//            os << "Pack"; break;
-//        case Unpack:
-//            os << "Unpacl"; break;
-//        case Convert:
-//            os << "Convert"; break;
-//        case Heal:
-//            os << "Heal"; break;
-//        case PickUpRelic:
-//            os << "PickUpRelic"; break;
-//        case Disembark:
-//            os << "Disembark"; break;
-//        case CollectWood:
-//            os << "CollectWood"; break;
-//        case CollectFood:
-//            os << "CollectFood"; break;
-//        case CollectGold:
-//            os << "CollectGold"; break;
-//        case CollectStone:
-//            os << "CollectStone"; break;
-//        case BuyFood:
-//            os << "BuyFood"; break;
-//        case BuyStone:
-//            os << "BuyStone"; break;
-//        case SellFood:
-//            os << "SellFood"; break;
-//        case SellWood:
-//            os << "SellWood"; break;
-//        case SellStone:
-//            os << "SellStone"; break;
-//        case Trade:
-//            os << "Trade"; break;
-//        case Repair:
-//            os << "Repair"; break;
-//        case LootMaybe:
-//            os << "LootMaybe"; break;
-//        case BuildCivilian:
-//            os << "BuildCivilian"; break;
-//        case BuildMilitary:
-//            os << "BuildMilitary"; break;
-//        case NextPage:
-//            os << "NextPage"; break;
-//        case BuildFishTrap:
-//            os << "BuildFishTrap"; break;
-//        case SignalFlare:
-//            os << "SignalFlare"; break;
-//        case SquareFormation:
-//            os << "SquareFormation"; break;
-//        case RotateFormationRight:
-//            os << "RotateFormationRight"; break;
-//        case RotateFormationLeft:
-//            os << "RotateFormationLeft"; break;
-//        case MoveFormationFrontToBack:
-//            os << "MoveFormationFrontToBack"; break;
-//        case DisbandFormation:
-//            os << "DisbandFormation"; break;
-//        case NormalFormation:
-//            os << "NormalFormation"; break;
-//        case AttackWithSword:
-//            os << "AttackWithSword"; break;
-//        case JumpOverWall:
-//            os << "JumpOverWall"; break;
-//        case BoxFormation:
-//            os << "BoxFormation"; break;
-//        case LooseFormation:
-//            os << "LooseFormation"; break;
-//        case SetRallyPoint:
-//            os << "SetRallyPoint"; break;
-//        case RemoveRallyPoint:
-//            os << "RemoveRallyPoint"; break;
-//        case OpenGate:
-//            os << "OpenGate"; break;
-//        case CloseGate:
-//            os << "CloseGate"; break;
-//        case RingTownBell:
-//            os << "RingTownBell"; break;
-//        case SwordInStone:
-//            os << "SwordInStone"; break;
-//        case StandGroundEnabled:
-//            os << "StandGroundEnabled"; break;
-//        case DefensiveEnabled:
-//            os << "DefensiveEnabled"; break;
-//        case AggressiveEnabled:
-//            os << "AggressiveEnabled"; break;
-//        case SwordInStoneEnabled:
-//            os << "SwordInStoneEnabled"; break;
-//        case PatrolEnabled:
-//            os << "PatrolEnabled"; break;
-//        case GuardEnabled:
-//            os << "GuardEnabled"; break;
-//        case FollowEnabled:
-//            os << "FollowEnabled"; break;
-//        case EyeThing:
-//            os << "EyeThing"; break;
-//        case Kill:
-//            os << "Kill"; break;
-//        case AttackGround:
-//            os << "AttackGround"; break;
-//        case AbortTownBell:
-//            os << "AbortTownBell"; break;
-//        case FlankFormation:
-//            os << "FlankFormation"; break;
-//        case SpreadOutFormation:
-//            os << "SpreadOutFormation"; break;
-//        case GarrisonCivilian:
-//            os << "GarrisonCivilian"; break;
-//        case NormalFormationEnabled:
-//            os << "NormalFormationEnabled"; break;
-//        case BoxFormationEnabled:
-//            os << "BoxFormationEnabled"; break;
-//        case FlankFormationEnabled:
-//            os << "FlankFormationEnabled"; break;
-//        case SpreadOutFormationEnabled:
-//            os << "SpreadOutFormationEnabled"; break;
-//        case IconCount:
-//            os << "IconCount"; break;
-//        case PreviousPage:
-//            os << "PreviousPage"; break;
-//        default:
-//            os << "Invalid";
-//            break;
-//    }
+    switch (cmd) {
+    case ActionPanel::Command::Cancel: os << "Cancel"; break;
+    case ActionPanel::Command::AbortPatrol: os << "AbortPatrol"; break;
+    case ActionPanel::Command::Ungarrison: os << "Ungarrison"; break;
+    case ActionPanel::Command::Stop: os << "Stop"; break;
+    case ActionPanel::Command::Group: os << "Group"; break;
+    case ActionPanel::Command::Ungroup: os << "Ungroup"; break;
+    case ActionPanel::Command::Patrol: os << "Patrol"; break;
+    case ActionPanel::Command::Guard: os << "Guard"; break;
+    case ActionPanel::Command::Follow: os << "Follow"; break;
+    case ActionPanel::Command::Aggressive: os << "Aggressive"; break;
+    case ActionPanel::Command::Defensive: os << "Defensive"; break;
+    case ActionPanel::Command::StandGround: os << "StandGround"; break;
+    case ActionPanel::Command::Pack: os << "Pack"; break;
+    case ActionPanel::Command::Unpack: os << "Unpack"; break;
+    case ActionPanel::Command::Convert: os << "Convert"; break;
+    case ActionPanel::Command::Heal: os << "Heal"; break;
+    case ActionPanel::Command::PickUpRelic: os << "PickUpRelic"; break;
+    case ActionPanel::Command::Disembark: os << "Disembark"; break;
+    case ActionPanel::Command::CollectWood: os << "CollectWood"; break;
+    case ActionPanel::Command::CollectFood: os << "CollectFood"; break;
+    case ActionPanel::Command::CollectGold: os << "CollectGold"; break;
+    case ActionPanel::Command::CollectStone: os << "CollectStone"; break;
+    case ActionPanel::Command::BuyFood: os << "BuyFood"; break;
+    case ActionPanel::Command::BuyStone: os << "BuyStone"; break;
+    case ActionPanel::Command::SellFood: os << "SellFood"; break;
+    case ActionPanel::Command::SellWood: os << "SellWood"; break;
+    case ActionPanel::Command::SellStone: os << "SellStone"; break;
+    case ActionPanel::Command::Trade: os << "Trade"; break;
+    case ActionPanel::Command::Repair: os << "Repair"; break;
+    case ActionPanel::Command::LootMaybe: os << "LootMaybe"; break;
+    case ActionPanel::Command::BuildCivilian: os << "BuildCivilian"; break;
+    case ActionPanel::Command::BuildMilitary: os << "BuildMilitary"; break;
+    case ActionPanel::Command::NextPage: os << "NextPage"; break;
+    case ActionPanel::Command::BuildFishTrap: os << "BuildFishTrap"; break;
+    case ActionPanel::Command::SignalFlare: os << "SignalFlare"; break;
+    case ActionPanel::Command::SquareFormation: os << "SquareFormation"; break;
+    case ActionPanel::Command::RotateFormationRight: os << "RotateFormationRight"; break;
+    case ActionPanel::Command::RotateFormationLeft: os << "RotateFormationLeft"; break;
+    case ActionPanel::Command::MoveFormationFrontToBack: os << "MoveFormationFrontToBack"; break;
+    case ActionPanel::Command::DisbandFormation: os << "DisbandFormation"; break;
+    case ActionPanel::Command::LineFormation: os << "LineFormation"; break;
+    case ActionPanel::Command::AttackWithSword: os << "AttackWithSword"; break;
+    case ActionPanel::Command::JumpOverWall: os << "JumpOverWall"; break;
+    case ActionPanel::Command::BoxFormation: os << "BoxFormation"; break;
+    case ActionPanel::Command::HordeFormation: os << "HordeFormation"; break;
+    case ActionPanel::Command::SetRallyPoint: os << "SetRallyPoint"; break;
+    case ActionPanel::Command::RemoveRallyPoint: os << "RemoveRallyPoint"; break;
+    case ActionPanel::Command::CloseGate: os << "CloseGate"; break;
+    case ActionPanel::Command::OpenGate: os << "OpenGate"; break;
+    case ActionPanel::Command::RingTownBell: os << "RingTownBell"; break;
+    case ActionPanel::Command::NoAttack: os << "NoAttack"; break;
+    case ActionPanel::Command::StandGroundEnabled: os << "StandGroundEnabled"; break;
+    case ActionPanel::Command::DefensiveEnabled: os << "DefensiveEnabled"; break;
+    case ActionPanel::Command::AggressiveEnabled: os << "AggressiveEnabled"; break;
+    case ActionPanel::Command::NoAttackEnabled: os << "NoAttackEnabled"; break;
+    case ActionPanel::Command::PatrolEnabled: os << "PatrolEnabled"; break;
+    case ActionPanel::Command::GuardEnabled: os << "GuardEnabled"; break;
+    case ActionPanel::Command::FollowEnabled: os << "FollowEnabled"; break;
+    case ActionPanel::Command::ResearchSpies: os << "ResearchSpies"; break;
+    case ActionPanel::Command::Kill: os << "Kill"; break;
+    case ActionPanel::Command::AttackGround: os << "AttackGround"; break;
+    case ActionPanel::Command::AbortTownBell: os << "AbortTownBell"; break;
+    case ActionPanel::Command::FlankFormation: os << "FlankFormation"; break;
+    case ActionPanel::Command::SpreadOutFormation: os << "SpreadOutFormation"; break;
+    case ActionPanel::Command::UngarrisonCivilian: os << "UngarrisonCivilian"; break;
+    case ActionPanel::Command::NormalFormationEnabled: os << "NormalFormationEnabled"; break;
+    case ActionPanel::Command::BoxFormationEnabled: os << "BoxFormationEnabled"; break;
+    case ActionPanel::Command::FlankFormationEnabled: os << "FlankFormationEnabled"; break;
+    case ActionPanel::Command::SpreadOutFormationEnabled: os << "SpreadOutFormationEnabled"; break;
+    case ActionPanel::Command::IconCount: os << "IconCount"; break;
+    case ActionPanel::Command::PreviousPage: os << "PreviousPage"; break;
+    case ActionPanel::Command::Garrison: os << "Garrison"; break;
+    case ActionPanel::Command::Undefined: os << "Undefined"; break;
+    default: os << "Invalid"; break;
+    }
     os << ")";
     return os;
 }

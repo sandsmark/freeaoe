@@ -112,7 +112,7 @@ bool UnitManager::update(Time time)
             if (!task.data) {
                 continue;
             }
-            IAction::assignTask(task, unit, IAction::AssignType::Now);
+            IAction::assignTask(task, unit, IAction::AssignType::Replace);
         }
     }
 
@@ -246,9 +246,31 @@ bool UnitManager::onLeftClick(const ScreenPos &screenPos, const CameraPtr &camer
         }
         break;
     }
+    case State::SelectingGarrisonTarget: {
+        DBG << "Selecting garrison target";
+        Unit::Ptr targetUnit = unitAt(screenPos, camera);
+        if (!targetUnit || !humanPlayer->isAllied(targetUnit->playerId())) {
+            WARN << "No valid unit at selected position";
+            break;
+        }
+        for (const Unit::Ptr &unit : m_selectedUnits) {
+            if (unit->playerId() != humanPlayer->playerId) {
+                continue;
+            }
+
+            Task garrison = unit->actions.findAnyTask(genie::ActionType::Garrison, targetUnit->data()->ID);
+            if (!garrison.data) {
+                continue;
+            }
+            garrison.target = targetUnit;
+            IAction::assignTask(garrison, unit, IAction::AssignType::Replace);
+        }
+        break;
+    }
     case State::Default:
         return false;
     default:
+        WARN << "Unhandled state" << m_state;
         break;
     }
 
@@ -287,7 +309,7 @@ void UnitManager::onRightClick(const ScreenPos &screenPos, const CameraPtr &came
 
         Unit::Ptr target = unitAt(screenPos, camera);
         task.target = target;
-        IAction::assignTask(task, unit, IAction::AssignType::Now);
+        IAction::assignTask(task, unit, IAction::AssignType::Replace);
         if (target) {
             target->targetBlinkTimeLeft = 3000; // 3s
         }
@@ -450,6 +472,10 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
     const bool isClick = selectionRect.width < 10 && selectionRect.height < 10;
 
     for (const Unit::Ptr &unit : m_units) {
+        if (!unit->isVisible) {
+            continue;
+        }
+
         const ScreenPos absoluteUnitPosition = camera->absoluteScreenPos(unit->position());
         if (!selectionRect.overlaps(unit->rect() + absoluteUnitPosition)) {
             continue;
@@ -695,6 +721,11 @@ void UnitManager::selectAttackTarget()
     m_state = State::SelectingAttackTarget;
 }
 
+void UnitManager::selectGarrisonTarget()
+{
+    m_state = State::SelectingGarrisonTarget;
+}
+
 void UnitManager::placeBuilding(const UnplacedBuilding &building)
 {
     if (!building.canPlace) {
@@ -752,7 +783,7 @@ void UnitManager::placeBuilding(const UnplacedBuilding &building)
         }
 
         task.target = buildingToPlace;
-        IAction::assignTask(task, unit, IAction::AssignType::Now);
+        IAction::assignTask(task, unit, IAction::AssignType::Replace);
     }
 }
 

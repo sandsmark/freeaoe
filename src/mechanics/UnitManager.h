@@ -102,6 +102,7 @@ public:
         PlacingBuilding,
         PlacingWall,
         SelectingAttackTarget,
+        SelectingGarrisonTarget,
         Default
     };
 
@@ -149,6 +150,7 @@ public:
     const Task defaultActionAt(const ScreenPos &pos, const CameraPtr &camera) const noexcept;
     void moveUnitTo(const Unit::Ptr &unit, const MapPos &targetPos);
     void selectAttackTarget();
+    void selectGarrisonTarget();
 
     State state() const { return m_state; }
 
@@ -200,6 +202,7 @@ inline LogPrinter operator <<(LogPrinter os, const UnitManager::State state)
     case UnitManager::State::PlacingWall: os << "PlacingWall"; break;
     case UnitManager::State::PlacingBuilding: os << "PlacingBuilding"; break;
     case UnitManager::State::SelectingAttackTarget: os << "SelectingAttackTarget"; break;
+    case UnitManager::State::SelectingGarrisonTarget: os << "SelectingGarrisonTarget"; break;
     }
 
     os << separator;

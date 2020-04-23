@@ -317,7 +317,7 @@ void UnitInfoPanel::drawSingleUnit()
         StatItem &item = m_statItems[StatItem::GarrisonCapacity];
         m_renderTarget->draw(item.icon, ScreenPos(pos));
         item.text->position = ScreenPos(rightX, pos.y);
-        item.text->string = std::to_string(building->garrisonedUnits) + '/' + std::to_string(unit->data()->GarrisonCapacity);
+        item.text->string = std::to_string(building->garrisonedUnits.size()) + '/' + std::to_string(unit->data()->GarrisonCapacity);
         m_renderTarget->draw(item.text);
         pos.y += item.icon->size.height + 5;
     }

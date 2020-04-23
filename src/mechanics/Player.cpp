@@ -300,7 +300,7 @@ void Player::removeAlliedPlayer(int playerId)
 bool Player::isAllied(int playerId)
 {
     // STL sucks
-    return m_alliedPlayers.count(playerId) > 0;
+    return m_alliedPlayers.count(playerId) > 0 || playerId == this->playerId; // yes, we ally ourselves pls
 }
 
 void Player::setAvailableResource(const genie::ResourceType type, float newValue)

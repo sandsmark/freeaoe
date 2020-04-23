@@ -36,18 +36,37 @@ bool MouseCursor::setPosition(const ScreenPos &position)
 
 bool MouseCursor::update(const std::shared_ptr<UnitManager> &unitManager)
 {
-    const Task targetAction = unitManager->defaultActionAt(m_position, m_renderTarget->camera());
-    if (!targetAction.data) {
-        return setCursor(MouseCursor::Normal);
-    } else if (targetAction.data->ActionType == genie::ActionType::Combat) {
-        return setCursor(MouseCursor::Attack);
-    } else {
-        return setCursor(MouseCursor::Action);
+    switch(unitManager->state()) {
+    case UnitManager::State::Default: {
+        const Task targetAction = unitManager->defaultActionAt(m_position, m_renderTarget->camera());
+        if (!targetAction.data) {
+            return setCursor(MouseCursor::Normal);
+        } else if (targetAction.data->ActionType == genie::ActionType::Combat) {
+            return setCursor(MouseCursor::Attack);
+        } else {
+            return setCursor(MouseCursor::Action);
+        }
+        break;
     }
+    case UnitManager::State::SelectingAttackTarget: {
+        return setCursor(MouseCursor::Axe); // idk
+    }
+    case UnitManager::State::PlacingBuilding:
+    case UnitManager::State::PlacingWall:
+        return setCursor(MouseCursor::Invalid); // IDK
+    case UnitManager::State::SelectingGarrisonTarget:
+        return setCursor(MouseCursor::Garrison);
+    }
+
+    WARN << "Unhandled state" << unitManager->state();
+    return false;
 }
 
 void MouseCursor::render()
 {
+    if (m_currentType == Invalid) {
+        return;
+    }
     m_cursor_pos_text.setString(std::to_string(m_position.x) + ", " + std::to_string(m_position.y));
     m_cursor_pos_text.setCharacterSize(11);
     m_cursor_pos_text.setPosition(ScreenPos(m_position));

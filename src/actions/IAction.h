@@ -63,7 +63,8 @@ public:
         Gather,
         DropOff,
         Attack,
-        Fly
+        Fly,
+        Garrison
     };
 
     enum UnitState {
@@ -83,7 +84,7 @@ public:
     };
 
     enum class AssignType {
-        Now,
+        Replace,
         Queue
     };
 
@@ -146,6 +147,7 @@ inline LogPrinter operator <<(LogPrinter os, const IAction::Type actionType)
     case IAction::Type::DropOff: os << "DropOff"; break;
     case IAction::Type::Attack: os << "Attack"; break;
     case IAction::Type::Fly: os << "Fly"; break;
+    case IAction::Type::Garrison: os << "Garrison"; break;
     }
 
     os << separator;

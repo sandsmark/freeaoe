@@ -145,6 +145,8 @@ struct Unit : public Entity
     bool selected = false;
     std::vector<Annex> annexes;
 
+    std::weak_ptr<Building> garrisonedIn;
+
     ResourceMap resources;
 
     virtual ScreenRect rect() const noexcept;

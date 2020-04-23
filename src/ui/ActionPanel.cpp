@@ -669,7 +669,12 @@ void ActionPanel::handleButtonClick(const ActionPanel::InterfaceButton &button)
         case Command::AttackGround:
             m_unitManager->selectAttackTarget();
             break;
+        case Command::Garrison: {
+            m_unitManager->selectGarrisonTarget();
+            break;
+        }
         default:
+            WARN << "Unhandled action" << button.action;
             break;
         }
     }

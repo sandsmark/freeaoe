@@ -274,7 +274,7 @@ bool ai::Actions::BuildBuilding::tryBuild(Player *player, int unitId)
     buildingToPlace->setCreationProgress(0);
 
     task.target = buildingToPlace;
-    IAction::assignTask(task, ::Unit::fromEntity(builder->shared_from_this()), IAction::AssignType::Now); // TODO HACKKC fixme proper shared_ptr everywhere pls todo
+    IAction::assignTask(task, ::Unit::fromEntity(builder->shared_from_this()), IAction::AssignType::Replace); // TODO HACKKC fixme proper shared_ptr everywhere pls todo
 
     return true;
 }

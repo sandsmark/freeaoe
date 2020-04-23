@@ -88,7 +88,7 @@ TODO (this is probably going to get outdated)
  - Proper victory screen.
  - Unit grouping/formations.
  - Patrolling.
- - Garrisoning.
+ - Ungarrisoning.
  - Campaign cinematics (mainly just parse the .mm files).
  - Random map RMS script parsing and generating.
  - Performance (especially the path finding).
@@ -128,6 +128,7 @@ Compared to other reimplementations as much as possible is fetched from the data
     * Decaying corpses.
     * Visibility tracking.
     * Default actions on right click.
+    * Garrisoning.
  * Buildings:
     * Construction of buildings.
     * Training units.
