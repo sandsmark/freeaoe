@@ -66,6 +66,43 @@ you manage to get it to build please open a PR. It seems like Apple ships a
 really outdated version of Clang that doesn't support modern C++.
 
 
+Legal
+-----
+Preface: I am not a lawyer (nor a native english speaker), this is just based
+on my interpretation of local laws to show that everything is done in good
+faith. If you believe I am infringing on any of your rights please open an
+issue and I will seek to rectify it as soon as possible.
+
+
+I am in no way affiliated with Microsoft, Linus Torvalds nor anyone else who own
+any trademarks that may appear here. Any display of trademarks here is purely
+to indicate the purpose of this project and in accordance with good business
+practice, as permitted by relevant laws.
+
+There are no copyrighted works distributed here, nor works derived from
+copyrighted works, except works with a free and open source license permitting
+distribution.
+
+*In no part of the creation of this is reverse engineering involved*. All
+insight used is based on publicly available knowledge and playing of the game.
+
+My right to gather insight into the functioning and principles of individiual
+parts of a copyrighted computer program by means of execution, observation,
+investigation and testing is [protected by norwegian law](https://lovdata.no/lov/2018-06-15-40/§41).
+
+Although I also have some rights to reverse engineer works I have the right to
+use it's more fun to figure out how to do something myself. In addition I'm
+not familiar enough with the laws governing reverse engineering that Github is
+subject to, and I don't want to be nuked from Github.
+
+
+In general I work on this this because it's fun to create a strategy game, I
+already paid for and own a license to the games. I do not receive nor do I
+intend to receive any form of compensation for this. I have no incentive or
+intention to do anything that would infringe on anyones copyright, trademarks
+or other rights.
+
+
 Misc
 ----
 
