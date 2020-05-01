@@ -9,6 +9,7 @@
 #include "mechanics/Map.h"
 #include "GraphicRender.h"
 #include "IRenderTarget.h"
+#include "SfmlRenderTarget.h"
 
 #ifdef DEBUG
 // For debugging pathfinding

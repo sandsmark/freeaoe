@@ -55,6 +55,7 @@ namespace sf {
 class Clock;
 class Event;
 class RenderWindow;
+class Shader;
 }
 
 struct MouseCursor;
@@ -90,8 +91,10 @@ private:
     bool updateUi(const std::shared_ptr<GameState> &state);
 
     std::shared_ptr<sf::RenderWindow> renderWindow_;
+    std::shared_ptr<SfmlRenderTarget> m_windowTarget;
     std::shared_ptr<SfmlRenderTarget> renderTarget_;
     std::unique_ptr<Dialog> m_currentDialog;
+    std::unique_ptr<sf::Shader> m_upscaleShader;
 
     std::unique_ptr<UiScreen> m_mainScreen;
     std::unique_ptr<UnitsRenderer> m_unitsRenderer;

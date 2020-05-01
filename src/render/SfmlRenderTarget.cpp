@@ -295,7 +295,7 @@ void SfmlRenderTarget::draw(const Drawable::Image::Ptr &image, const ScreenPos &
 }
 
 
-std::shared_ptr<IRenderTarget> SfmlRenderTarget::createTextureTarget(const Size &size)
+std::shared_ptr<SfmlRenderTarget> SfmlRenderTarget::createTextureTarget(const Size &size)
 {
     return std::make_shared<SfmlRenderTarget>(size);
 }

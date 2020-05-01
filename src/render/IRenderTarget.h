@@ -31,6 +31,7 @@ class Image;
 class Color;
 struct BlendMode;
 }
+class SfmlRenderTarget;
 
 namespace genie{
 class SlpFrame;
@@ -187,7 +188,7 @@ public:
 
     virtual void draw(const Drawable::Image::Ptr &image, const ScreenPos &position) = 0;
 
-    virtual std::shared_ptr<IRenderTarget> createTextureTarget(const Size &size) = 0;
+    virtual std::shared_ptr<SfmlRenderTarget> createTextureTarget(const Size &size) = 0;
 
     virtual Drawable::Text::Ptr createText() = 0;
     virtual void draw(const Drawable::Text::Ptr &text) = 0;

@@ -11,6 +11,7 @@
 #include "render/Camera.h"
 #include "resource/AssetManager.h"
 #include "resource/DataManager.h"
+#include "render/SfmlRenderTarget.h"
 
 #include <genie/Types.h>
 #include <genie/dat/Terrain.h>

@@ -30,6 +30,7 @@
 #include "resource/AssetManager.h"
 #include "resource/DataManager.h"
 #include "IRenderTarget.h"
+#include "SfmlRenderTarget.h"
 #include "core/Constants.h"
 #include "core/Logger.h"
 #include "core/Utility.h"

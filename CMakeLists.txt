@@ -149,6 +149,7 @@ include_directories(
 add_subdirectory(src/tools/resgen)
 add_resource(FONT_ALEGREYA fonts/Alegreya/Alegreya-Bold.latin)
 add_resource(FONT_BERRYROTUNDA fonts/BerryRotunda/BerryRotunda.ttf)
+add_resource(SHADER_XBRZ_FREESCALE shaders/xBRZFreescale.glsl)
 
 set(AI_SRC
     src/ai/grammar.gen.tab.cpp
@@ -283,6 +284,7 @@ set(ENGINE_SRC
     ${UI_SRC}
     ${FONT_ALEGREYA}
     ${FONT_BERRYROTUNDA}
+    ${SHADER_XBRZ_FREESCALE}
     ${SETTINGS_SRC}
     ${DEBUG_SRC}
     ${EDITOR_SRC}

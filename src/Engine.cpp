@@ -45,6 +45,8 @@
 #include "ui/MouseCursor.h"
 #include "settings/input.h"
 
+#include "shaders/xBRZFreescale.glsl.h"
+
 #include <genie/dat/ResourceUsage.h>
 #include <genie/resource/SlpFile.h>
 #include <genie/resource/UIFile.h>
@@ -54,6 +56,8 @@
 #include <SFML/Graphics/Image.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/Shader.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/System/Sleep.hpp>
 #include <SFML/System/Time.hpp>
@@ -63,6 +67,8 @@
 #include <SFML/Window/Mouse.hpp>
 #include <SFML/Window/VideoMode.hpp>
 #include <SFML/Window/WindowStyle.hpp>
+#include <SFML/Window/WindowStyle.hpp>
+#include <SFML/Graphics/RenderTexture.hpp>
 
 #include <algorithm>
 #include <utility>
@@ -167,7 +173,7 @@ void Engine::start()
 
         if (updated) {
             // Clear screen
-            renderWindow_->clear(sf::Color::Green);
+            renderTarget_->clear(Drawable::Black);
             m_mapRenderer->display();
 
             std::vector<std::weak_ptr<Entity>> visibleEntities;
@@ -197,6 +203,21 @@ void Engine::start()
                 totalFps += 1000. / renderTime;
                 fps_label_.setString("fps: " + std::to_string(1000/renderTime));
             }
+            renderTarget_->m_renderTexture->display();
+            //sf::Sprite sprite;
+            sf::Texture tex = renderTarget_->m_renderTexture->getTexture();
+            //sprite.setTexture(tex);
+            //sprite.setPosition(ScreenPos(0,0));
+            m_upscaleShader->setUniform("Texture", tex);
+            m_upscaleShader->setUniform("TextureSize", sf::Vector2<float>(tex.getSize().x, tex.getSize().y));
+            m_upscaleShader->setUniform("OutputSize", sf::Vector2<float>(renderWindow_->getSize().x, renderWindow_->getSize().y));
+            //renderWindow_->draw(sprite, m_upscaleShader.get());
+            //renderWindow_->draw(sprite);
+            m_windowTarget->setSize(renderWindow_->getSize());
+            //_windowTarget->renderTarget_->draw(sprite);
+            sf::RectangleShape shape;
+            shape.setSize(sf::Vector2<float>(renderWindow_->getSize().x, renderWindow_->getSize().y));
+            m_windowTarget->renderTarget_->draw(shape, m_upscaleShader.get());
 
             // Update the window
             renderWindow_->display();
@@ -508,13 +529,16 @@ Engine::~Engine() { } // NOLINT
 
 bool Engine::setup(const std::shared_ptr<genie::ScnFile> &scenario)
 {
-    renderWindow_ = std::make_unique<sf::RenderWindow>(sf::VideoMode(1280, 1024), "freeaoe", sf::Style::None);
+    //renderWindow_ = std::make_unique<sf::RenderWindow>(sf::VideoMode(1280, 1024), "freeaoe", sf::Style::None);
+    renderWindow_ = std::make_unique<sf::RenderWindow>(sf::VideoMode(1280, 1024), "freeaoe");
     renderWindow_->setFramerateLimit(60);
 
     m_mainScreen->setRenderWindow(renderWindow_);
     m_mainScreen->init();
 
-    renderTarget_ = std::make_shared<SfmlRenderTarget>(*renderWindow_);
+    m_windowTarget = std::make_shared<SfmlRenderTarget>(*renderWindow_);
+    renderTarget_ = m_windowTarget->createTextureTarget(m_windowTarget->getSize());
+    //renderTarget_ = std::make_shared<SfmlRenderTarget>(*renderWindow_);
 
     m_mouseCursor = std::make_unique<MouseCursor>(renderTarget_);
     if (m_mouseCursor->isValid()) {
@@ -571,6 +595,15 @@ bool Engine::setup(const std::shared_ptr<genie::ScnFile> &scenario)
     if (!m_uiOverlay->size.isValid()) {
         WARN << "We don't have a valid UI overlay";
         uiSize = Size(640, 480);
+    }
+    m_upscaleShader = std::make_unique<sf::Shader>();
+    const std::string xbrzShader(reinterpret_cast<const char*>(resource_xBRZFreescale_glsl_data), resource_xBRZFreescale_glsl_size);
+    const bool shaderLoaded = m_upscaleShader->loadFromMemory(
+            "#define VERTEX\n#define PARAMETER_UNIFORM\n" + xbrzShader,
+            "#define FRAGMENT\n#define PARAMETER_UNIFORM\n" + xbrzShader
+            );
+    if (!shaderLoaded) {
+        WARN << "Failed to load shader";
     }
 
     renderWindow_->setSize(uiSize);
