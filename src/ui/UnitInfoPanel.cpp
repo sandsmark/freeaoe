@@ -415,6 +415,42 @@ void UnitInfoPanel::drawSingleUnit()
 
         pos.y += item.icon->size.height + 5;
     }
+
+    if (!building) {
+        return;
+    }
+
+    for (const std::weak_ptr<Unit> &garrisonedWeak : building->garrisonedUnits) {
+        pos = rect().topLeft() + ScreenPos(100, 2); // 100 pulled out of where the sun doesn't shine
+        Unit::Ptr garrisoned = garrisonedWeak.lock();
+        if (!garrisoned) {
+            WARN << "Expired unit garrisoned in" << unit->debugName;
+            continue;
+        }
+
+        const int16_t iconId = garrisoned->data()->IconID;
+        if (iconId < 0) {
+            WARN << "invalid unit id";
+            continue;
+        }
+
+        if (garrisoned->data()->Type == genie::Unit::BuildingType) {
+            if (iconId >= m_buildingIcons.size()) {
+                WARN << "out of bounds building icon" << iconId;
+                continue;
+            }
+
+//            button.sprite = m_buildingIcons[iconId];
+        } else {
+            if (iconId >= m_unitIcons.size()) {
+                WARN << "out of bounds unit icon" << iconId;
+                continue;
+            }
+
+//            button.sprite = m_unitIcons[iconId];
+        }
+
+    }
 }
 
 void UnitInfoPanel::drawMultipleUnits()
