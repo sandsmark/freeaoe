@@ -329,6 +329,14 @@ struct ScreenPos {
         return (other.x == x && other.y == y);
     }
 
+    inline bool operator!=(const ScreenPos &other) const {
+        return (other.x != x || other.y != y);
+    }
+
+    inline bool operator==(const ScreenPos &other) const {
+        return (other.x == x && other.y == y);
+    }
+
     inline ScreenPos &operator+=(const ScreenPos &other) {
         x += other.x;
         y += other.y;
