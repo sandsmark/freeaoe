@@ -4,6 +4,8 @@
 #include "mechanics/Building.h"
 #include "mechanics/Unit.h"
 
+#include "global/EventManager.h"
+
 #include <genie/dat/Unit.h>
 
 ActionGarrison::ActionGarrison(const std::shared_ptr<Unit> &unit, const Task &task) :
@@ -43,6 +45,8 @@ IAction::UpdateResult ActionGarrison::update(Time /*time*/)
 
     target->garrisonedUnits.push_back(unit);
     unit->garrisonedIn = target;
+
+    EventManager::unitGarrisoned(unit.get(), target.get());
 
     return UpdateResult::Completed;
 }
