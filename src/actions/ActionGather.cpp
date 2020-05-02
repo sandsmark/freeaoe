@@ -145,11 +145,15 @@ std::shared_ptr<Unit> ActionGather::findDropSite(const std::shared_ptr<Unit> &un
     MapPos closestPos = unit->position(); // fallback
     Unit::Ptr closestUnit;
 
-    const int dropUnitId1 = unit->data()->Action.DropSite.first;
-    const int dropUnitId2 = unit->data()->Action.DropSite.second;
-
     for (const Unit::Ptr &other : unit->unitManager().units()) {
-        if (other->data()->ID != dropUnitId1 && other->data()->ID != dropUnitId2) {
+        bool foundSite = false;
+        for (const uint16_t dropUnitId : unit->data()->Action.DropSites) {
+            if (other->data()->ID == dropUnitId) {
+                foundSite = true;
+                break;
+            }
+        }
+        if (!foundSite) {
             continue;
         }
 
