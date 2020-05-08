@@ -27,10 +27,31 @@
 #include <assert.h>
 
 Minimap::Minimap(const IRenderTargetPtr &renderTarget) :
-    m_renderTarget(renderTarget),
-    m_rect(865, 815, 400, 200)
+    m_renderTarget(renderTarget)
 {
+    updateRect(renderTarget->getSize());
+}
 
+bool Minimap::updateRect(const Size &size)
+{
+    if (size == m_windowSize) {
+        return false;
+    }
+
+    if (size.height == 1024) {
+        m_rect = ScreenRect(865, 815, 400, 200);
+    } else if (size.height == 768) {
+        m_rect = ScreenRect(688, 599, 336, 169);
+    } else if (size.height == 600) {
+        m_rect = ScreenRect(510, 465, 267, 134);
+    } else {
+        WARN << "unhandled window size" << size;
+        m_rect = ScreenRect(size.width - 400, size.height - 200, 400, 200);
+    }
+
+    m_windowSize = size;
+
+    return true;
 }
 
 void Minimap::setMap(const std::shared_ptr<Map> &map)
@@ -195,13 +216,15 @@ bool Minimap::update(Time /*time*/)
         m_lastCameraPos = m_renderTarget->camera()->m_target;
     }
 
-    if (!m_map || (!m_unitsUpdated && !m_terrainUpdated)) {
+    const bool rectUpdated = updateRect(m_renderTarget->getSize());
+
+    if (!m_map || (!m_unitsUpdated && !m_terrainUpdated && !rectUpdated)) {
         return false;
     }
 
     const MapRect mapDimensions(0, 0, m_map->columnCount(), m_map->rowCount());
 
-    if (m_terrainUpdated) {
+    if (m_terrainUpdated || rectUpdated) {
         DBG << "redrawing terrain";
         if (!m_terrainTexture ||  m_terrainTexture->getSize() != m_rect.size()) {
             DBG << "recreating terrain";
@@ -260,7 +283,7 @@ bool Minimap::update(Time /*time*/)
         m_terrainUpdated = false;
     }
 
-    if (m_unitsUpdated && m_unitManager) {
+    if ((m_unitsUpdated || rectUpdated) && m_unitManager) {
         TIME_THIS;
 
         if (!m_unitsTexture || m_unitsTexture->getSize() != m_rect.size()) {
@@ -337,7 +360,6 @@ bool Minimap::update(Time /*time*/)
         m_unitsTexture->display();
         m_unitsUpdated = false;
     }
-
     return true;
 }
 

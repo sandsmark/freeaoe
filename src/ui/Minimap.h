@@ -42,6 +42,8 @@ private:
     void updateUnits();
     void updateTerrain();
     void updateCamera();
+    bool updateRect(const Size &windowSize);
+
     Drawable::Color unitColor(const std::shared_ptr<Unit> &unit);
 
     bool m_unitsUpdated = false;
@@ -56,6 +58,8 @@ private:
     ScreenRect m_cameraRect;
     bool m_mousePressed = false;
     std::shared_ptr<VisibilityMap> m_visibilityMap;
+
+    Size m_windowSize;
 
     MinimapMode m_mode = MinimapMode::Diplomatic; // easiest, so sue me
 };
