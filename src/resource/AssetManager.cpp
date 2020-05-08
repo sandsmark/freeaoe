@@ -111,7 +111,14 @@ std::shared_ptr<uint8_t[]> AssetManager::getWavPtr(uint32_t id)
             return wavPtr;
         }
     }
-    DBG << "failed to find wav file for" << id;
+    DBG << "failed to find wav file for" << id << "trying fallback";
+    for (const std::shared_ptr<genie::DrsFile> &drsFile : m_allFiles) {
+        wavPtr = drsFile->getWavPtr(id);
+        if (wavPtr) {
+            m_wavCache[id] = wavPtr;
+            return wavPtr;
+        }
+    }
     return nullptr;
 }
 
