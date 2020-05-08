@@ -108,8 +108,31 @@ bool HomeScreen::init()
         m_buttons[Button::Options].textRect =      { 304, 450, 117,  24 };
         m_buttons[Button::Exit].textRect =         { 200, 704, 160,  26 };
 
+    } else if (m_backgroundSize.height == 600) {
+        // These are fun to figure out.
+        // Aka. found by trial and error (extract image, try to count pixels in
+        // your favorite image viewer, discover that they're wrong, and adjust
+        // and try again until you rip your hair out).
+        m_buttons[Button::Singleplayer].rect = { 306,  7, 120, 189 };
+        m_buttons[Button::Multiplayer].rect =  { 258, 214,  97, 131 };
+        m_buttons[Button::Zone].rect =         { 268, 364,  67,  64 };
+        m_buttons[Button::Tutorial].rect =     {   0,   4, 125, 187 };
+        m_buttons[Button::MapEditor].rect =    { 194, 271,  70,  67 };
+        m_buttons[Button::History].rect =      { 100, 161, 102,  97 };
+        m_buttons[Button::Options].rect =      { 97, 344,  95, 100 };
+        m_buttons[Button::Banner].rect =       {   0,   0, 427, 170 };
+        m_buttons[Button::Exit].rect =         {   0, 533, 153,  65 };
+
+        // These are fun to figure out x2
+        m_buttons[Button::Singleplayer].textRect = { 277,  21, 180,  18 };
+        m_buttons[Button::Multiplayer].textRect =  { 222, 222, 180,  18 };
+        m_buttons[Button::Zone].textRect =         { 213, 369, 180,  18 };
+        m_buttons[Button::Tutorial].textRect =     {   0,  16, 120,  18 };
+        m_buttons[Button::MapEditor].textRect =    { 142, 276, 180,  18 };
+        m_buttons[Button::History].textRect =      {  64, 169, 180,  18 };
+        m_buttons[Button::Options].textRect =      {  56, 351, 180,  18 };
+        m_buttons[Button::Exit].textRect =         {   0, 562, 160,  18 };
     } else {
-        // These are fun to figure out
         m_buttons[Button::Singleplayer].rect = { 309,  12, 120, 189 };
         m_buttons[Button::Multiplayer].rect =  { 263, 217,  97, 131 };
         m_buttons[Button::Zone].rect =         { 271, 367,  67,  64 };
