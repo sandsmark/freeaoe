@@ -34,6 +34,7 @@
 #include "ui/HistoryScreen.h"
 #include "editor/Editor.h"
 #include "debug/SampleGameFactory.h"
+#include <genie/util/Utility.h>
 
 #include "ui/HomeScreen.h"
 
@@ -155,7 +156,7 @@ int main(int argc, char **argv) try
                     if (DataManager::Inst().isHd()){
                         cpxFile.setFileName(config.getValue("game-path") + "/resources/_common/drs/retail-campaigns/dlc0/kings/cam8.cpn");
                     } else {
-                        cpxFile.setFileName(config.getValue("game-path") + "/Campaign/cam8.cpn");
+                        cpxFile.setFileName(genie::util::resolvePathCaseInsensitive(config.getValue("game-path") + "/campaign/cam8.cpn"));
                     }
                     cpxFile.load();
 
