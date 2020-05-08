@@ -40,16 +40,16 @@ public:
     ~HomeScreen();
     struct Button {
         enum Type {
-            Singleplayer,
-            Multiplayer,
-            Zone,
-            Tutorial,
-            MapEditor,
-            History,
-            Options,
-            About,
-            Banner,
-            Exit,
+            Singleplayer = 0,
+            Multiplayer = 1,
+            Zone = 2,
+            Tutorial = 3,
+            MapEditor = 4,
+            History = 5,
+            Options = 6,
+            About = 7,
+            Banner = 8,
+            Exit = 9,
             TypeCount
         };
 

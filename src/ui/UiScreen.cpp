@@ -50,7 +50,16 @@ static sf::Color convertColor(const genie::Color &color)
 
 bool UiScreen::init()
 {
-    m_uiFile = AssetManager::Inst()->getUIFile(m_uiFileName);
+    const std::string uiFilename = 'x' + m_uiFileName;
+
+    m_uiFile = AssetManager::Inst()->getUIFile(uiFilename);
+
+    if (m_uiFile) {
+        m_uiFileName = uiFilename;
+    } else {
+        DBG << "Failed to find" << m_uiFileName << "with x prefix, trying without";
+        m_uiFile = AssetManager::Inst()->getUIFile(m_uiFileName);
+    }
 
     if (!m_uiFile) {
         WARN << "Unable to load ui file" << m_uiFileName;
@@ -80,8 +89,8 @@ bool UiScreen::init()
     m_pressOffset = m_uiFile->backgroundPosition;
 
     if (!m_renderWindow) {
-        std::shared_ptr<genie::SlpFile> slpFile = AssetManager::Inst()->getSlp(m_uiFile->backgroundLarge.fileId, AssetManager::ResourceType::Interface);
-        if (!slpFile) {
+        m_backgroundSlp = AssetManager::Inst()->getSlp(m_uiFile->backgroundLarge.fileId, AssetManager::ResourceType::Interface);
+        if (!m_backgroundSlp) {
             DBG << "failed to load slp file for UI screen by ID, trying name";
 
             std::string backgroundName;
@@ -90,15 +99,15 @@ bool UiScreen::init()
             } else {
                 backgroundName = m_uiFile->backgroundSmall.filename;
             }
-            slpFile = AssetManager::Inst()->getSlp(backgroundName + ".slp", AssetManager::ResourceType::Interface);
+            m_backgroundSlp = AssetManager::Inst()->getSlp(backgroundName + ".slp", AssetManager::ResourceType::Interface);
         }
-        if (!slpFile) {
+        if (!m_backgroundSlp) {
             WARN << "failed to load slp file for UI screen";
             return false;
         }
 
 
-        genie::SlpFramePtr backgroundFrame = slpFile->getFrame(0);
+        genie::SlpFramePtr backgroundFrame = m_backgroundSlp->getFrame(0);
         if (!backgroundFrame) {
             WARN << "Failed to get frame";
             return false;
@@ -106,6 +115,9 @@ bool UiScreen::init()
 
         const int width = backgroundFrame->getWidth();
         const int height = backgroundFrame->getHeight();
+
+        m_backgroundSize = Size(width, height);
+
         m_renderWindow = std::make_shared<sf::RenderWindow>(sf::VideoMode(width, height), "freeaoe");
         m_renderWindow->setSize(sf::Vector2u(width, height));
         m_renderWindow->setView(sf::View(sf::FloatRect(0, 0, width, height)));

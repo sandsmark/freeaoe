@@ -45,7 +45,7 @@ HomeScreen::~HomeScreen()
 }
 
 HomeScreen::HomeScreen() :
-    UiScreen(DataManager::Inst().isHd() ? "main.sin" : "xmain.sin")
+    UiScreen("main.sin")
 {
 
 }
@@ -60,8 +60,7 @@ bool HomeScreen::init()
 
     const bool isHd = DataManager::Inst().isHd();
 
-    std::shared_ptr<genie::SlpFile> slpFile = AssetManager::Inst()->getSlp(isHd ? "main_32.slp" : "xmain.slp");
-    if (!slpFile) {
+    if (!m_backgroundSlp) {
         WARN << "failed to load slp file for home screen";
         return false;
     }
@@ -175,10 +174,14 @@ bool HomeScreen::init()
                 frameNum = 49;
             }
         }
+        if (frameNum + 3 > m_backgroundSlp->getFrameCount()) {
+            WARN << "Invalid frame index" << frameNum << "for" << i << "max is" << m_backgroundSlp->getFrameCount();
+            continue;
+        }
 
-        const genie::SlpFramePtr &frame = slpFile->getFrame(frameNum);
-        const genie::SlpFramePtr &selectedFrame = slpFile->getFrame(frameNum + 1);
-        const genie::SlpFramePtr &hoverFrame = slpFile->getFrame(frameNum + 2);
+        const genie::SlpFramePtr &frame = m_backgroundSlp->getFrame(frameNum);
+        const genie::SlpFramePtr &selectedFrame = m_backgroundSlp->getFrame(frameNum + 1);
+        const genie::SlpFramePtr &hoverFrame = m_backgroundSlp->getFrame(frameNum + 2);
 
         if (i != Button::Banner) {
             b.text.setString(LanguageManager::getString(9500 + i));

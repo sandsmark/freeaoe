@@ -21,6 +21,8 @@
 #include <memory>
 #include <string>
 
+#include "core/Types.h"
+
 namespace sf {
 class Event;
 class RenderWindow;
@@ -28,6 +30,7 @@ class RenderWindow;
 
 namespace genie {
 class UIFile;
+class SlpFile;
 }
 
 class UiScreen
@@ -50,6 +53,7 @@ protected:
     friend struct TextButton;
 
 
+    Size m_backgroundSize;
     sf::Color m_textFillColor;
     sf::Color m_textOutlineColor;
 
@@ -68,6 +72,7 @@ protected:
 
     std::string m_uiFileName;
     std::shared_ptr<genie::UIFile> m_uiFile;
+    std::shared_ptr<genie::SlpFile> m_backgroundSlp;
     std::shared_ptr<sf::RenderWindow> m_renderWindow;
     sf::Texture m_background;
 };
