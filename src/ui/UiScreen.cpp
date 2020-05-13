@@ -19,6 +19,7 @@
 #include "core/Logger.h"
 #include "core/Types.h"
 #include "resource/AssetManager.h"
+#include "resource/DataManager.h"
 #include "resource/Resource.h"
 
 #include <genie/resource/Color.h>
@@ -50,14 +51,19 @@ static sf::Color convertColor(const genie::Color &color)
 
 bool UiScreen::init()
 {
-    const std::string uiFilename = 'x' + m_uiFileName;
+    if (!DataManager::Inst().isHd()) {
+        const std::string uiFilename = 'x' + m_uiFileName;
 
-    m_uiFile = AssetManager::Inst()->getUIFile(uiFilename);
+        m_uiFile = AssetManager::Inst()->getUIFile(uiFilename);
 
-    if (m_uiFile) {
-        m_uiFileName = uiFilename;
-    } else {
-        DBG << "Failed to find" << m_uiFileName << "with x prefix, trying without";
+        if (m_uiFile) {
+            m_uiFileName = uiFilename;
+        } else {
+            DBG << "Failed to find" << m_uiFileName << "with x prefix, trying without";
+        }
+    }
+
+    if (!m_uiFile) {
         m_uiFile = AssetManager::Inst()->getUIFile(m_uiFileName);
     }
 
