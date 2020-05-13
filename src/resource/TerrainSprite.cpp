@@ -179,8 +179,6 @@ const Drawable::Image::Ptr &TerrainSprite::pngTexture(const MapTile &tile, const
         }
     }
 
-    sourcePixels = sourceImage.getPixelsPtr();
-
     const std::string pngFolder = AssetManager::Inst()->assetsPath() + "/terrain/textures/";
     float maxAlpha = 0.f;
     float minAlpha = 1.f;
@@ -229,16 +227,12 @@ const Drawable::Image::Ptr &TerrainSprite::pngTexture(const MapTile &tile, const
                 }
                 const int sourceIndex = (sourcePos.y * sourceSize.x + sourcePos.x) * 4;
                 const float alpha = alphamask[alphaOffset];
-                pixels[index + 0] = (blendSourcePixels[sourceIndex + 0] * (1. - alpha)) + (sourcePixels[sourceIndex + 0] *( alpha));
-                pixels[index + 1] = (blendSourcePixels[sourceIndex + 1] * (1. - alpha)) + (sourcePixels[sourceIndex + 1] *( alpha));
-                pixels[index + 2] = (blendSourcePixels[sourceIndex + 2] * (1. - alpha)) + (sourcePixels[sourceIndex + 2] *( alpha));
-//                pixels[index + 0] = (blendSourcePixels[sourceIndex + 0] * (1. - alpha)) + (pixels[index + 2] *( alpha));
-//                pixels[index + 1] = (blendSourcePixels[sourceIndex + 1] * (1. - alpha)) + (pixels[index + 2] *( alpha));
-//                pixels[index + 2] = (blendSourcePixels[sourceIndex + 2] * (1. - alpha)) + (pixels[index + 2] *( alpha));
+                pixels[index + 0] = (blendSourcePixels[sourceIndex + 0] * (1.f - alpha)) + (pixels[index + 0] *( alpha));
+                pixels[index + 1] = (blendSourcePixels[sourceIndex + 1] * (1.f - alpha)) + (pixels[index + 1] *( alpha));
+                pixels[index + 2] = (blendSourcePixels[sourceIndex + 2] * (1.f - alpha)) + (pixels[index + 2] *( alpha));
                 alphaOffset++;
             }
         }
-
     }
     m_textures[tile] = renderer->createImage(Size(subRect.width, subRect.height), pixelsBuf.data());
     return m_textures[tile];
