@@ -22,7 +22,7 @@ public:
 
     Civilization(const int civId);
 
-    int id() { return m_civId; }
+    int id() const { return m_civId; }
 
     const std::vector<const genie::Unit *> &creatableUnits(int16_t creator) const;
     const std::vector<const genie::Tech *> &researchAvailableAt(int16_t creator) const;

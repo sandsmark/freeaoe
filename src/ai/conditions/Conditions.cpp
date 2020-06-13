@@ -44,14 +44,16 @@ ResourceValue::ResourceValue(const genie::ResourceType type, const RelOp compari
     EventManager::registerListener(this, EventManager::PlayerResourceChanged);
 }
 
-UnitTypeCount::UnitTypeCount(const Unit type, const RelOp comparison, const int targetValue, int playerId) :
+UnitTypeCount::UnitTypeCount(const Unit type, const RelOp comparison, const int targetValue, Player *player) :
+    m_targetValue(targetValue),
     m_relOp(comparison),
-    m_playerId(playerId)
+    m_playerId(player ? player->playerId : -1)
 {
-    m_typeIds = unitIds(type);
+    m_typeIds = unitIds(type, player ? civFromId(player->civilization.id()) : Civ::MyCiv);
 }
 
 UnitTypeCount::UnitTypeCount(const Building type, const RelOp comparison, const int targetValue, int playerId) :
+    m_targetValue(targetValue),
     m_relOp(comparison),
     m_playerId(playerId)
 {
@@ -59,6 +61,7 @@ UnitTypeCount::UnitTypeCount(const Building type, const RelOp comparison, const 
 }
 
 UnitTypeCount::UnitTypeCount(const WallType type, const RelOp comparison, const int targetValue, int playerId) :
+    m_targetValue(targetValue),
     m_relOp(comparison),
     m_playerId(playerId)
 {
@@ -170,11 +173,11 @@ void PopulationHeadroomCondition::onPlayerResourceChanged(Player *player, const 
     emit(SatisfiedChanged);
 }
 
-CanTrainOrBuildCondition::CanTrainOrBuildCondition(const Unit type, const int playerId, bool withEscrow) :
-    m_playerId(playerId),
+CanTrainOrBuildCondition::CanTrainOrBuildCondition(const Unit type, const Player *player, bool withEscrow) :
+    m_playerId(player->playerId),
     m_withEscrow(withEscrow)
 {
-    m_typeIds = unitIds(type);
+    m_typeIds = unitIds(type, civFromId(player->civilization.id()));
     EventManager::registerListener(this, EventManager::PlayerResourceChanged);
 }
 

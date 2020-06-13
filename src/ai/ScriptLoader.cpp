@@ -243,9 +243,9 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const 
 {
     switch(type) {
     case Fact::UnitTypeCount:
-        return std::make_shared<Conditions::UnitTypeCount>(unit, comparison, number, m_script->m_player->playerId);
+        return std::make_shared<Conditions::UnitTypeCount>(unit, comparison, number, m_script->m_player);
     case Fact::UnitTypeCountTotal:
-        return std::make_shared<Conditions::UnitTypeCount>(unit, comparison, number, -1);
+        return std::make_shared<Conditions::UnitTypeCount>(unit, comparison, number, nullptr);
     default:
         break;
     }
@@ -312,7 +312,7 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const 
 {
     switch(type) {
     case Fact::CanTrain:
-        return std::make_shared<Conditions::CanTrainOrBuildCondition>(unit, m_script->m_player->playerId, false);
+        return std::make_shared<Conditions::CanTrainOrBuildCondition>(unit, m_script->m_player, false);
     default:
         break;
     }
@@ -504,7 +504,7 @@ std::shared_ptr<Action> ScriptLoader::createAction(const ActionType type, const 
 {
     switch(type) {
     case ActionType::Train:
-        return std::make_shared<Actions::TrainUnit>(unit);
+        return std::make_shared<Actions::TrainUnit>(unit, m_script->m_player);
     default:
         WARN << "unimplemented action" << type << unit;
     }

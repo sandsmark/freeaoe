@@ -191,7 +191,7 @@ struct ResourceValue : public Condition
 
 struct UnitTypeCount : public Condition
 {
-    UnitTypeCount(const Unit type, const RelOp comparison, const int targetValue, int playerId);
+    UnitTypeCount(const Unit type, const RelOp comparison, const int targetValue, Player *player);
     UnitTypeCount(const Building type, const RelOp comparison, const int targetValue, int playerId);
     UnitTypeCount(const WallType type, const RelOp comparison, const int targetValue, int playerId);
 
@@ -238,7 +238,7 @@ struct PopulationHeadroomCondition : public Condition
 
 struct CanTrainOrBuildCondition : public Condition
 {
-    CanTrainOrBuildCondition(const Unit type, const int playerId, bool withEscrow);
+    CanTrainOrBuildCondition(const Unit type, const Player *player, bool withEscrow);
     CanTrainOrBuildCondition(const Building type, const int playerId, bool withEscrow);
 
     void onPlayerResourceChanged(Player *player, const genie::ResourceType resourceType, float newValue) override;

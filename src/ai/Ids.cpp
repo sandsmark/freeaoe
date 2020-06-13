@@ -1,4 +1,5 @@
 #include "Ids.h"
+#include "EnumLogDefs.h"
 
 int ai::researchId(const ai::Age age)
 {
@@ -132,7 +133,9 @@ int ai::researchId(const ai::ResearchItem item)
     }
 }
 
-int ai::unitId(const ai::OtherUnits &unit)
+namespace ai {
+
+static int unitId(const ai::OtherUnits &unit)
 {
     switch (unit) {
     case OtherUnits::Gate: return 487;
@@ -140,7 +143,7 @@ int ai::unitId(const ai::OtherUnits &unit)
     }
 }
 
-int ai::unitId(const ai::WallType &wall)
+static int unitId(const ai::WallType &wall)
 {
     switch (wall) {
     case WallType::FortifiedWall: return 155;
@@ -150,7 +153,7 @@ int ai::unitId(const ai::WallType &wall)
     }
 }
 
-int ai::unitId(const ai::Building &building)
+int unitId(const ai::Building &building)
 {
     switch (building) {
     case Building::ArcheryRange: return 87;
@@ -180,7 +183,7 @@ int ai::unitId(const ai::Building &building)
     }
 }
 
-int ai::unitId(const ai::Unit &unit)
+int unitId(const ai::Unit &unit)
 {
     switch (unit) {
     case Unit::Arbalest: return 492;
@@ -278,7 +281,43 @@ int ai::unitId(const ai::Unit &unit)
     }
 }
 
-std::unordered_set<int> ai::unitIds(const ai::Unit type)
+Civ civFromId(const int id)
+{
+    switch(id) {
+    case 1: return Civ::Briton;
+    case 2: return Civ::Frankish;
+    case 3: return Civ::Gothic;
+    case 4: return Civ::Teutonic;
+    case 5: return Civ::Japanese;
+    case 6: return Civ::Chinese;
+    case 7: return Civ::Byzantine;
+    case 8: return Civ::Persian;
+    case 9: return Civ::Saracen;
+    case 10: return Civ::Turkish;
+    case 11: return Civ::Viking;
+    case 12: return Civ::Mongol;
+    case 13: return Civ::Celtic;
+//    case 14: return Civ::Spanish;
+//    case 15: return Civ::Aztec;
+//    case 16: return Civ::Mayan;
+//    case 17: return Civ::Hunnic;
+//    case 18: return Civ::Korean;
+    default:
+        WARN << "unhandled civ id" << id;
+        return Civ::MyCiv;
+    }
+}
+
+} // namespace ai
+
+std::unordered_set<int> ai::unitIds(const OtherUnits &unit)
+{
+    std::unordered_set<int> ids;
+    ids.insert(unitId(unit));
+    return ids;
+}
+
+std::unordered_set<int> ai::unitIds(const ai::Unit type, const Civ civ)
 {
     std::unordered_set<int> ids;
     switch(type) {
@@ -477,10 +516,150 @@ std::unordered_set<int> ai::unitIds(const ai::Unit type)
         ids.insert(unitId(Unit::Hussar));
         break;
 
+        // From https://ageofempires.fandom.com/wiki/Unique_unit_(Age_of_Empires_II)
     case Unit::MyUniqueUnit:
-    case Unit::MyUniqueUnitLine:
+        switch(civ) {
+        case Civ::Briton:
+            ids.insert(unitId(Unit::Longbowman));
+            break;
+        case Civ::Byzantine:
+            ids.insert(unitId(Unit::Cataphract));
+            break;
+        case Civ::Celtic:
+            ids.insert(unitId(Unit::WoadRaider));
+            break;
+        case Civ::Chinese:
+            ids.insert(unitId(Unit::ChuKoNu));
+            break;
+        case Civ::Frankish:
+            ids.insert(unitId(Unit::ThrowingAxeman));
+            break;
+        case Civ::Gothic:
+            ids.insert(unitId(Unit::Huskarl));
+            break;
+        case Civ::Japanese:
+            ids.insert(unitId(Unit::Samurai));
+            break;
+        case Civ::Mongol:
+            ids.insert(unitId(Unit::Mangudai));
+            break;
+        case Civ::Persian:
+            ids.insert(unitId(Unit::WarElephant));
+            break;
+        case Civ::Saracen:
+            ids.insert(unitId(Unit::Mameluke));
+            break;
+        case Civ::Teutonic:
+            ids.insert(unitId(Unit::TeutonicKnight));
+            break;
+        case Civ::Turkish:
+            ids.insert(unitId(Unit::Janissary));
+            break;
+        case Civ::Viking:
+            ids.insert(unitId(Unit::Berserk));
+            break;
+        case Civ::MyCiv:
+            WARN << "Error in script parsing, we need to know what your civ is";
+            break;
+        }
+        WARN << "Unhandled civ" << civ;
+        break;
+
     case Unit::MyEliteUniqueUnit:
-        WARN << "Civ specific stuff not implemented yet";
+        switch(civ) {
+        case Civ::Briton:
+            ids.insert(unitId(Unit::EliteLongbowman));
+            break;
+        case Civ::Byzantine:
+            ids.insert(unitId(Unit::EliteCataphract));
+            break;
+        case Civ::Celtic:
+            ids.insert(unitId(Unit::EliteWoadRaider));
+            break;
+        case Civ::Chinese:
+            ids.insert(unitId(Unit::EliteChuKoNu));
+            break;
+        case Civ::Frankish:
+            ids.insert(unitId(Unit::EliteThrowingAxeman));
+            break;
+        case Civ::Gothic:
+            ids.insert(unitId(Unit::EliteHuskarl));
+            break;
+        case Civ::Japanese:
+            ids.insert(unitId(Unit::EliteSamurai));
+            break;
+        case Civ::Mongol:
+            ids.insert(unitId(Unit::EliteMangudai));
+            break;
+        case Civ::Persian:
+            ids.insert(unitId(Unit::EliteWarElephant));
+            break;
+        case Civ::Saracen:
+            ids.insert(unitId(Unit::EliteMameluke));
+            break;
+        case Civ::Teutonic:
+            ids.insert(unitId(Unit::EliteTeutonicKnight));
+            break;
+        case Civ::Turkish:
+            ids.insert(unitId(Unit::EliteJanissary));
+            break;
+        case Civ::Viking:
+            ids.insert(unitId(Unit::EliteBerserk));
+            break;
+        case Civ::MyCiv:
+            WARN << "Error in script parsing, we need to know what your civ is";
+            break;
+        }
+        WARN << "Unhandled civ" << civ;
+        break;
+
+        // From https://ageofempires.fandom.com/wiki/Unique_unit_(Age_of_Empires_II)
+    case Unit::MyUniqueUnitLine:
+        switch(civ) {
+        case Civ::Briton:
+            return unitIds(Unit::Longbowman, civ);
+            break;
+        case Civ::Byzantine:
+            return unitIds(Unit::Cataphract, civ);
+            break;
+        case Civ::Celtic:
+            return unitIds(Unit::WoadRaider, civ);
+            break;
+        case Civ::Chinese:
+            return unitIds(Unit::ChuKoNu, civ);
+            break;
+        case Civ::Frankish:
+            return unitIds(Unit::ThrowingAxeman, civ);
+            break;
+        case Civ::Gothic:
+            return unitIds(Unit::Huskarl, civ);
+            break;
+        case Civ::Japanese:
+            return unitIds(Unit::Samurai, civ);
+            break;
+        case Civ::Mongol:
+            return unitIds(Unit::Mangudai, civ);
+            break;
+        case Civ::Persian:
+            return unitIds(Unit::WarElephant, civ);
+            break;
+        case Civ::Saracen:
+            return unitIds(Unit::Mameluke, civ);
+            break;
+        case Civ::Teutonic:
+            return unitIds(Unit::TeutonicKnight, civ);
+            break;
+        case Civ::Turkish:
+            return unitIds(Unit::Janissary, civ);
+            break;
+        case Civ::Viking:
+            return unitIds(Unit::Berserk, civ);
+            break;
+        case Civ::MyCiv:
+            WARN << "Error in script parsing, we need to know what your civ is";
+            break;
+        }
+        WARN << "Unhandled civ" << civ;
         break;
 
     default:

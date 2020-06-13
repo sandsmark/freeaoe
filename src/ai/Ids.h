@@ -14,15 +14,18 @@ namespace ai
         Gate
     };
 
-    int unitId(const OtherUnits &unit);
 
-    int unitId(const WallType &wall);
+//    int unitId(const WallType &wall);
 
-    int unitId(const Building &building);
+//    int unitId(const Building &building);
 
-    int unitId(const Unit &unit);
+//    int unitId(const Unit &unit);
 
-    std::unordered_set<int> unitIds(const Unit type);
+    Civ civFromId(const int id);
+
+    std::unordered_set<int> unitIds(const OtherUnits &unit);
+
+    std::unordered_set<int> unitIds(const Unit type, const Civ civ);
 
     std::unordered_set<int> unitIds(const Building type);
 

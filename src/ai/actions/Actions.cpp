@@ -216,8 +216,8 @@ void ai::Actions::ShowDebugMessage::execute(ai::AiRule *rule)
     rule->m_owner->showDebugMessage(m_message);
 }
 
-ai::Actions::TrainUnit::TrainUnit(const ai::Unit unit) :
-    m_unitIds(ai::unitIds(unit))
+ai::Actions::TrainUnit::TrainUnit(const ai::Unit unit, const Player *player) :
+    m_unitIds(ai::unitIds(unit, civFromId(player->civilization.id())))
 {
 }
 

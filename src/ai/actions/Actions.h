@@ -95,7 +95,7 @@ private:
 
 struct TrainUnit : public Action
 {
-    TrainUnit(const Unit unit);
+    TrainUnit(const Unit unit, const Player *player);
 
     void execute(AiRule *rule) override;
 
