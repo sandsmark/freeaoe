@@ -282,6 +282,12 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const 
 
 std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const int number)
 {
+    switch(type) {
+    case Fact::TimerTriggered:
+        return std::make_shared<Conditions::TimerTriggered>(m_script.get(), number);
+    default:
+        break;
+    }
     WARN << "unimplemented condition" << type << number;
     return nullptr;
 }

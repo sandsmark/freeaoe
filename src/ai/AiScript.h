@@ -2,11 +2,13 @@
 
 #include "ai/gen/enums.h"
 #include "core/SignalEmitter.h"
+#include "core/Types.h"
 
 #include <genie/dat/ResourceType.h>
 
 #include <memory>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 struct AiPlayer;
@@ -19,11 +21,14 @@ struct AiScript : public SignalEmitter<AiScript>
 {
     enum Signals {
         GoalChanged,
-        EscrowChanged
+        EscrowChanged,
+        TimerTriggered
     };
 
     AiScript(AiPlayer *player) : m_player(player) { }
     AiScript() = delete;
+
+    bool update(const Time time);
 
     std::unordered_map<StrategicNumberName, int> strategicNumbers;
 
@@ -47,8 +52,22 @@ struct AiScript : public SignalEmitter<AiScript>
 
     void showDebugMessage(const std::string &message);
 
+    void addTimer(const int id, const Time targetTime);
+
+    Time currentTime() const { return m_currentTime; }
+    bool hasTimerExpired(const int id) { return m_expiredTimers.count(id) > 0; }
+
 private:
+    struct Timer {
+        int id = -1;
+        Time time = 0;
+    };
+    std::vector<Timer> m_timers;
+    std::vector<Timer> m_activeTimers;
+    std::unordered_set<int> m_expiredTimers;
+
     std::unordered_map<int, int> m_goals;
+    Time m_currentTime = -1;
 };
 
 } // namespace ai

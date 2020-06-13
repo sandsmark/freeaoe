@@ -377,6 +377,17 @@ struct DifficultyCondition : public Condition
     const ai::DifficultyLevel m_requirement;
 };
 
+struct TimerTriggered : public Condition
+{
+    TimerTriggered(AiScript *script, const int id);
+
+    void onTimerExpired();
+    bool satisfied(AiRule * owner) override;
+
+    AiScript *m_script;
+    int m_id = -1;
+};
+
 
 }//namespace Conditions
 }//namespace ai

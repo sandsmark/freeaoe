@@ -653,5 +653,24 @@ void CanTrade::actualCheck()
     emit(SatisfiedChanged);
 }
 
+TimerTriggered::TimerTriggered(AiScript *script, const int id) :
+    m_script(script),
+    m_id(id)
+{
+    script->connect(AiScript::TimerTriggered, this, &TimerTriggered::onTimerExpired);
+}
+
+void TimerTriggered::onTimerExpired()
+{
+    if (m_script->hasTimerExpired(m_id)) {
+        emit (SatisfiedChanged);
+    }
+}
+
+bool TimerTriggered::satisfied(AiRule *owner)
+{
+    return owner->m_owner->hasTimerExpired(m_id);
+}
+
 } // namespace Conditions
 } //namespace ai
