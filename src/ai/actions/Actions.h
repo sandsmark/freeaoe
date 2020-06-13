@@ -33,6 +33,11 @@ struct DisableSelf : public Action
     void execute(AiRule *rule) override;
 };
 
+struct Resign : public Action
+{
+    void execute(AiRule *rule) override;
+};
+
 struct BuyCommodity : public Action, EventListener
 {
     BuyCommodity(const Commodity commodity, const int amount);

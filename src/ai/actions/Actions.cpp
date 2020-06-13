@@ -378,5 +378,4 @@ void ai::Actions::Research::execute(ai::AiRule *rule)
 void ai::Actions::Resign::execute(ai::AiRule *rule)
 {
     rule->m_owner->m_player->resign();
-
 }

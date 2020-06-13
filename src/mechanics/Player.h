@@ -125,9 +125,7 @@ struct Player
     bool alive = true;
     std::shared_ptr<VisibilityMap> visibility;
 
-    void resign() {
-        alive = false;
-    }
+    void resign();
 
     ///////////////////
     /// Tech
