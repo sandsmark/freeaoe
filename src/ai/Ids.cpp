@@ -154,6 +154,42 @@ int ai::researchId(const ai::ResearchItem item, const ai::Civ civ)
         }
 
         return -1;
+    case ResearchItem::MyUniqueUnitUpgrade:
+        // TODO: should this change as the things are researched?
+        switch(civ) {
+        case Civ::Briton:
+            return researchId(ResearchItem::RiEliteLongbowman, civ);
+        case Civ::Byzantine:
+            return researchId(ResearchItem::RiEliteCataphract, civ);
+        case Civ::Celtic:
+            return researchId(ResearchItem::RiEliteWoadRaider, civ);
+        case Civ::Chinese:
+            return researchId(ResearchItem::RiEliteChuKoNu, civ);
+        case Civ::Frankish:
+            return researchId(ResearchItem::RiEliteThrowingAxeman, civ);
+        case Civ::Gothic:
+            return researchId(ResearchItem::RiEliteHuskarl, civ);
+        case Civ::Japanese:
+            return researchId(ResearchItem::RiEliteSamurai, civ);
+        case Civ::Mongol:
+            return researchId(ResearchItem::RiEliteMangudai, civ);
+        case Civ::Persian:
+            return researchId(ResearchItem::RiEliteWarElephant, civ);
+        case Civ::Saracen:
+            return researchId(ResearchItem::RiEliteMameluke, civ);
+        case Civ::Teutonic:
+            return researchId(ResearchItem::RiEliteTeutonicKnight, civ);
+        case Civ::Turkish:
+            return researchId(ResearchItem::RiEliteJanissary, civ);
+        case Civ::Viking:
+            return researchId(ResearchItem::RiEliteBerserk, civ);
+        case Civ::MyCiv:
+            WARN << "Error in script parsing, we need to know what your civ is";
+            return -1;
+        }
+        WARN << "Unhandled civ" << civ;
+        return -1;
+
     default: return -1;
     }
 }
