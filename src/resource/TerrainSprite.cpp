@@ -234,6 +234,48 @@ const Drawable::Image::Ptr &TerrainSprite::pngTexture(const MapTile &tile, const
             }
         }
     }
+
+#if 0
+    // This is used to alter the source SLP (for sloping), but we mostly ignore it,
+    // we only need the modified offset to the left and then use the texture filtering for the rest
+    const genie::SlpTemplateFile::SlpTemplate &slpTemplate = AssetManager::Inst()->getSlpTemplateFile()->templates[tile.slopes.self.toGenie()];
+
+    // This defines the texture mapping for slopes (what pixels from the original SLP should go where)
+    const genie::FiltermapFile::Filtermap &filter = AssetManager::Inst()->filtermapFile()->maps[tile.slopes.self.toGenie()];
+
+    const std::vector<genie::Pattern> &slopePatterns = tile.slopePatterns();
+
+    const int width = m_slp->frameWidth(tile.frame);
+    const int area = width * filter.height;
+
+    for (uint32_t y=0; y<filter.height; y++) {
+        int xPos = slpTemplate.left_edges_[y];
+        const genie::FiltermapFile::FilterLine &line = filter.lines[y];
+
+        for (uint32_t x=0; x<line.width; x++, xPos++) {
+            const genie::FiltermapFile::FilterCmd &cmd = line.commands[x];
+
+            // Each target pixel can blend several source pixels
+            int r = 0, g = 0, b = 0;
+            for (const genie::FiltermapFile::SourcePixel &source : cmd.sourcePixels) {
+                const uint8_t sourcePaletteIndex = data[source.sourceIndex];
+                const genie::Color &sourceColor = colors[sourcePaletteIndex];
+                r += sourceColor.r * source.alpha;
+                g += sourceColor.g * source.alpha;
+                b += sourceColor.b * source.alpha;
+            }
+
+            // Get the appropriate lightning from the pattern masks file
+            // There are several lightning textures used for each tile, so here we blend them
+            // together to get the inverse color map with the appropriate darkness for this pixel
+            const genie::IcmFile::InverseColorMap &icm = patternmasksFile->getIcm(cmd.lightIndex, slopePatterns);
+            const int pixelIndex = icm.paletteIndex(r >> 11, g >> 11, b >> 11);
+
+            // And then finally we get the color for a single pixel
+            pixels[y * width + xPos] = colors[pixelIndex].toUint32();
+        }
+    }
+#endif
     m_textures[tile] = renderer->createImage(Size(subRect.width, subRect.height), pixelsBuf.data());
     return m_textures[tile];
 }
