@@ -46,6 +46,19 @@ private:
     int m_amount;
 };
 
+struct SellCommodity : public Action, EventListener
+{
+    SellCommodity(const Commodity commodity, const int amount);
+
+    void execute(AiRule *rule) override;
+    void onTradingPriceChanged(const genie::ResourceType type, const int newPrice) override;
+
+private:
+    genie::ResourceType m_resourceType = genie::ResourceType::InvalidResource;
+    int m_tradingPrice = 100;
+    int m_amount;
+};
+
 struct SetEscrowPercent : public Action
 {
     SetEscrowPercent(const Commodity commodity, const int targetValue);

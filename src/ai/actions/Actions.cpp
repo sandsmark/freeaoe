@@ -92,6 +92,59 @@ void ai::Actions::BuyCommodity::onTradingPriceChanged(const genie::ResourceType 
     m_tradingPrice = newPrice;
 }
 
+ai::Actions::SellCommodity::SellCommodity(const ai::Commodity commodity, const int amount)
+{
+    if (amount % 100 != 0) {
+        WARN << "Invalid amount to sell:" << amount;
+        m_amount -= amount % 100;
+    }
+
+    switch(commodity) {
+    case Commodity::Food:
+        m_resourceType = genie::ResourceType::FoodStorage;
+        break;
+
+    case Commodity::Wood:
+        m_resourceType = genie::ResourceType::WoodStorage;
+        break;
+
+    case Commodity::Stone:
+        m_resourceType = genie::ResourceType::StoneStorage;
+        break;
+
+    default:
+        WARN << "Unhandled commodity for trade" << commodity;
+        break;
+    }
+
+    EventManager::registerListener(this, EventManager::TradingPriceChanged);
+}
+
+void ai::Actions::SellCommodity::onTradingPriceChanged(const genie::ResourceType type, const int newPrice)
+{
+    if (type != m_resourceType) {
+        return;
+    }
+
+    m_tradingPrice = newPrice;
+}
+
+void ai::Actions::SellCommodity::execute(ai::AiRule *rule)
+{
+    Player *player = rule->m_owner->m_player;
+    const int resourceAvailable = player->resourcesAvailable(m_resourceType);
+    const bool canTrade = resourceAvailable >= m_amount;
+
+    if (!canTrade) {
+        WARN << "tried to trade without enough resources" << resourceAvailable << m_amount;
+        return;
+    }
+    const int price = m_tradingPrice * m_amount * 0.7;
+    player->removeResource(m_resourceType, m_amount);
+    player->addResource(genie::ResourceType::GoldStorage, price);
+    EventManager::resourceSold(m_resourceType, m_amount);
+}
+
 ai::Actions::SetEscrowPercent::SetEscrowPercent(const Commodity commodity, const int targetValue) :
     m_targetValue(targetValue)
 {

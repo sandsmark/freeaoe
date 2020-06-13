@@ -465,6 +465,8 @@ std::shared_ptr<Action> ScriptLoader::createAction(const ActionType type, const 
     switch(type) {
     case ActionType::BuyCommodity:
         return std::make_shared<Actions::BuyCommodity>(commodity, 100);
+    case ActionType::SellCommodity:
+        return std::make_shared<Actions::SellCommodity>(commodity, 100);
     case ActionType::ReleaseEscrow:
         return std::make_shared<Actions::ReleaseEscrow>(commodity);
     default:
