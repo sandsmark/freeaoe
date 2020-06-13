@@ -108,11 +108,12 @@ struct Player
         ImperialAge
     };
 
-    bool alive = true;
-    std::shared_ptr<VisibilityMap> visibility;
-
     Player(const int id, const int civId, const ResourceMap &startingResources = {});
     virtual ~Player() = default;
+
+
+    ///////////////////
+    /// Basics
     const int playerId;
     int playerColor = 0;
 
@@ -121,6 +122,15 @@ struct Player
     typedef std::shared_ptr<Player> Ptr;
     std::string name = "Player";
 
+    bool alive = true;
+    std::shared_ptr<VisibilityMap> visibility;
+
+    void resign() {
+        alive = false;
+    }
+
+    ///////////////////
+    /// Tech
     bool researchAvailable(const int researchId) { return m_currentlyAvailableTechs.count(researchId); }
     void applyResearch(const int researchId);
     void applyTechEffect(const int effectId);
@@ -131,6 +141,8 @@ struct Player
     }
     bool canAffordResearch(const int researchId) const;
 
+    ///////////////////
+    /// Units
     bool canAffordUnit(const int unitId) const;
     void payForUnit(const int unitId);
 
@@ -139,10 +151,14 @@ struct Player
 
     void setUnitGroup(Unit *unit, int group);
 
+    ////////////////////
+    /// Diplomacy
     void addAlliedPlayer(int playerId);
     void removeAlliedPlayer(int playerId);
     bool isAllied(int playerId);
 
+    ////////////////////
+    /// Resources
     void removeResource(const genie::ResourceType type, float amount) {
         setAvailableResource(type, m_resourcesAvailable[type] - amount);
     }

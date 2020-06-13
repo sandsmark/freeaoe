@@ -374,3 +374,9 @@ void ai::Actions::Research::execute(ai::AiRule *rule)
     }
     WARN << "Failed to find a location to produce";
 }
+
+void ai::Actions::Resign::execute(ai::AiRule *rule)
+{
+    rule->m_owner->m_player->resign();
+
+}

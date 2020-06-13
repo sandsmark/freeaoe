@@ -17,10 +17,10 @@
 //#define CHEAT_VISIBILITY 1
 
 Player::Player(const int id, const int civId, const ResourceMap &startingResources) :
-    visibility(std::make_shared<VisibilityMap>()),
     playerId(id),
     civilization(civId),
     name("Player " + std::to_string(id)),
+    visibility(std::make_shared<VisibilityMap>()),
     m_resourcesAvailable(civilization.startingResources())
 {
     // Override
@@ -29,6 +29,12 @@ Player::Player(const int id, const int civId, const ResourceMap &startingResourc
     }
 
     updateAvailableTechs();
+}
+
+void Player::resign()
+{
+    alive = false;
+    EventManager::playerDefeated(this);
 }
 
 void Player::applyResearch(const int researchId)

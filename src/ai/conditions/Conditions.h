@@ -362,5 +362,21 @@ struct CanTrade : public Condition
     void actualCheck();
 };
 
+struct DifficultyCondition : public Condition
+{
+    DifficultyCondition(const ai::RelOp comparison, const ai::DifficultyLevel difficulty) :
+        m_comparison(comparison),
+        m_requirement(difficulty) {}
+
+    bool satisfied(AiRule * owner) override {
+        const ai::DifficultyLevel playerLevel = owner->m_owner->m_player->difficultyLevel;
+        return CompareCondition::actualCompare(int(m_requirement), m_comparison, int(playerLevel));
+    }
+
+    const ai::RelOp m_comparison;
+    const ai::DifficultyLevel m_requirement;
+};
+
+
 }//namespace Conditions
 }//namespace ai

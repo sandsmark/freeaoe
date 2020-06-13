@@ -216,6 +216,13 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const 
 
 std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const RelOp comparison, const DifficultyLevel level)
 {
+    switch(type) {
+    case ai::Fact::Difficulty:
+        return std::make_shared<Conditions::DifficultyCondition>(comparison, level);
+    default:
+        break;
+    }
+
     WARN << "unimplemented condition" << type << comparison << level;
     return nullptr;
 }
@@ -378,6 +385,8 @@ std::shared_ptr<Action> ScriptLoader::createAction(const ActionType type)
     switch(type) {
     case ActionType::DisableSelf:
         return std::make_shared<Actions::DisableSelf>();
+    case ActionType::Resign:
+        return std::make_shared<Actions::Resign>();
     default:
         WARN << "unimplemented action" << type;
         break;

@@ -2,12 +2,15 @@
 #define AIPLAYER_H
 
 #include "mechanics/Player.h"
+#include "gen/enums.h"
 
 struct AiPlayer : public Player
 {
     AiPlayer(const int id, const int civId, const ResourceMap &startingResources = {}) :
         Player(id, civId, startingResources)
     {}
+
+    ai::DifficultyLevel difficultyLevel = ai::DifficultyLevel::Moderate;
 
     // Held in escrow
     ResourceMap m_reserves;
