@@ -20,7 +20,7 @@ struct AiScript;
 class ScriptLoader {
 public:
     ScriptLoader(AiPlayer *player);
-    virtual ~ScriptLoader() {};
+    virtual ~ScriptLoader();
 
     int parse(std::istream& in, std::ostream& out);
 

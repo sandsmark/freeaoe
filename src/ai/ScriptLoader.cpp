@@ -18,6 +18,10 @@ ScriptLoader::ScriptLoader(AiPlayer *player) :
 {
 }
 
+ScriptLoader::~ScriptLoader()
+{
+}
+
 int ScriptLoader::parse(std::istream& in, std::ostream& out)
 {
 
