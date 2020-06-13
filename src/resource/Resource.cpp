@@ -81,7 +81,7 @@ sf::Image Resource::convertFrameToImage(const genie::SlpFramePtr &frame,
 
         }
     } else {
-        const std::vector<genie::Color> &colors = palette.colors_;
+        const std::vector<genie::Color> &colors = palette.getColors();
         const std::vector<uint8_t> &pixelindexes = frameData.pixel_indexes;
         const std::vector<uint8_t> &alphachannel = frameData.alpha_channel;
         for (int i=0; i<area; i++) {

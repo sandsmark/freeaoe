@@ -52,7 +52,7 @@ Drawable::Image::Ptr IRenderTarget::convertFrameToImage(const genie::SlpFramePtr
     std::vector<Uint8> pixelsBuf(area * 4);
     Uint8 *pixels = pixelsBuf.data();
 
-    const std::vector<genie::Color> &colors = palette.colors_;
+    const std::vector<genie::Color> &colors = palette.getColors();
     const std::vector<uint8_t> &pixelindexes = frameData.pixel_indexes;
     const std::vector<uint8_t> &alphachannel = frameData.alpha_channel;
     assert(pixelindexes.size() == area);

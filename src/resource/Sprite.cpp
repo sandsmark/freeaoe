@@ -117,9 +117,9 @@ sf::Image Sprite::slpFrameToImage(const genie::SlpFramePtr &frame, int8_t player
         for (uint32_t row = 0; row < height; row++) {
             for (uint32_t col = 0; col < width; col++) {
                 const uint8_t paletteIndex = frameData.pixel_indexes[row * width + col];
-                assert(paletteIndex < palette.colors_.size());
+                assert(paletteIndex < palette.getColors().size());
 
-                const genie::Color &g_color = palette.colors_[paletteIndex];
+                const genie::Color &g_color = palette[paletteIndex];
                 const size_t pixelPos = (row * width + col) * 4;
 
                 if ((row + col) % 2 == 1) {
@@ -147,9 +147,9 @@ sf::Image Sprite::slpFrameToImage(const genie::SlpFramePtr &frame, int8_t player
         for (uint32_t row = 0; row < height; row++) {
             for (uint32_t col = 0; col < width; col++) {
                 const uint8_t paletteIndex = frameData.pixel_indexes[row * width + col];
-                assert(paletteIndex < palette.colors_.size());
+                assert(paletteIndex < palette.getColors().size());
 
-                const genie::Color &g_color = palette.colors_[paletteIndex];
+                const genie::Color &g_color = palette[paletteIndex];
                 const size_t pixelPos = (row * width + col) * 4;
 
                 if ((row + col) % 2 == 1) {
@@ -177,9 +177,9 @@ sf::Image Sprite::slpFrameToImage(const genie::SlpFramePtr &frame, int8_t player
         for (uint32_t row = 0; row < height; row++) {
             for (uint32_t col = 0; col < width; col++) {
                 const uint8_t paletteIndex = frameData.pixel_indexes[row * width + col];
-                assert(paletteIndex < palette.colors_.size());
+                assert(paletteIndex < palette.getColors().size());
 
-                const genie::Color &g_color = palette.colors_[paletteIndex];
+                const genie::Color &g_color = palette[paletteIndex];
                 const size_t pixelPos = (row * width + col) * 4;
 
                 pixels[pixelPos    ] = g_color.r / 2;
@@ -272,9 +272,9 @@ Drawable::Image::Ptr Sprite::slpFrameToImage(const IRenderTarget &renderTarget, 
         for (uint32_t row = 0; row < height; row++) {
             for (uint32_t col = 0; col < width; col++) {
                 const uint8_t paletteIndex = frameData.pixel_indexes[row * width + col];
-                assert(paletteIndex < palette.colors_.size());
+                assert(paletteIndex < palette.getColors().size());
 
-                const genie::Color &g_color = palette.colors_[paletteIndex];
+                const genie::Color &g_color = palette[paletteIndex];
                 const size_t pixelPos = (row * width + col) * 4;
 
                 if ((row + col) % 2 == 1) {
@@ -302,9 +302,9 @@ Drawable::Image::Ptr Sprite::slpFrameToImage(const IRenderTarget &renderTarget, 
         for (uint32_t row = 0; row < height; row++) {
             for (uint32_t col = 0; col < width; col++) {
                 const uint8_t paletteIndex = frameData.pixel_indexes[row * width + col];
-                assert(paletteIndex < palette.colors_.size());
+                assert(paletteIndex < palette.getColors().size());
 
-                const genie::Color &g_color = palette.colors_[paletteIndex];
+                const genie::Color &g_color = palette[paletteIndex];
                 const size_t pixelPos = (row * width + col) * 4;
 
                 if ((row + col) % 2 == 1) {
@@ -332,9 +332,9 @@ Drawable::Image::Ptr Sprite::slpFrameToImage(const IRenderTarget &renderTarget, 
         for (uint32_t row = 0; row < height; row++) {
             for (uint32_t col = 0; col < width; col++) {
                 const uint8_t paletteIndex = frameData.pixel_indexes[row * width + col];
-                assert(paletteIndex < palette.colors_.size());
+                assert(paletteIndex < palette.getColors().size());
 
-                const genie::Color &g_color = palette.colors_[paletteIndex];
+                const genie::Color &g_color = palette[paletteIndex];
                 const size_t pixelPos = (row * width + col) * 4;
 
                 pixels[pixelPos    ] = g_color.r / 2;
