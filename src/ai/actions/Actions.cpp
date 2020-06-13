@@ -389,3 +389,30 @@ void ai::Actions::EnableTimer::execute(ai::AiRule *rule)
 {
     rule->m_owner->addTimer(m_timerId, rule->m_owner->currentTime() + m_duration);
 }
+
+ai::Actions::CheatAddResource::CheatAddResource(const ai::Commodity commodity, const int amount) :
+    m_amount(amount)
+{
+    switch(commodity) {
+    case Commodity::Food:
+        m_resourceType = genie::ResourceType::FoodStorage;
+        break;
+
+    case Commodity::Wood:
+        m_resourceType = genie::ResourceType::WoodStorage;
+        break;
+
+    case Commodity::Stone:
+        m_resourceType = genie::ResourceType::StoneStorage;
+        break;
+
+    default:
+        WARN << "Unhandled commodity for cheating" << commodity;
+        break;
+    }
+}
+
+void ai::Actions::CheatAddResource::execute(ai::AiRule *rule)
+{
+    rule->m_owner->m_player->addResource(m_resourceType, m_amount);
+}

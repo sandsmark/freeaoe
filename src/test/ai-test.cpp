@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
        std::ifstream in;
        in.open(argv[1]);
        std::cout << in.good() << std::endl;
-       AiPlayer player(0, 0, {});
+       AiPlayer player(0, 1, {});
        ai::ScriptLoader parser(&player);
        return parser.parse(in, std::cout);
 }

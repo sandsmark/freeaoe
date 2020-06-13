@@ -155,6 +155,17 @@ struct EnableTimer : public Action
     const Time m_duration;
 };
 
+struct CheatAddResource : public Action, EventListener
+{
+    CheatAddResource(const Commodity commodity, const int amount);
+
+    void execute(AiRule *rule) override;
+
+private:
+    genie::ResourceType m_resourceType = genie::ResourceType::InvalidResource;
+    int m_amount;
+};
+
 } //namespace Actions
 
 } //namespace ai

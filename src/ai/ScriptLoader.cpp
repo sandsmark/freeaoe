@@ -516,6 +516,8 @@ std::shared_ptr<Action> ScriptLoader::createAction(const ActionType type, const 
     switch(type) {
     case ActionType::SetEscrowPercentage:
         return std::make_shared<Actions::SetEscrowPercent>(commodity, number);
+    case ActionType::CcAddResource:
+        return std::make_shared<Actions::CheatAddResource>(commodity, number);
     default:
         WARN << "unimplemented action" << type << commodity << number;
         break;
