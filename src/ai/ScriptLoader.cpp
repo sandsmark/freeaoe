@@ -418,6 +418,8 @@ std::shared_ptr<Action> ScriptLoader::createAction(const ActionType type, const 
     switch(type) {
     case ActionType::SetGoal:
         return std::make_shared<Actions::SetGoal>(number1, number2);
+    case ActionType::EnableTimer:
+        return std::make_shared<Actions::EnableTimer>(number1, number2);
     default:
         WARN << "unimplemented action" << type << number1 << number2;
         break;
@@ -428,6 +430,13 @@ std::shared_ptr<Action> ScriptLoader::createAction(const ActionType type, const 
 
 std::shared_ptr<Action> ScriptLoader::createAction(const ActionType type, const int number)
 {
+    switch(type) {
+    case ActionType::DisableTimer:
+        return std::make_shared<Actions::DisableTimer>(number);
+    default:
+        break;
+    }
+
     WARN << "unimplemented action" << type << number;
     return nullptr;
 }

@@ -379,3 +379,13 @@ void ai::Actions::Resign::execute(ai::AiRule *rule)
 {
     rule->m_owner->m_player->resign();
 }
+
+void ai::Actions::DisableTimer::execute(ai::AiRule *rule)
+{
+    rule->m_owner->disableTimer(m_timerId);
+}
+
+void ai::Actions::EnableTimer::execute(ai::AiRule *rule)
+{
+    rule->m_owner->addTimer(m_timerId, rule->m_owner->currentTime() + m_duration);
+}

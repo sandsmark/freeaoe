@@ -1,6 +1,8 @@
 #pragma once
 
+#include "core/Types.h"
 #include "ai/gen/enums.h"
+
 #include "global/EventListener.h"
 #include <genie/dat/ResourceType.h>
 
@@ -134,6 +136,23 @@ struct Research : public Action
 
 private:
     const int m_researchId;
+};
+
+struct DisableTimer : public Action
+{
+    DisableTimer(const int timerId) : m_timerId(timerId) {}
+    void execute(AiRule *rule) override;
+
+    const int m_timerId;
+};
+
+struct EnableTimer : public Action
+{
+    EnableTimer(const int timerId, Time duration) : m_timerId(timerId), m_duration(duration) {}
+    void execute(AiRule *rule) override;
+
+    const int m_timerId;
+    const Time m_duration;
 };
 
 } //namespace Actions

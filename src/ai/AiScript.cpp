@@ -58,9 +58,16 @@ void AiScript::addTimer(const int id, const Time targetTime)
     Timer timer;
     timer.id = id;
     timer.time = targetTime;
-    m_timers.push_back(timer);
     m_activeTimers.push_back(timer);
     m_expiredTimers.erase(id);
+}
+
+void AiScript::disableTimer(const int id)
+{
+    // holy shit I hate STL, why can't this be simple and readable...
+    std::erase_if(m_activeTimers, [=](const Timer &timer){
+        return timer.id == id;
+    });
 }
 
 } // namespace ai

@@ -54,6 +54,7 @@ struct AiScript : public SignalEmitter<AiScript>
 
     void addTimer(const int id, const Time targetTime);
 
+    void disableTimer(const int id);
     Time currentTime() const { return m_currentTime; }
     bool hasTimerExpired(const int id) { return m_expiredTimers.count(id) > 0; }
 
@@ -62,7 +63,6 @@ private:
         int id = -1;
         Time time = 0;
     };
-    std::vector<Timer> m_timers;
     std::vector<Timer> m_activeTimers;
     std::unordered_set<int> m_expiredTimers;
 
