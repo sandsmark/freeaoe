@@ -129,7 +129,7 @@ struct SetGoal : public Action
 
 struct Research : public Action
 {
-    Research(const ResearchItem research);
+    Research(const ResearchItem research, Player *player);
     Research(const Age age);
 
     void execute(AiRule *rule) override;
@@ -158,7 +158,6 @@ struct EnableTimer : public Action
 struct CheatAddResource : public Action, EventListener
 {
     CheatAddResource(const Commodity commodity, const int amount);
-
     void execute(AiRule *rule) override;
 
 private:

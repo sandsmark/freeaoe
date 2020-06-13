@@ -14,7 +14,7 @@ int ai::researchId(const ai::Age age)
     }
 }
 
-int ai::researchId(const ai::ResearchItem item)
+int ai::researchId(const ai::ResearchItem item, const ai::Civ civ)
 {
     switch(item) {
     case ResearchItem::RiArbalest: return 237;
@@ -129,6 +129,31 @@ int ai::researchId(const ai::ResearchItem item)
     case ResearchItem::RiMurderHoles: return 322;
     case ResearchItem::RiSiegeEngineers: return 377;
     case ResearchItem::RiStonecutting: return 54;
+
+        // From https://ageofempires.fandom.com/wiki/Unique_technology
+    case ResearchItem::MyUniqueResearch:
+        // TODO: should this change as the things are researched?
+        switch (civ) {
+        case ai::Civ::Briton: return 3; // yeomen
+        case ai::Civ::Byzantine: return 464; // greek fire
+        case ai::Civ::Celtic: return 482; // stronghold
+        case ai::Civ::Chinese: return 462; // great wall
+        case ai::Civ::Frankish: return 493; // chivalry
+        case ai::Civ::Gothic: return 16; // anarchy
+        case ai::Civ::Japanese: return 484; // yasama
+        case ai::Civ::Mongol: return 487; // nomads
+            // TODO: DE and later has Kamandaran
+        case ai::Civ::Persian: return 487; // boiling oil
+        case ai::Civ::Saracen: return 490; // madrasah
+        case ai::Civ::Teutonic: return 489; // ironclad
+        case ai::Civ::Turkish: return 491; // sipahi
+        case ai::Civ::Viking: return 463; // chieftains
+        default:
+            WARN << "Unhandled civ" << civ;
+            break;
+        }
+
+        return -1;
     default: return -1;
     }
 }

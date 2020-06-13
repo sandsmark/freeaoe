@@ -343,8 +343,8 @@ void ai::Actions::SetGoal::execute(ai::AiRule *rule)
     rule->m_owner->setGoal(m_goalId, m_number);
 }
 
-ai::Actions::Research::Research(const ai::ResearchItem research) :
-    m_researchId(researchId(research))
+ai::Actions::Research::Research(const ai::ResearchItem research, Player *player) :
+    m_researchId(researchId(research, civFromId(player->civilization.id())))
 {
 }
 
@@ -404,6 +404,10 @@ ai::Actions::CheatAddResource::CheatAddResource(const ai::Commodity commodity, c
 
     case Commodity::Stone:
         m_resourceType = genie::ResourceType::StoneStorage;
+        break;
+
+    case Commodity::Gold:
+        m_resourceType = genie::ResourceType::GoldStorage;
         break;
 
     default:

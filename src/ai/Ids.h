@@ -8,7 +8,7 @@
 namespace ai
 {
     int researchId(const Age age);
-    int researchId(const ResearchItem item);
+    int researchId(const ResearchItem item, const Civ civ);
 
     enum class OtherUnits {
         Gate

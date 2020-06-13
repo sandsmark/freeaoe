@@ -251,9 +251,9 @@ bool CanTrainOrBuildCondition::checkCanBuild(const AiPlayer *player) const
 
 }
 
-TechAvailableCondition::TechAvailableCondition(ResearchItem tech, int playerId, bool withEscrow) :
-    m_playerId(playerId),
-    m_techId(researchId(tech)),
+TechAvailableCondition::TechAvailableCondition(ResearchItem tech, Player *player, bool withEscrow) :
+    m_playerId(player->playerId),
+    m_techId(researchId(tech, civFromId(player->civilization.id()))),
     m_withEscrow(withEscrow)
 {
     if (m_techId == -1) {

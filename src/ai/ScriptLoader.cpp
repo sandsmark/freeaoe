@@ -296,10 +296,10 @@ std::shared_ptr<Condition> ScriptLoader::createCondition(const Fact type, const 
 {
     switch (type) {
     case Fact::CanResearchWithEscrow: // todo: handle escrow
-        return std::make_shared<Conditions::TechAvailableCondition>(research, m_script->m_player->playerId, true);
+        return std::make_shared<Conditions::TechAvailableCondition>(research, m_script->m_player, true);
     case Fact::CanResearch: // todo: handle cost
     case Fact::ResearchAvailable:
-        return std::make_shared<Conditions::TechAvailableCondition>(research, m_script->m_player->playerId, false);
+        return std::make_shared<Conditions::TechAvailableCondition>(research, m_script->m_player, false);
     default:
         break;
     }
@@ -476,7 +476,7 @@ std::shared_ptr<Action> ScriptLoader::createAction(const ActionType type, const 
 {
     switch(type) {
     case ActionType::Research:
-        return std::make_shared<Actions::Research>(research);
+        return std::make_shared<Actions::Research>(research, m_script->m_player);
     default:
         WARN << "unimplemented action" << type << research;
         break;

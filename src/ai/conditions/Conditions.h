@@ -255,7 +255,7 @@ struct CanTrainOrBuildCondition : public Condition
 
 struct TechAvailableCondition : public Condition
 {
-    TechAvailableCondition(ResearchItem tech, int playerId, bool withEscrow);
+    TechAvailableCondition(ResearchItem tech, Player *player, bool withEscrow);
     TechAvailableCondition(Age targetAge, int playerId, bool withEscrow);
 
     const int m_playerId;
