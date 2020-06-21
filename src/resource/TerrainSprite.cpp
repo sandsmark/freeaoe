@@ -144,7 +144,12 @@ const Drawable::Image::Ptr &TerrainSprite::pngTexture(const MapTile &tile, const
     subRect.top = (tile.frame / cols) * 64;
 
     // First generate an alpha mask that we use to blend the two frames below
-    std::vector<uint8_t> pixelsBuf(subRect.width * subRect.height * 4, 0);
+    const int byteCount = subRect.width * subRect.height * 4;
+    if (byteCount <= 0) {
+        WARN << "invalid size" << subRect.width << subRect.height;
+        return Drawable::Image::null;
+    }
+    std::vector<uint8_t> pixelsBuf(byteCount, 0);
     uint8_t *pixels = pixelsBuf.data();
     const sf::Uint8 *sourcePixels = sourceImage.getPixelsPtr();
     Vector2u sourceSize = sourceImage.getSize();
