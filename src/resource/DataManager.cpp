@@ -221,6 +221,7 @@ const genie::Civ &DataManager::civilization(unsigned int id) const
 
 bool DataManager::initialize(const std::string &gamePath)
 {
+    TIME_THIS;
     std::vector<std::pair<std::string, genie::GameVersion>> datFilenames({
 //        {"empires2_x2_p1.dat", genie::GV_TC  }, // forgotten kingdoms, TODO
         {"empires2_x1_p1.dat", genie::GV_TC  }, // the conquerors, patch 1

@@ -276,7 +276,7 @@ void UnitInfoPanel::drawSingleUnit()
 
     Size size;
     if (unit->data()->Type == genie::Unit::BuildingType) {
-        if (iconId > m_buildingIcons.size()) {
+        if (iconId > int16_t(m_buildingIcons.size())) {
             WARN << "out of bounds building icon" << iconId;
             return;
         }
@@ -284,7 +284,7 @@ void UnitInfoPanel::drawSingleUnit()
         m_renderTarget->draw(m_buildingIcons[iconId], pos);
         size = m_buildingIcons[iconId]->size;
     } else {
-        if (iconId > m_unitIcons.size()) {
+        if (iconId > int16_t(m_unitIcons.size())) {
             WARN << "out of bounds unit icon" << iconId;
             return;
         }
@@ -435,14 +435,14 @@ void UnitInfoPanel::drawSingleUnit()
         }
 
         if (garrisoned->data()->Type == genie::Unit::BuildingType) {
-            if (iconId >= m_buildingIcons.size()) {
+            if (iconId >= int16_t(m_buildingIcons.size())) {
                 WARN << "out of bounds building icon" << iconId;
                 continue;
             }
 
 //            button.sprite = m_buildingIcons[iconId];
         } else {
-            if (iconId >= m_unitIcons.size()) {
+            if (iconId >= int16_t(m_unitIcons.size())) {
                 WARN << "out of bounds unit icon" << iconId;
                 continue;
             }
@@ -500,14 +500,14 @@ void UnitInfoPanel::updateSelectedUnitButtons()
         }
         Button button;
         if (unit->data()->Type == genie::Unit::BuildingType) {
-            if (iconId >= m_buildingIcons.size()) {
+            if (iconId >= int16_t(m_buildingIcons.size())) {
                 WARN << "out of bounds building icon" << iconId;
                 continue;
             }
 
             button.sprite = m_buildingIcons[iconId];
         } else {
-            if (iconId >= m_unitIcons.size()) {
+            if (iconId >= int16_t(m_unitIcons.size())) {
                 WARN << "out of bounds unit icon" << iconId;
                 continue;
             }
