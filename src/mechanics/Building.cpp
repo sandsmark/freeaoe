@@ -41,6 +41,29 @@ Building::~Building()
     }
 }
 
+bool Building::ungarrison(const std::shared_ptr<Unit> &unit)
+{
+    std::vector<std::weak_ptr<Unit>>::iterator it = garrisonedUnits.begin();
+    for (; it != garrisonedUnits.end(); it++) {
+        Unit::Ptr garrisoned = it->lock();
+        if (!garrisoned) {
+            WARN << "we have dead garrisoned";
+            it = garrisonedUnits.erase(it);
+            continue;
+        }
+
+        if (garrisoned == unit) {
+            // TOOD: find a nice position to put the unit
+            // Works ish because the unit preserves the position it was at when getting garrisoned
+            unit->garrisonedIn.reset();
+            it = garrisonedUnits.erase(it);
+            return true;
+        }
+    }
+
+    return false;
+}
+
 bool Building::enqueueProduceUnit(const genie::Unit *data) noexcept
 {
     if (!data) {

@@ -29,6 +29,8 @@ struct Building : public Unit
     std::vector<std::weak_ptr<Unit>> garrisonedUnits;
     int constructors = 0;
 
+    bool ungarrison(const std::shared_ptr<Unit> &unit);
+
     bool enqueueProduceUnit(const genie::Unit *data) noexcept;
     bool enqueueProduceResearch(const genie::Tech *data) noexcept;
     void abortProduction(size_t index) noexcept;

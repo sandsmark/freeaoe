@@ -179,18 +179,25 @@ bool UnitInfoPanel::handleEvent(sf::Event event)
 
     DBG << "clicked" << clickedButton;
 
-    Unit::Ptr clickedUnit;
-
+    Unit::Ptr singleUnit;
     if (m_selectedUnits.size() == 1) {
-        clickedUnit = *m_selectedUnits.begin();
+        singleUnit = *m_selectedUnits.begin();
     }
-    Building::Ptr building = Unit::asBuilding(clickedUnit);
+
+    Building::Ptr building = Unit::asBuilding(singleUnit);
     if (building && building->isProducing()) {
         building->abortProduction(clickedButton);
         return true;
     }
 
-    clickedUnit = m_unitButtons[clickedButton].unit;
+    Unit::Ptr clickedUnit = m_unitButtons[clickedButton].unit;
+
+    if (building && !building->garrisonedUnits.empty()) {
+        if (building->ungarrison(clickedUnit)) {
+            return true;
+        }
+    }
+
     std::shared_ptr<UnitManager> unitManager = m_unitManager.lock();
     unitManager->setSelectedUnits({clickedUnit});
 
@@ -229,35 +236,18 @@ void UnitInfoPanel::draw()
 
     if (m_selectedUnits.size() == 1) {
         drawSingleUnit();
-    } else {
-        updateSelectedUnitButtons();
-        drawMultipleUnits();
+        return;
+    }
+
+    if (!m_selectedUnits.empty()) {
+        updateUnitsList(m_selectedUnits, ScreenPos(2, 2));
+        drawUnitsList();
     }
 }
 
 void UnitInfoPanel::drawSingleUnit()
 {
     Unit::Ptr unit = *m_selectedUnits.begin();
-
-    Building::Ptr building = Unit::asBuilding(unit);
-    if (building && building->isProducing()) {
-        drawConstructionInfo(building);
-    } else {
-        std::shared_ptr<Player> player = unit->player().lock();
-        if (!player) {
-            WARN << "Unit missing player";
-            return;
-        }
-
-        m_civilizationName->string = player->civilization.name();
-        m_playerName->string = player->name;
-
-        m_civilizationName->position = (rect().center() - ScreenPos(0, m_civilizationName->size().height + m_playerName->size().height + 10));
-        m_playerName->position = (rect().center() - ScreenPos(0, m_playerName->size().height));
-
-        m_renderTarget->draw(m_civilizationName);
-        m_renderTarget->draw(m_playerName);
-    }
 
     ScreenPos pos = rect().topLeft();
     m_name->string = LanguageManager::getString(unit->data()->LanguageDLLName);
@@ -416,44 +406,49 @@ void UnitInfoPanel::drawSingleUnit()
         pos.y += item.icon->size.height + 5;
     }
 
-    if (!building) {
+
+    Building::Ptr building = Unit::asBuilding(unit);
+    if (!building || (!building->isProducing() && building->garrisonedUnits.empty())) {
+        std::shared_ptr<Player> player = unit->player().lock();
+        if (!player) {
+            WARN << "Unit missing player";
+            return;
+        }
+
+        m_civilizationName->string = player->civilization.name();
+        m_playerName->string = player->name;
+
+        m_civilizationName->position = (rect().center() - ScreenPos(0, m_civilizationName->size().height + m_playerName->size().height + 10));
+        m_playerName->position = (rect().center() - ScreenPos(0, m_playerName->size().height));
+
+        m_renderTarget->draw(m_civilizationName);
+        m_renderTarget->draw(m_playerName);
+
+
         return;
     }
 
+    if (building->isProducing()) {
+        drawConstructionInfo(building);
+    }
+
+    UnitSet garrisoned;
     for (const std::weak_ptr<Unit> &garrisonedWeak : building->garrisonedUnits) {
-        pos = rect().topLeft() + ScreenPos(100, 2); // 100 pulled out of where the sun doesn't shine
-        Unit::Ptr garrisoned = garrisonedWeak.lock();
-        if (!garrisoned) {
+        Unit::Ptr unit = garrisonedWeak.lock();
+        if (!unit) {
             WARN << "Expired unit garrisoned in" << unit->debugName;
             continue;
         }
+        garrisoned.insert(unit);
+    }
 
-        const int16_t iconId = garrisoned->data()->IconID;
-        if (iconId < 0) {
-            WARN << "invalid unit id";
-            continue;
-        }
-
-        if (garrisoned->data()->Type == genie::Unit::BuildingType) {
-            if (iconId >= int16_t(m_buildingIcons.size())) {
-                WARN << "out of bounds building icon" << iconId;
-                continue;
-            }
-
-//            button.sprite = m_buildingIcons[iconId];
-        } else {
-            if (iconId >= int16_t(m_unitIcons.size())) {
-                WARN << "out of bounds unit icon" << iconId;
-                continue;
-            }
-
-//            button.sprite = m_unitIcons[iconId];
-        }
-
+    if (!garrisoned.empty()) {
+        updateUnitsList(garrisoned, ScreenPos(100, 2)); // a bit arbitrary
+        drawUnitsList();
     }
 }
 
-void UnitInfoPanel::drawMultipleUnits()
+void UnitInfoPanel::drawUnitsList()
 {
     // TODO refactor into common function
     Drawable::Rect bevelRect;
@@ -474,7 +469,7 @@ void UnitInfoPanel::drawMultipleUnits()
 
 }
 
-void UnitInfoPanel::updateSelectedUnitButtons()
+void UnitInfoPanel::updateUnitsList(const UnitSet &units, const ScreenPos offset)
 {
     const int maxVertical = 3;
     Size iconSize;
@@ -482,7 +477,7 @@ void UnitInfoPanel::updateSelectedUnitButtons()
     const int maxHorizontal = rect().width / iconSize.height;
 
 
-    int unitCount = m_selectedUnits.size();
+    int unitCount = units.size();
     if (unitCount >= maxVertical * maxHorizontal) {
         iconSize.width = iconSize.height - (unitCount - maxVertical * maxHorizontal) / 3;
     } else {
@@ -490,9 +485,8 @@ void UnitInfoPanel::updateSelectedUnitButtons()
     }
     iconSize.width = std::min(iconSize.width, 38.f);
 
-
-    ScreenPos pos = rect().topLeft() + ScreenPos(2, 2);
-    for (const Unit::Ptr &unit : m_selectedUnits) {
+    ScreenPos pos = rect().topLeft() + offset;
+    for (const Unit::Ptr &unit : units) {
         const int16_t iconId = unit->data()->IconID;
         if (iconId < 0) {
             WARN << "invalid unit id";
@@ -578,7 +572,7 @@ void UnitInfoPanel::drawConstructionInfo(const std::shared_ptr<Building> &buildi
         pos.x += iconSize.width;
     }
 
-    drawMultipleUnits();
+    drawUnitsList();
 }
 
 ScreenRect UnitInfoPanel::rect() const

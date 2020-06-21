@@ -33,7 +33,7 @@ struct Building;
 struct Unit;
 
 typedef std::vector<std::shared_ptr<Unit>> UnitVector;
-typedef std::unordered_set<std::shared_ptr<Unit>> UnitSet;
+typedef std::unordered_set<std::shared_ptr<Unit>> UnitSet; // TODO: make this weak_ptr, it only works by accident because UnitManager cleans up in itself
 
 class UnitInfoPanel : public IState
 {
@@ -51,8 +51,8 @@ public:
 
 private:
     void drawSingleUnit();
-    void drawMultipleUnits();
-    void updateSelectedUnitButtons();
+    void drawUnitsList();
+    void updateUnitsList(const UnitSet &units, const ScreenPos offset);
     void drawConstructionInfo(const std::shared_ptr<Building> &building);
 
     struct StatItem {
