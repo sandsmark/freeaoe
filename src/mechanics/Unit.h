@@ -38,7 +38,7 @@ namespace genie {
 class Unit;
 
 namespace unit {
-class AttackOrArmor;
+struct AttackOrArmor;
 }  // namespace unit
 }  // namespace genie
 
