@@ -5,6 +5,8 @@ else()
  cmake_minimum_required(VERSION 3.9)
 endif()
 
+option(BUILD_TESTS "Build tests")
+
 set (CMAKE_CXX_STANDARD 20)
 set(CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -306,11 +308,13 @@ add_executable(freeaoe src/main.cpp $<TARGET_OBJECTS:freeaoe_common>)
 target_link_libraries(freeaoe ${ALL_LIBRARIES})
 install(TARGETS freeaoe DESTINATION bin)
 
-add_executable(test src/test/main.cpp $<TARGET_OBJECTS:freeaoe_common>)
-target_link_libraries(test ${ALL_LIBRARIES})
+if (BUILD_TESTS)
+    add_executable(test src/test/main.cpp $<TARGET_OBJECTS:freeaoe_common>)
+    target_link_libraries(test ${ALL_LIBRARIES})
 
-add_executable(ai-test src/test/ai-test.cpp $<TARGET_OBJECTS:freeaoe_common>)
-target_link_libraries(ai-test ${ALL_LIBRARIES})
+    add_executable(ai-test src/test/ai-test.cpp $<TARGET_OBJECTS:freeaoe_common>)
+    target_link_libraries(ai-test ${ALL_LIBRARIES})
+endif()
 
 if (ENABLE_SANITIZERS)
     set_source_files_properties(src/ai/grammar.gen.tab.cpp PROPERTIES COMPILE_FLAGS -fno-sanitize=all)
