@@ -36,6 +36,19 @@
 #define DUMB_CLANG_IT_IS_USED
 #endif // _MSC_VER
 
+// Because cmake is confusing (double negatives? really?): this is in debug builds
+#ifndef NDEBUG
+    // Throw a generic exception instead of assert()ing, since eventually there will be more stuff handling it in main()
+    #ifdef _MSC_VER
+        #define REQUIRE(condition, action) if (IS_UNLIKELY(!condition)) { throw std::runtime_error(std::string("Assertion '") + #condition + "' failed in " + __FUNCTION__  + " at " + __FILE__ + ":" + std::to_string(__LINE__)); }
+    #else //_MSC_VER
+        #define REQUIRE(condition, action) if (IS_UNLIKELY(!condition)) { throw std::runtime_error(std::string("Assertion '") + #condition + "' failed in " + __PRETTY_FUNCTION__  + " at " + __FILE__ + ":" + std::to_string(__LINE__)); }
+    #endif//_MSC_VER
+
+#else // ... and this is in release builds
+    #define REQUIRE(condition, action) if (IS_UNLIKELY(!condition)) { WARN << "Assertion" << #condition << "failed"; action; }
+#endif
+
 namespace util {
 
 inline std::string toLowercase(std::string input)
