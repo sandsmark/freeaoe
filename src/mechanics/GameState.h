@@ -87,7 +87,7 @@ public:
 
     const std::shared_ptr<Player> &humanPlayer() { return m_humanPlayer; }
 
-    std::shared_ptr<Player> player(int id);
+    std::shared_ptr<Player> player(size_t id);
 
     const std::shared_ptr<UnitManager> &unitManager() { return m_unitManager; }
     const MapPtr &map() const { return map_; }
@@ -107,7 +107,7 @@ public:
 
 private:
     void setupScenario();
-    void setupGame(const GameType gameType);
+    void setupGame();
 
     GameState(const GameState &other) = delete;
 

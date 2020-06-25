@@ -137,7 +137,7 @@ bool GameState::init()
     if (scenario_) {
         setupScenario();
     } else {
-        setupGame(GameType::Default);
+        setupGame();
     }
 
     m_unitManager->setHumanPlayer(m_humanPlayer);
@@ -159,12 +159,39 @@ bool GameState::update(Time time)
     //game_server_->update();
     //game_client_->update();
 
+    std::vector<Player::Ptr> playersAlive;
+    for (const Player::Ptr &player : m_players) {
+        if (player->alive) {
+            playersAlive.push_back(player);
+        }
+    }
+
+    if (playersAlive.size() == 1) {
+        onPlayerWin(playersAlive[0]->playerId);
+    }
+
+//     TODO alliance win
+//    if (!playersAlive.empty()) {
+//        bool anyEnemiesAlive = false;
+//        for (size_t i=0; i<playersAlive.size() - 1 && !anyEnemiesAlive; i++) {
+//            for (size_t j=i+1; j < playersAlive.size(); j++) {
+//                // are they allied both ways
+//                if (playersAlive[i]->isAllied(playersAlive[j]->playerId) &&
+//                        playersAlive[j]->isAllied(playersAlive[i]->playerId)) {
+//                    continue;
+//                }
+//                anyEnemiesAlive = true;
+//                break;
+//            }
+//        }
+//    }
+
     return updated;
 }
 
-Player::Ptr GameState::player(int id)
+Player::Ptr GameState::player(size_t id)
 {
-    if (id < 0 || id >= m_players.size()) {
+    if (id >= m_players.size()) {
         WARN << "asked for invalid player id" << id << m_players.size();
         return nullptr;
     }
@@ -287,12 +314,12 @@ void GameState::setupScenario()
     m_scenarioController->setScenario(scenario_);
 }
 
-void GameState::setupGame(const GameType /*gameType*/)
+void GameState::setupGame()
 {
-   SampleGamePtr sampleGameSetup = SampleGameFactory::Inst().createGameSetup(map_, m_unitManager);
+    SampleGamePtr sampleGameSetup = SampleGameFactory::Inst().createGameSetup(map_, m_unitManager);
 
-   sampleGameSetup->setupMap();
-   sampleGameSetup->setupActors(defaultStartingResources[m_gameType]);
+    sampleGameSetup->setupMap();
+    sampleGameSetup->setupActors(defaultStartingResources[m_gameType]);
 
     m_humanPlayer = sampleGameSetup->getHumanPlayer();
 
