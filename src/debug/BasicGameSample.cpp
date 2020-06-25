@@ -75,7 +75,7 @@ void BasicGameSample::addHumanWalls()
 {
     Unit::Ptr unit;
     std::function<void(int, int, float)> addWall = [&](int x, int y, float angle) {
-        unit = UnitFactory::Inst().createUnit(Unit::StoneWall, m_humanPlayer, *unitManager_);
+        unit = UnitFactory::Inst().createUnit(Unit::PalisadeWall, m_humanPlayer, *unitManager_);
         unitManager_->add(unit, MapPos(48*x, 48*y, 0));
         unit->setAngle(angle);
     };
