@@ -143,6 +143,9 @@ struct Unit : public Entity
         return fromEntity(entity.lock());
     }
 
+    static std::shared_ptr<Building> asBuilding(const Unit::Ptr &unit) noexcept;
+    static std::shared_ptr<Building> asBuilding(const std::weak_ptr<Unit> &unit) noexcept;
+
     Unit() = delete;
     Unit(const Unit &unit) = delete;
 
@@ -153,12 +156,10 @@ struct Unit : public Entity
     inline float angle() const noexcept { return m_angle; }
     void setAngle(const float angle) noexcept;
 
-    [[nodiscard]] static MapPos snapPositionToGrid(const MapPos &position, const MapPtr &map, const genie::Unit *data) noexcept;
+    void setMap(const MapPtr &newMap) noexcept override;
+    void setPosition(const MapPos &pos, const bool initial = false) noexcept override;
 
     bool update(Time time) noexcept override;
-
-    static std::shared_ptr<Building> asBuilding(const Unit::Ptr &unit) noexcept;
-    static std::shared_ptr<Building> asBuilding(const std::weak_ptr<Unit> &unit) noexcept;
 
     int playerId() const { return m_playerId; }
     const std::weak_ptr<Player> &player() const { return m_player; }
@@ -184,9 +185,6 @@ struct Unit : public Entity
     void kill() noexcept;
     bool isDying() const noexcept;
     bool isDead() const noexcept;
-
-    void setMap(const MapPtr &newMap) noexcept override;
-    void setPosition(const MapPos &pos, const bool initial = false) noexcept override;
 
     void setUnitData(const genie::Unit &data_) noexcept;
     const genie::Unit *data() const noexcept {return m_data; }

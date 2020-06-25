@@ -63,6 +63,23 @@ std::shared_ptr<Unit> Unit::fromEntity(const EntityPtr &entity) noexcept
     return std::static_pointer_cast<Unit>(entity);
 }
 
+std::shared_ptr<Building> Unit::asBuilding(const Unit::Ptr &unit) noexcept
+{
+    if (!unit) {
+        return nullptr;
+    }
+
+    if (!unit->isBuilding()) {
+        return nullptr;
+    }
+    return std::static_pointer_cast<Building>(unit);
+}
+
+std::shared_ptr<Building> Unit::asBuilding(const std::weak_ptr<Unit> &unit) noexcept
+{
+    return asBuilding(unit.lock());
+}
+
 Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager) :
     Entity(Type::Unit, LanguageManager::getString(data_.LanguageDLLName) + " (" + std::to_string(data_.ID) + ")"),
     actions(this),
@@ -172,43 +189,6 @@ bool Unit::update(Time time) noexcept
 
 
     return Entity::update(time) || updated;
-}
-
-MapPos Unit::snapPositionToGrid(const MapPos &position, const MapPtr &map, const genie::Unit *data) noexcept
-{
-    MapPos newPos = position;
-    newPos /= Constants::TILE_SIZE;
-    newPos += Size(data->Size);
-    newPos.round();
-    newPos -= Size(data->Size);
-    newPos *= Constants::TILE_SIZE;
-
-    if (map) {
-        if (map->isValidPosition(newPos)) {
-            newPos.z = map->elevationAt(newPos);
-        }
-    } else {
-        WARN << "map gone!";
-    }
-
-    return newPos;
-}
-
-std::shared_ptr<Building> Unit::asBuilding(const Unit::Ptr &unit) noexcept
-{
-    if (!unit) {
-        return nullptr;
-    }
-
-    if (!unit->isBuilding()) {
-        return nullptr;
-    }
-    return std::static_pointer_cast<Building>(unit);
-}
-
-std::shared_ptr<Building> Unit::asBuilding(const std::weak_ptr<Unit> &unit) noexcept
-{
-    return asBuilding(unit.lock());
 }
 
 void Unit::setPlayer(const std::shared_ptr<Player> &player)

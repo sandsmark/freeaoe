@@ -431,7 +431,7 @@ void UnitManager::onMouseMove(const MapPos &mapPos)
     }
 
     for (UnplacedBuilding &building : m_buildingsToPlace) {
-        building.position = Unit::snapPositionToGrid(building.position, m_map, building.data);
+        building.position = m_map->snapPositionToGrid(building.position, Size(building.data->Size));
         building.canPlace = Building::canPlace(building.position, m_map, building.data);
     }
 }

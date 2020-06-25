@@ -146,6 +146,7 @@ public:
         return position.x >= 0 && position.y >= 0 && position.x < pixelWidth() && position.y < pixelHeight();
     }
 
+    [[nodiscard]] MapPos snapPositionToGrid(const MapPos &position, const Size unitSize) noexcept; // how big is size? does it fit in a register, or should it be passed by reference? noone knows...
 private:
     void updateTileBlend(int tileX, int tileY) noexcept;
     void updateTileSlopes(int tileX, int tileY) noexcept;

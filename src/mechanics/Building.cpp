@@ -290,7 +290,10 @@ bool Building::update(Time time) noexcept
 
 void Building::setPosition(const MapPos &pos, const bool initial) noexcept
 {
-    Unit::setPosition(Unit::snapPositionToGrid(pos, m_map.lock(), data()), initial);
+    std::shared_ptr<Map> map = m_map.lock();
+    REQUIRE(map, return);
+
+    Unit::setPosition(map->snapPositionToGrid(pos, clearanceSize()), initial);
 }
 
 bool Building::canPlace(const MapPos &position, const MapPtr &map, const genie::Unit *data) noexcept

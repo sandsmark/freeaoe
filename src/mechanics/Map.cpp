@@ -384,6 +384,23 @@ void Map::updateMapData() noexcept
     emit(Signals::TerrainChanged);
 }
 
+MapPos Map::snapPositionToGrid(const MapPos &position, const Size unitSize) noexcept
+{
+    MapPos newPos = position;
+    newPos /= Constants::TILE_SIZE;
+    newPos += unitSize;
+    newPos.round();
+    newPos -= unitSize;
+    newPos *= Constants::TILE_SIZE;
+
+    if (isValidPosition(newPos)) {
+        newPos.z = elevationAt(newPos);
+    }
+
+    return newPos;
+
+}
+
 enum Direction : uint8_t {
     None = 0,
     West = 1 << 0,
