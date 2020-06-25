@@ -183,7 +183,7 @@ void ActionAttack::spawnMissiles(const Unit::Ptr &source, const int unitId, cons
         MapPos pos = source->position();
         pos.x += -sin(source->angle()) * offsetX + cos(source->angle()) * offsetX;
         pos.y +=  cos(source->angle()) * offsetY + sin(source->angle()) * offsetY;
-        pos.z += graphicDisplacement[2] * Constants::TILE_SIZE_HEIGHT;
+        pos.z += graphicDisplacement[2];// * Constants::TILE_SIZE_HEIGHT;
 
         if (spawnArea[2] > 0) {
             pos.x += (rand() % int((100 - spawnArea[2]) * spawnArea[0] * Constants::TILE_SIZE)) / 100.;
