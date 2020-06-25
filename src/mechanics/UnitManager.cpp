@@ -89,7 +89,14 @@ void UnitManager::remove(const Unit::Ptr &unit)
         EventManager::unitDying(unit.get()); // not sure about this, but whatever
         m_units.erase(it);
     }
-    // TODO: EventManager::unitDisappeared(), we need to check the visibility maps
+
+    // Check if the human player saw it, and in that case notify it
+    // TODO: non-human players, we need to check all visibility maps
+    std::shared_ptr<Player> humanPlayer = m_humanPlayer.lock();
+    REQUIRE(humanPlayer, return);
+    if (humanPlayer->visibility->visibilityAt(unit->position()) == VisibilityMap::Visible) {
+        EventManager::unitDisappeared(humanPlayer.get(), unit.get()); // good thing this is synchronous, I hate raw pointers
+    }
 }
 
 bool UnitManager::init()
