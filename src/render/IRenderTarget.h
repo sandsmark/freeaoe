@@ -128,16 +128,6 @@ private:
 
 }
 
-struct Window
-{
-
-};
-
-struct TextureTarget
-{
-
-};
-
 class IRenderTarget
 {
 public:
