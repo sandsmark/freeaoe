@@ -19,4 +19,3 @@
 
 #include "Logger.h"
 int LifeTimePrinter::indent = 0;
-thread_local const char *LogPrinter::separator = " ";

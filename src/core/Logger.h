@@ -137,7 +137,7 @@ struct LogPrinter
         }
     }
 
-    static thread_local const char *separator;
+    const char *separator;
 
 private:
     const char *m_funcName = nullptr;
