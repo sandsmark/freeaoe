@@ -39,6 +39,8 @@ public:
     bool isExploding() const noexcept;
 
 private:
+    bool initialize();
+
     void die();
 
     bool m_isFlying = true;
@@ -48,16 +50,19 @@ private:
     UnitManager &m_unitManager;
     const genie::Unit &m_data;
     MapPos m_targetPosition;
-    float m_zVelocity = 0.f;
-    float m_zAcceleration = 0.f;
     Time m_previousUpdateTime = 0.f;
     Time m_previousSmokeTime = 0.f;
-    float m_angle = 0.f;
-    float m_startingElevation = 0;
-    float m_blastRadius = 0.f;
-    float m_distanceLeft = 0.f;
     BlastType m_blastType = DamageTargetOnly;
     std::vector<genie::unit::AttackOrArmor> m_attacks;
+
+    float m_blastRadius = 0.f;
+
+    float m_angle = 0.f;
+    float m_startingElevation = 0;
+    float m_distanceLeft = 0.f;
+
+    float m_zVelocity = 0.f;
+    float m_zAcceleration = 0.f;
 };
 
 #endif // MISSILE_H

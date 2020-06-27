@@ -68,6 +68,25 @@ void Missile::setBlastType(const BlastType type, const float radius) noexcept
     }
 }
 
+bool Missile::initialize()
+{
+    Unit::Ptr sourceUnit = m_sourceUnit.lock();
+    if (!sourceUnit) {
+        WARN << "Source unit gone before we could start";
+        die();
+        return true;
+    }
+
+    m_distanceLeft = std::min(position().distance(m_targetPosition), sourceUnit->data()->Combat.MaxRange * Constants::TILE_SIZE);;
+    m_angle = std::atan2(m_targetPosition.y - position().y, m_targetPosition.x - position().x);
+    float flightTime = m_distanceLeft / m_data.Speed;
+    float timeToApex = flightTime / 2;
+    m_zVelocity = m_data.Missile.ProjectileArc * m_distanceLeft / timeToApex;
+    m_zAcceleration = m_zVelocity / timeToApex;
+
+    return false;
+}
+
 
 bool Missile::update(Time time) noexcept
 {
@@ -95,22 +114,9 @@ bool Missile::update(Time time) noexcept
     }
 
     if (m_previousUpdateTime == 0) {
-        Unit::Ptr sourceUnit = m_sourceUnit.lock();
-        if (!sourceUnit) {
-            WARN << "Source unit gone before we could start";
-            die();
-            return false;
-        }
-
-        m_distanceLeft = std::min(position().distance(m_targetPosition), sourceUnit->data()->Combat.MaxRange * Constants::TILE_SIZE);;
-        m_angle = std::atan2(m_targetPosition.y - position().y, m_targetPosition.x - position().x);
-        float flightTime = m_distanceLeft / m_data.Speed;
-        float timeToApex = flightTime / 2;
-        m_zVelocity = m_data.Missile.ProjectileArc * m_distanceLeft / timeToApex;
-        m_zAcceleration = m_zVelocity / timeToApex;
         m_previousUpdateTime = time;
         m_previousSmokeTime = time;
-        return false;
+        return initialize();
     }
 
     const float elapsed = time - m_previousUpdateTime;
