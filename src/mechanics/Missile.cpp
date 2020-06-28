@@ -94,6 +94,7 @@ bool Missile::initialize()
     m_zAcceleration = (m_zVelocity) / (m_data.Speed * timeToApex);
 
     m_angle = position().angleTo(m_targetPosition);
+    m_renderer->setAngle(m_angle);
 
     return false;
 }
@@ -165,14 +166,11 @@ bool Missile::update(Time time) noexcept
 
     }
     if (movement != 0.f && m_zVelocity != 0.f) {
-        const int nextFrame = std::round((0.5 + m_zVelocity / movement) * m_renderer->frameCount());
+        const int nextFrame = std::round((0.5 - m_zVelocity / movement) * m_renderer->frameCount());
         m_renderer->setCurrentFrame(std::clamp(nextFrame, 0, m_renderer->frameCount()));
     } else {
         m_renderer->setCurrentFrame(0);
     }
-
-    m_renderer->setAngle(position().toScreen().angleTo(newPos.toScreen()));
-
 
     std::vector<Unit::Ptr> hitUnits;
 
