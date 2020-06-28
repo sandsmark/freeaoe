@@ -18,14 +18,15 @@
 
 #pragma once
 
-#include <stddef.h>
-#include <stdint.h>
-#include <cassert>
 #include <chrono>
 #include <filesystem>
 #include <iostream>
 #include <string>
 #include <vector>
+
+#include <cstddef>
+#include <cstdint>
+#include <cassert>
 
 struct LogPrinter
 {
@@ -85,6 +86,7 @@ struct LogPrinter
     }
 
     LogPrinter(const LogPrinter &other) :
+        separator(other.separator),
         m_funcName(other.m_funcName),
         m_filename(other.m_filename),
         m_linenum(other.m_linenum),
@@ -93,7 +95,7 @@ struct LogPrinter
         (*m_refs)++;
     }
 
-    inline LogPrinter &operator<<(const char *text) { std::cout << (text ? text : "") << separator; return *this; }
+    inline LogPrinter &operator<<(const char *text) { std::cout << (text ? text : "(null)") << separator; return *this; }
     inline LogPrinter &operator<<(const char c) { std::cout << c << separator; return *this; }
     inline LogPrinter &operator<<(const uint8_t num) { std::cout << int(num) << separator; return *this; }
     inline LogPrinter &operator<<(const int8_t num) { std::cout << int(num) << separator; return *this; }
