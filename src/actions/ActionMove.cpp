@@ -346,7 +346,7 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
     }
 
     if (targetUnit) {
-        if (unit->distanceTo(targetUnit) < 0.f) {
+        if (unit->distanceTo(targetUnit) < maxDistance) {
             return UpdateResult::Completed;
         }
 
