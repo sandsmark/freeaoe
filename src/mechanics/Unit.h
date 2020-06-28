@@ -217,7 +217,7 @@ struct Unit : public Entity
     }
 
     // in Z direction, if that makes sense
-    float height();
+    float tallness();
 
 protected:
     friend struct UnitActionHandler;

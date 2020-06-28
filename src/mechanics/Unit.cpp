@@ -460,7 +460,7 @@ Size Unit::clearanceSize() const noexcept
     return Size(data()->Size.x * Constants::TILE_SIZE, data()->Size.y * Constants::TILE_SIZE);
 }
 
-float Unit::height()
+float Unit::tallness()
 {
     return data()->Size.z * Constants::TILE_SIZE;
 }
