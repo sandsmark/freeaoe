@@ -119,7 +119,8 @@ void BasicGameSample::addHumanUnits()
 
 void BasicGameSample::addEnemyUnits()
 {
-    Unit::Ptr unit = UnitFactory::Inst().createUnit(74, m_enemyPlayer, *unitManager_);
+    Unit::Ptr unit;
+    unit = UnitFactory::Inst().createUnit(74, m_enemyPlayer, *unitManager_);
     unitManager_->add(unit, MapPos(48*5, 48*5, 0));
 
     unit = UnitFactory::Inst().createUnit(Unit::PalisadeWall, m_enemyPlayer, *unitManager_);

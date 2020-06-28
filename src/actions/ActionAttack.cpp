@@ -77,6 +77,7 @@ IAction::UpdateResult ActionAttack::update(Time time)
             DBG << "this unit can't move...";
             return IAction::UpdateResult::Failed;
         }
+        DBG << unit->debugName << "is too far away" << distance << unit->data()->Combat.MaxRange;
 
         std::shared_ptr<ActionMove> moveAction = ActionMove::moveUnitTo(unit, targetUnit);
 
@@ -154,7 +155,7 @@ void ActionAttack::spawnMissiles(const Unit::Ptr &source, const int unitId, cons
     DBG << "Spawning missile" << unitId;
 
     const std::array<float, 3> &graphicDisplacement = source->data()->Combat.GraphicDisplacement;
-    const std::array<float, 3> &spawnArea = source->data()->Creatable.ProjectileSpawningArea;
+//    const std::array<float, 3> &spawnArea = source->data()->Creatable.ProjectileSpawningArea; // TODO
     DBG << source->data()->Combat.AccuracyPercent << source->data()->Creatable.SecondaryProjectileUnit;
 
     Player::Ptr owner = source->player().lock();
@@ -164,30 +165,31 @@ void ActionAttack::spawnMissiles(const Unit::Ptr &source, const int unitId, cons
     }
     const genie::Unit &gunit = owner->civilization.unitData(unitId);
 
-    float widthDispersion = 0.;
-    if (source->data()->Creatable.TotalProjectiles > 1) {
-        widthDispersion = spawnArea[0] * Constants::TILE_SIZE / source->data()->Creatable.TotalProjectiles;
-    }
+//    float widthDispersion = 0.;
+//    if (source->data()->Creatable.TotalProjectiles > 1) {
+//        widthDispersion = spawnArea[0] * Constants::TILE_SIZE / source->data()->Creatable.TotalProjectiles;
+//    }
     for (int i=0; i<missilesUnitCanFire(source); i++) {
         MapPos individualTarget = target;
-        individualTarget.x +=  -cos(source->angle()) * i*widthDispersion - spawnArea[0]/2.;
-        individualTarget.y +=  sin(source->angle()) * i*widthDispersion - spawnArea[1]/2.;
+        individualTarget.z += targetUnit->height()/ Constants::TILE_SIZE;
         Missile::Ptr missile = std::make_shared<Missile>(gunit, source, individualTarget, targetUnit);
         missile->setMap(source->map());
 
         float offsetX = graphicDisplacement[0];
         float offsetY = graphicDisplacement[1];
 
-        MapPos pos = source->position();
+        MapPos pos = source->position() - source->clearanceSize()/2;
         pos.x += -sin(source->angle()) * offsetX + cos(source->angle()) * offsetX;
         pos.y +=  cos(source->angle()) * offsetY + sin(source->angle()) * offsetY;
         pos.z += graphicDisplacement[2]  * Constants::TILE_SIZE_HEIGHT;
 
-        if (spawnArea[2] > 0) {
-            pos.x += (rand() % int((100 - spawnArea[2]) * spawnArea[0] * Constants::TILE_SIZE)) / 100.;
-            pos.y += (rand() % int((100 - spawnArea[2]) * spawnArea[1] * Constants::TILE_SIZE)) / 100.;
-        }
+        // TODO
+//        if (spawnArea[2] > 0) {
+//            pos.x += (rand() % int((100 - spawnArea[2]) * spawnArea[0] * Constants::TILE_SIZE)) / 100.;
+//            pos.y += (rand() % int((100 - spawnArea[2]) * spawnArea[1] * Constants::TILE_SIZE)) / 100.;
+//        }
         missile->setPosition(pos, true);
+        DBG << "Missile spawned at" << pos;
         source->unitManager().addMissile(missile);
     }
 }

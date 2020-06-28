@@ -43,6 +43,7 @@ Missile::Missile(const genie::Unit &data, const Unit::Ptr &sourceUnit, const Map
     setBlastType(Missile::BlastType(data.Combat.BlastAttackLevel), data.Combat.BlastWidth);
 
     DBG << "Firing at" << target;
+    DBG << "Target unit at" << targetUnit->position();
 }
 
 Missile::~Missile()
@@ -82,13 +83,17 @@ bool Missile::initialize()
     }
 
     m_distanceLeft = std::min(position().distance(m_targetPosition), sourceUnit->data()->Combat.MaxRange * Constants::TILE_SIZE);
-    m_angle = position().angleTo(m_targetPosition);
+    const float heightDifference = (position().z - m_targetPosition.z);
     const float flightTime = m_distanceLeft / m_data.Speed;
-    const float timeToApex = flightTime / 2;
-    m_zAcceleration = 0.01f * (expm1(pow(m_data.Missile.ProjectileArc, 0.5f)) - 1) * m_data.Speed;
-    m_zVelocity = m_zAcceleration * timeToApex - (position().z - m_targetPosition.z) / flightTime;
+    const float timeToApex = flightTime / 2 - std::hypot(heightDifference/(m_data.Speed*2), heightDifference/(m_data.Speed*2));
+    float arc = m_data.Missile.ProjectileArc;
+    if (arc < 0) {
+        arc = std::abs(arc);
+    }
+    m_zVelocity = m_data.Speed * arc;
+    m_zAcceleration = (m_zVelocity) / (m_data.Speed * timeToApex);
 
-    DBG << "starting position" << position() << "target position" << m_targetPosition;
+    m_angle = position().angleTo(m_targetPosition);
 
     return false;
 }
@@ -115,6 +120,7 @@ bool Missile::update(Time time) noexcept
 
     if (position().z <= map->elevationAt(position())) {
         DBG << "we hit the ground, we're at" << position().z << "ground at" << map->elevationAt(position());
+        DBG << "Distance lefT:" << position().distance(m_targetPosition);
         die();
         return false;
     }
@@ -128,15 +134,15 @@ bool Missile::update(Time time) noexcept
     const float elapsed = time - m_previousUpdateTime;
     m_previousUpdateTime = time;
 
-    const float movement = elapsed * m_data.Speed * 0.15;
+    float movement = elapsed * m_data.Speed * 0.15;
     m_distanceLeft -= movement;
 
     MapPos newPos = position();
     newPos.x += movement * cos(m_angle);
     newPos.y += movement * sin(m_angle);
 
-    m_zVelocity -= m_zAcceleration * elapsed * 0.15;
-    newPos.z += m_zVelocity * elapsed * 0.15;
+    m_zVelocity -= m_zAcceleration * movement;
+    newPos.z += m_zVelocity * movement;
 
     int tileX = newPos.x / Constants::TILE_SIZE;
     int tileY = newPos.y / Constants::TILE_SIZE;
@@ -201,8 +207,11 @@ bool Missile::update(Time time) noexcept
             return true;
         }
 
+        Unit::Ptr sourceUnit = m_sourceUnit.lock();
 
-        DBG << debugName << "hit out target" << targetUnit->debugName;
+        DBG << debugName << "from" << m_sourceUnit.lock()->debugName << "hit our target" << targetUnit->debugName;
+        DBG << minDistance << newPos.distance(targetUnit->position());
+        DBG << targetUnit->position() << newPos;
 
         hitUnits.push_back(targetUnit);
     } else {
