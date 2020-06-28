@@ -139,6 +139,8 @@ TODO (this is probably going to get outdated)
     - dropsite-min-distance
     - resource-found
     - players-stance
+ - Angle of arrows
+ - Arrows stuck in the ground
 
 Wishlist/low priority:
  - Proper support for new terrain graphics (Rise of the Rajas stopped shipping the old ones).

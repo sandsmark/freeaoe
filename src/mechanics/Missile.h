@@ -38,6 +38,11 @@ public:
     inline bool isFlying() const noexcept { return m_isFlying; }
     bool isExploding() const noexcept;
 
+    double distanceTo(const std::shared_ptr<Unit> &otherUnit) const noexcept;
+    double distanceTo(const MapPos &sourcePosition, const std::shared_ptr<Unit> &otherUnit) const noexcept;
+
+    Size clearanceSize() const noexcept;
+
 private:
     bool initialize();
 

@@ -120,7 +120,11 @@ void BasicGameSample::addHumanUnits()
 void BasicGameSample::addEnemyUnits()
 {
     Unit::Ptr unit = UnitFactory::Inst().createUnit(74, m_enemyPlayer, *unitManager_);
-    unitManager_->add(unit, MapPos(48*8, 48*8, 0));
+    unitManager_->add(unit, MapPos(48*5, 48*5, 0));
+
+    unit = UnitFactory::Inst().createUnit(Unit::PalisadeWall, m_enemyPlayer, *unitManager_);
+    unitManager_->add(unit, MapPos(48*10, 48*15, 0));
+    unit->setAngle(unit->renderer().sprite()->orientationToAngle(0));
 }
 
 void BasicGameSample::addGaia()

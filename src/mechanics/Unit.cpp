@@ -460,6 +460,11 @@ Size Unit::clearanceSize() const noexcept
     return Size(data()->Size.x * Constants::TILE_SIZE, data()->Size.y * Constants::TILE_SIZE);
 }
 
+float Unit::height()
+{
+    return data()->Size.z * Constants::TILE_SIZE;
+}
+
 void Unit::forEachVisibleTile(const std::function<void (const int, const int)> &action)
 {
     const int los = data()->LineOfSight;

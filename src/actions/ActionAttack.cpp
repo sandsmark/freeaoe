@@ -175,21 +175,19 @@ void ActionAttack::spawnMissiles(const Unit::Ptr &source, const int unitId, cons
         Missile::Ptr missile = std::make_shared<Missile>(gunit, source, individualTarget, targetUnit);
         missile->setMap(source->map());
 
-        missile->setBlastType(Missile::BlastType(source->data()->Combat.BlastAttackLevel), source->data()->Combat.BlastWidth);
-
         float offsetX = graphicDisplacement[0];
         float offsetY = graphicDisplacement[1];
 
         MapPos pos = source->position();
         pos.x += -sin(source->angle()) * offsetX + cos(source->angle()) * offsetX;
         pos.y +=  cos(source->angle()) * offsetY + sin(source->angle()) * offsetY;
-        pos.z += graphicDisplacement[2];// * Constants::TILE_SIZE_HEIGHT;
+        pos.z += graphicDisplacement[2]  * Constants::TILE_SIZE_HEIGHT;
 
         if (spawnArea[2] > 0) {
             pos.x += (rand() % int((100 - spawnArea[2]) * spawnArea[0] * Constants::TILE_SIZE)) / 100.;
             pos.y += (rand() % int((100 - spawnArea[2]) * spawnArea[1] * Constants::TILE_SIZE)) / 100.;
         }
-        missile->setPosition(pos);
+        missile->setPosition(pos, true);
         source->unitManager().addMissile(missile);
     }
 }

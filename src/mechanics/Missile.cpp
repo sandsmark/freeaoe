@@ -37,9 +37,12 @@ Missile::Missile(const genie::Unit &data, const Unit::Ptr &sourceUnit, const Map
     m_startingElevation = sourceUnit->position().z;
     m_attacks = sourceUnit->data()->Combat.Attacks;
     sourceUnit->activeMissiles++;
-    DBG << "Firing at" << target;
     defaultGraphics = AssetManager::Inst()->getGraphic(data.StandingGraphic.first);
     m_renderer->setSprite(defaultGraphics);
+
+    setBlastType(Missile::BlastType(data.Combat.BlastAttackLevel), data.Combat.BlastWidth);
+
+    DBG << "Firing at" << target;
 }
 
 Missile::~Missile()
@@ -63,6 +66,7 @@ void Missile::setBlastType(const BlastType type, const float radius) noexcept
         m_blastRadius = radius;
         break;
     default:
+        WARN << "unknown blast type" << type << radius;
         m_blastType = DamageTargetOnly;
         break;
     }
@@ -77,12 +81,14 @@ bool Missile::initialize()
         return true;
     }
 
-    m_distanceLeft = std::min(position().distance(m_targetPosition), sourceUnit->data()->Combat.MaxRange * Constants::TILE_SIZE);;
-    m_angle = std::atan2(m_targetPosition.y - position().y, m_targetPosition.x - position().x);
-    float flightTime = m_distanceLeft / m_data.Speed;
-    float timeToApex = flightTime / 2;
-    m_zVelocity = m_data.Missile.ProjectileArc * m_distanceLeft / timeToApex;
-    m_zAcceleration = m_zVelocity / timeToApex;
+    m_distanceLeft = std::min(position().distance(m_targetPosition), sourceUnit->data()->Combat.MaxRange * Constants::TILE_SIZE);
+    m_angle = position().angleTo(m_targetPosition);
+    const float flightTime = m_distanceLeft / m_data.Speed;
+    const float timeToApex = flightTime / 2;
+    m_zAcceleration = 0.01f * (expm1(pow(m_data.Missile.ProjectileArc, 0.5f)) - 1) * m_data.Speed;
+    m_zVelocity = m_zAcceleration * timeToApex - (position().z - m_targetPosition.z) / flightTime;
+
+    DBG << "starting position" << position() << "target position" << m_targetPosition;
 
     return false;
 }
@@ -142,7 +148,6 @@ bool Missile::update(Time time) noexcept
     }
 
     if (m_data.Moving.TrackingUnit != -1&& rand() % 100 < m_data.Moving.TrackingUnitDensity * 100 * 0.15) {
-//        DBG << (m_data.Moving.TrackingUnitDensity / 0.015) << time - m_previousSmokeTime ;
         m_previousSmokeTime = time;
         if (player) {
             const genie::Unit &trailingData = player->civilization.unitData(m_data.Moving.TrackingUnit);
@@ -162,27 +167,46 @@ bool Missile::update(Time time) noexcept
 
     m_renderer->setAngle(position().toScreen().angleTo(newPos.toScreen()));
 
-    setPosition(newPos);
 
     std::vector<Unit::Ptr> hitUnits;
 
-    if (m_blastType == DamageTargetOnly) {
-        Unit::Ptr targetUnit = m_targetUnit.lock();
-        if (!targetUnit) {
-            return true;
-        }
-        const float xSize = (targetUnit->data()->Size.x + m_data.Size.x) * Constants::TILE_SIZE;
-        const float ySize = (targetUnit->data()->Size.y + m_data.Size.y) * Constants::TILE_SIZE;
-        const float xDistance = std::abs(targetUnit->position().x - newPos.x);
-        const float yDistance = std::abs(targetUnit->position().y - newPos.y);
+    Unit::Ptr targetUnit = m_targetUnit.lock();
 
-        if (xDistance > xSize || yDistance > ySize) {
+    if (m_blastType == DamageTargetOnly) {
+        if (!targetUnit) {
+            WARN << "lost target";
+            die();
             return true;
         }
+
+        // We need to test the intermediate, because otherwise the previous position and the next position are too far away
+        // Could use something more efficient (bresenham? some magic line intersection?), but not a hot path (for now)
+
+        float minDistance = distanceTo(newPos, targetUnit);
+        for (int i=1; i<= std::ceil(movement); i++) {
+            MapPos testPos = position();
+            testPos.x += i * cos(m_angle);
+            testPos.y += i * sin(m_angle);
+            testPos.z = newPos.z;
+
+            const float distance = distanceTo(targetUnit);
+            if (distance <= m_blastRadius)  {
+                minDistance = distance;
+                break;
+            }
+        }
+
+        setPosition(newPos);
+        if (minDistance > m_blastRadius)  {
+            return true;
+        }
+
+
         DBG << debugName << "hit out target" << targetUnit->debugName;
 
         hitUnits.push_back(targetUnit);
     } else {
+        setPosition(newPos);
         Unit::Ptr sourceUnit = m_sourceUnit.lock();
         for (int dx = tileX-1; dx<=tileX+1; dx++) {
             for (int dy = tileY-1; dy<=tileY+1; dy++) {
@@ -223,22 +247,8 @@ bool Missile::update(Time time) noexcept
         return true;
     }
 
-    // Only pick the closest
-    if (m_blastType != DamageNearby) {
-        Unit::Ptr closestUnit;
-        float closestDistance = std::numeric_limits<float>::infinity();
-        for (const Unit::Ptr &unit : hitUnits) {
-            const float distance = unit->position().distance(position());
-            if (distance < closestDistance || !closestUnit) {
-                closestDistance = distance;
-                closestUnit = unit;
-            }
-        }
-        hitUnits.clear();
-        hitUnits.push_back(closestUnit);
-    }
-
-    if (!m_data.Missile.HitMode || m_distanceLeft <= 0) {
+    // make sure we don't live forever because of some bug
+    if (m_distanceLeft <= 0) {
         die();
     }
 
@@ -262,12 +272,41 @@ bool Missile::update(Time time) noexcept
         }
     }
 
+
+    // We hit a unit, and we're only supposed to hit our target, so disappear
+    if (m_blastType == DamageTargetOnly) {
+        die();
+    }
+
     return true;
 }
 
 bool Missile::isExploding() const noexcept
 {
     return !m_isFlying && m_renderer->currentFrame() < m_renderer->frameCount() - 1;
+}
+
+double Missile::distanceTo(const std::shared_ptr<Unit> &otherUnit) const noexcept
+{
+    const double centreDistance = position().distance(otherUnit->position());
+    const Size otherSize = otherUnit->clearanceSize();
+    const Size size = clearanceSize();
+    const double clearance = std::max(size.width, size.height) + std::max(otherSize.width, otherSize.height);
+    return centreDistance - clearance;
+}
+
+double Missile::distanceTo(const MapPos &sourcePosition, const std::shared_ptr<Unit> &otherUnit) const noexcept
+{
+    const double centreDistance = sourcePosition.distance(otherUnit->position());
+    const Size otherSize = otherUnit->clearanceSize();
+    const Size size = clearanceSize();
+    const double clearance = std::max(size.width, size.height) + std::max(otherSize.width, otherSize.height);
+    return centreDistance - clearance;
+}
+
+Size Missile::clearanceSize() const noexcept
+{
+    return Size(m_data.Size.x * Constants::TILE_SIZE, m_data.Size.y * Constants::TILE_SIZE);
 }
 
 void Missile::die()

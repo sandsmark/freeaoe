@@ -216,6 +216,9 @@ struct Unit : public Entity
         return centreDistance - clearance;
     }
 
+    // in Z direction, if that makes sense
+    float height();
+
 protected:
     friend struct UnitActionHandler;
 
