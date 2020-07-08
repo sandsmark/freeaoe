@@ -260,10 +260,12 @@ void UnitInfoPanel::drawSingleUnit()
         return;
     }
 
+    // "Halo" behind the unit, basically a picture frame
     m_renderTarget->draw(m_unitHalo, pos);
     pos.x += 2;
     pos.y += 2;
 
+    // Draw the correct icon
     Size size;
     if (unit->data()->Type == genie::Unit::BuildingType) {
         if (iconId > int16_t(m_buildingIcons.size())) {
@@ -302,6 +304,7 @@ void UnitInfoPanel::drawSingleUnit()
 
     pos.y += size.height + 5;
 
+    // Render garrisoned and garrison capacity
     if (unit->isBuilding() && unit->data()->GarrisonCapacity) {
         Building::Ptr building = Unit::asBuilding(unit);
         StatItem &item = m_statItems[StatItem::GarrisonCapacity];
@@ -312,7 +315,7 @@ void UnitInfoPanel::drawSingleUnit()
         pos.y += item.icon->size.height + 5;
     }
 
-
+    // Look up the different attack types
     int16_t meleeAttack = 0;
     int16_t pierceAttack = 0;
     for (const genie::unit::AttackOrArmor &armor : unit->data()->Combat.Attacks) {
@@ -324,6 +327,7 @@ void UnitInfoPanel::drawSingleUnit()
         }
     }
 
+    // Render attack types
     if (meleeAttack || pierceAttack) {
         StatItem &item = m_statItems[StatItem::Damage];
         m_renderTarget->draw(item.icon, ScreenPos(pos));
@@ -333,6 +337,7 @@ void UnitInfoPanel::drawSingleUnit()
         pos.y += item.icon->size.height + 5;
     }
 
+    // Render armors
     if (unit->data()->Type < genie::Unit::BuildingType) {
         int16_t meleeArmor = 0;
         int16_t pierceArmor = 0;
@@ -356,6 +361,7 @@ void UnitInfoPanel::drawSingleUnit()
         }
     }
 
+    // Render attack range
     if (unit->data()->Combat.MaxRange > 0) {
         StatItem &item = m_statItems[StatItem::AttackRange];
         m_renderTarget->draw(item.icon, ScreenPos(pos));
@@ -366,6 +372,7 @@ void UnitInfoPanel::drawSingleUnit()
         pos.y += item.icon->size.height + 5;
     }
 
+    // Render resource storages
     if (unit->resources[genie::ResourceType::WoodStorage] > 0) {
         StatItem &item = m_statItems[StatItem::CarryingWoodAmount];
         m_renderTarget->draw(item.icon, ScreenPos(pos));
@@ -407,6 +414,7 @@ void UnitInfoPanel::drawSingleUnit()
     }
 
 
+    // Render player name and civ, only if building is not producing and don't have any units garrisoned
     Building::Ptr building = Unit::asBuilding(unit);
     if (!building || (!building->isProducing() && building->garrisonedUnits.empty())) {
         std::shared_ptr<Player> player = unit->player().lock();
@@ -428,10 +436,12 @@ void UnitInfoPanel::drawSingleUnit()
         return;
     }
 
+    // Draw production and production queue
     if (building->isProducing()) {
         drawConstructionInfo(building);
     }
 
+    // Render garrisoned units
     UnitSet garrisoned;
     for (const std::weak_ptr<Unit> &garrisonedWeak : building->garrisonedUnits) {
         Unit::Ptr unit = garrisonedWeak.lock();
