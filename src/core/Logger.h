@@ -188,7 +188,9 @@ public:
             std::cout
                     << "\033[0;36m"
                     << m_ticks[i] << " ms\t"
+#ifndef _MSC_VER
                     << std::filesystem::path(m_filename).filename().c_str() << ":" << m_linenums[i]
+#endif
                     << " \033[0;37m("
                     << m_funcName
                     << ")\033[0m" << std::endl;
@@ -201,7 +203,9 @@ public:
                 << "\033[1;36m"
                 << elapsedMs << " ms\t"
                 << "\033[0;36m"
+#ifndef _MSC_VER
                 << std::filesystem::path(m_filename).filename().c_str() << ":" << m_linenum
+#endif
                 << " \033[0;37m("
                 << m_funcName
                 << ")\033[0m" << std::endl;
