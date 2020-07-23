@@ -993,11 +993,11 @@ void ActionMove::updatePath() noexcept
         TIME_THIS;
         std::vector<MapUnit> mapUnits;
         MapUnit mapUnit;
-        for (const Unit::Ptr &unit : unit->unitManager().units()) {
-            mapUnit.pos = unit->position();
-            mapUnit.size = unit->data()->ClearanceSize;
+        for (const Unit::Ptr &otherUnit : unit->unitManager().units()) {
+            mapUnit.pos = otherUnit->position();
+            mapUnit.size = otherUnit->data()->ClearanceSize;
 
-            switch (unit->data()->ObstructionType) {
+            switch (otherUnit->data()->ObstructionType) {
             case genie::Unit::PassableObstruction:
             case genie::Unit::PassableObstruction2:
             case genie::Unit::PassableNoOutlineObstruction:

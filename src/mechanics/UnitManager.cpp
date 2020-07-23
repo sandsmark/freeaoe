@@ -773,13 +773,13 @@ void UnitManager::placeBuilding(const UnplacedBuilding &building)
     }
     DBG << unit->angle();
 
-    for (const Unit::Ptr &unit : m_selectedUnits) {
-        if (unit->playerId() != humanPlayer->playerId) {
+    for (const Unit::Ptr &selectedUnit : m_selectedUnits) {
+        if (selectedUnit->playerId() != humanPlayer->playerId) {
             continue;
         }
 
         Task task;
-        for (const Task &potential : unit->actions.availableActions()) {
+        for (const Task &potential : selectedUnit->actions.availableActions()) {
             if (potential.data->ActionType == genie::ActionType::Build) {
                 task = potential;
                 break;
@@ -790,7 +790,7 @@ void UnitManager::placeBuilding(const UnplacedBuilding &building)
         }
 
         task.target = buildingToPlace;
-        IAction::assignTask(task, unit, IAction::AssignType::Replace);
+        IAction::assignTask(task, selectedUnit, IAction::AssignType::Replace);
     }
 }
 

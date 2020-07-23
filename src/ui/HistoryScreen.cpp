@@ -158,10 +158,10 @@ bool HistoryScreen::init(const std::string &filesDir)
         std::string compareFilename = util::toLowercase(LanguageManager::getString(20410 + 1 + i));
 
         std::string filePath;
-        for (const std::filesystem::directory_entry &entry : std::filesystem::directory_iterator(filesDir)) {
-            std::string candidate = util::toLowercase(entry.path().filename().string());
+        for (const std::filesystem::directory_entry &candidateEntry : std::filesystem::directory_iterator(filesDir)) {
+            std::string candidate = util::toLowercase(candidateEntry.path().filename().string());
             if (candidate == compareFilename) {
-                filePath = entry.path().string();
+                filePath = candidateEntry.path().string();
                 break;
             }
         }
@@ -247,16 +247,16 @@ void HistoryScreen::render()
     m_renderWindow->draw(sprite);
 
     for (int i=0; i<UiElementsCount; i++) {
-        sf::Sprite sprite;
+        sf::Sprite buttonSprite;
         if (i == m_pressedUiElement && m_uiElements[i].pressTexture.getSize().x > 0) {
-            sprite.setTexture(m_uiElements[i].pressTexture);
+            buttonSprite.setTexture(m_uiElements[i].pressTexture);
         } else if (i == m_currentUiElement && m_uiElements[i].hoverTexture.getSize().x > 0) {
-            sprite.setTexture(m_uiElements[i].hoverTexture);
+            buttonSprite.setTexture(m_uiElements[i].hoverTexture);
         } else {
-            sprite.setTexture(m_uiElements[i].texture);
+            buttonSprite.setTexture(m_uiElements[i].texture);
         }
-        sprite.setPosition(m_uiElements[i].rect.topLeft());
-        m_renderWindow->draw(sprite);
+        buttonSprite.setPosition(m_uiElements[i].rect.topLeft());
+        m_renderWindow->draw(buttonSprite);
     }
 
     for (int i=0; i<s_numVisibleTextLines; i++) {

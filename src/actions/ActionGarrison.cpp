@@ -22,7 +22,7 @@ IAction::UpdateResult ActionGarrison::update(Time /*time*/)
         return UpdateResult::Failed;
     }
     Building::Ptr target = m_target.lock();
-    if (!unit) {
+    if (!target) {
         WARN << "garrison target lost";
         return UpdateResult::Failed;
     }

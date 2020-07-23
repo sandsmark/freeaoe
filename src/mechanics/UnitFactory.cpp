@@ -136,12 +136,12 @@ Unit::Ptr UnitFactory::createUnit(const int ID, const Player::Ptr &owner, UnitMa
             if (annexData.UnitID < 0) {
                 continue;
             }
-            const genie::Unit &gunit = owner->civilization.unitData(annexData.UnitID);
-            owner->applyResearch(gunit.Building.TechID);
+            const genie::Unit &stackGUnit = owner->civilization.unitData(annexData.UnitID);
+            owner->applyResearch(stackGUnit.Building.TechID);
 
             Unit::Annex annex;
             annex.offset = MapPos(annexData.Misplacement.first * -48, annexData.Misplacement.second * -48);
-            annex.unit = std::make_shared<Unit>(gunit, owner, unitManager);
+            annex.unit = std::make_shared<Unit>(stackGUnit, owner, unitManager);
             unit->annexes.push_back(annex);
         }
 

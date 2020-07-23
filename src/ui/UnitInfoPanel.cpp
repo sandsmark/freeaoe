@@ -444,12 +444,12 @@ void UnitInfoPanel::drawSingleUnit()
     // Render garrisoned units
     UnitSet garrisoned;
     for (const std::weak_ptr<Unit> &garrisonedWeak : building->garrisonedUnits) {
-        Unit::Ptr unit = garrisonedWeak.lock();
-        if (!unit) {
-            WARN << "Expired unit garrisoned in" << unit->debugName;
+        Unit::Ptr garrisonedUnit = garrisonedWeak.lock();
+        if (!garrisonedUnit) {
+            WARN << "Expired unit garrisoned in" << garrisonedUnit->debugName;
             continue;
         }
-        garrisoned.insert(unit);
+        garrisoned.insert(garrisonedUnit);
     }
 
     if (!garrisoned.empty()) {
@@ -571,15 +571,15 @@ void UnitInfoPanel::drawConstructionInfo(const std::shared_ptr<Building> &buildi
     pos.x = rect().center().x - iconSize.width;
     pos.y = rect().center().y + iconSize.height / 2 + 4;
     for (size_t i = 1; i<building->productionQueueLength(); i++) {
-        const Drawable::Image::Ptr &icon = m_unitIcons.at(building->productIcon(i));
-        const Size iconSize = icon->size;
+        const Drawable::Image::Ptr &productIcon = m_unitIcons.at(building->productIcon(i));
+        const Size productIconSize = productIcon->size;
 
-        Button button;
-        button.sprite = icon;
-        button.rect = ScreenRect(pos, iconSize);
-        m_unitButtons.push_back(std::move(button));
+        Button productButton;
+        productButton.sprite = productIcon;
+        productButton.rect = ScreenRect(pos, productIconSize);
+        m_unitButtons.push_back(std::move(productButton));
 
-        pos.x += iconSize.width;
+        pos.x += productIconSize.width;
     }
 
     drawUnitsList();

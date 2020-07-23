@@ -234,10 +234,10 @@ const genie::PalFile &AssetManager::getPalette(uint32_t id)
     }
 
     for (const std::shared_ptr<genie::DrsFile> &drsFile : m_allFiles) {
-        const genie::PalFile &palette = drsFile->getPalFile(id);
+        const genie::PalFile &drsPalette = drsFile->getPalFile(id);
 
-        if (palette.isValid()) {
-            return palette;
+        if (drsPalette.isValid()) {
+            return drsPalette;
         }
     }
 

@@ -246,8 +246,8 @@ void UnitsRenderer::render(const std::shared_ptr<IRenderTarget> &renderTarget, c
             circle.setOutlineColor(sf::Color::White);
             circle.setOutlineThickness(1);
             for (const MapPos &p : moveAction->path()) {
-                ScreenPos pos = camera->absoluteScreenPos(p);
-                circle.setPosition(pos.x, pos.y);
+                ScreenPos pointPos = camera->absoluteScreenPos(p);
+                circle.setPosition(pointPos.x, pointPos.y);
                 m_outlineOverlay->draw(circle);
             }
         }
