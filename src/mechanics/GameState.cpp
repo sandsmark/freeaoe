@@ -299,7 +299,7 @@ void GameState::setupScenario()
     }
 
     MapPos cameraPos;
-    if (scenario_->playerData.player1CameraX >= 0 &&  scenario_->playerData.player1CameraX >= 0) {
+    if (scenario_->playerData.player1CameraX >= 0 &&  scenario_->playerData.player1CameraY >= 0) {
         cameraPos = MapPos(scenario_->playerData.player1CameraX * Constants::TILE_SIZE, scenario_->playerData.player1CameraY * Constants::TILE_SIZE);
     } else {
         cameraPos = MapPos (scenario_->players[humanPlayerId].initCameraX * Constants::TILE_SIZE, map_->pixelHeight() - scenario_->players[humanPlayerId].initCameraY * Constants::TILE_SIZE);
