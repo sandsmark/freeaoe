@@ -94,7 +94,7 @@ MapPtr Entity::map() const noexcept
     return m_map.lock();
 }
 
-void Entity::setPosition(const MapPos &pos, const bool initial) noexcept
+void Entity::setPosition(const MapPos &pos, const bool initial)
 {
     const int oldTileX = m_position.x / Constants::TILE_SIZE;
     const int oldTileY = m_position.y / Constants::TILE_SIZE;

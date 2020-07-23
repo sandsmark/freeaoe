@@ -44,7 +44,7 @@ struct Building : public Unit
 
     bool update(Time time) noexcept override;
 
-    void setPosition(const MapPos &pos, const bool initial = false) noexcept override;
+    void setPosition(const MapPos &pos, const bool initial = false) override;
 
     MapPos waypoint;
 

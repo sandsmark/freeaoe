@@ -288,7 +288,7 @@ bool Building::update(Time time) noexcept
     return updated;
 }
 
-void Building::setPosition(const MapPos &pos, const bool initial) noexcept
+void Building::setPosition(const MapPos &pos, const bool initial)
 {
     std::shared_ptr<Map> map = m_map.lock();
     REQUIRE(map, return);

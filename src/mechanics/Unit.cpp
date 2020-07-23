@@ -389,7 +389,7 @@ void Unit::setMap(const MapPtr &newMap) noexcept
     Entity::setMap(newMap);
 }
 
-void Unit::setPosition(const MapPos &pos, const bool initial) noexcept
+void Unit::setPosition(const MapPos &pos, const bool initial)
 {
     if (pos == position()) {
         return;

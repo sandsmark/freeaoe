@@ -157,7 +157,7 @@ struct Unit : public Entity
     void setAngle(const float angle) noexcept;
 
     void setMap(const MapPtr &newMap) noexcept override;
-    void setPosition(const MapPos &pos, const bool initial = false) noexcept override;
+    void setPosition(const MapPos &pos, const bool initial = false) override;
 
     bool update(Time time) noexcept override;
 
