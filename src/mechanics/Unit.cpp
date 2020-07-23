@@ -365,7 +365,7 @@ bool Unit::isDead() const noexcept
     }
 
     if (m_data->CanBeGathered) {
-        for (const ResourceEntry resource : resources) {
+        for (const ResourceEntry &resource : resources) {
             if (resource.second > 0) {
                 return false;
             }

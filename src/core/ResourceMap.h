@@ -22,7 +22,7 @@
 #include "Logger.h"
 
 typedef std::unordered_map<genie::ResourceType, float> ResourceMap;
-typedef std::pair<genie::ResourceType, float> ResourceEntry;
+typedef std::pair<const genie::ResourceType, float> ResourceEntry;
 
 inline LogPrinter operator <<(LogPrinter os, const genie::ResourceType &type) {
     const char *separator = os.separator;
