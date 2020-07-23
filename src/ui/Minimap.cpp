@@ -292,7 +292,6 @@ bool Minimap::update(Time /*time*/)
         m_unitsTexture->clear(Drawable::Transparent);
 
 
-        const MapRect mapDimensions(0, 0, m_map->columnCount(), m_map->rowCount());
         const float scaleX = m_rect.boundingMapRect().width / mapDimensions.width / 2;
         const float scaleY = m_rect.boundingMapRect().height / mapDimensions.height / 2;
 

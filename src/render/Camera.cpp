@@ -60,10 +60,6 @@ MapPos Camera::absoluteMapPos(ScreenPos pos)
 
     MapPos nullPos = pos.toMap();
 
-    MapPos relPos;
-    relPos.x = nullPos.x - nullCenterMp.x;
-    relPos.y = nullPos.y - nullCenterMp.y;
-
     MapPos absMapPos = m_target + (nullPos - nullCenterMp);
 
     return absMapPos;

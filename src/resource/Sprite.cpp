@@ -243,7 +243,6 @@ Drawable::Image::Ptr Sprite::slpFrameToImage(const IRenderTarget &renderTarget, 
     case ImageType::Outline: {
         if (playerColor < 0) {
             return renderTarget.createImage(Size(1, 1), nullptr);
-            return img;
         }
 
         std::vector<uint8_t> pixelsBuf(byteCount, 0);
@@ -363,7 +362,6 @@ const sf::Texture &Sprite::texture(uint32_t frameNum, float angleRadians, int8_t
     }
 
     SpriteState state;
-    state.frame = frameNum;
     state.playerColor = playerColor;
     state.type = imageType;
 
