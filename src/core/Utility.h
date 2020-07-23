@@ -80,11 +80,6 @@ inline std::string trimString(std::string string)
     return string;
 }
 
-inline bool stringStartsWith(const std::string &string, const std::string &prefix)
-{
-    return string.compare(0, prefix.size(), prefix) == 0;
-}
-
 inline std::vector<std::string> stringSplit(const std::string &string, const char delimiter)
 {
     if (string.find(delimiter) == std::string::npos) {

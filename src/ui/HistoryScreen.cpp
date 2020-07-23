@@ -495,9 +495,9 @@ void HistoryScreen::loadFile(const std::string &filePath)
         if (line.text[0] != '<') {
             continue;
         }
-        if (util::stringStartsWith(util::toLowercase(line.text), "<b>")) {
+        if (util::toLowercase(line.text).starts_with("<b>")) {
             line.bold = true;
-        } else if (util::stringStartsWith(util::toLowercase(line.text), "<i>")) {
+        } else if (util::toLowercase(line.text).starts_with("<i>")) {
             line.italic = true;
         }
         line.text = util::stringReplace(line.text, "<b>", "");

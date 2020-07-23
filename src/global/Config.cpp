@@ -173,7 +173,7 @@ static std::string getRegistryString(const std::string &regGroup, const std::str
         }
 
         if (line[0] == '[') {
-            if (util::stringStartsWith(util::toLowercase(line), groupString)) {
+            if (util::toLowercase(line).starts_with(groupString)) {
                 isInCorrectGroup = true;
             } else {
                 isInCorrectGroup = false;
@@ -186,7 +186,7 @@ static std::string getRegistryString(const std::string &regGroup, const std::str
             continue;
         }
 
-        if (!util::stringStartsWith(util::toLowercase(line), keyString)) {
+        if (!util::toLowercase(line).starts_with(keyString)) {
             continue;
         }
 
@@ -213,7 +213,7 @@ static std::string getRegistryString(const std::string &regGroup, const std::str
         return {};
     }
 
-    if (util::stringStartsWith(path, "C:") || util::stringStartsWith(path, "c:")) {
+    if (util::toLowercase(path).starts_with("C:")) {
         path = path.substr(2);
     }
 
@@ -251,7 +251,7 @@ bool Config::parseOptions(int argc, char **argv)
 
     for (int i=1; i<argc; i++) {
         std::string argument = argv[i];
-        if (argument.find("--") != 0) {
+        if (argument.starts_with("--")) {
             printUsage(argv[0]);
             return false;
         }
