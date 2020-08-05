@@ -28,7 +28,7 @@ typedef std::shared_ptr<TerrainSprite> TerrainPtr;
 struct Entity;
 
 struct Slope {
-    enum Direction {
+    enum Direction : uint8_t {
         Flat = 0,
         SouthUp     = 1 << 0,
         NorthUp     = 1 << 1,
@@ -225,10 +225,10 @@ struct Blend  {
     }
 
     uint32_t bits = 0;
-    uint8_t blendMode = 0;
-    uint32_t frame = 0;
 
-    uint32_t terrainId;
+    uint16_t terrainId;
+    uint8_t frame = 0;
+    uint8_t blendMode = 0;
 };
 
 struct MapTile

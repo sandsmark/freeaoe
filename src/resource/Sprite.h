@@ -77,9 +77,9 @@ inline LogPrinter &operator <<(LogPrinter &os, const ImageType &type) {
 }
 
 struct SpriteState {
-    uint32_t frame = 0;
+    int frame = 0;
     int angle = 0;
-    int8_t playerColor = 0;
+    int playerColor = 0;
     ImageType type = ImageType::Base;
     bool flipped = false;
 

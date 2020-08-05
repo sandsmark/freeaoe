@@ -32,13 +32,16 @@ class Task;
 }
 
 struct Task {
-    int16_t taskId = -1;
-    Task(const genie::Task &t, int id);
+    Task(const genie::Task *t, int id);
     Task() = default;
 
-    const genie::Task *data = nullptr;
+    int taskId = -1;
     int unitId = -1; // for task group swapping
     std::weak_ptr<Unit> target;
+
+    // Raw pointer because we can assume that the dat file stays around for as long as we stay around
+    const genie::Task *data = nullptr;
+
 
     bool operator==(const Task &other) const;
 };

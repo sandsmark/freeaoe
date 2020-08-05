@@ -27,7 +27,7 @@ std::unordered_set<Task> UnitActionHandler::availableActions() const noexcept
             continue;
         }
 
-        tasks.insert(Task(task, data->ID));
+        tasks.insert(Task(&task, data->ID));
     }
 
     if (!data->Action.TaskSwapGroup) {
@@ -45,7 +45,7 @@ std::unordered_set<Task> UnitActionHandler::availableActions() const noexcept
             if (task.ActionType == genie::ActionType::Combat && data->Combat.Attacks.empty()) {
                 continue;
             }
-            tasks.insert(Task(task, swappable->ID));
+            tasks.insert(Task(&task, swappable->ID));
         }
     }
 
