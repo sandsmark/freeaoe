@@ -185,8 +185,10 @@ const Drawable::Image::Ptr &TerrainSprite::pngTexture(const MapTile &tile, const
     }
 
     const std::string pngFolder = AssetManager::Inst()->assetsPath() + "/terrain/textures/";
+#if DEBUG_TERRAIN_TEXTURES
     float maxAlpha = 0.f;
     float minAlpha = 1.f;
+#endif
     for (const Blend &tileBlend : tile.blends) {
         const genie::BlendMode &blendMode = AssetManager::Inst()->getBlendmode(tileBlend.blendMode);
         std::vector<float> alphamask(subRect.width * subRect.height, 1.);
@@ -200,10 +202,12 @@ const Drawable::Image::Ptr &TerrainSprite::pngTexture(const MapTile &tile, const
                 continue;
             }
 
-            for (size_t j=0; j<blendMode.alphaValues[i].size(); j++) {
+            for (unsigned j=0; j<blendMode.alphaValues[i].size(); j++) {
                 alphamask[j] = std::min(alphamask[j], blendMode.alphaValues[i][j] / 128.f);
+#if DEBUG_TERRAIN_TEXTURES
                 maxAlpha = std::max(alphamask[j], maxAlpha);
                 minAlpha = std::min(alphamask[j], minAlpha);
+#endif
             }
         }
 
@@ -309,7 +313,7 @@ const Drawable::Image::Ptr &TerrainSprite::texture(const MapTile &tile, const IR
 
     // We need to keep operating on indexed colors with the right palette until we've done all
     // the transformations and mapping and lighting
-    const std::vector<genie::Color> &colors = AssetManager::Inst()->getPalette().getColors();
+    const genie::Color * const colors = AssetManager::Inst()->getPalette().getColors().data();
 
     // This maps from RGB to indices in the palette
     const genie::IcmFile::InverseColorMap &defaultIcm = patternmasksFile->icmFile.maps[genie::IcmFile::AokNeutral];
@@ -379,11 +383,11 @@ const Drawable::Image::Ptr &TerrainSprite::texture(const MapTile &tile, const IR
                 if (alpha == 0) {
                     data[srcOffset] = blendData[blendOffset];
                 } else if (alpha != 128) {
-                    const genie::Color &col1 = colors[data[srcOffset]];
-                    const genie::Color &col2 = colors[blendData[blendOffset]];
-                    const int r = col1.r * alpha + col2.r * (128 - alpha);
-                    const int g = col1.g * alpha + col2.g * (128 - alpha);
-                    const int b = col1.b * alpha + col2.b * (128 - alpha);
+                    const genie::Color col1 = colors[data[srcOffset]];
+                    const genie::Color col2 = colors[blendData[blendOffset]];
+                    const unsigned r = col1.r * alpha + col2.r * (128 - alpha);
+                    const unsigned g = col1.g * alpha + col2.g * (128 - alpha);
+                    const unsigned b = col1.b * alpha + col2.b * (128 - alpha);
 
                     // The top five bits are used to look up the palette index
                     // E. g. we have max 255 * 128 = 32640, if we shift that 10
@@ -414,18 +418,22 @@ const Drawable::Image::Ptr &TerrainSprite::texture(const MapTile &tile, const IR
     std::vector<Uint8> pixelsBuf(area * 4, 0);
     uint32_t *pixels = reinterpret_cast<uint32_t*>(pixelsBuf.data());
 
-    for (uint32_t y=0; y<filter.height; y++) {
+    for (unsigned y=0; y<filter.height; y++) {
         int xPos = slpTemplate.left_edges_[y];
         const genie::FiltermapFile::FilterLine &line = filter.lines[y];
 
-        for (uint32_t x=0; x<line.width; x++, xPos++) {
+        for (unsigned x=0; x<line.width; x++, xPos++) {
             const genie::FiltermapFile::FilterCmd &cmd = line.commands[x];
 
             // Each target pixel can blend several source pixels
             int r = 0, g = 0, b = 0;
-            for (const genie::FiltermapFile::SourcePixel &source : cmd.sourcePixels) {
-                const uint8_t sourcePaletteIndex = data[source.sourceIndex];
-                const genie::Color &sourceColor = colors[sourcePaletteIndex];
+
+            // Don't use value based for loops or other dumb c++ iterator shit, it is slooow
+            for (unsigned i = 0; i < cmd.sourcePixelCount; i++) {
+                const genie::FiltermapFile::SourcePixel source = cmd.sourcePixels[i];
+
+                // This is the hottest path of them all...
+                const genie::Color sourceColor = colors[data[source.sourceIndex]];
                 r += sourceColor.r * source.alpha;
                 g += sourceColor.g * source.alpha;
                 b += sourceColor.b * source.alpha;
@@ -473,11 +481,12 @@ void TerrainSprite::addOutline(uint32_t *pixels, const int width, const int heig
 {
     for (size_t x=2;x<width; x++) {
         for (size_t y=0;y<height; y++) {
-            const bool nonTransparentLeft = (pixels[y * width + x - 1] & ALPHA_MASK) != 0;
-            const bool transparentTwoLeft = (pixels[y * width + x - 2] & ALPHA_MASK) == 0;
-            if (nonTransparentLeft && (transparentTwoLeft || (y == 0 && x%2))) {
-                pixels[y * width + x] = 0xFFFFFFFF;
-
+            const uint8_t nonTransparentLeft = (pixels[y * width + x - 1] & ALPHA_MASK) != 0;
+            const uint8_t transparentTwoLeft = (pixels[y * width + x - 2] & ALPHA_MASK) == 0;
+            const unsigned index = y * width + x;
+            const uint8_t isTop = (y == 0) & (x % 2);
+            if ((nonTransparentLeft & (transparentTwoLeft | isTop))) {
+                pixels[index] = 0xFFFFFFFF;
             }
         }
     }
