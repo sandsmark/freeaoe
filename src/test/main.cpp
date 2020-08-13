@@ -57,7 +57,7 @@ void testLoadTiles()
 
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char *argv[]) try
 {
     if (argc < 2)  {
         WARN << "Please pass path to game installation directory";
@@ -65,9 +65,9 @@ int main(int argc, char *argv[])
     }
     gamePath = argv[1];
 //    std::string gamePath(argv[1]);
-    std::string dataPath = std::string(gamePath) + "/Data/";
+    //std::string dataPath = std::string(gamePath) + "/Data/";
     try {
-        if (!std::filesystem::exists(dataPath)) {
+        if (!std::filesystem::exists(gamePath)) {
             throw std::runtime_error("Data path does not exist");
         }
 
@@ -75,21 +75,29 @@ int main(int argc, char *argv[])
             throw std::runtime_error("Failed to load language.dll");
         }
 
-        if (!DataManager::Inst().initialize(dataPath)) {
+        if (!DataManager::Inst().initialize(gamePath)) {
             throw std::runtime_error("Failed to load game data");
         }
 
-        if (!AssetManager::Inst()->initialize(dataPath, DataManager::Inst().gameVersion())) {
+        DBG << "create";
+        AssetManager::create(DataManager::Inst().isHd());
+        DBG << "created";
+
+        if (!AssetManager::Inst()->initialize(gamePath, DataManager::Inst().gameVersion())) {
             throw std::runtime_error("Failed to load game assets");
         }
     } catch(const std::exception &e) {
-        dataPath = "";
+        gamePath = "";
         WARN << "failed to load data:" << e.what();
+        return 1;
     }
     DBG << "Successfully loaded data files";
 
     testLoadTiles();
 
     return 0;
+} catch(const std::exception &e) {
+    puts(e.what());
+    return 1;
 }
 
