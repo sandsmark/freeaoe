@@ -133,7 +133,7 @@ static bool showHomeScreen(genie::ScnFilePtr *scenarioFile)
             if (DataManager::Inst().isHd()){
                 cpxFile.setFileName(config.getValue(Config::GamePath) + "/resources/_common/drs/retail-campaigns/dlc0/conquerors/xcam3.cpn");
             } else {
-                cpxFile.setFileName(config.getValue(Config::GamePath) + "/Campaign/cam4.cpn");
+                cpxFile.setFileName(config.getValue(Config::GamePath) + "/Campaign/xcam3.cpx");
             }
 
             try {
