@@ -72,7 +72,8 @@ void ScenarioController::setScenario(const std::shared_ptr<genie::ScnFile> &scen
                 isImplemented = true;
                 break;
             default:
-                WARN << "Not implemented condition" << cond;
+//                WARN << "Not implemented condition" << cond;
+                missingConditionTypes.insert(cond.type);
                 continue;
             }
         }
@@ -80,8 +81,12 @@ void ScenarioController::setScenario(const std::shared_ptr<genie::ScnFile> &scen
         if (isImplemented) {
             m_triggers.emplace_back(trigger);
         } else {
-//            DBG << trigger;
+            DBG << trigger;
         }
+    }
+
+    for (const int32_t type : missingConditionTypes) {
+        DBG << "Missing support for condition type" << genie::TriggerCondition::Type(type);
     }
 
     std::unordered_set<int32_t> missingEffectTypes;
