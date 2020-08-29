@@ -131,7 +131,11 @@ IAction::~IAction()
 {
 }
 
-Task::Task(const genie::Task *t, int id) : taskId(t->ID), data(t), unitId(id) {}
+Task::Task(const genie::Task *t, int id) :
+    taskId(t->ID),
+    unitId(id),
+    data(t)
+{}
 
 bool Task::operator==(const Task &other) const
 {
