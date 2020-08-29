@@ -2,6 +2,7 @@
 
 #include "AssetManager.h"
 #include "core/Logger.h"
+#include "global/Config.h"
 
 #include <genie/resource/DrsFile.h>
 
@@ -18,7 +19,7 @@ public:
     SlpFilePtr getUiOverlay(const UiResolution res, const UiCiv civ) override;
     std::shared_ptr<genie::UIFile> getUIFile(const std::string &name) override;
     const genie::PalFile &getPalette(uint32_t id) override;
-    bool initialize(const std::string &gamePath, const genie::GameVersion gameVersion) override;
+    bool initialize(const genie::GameVersion gameVersion) override;
     const std::string &assetsPath() const override;
     std::string soundsPath() const override;
     bool missingData() const override;
@@ -123,8 +124,10 @@ const genie::PalFile &AssetManager_HD::getPalette(uint32_t id)
     return *m_hdPalFiles[id];
 }
 
-bool AssetManager_HD::initialize(const std::string &gamePath, const genie::GameVersion gameVersion)
+bool AssetManager_HD::initialize(const genie::GameVersion gameVersion)
 {
+    const std::string gamePath = Config::Inst().getValue(Config::GamePath);
+
     AssetManager::initializeInternal(gamePath + "/resources/_common/dat/", gameVersion);
 
     m_hdAssetPath = gamePath + "/resources/_common/";

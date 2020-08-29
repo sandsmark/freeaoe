@@ -44,7 +44,7 @@ class TerrainRestriction;
 class DataManager
 {
 public:
-    bool initialize(const std::string &gamePath);
+    bool initialize();
 
     DataManager(const DataManager &) = delete;
     DataManager &operator=(const DataManager &) = delete;
@@ -60,8 +60,8 @@ public:
     const genie::Sound &getSound(unsigned int id) const;
     const std::vector<genie::Task> &getTasks(unsigned int id) const;
 
-    const std::vector<genie::Tech> &allTechs() const { return dat_file_.Techs; }
-    const genie::TerrainBlock &terrainBlock() const { return dat_file_.TerrainBlock; }
+    const std::vector<genie::Tech> &allTechs() const { return dat_file_->Techs; }
+    const genie::TerrainBlock &terrainBlock() const { return dat_file_->TerrainBlock; }
 
     bool isHd() const { return m_isHd; }
     genie::GameVersion gameVersion() const;
@@ -76,7 +76,7 @@ private:
     DataManager() = default;
     virtual ~DataManager() = default;
 
-    genie::DatFile dat_file_;
+    std::unique_ptr<genie::DatFile> dat_file_;
     bool m_isHd = false;
 };
 

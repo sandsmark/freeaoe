@@ -19,6 +19,7 @@
 #include "DataManager.h"
 
 #include "LanguageManager.h"
+#include "global/Config.h"
 
 #include <genie/dat/PlayerColour.h>
 #include <genie/dat/Research.h>
@@ -59,81 +60,81 @@ DataManager &DataManager::Inst()
 const genie::Graphic &DataManager::getGraphic(unsigned int id) const
 {
     static const genie::Graphic nullGraphic;
-    if (id >= dat_file_.Graphics.size()) {
+    if (id >= dat_file_->Graphics.size()) {
         WARN << "graphic id" << id << "is out of range";
         return nullGraphic;
     }
-    return dat_file_.Graphics[id];
+    return dat_file_->Graphics[id];
 }
 
 const genie::Tech &DataManager::getTech(unsigned int id) const
 {
-    if (id >= dat_file_.Techs.size()) {
+    if (id >= dat_file_->Techs.size()) {
         return nullTech;
     }
 
-    return dat_file_.Techs.at(id);
+    return dat_file_->Techs.at(id);
 }
 
 const genie::Terrain &DataManager::getTerrain(unsigned int id) const
 {
-    if (id >= dat_file_.TerrainBlock.Terrains.size()) {
+    if (id >= dat_file_->TerrainBlock.Terrains.size()) {
         WARN << "terrain id" << id << "is out of range";
         return nullTerrain;
     }
 
-    return dat_file_.TerrainBlock.Terrains[id];
+    return dat_file_->TerrainBlock.Terrains[id];
 }
 
 const genie::Effect &DataManager::getEffect(unsigned int id) const
 {
-    if (id >= dat_file_.Effects.size()) {
+    if (id >= dat_file_->Effects.size()) {
         WARN << "terrain id" << id << "is out of range";
         return nullEffect;
     }
 
-    return dat_file_.Effects[id];
+    return dat_file_->Effects[id];
 
 }
 
 const genie::TerrainRestriction &DataManager::getTerrainRestriction(unsigned int id) const
 {
-    if (id >= dat_file_.TerrainRestrictions.size()) {
+    if (id >= dat_file_->TerrainRestrictions.size()) {
         WARN << "terrain restriction" << id << "out of range";
         return nullTerrainRestriction;
     }
 
-    return dat_file_.TerrainRestrictions[id];
+    return dat_file_->TerrainRestrictions[id];
 }
 
 const genie::PlayerColour &DataManager::getPlayerColor(unsigned int id) const
 {
-    if (id >= dat_file_.PlayerColours.size()) {
+    if (id >= dat_file_->PlayerColours.size()) {
         WARN << "invalid player color id" << id;
         return nullPlayerColor;
     }
 
-    return dat_file_.PlayerColours[id];
+    return dat_file_->PlayerColours[id];
 }
 
 const genie::Sound &DataManager::getSound(unsigned int id) const
 {
-    if (id >= dat_file_.Sounds.size()) {
+    if (id >= dat_file_->Sounds.size()) {
         WARN << "Invalid sound ID" << id;
         return nullSound;
     }
 
-    return dat_file_.Sounds[id];
+    return dat_file_->Sounds[id];
 }
 
 const std::vector<genie::Task> &DataManager::getTasks(unsigned int id) const
 {
-    if (id >= dat_file_.UnitHeaders.size()) {
+    if (id >= dat_file_->UnitHeaders.size()) {
 //        WARN << "Invalid unit id, can't give tasks" << id;
         return nullTaskList;
     }
 
-    return dat_file_.UnitHeaders[id].TaskList;
+    return dat_file_->UnitHeaders[id].TaskList;
 }
 
 std::string DataManager::gameName(const genie::GameVersion version)
@@ -201,28 +202,33 @@ std::string DataManager::genieVersionString(const genie::GameVersion version)
 
 genie::GameVersion DataManager::gameVersion() const
 {
-    return dat_file_.getGameVersion();
+    return dat_file_->getGameVersion();
 }
 
 const std::vector<genie::Civ> &DataManager::civilizations() const
 {
-    return dat_file_.Civs;
+    return dat_file_->Civs;
 }
 
 const genie::Civ &DataManager::civilization(unsigned int id) const
 {
-    if (id >= dat_file_.Civs.size()) {
+    if (id >= dat_file_->Civs.size()) {
         WARN << "civ out of range";
         return nullCiv;
     }
 
-    return dat_file_.Civs[id];
+    return dat_file_->Civs[id];
 }
 
-bool DataManager::initialize(const std::string &gamePath)
+bool DataManager::initialize()
 {
     TIME_THIS;
-    std::vector<std::pair<std::string, genie::GameVersion>> datFilenames({
+
+    const std::string gamePath = Config::Inst().getValue(Config::GamePath) + "/";
+
+    dat_file_.reset(new genie::DatFile);
+
+    const std::vector<std::pair<std::string, genie::GameVersion>> datFilenames({
 //        {"empires2_x2_p1.dat", genie::GV_TC  }, // forgotten kingdoms, TODO
         {"empires2_x1_p1.dat", genie::GV_TC  }, // the conquerors, patch 1
         {"empires2_x1.dat",    genie::GV_TC  }, // the conquerors
@@ -249,7 +255,7 @@ bool DataManager::initialize(const std::string &gamePath)
         std::string potential = dataPath + datfile.first;
         if (std::filesystem::exists(potential)) {
             filePath = potential;
-            dat_file_.setGameVersion(datfile.second);
+            dat_file_->setGameVersion(datfile.second);
             break;
         }
     }
@@ -259,7 +265,7 @@ bool DataManager::initialize(const std::string &gamePath)
         return false;
     }
 
-    dat_file_.load(filePath);
+    dat_file_->load(filePath);
 
     return true;
 }

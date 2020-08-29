@@ -13,7 +13,7 @@ class LanguageManager
 {
 public:
     static LanguageManager *Inst();
-    bool initialize(const std::string &gamePath);
+    bool initialize();
 
     static const std::string &getString(unsigned int id);
 

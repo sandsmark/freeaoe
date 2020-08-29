@@ -23,8 +23,9 @@
 #include "core/Logger.h"
 #include "TerrainSprite.h"
 #include "Sprite.h"
-
 #include "core/Utility.h"
+#include "global/Config.h"
+
 #include <genie/resource/DrsFile.h>
 #include <genie/resource/PalFile.h>
 #include <genie/resource/UIFile.h>
@@ -269,10 +270,10 @@ std::string AssetManager::uiFilename(const AssetManager::UiResolution resolution
     return ret;
 }
 
-bool AssetManager::initialize(const std::string &gamePath, const genie::GameVersion gameVersion)
+bool AssetManager::initialize(const genie::GameVersion gameVersion)
 {
-    m_gamePath = gamePath;
-    return initializeInternal(gamePath + "/Data/", gameVersion);
+    m_gamePath = Config::Inst().getValue(Config::GamePath) + "/";
+    return initializeInternal(m_gamePath + "/Data/", gameVersion);
 }
 
 //------------------------------------------------------------------------------

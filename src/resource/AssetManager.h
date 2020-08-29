@@ -170,7 +170,7 @@ public:
     const genie::VisibilityMask &unexploredVisibilityMask(const genie::Slope slope, int edges) const;
     const genie::VisibilityMask &exploredVisibilityMask(const genie::Slope slope, int edges) const;
 
-    virtual bool initialize(const std::string &gamePath, const genie::GameVersion gameVersion);
+    virtual bool initialize(const genie::GameVersion gameVersion);
 
     static int filenameID(const std::string &filename);
 

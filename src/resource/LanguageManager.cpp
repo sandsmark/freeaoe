@@ -7,6 +7,7 @@
 
 #include "core/Logger.h"
 #include "core/Utility.h"
+#include "global/Config.h"
 
 LanguageManager *LanguageManager::Inst()
 {
@@ -14,8 +15,13 @@ LanguageManager *LanguageManager::Inst()
     return &instance;
 }
 
-bool LanguageManager::initialize(const std::string &gamePath)
+bool LanguageManager::initialize()
 {
+    m_cache.clear();
+    m_langFiles.clear();
+    m_isHd = false;
+
+    const std::string gamePath = Config::Inst().getValue(Config::GamePath) + "/";
     std::string hdFile = gamePath + "/resources/en/strings/key-value/key-value-strings-utf8.txt";
     if (std::filesystem::exists(hdFile)) {
         if (!loadTxtFile(hdFile)) {
