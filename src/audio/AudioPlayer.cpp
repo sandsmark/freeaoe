@@ -1,5 +1,7 @@
 #include "AudioPlayer.h"
 
+#include "core/Utility.h"
+
 #include <algorithm>
 #include <cstdint>
 #include <random>
@@ -25,8 +27,11 @@
 //#define ma_DEBUG_OUTPUT
 #include <miniaudio/miniaudio.h>
 
-#ifndef DRMP3_SRC_CACHE_SIZE_IN_FRAMES
-#define DRMP3_SRC_CACHE_SIZE_IN_FRAMES    512
+#ifndef DRMP3_MIN_DATA_CHUNK_SIZE
+#define DRMP3_MIN_DATA_CHUNK_SIZE   16384
+#endif
+#ifndef DRMP3_DATA_CHUNK_SIZE
+#define DRMP3_DATA_CHUNK_SIZE  DRMP3_MIN_DATA_CHUNK_SIZE*4
 #endif
 
 void AudioPlayer::malCallback(ma_device *device, void *buffer, const void* /*input*/, uint32_t frameCount)
@@ -44,16 +49,15 @@ void AudioPlayer::malCallback(ma_device *device, void *buffer, const void* /*inp
 void AudioPlayer::mp3Callback(sts_mixer_sample_t *sample, void *userdata)
 {
     ma_decoder* decoder = reinterpret_cast<ma_decoder*>(userdata);
-    if (!decoder) {
-        WARN << "No decoder!";
-        return;
-    }
+    REQUIRE(decoder, return);
 
-    sample->length = ma_decoder_read_pcm_frames(decoder, sample->audiodata, DRMP3_SRC_CACHE_SIZE_IN_FRAMES) * 2;
+    sample->length = ma_decoder_read_pcm_frames(decoder, sample->audiodata, DRMP3_MIN_DATA_CHUNK_SIZE) * 2;
 }
 
 void AudioPlayer::mp3StopCallback(const int id, sts_mixer_sample_t *sample, void *userdata)
 {
+    (void)sample;
+
     ma_decoder* decoder = reinterpret_cast<ma_decoder*>(userdata);
     ma_decoder_uninit(decoder);
     delete decoder;
@@ -69,9 +73,9 @@ void AudioPlayer::mp3StopCallback(const int id, sts_mixer_sample_t *sample, void
     WARN << "Failed to find" << id << "in active streams";
 }
 
-AudioPlayer::AudioPlayer()
+AudioPlayer::AudioPlayer() :
+    m_mixer(std::make_unique<sts_mixer_t>())
 {
-    m_mixer = std::make_unique<sts_mixer_t>();
     sts_mixer_init(m_mixer.get(), 44100, STS_MIXER_SAMPLE_FORMAT_16);
 
 
@@ -363,12 +367,12 @@ void AudioPlayer::playStream(const std::string &filename)
 
     stream->sample.frequency = mp3Decoder->outputSampleRate;
     stream->sample.length = 0; // force a fetch on first play
-    stream->sample.data = std::shared_ptr<uint8_t[]>(new uint8_t[DRMP3_SRC_CACHE_SIZE_IN_FRAMES * bytesPerFrame]);
+    stream->sample.data = std::shared_ptr<uint8_t[]>(new uint8_t[DRMP3_DATA_CHUNK_SIZE * bytesPerFrame]);
     stream->sample.audiodata = stream->sample.data.get();
 
     stream->userdata = mp3Decoder.get();
 
-    int id =sts_mixer_play_stream(m_mixer.get(), stream, 0.5);
+    int id = sts_mixer_play_stream(m_mixer.get(), stream, 0.5);
     if (id < 0) {
         WARN << "unable to play sample, too many playing already";
         delete stream;
