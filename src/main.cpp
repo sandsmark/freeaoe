@@ -105,18 +105,18 @@ static bool showHomeScreen(genie::ScnFilePtr *scenarioFile)
         }
 
         if (button == HomeScreen::Button::Tutorial) {
+            genie::CpxFile cpxFile;
+            if (DataManager::Inst().isHd()){
+                cpxFile.setFileName(config.getValue(Config::GamePath) + "/resources/_common/drs/retail-campaigns/dlc0/kings/cam8.cpn");
+            } else {
+                cpxFile.setFileName(genie::util::resolvePathCaseInsensitive(config.getValue(Config::GamePath) + "/campaign/cam8.cpn"));
+            }
             try {
-                genie::CpxFile cpxFile;
-                if (DataManager::Inst().isHd()){
-                    cpxFile.setFileName(config.getValue(Config::GamePath) + "/resources/_common/drs/retail-campaigns/dlc0/kings/cam8.cpn");
-                } else {
-                    cpxFile.setFileName(genie::util::resolvePathCaseInsensitive(config.getValue(Config::GamePath) + "/campaign/cam8.cpn"));
-                }
                 cpxFile.load();
 
                 *scenarioFile = cpxFile.getScnFile(0);
             } catch (const std::exception &error) {
-                WARN << "Failed to load" << ":" << error.what();
+                WARN << "Failed to load " << cpxFile.getFileName() << ":" << error.what();
                 continue;
             }
 
@@ -128,19 +128,21 @@ static bool showHomeScreen(genie::ScnFilePtr *scenarioFile)
                 break;
             }
 
+
+            genie::CpxFile cpxFile;
+            if (DataManager::Inst().isHd()){
+                cpxFile.setFileName(config.getValue(Config::GamePath) + "/resources/_common/drs/retail-campaigns/dlc0/conquerors/xcam3.cpn");
+            } else {
+                cpxFile.setFileName(config.getValue(Config::GamePath) + "/Campaign/xcam3.cpx");
+            }
+
             try {
-                genie::CpxFile cpxFile;
-                if (DataManager::Inst().isHd()){
-                    cpxFile.setFileName(config.getValue(Config::GamePath) + "/resources/_common/drs/retail-campaigns/dlc0/conquerors/xcam3.cpn");
-                } else {
-                    cpxFile.setFileName(config.getValue(Config::GamePath) + "/Campaign/xcam3.cpx");
-                }
                 cpxFile.load();
 
                 *scenarioFile = cpxFile.getScnFile(0);
                 break;
             } catch (const std::exception &error) {
-                WARN << "Failed to load" << ":" << error.what();
+                WARN << "Failed to load " << cpxFile.getFileName() << ":" << error.what();
             }
 
             break;
