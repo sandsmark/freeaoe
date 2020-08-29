@@ -88,6 +88,27 @@ const std::string &LanguageManager::getString(unsigned int id)
     return cache[id];
 }
 
+const std::string &LanguageManager::cpnTitle(const uint8_t campaignNum)
+{
+    // IDK? It's in the DLL at this offset
+    return getString(34928 + campaignNum * 30);
+}
+
+const std::string &LanguageManager::cpxTitle(const uint8_t campaignNum)
+{
+    return getString(34928 + campaignNum * 30 + 300); // cpx files are +300
+}
+
+const std::string &LanguageManager::cpnScenarioTitle(const uint8_t campaignNum, const uint8_t scenarioNum)
+{
+    return getString(34928 + campaignNum * 30 + 1 + scenarioNum);
+}
+
+const std::string &LanguageManager::cpxScenarioTitle(const uint8_t campaignNum, const uint8_t scenarioNum)
+{
+    return getString(34928 + campaignNum * 30 + 1 + scenarioNum + 300);
+}
+
 void LanguageManager::loadLangFile(const std::string &filename)
 {
     DBG << "Loading" << filename;

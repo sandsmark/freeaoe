@@ -17,6 +17,11 @@ public:
 
     static const std::string &getString(unsigned int id);
 
+    static const std::string &cpnTitle(const uint8_t campaignNum);
+    static const std::string &cpxTitle(const uint8_t campaignNum);
+    static const std::string &cpnScenarioTitle(const uint8_t campaignNum, const uint8_t scenarioNum);
+    static const std::string &cpxScenarioTitle(const uint8_t campaignNum, const uint8_t scenarioNum);
+
 private:
     LanguageManager() = default;
     void loadLangFile(const std::string &filename);
