@@ -26,35 +26,42 @@
 class Config
 {
 public:
+    enum OptionType {
+        GamePath,
+        GameSample,
+        SinglePlayer,
+        ScenarioFile,
+    };
+
     enum StorePolicy {
         NotStored = 0,
         Stored = 1
     };
-    struct ConfigOption {
+
+    struct OptionDefinition {
+        OptionType id;
         std::string name;
         std::string description;
         StorePolicy saved = NotStored;
     };
-
-    Config(const std::string &applicationName);
 
     //----------------------------------------------------------------------------
     /// Get instance (singleton pattern)
     ///
     /// @return returns instance of config
     //
-    static Config *Inst();
+    static Config &Inst();
 
     //----------------------------------------------------------------------------
     /// Parses command line options and config file if present.
     ///
     //
     bool parseOptions(int argc, char **argv);
-    void setAllowedOptions(const std::vector<ConfigOption> &options);
 
 
-    std::string getValue(const std::string &name);
-    void setValue(const std::string &name, const std::string &value);
+    bool isOptionSet(const OptionType option);
+    std::string getValue(const OptionType option);
+    void setValue(const OptionType option, const std::string &value);
 
     void printUsage(const std::string &programName);
 
@@ -63,8 +70,10 @@ public:
 #endif
 
 private:
+    Config(const std::string &applicationName);
+    void setKnownOptions(const std::vector<OptionDefinition> &options);
+
     bool parseOption(const std::string &option);
-    bool checkOption(const std::string &name, const std::string &value);
 
     void parseConfigFile(const std::string &path);
     void writeConfigFile(const std::string &path);
@@ -73,7 +82,7 @@ private:
     std::string m_gamePath;
     std::string m_scenarioFile;
     std::string m_filePath;
-    std::unordered_map<std::string, std::string> m_options;
-    std::unordered_map<std::string, ConfigOption> m_allowedOptions;
+    std::unordered_map<OptionType, std::string> m_values;
+    std::unordered_map<std::string, OptionDefinition> m_knownOptions;
 };
 

@@ -38,50 +38,49 @@
 
 #include "ui/HomeScreen.h"
 
+static void initData()
+{
+    if (!Config::Inst().isOptionSet(Config::GamePath)) {
+        throw std::runtime_error("No data path set");
+    }
+
+    const std::string dataPath = Config::Inst().getValue(Config::GamePath);
+    if (!std::filesystem::exists(dataPath)) {
+        throw std::runtime_error("Data path does not exist");
+    }
+
+    if (!LanguageManager::Inst()->initialize()) {
+        throw std::runtime_error("Failed to load language.dll");
+    }
+
+    if (!DataManager::Inst().initialize()) {
+        throw std::runtime_error("Failed to load game data");
+    }
+    DBG << "Loaded game data";
+
+    // reinits if already inited
+    AssetManager::create(DataManager::Inst().isHd());
+
+    if (!AssetManager::Inst()->initialize(DataManager::Inst().gameVersion())) {
+        throw std::runtime_error("Failed to load game assets");
+    }
+}
+
 // TODO: Bad_alloc
 int main(int argc, char **argv) try
 {
     DBG << "executable path" << util::executablePath();
 
-    Config config("freeaoe");
-    config.setAllowedOptions({
-            {"game-path", "Path to AoE installation with data files", Config::Stored },
-            {"scenario-file", "Path to scenario file to load", Config::NotStored },
-            {"single-player", "Launch a simple test map", Config::NotStored },
-            {"game-sample", "Game samples to load", Config::NotStored }
-            });
+    Config &config = Config::Inst();
+
     if (!config.parseOptions(argc, argv)) {
         return 1;
     }
-    std::string dataPath;
 
     do {
         try {
-            if (config.getValue("game-path").empty()) {
-                throw std::runtime_error("No data path set");
-            }
-
-            dataPath = config.getValue("game-path");
-            if (!std::filesystem::exists(dataPath)) {
-                throw std::runtime_error("Data path does not exist");
-            }
-
-            if (!LanguageManager::Inst()->initialize(config.getValue("game-path") + "/")) {
-                throw std::runtime_error("Failed to load language.dll");
-            }
-
-            if (!DataManager::Inst().initialize(config.getValue("game-path"))) {
-                throw std::runtime_error("Failed to load game data");
-            }
-            DBG << "Loaded game data";
-
-            AssetManager::create(DataManager::Inst().isHd());
-            if (!AssetManager::Inst()->initialize(dataPath, DataManager::Inst().gameVersion())) {
-                throw std::runtime_error("Failed to load game assets");
-            }
-
+            initData();
         } catch(const std::exception &e) {
-            dataPath = "";
 
             std::string errorMessage;
             if (errno != 0) {
@@ -105,15 +104,15 @@ int main(int argc, char **argv) try
                 return 1;
             }
 
-            config.setValue("game-path", selectedPath);
+            config.setValue(Config::GamePath, selectedPath);
         }
-    } while (!std::filesystem::exists(dataPath));
+    } while (!std::filesystem::exists(Config::Inst().getValue(Config::GamePath)));
 
     AudioPlayer::instance();
 
     genie::ScnFilePtr scenarioFile;
 
-    bool skipMenu = config.getValue("single-player") == "true" || !config.getValue("game-sample").empty();
+    bool skipMenu = config.getValue(Config::SinglePlayer) == "true" || config.isOptionSet(Config::GameSample);
 
     if (!skipMenu) {
         // TODO: clean up this mess...
@@ -130,7 +129,7 @@ int main(int argc, char **argv) try
 
             if (button == HomeScreen::Button::History) {
                 HistoryScreen history;
-                if (!history.init(config.getValue("game-path") + "/History/")) {
+                if (!history.init(config.getValue(Config::GamePath) + "/History/")) {
                     continue;
                 }
 
@@ -154,9 +153,9 @@ int main(int argc, char **argv) try
                 try {
                     genie::CpxFile cpxFile;
                     if (DataManager::Inst().isHd()){
-                        cpxFile.setFileName(config.getValue("game-path") + "/resources/_common/drs/retail-campaigns/dlc0/kings/cam8.cpn");
+                        cpxFile.setFileName(config.getValue(Config::GamePath) + "/resources/_common/drs/retail-campaigns/dlc0/kings/cam8.cpn");
                     } else {
-                        cpxFile.setFileName(genie::util::resolvePathCaseInsensitive(config.getValue("game-path") + "/campaign/cam8.cpn"));
+                        cpxFile.setFileName(genie::util::resolvePathCaseInsensitive(config.getValue(Config::GamePath) + "/campaign/cam8.cpn"));
                     }
                     cpxFile.load();
 
@@ -177,9 +176,9 @@ int main(int argc, char **argv) try
                 try {
                     genie::CpxFile cpxFile;
                     if (DataManager::Inst().isHd()){
-                        cpxFile.setFileName(config.getValue("game-path") + "/resources/_common/drs/retail-campaigns/dlc0/conquerors/xcam3.cpn");
+                        cpxFile.setFileName(config.getValue(Config::GamePath) + "/resources/_common/drs/retail-campaigns/dlc0/conquerors/xcam3.cpn");
                     } else {
-                        cpxFile.setFileName(config.getValue("game-path") + "/Campaign/xcam3.cpx");
+                        cpxFile.setFileName(config.getValue(Config::GamePath) + "/Campaign/xcam3.cpx");
                     }
                     cpxFile.load();
 
@@ -192,21 +191,21 @@ int main(int argc, char **argv) try
                 break;
             }
 
-            if (config.getValue("scenario-file").empty()) {
+            if (!config.isOptionSet(Config::ScenarioFile)) {
                 break;
             }
 
             try {
                 scenarioFile = std::make_shared<genie::ScnFile>();
-                scenarioFile->load(config.getValue("scenario-file"));
+                scenarioFile->load(config.getValue(Config::ScenarioFile));
             } catch (const std::exception &error) {
-                WARN << "Failed to load" << config.getValue("scenario-file") << ":" << error.what();
+                WARN << "Failed to load" << config.getValue(Config::ScenarioFile) << ":" << error.what();
                 continue;
             }
             break;
         }
-    } else if (!config.getValue("game-sample").empty()) {
-        const std::string alias = config.getValue("game-sample");
+    } else if (config.isOptionSet(Config::GameSample)) {
+        const std::string alias = config.getValue(Config::GameSample);
         SampleGameFactory::Inst().setSampleFromAlias(alias);
     }
 

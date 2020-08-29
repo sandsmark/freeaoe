@@ -230,9 +230,9 @@ void Config::printUsage(const std::string &programName)
     WARN << "Usage:" << programName << "[options]";
     WARN << "Options:";
 
-    for (const auto &[name, option] : m_allowedOptions) {
+    for (const auto &[name, option] : m_knownOptions) {
         static_assert(std::is_same<decltype(name), const std::string>()); // fuck auto
-        static_assert(std::is_same<decltype(option), const ConfigOption>()); // fuck auto x2
+        static_assert(std::is_same<decltype(option), const OptionDefinition>()); // fuck auto x2
 
         std::cout << std::setw(25) << std::left;
         std::cout << ("  --" + name + "=value");
@@ -247,7 +247,7 @@ bool Config::parseOptions(int argc, char **argv)
 {
     parseConfigFile(m_filePath);
 
-    std::unordered_map<std::string, std::string> configuredOptions = m_options;
+    std::unordered_map<OptionType, std::string> configuredOptions = m_values;
 
     for (int i=1; i<argc; i++) {
         std::string argument = argv[i];
@@ -263,11 +263,11 @@ bool Config::parseOptions(int argc, char **argv)
         }
     }
 
-    if (m_options["game-path"].empty()) {
-        m_options["game-path"] = getRegistryString(s_registryGroupTC, s_registryKey);
+    if (m_values[GamePath].empty()) {
+        m_values[GamePath] = getRegistryString(s_registryGroupTC, s_registryKey);
     }
-    if (m_options["game-path"].empty()) {
-        m_options["game-path"] = getRegistryString(s_registryGroupAoK, s_registryKey);
+    if (m_values[GamePath].empty()) {
+        m_values[GamePath] = getRegistryString(s_registryGroupAoK, s_registryKey);
     }
 #if defined(DEFAULT_DATA_PATH)
     if (m_options["game-path"].empty()) {
@@ -275,7 +275,7 @@ bool Config::parseOptions(int argc, char **argv)
     }
 #endif
 
-    if (m_options != configuredOptions) {
+    if (m_values != configuredOptions) {
         writeConfigFile(m_filePath);
     }
 
@@ -284,29 +284,38 @@ bool Config::parseOptions(int argc, char **argv)
     return true;
 }
 
-void Config::setAllowedOptions(const std::vector<Config::ConfigOption> &options)
+void Config::setKnownOptions(const std::vector<Config::OptionDefinition> &options)
 {
-    m_allowedOptions.clear();
-    for (const ConfigOption &option : options) {
-        m_allowedOptions[option.name] = option;
+    m_knownOptions.clear();
+    for (const OptionDefinition &option : options) {
+        m_knownOptions[option.name] = option;
     }
 }
 
+bool Config::isOptionSet(const Config::OptionType option)
+{
+    return (m_values.find(option) != m_values.end());
+}
 
-std::string Config::getValue(const std::string &name)
+
+std::string Config::getValue(const OptionType option)
 {
     // TODO separate getters, it's a bit dumb with all this generic shit for basically just one
-    if (name == "game-path") {
-        std::filesystem::path path(m_options[name]);
+    if (option == GamePath) {
+        std::filesystem::path path(m_values[GamePath]);
         return path.generic_string();
     }
-
-    return m_options[name];
+    std::unordered_map<OptionType, std::string>::const_iterator it = m_values.find(option);
+    if (it == m_values.end()) {
+        DBG << "Unconfigured option" << option;
+        return "";
+    }
+    return it->second;
 }
 
-void Config::setValue(const std::string &name, const std::string &value)
+void Config::setValue(const OptionType option, const std::string &value)
 {
-    m_options[name] = value;
+    m_values[option] = value;
 
     writeConfigFile(m_filePath);
 }
@@ -314,6 +323,13 @@ void Config::setValue(const std::string &name, const std::string &value)
 //------------------------------------------------------------------------------
 Config::Config(const std::string &applicationName)
 {
+    setKnownOptions({
+            { Config::GamePath, "game-path", "Path to AoE installation with data files", Config::Stored },
+            { Config::ScenarioFile, "scenario-file", "Path to scenario file to load", Config::NotStored },
+            { Config::SinglePlayer, "single-player", "Launch a simple test map", Config::NotStored },
+            { Config::GameSample, "game-sample", "Game samples to load", Config::NotStored }
+        });
+
 #if defined(__linux__)
     char *rawPath = getenv("XDG_CONFIG_HOME");
     if (rawPath) {
@@ -348,6 +364,13 @@ Config::Config(const std::string &applicationName)
     m_filePath += applicationName + ".cfg";
 }
 
+Config &Config::Inst()
+{
+    static Config instance("freeaoe");
+
+    return instance;
+}
+
 bool Config::parseOption(const std::string &option)
 {
     if (option.empty()) {
@@ -362,10 +385,13 @@ bool Config::parseOption(const std::string &option)
 
     std::string name = option.substr(0, splitPos);
     std::string value = option.substr(splitPos + 1);
-    if (!checkOption(name, value)) {
-        WARN << "Invalid option in config: " << option;
+
+    std::unordered_map<std::string, OptionDefinition>::const_iterator it = m_knownOptions.find(name);
+    if (it == m_knownOptions.end()) {
+        WARN << "Unknown option" << name;
         return false;
     }
+    m_values[it->second.id] = value;
 
     return true;
 }
@@ -398,26 +424,16 @@ void Config::writeConfigFile(const std::string &path)
         return;
     }
 
-    for (const auto &[name, value] : m_options) {
-        static_assert(std::is_same<decltype(name), const std::string>()); // fuck auto
+    for (const auto &[id, value] : m_values) {
+        static_assert(std::is_same<decltype(id), const OptionType>()); // fuck auto
         static_assert(std::is_same<decltype(value), const std::string>()); // fuck auto x2
 
-        if (!m_allowedOptions[name].saved) {
+        const std::string &name = m_values[id];
+
+        if (!m_knownOptions[name].saved) {
             continue;
         }
 
         file << name << "=" << value << "\n";
     }
-}
-
-bool Config::checkOption(const std::string &name, const std::string &value)
-{
-    DBG << "checking" << name << value;
-    if (m_allowedOptions.find(name) == m_allowedOptions.end()) {
-        WARN << "Unknown option" << name;
-        return false;
-    }
-
-    m_options[name] = value;
-    return true;
 }
