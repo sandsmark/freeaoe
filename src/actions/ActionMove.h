@@ -60,12 +60,19 @@ public:
     genie::ActionType taskType() const noexcept override { return genie::ActionType::MoveTo; }
 
 private:
+    void resetCache() {
+        if (m_passableDirty) {
+            m_passable.reset();
+            m_passableCached.reset();
+            m_passableDirty = false;
+        }
+    }
     ActionMove(MapPos destination, const UnitPtr &unit, const Task &task);
 
     MapPos findClosestWalkableBorder(const MapPos &start, const MapPos &target, int coarseness) noexcept;
 
     std::vector<MapPos> findPath(MapPos start, MapPos end, int coarseness) noexcept;
-    bool isPassable(const float x, const float y) noexcept;
+    bool isPassable(const int x, const int y, const bool useCache = false) noexcept;
 
     void updatePath() noexcept;
 
@@ -75,7 +82,7 @@ private:
     std::vector<float> m_terrainMoveMultipliers;
     float m_speed;
 
-    bool m_targetReached;
+    bool m_targetReached = false;
     std::bitset<Constants::TILE_SIZE * Constants::TILE_SIZE * Constants::MAP_MAX_SIZE * Constants::MAP_MAX_SIZE> m_passable;
     std::bitset<Constants::TILE_SIZE * Constants::TILE_SIZE * Constants::MAP_MAX_SIZE * Constants::MAP_MAX_SIZE> m_passableCached;
     bool m_passableDirty = false;
@@ -84,5 +91,7 @@ private:
     std::weak_ptr<Unit> m_targetUnit;
     MapPos m_lastTargetUnitPosition;
     MapPos m_prevPathPoint;
+    const int m_mapColumns = 0;
+    const int m_mapRows = 0;
 };
 

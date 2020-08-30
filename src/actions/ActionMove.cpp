@@ -112,7 +112,8 @@ static const float PATHFINDING_HEURISTIC_WEIGHT = 10;
 ActionMove::ActionMove(MapPos destination, const Unit::Ptr &unit, const Task &task) :
     IAction(Type::Move, unit, task),
     m_map(unit->map()),
-    m_targetReached(false)
+    m_mapColumns(m_map->columnCount()),
+    m_mapRows(m_map->rowCount())
 {
     m_destination = destination;
 
@@ -147,16 +148,19 @@ MapPos ActionMove::findClosestWalkableBorder(const MapPos &start, const MapPos &
     const float radius = std::max(xSize, ySize);
     float clearanceLength = 0.f;
 
-    const int tileX = target.x / Constants::TILE_SIZE;
-    const int tileY = target.y / Constants::TILE_SIZE;
+    const int mapColumns = m_map->columnCount();
+    const int mapRows = m_map->rowCount();
+
+    const int tileX = target.x / Constants::TILE_SIZE_F;
+    const int tileY = target.y / Constants::TILE_SIZE_F;
     for (int dx = tileX-1; dx<=tileX+1; dx++) {
         for (int dy = tileY-1; dy<=tileY+1; dy++) {
-            if (IS_UNLIKELY(dx < 0 || dy < 0 || dx >= m_map->columnCount() || dy >= m_map->rowCount())) {
+            if (IS_UNLIKELY(dx < 0 || dy < 0 || dx >= mapColumns || dy >= mapRows)) {
                 continue;
             }
             const std::vector<std::weak_ptr<Entity>> &entities = m_map->entitiesAt(dx, dy);
 
-            if (entities.empty()) {
+            if (entities.size() == 0) {
                 continue;
             }
 
@@ -315,11 +319,6 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
         return UpdateResult::Failed;
     }
 
-    if (m_passableDirty) {
-        m_passable.reset();
-        m_passableCached.reset();
-    }
-
     // TODO differentiate between max manhattan distance (square obstruction type) and euclidian distance (round obstruction type)
     MapRect targetRect(m_destination, Size(maxDistance + 1, maxDistance + 1));
     MapPos unitPosition = unit->position();
@@ -338,7 +337,7 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
 
         m_prevTime = time;
         updatePath();
-        if (m_path.empty()) {
+        if (m_path.size() == 0) {
             return UpdateResult::Failed;
         }
 
@@ -397,7 +396,7 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
         return UpdateResult::Completed;
     }
 
-    if (m_path.empty()) {
+    if (m_path.size() == 0) {
         m_targetReached = true;
 
         if (unitPosition.distance(m_destination) < 1 || targetRect.contains(unitPosition)) {
@@ -419,19 +418,19 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
 
 
     float distanceLeft = util::hypot(m_path.back().x - unitPosition.x, m_path.back().y - unitPosition.y);
-    while (movement > distanceLeft && !m_path.empty() && isPassable(m_path.back().x, m_path.back().y)) {
+    while (movement > distanceLeft && m_path.size() > 0 && isPassable(m_path.back().x, m_path.back().y)) {
         movement -= distanceLeft;
         m_prevPathPoint = unitPosition;
         unitPosition = m_path.back();
         unitPosition.z = m_map->elevationAt(unitPosition);
         m_path.pop_back();
-        if (m_path.empty()) {
+        if (m_path.size() == 0) {
             break;
         }
         distanceLeft = util::hypot(m_path.back().x - unitPosition.x, m_path.back().y - unitPosition.y);
     }
 
-    if (m_path.empty()) {
+    if (m_path.size() == 0) {
         m_targetReached = true;
         if (!isPassable(unitPosition.x, unitPosition.y)) {
             WARN << "path empty after loop, complete, distance left:" << unitPosition.distance(m_destination) << unit->debugName;
@@ -457,7 +456,7 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
             return UpdateResult::Completed;
         }
 
-        if (m_path.empty()) {
+        if (m_path.size() == 0) {
             WARN << "failed to find new target path";
             m_targetReached = true;
             return UpdateResult::Failed;
@@ -716,26 +715,26 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
         DBG << "Already at right position" << start << end;
         return {start};
     }
-    if (!isPassable(startX * coarseness, startY * coarseness)) {
+    if (!isPassable(startX * coarseness, startY * coarseness, true)) {
         WARN << "handed unpassable start, attempting to get out";
         start = findClosestWalkableBorder(MapPos(endX * coarseness, endY * coarseness), MapPos(startX * coarseness, startY * coarseness), coarseness);
         startX = std::round(start.x / coarseness);
         startY = std::round(start.y / coarseness);
     }
 
-    if (!isPassable(startX * coarseness, startY * coarseness)) {
+    if (!isPassable(startX * coarseness, startY * coarseness, true)) {
         WARN << "handed unpassable start, failed to find new";
         return path;
     }
 
-    if (!isPassable(endX * coarseness, endY * coarseness)) {
+    if (!isPassable(endX * coarseness, endY * coarseness, true)) {
 //        WARN << "handed unpassable target, attempting to get out";
         start = findClosestWalkableBorder(start, end, coarseness);
         startX = std::round(start.x / coarseness);
         startY = std::round(start.y / coarseness);
     }
 
-    if (!isPassable(endX * coarseness, endY * coarseness)) {
+    if (!isPassable(endX * coarseness, endY * coarseness, true)) {
         WARN << "handed unpassable target";
         return path;
     }
@@ -809,20 +808,21 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
                 }
 
 
-                SimplePathPoint position(nx, ny);
-                if (visited.find(position) != visited.end()) {
+                const SimplePathPoint position(nx, ny);
+                if (visited.count(position) > 0) {
                     continue;
                 }
 
-                if (!isPassable(nx * coarseness, ny * coarseness)) {
+                if (!isPassable(nx * coarseness, ny * coarseness, true)) {
                     visited.insert(position);
                     continue;
                 }
                 PathPoint pathPoint(nx, ny);
 
 
-                if (cameFrom.find(pathPoint) != cameFrom.end()) {
-                    if ((cameFrom[pathPoint].pathLength < parent.pathLength)) {
+                const std::unordered_map<PathPoint, PathPoint>::const_iterator previousPathIterator = cameFrom.find(pathPoint);
+                if (previousPathIterator != cameFrom.end()) {
+                    if ((previousPathIterator->second.pathLength < parent.pathLength)) {
                         continue;
                     }
                 }
@@ -894,35 +894,45 @@ bool ActionMove::isPassable(const int x, const int y, const bool useCache) noexc
     if (IS_UNLIKELY(x < 0 || y < 0)) {
         return false;
     }
-    const int tileX = x / Constants::TILE_SIZE;
-    const int tileY = y / Constants::TILE_SIZE;
-    if (IS_UNLIKELY(tileX >= m_map->columnCount() || tileY >= m_map->rowCount())) {
+
+    const int mapColumns = m_mapColumns;
+    const int mapRows = m_mapRows;
+
+    const int tileX = x / Constants::TILE_SIZE_F;
+    const int tileY = y / Constants::TILE_SIZE_F;
+    if (IS_UNLIKELY(tileX >= mapColumns || tileY >= mapRows)) {
         return false;
     }
 
-    const unsigned cacheIndex = x  + y * Constants::TILE_SIZE * Constants::MAP_MAX_SIZE;
-    if (m_passableCached[cacheIndex]) {
-        return m_passable[cacheIndex];
-    }
 
-    m_passableDirty = true;
-    m_passableCached[cacheIndex] = true;
+    const unsigned cacheIndex = x  + y * Constants::TILE_SIZE * Constants::MAP_MAX_SIZE;
+    if (useCache) {
+        m_passableDirty = true;
+
+        if (std::as_const(m_passableCached)[cacheIndex]) {
+            return std::as_const(m_passable)[cacheIndex];
+        }
+
+        m_passableCached[cacheIndex] = true;
+    }
 
     const MapTile &tile = m_map->getTileAt(tileX, tileY);
     if (m_terrainMoveMultipliers[tile.terrainId] == 0) {
-        m_passable[cacheIndex] = false;
+        if (useCache) {
+            m_passable[cacheIndex] = false;
+        }
         return false;
     }
 
     const double z = m_map->elevationAt(MapPos(x, y));
     const Unit::Ptr unit = m_unit.lock();
     genie::XYZF size = unit->data()->Size;
-    size.x *= Constants::TILE_SIZE;
-    size.y *= Constants::TILE_SIZE;
+    size.x *= Constants::TILE_SIZE_F;
+    size.y *= Constants::TILE_SIZE_F;
 
     for (int dx = tileX-1; dx<=tileX+1; dx++) {
         for (int dy = tileY-1; dy<=tileY+1; dy++) {
-            if (IS_UNLIKELY(dx < 0 || dy < 0 || dx >= m_map->columnCount() || dy >= m_map->rowCount())) {
+            if (IS_UNLIKELY(dx < 0 || dy < 0 || dx >= mapColumns || dy >= mapRows)) {
                 continue;
             }
             const std::vector<std::weak_ptr<Entity>> &entities = m_map->entitiesAt(dx, dy);
@@ -949,7 +959,9 @@ bool ActionMove::isPassable(const int x, const int y, const bool useCache) noexc
                 case genie::Unit::BuildingObstruction:
                 case genie::Unit::MountainObstruction: // TOOD:  apparently uses the selection mask?
                     if (dx == tileX && dy == tileY) { // TODO: need to check the distance from the tile
-                        m_passable[cacheIndex] = false;
+                        if (useCache) {
+                            m_passable[cacheIndex] = false;
+                        }
                         return false;
                     }
                     break;
@@ -961,7 +973,9 @@ bool ActionMove::isPassable(const int x, const int y, const bool useCache) noexc
                     const Size otherSize = otherUnit->clearanceSize();
                     const double clearance = std::max(std::max(size.x, size.y), std::max(otherSize.width, otherSize.height));
                     if (centreDistance < clearance) {
-                        m_passable[cacheIndex] = false;
+                        if (useCache) {
+                            m_passable[cacheIndex] = false;
+                        }
                         return false;
                     }
                     break;
@@ -971,7 +985,9 @@ bool ActionMove::isPassable(const int x, const int y, const bool useCache) noexc
         }
     }
 
-    m_passable[cacheIndex] = true;
+    if (useCache) {
+        m_passable[cacheIndex] = true;
+    }
     return true;
 }
 
@@ -981,6 +997,8 @@ void ActionMove::updatePath() noexcept
     testedPoints.clear();
 #endif
     TIME_THIS;
+
+    resetCache();
 
     m_path.clear();
     std::shared_ptr<Unit> unit = m_unit.lock();
@@ -1031,7 +1049,7 @@ void ActionMove::updatePath() noexcept
 
     // Try coarser
     // Uglier, but hopefully faster
-    if (m_path.empty()) {
+    if (m_path.size() == 0) {
         WARN << "failed to find path, trying 0.2 resolution";
         if (newDest != m_destination) {
             newDest = findClosestWalkableBorder(unit->position(), m_destination, 5);
@@ -1042,7 +1060,7 @@ void ActionMove::updatePath() noexcept
 
     TIME_TICK;
 
-    if (m_path.empty()) {
+    if (m_path.size() == 0) {
         WARN << "failed to find path, trying 0.1 resolution";
         if (newDest != m_destination) {
             newDest = findClosestWalkableBorder(unit->position(), m_destination, 10);
@@ -1051,7 +1069,7 @@ void ActionMove::updatePath() noexcept
         m_path = findPath(unit->position(), newDest, 10);
     }
 
-    if (m_path.empty()) {
+    if (m_path.size() == 0) {
         DBG << "Failed to find path for" << unit->debugName;
     }
 

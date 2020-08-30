@@ -21,6 +21,7 @@
 namespace Constants {
 
 static const int TILE_SIZE = 48;
+static const float TILE_SIZE_F = 48.f;
 
 static const int MAP_MAX_SIZE = 255;
 
