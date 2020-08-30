@@ -270,8 +270,8 @@ bool Config::parseOptions(int argc, char **argv)
         m_values[GamePath] = getRegistryString(s_registryGroupAoK, s_registryKey);
     }
 #if defined(DEFAULT_DATA_PATH)
-    if (m_options["game-path"].empty()) {
-        m_options["game-path"] = DEFAULT_DATA_PATH;
+    if (getValue(GamePath).empty()) {
+        setValue(GamePath, DEFAULT_DATA_PATH);
     }
 #endif
 
@@ -302,7 +302,10 @@ std::string Config::getValue(const OptionType option)
 {
     // TODO separate getters, it's a bit dumb with all this generic shit for basically just one
     if (option == GamePath) {
-        std::filesystem::path path(m_values[GamePath]);
+        const std::filesystem::path path(m_values[GamePath]);
+        if (!std::filesystem::exists(path)) {
+            return {};
+        }
         return path.generic_string();
     }
     std::unordered_map<OptionType, std::string>::const_iterator it = m_values.find(option);
