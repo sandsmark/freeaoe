@@ -230,9 +230,9 @@ void Config::printUsage(const std::string &programName)
     std::cout << "Usage: " << programName << " [options]" << std::endl;
     std::cout << "Options:" << std::endl;
 
-    for (const auto &[name, option] : m_knownOptions) {
-        static_assert(std::is_same<decltype(name), const std::string>()); // fuck auto
-        static_assert(std::is_same<decltype(option), const OptionDefinition>()); // fuck auto x2
+    for (const std::pair<const std::string, OptionDefinition> &nameAndDefinition : m_knownOptions) {
+        const std::string &name = nameAndDefinition.first;
+        const OptionDefinition &option = nameAndDefinition.second;
 
         std::cout << std::setw(25) << std::left;
         std::cout << ("  --" + name + (option.argumentType != NoArgument ? "=value" : ""));
@@ -451,9 +451,9 @@ void Config::writeConfigFile(const std::string &path)
         return;
     }
 
-    for (const auto &[name, option] : m_knownOptions) {
-        static_assert(std::is_same<decltype(name), const std::string>()); // fuck auto
-        static_assert(std::is_same<decltype(option), const OptionDefinition>()); // fuck auto x2
+    for (const std::pair<const std::string, OptionDefinition> &nameAndDefinition : m_knownOptions) {
+        const std::string &name = nameAndDefinition.first;
+        const OptionDefinition &option = nameAndDefinition.second;
 
         if (option.saved == NotStored) {
             continue;
