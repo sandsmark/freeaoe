@@ -113,7 +113,7 @@ else()
 
     add_definitions(-Wall -Wextra -pedantic -Wno-sign-compare -Wno-unused-parameter)
     set(EXTRA_LIBS stdc++fs pthread dl)
-    set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/)
+    #set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/)
 
     # Somehow need this because otherwise the SFML config gets fucked
     find_package(ZLIB)
