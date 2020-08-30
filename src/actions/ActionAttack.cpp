@@ -24,7 +24,7 @@ ActionAttack::ActionAttack(const Unit::Ptr &attacker, const Task &task) :
 {
     Unit::Ptr target = task.target.lock();
     if (!target) {
-        WARN << "target gone";
+        WARN << "target gone even before we started attacking";
         return;
     }
     m_targetPosition = target->position();
@@ -154,7 +154,7 @@ void ActionAttack::spawnMissiles(const Unit::Ptr &source, const int unitId, cons
 {
     DBG << "Spawning missile" << unitId;
 
-    const std::array<float, 3> &graphicDisplacement = source->data()->Combat.GraphicDisplacement;
+    const genie::XYZF &graphicDisplacement = source->data()->Combat.GraphicDisplacement;
 //    const std::array<float, 3> &spawnArea = source->data()->Creatable.ProjectileSpawningArea; // TODO
     DBG << source->data()->Combat.AccuracyPercent << source->data()->Creatable.SecondaryProjectileUnit;
 
@@ -175,13 +175,13 @@ void ActionAttack::spawnMissiles(const Unit::Ptr &source, const int unitId, cons
         Missile::Ptr missile = std::make_shared<Missile>(gunit, source, individualTarget, targetUnit);
         missile->setMap(source->map());
 
-        float offsetX = graphicDisplacement[0];
-        float offsetY = graphicDisplacement[1];
+        float offsetX = graphicDisplacement.x;
+        float offsetY = graphicDisplacement.y;
 
         MapPos pos = source->position() - source->clearanceSize()/2;
         pos.x += -sin(source->angle()) * offsetX + cos(source->angle()) * offsetX;
         pos.y +=  cos(source->angle()) * offsetY + sin(source->angle()) * offsetY;
-        pos.z += graphicDisplacement[2]  * Constants::TILE_SIZE_HEIGHT;
+        pos.z += graphicDisplacement.z  * Constants::TILE_SIZE_HEIGHT;
 
         // TODO
 //        if (spawnArea[2] > 0) {
