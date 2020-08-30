@@ -451,15 +451,15 @@ void Config::writeConfigFile(const std::string &path)
         return;
     }
 
-    for (const auto &[id, value] : m_values) {
-        static_assert(std::is_same<decltype(id), const OptionType>()); // fuck auto
-        static_assert(std::is_same<decltype(value), const std::string>()); // fuck auto x2
+    for (const auto &[name, option] : m_knownOptions) {
+        static_assert(std::is_same<decltype(name), const std::string>()); // fuck auto
+        static_assert(std::is_same<decltype(option), const OptionDefinition>()); // fuck auto x2
 
-        const std::string &name = m_values[id];
-
-        if (!m_knownOptions[name].saved) {
+        if (option.saved == NotStored) {
             continue;
         }
+
+        const std::string &value = m_values[option.id];
 
         file << name << "=" << value << "\n";
     }
