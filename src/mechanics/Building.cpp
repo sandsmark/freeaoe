@@ -298,14 +298,8 @@ void Building::setPosition(const MapPos &pos, const bool initial)
 
 bool Building::canPlace(const MapPos &position, const MapPtr &map, const genie::Unit *data)
 {
-    if (!map) {
-        WARN << "No map available";
-        return false;
-    }
-    if (!data) {
-        WARN << "no data!";
-        return false;
-    }
+    REQUIRE(map, return false);
+    REQUIRE(data, return false);
 
     std::vector<float> passable = DataManager::Inst().getTerrainRestriction(data->TerrainRestriction).PassableBuildableDmgMultiplier;
 
