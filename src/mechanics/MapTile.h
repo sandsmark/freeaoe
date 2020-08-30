@@ -227,7 +227,7 @@ struct Blend  {
     uint32_t bits = 0;
 
     uint16_t terrainId;
-    uint8_t frame = 0;
+    int8_t frame = 0;
     uint8_t blendMode = 0;
 };
 
