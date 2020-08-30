@@ -315,6 +315,7 @@ const Drawable::Image::Ptr &TerrainSprite::texture(const MapTile &tile, const IR
     const genie::IcmFile::InverseColorMap &defaultIcm = patternmasksFile->icmFile.maps[genie::IcmFile::AokNeutral];
 
     // Precalculate the line widths
+    // This could be static or a constexpr or something, but way out of a hot path so meh
     uint8_t widths[49];
     uint8_t size = 1;
     for(int i = 0; i < 25; i++){

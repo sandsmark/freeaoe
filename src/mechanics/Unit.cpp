@@ -516,7 +516,6 @@ void Unit::updateGraphic()
 
     switch (actions.m_currentAction->type) {
     case IAction::Type::Move:
-        graphic = movingGraphics;
         for (const genie::Task &task : DataManager::Inst().getTasks(m_data->ID)) {
             if (task.ActionType != genie::ActionType::GatherRebuild && task.ActionType != genie::ActionType::Hunt) {
                 continue;
@@ -526,23 +525,40 @@ void Unit::updateGraphic()
                 continue;
             }
 
-            if (resources[genie::ResourceType(task.ResourceIn)] > 0) {
-                if (task.CarryingGraphicID != -1) {
-                    graphic = AssetManager::Inst()->getGraphic(task.CarryingGraphicID);
-                    break;
-                }
+            if (resources[genie::ResourceType(task.ResourceIn)] <= 0) {
+                continue;
             }
+
+            if (task.CarryingGraphicID == -1) {
+                continue;
+            }
+
+            graphic = AssetManager::Inst()->getGraphic(task.CarryingGraphicID);
+            break;
+        }
+
+        if (!graphic) {
+            graphic = movingGraphics;
         }
 
         break;
     case IAction::Type::Attack:
-        if (actions.m_currentAction->unitState() == IAction::UnitState::Attacking && data()->Combat.AttackGraphic != -1) {
-            graphic = AssetManager::Inst()->getGraphic(data()->Combat.AttackGraphic);
-            graphic->setRunOnce(true);
-        } else {
+        if (actions.m_currentAction->unitState() != IAction::UnitState::Attacking) {
             graphic = defaultGraphics;
+            break;
+        }
+
+        if (data()->Combat.AttackGraphic == -1) {
+            graphic = defaultGraphics;
+            break;
+        }
+
+        graphic = AssetManager::Inst()->getGraphic(data()->Combat.AttackGraphic);
+        if (graphic) {
+            graphic->setRunOnce(true);
         }
         break;
+
     default:
         graphic = AssetManager::Inst()->getGraphic(actions.taskGraphicId(actions.m_currentAction->taskType(), actions.m_currentAction->unitState()));
         break;

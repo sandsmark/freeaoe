@@ -20,7 +20,7 @@ public:
     UpdateResult update(Time time) override;
 
 private:
-    void spawnMissiles(const UnitPtr &source, const int unitId, const MapPos &target, const UnitPtr &targetUnit);
+    void spawnMissiles(const UnitPtr &source, const int unitId, const UnitPtr &targetUnit);
     bool unitFiresMissiles(const UnitPtr &unit);
     int missilesUnitCanFire(const UnitPtr &source);
 

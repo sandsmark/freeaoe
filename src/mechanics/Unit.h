@@ -228,6 +228,8 @@ protected:
     void updateGraphic();
 
     const genie::Unit *m_data = nullptr;
+
+    // Because we use it often
     SpritePtr movingGraphics;
 
     int m_playerId = -1;

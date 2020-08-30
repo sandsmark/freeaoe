@@ -53,25 +53,30 @@ IAction::UpdateResult ActionAttack::update(Time time)
 {
     Unit::Ptr unit = m_unit.lock();
     if (!unit) {
+        // Our unit died
         return IAction::UpdateResult::Completed;
     }
 
     Unit::Ptr targetUnit = m_targetUnit.lock();
-    if (!targetUnit && !m_attackGround) {
+    if (!targetUnit && !m_attackGround) { // we lost our target unit, and we're not attacking the ground
         DBG << "Target unit gone";
         return IAction::UpdateResult::Completed;
     }
 
+    // Update target position if we're attacking a unit
     if (targetUnit) {
         m_targetPosition = targetUnit->position();
     }
 
+
+    // Need to use this more complex thing because when checking distance to a target
+    // we need to find the distance to the closest part of it, not the center of the unit.
     const float distance = (targetUnit ?
                 unit->distanceTo(targetUnit) :
                 unit->distanceTo(m_targetPosition)
-                                )
-            / Constants::TILE_SIZE;
+        ) / Constants::TILE_SIZE; // everything is defined by tile size in the dat files
 
+    // Check if we are too far away
     if (distance > unit->data()->Combat.MaxRange) {
         if (!unit->data()->Speed) {
             DBG << "this unit can't move...";
@@ -87,9 +92,10 @@ IAction::UpdateResult ActionAttack::update(Time time)
         return IAction::UpdateResult::NotUpdated;
     }
 
+    // Check if we are too close
     const float minDistance = unit->data()->Combat.MinRange * Constants::TILE_SIZE;
     if (minDistance > 0.f && m_targetPosition.distance(unit->position()) < minDistance) {
-        if (!unit->data()->Speed) {
+        if (!unit->data()->Speed) { // Too close, and the unit is stationary
             DBG << "this unit can't move...";
             return IAction::UpdateResult::Failed;
         }
@@ -112,22 +118,26 @@ IAction::UpdateResult ActionAttack::update(Time time)
         return IAction::UpdateResult::NotUpdated;
     }
 
-    ScreenPos screenPosition = unit->position().toScreen();
-    ScreenPos targetScreenPosition = m_targetPosition.toScreen();
+    // Update the displayed angle
+    const ScreenPos screenPosition = unit->position().toScreen();
+    const ScreenPos targetScreenPosition = m_targetPosition.toScreen();
     unit->setAngle(screenPosition.angleTo(targetScreenPosition));
 
-    float timeSinceLastAttack = (time - m_lastAttackTime) * 0.0015;
+    const float timeSinceLastAttack = (time - m_lastAttackTime) * 0.0015;
 
+    // Check if we need to update our attack animation
     if (timeSinceLastAttack < unit->data()->Combat.DisplayedReloadTime) {
         m_firing = true;
     } else {
         m_firing = false;
     }
 
+    // Check if we're still reloading
     if (timeSinceLastAttack < unit->data()->Combat.ReloadTime) {
         return IAction::UpdateResult::NotUpdated;
     }
 
+    // Did we kill our target?
     if (targetUnit && targetUnit->healthLeft() <= 0.f) {
         return IAction::UpdateResult::Completed;
     }
@@ -135,22 +145,22 @@ IAction::UpdateResult ActionAttack::update(Time time)
 
     // TODO: Create a flare here owned by the owner of the targeted unit, to show where the attack is coming from
 
+    // Do the actual attack
     if (unit->data()->Creatable.SecondaryProjectileUnit != -1) { // I think we should prefer the secondary, for some reason, at least those are cooler
-        spawnMissiles(unit, unit->data()->Creatable.SecondaryProjectileUnit, m_targetPosition, targetUnit);
-        return IAction::UpdateResult::Updated;
+        spawnMissiles(unit, unit->data()->Creatable.SecondaryProjectileUnit, targetUnit);
     } else if (unit->data()->Combat.ProjectileUnitID != -1) {
-        spawnMissiles(unit, unit->data()->Combat.ProjectileUnitID,  m_targetPosition, targetUnit);
-        return IAction::UpdateResult::Updated;
+        spawnMissiles(unit, unit->data()->Combat.ProjectileUnitID, targetUnit);
     } else {
+        // Not firing missiles, deal damage directly
         for (const genie::unit::AttackOrArmor &attack : unit->data()->Combat.Attacks) {
-            targetUnit->takeDamage(attack, 1.); // todo: damage multiplier
+            targetUnit->takeDamage(attack, 1.); // todo: damage multiplier from elevation
         }
     }
 
     return IAction::UpdateResult::Updated;
 }
 
-void ActionAttack::spawnMissiles(const Unit::Ptr &source, const int unitId, const MapPos &target, const Unit::Ptr &targetUnit)
+void ActionAttack::spawnMissiles(const Unit::Ptr &source, const int unitId, const Unit::Ptr &targetUnit)
 {
     DBG << "Spawning missile" << unitId;
 
@@ -170,7 +180,7 @@ void ActionAttack::spawnMissiles(const Unit::Ptr &source, const int unitId, cons
 //        widthDispersion = spawnArea[0] * Constants::TILE_SIZE / source->data()->Creatable.TotalProjectiles;
 //    }
     for (int i=0; i<missilesUnitCanFire(source); i++) {
-        MapPos individualTarget = target;
+        MapPos individualTarget = m_targetPosition;
         individualTarget.z += targetUnit->tallness()/ Constants::TILE_SIZE;
         Missile::Ptr missile = std::make_shared<Missile>(gunit, source, individualTarget, targetUnit);
         missile->setMap(source->map());
