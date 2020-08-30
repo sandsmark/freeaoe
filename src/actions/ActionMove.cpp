@@ -889,7 +889,7 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
 
 }
 
-bool ActionMove::isPassable(const float x, const float y) noexcept
+bool ActionMove::isPassable(const int x, const int y, const bool useCache) noexcept
 {
     if (IS_UNLIKELY(x < 0 || y < 0)) {
         return false;

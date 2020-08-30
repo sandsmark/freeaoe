@@ -48,7 +48,7 @@ struct Building : public Unit
 
     MapPos waypoint;
 
-    static bool canPlace(const MapPos &pos, const MapPtr &map, const genie::Unit *data) noexcept;
+    static bool canPlace(const MapPos &pos, const MapPtr &map, const genie::Unit *data);
 
 private:
     void finalizeUnit() noexcept;

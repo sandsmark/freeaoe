@@ -296,7 +296,7 @@ void Building::setPosition(const MapPos &pos, const bool initial)
     Unit::setPosition(map->snapPositionToGrid(pos, clearanceSize()), initial);
 }
 
-bool Building::canPlace(const MapPos &position, const MapPtr &map, const genie::Unit *data) noexcept
+bool Building::canPlace(const MapPos &position, const MapPtr &map, const genie::Unit *data)
 {
     if (!map) {
         WARN << "No map available";
