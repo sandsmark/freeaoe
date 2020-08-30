@@ -310,6 +310,7 @@ private:
     int m_currentPage = 3;
     int m_buttonOffset = 0;
 
+    // TODO: should be weak pointer, this is STRONK shared ptr
     UnitSet m_selectedUnits;
     UnitManager::State m_unitManagerState = UnitManager::State::Default;
 

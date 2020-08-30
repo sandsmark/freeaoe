@@ -97,6 +97,7 @@ void UnitManager::remove(const Unit::Ptr &unit)
     if (humanPlayer->visibility->visibilityAt(unit->position()) == VisibilityMap::Visible) {
         EventManager::unitDisappeared(humanPlayer.get(), unit.get()); // good thing this is synchronous, I hate raw pointers
     }
+    m_availableActionsChanged = true;
 }
 
 bool UnitManager::init()
@@ -167,6 +168,8 @@ bool UnitManager::update(Time time)
             unit->selected = false;
             m_selectedUnits.erase(unit);
             EventManager::unitDeselected(unit.get());
+            m_unitsWithActions.erase(unit);
+            m_availableActionsChanged = true;
         }
 
         if (isDead) {
@@ -177,7 +180,6 @@ bool UnitManager::update(Time time)
                 m_decayingEntities.insert(corpse);
                 updated = true;
             }
-            m_unitsWithActions.erase(unit);
 
             unitIterator = m_units.erase(unitIterator);
         } else {
