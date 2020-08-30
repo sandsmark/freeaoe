@@ -23,18 +23,21 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <unordered_set>
 
 #include <cstddef>
 #include <cstdint>
 #include <cassert>
 
-struct LogPrinter
-{
+struct LogPrinter {
     enum class LogType {
         Debug,
         Warning,
         Error,
     };
+
+    static std::unordered_set<std::string> debugEnabledClasses;
+    static bool enableAllDebug;
 
     static constexpr inline std::string_view extractClassName(const std::string_view &prettyFunction)
     {
@@ -57,16 +60,24 @@ struct LogPrinter
     LogPrinter(const char *funcName, const std::string_view &className, const char *filename, const int linenum, const LogType type) :
         m_funcName(funcName),
         m_filename(filename),
-        m_linenum(linenum),
-        m_refs(std::make_shared<int>(1))
+        m_linenum(linenum)
     {
         separator = " ";
+
+#ifdef NDEBUG
+        m_enabled = (type != LogType::Debug || enableAllDebug || debugEnabledClasses.count(className.data()));
+        if (!m_enabled) {
+            return;
+        }
+#endif
+
+        m_refs = std::make_shared<int>(1);
 
 #ifndef _MSC_VER
         std::cout <<  "\033[0;37m"<< className << " ";
 #endif
 
-        switch(type) {
+        switch (type) {
         case LogType::Debug:
             std::cout << "\033[02;32m";
             break;
@@ -90,27 +101,75 @@ struct LogPrinter
         m_funcName(other.m_funcName),
         m_filename(other.m_filename),
         m_linenum(other.m_linenum),
-        m_refs(other.m_refs)
+        m_enabled(other.m_enabled)
     {
+        if (!m_enabled) {
+            return;
+        }
+
+        m_refs = other.m_refs;
+
         (*m_refs)++;
     }
 
-    inline LogPrinter &operator<<(const char *text) { std::cout << (text ? text : "(null)") << separator; return *this; }
-    inline LogPrinter &operator<<(const char c) { std::cout << c << separator; return *this; }
-    inline LogPrinter &operator<<(const uint8_t num) { std::cout << int(num) << separator; return *this; }
-    inline LogPrinter &operator<<(const int8_t num) { std::cout << int(num) << separator; return *this; }
-    inline LogPrinter &operator<<(const uint64_t num) { std::cout << num << separator; return *this; }
-    inline LogPrinter &operator<<(const int64_t num) { std::cout << num << separator; return *this; }
-    inline LogPrinter &operator<<(const uint32_t num) { std::cout << num << separator; return *this; }
-    inline LogPrinter &operator<<(const int32_t num) { std::cout << num << separator; return *this; }
-    inline LogPrinter &operator<<(const double num) { std::cout << num << separator; return *this; }
-    inline LogPrinter &operator<<(const bool b) { std::cout << (b ? "true" : "false") << separator; return *this; }
-    inline LogPrinter &operator<<(const std::string &str) { std::cout << '\'' << str << '\'' << separator; return *this; }
-    inline LogPrinter &operator<<(const void *addr) { std::cout << std::hex << addr << std::dec << separator; return *this; }
-    inline LogPrinter &operator<<(const std::filesystem::path &path) { std::cout << '\'' << path.string() << '\'' << separator; return *this; }
+    inline LogPrinter &operator<<(const char *text) {
+        if (m_enabled) std::cout << (text ? text : "(null)") << separator;
+        return *this;
+    }
+    inline LogPrinter &operator<<(const char c) {
+        if (m_enabled) std::cout << c << separator;
+        return *this;
+    }
+    inline LogPrinter &operator<<(const uint8_t num) {
+        if (m_enabled) std::cout << int(num) << separator;
+        return *this;
+    }
+    inline LogPrinter &operator<<(const int8_t num) {
+        if (m_enabled) std::cout << int(num) << separator;
+        return *this;
+    }
+    inline LogPrinter &operator<<(const uint64_t num) {
+        if (m_enabled) std::cout << num << separator;
+        return *this;
+    }
+    inline LogPrinter &operator<<(const int64_t num) {
+        if (m_enabled) std::cout << num << separator;
+        return *this;
+    }
+    inline LogPrinter &operator<<(const uint32_t num) {
+        if (m_enabled) std::cout << num << separator;
+        return *this;
+    }
+    inline LogPrinter &operator<<(const int32_t num) {
+        if (m_enabled) std::cout << num << separator;
+        return *this;
+    }
+    inline LogPrinter &operator<<(const double num) {
+        if (m_enabled) std::cout << num << separator;
+        return *this;
+    }
+    inline LogPrinter &operator<<(const bool b) {
+        if (m_enabled) std::cout << (b ? "true" : "false") << separator;
+        return *this;
+    }
+    inline LogPrinter &operator<<(const std::string &str) {
+        if (m_enabled) std::cout << '\'' << str << '\'' << separator;
+        return *this;
+    }
+    inline LogPrinter &operator<<(const void *addr) {
+        if (m_enabled) std::cout << std::hex << addr << std::dec << separator;
+        return *this;
+    }
+    inline LogPrinter &operator<<(const std::filesystem::path &path) {
+        if (m_enabled) std::cout << '\'' << path.string() << '\'' << separator;
+        return *this;
+    }
 
     template<typename T>
-    inline LogPrinter &operator<<(const std::vector<T> &vec) {
+    inline LogPrinter &operator<<(const std::vector<T> &vec)
+    {
+        if (!m_enabled) return *this;
+
         std::cout << '(';
         const char *oldSep = separator;
         separator = "";
@@ -128,6 +187,9 @@ struct LogPrinter
 
     ~LogPrinter()
     {
+        if (!m_enabled) {
+            return;
+        }
         (*m_refs)--;
         assert(*m_refs >= 0);
 
@@ -146,6 +208,7 @@ private:
     const char *m_filename = nullptr;
     const int m_linenum = 0;
     std::shared_ptr<int> m_refs = nullptr;
+    bool m_enabled = true;
 };
 
 #ifdef _MSC_VER

@@ -18,4 +18,7 @@
 */
 
 #include "Logger.h"
+
 int LifeTimePrinter::indent = 0;
+std::unordered_set<std::string> LogPrinter::debugEnabledClasses;
+bool LogPrinter::enableAllDebug = false;
