@@ -215,8 +215,9 @@ private:
 };
 
 #ifdef _MSC_VER
-#define DBG LogPrinter(__FUNCTION__, "", __FILE__, __LINE__, LogPrinter::LogType::Debug)
-#define WARN LogPrinter(__FUNCTION__, "", __FILE__, __LINE__, LogPrinter::LogType::Warning)
+// Not sure if this class extraction works, msvc is weird
+#define DBG LogPrinter(__FUNCTION__, LogPrinter::extractClassName(__FUNCTION__), __FILE__, __LINE__, LogPrinter::LogType::Debug)
+#define WARN LogPrinter(__FUNCTION__, LogPrinter::extractClassName(__FUNCTION__), __FILE__, __LINE__, LogPrinter::LogType::Warning)
 #else
 #define DBG LogPrinter(__PRETTY_FUNCTION__, LogPrinter::extractClassName(__PRETTY_FUNCTION__), __FILE__, __LINE__, LogPrinter::LogType::Debug)
 #define WARN LogPrinter(__PRETTY_FUNCTION__, LogPrinter::extractClassName(__PRETTY_FUNCTION__), __FILE__, __LINE__, LogPrinter::LogType::Warning)
