@@ -117,6 +117,7 @@ private:
     Drawable::Image::Ptr m_unitHalo;
 
     std::vector<Drawable::Image::Ptr> m_progressBars;
+    int m_buttonSize = 40;
 };
 
 #endif // UNITINFOPANEL_H

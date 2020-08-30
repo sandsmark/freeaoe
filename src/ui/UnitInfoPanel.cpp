@@ -40,7 +40,6 @@
 UnitInfoPanel::UnitInfoPanel(const std::shared_ptr<IRenderTarget> &renderTarget) :
     m_renderTarget(renderTarget)
 {
-
 }
 
 void UnitInfoPanel::setUnitManager(const std::shared_ptr<UnitManager> &unitManager)
@@ -206,6 +205,13 @@ bool UnitInfoPanel::handleEvent(sf::Event event)
 
 bool UnitInfoPanel::update(Time /*time*/)
 {
+    // TODO don't do this every update
+    if (m_renderTarget->getSize().height >= 1024) {
+        m_buttonSize = 45;
+    } else {
+        m_buttonSize = 40;
+    }
+
     std::shared_ptr<UnitManager> unitManager = m_unitManager.lock();
     if (!unitManager) {
         WARN << "Unit manager went away?";
@@ -588,9 +594,9 @@ void UnitInfoPanel::drawConstructionInfo(const std::shared_ptr<Building> &buildi
 ScreenRect UnitInfoPanel::rect() const
 {
     ScreenRect r;
-    r.height = 4 * 45;
-    r.width = 10 * 45;
-    r.x = 8 * 45;
-    r.y = m_renderTarget->getSize().height - r.height - 10;
+    r.height = 4 * m_buttonSize;
+    r.width = 10 * m_buttonSize;
+    r.x = 8 * m_buttonSize;
+    r.y = m_renderTarget->getSize().height - r.height;
     return r;
 }

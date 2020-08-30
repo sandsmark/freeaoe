@@ -151,6 +151,13 @@ bool ActionPanel::handleEvent(sf::Event event)
 
 bool ActionPanel::update(Time /*time*/)
 {
+    if (m_renderTarget->getSize().height >= 1024) {
+        m_buttonSize = 45;
+        m_bottomOffset = 30;
+    } else {
+        m_buttonSize = 40;
+        m_bottomOffset = 20;
+    }
     if (m_buttonsDirty) {
         m_selectedUnits = m_unitManager->selected();
         updateButtons();
@@ -250,11 +257,13 @@ void ActionPanel::setHumanPlayer(const Player::Ptr &player)
 ScreenRect ActionPanel::rect() const
 {
     ScreenRect r;
-    r.height = 3 * 51;
-    r.width = 5 * 55;
-    r.x = 35;
+    r.height = 3 * m_buttonSize;
+    //r.height = 3 * 51;
+    r.width = 4 * m_buttonSize;
+    r.x = m_buttonSize;
 //    r.y = 845;
-    r.y = m_renderTarget->getSize().height - r.height - 25;
+    r.y = m_renderTarget->getSize().height - r.height - m_bottomOffset;
+    //r.y = m_renderTarget->getSize().height - r.height - 25;
     return r;
 }
 
@@ -684,10 +693,10 @@ ScreenPos ActionPanel::buttonPosition(const int index) const
 {
     ScreenPos position;
     position.x = index % 5;
-    position.x = (position.x) * 50 + 55;
+    position.x = (position.x) * m_buttonSize + rect().x;
     position.y = std::floor(index / 5.f);
-    position.y *= 50;
-    position.y += m_renderTarget->getSize().height  - 170;
+    position.y *= m_buttonSize;
+    position.y += rect().y;
     return position;
 }
 
@@ -697,7 +706,7 @@ ScreenRect ActionPanel::buttonRect(const int index) const
     const ScreenPos screenPos = buttonPosition(index);
     rect.x = screenPos.x;
     rect.y = screenPos.y;
-    rect.width = 40;
-    rect.height = 40;
+    rect.width = m_buttonSize;
+    rect.height = m_buttonSize;
     return rect;
 }

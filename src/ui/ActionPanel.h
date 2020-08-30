@@ -317,6 +317,9 @@ private:
     std::vector<InterfaceButton> currentButtons;
     bool m_dirty = true;
     bool m_buttonsDirty = true;
+
+    int m_buttonSize = 40; // TODO: put this in a central place
+    int m_bottomOffset = 40;
 };
 
 inline LogPrinter &operator <<(LogPrinter &os, const ActionPanel::Command &cmd)
