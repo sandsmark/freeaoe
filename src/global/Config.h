@@ -31,6 +31,8 @@ public:
         GameSample,
         SinglePlayer,
         ScenarioFile,
+        EnableDebug,
+        PrintHelp,
     };
 
     enum StorePolicy {
@@ -38,10 +40,16 @@ public:
         Stored = 1
     };
 
+    enum OptionArgumentType {
+        NoArgument,
+        HasArgument
+    };
+
     struct OptionDefinition {
         OptionType id;
         std::string name;
         std::string description;
+        OptionArgumentType argumentType;
         StorePolicy saved = NotStored;
     };
 

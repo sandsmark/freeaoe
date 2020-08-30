@@ -190,6 +190,11 @@ bool requestFilePath(const std::string &errorMessage)
 // TODO: Bad_alloc
 int main(int argc, char **argv) try
 {
+    for (int i=1; i<argc; i++) {
+        if (std::string(argv[i]) == "--debug") {
+            LogPrinter::enableAllDebug = true;
+        }
+    }
     DBG << "executable path" << util::executablePath();
 
     Config &config = Config::Inst();
@@ -219,14 +224,14 @@ int main(int argc, char **argv) try
 
     genie::ScnFilePtr scenarioFile;
 
-    const bool skipMenu = config.getValue(Config::SinglePlayer) == "true" || config.isOptionSet(Config::GameSample);
-    if (!skipMenu) {
+    if (config.isOptionSet(Config::GameSample)) {
+        const std::string alias = config.getValue(Config::GameSample);
+        SampleGameFactory::Inst().setSampleFromAlias(alias);
+    } else if (!config.isOptionSet(Config::SinglePlayer)) {
         if (!showHomeScreen(&scenarioFile)) {
             return 0;
         }
-    } else if (config.isOptionSet(Config::GameSample)) {
-        const std::string alias = config.getValue(Config::GameSample);
-        SampleGameFactory::Inst().setSampleFromAlias(alias);
+
     }
 
     Engine engine;

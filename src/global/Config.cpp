@@ -227,15 +227,15 @@ static std::string getRegistryString(const std::string &regGroup, const std::str
 
 void Config::printUsage(const std::string &programName)
 {
-    WARN << "Usage:" << programName << "[options]";
-    WARN << "Options:";
+    std::cout << "Usage: " << programName << " [options]" << std::endl;
+    std::cout << "Options:" << std::endl;
 
     for (const auto &[name, option] : m_knownOptions) {
         static_assert(std::is_same<decltype(name), const std::string>()); // fuck auto
         static_assert(std::is_same<decltype(option), const OptionDefinition>()); // fuck auto x2
 
         std::cout << std::setw(25) << std::left;
-        std::cout << ("  --" + name + "=value");
+        std::cout << ("  --" + name + (option.argumentType != NoArgument ? "=value" : ""));
         std::cout << option.description << std::endl;
 
     }
@@ -251,7 +251,12 @@ bool Config::parseOptions(int argc, char **argv)
 
     for (int i=1; i<argc; i++) {
         std::string argument = argv[i];
-        if (argument.starts_with("--")) {
+        if (argument == "--help") {
+            printUsage(argv[0]);
+            return false;
+        }
+
+        if (!argument.starts_with("--")) {
             printUsage(argv[0]);
             return false;
         }
@@ -278,8 +283,6 @@ bool Config::parseOptions(int argc, char **argv)
     if (m_values != configuredOptions) {
         writeConfigFile(m_filePath);
     }
-
-
 
     return true;
 }
@@ -327,10 +330,15 @@ void Config::setValue(const OptionType option, const std::string &value)
 Config::Config(const std::string &applicationName)
 {
     setKnownOptions({
-            { Config::GamePath, "game-path", "Path to AoE installation with data files", Config::Stored },
-            { Config::ScenarioFile, "scenario-file", "Path to scenario file to load", Config::NotStored },
-            { Config::SinglePlayer, "single-player", "Launch a simple test map", Config::NotStored },
-            { Config::GameSample, "game-sample", "Game samples to load", Config::NotStored }
+            { Config::GamePath, "game-path", "Path to AoE installation with data files", Config::HasArgument, Config::Stored },
+            { Config::ScenarioFile, "scenario-file", "Path to scenario file to load", Config::HasArgument, Config::NotStored },
+            { Config::SinglePlayer, "single-player", "Launch a simple test map", Config::NoArgument, Config::NotStored },
+            { Config::GameSample, "game-sample", "Game samples to load", Config::HasArgument, Config::NotStored },
+            { Config::PrintHelp, "help", "Show usage", Config::NoArgument, Config::NotStored },
+
+
+            // Not actually parsed here (need it earlier to enable it), just so it knows about it
+            { Config::EnableDebug, "debug", "Print all debug output", Config::NoArgument, Config::NotStored },
         });
 
 #if defined(__linux__)
@@ -380,19 +388,35 @@ bool Config::parseOption(const std::string &option)
         return true;
     }
 
+    std::string name;
+    std::string value;
+
     size_t splitPos = option.find('=');
-    if (splitPos == std::string::npos) {
-        WARN << "Invalid line in config:" << option;
-        return false;
+    if (splitPos != std::string::npos) {
+        name = option.substr(0, splitPos);
+        value = option.substr(splitPos + 1);
+    } else {
+        name = option;
     }
 
-    std::string name = option.substr(0, splitPos);
-    std::string value = option.substr(splitPos + 1);
 
     std::unordered_map<std::string, OptionDefinition>::const_iterator it = m_knownOptions.find(name);
     if (it == m_knownOptions.end()) {
         WARN << "Unknown option" << name;
         return false;
+    }
+
+    if (it->second.argumentType != NoArgument && value.empty()) {
+        WARN << "Missing argument for" << name;
+        return false;
+    }
+
+    if (it->second.id == GamePath) {
+        if (!std::filesystem::exists(value)) {
+            WARN << value << "Does not exist, skipping";
+            return true;
+        }
+
     }
     m_values[it->second.id] = value;
 
