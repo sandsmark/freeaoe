@@ -29,4 +29,5 @@ private:
     Time m_lastAttackTime = 0;
     bool m_firing = false;
     bool m_attackGround = false;
+    float m_frameDelay = 0.f;
 };

@@ -7,6 +7,7 @@
 #include "mechanics/Missile.h"
 #include "mechanics/Player.h"
 #include "mechanics/UnitManager.h"
+#include "resource/DataManager.h"
 
 #include <genie/Types.h>
 #include <genie/dat/Unit.h>
@@ -30,6 +31,10 @@ ActionAttack::ActionAttack(const Unit::Ptr &attacker, const Task &task) :
     m_targetPosition = target->position();
     if (target->playerId() == attacker->playerId()) {
         m_targetUnit.reset();
+    }
+    const int attackGraphic = attacker->data()->Combat.AttackGraphic;
+    if (attackGraphic != -1) {
+        m_frameDelay = attacker->data()->Combat.FrameDelay * DataManager::Inst().getGraphic(attackGraphic).FrameDuration;
     }
 }
 
@@ -123,17 +128,19 @@ IAction::UpdateResult ActionAttack::update(Time time)
     const ScreenPos targetScreenPosition = m_targetPosition.toScreen();
     unit->setAngle(screenPosition.angleTo(targetScreenPosition));
 
+    if (!m_lastAttackTime) {
+        m_lastAttackTime = time + unit->data()->Combat.ReloadTime; // skip the reloading
+        m_firing = false;
+        return IAction::UpdateResult::Updated;
+    }
     const float timeSinceLastAttack = (time - m_lastAttackTime) * 0.0015;
 
-    // Check if we need to update our attack animation
-    if (timeSinceLastAttack < unit->data()->Combat.DisplayedReloadTime) {
-        m_firing = true;
-    } else {
+    if (timeSinceLastAttack >= unit->data()->Combat.ReloadTime) {
         m_firing = false;
     }
 
     // Check if we're still reloading
-    if (timeSinceLastAttack < unit->data()->Combat.ReloadTime) {
+    if (timeSinceLastAttack <= unit->data()->Combat.ReloadTime + m_frameDelay) {
         return IAction::UpdateResult::NotUpdated;
     }
 
@@ -142,6 +149,7 @@ IAction::UpdateResult ActionAttack::update(Time time)
         return IAction::UpdateResult::Completed;
     }
     m_lastAttackTime = time;
+    m_firing = true;
 
     // TODO: Create a flare here owned by the owner of the targeted unit, to show where the attack is coming from
 
