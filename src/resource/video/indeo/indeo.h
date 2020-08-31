@@ -1,3 +1,5 @@
+#ifndef IMAGE_CODECS_INDEO_INDEO_H
+#define IMAGE_CODECS_INDEO_INDEO_H
 /* ScummVM - Graphic Adventure Engine
  *
  * ScummVM is the legal property of its developers, whose names
@@ -21,7 +23,8 @@
  */
 
 //#include "common/scummsys.h"
-//#include "graphics/surface.h"
+#include "surface.h"
+#include "pixelformat.h"
 //#include "image/codecs/codec.h"
 
 /* Common structures, macros, and base class shared by both Indeo4 and
@@ -33,8 +36,6 @@
  * written, produced, and directed by Alan Smithee
  */
 
-#ifndef IMAGE_CODECS_INDEO_INDEO_H
-#define IMAGE_CODECS_INDEO_INDEO_H
 
 #include "get_bits.h"
 #include "vlc.h"
@@ -63,12 +64,12 @@ enum {
 /**
  *  Declare inverse transform function types
  */
-typedef void (InvTransformPtr)(const int32 *in, int16 *out, uint32 pitch, const uint8 *flags);
-typedef void (DCTransformPtr)(const int32 *in, int16 *out, uint32 pitch, int blkSize);
+typedef void (InvTransformPtr)(const int32 *in, int16 *out, uint32_t pitch, const uint8_t *flags);
+typedef void (DCTransformPtr)(const int32 *in, int16 *out, uint32_t pitch, int blkSize);
 
-typedef void (*IviMCFunc)(int16 *buf, const int16 *refBuf, uint32 pitch, int mcType);
+typedef void (*IviMCFunc)(int16 *buf, const int16 *refBuf, uint32_t pitch, int mcType);
 typedef void (*IviMCAvgFunc)(int16 *buf, const int16 *refBuf1, const int16 *refBuf2,
-	uint32 pitch, int mcType, int mcType2);
+	uint32_t pitch, int mcType, int mcType2);
 
 ///< max number of bits of the ivi's huffman codes
 #define IVI_VLC_BITS 13
@@ -90,7 +91,7 @@ typedef void (*IviMCAvgFunc)(int16 *buf, const int16 *refBuf1, const int16 *refB
  */
 struct IVIHuffDesc {
 	int32		_numRows;
-	uint8		_xBits[16];
+	uint8_t		_xBits[16];
 
 	/**
 	 *  Generate a huffman codebook from the given descriptor
@@ -154,9 +155,9 @@ public:
  *  run-value (RLE) table descriptor
  */
 struct RVMapDesc {
-	uint8     _eobSym; ///< end of block symbol
-	uint8     _escSym; ///< escape symbol
-	uint8     _runtab[256];
+	uint8_t     _eobSym; ///< end of block symbol
+	uint8_t     _escSym; ///< escape symbol
+	uint8_t     _runtab[256];
 	int8      _valtab[256];
 };
 
@@ -166,9 +167,9 @@ struct RVMapDesc {
 struct IVIMbInfo {
 	int16	_xPos;
 	int16	_yPos;
-	uint32	_bufOffs;	///< address in the output buffer for this mb
-	uint8	_type;		///< macroblock type: 0 - INTRA, 1 - INTER
-	uint8	_cbp;		///< coded block pattern
+	uint32_t	_bufOffs;	///< address in the output buffer for this mb
+	uint8_t	_type;		///< macroblock type: 0 - INTRA, 1 - INTER
+	uint8_t	_cbp;		///< coded block pattern
 	int8	_qDelta;	///< quant delta
 	int8	_mvX;		///< motion vector (x component)
 	int8	_mvY;		///< motion vector (y component)
@@ -205,7 +206,7 @@ struct IVIBandDesc {
 	int				_width;
 	int				_height;
 	int				_aHeight;		///< aligned band height
-	const uint8 *	_dataPtr;		///< ptr to the first byte of the band data
+	const uint8_t *	_dataPtr;		///< ptr to the first byte of the band data
 	int				_dataSize;		///< size of the band data
 	int16 *			_buf;			///< pointer to the output buffer for this band
 	int16 *			_refBuf;		///< pointer to the reference frame buffer (for motion compensation)
@@ -215,19 +216,19 @@ struct IVIBandDesc {
 	bool			_isEmpty;
 	int				_mbSize;		///< macroblock size
 	int				_blkSize;		///< block size
-	uint8			_isHalfpel;		///< precision of the motion compensation: 0 - fullpel, 1 - halfpel
+	uint8_t			_isHalfpel;		///< precision of the motion compensation: 0 - fullpel, 1 - halfpel
 	bool			_inheritMv;		///< tells if motion vector is inherited from reference macroblock
 	bool			_inheritQDelta;	///< tells if quantiser delta is inherited from reference macroblock
 	bool			_qdeltaPresent;	///< tells if Qdelta signal is present in the bitstream (Indeo5 only)
 	int				_quantMat;		///< dequant matrix index
 	int				_globQuant;		///< quant base for this band
-	const uint8 *	_scan;			///< ptr to the scan pattern
+	const uint8_t *	_scan;			///< ptr to the scan pattern
 	int				_scanSize;		///< size of the scantable
 
 	IVIHuffTab		_blkVlc;		///< vlc table for decoding block data
 
 	int				_numCorr;		///< number of correction entries
-	uint8			_corr[61 * 2];	///< rvmap correction pairs
+	uint8_t			_corr[61 * 2];	///< rvmap correction pairs
 	int				_rvmapSel;		///< rvmap table selector
 	RVMapDesc *		_rvMap;			///< ptr to the RLE table for this band
 	int				_numTiles;		///< number of tiles in this band
@@ -239,10 +240,10 @@ struct IVIBandDesc {
 	int32			_checksum;		///< for debug purposes
 	int				_checksumPresent;
 	int				_bufSize;		///< band buffer size in bytes
-	const uint16 *	_intraBase;		///< quantization matrix for intra blocks
-	const uint16 *	_interBase;		///< quantization matrix for inter blocks
-	const uint8 *	_intraScale;	///< quantization coefficient for intra blocks
-	const uint8 *	_interScale;	///< quantization coefficient for inter blocks
+	const uint16_t *	_intraBase;		///< quantization matrix for intra blocks
+	const uint16_t *	_interBase;		///< quantization matrix for inter blocks
+	const uint8_t *	_intraScale;	///< quantization coefficient for intra blocks
+	const uint8_t *	_interScale;	///< quantization coefficient for inter blocks
 
 	IVIBandDesc();
 
@@ -250,14 +251,14 @@ struct IVIBandDesc {
 };
 
 struct IVIPicConfig {
-	uint16		_picWidth;
-	uint16		_picHeight;
-	uint16		_chromaWidth;
-	uint16		_chromaHeight;
-	uint16		_tileWidth;
-	uint16		_tileHeight;
-	uint8		_lumaBands;
-	uint8		_chromaBands;
+	uint16_t		_picWidth;
+	uint16_t		_picHeight;
+	uint16_t		_chromaWidth;
+	uint16_t		_chromaHeight;
+	uint16_t		_tileWidth;
+	uint16_t		_tileHeight;
+	uint8_t		_lumaBands;
+	uint8_t		_chromaBands;
 
 	IVIPicConfig();
 
@@ -271,9 +272,9 @@ struct IVIPicConfig {
  *  color plane (luma or chroma) information
  */
 struct IVIPlaneDesc {
-	uint16			_width;
-	uint16			_height;
-	uint8			_numBands;	///< number of bands this plane subdivided into
+	uint16_t			_width;
+	uint16_t			_height;
+	uint8_t			_numBands;	///< number of bands this plane subdivided into
 	IVIBandDesc *	_bands;		///< array of band descriptors
 
 	IVIPlaneDesc();
@@ -320,7 +321,7 @@ struct AVFrame {
 	 * NOTE: Except for hwaccel formats, pointers not needed by the format
 	 * MUST be set to NULL.
 	 */
-	uint8 *_data[AV_NUM_DATA_POINTERS];
+	uint8_t *_data[AV_NUM_DATA_POINTERS];
 
 	/**
 	 * For video, size in bytes of each picture line.
@@ -352,7 +353,7 @@ struct AVFrame {
 	/**
 	 * Sets the frame dimensions
 	 */
-	int setDimensions(uint16 width, uint16 height);
+	int setDimensions(uint16_t width, uint16_t height);
 
 	/**
 	 * Get a buffer for a frame
@@ -372,20 +373,20 @@ private:
 	VLC _iviMbVlcTabs[8];			///< static macroblock Huffman tables
 	VLC _iviBlkVlcTabs[8];			///< static block Huffman tables
 public:
-	GetBits *		_gb;
+        GetBits *		_gb;
 	RVMapDesc		_rvmapTabs[9];	///< local corrected copy of the static rvmap tables
 
-	uint32			_frameNum;
+	uint32_t			_frameNum;
 	int				_frameType;
 	int				_prevFrameType;	///< frame type of the previous frame
-	uint32			_dataSize;		///< size of the frame data in bytes from picture header
+	uint32_t			_dataSize;		///< size of the frame data in bytes from picture header
 	int				_isScalable;
-	const uint8 *	_frameData;		///< input frame data pointer
+	const uint8_t *	_frameData;		///< input frame data pointer
 	int				_interScal;		///< signals a sequence of scalable inter frames
-	uint32			_frameSize;		///< frame size in bytes
-	uint32			_picHdrSize;	///< picture header size in bytes
-	uint8			_frameFlags;
-	uint16			_checksum;		///< frame _checksum
+	uint32_t			_frameSize;		///< frame size in bytes
+	uint32_t			_picHdrSize;	///< picture header size in bytes
+	uint8_t			_frameFlags;
+	uint16_t			_checksum;		///< frame _checksum
 
 	IVIPicConfig	_picConf;
 	IVIPlaneDesc	_planes[3];		///< color planes
@@ -400,15 +401,15 @@ public:
 	IVIHuffTab		_blkVlc;		///< current block table descriptor
 	IVIHuffTab		_transVlc;		///< current transparency table descriptor
 
-	uint8			_rvmapSel;
+	uint8_t			_rvmapSel;
 	bool			_inImf;
 	bool			_inQ;			///< flag for explicitly stored quantiser delta
-	uint8			_picGlobQuant;
-	uint8			_unknown1;
+	uint8_t			_picGlobQuant;
+	uint8_t			_unknown1;
 
-	uint16			_gopHdrSize;
-	uint8			_gopFlags;
-	uint32			_lockWord;
+	uint16_t			_gopHdrSize;
+	uint8_t			_gopFlags;
+	uint32_t			_lockWord;
 
 	bool			_hasBFrames;
 	bool			_hasTransp;		///< transparency mode enabled
@@ -420,7 +421,7 @@ public:
 	int				_bufInvalid[4];
 
 	bool			_isIndeo4;
-	uint32			_transKeyColor;
+	uint32_t			_transKeyColor;
 
 	AVFrame *		_pFrame;
 	bool			_gotPFrame;
@@ -450,7 +451,7 @@ private:
 	 *  @param[out] dst			pointer to the destination buffer
 	 *  @param[in]  dstPitch	Pitch of the destination buffer
 	 */
-	void recomposeHaar(const IVIPlaneDesc *plane, uint8 *dst, const int dstPitch);
+	void recomposeHaar(const IVIPlaneDesc *plane, uint8_t *dst, const int dstPitch);
 
 	/**
 	 *  5/3 wavelet recomposition filter for Indeo5
@@ -459,7 +460,7 @@ private:
 	 *  @param[out]  dst          Pointer to the destination buffer
 	 *  @param[in]   dstPitch     Pitch of the destination buffer
 	 */
-	void recompose53(const IVIPlaneDesc *plane, uint8 *dst, const int dstPitch);
+	void recompose53(const IVIPlaneDesc *plane, uint8_t *dst, const int dstPitch);
 
 	/*
 	 *  Convert and output the current plane.
@@ -470,7 +471,7 @@ private:
 	 *  @param[out]  dst		Pointer to the buffer receiving converted pixels
 	 *  @param[in]   dstPitch	Pitch for moving to the next y line
 	 */
-	void outputPlane(IVIPlaneDesc *plane, uint8 *dst, int dstPitch);
+	void outputPlane(IVIPlaneDesc *plane, uint8_t *dst, int dstPitch);
 
 	/**
 	 *  Handle empty tiles by performing data copying and motion
@@ -513,7 +514,7 @@ private:
 	int decodeCodedBlocks(GetBits *gb, IVIBandDesc *band,
 		IviMCFunc mc, IviMCAvgFunc mcAvg, int mvX, int mvY,
 		int mvX2, int mvY2, int32 *prevDc, int isIntra,
-		int mcType, int mcType2, uint32 quant, int offs);
+		int mcType, int mcType2, uint32_t quant, int offs);
 
 	int iviDcTransform(IVIBandDesc *band, int32 *prevDc, int bufOffs,
 		int blkSize);
@@ -525,9 +526,9 @@ protected:
 	/**
 	 *  Scan patterns shared between indeo4 and indeo5
 	 */
-	static const uint8 _ffIviVerticalScan8x8[64];
-	static const uint8 _ffIviHorizontalScan8x8[64];
-	static const uint8 _ffIviDirectScan4x4[16];
+	static const uint8_t _ffIviVerticalScan8x8[64];
+	static const uint8_t _ffIviHorizontalScan8x8[64];
+	static const uint8_t _ffIviDirectScan4x4[16];
 protected:
 	/**
 	 * Returns the pixel format for the decoder's surface
@@ -581,7 +582,7 @@ protected:
 	 */
 	int scaleMV(int mv, int mvScale);
 public:
-	IndeoDecoderBase(uint16 width, uint16 height, uint bitsPerPixel);
+	IndeoDecoderBase(uint16_t width, uint16_t height, uint bitsPerPixel);
 	virtual ~IndeoDecoderBase();
 };
 

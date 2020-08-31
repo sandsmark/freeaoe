@@ -31,7 +31,7 @@
 namespace Image {
 namespace Indeo {
 
-const uint8 ffReverse[256] = {
+const uint8_t ffReverse[256] = {
 	0x00, 0x80, 0x40, 0xC0, 0x20, 0xA0, 0x60, 0xE0, 0x10, 0x90, 0x50, 0xD0, 0x30, 0xB0, 0x70, 0xF0,
 	0x08, 0x88, 0x48, 0xC8, 0x28, 0xA8, 0x68, 0xE8, 0x18, 0x98, 0x58, 0xD8, 0x38, 0xB8, 0x78, 0xF8,
 	0x04, 0x84, 0x44, 0xC4, 0x24, 0xA4, 0x64, 0xE4, 0x14, 0x94, 0x54, 0xD4, 0x34, 0xB4, 0x74, 0xF4,
@@ -50,7 +50,7 @@ const uint8 ffReverse[256] = {
 	0x0F, 0x8F, 0x4F, 0xCF, 0x2F, 0xAF, 0x6F, 0xEF, 0x1F, 0x9F, 0x5F, 0xDF, 0x3F, 0xBF, 0x7F, 0xFF,
 };
 
-const uint8 ffZigZagDirect[64] = {
+const uint8_t ffZigZagDirect[64] = {
 	0,   1,  8, 16,  9,  2,  3, 10,
 	17, 24, 32, 25, 18, 11,  4,  5,
 	12, 19, 26, 33, 40, 48, 41, 34,
@@ -108,19 +108,19 @@ void *avReallocF(void *ptr, size_t nelem, size_t elsize) {
 /**
  * Swap the order of the bytes in the passed value
  */
-uint32 bitswap32(uint32 x) {
-	return (uint32)ffReverse[x & 0xFF] << 24 |
-		(uint32)ffReverse[(x >> 8) & 0xFF] << 16 |
-		(uint32)ffReverse[(x >> 16) & 0xFF] << 8 |
-		(uint32)ffReverse[x >> 24];
+uint32_t bitswap32(uint32_t x) {
+	return (uint32_t)ffReverse[x & 0xFF] << 24 |
+		(uint32_t)ffReverse[(x >> 8) & 0xFF] << 16 |
+		(uint32_t)ffReverse[(x >> 16) & 0xFF] << 8 |
+		(uint32_t)ffReverse[x >> 24];
 }
 
 /**
  * Reverse "nbits" bits of the value "val" and return the result
  * in the least significant bits.
  */
-uint16 invertBits(uint16 val, int nbits) {
-	uint16 res;
+uint16_t invertBits(uint16_t val, int nbits) {
+	uint16_t res;
 
 	if (nbits <= 8) {
 		res = ffReverse[val] >> (8 - nbits);

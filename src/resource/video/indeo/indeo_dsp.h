@@ -48,12 +48,12 @@ public:
 	 *						!= 0 - non_empty column, 0 - empty one
 	 *						(this array must be filled by caller)
 	 */
-	static void ffIviInverseHaar8x8(const int32 *in, int16 *out, uint32 pitch,
-		const uint8 *flags);
-	static void ffIviInverseHaar8x1(const int32 *in, int16 *out, uint32 pitch,
-		const uint8 *flags);
-	static void ffIviInverseHaar1x8(const int32 *in, int16 *out, uint32 pitch,
-		const uint8 *flags);
+	static void ffIviInverseHaar8x8(const int32 *in, int16 *out, uint32_t pitch,
+		const uint8_t *flags);
+	static void ffIviInverseHaar8x1(const int32 *in, int16 *out, uint32_t pitch,
+		const uint8_t *flags);
+	static void ffIviInverseHaar1x8(const int32 *in, int16 *out, uint32_t pitch,
+		const uint8_t *flags);
 
 	/**
 	 *  one-dimensional inverse 8-point Haar transform on rows for Indeo 4
@@ -65,8 +65,8 @@ public:
 	 *						!= 0 - non_empty column, 0 - empty one
 	 *						(this array must be filled by caller)
 	 */
-	static void ffIviRowHaar8(const int32 *in, int16 *out, uint32 pitch,
-		const uint8 *flags);
+	static void ffIviRowHaar8(const int32 *in, int16 *out, uint32_t pitch,
+		const uint8_t *flags);
 
 	/**
 	 *  one-dimensional inverse 8-point Haar transform on columns for Indeo 4
@@ -78,8 +78,8 @@ public:
 	 *						!= 0 - non_empty column, 0 - empty one
 	 *						(this array must be filled by caller)
 	 */
-	static void ffIviColHaar8(const int32 *in, int16 *out, uint32 pitch,
-		const uint8 *flags);
+	static void ffIviColHaar8(const int32 *in, int16 *out, uint32_t pitch,
+		const uint8_t *flags);
 
 	/**
 	 *  two-dimensional inverse Haar 4x4 transform for Indeo 4
@@ -91,8 +91,8 @@ public:
 	 *						!= 0 - non_empty column, 0 - empty one
 	 *						(this array must be filled by caller)
 	 */
-	static void ffIviInverseHaar4x4(const int32 *in, int16 *out, uint32 pitch,
-		const uint8 *flags);
+	static void ffIviInverseHaar4x4(const int32 *in, int16 *out, uint32_t pitch,
+		const uint8_t *flags);
 
 	/**
 	 *  one-dimensional inverse 4-point Haar transform on rows for Indeo 4
@@ -104,8 +104,8 @@ public:
 	 *						!= 0 - non_empty column, 0 - empty one
 	 *						(this array must be filled by caller)
 	 */
-	static void ffIviRowHaar4(const int32 *in, int16 *out, uint32 pitch,
-		const uint8 *flags);
+	static void ffIviRowHaar4(const int32 *in, int16 *out, uint32_t pitch,
+		const uint8_t *flags);
 
 	/**
 	 *  one-dimensional inverse 4-point Haar transform on columns for Indeo 4
@@ -117,8 +117,8 @@ public:
 	 *						!= 0 - non_empty column, 0 - empty one
 	 *						(this array must be filled by caller)
 	 */
-	static void ffIviColHaar4(const int32 *in, int16 *out, uint32 pitch,
-						  const uint8 *flags);
+	static void ffIviColHaar4(const int32 *in, int16 *out, uint32_t pitch,
+						  const uint8_t *flags);
 
 	/**
 	 *  DC-only two-dimensional inverse Haar transform for Indeo 4.
@@ -130,7 +130,7 @@ public:
 	 *  @param[in]  pitch		Pitch to move to the next y line
 	 *  @param[in]  blkSize		Transform block size
 	 */
-	static void ffIviDcHaar2d(const int32 *in, int16 *out, uint32 pitch,
+	static void ffIviDcHaar2d(const int32 *in, int16 *out, uint32_t pitch,
 		int blkSize);
 
 	/**
@@ -143,8 +143,8 @@ public:
 	 *						!= 0 - non_empty column, 0 - empty one
 	 *						(this array must be filled by caller)
 	 */
-	static void ffIviInverseSlant8x8(const int32 *in, int16 *out, uint32 pitch,
-		const uint8 *flags);
+	static void ffIviInverseSlant8x8(const int32 *in, int16 *out, uint32_t pitch,
+		const uint8_t *flags);
 
 	/**
 	 *  two-dimensional inverse slant 4x4 transform
@@ -156,8 +156,8 @@ public:
 	 *						!= 0 - non_empty column, 0 - empty one
 	 *						(this array must be filled by caller)
 	 */
-	static void ffIviInverseSlant4x4(const int32 *in, int16 *out, uint32 pitch,
-		const uint8 *flags);
+	static void ffIviInverseSlant4x4(const int32 *in, int16 *out, uint32_t pitch,
+		const uint8_t *flags);
 
 	/**
 	 *  DC-only two-dimensional inverse slant transform.
@@ -170,7 +170,7 @@ public:
 	 *  @param[in]  pitch		Pitch to move to the next y line
 	 *  @param[in]  blkSize		Transform block size
 	 */
-	static void ffIviDcSlant2d(const int32 *in, int16 *out, uint32 pitch, int blkSize);
+	static void ffIviDcSlant2d(const int32 *in, int16 *out, uint32_t pitch, int blkSize);
 
 	/**
 	 *  inverse 1D row slant transform
@@ -180,8 +180,8 @@ public:
 	 *  @param[in]    pitch		Pitch to move to the next y line
 	 *  @param[in]    flags		Pointer to the array of column flags (unused here)
 	 */
-	static void ffIviRowSlant8(const int32 *in, int16 *out, uint32 pitch,
-		const uint8 *flags);
+	static void ffIviRowSlant8(const int32 *in, int16 *out, uint32_t pitch,
+		const uint8_t *flags);
 
 	/**
 	 *  inverse 1D column slant transform
@@ -193,8 +193,8 @@ public:
 	 *						!= 0 - non_empty column, 0 - empty one
 	 *						(this array must be filled by caller)
 	 */
-	static void ffIviColSlant8(const int32 *in, int16 *out, uint32 pitch,
-		const uint8 *flags);
+	static void ffIviColSlant8(const int32 *in, int16 *out, uint32_t pitch,
+		const uint8_t *flags);
 
 	/**
 	 *  inverse 1D row slant transform
@@ -204,8 +204,8 @@ public:
 	 *  @param[in]    pitch		Pitch to move to the next y line
 	 *  @param[in]    flags		Pointer to the array of column flags (unused here)
 	 */
-	static void ffIviRowSlant4(const int32 *in, int16 *out, uint32 pitch,
-		const uint8 *flags);
+	static void ffIviRowSlant4(const int32 *in, int16 *out, uint32_t pitch,
+		const uint8_t *flags);
 
 	/**
 	 *  inverse 1D column slant transform
@@ -217,29 +217,29 @@ public:
 	 *						!= 0 - non_empty column, 0 - empty one
 	 *						(this array must be filled by caller)
 	 */
-	static void ffIviColSlant4(const int32 *in, int16 *out, uint32 pitch,
-		const uint8 *flags);
+	static void ffIviColSlant4(const int32 *in, int16 *out, uint32_t pitch,
+		const uint8_t *flags);
 
 	/**
 	 *  DC-only inverse row slant transform
 	 */
-	static void ffIviDcRowSlant(const int32 *in, int16 *out, uint32 pitch, int blkSize);
+	static void ffIviDcRowSlant(const int32 *in, int16 *out, uint32_t pitch, int blkSize);
 
 	/**
 	 *  DC-only inverse column slant transform
 	 */
-	static void ffIviDcColSlant(const int32 *in, int16 *out, uint32 pitch, int blkSize);
+	static void ffIviDcColSlant(const int32 *in, int16 *out, uint32_t pitch, int blkSize);
 
 	/**
 	 *  Copy the pixels into the frame buffer.
 	 */
-	static void ffIviPutPixels8x8(const int32 *in, int16 *out, uint32 pitch, const uint8 *flags);
+	static void ffIviPutPixels8x8(const int32 *in, int16 *out, uint32_t pitch, const uint8_t *flags);
 
 	/**
 	 *  Copy the DC coefficient into the first pixel of the block and
 	 *  zero all others.
 	 */
-	static void ffIviPutDcPixel8x8(const int32 *in, int16 *out, uint32 pitch, int blkSize);
+	static void ffIviPutDcPixel8x8(const int32 *in, int16 *out, uint32_t pitch, int blkSize);
 
 	/**
 	 *  8x8 block motion compensation with adding delta
@@ -249,7 +249,7 @@ public:
 	 *  @param[in]       pitch		Pitch for moving to the next y line
 	 *  @param[in]       mcType		Interpolation type
 	 */
-	static void ffIviMc8x8Delta(int16 *buf, const int16 *refBuf, uint32 pitch, int mcType);
+	static void ffIviMc8x8Delta(int16 *buf, const int16 *refBuf, uint32_t pitch, int mcType);
 
 	/**
 	 *  4x4 block motion compensation with adding delta
@@ -259,7 +259,7 @@ public:
 	 *  @param[in]       pitch		Pitch for moving to the next y line
 	 *  @param[in]       mcType		Interpolation type
 	 */
-	static void ffIviMc4x4Delta(int16 *buf, const int16 *refBuf, uint32 pitch, int mcType);
+	static void ffIviMc4x4Delta(int16 *buf, const int16 *refBuf, uint32_t pitch, int mcType);
 
 	/**
 	 *  motion compensation without adding delta
@@ -269,7 +269,7 @@ public:
 	 *  @param[in]       pitch		Pitch for moving to the next y line
 	 *  @param[in]       mcType		Interpolation type
 	 */
-	static void ffIviMc8x8NoDelta(int16 *buf, const int16 *refBuf, uint32 pitch, int mcType);
+	static void ffIviMc8x8NoDelta(int16 *buf, const int16 *refBuf, uint32_t pitch, int mcType);
 
 	/**
 	 *  4x4 block motion compensation without adding delta
@@ -279,7 +279,7 @@ public:
 	 *  @param[in]      pitch		Pitch for moving to the next y line
 	 *  @param[in]      mcType		Interpolation type
 	 */
-	static void ffIviMc4x4NoDelta(int16 *buf, const int16 *refBuf, uint32 pitch, int mcType);
+	static void ffIviMc4x4NoDelta(int16 *buf, const int16 *refBuf, uint32_t pitch, int mcType);
 
 	/**
 	 *  8x8 block motion compensation with adding delta
@@ -291,7 +291,7 @@ public:
 	 *  @param[in]      mcType		Interpolation type for backward reference
 	 *  @param[in]      mcType2		Interpolation type for forward reference
 	 */
-	static void ffIviMcAvg8x8Delta(int16 *buf, const int16 *refBuf, const int16 *refBuf2, uint32 pitch, int mcType, int mcType2);
+	static void ffIviMcAvg8x8Delta(int16 *buf, const int16 *refBuf, const int16 *refBuf2, uint32_t pitch, int mcType, int mcType2);
 
 	/**
 	 *  4x4 block motion compensation with adding delta
@@ -303,7 +303,7 @@ public:
 	 *  @param[in]      mcType		Interpolation type for backward reference
 	 *  @param[in]      mcType2		Interpolation type for forward reference
 	 */
-	static void ffIviMcAvg4x4Delta(int16 *buf, const int16 *refBuf, const int16 *refBuf2, uint32 pitch, int mcType, int mcType2);
+	static void ffIviMcAvg4x4Delta(int16 *buf, const int16 *refBuf, const int16 *refBuf2, uint32_t pitch, int mcType, int mcType2);
 
 	/**
 	 *  motion compensation without adding delta for B-frames
@@ -315,7 +315,7 @@ public:
 	 *  @param[in]      mcType		Interpolation type for backward reference
 	 *  @param[in]      mcType2		Interpolation type for forward reference
 	 */
-	static void ffIviMcAvg8x8NoDelta(int16 *buf, const int16 *refBuf, const int16 *refBuf2, uint32 pitch, int mcType, int mcType2);
+	static void ffIviMcAvg8x8NoDelta(int16 *buf, const int16 *refBuf, const int16 *refBuf2, uint32_t pitch, int mcType, int mcType2);
 
 	/**
 	 *  4x4 block motion compensation without adding delta for B-frames
@@ -327,7 +327,7 @@ public:
 	 *  @param[in]      mcType		Interpolation type for backward reference
 	 *  @param[in]      mcType2		Interpolation type for forward reference
 	 */
-	static void ffIviMcAvg4x4NoDelta(int16 *buf, const int16 *refBuf, const int16 *refBuf2, uint32 pitch, int mcType, int mcType2);
+	static void ffIviMcAvg4x4NoDelta(int16 *buf, const int16 *refBuf, const int16 *refBuf2, uint32_t pitch, int mcType, int mcType2);
 };
 
 } // End of namespace Indeo

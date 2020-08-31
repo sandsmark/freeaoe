@@ -70,19 +70,19 @@ extern void *avReallocF(void *ptr, size_t nelem, size_t elsize);
  * Reverse "nbits" bits of the value "val" and return the result
  * in the least significant bits.
  */
-extern uint16 invertBits(uint16 val, int nbits);
+extern uint16_t invertBits(uint16_t val, int nbits);
 
 /**
  * Swap the order of the bytes in the passed value
  */
-extern uint32 bitswap32(uint32 x);
+extern uint32_t bitswap32(uint32_t x);
 
 /**
  * Clip a signed integer value into the 0-255 range.
  * @param a value to clip
  * @return clipped value
  */
-inline uint8 avClipUint8(int a) {
+inline uint8_t avClipUint8(int a) {
 	if (a & (~0xFF))
 		return (-a) >> 31;
 	else
@@ -102,7 +102,7 @@ inline unsigned avClipUintp2(int a, int p) {
 		return  a;
 }
 
-extern const uint8 ffZigZagDirect[64];
+extern const uint8_t ffZigZagDirect[64];
 
 } // End of namespace Indeo
 } // End of namespace Image

@@ -25,6 +25,8 @@
 
 #include "bitstream.h"
 
+#include <cstdint>
+
 namespace Image {
 namespace Indeo {
 
@@ -36,7 +38,7 @@ public:
 	/**
 	* Constructor
 	*/
-	GetBits(const byte *dataPtr, uint32 dataSize) : Common::BitStreamMemory8LSB(new Common::BitStreamMemoryStream(dataPtr, dataSize), DisposeAfterUse::YES) {}
+	GetBits(const byte *dataPtr, uint32_t dataSize) : Common::BitStreamMemory8LSB(new Common::BitStreamMemoryStream(dataPtr, dataSize), true) {}
 
 	/**
 	 * The number of bits left

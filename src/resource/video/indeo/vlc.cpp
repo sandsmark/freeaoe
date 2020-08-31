@@ -212,7 +212,7 @@ int VLC::buildTable(int tableNbBits, int nbCodes,
 	VLC *vlc = this;
 	int tableSize, tableIndex, index, codePrefix, symbol, subtableBits;
 	int i, j, k, n, nb, inc;
-	uint32 code;
+	uint32_t code;
 	VLC_TYPE (*table)[2];
 
 	tableSize = 1 << tableNbBits;
@@ -318,17 +318,17 @@ int VLC::allocTable(int size, int useStatic) {
 }
 
 uint VLC::getData(const void *table, uint idx, uint wrap, uint size) {
-	const uint8 *ptr = (const uint8 *)table + idx * wrap;
+	const uint8_t *ptr = (const uint8_t *)table + idx * wrap;
 
 	switch(size) {
 	case 1:
-		return *(const uint8 *)ptr;
+		return *(const uint8_t *)ptr;
 
 	case 2:
-		return *(const uint16 *)ptr;
+		return *(const uint16_t *)ptr;
 
 	default:
-		return *(const uint32 *)ptr;
+		return *(const uint32_t *)ptr;
 	}
 }
 

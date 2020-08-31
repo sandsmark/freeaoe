@@ -44,14 +44,14 @@ enum VLCFlag {
 };
 
 struct VLCcode {
-	uint8 bits;
-	uint16 symbol;
+	uint8_t bits;
+	uint16_t symbol;
 
 	/**
 	 * codeword, with the first bit-to-be-read in the msb
 	 * (even if intended for a little-endian bitstream reader)
 	 */
-	uint32 code;
+	uint32_t code;
 };
 
 struct VLC {
