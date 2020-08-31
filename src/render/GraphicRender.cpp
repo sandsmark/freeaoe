@@ -375,6 +375,17 @@ int GraphicRender::frameCount() const noexcept
     return m_sprite ? m_sprite->frameCount() : 0;
 }
 
+bool GraphicRender::isRunning() const noexcept
+{
+    if (!m_sprite) {
+        return false;
+    }
+    if (!m_sprite->runOnce()) {
+        return true;
+    }
+    return m_currentFrame < m_sprite->frameCount() - 1;
+}
+
 void GraphicRender::setCurrentFrame(int frame) noexcept
 {
     if (frame == m_currentFrame) {

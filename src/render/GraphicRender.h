@@ -103,6 +103,7 @@ public:
 
     inline int currentFrame() const noexcept { return m_currentFrame; }
     void setCurrentFrame(int frame) noexcept;
+    bool isRunning() const noexcept;
 
     void setPlaySounds(bool playSound) noexcept { m_playSounds = playSound; }
 
