@@ -181,6 +181,8 @@ set(RESOURCE_SRC
     src/resource/Resource.cpp
     src/resource/AssetManager.cpp
     src/resource/TerrainSprite.cpp
+
+    src/resource/video/indeo5.cpp
     )
 
 set(MECHANICS_SRC
