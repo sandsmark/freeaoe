@@ -7,3 +7,6 @@
 [submodule "src/extern/miniaudio"]
 	path = src/extern/miniaudio
 	url = https://github.com/dr-soft/miniaudio.git
+[submodule "src/extern/tinysoundfont"]
+	path = src/extern/tinysoundfont
+	url = https://github.com/schellingb/TinySoundFont.git

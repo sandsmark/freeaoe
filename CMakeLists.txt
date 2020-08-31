@@ -148,10 +148,16 @@ include_directories(
 
 # Because we want to support msvc we can't use the standard funny linker or incbin tricks
 add_subdirectory(src/tools/resgen)
+
+# Fonts
 add_resource(FONT_ALEGREYA misc/fonts/Alegreya/Alegreya-Bold.latin)
 add_resource(FONT_BERRYROTUNDA misc/fonts/BerryRotunda/BerryRotunda.ttf)
 add_resource(FONT_CHARIS misc/fonts/charis/CharisSILEur-R.ttf)
+# Images
 add_resource(IMAGE_PARCHMENT misc/images/parchment.jpg)
+
+# Soundfont (for midi playback)
+add_resource(SOUNDFONT_GENERAL808 misc/general808/General808.sf2)
 
 set(AI_SRC
     src/ai/grammar.gen.tab.cpp
@@ -375,6 +381,7 @@ set(ENGINE_SRC
     ${FONT_ALEGREYA}
     ${FONT_BERRYROTUNDA}
     ${FONT_CHARIS}
+    ${SOUNDFONT_GENERAL808}
     ${SETTINGS_SRC}
     ${DEBUG_SRC}
     ${EDITOR_SRC}
