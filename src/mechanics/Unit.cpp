@@ -542,23 +542,29 @@ void Unit::updateGraphic()
         }
 
         break;
-    case IAction::Type::Attack:
+    case IAction::Type::Attack: {
         if (actions.m_currentAction->unitState() != IAction::UnitState::Attacking) {
             graphic = defaultGraphics;
             break;
         }
 
-        if (data()->Combat.AttackGraphic == -1) {
+        const int attackSpriteID = data()->Combat.AttackGraphic;
+        if (attackSpriteID == -1) {
             graphic = defaultGraphics;
             break;
         }
 
+        if (m_renderer->spriteId() == attackSpriteID && m_renderer->isRunning()) {
+            return;
+        }
+
         graphic = AssetManager::Inst()->getGraphic(data()->Combat.AttackGraphic);
         if (graphic) {
+            m_renderer->setCurrentFrame(0);
             graphic->setRunOnce(true);
         }
         break;
-
+    }
     default:
         graphic = AssetManager::Inst()->getGraphic(actions.taskGraphicId(actions.m_currentAction->taskType(), actions.m_currentAction->unitState()));
         break;
