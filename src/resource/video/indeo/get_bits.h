@@ -38,7 +38,7 @@ public:
 	/**
 	* Constructor
 	*/
-	GetBits(const byte *dataPtr, uint32_t dataSize) : Common::BitStreamMemory8LSB(new Common::BitStreamMemoryStream(dataPtr, dataSize), true) {}
+	GetBits(const uint8_t *dataPtr, uint32_t dataSize) : Common::BitStreamMemory8LSB(new Common::BitStreamMemoryStream(dataPtr, dataSize), true) {}
 
 	/**
 	 * The number of bits left
@@ -54,7 +54,7 @@ public:
 	 *                  = (max_vlc_length + bits - 1) / bits
 	 */
 	template <int maxDepth>
-	int getVLC2(int16 (*table)[2], int bits) {
+	int getVLC2(int16_t (*table)[2], int bits) {
 		int code;
 		int n, nbBits;
 		unsigned int index;

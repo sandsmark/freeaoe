@@ -30,6 +30,8 @@
 #ifndef IMAGE_CODECS_INDEO5_H
 #define IMAGE_CODECS_INDEO5_H
 
+#include "core/Logger.h"
+
 
 ///////////// TEMP
 // TODO: move below after adding everywere necessaray
@@ -43,15 +45,6 @@
 
 #define error printf
 #define warning printf
-#define int32 int32_t
-#define uint32 uint32_t
-#define int16 int16_t
-#define uint16 uint16_t
-#define int8 int8_t
-#define uint8 uint8_t
-#define byte uint8_t
-
-#define SWAP std::swap
 
 struct Codec {};
 

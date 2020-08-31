@@ -36,7 +36,7 @@
 namespace Image {
 namespace Indeo {
 
-#define VLC_TYPE int16
+#define VLC_TYPE int16_t
 
 enum VLCFlag {
 	INIT_VLC_LE             = 2,

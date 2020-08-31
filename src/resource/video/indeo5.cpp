@@ -49,7 +49,6 @@ enum {
 
 Indeo5Decoder::Indeo5Decoder(uint16_t width, uint16_t height, uint bitsPerPixel) :
 		IndeoDecoderBase(width, height, bitsPerPixel) {
-	_ctx._isIndeo4 = false;
 	_ctx._refBuf = 1;
 	_ctx._bRefBuf = 3;
 	_ctx._pFrame = new AVFrame();
@@ -62,7 +61,7 @@ bool Indeo5Decoder::isIndeo5(Common::SeekableReadStream &stream) {
 		return false;
 
 	// Read in the start of the data
-	byte buffer[16];
+	uint8_t buffer[16];
 	stream.read(buffer, 16);
 	stream.seek(-16, SEEK_CUR);
 
@@ -79,7 +78,7 @@ const Graphics::Surface *Indeo5Decoder::decodeFrame(Common::SeekableReadStream &
 		return nullptr;
 
 	// Set up the frame data buffer
-	byte *frameData = new byte[stream.size()];
+	uint8_t *frameData = new uint8_t[stream.size()];
 	stream.read(frameData, stream.size());
 	_ctx._frameData = frameData;
 	_ctx._frameSize = stream.size();
@@ -172,7 +171,7 @@ void Indeo5Decoder::switchBuffers() {
 			_ctx._ref2Buf = 2;
 			_ctx._interScal = 1;
 		}
-		SWAP(_ctx._dstBuf, _ctx._ref2Buf);
+                std::swap(_ctx._dstBuf, _ctx._ref2Buf);
 		_ctx._refBuf = _ctx._ref2Buf;
 		break;
 
@@ -227,7 +226,7 @@ int Indeo5Decoder::decodeBandHeader(IVIBandDesc *band) {
 	if (bandFlags & 0x10) {
 		band->_numCorr = _ctx._gb->getBits(8); // get number of correction pairs
 		if (band->_numCorr > 61) {
-			warning("Too many corrections: %d", band->_numCorr);
+			WARN << "Too many corrections" << band->_numCorr;
 			return -1;
 		}
 
@@ -444,7 +443,7 @@ int Indeo5Decoder::decode_gop_header() {
 
 	// check if picture layout was changed and reallocate buffers
 	if (picConf.ivi_pic_config_cmp(_ctx._picConf) || _ctx._gopInvalid) {
-		result = IVIPlaneDesc::initPlanes(_ctx._planes, &picConf, 0);
+		result = IVIPlaneDesc::initPlanes(_ctx._planes, &picConf);
 		if (result < 0) {
 			warning("Couldn't reallocate color planes!");
 			return result;

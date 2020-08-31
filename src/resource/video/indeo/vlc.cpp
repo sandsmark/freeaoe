@@ -55,30 +55,30 @@ namespace Indeo {
 				type *left  = start + 1;\
 				type *mid = start + ((end - start) >> 1);\
 				if(cmp(start, end) > 0) {\
-					if(cmp(  end, mid) > 0) SWAP(*start, *mid);\
-					else                    SWAP(*start, *end);\
+					if(cmp(  end, mid) > 0) std::swap(*start, *mid);\
+					else                    std::swap(*start, *end);\
 				} else {\
-					if(cmp(start, mid) > 0) SWAP(*start, *mid);\
+					if(cmp(start, mid) > 0) std::swap(*start, *mid);\
 					else checksort = 1;\
 				}\
 				if (cmp(mid, end) > 0) { \
-					SWAP(*mid, *end);\
+					std::swap(*mid, *end);\
 					checksort = 0;\
 				}\
 				if(start == end - 2) break;\
-				SWAP(end[-1], *mid);\
+				std::swap(end[-1], *mid);\
 				while (left <= right) {\
 					while (left<=right && cmp(left, end - 1) < 0)\
 						left++;\
 					while (left<=right && cmp(right, end - 1) > 0)\
 						right--;\
 					if (left <= right) {\
-						SWAP(*left, *right);\
+						std::swap(*left, *right);\
 						left++;\
 						right--;\
 					}\
 				}\
-				SWAP(end[-1], *left);\
+				std::swap(end[-1], *left);\
 				if(checksort && (mid == left - 1 || mid == left)){\
 					mid= start;\
 					while(mid<end && cmp(mid, mid+1) <= 0)\
@@ -97,7 +97,7 @@ namespace Indeo {
 				}\
 			} else {\
 				if (cmp(start, end) > 0)\
-					SWAP(*start, *end);\
+					std::swap(*start, *end);\
 				break;\
 			}\
 		}\
@@ -245,7 +245,7 @@ int VLC::buildTable(int tableNbBits, int nbCodes,
 				//warning("%4x: code=%d n=%d", j, i, n);
 
 				if (bits != 0 && bits != n) {
-					warning("incorrect codes");
+					WARN << "incorrect codes";
 					return -1;
 				}
 
@@ -304,7 +304,7 @@ int VLC::allocTable(int size, int useStatic) {
 		assert(!useStatic);
 
 		vlc->_tableAllocated += (1 << vlc->_bits);
-		vlc->_table = (int16(*)[2])avReallocF(vlc->_table, vlc->_tableAllocated, sizeof(VLC_TYPE) * 2);
+		vlc->_table = (int16_t(*)[2])avReallocF(vlc->_table, vlc->_tableAllocated, sizeof(VLC_TYPE) * 2);
 		if (!vlc->_table) {
 			vlc->_tableAllocated = 0;
 			vlc->_tableSize = 0;

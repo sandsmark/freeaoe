@@ -71,15 +71,15 @@ namespace Indeo {
 	d3 = COMPENSATE(t2);\
 	d4 = COMPENSATE(t3); }
 
-void IndeoDSP::ffIviInverseHaar8x8(const int32 *in, int16 *out, uint32_t pitch,
+void IndeoDSP::ffIviInverseHaar8x8(const int32_t *in, int16_t *out, uint32_t pitch,
 							 const uint8_t *flags) {
-	int32 tmp[64];
+	int32_t tmp[64];
 	int t0, t1, t2, t3, t4, t5, t6, t7, t8;
 
 	// apply the InvHaar8 to all columns
 #define COMPENSATE(x) (x)
-	const int32 *src = in;
-	int32 *dst = tmp;
+	const int32_t *src = in;
+	int32_t *dst = tmp;
 	for (int i = 0; i < 8; i++) {
 		if (flags[i]) {
 			// pre-scaling
@@ -123,7 +123,7 @@ void IndeoDSP::ffIviInverseHaar8x8(const int32 *in, int16 *out, uint32_t pitch,
 #undef  COMPENSATE
 }
 
-void IndeoDSP::ffIviRowHaar8(const int32 *in, int16 *out, uint32_t pitch,
+void IndeoDSP::ffIviRowHaar8(const int32_t *in, int16_t *out, uint32_t pitch,
 					  const uint8_t *flags) {
 	int t0, t1, t2, t3, t4, t5, t6, t7, t8;
 
@@ -146,7 +146,7 @@ void IndeoDSP::ffIviRowHaar8(const int32 *in, int16 *out, uint32_t pitch,
 #undef  COMPENSATE
 }
 
-void IndeoDSP::ffIviColHaar8(const int32 *in, int16 *out, uint32_t pitch,
+void IndeoDSP::ffIviColHaar8(const int32_t *in, int16_t *out, uint32_t pitch,
 					  const uint8_t *flags) {
 	int t0, t1, t2, t3, t4, t5, t6, t7, t8;
 
@@ -174,15 +174,15 @@ void IndeoDSP::ffIviColHaar8(const int32 *in, int16 *out, uint32_t pitch,
 #undef  COMPENSATE
 }
 
-void IndeoDSP::ffIviInverseHaar4x4(const int32 *in, int16 *out, uint32_t pitch,
+void IndeoDSP::ffIviInverseHaar4x4(const int32_t *in, int16_t *out, uint32_t pitch,
 							 const uint8_t *flags) {
-	int32 tmp[16];
+	int32_t tmp[16];
 	int t0, t1, t2, t3, t4;
 
 	// apply the InvHaar4 to all columns
 #define COMPENSATE(x) (x)
-	const int32 *src = in;
-	int32 *dst = tmp;
+	const int32_t *src = in;
+	int32_t *dst = tmp;
 	for (int i = 0; i < 4; i++) {
 		if (flags[i]) {
 			// pre-scaling
@@ -218,7 +218,7 @@ void IndeoDSP::ffIviInverseHaar4x4(const int32 *in, int16 *out, uint32_t pitch,
 #undef  COMPENSATE
 }
 
-void IndeoDSP::ffIviRowHaar4(const int32 *in, int16 *out, uint32_t pitch,
+void IndeoDSP::ffIviRowHaar4(const int32_t *in, int16_t *out, uint32_t pitch,
 					  const uint8_t *flags) {
 	int t0, t1, t2, t3, t4;
 
@@ -238,7 +238,7 @@ void IndeoDSP::ffIviRowHaar4(const int32 *in, int16 *out, uint32_t pitch,
 #undef  COMPENSATE
 }
 
-void IndeoDSP::ffIviColHaar4(const int32 *in, int16 *out, uint32_t pitch,
+void IndeoDSP::ffIviColHaar4(const int32_t *in, int16_t *out, uint32_t pitch,
 					  const uint8_t *flags) {
 	int t0, t1, t2, t3, t4;
 
@@ -261,9 +261,9 @@ void IndeoDSP::ffIviColHaar4(const int32 *in, int16 *out, uint32_t pitch,
 #undef  COMPENSATE
 }
 
-void IndeoDSP::ffIviDcHaar2d(const int32 *in, int16 *out, uint32_t pitch,
+void IndeoDSP::ffIviDcHaar2d(const int32_t *in, int16_t *out, uint32_t pitch,
 					   int blkSize) {
-	int16 dcCoeff = (*in + 0) >> 3;
+	int16_t dcCoeff = (*in + 0) >> 3;
 
 	for (int y = 0; y < blkSize; out += pitch, y++) {
 		for (int x = 0; x < blkSize; x++)
@@ -321,13 +321,13 @@ void IndeoDSP::ffIviDcHaar2d(const int32 *in, int16 *out, uint32_t pitch,
 	d3 = COMPENSATE(t3);\
 	d4 = COMPENSATE(t4);}
 
-void IndeoDSP::ffIviInverseSlant8x8(const int32 *in, int16 *out, uint32_t pitch, const uint8_t *flags) {
-	int32 tmp[64];
+void IndeoDSP::ffIviInverseSlant8x8(const int32_t *in, int16_t *out, uint32_t pitch, const uint8_t *flags) {
+	int32_t tmp[64];
 	int t0, t1, t2, t3, t4, t5, t6, t7, t8;
 
 #define COMPENSATE(x) (x)
-	const int32 *src = in;
-	int32 *dst = tmp;
+	const int32_t *src = in;
+	int32_t *dst = tmp;
 	for (int i = 0; i < 8; i++) {
 		if (flags[i]) {
 			IVI_INV_SLANT8(src[0], src[8], src[16], src[24], src[32], src[40], src[48], src[56],
@@ -358,13 +358,13 @@ void IndeoDSP::ffIviInverseSlant8x8(const int32 *in, int16 *out, uint32_t pitch,
 #undef COMPENSATE
 }
 
-void IndeoDSP::ffIviInverseSlant4x4(const int32 *in, int16 *out, uint32_t pitch, const uint8_t *flags) {
-	int32 tmp[16];
+void IndeoDSP::ffIviInverseSlant4x4(const int32_t *in, int16_t *out, uint32_t pitch, const uint8_t *flags) {
+	int32_t tmp[16];
 	int t0, t1, t2, t3, t4;
 
 #define COMPENSATE(x) (x)
-	const int32 *src = in;
-	int32 *dst = tmp;
+	const int32_t *src = in;
+	int32_t *dst = tmp;
 	for (int i = 0; i < 4; i++) {
 		if (flags[i]) {
 			IVI_INV_SLANT4(src[0], src[4], src[8], src[12],
@@ -394,9 +394,9 @@ void IndeoDSP::ffIviInverseSlant4x4(const int32 *in, int16 *out, uint32_t pitch,
 #undef COMPENSATE
 }
 
-void IndeoDSP::ffIviDcSlant2d(const int32 *in, int16 *out, uint32_t pitch,
+void IndeoDSP::ffIviDcSlant2d(const int32_t *in, int16_t *out, uint32_t pitch,
 		int blkSize) {
-	int16 dcCoeff = (*in + 1) >> 1;
+	int16_t dcCoeff = (*in + 1) >> 1;
 
 	for (int y = 0; y < blkSize; out += pitch, y++) {
 		for (int x = 0; x < blkSize; x++)
@@ -404,7 +404,7 @@ void IndeoDSP::ffIviDcSlant2d(const int32 *in, int16 *out, uint32_t pitch,
 	}
 }
 
-void IndeoDSP::ffIviRowSlant8(const int32 *in, int16 *out, uint32_t pitch,
+void IndeoDSP::ffIviRowSlant8(const int32_t *in, int16_t *out, uint32_t pitch,
 		const uint8_t *flags) {
 	int t0, t1, t2, t3, t4, t5, t6, t7, t8;
 
@@ -423,8 +423,8 @@ void IndeoDSP::ffIviRowSlant8(const int32 *in, int16 *out, uint32_t pitch,
 #undef COMPENSATE
 }
 
-void IndeoDSP::ffIviDcRowSlant(const int32 *in, int16 *out, uint32_t pitch, int blkSize) {
-	int16 dcCoeff = (*in + 1) >> 1;
+void IndeoDSP::ffIviDcRowSlant(const int32_t *in, int16_t *out, uint32_t pitch, int blkSize) {
+	int16_t dcCoeff = (*in + 1) >> 1;
 
 	for (int x = 0; x < blkSize; x++)
 		out[x] = dcCoeff;
@@ -437,7 +437,7 @@ void IndeoDSP::ffIviDcRowSlant(const int32 *in, int16 *out, uint32_t pitch, int 
 	}
 }
 
-void IndeoDSP::ffIviColSlant8(const int32 *in, int16 *out, uint32_t pitch, const uint8_t *flags) {
+void IndeoDSP::ffIviColSlant8(const int32_t *in, int16_t *out, uint32_t pitch, const uint8_t *flags) {
 	int t0, t1, t2, t3, t4, t5, t6, t7, t8;
 
 	int row2 = pitch << 1;
@@ -462,8 +462,8 @@ void IndeoDSP::ffIviColSlant8(const int32 *in, int16 *out, uint32_t pitch, const
 #undef COMPENSATE
 }
 
-void IndeoDSP::ffIviDcColSlant(const int32 *in, int16 *out, uint32_t pitch, int blkSize) {
-	int16 dcCoeff = (*in + 1) >> 1;
+void IndeoDSP::ffIviDcColSlant(const int32_t *in, int16_t *out, uint32_t pitch, int blkSize) {
+	int16_t dcCoeff = (*in + 1) >> 1;
 
 	for (int y = 0; y < blkSize; out += pitch, y++) {
 		out[0] = dcCoeff;
@@ -472,7 +472,7 @@ void IndeoDSP::ffIviDcColSlant(const int32 *in, int16 *out, uint32_t pitch, int 
 	}
 }
 
-void IndeoDSP::ffIviRowSlant4(const int32 *in, int16 *out,
+void IndeoDSP::ffIviRowSlant4(const int32_t *in, int16_t *out,
 		uint32_t pitch, const uint8_t *flags) {
 	int t0, t1, t2, t3, t4;
 
@@ -491,7 +491,7 @@ void IndeoDSP::ffIviRowSlant4(const int32 *in, int16 *out,
 #undef COMPENSATE
 }
 
-void IndeoDSP::ffIviColSlant4(const int32 *in, int16 *out, uint32_t pitch,
+void IndeoDSP::ffIviColSlant4(const int32_t *in, int16_t *out, uint32_t pitch,
 		const uint8_t *flags) {
 	int t0, t1, t2, t3, t4;
 
@@ -513,14 +513,14 @@ void IndeoDSP::ffIviColSlant4(const int32 *in, int16 *out, uint32_t pitch,
 #undef COMPENSATE
 }
 
-void IndeoDSP::ffIviPutPixels8x8(const int32 *in, int16 *out, uint32_t pitch,
+void IndeoDSP::ffIviPutPixels8x8(const int32_t *in, int16_t *out, uint32_t pitch,
 		const uint8_t *flags) {
 	for (int y = 0; y < 8; out += pitch, in += 8, y++)
 		for (int x = 0; x < 8; x++)
 			out[x] = in[x];
 }
 
-void IndeoDSP::ffIviPutDcPixel8x8(const int32 *in, int16 *out, uint32_t pitch,
+void IndeoDSP::ffIviPutDcPixel8x8(const int32_t *in, int16_t *out, uint32_t pitch,
 		int blkSize) {
 	out[0] = in[0];
 	memset(out + 1, 0, 7 * sizeof(out[0]));
@@ -531,12 +531,12 @@ void IndeoDSP::ffIviPutDcPixel8x8(const int32 *in, int16 *out, uint32_t pitch,
 }
 
 #define IVI_MC_TEMPLATE(size, suffix, OP) \
-static void iviMc ## size ##x## size ## suffix(int16 *buf, \
+static void iviMc ## size ##x## size ## suffix(int16_t *buf, \
 												 uint32_t dpitch, \
-												 const int16 *refBuf, \
+												 const int16_t *refBuf, \
 												 uint32_t pitch, int mcType) \
 { \
-	const int16 *wptr; \
+	const int16_t *wptr; \
 \
 	switch (mcType) { \
 	case 0: /* fullpel (no interpolation) */ \
@@ -568,20 +568,20 @@ static void iviMc ## size ##x## size ## suffix(int16 *buf, \
 	} \
 } \
 \
-void IndeoDSP::ffIviMc ## size ##x## size ## suffix(int16 *buf, const int16 *refBuf, \
+void IndeoDSP::ffIviMc ## size ##x## size ## suffix(int16_t *buf, const int16_t *refBuf, \
 											 uint32_t pitch, int mcType) \
 { \
 	iviMc ## size ##x## size ## suffix(buf, pitch, refBuf, pitch, mcType); \
 }
 
 #define IVI_MC_AVG_TEMPLATE(size, suffix, OP) \
-void IndeoDSP::ffIviMcAvg ## size ##x## size ## suffix(int16 *buf, \
-												 const int16 *refBuf, \
-												 const int16 *refBuf2, \
+void IndeoDSP::ffIviMcAvg ## size ##x## size ## suffix(int16_t *buf, \
+												 const int16_t *refBuf, \
+												 const int16_t *refBuf2, \
 												 uint32_t pitch, \
 											   int mcType, int mcType2) \
 { \
-	int16 tmp[size * size]; \
+	int16_t tmp[size * size]; \
 \
 	iviMc ## size ##x## size ## NoDelta(tmp, size, refBuf, pitch, mcType); \
 	iviMc ## size ##x## size ## Delta(tmp, size, refBuf2, pitch, mcType2); \

@@ -50,19 +50,19 @@ struct Surface {
 	/**
 	 * The width of the surface.
 	 */
-	uint16 w;
+	uint16_t w;
 
 	/**
 	 * The height of the surface.
 	 */
-	uint16 h;
+	uint16_t h;
 
 	/**
 	 * The number of bytes a pixel line has.
 	 *
 	 * Note that this might not equal w * bytesPerPixel.
 	 */
-	uint16 pitch;
+	uint16_t pitch;
 
 protected:
 	/**
@@ -117,7 +117,7 @@ public:
 	 * @return Pointer to the pixel.
 	 */
 	inline const void *getBasePtr(int x, int y) const {
-		return (const byte *)(pixels) + y * pitch + x * format.bytesPerPixel;
+		return (const uint8_t *)(pixels) + y * pitch + x * format.bytesPerPixel;
 	}
 
 	/**
@@ -128,7 +128,7 @@ public:
 	 * @return Pointer to the pixel.
 	 */
 	inline void *getBasePtr(int x, int y) {
-		return static_cast<byte *>(pixels) + y * pitch + x * format.bytesPerPixel;
+		return static_cast<uint8_t *>(pixels) + y * pitch + x * format.bytesPerPixel;
 	}
 
 	/**
@@ -141,7 +141,7 @@ public:
 	 * @param height Height of the surface object.
 	 * @param format The pixel format the surface should use.
 	 */
-	//void create(uint16 width, uint16 height, const PixelFormat &format);
+	//void create(uint16_t width, uint16_t height, const PixelFormat &format);
 
 	/**
 	 * Release the memory used by the pixels memory of this surface. This is the
@@ -165,7 +165,7 @@ public:
 	 * @param pixels The pixel data itself.
 	 * @param format The pixel format of the pixel data.
 	 */
-	void init(uint16 width, uint16 height, uint16 pitch, void *pixels, const PixelFormat &format);
+	void init(uint16_t width, uint16_t height, uint16_t pitch, void *pixels, const PixelFormat &format);
 
 	/**
 	 * Copy the data from another Surface.
@@ -247,7 +247,7 @@ public:
 	 * @param dstFormat The desired format
 	 * @param palette   The palette (in RGB888), if the source format has a Bpp of 1
 	 */
-	void convertToInPlace(const PixelFormat &dstFormat, const byte *palette = 0);
+	void convertToInPlace(const PixelFormat &dstFormat, const uint8_t *palette = 0);
 
 	/**
 	 * Convert the data to another pixel format.
@@ -258,7 +258,7 @@ public:
 	 * @param dstFormat The desired format
 	 * @param palette   The palette (in RGB888), if the source format has a Bpp of 1
 	 */
-	Graphics::Surface *convertTo(const PixelFormat &dstFormat, const byte *palette = 0) const;
+	Graphics::Surface *convertTo(const PixelFormat &dstFormat, const uint8_t *palette = 0) const;
 
 	/**
 	 * Draw a line.
@@ -270,7 +270,7 @@ public:
 	 * @param color The color of the line.
 	 * @note This is just a wrapper around Graphics::drawLine
 	 */
-	void drawLine(int x0, int y0, int x1, int y1, uint32 color);
+	void drawLine(int x0, int y0, int x1, int y1, uint32_t color);
 
 	/**
 	 * Draw a thick line.
@@ -285,7 +285,7 @@ public:
 	 * @note This is just a wrapper around Graphics::drawThickLine
 	 * @note The x/y coordinates of the start and end points are the upper-left most part of the pen
 	 */
-	void drawThickLine(int x0, int y0, int x1, int y1, int penX, int penY, uint32 color);
+	void drawThickLine(int x0, int y0, int x1, int y1, int penX, int penY, uint32_t color);
 
 	/**
 	 * Draw a horizontal line.
@@ -296,7 +296,7 @@ public:
 	 *           In case x > x2 the coordinates are swapped.
 	 * @param color The color of the line.
 	 */
-	void hLine(int x, int y, int x2, uint32 color);
+	void hLine(int x, int y, int x2, uint32_t color);
 
 	/**
 	 * Draw a vertical line.
@@ -307,7 +307,7 @@ public:
 	 *           In case y > y2 the coordinates are swapped.
 	 * @param color The color of the line.
 	 */
-	void vLine(int x, int y, int y2, uint32 color);
+	void vLine(int x, int y, int y2, uint32_t color);
 
 	/**
 	 * Fill a rect with a given color.
@@ -315,7 +315,7 @@ public:
 	 * @param r Rect to fill
 	 * @param color The color of the rect's contents.
 	 */
-	void fillRect(Common::Rect r, uint32 color);
+	void fillRect(Common::Rect r, uint32_t color);
 
 	/**
 	 * Draw a frame around a specified rect.
@@ -323,7 +323,7 @@ public:
 	 * @param r Rect to frame
 	 * @param color The color of the frame.
 	 */
-	void frameRect(const Common::Rect &r, uint32 color);
+	void frameRect(const Common::Rect &r, uint32_t color);
 
 	// See comment in graphics/surface.cpp about it
 	void move(int dx, int dy, int height);
@@ -345,92 +345,10 @@ public:
 	 * @param newHeight the resulting height.
 	 * @param filtering Whether or not to use bilinear filtering.
 	 */
-	Graphics::Surface *scale(uint16 newWidth, uint16 newHeight, bool filtering = false) const;
+	Graphics::Surface *scale(uint16_t newWidth, uint16_t newHeight, bool filtering = false) const;
 
 };
 
-#if 0
-/**
- * A deleter for Surface objects which can be used with SharedPtr.
- *
- * This deleter assures Surface::free is called on deletion.
- */
-struct SurfaceDeleter {
-	void operator()(Surface *ptr) {
-		if (ptr) {
-			ptr->free();
-		}
-		delete ptr;
-	}
-};
-
-/**
- * Stack-based flood fill algorithm for arbitrary Surfaces.
- *
- * It could be used in 2 ways. One is to fill the pixels of oldColor
- * with fillColor. Second is when the surface stays intact but another
- * surface with mask is created, where filled colors are marked with 255.
- *
- * Before running fill() or fillMask(), the initial pixels must be addSeed
- * with addSeed() method.
- */
-class FloodFill {
-public:
-	/**
-	 * Construct a simple Surface object.
-	 *
-	 * @param surface Input surface
-	 * @param oldColor Color on the surface to change
-	 * @param fillColor Color to fill with
-	 */
-	FloodFill(Surface *surface, uint32 oldColor, uint32 fillColor, bool maskMode = false);
-	~FloodFill();
-
-	/**
-	 * Add pixels to the fill queue.
-	 *
-	 * @param x The x coordinate of the pixel.
-	 * @param y The x coordinate of the pixel.
-	 */
-	void addSeed(int x, int y);
-
-	/**
-	 * Fill the surface as requested.
-	 *
-	 * It uses pixels which were added with addSeed() method.
-	 *
-	 * @see addSeed
-	 */
-	void fill();
-
-	/**
-	 * Fill the mask. The mask is a CLUT8 Surface with pixels 0 and 255.
-	 * 255 means that the pixel has been filled.
-	 *
-	 * It uses pixels which were added with addSeed() method.
-	 *
-	 * @see addSeed
-	 */
-	void fillMask();
-
-	/**
-	 * Get the resulting mask.
-	 *
-	 * @see fillMask
-	 */
-	Surface *getMask() { return _mask; }
-
-private:
-	Common::List<Common::Point *> _queue;
-	Surface *_surface;
-	Surface *_mask;
-	uint32 _oldColor, _fillColor;
-	byte *_visited;
-	int _w, _h;
-
-	bool _maskMode;
-};
-#endif
 
 } // End of namespace Graphics
 

@@ -82,24 +82,11 @@ extern uint32_t bitswap32(uint32_t x);
  * @param a value to clip
  * @return clipped value
  */
-inline uint8_t avClipUint8(int a) {
+inline uint8_t avClipUint8_t(int a) {
 	if (a & (~0xFF))
 		return (-a) >> 31;
 	else
 		return a;
-}
-
-/**
- * Clip a signed integer to an unsigned power of two range.
- * @param  a value to clip
- * @param  p bit position to clip at
- * @return clipped value
- */
-inline unsigned avClipUintp2(int a, int p) {
-	if (a & ~((1 << p) - 1))
-		return -a >> 31 & ((1 << p) - 1);
-	else
-		return  a;
 }
 
 extern const uint8_t ffZigZagDirect[64];

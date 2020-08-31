@@ -146,7 +146,7 @@ int IVIHuffTab::decodeHuffDesc(IVI45DecContext *ctx, int descCoded, int whichTab
 		// custom huffman table (explicitly encoded)
 		newHuff._numRows = ctx->_gb->getBits(4);
 		if (!newHuff._numRows) {
-			warning("Empty custom Huffman table!");
+			WARN << "Empty custom Huffman table!";
 			return -1;
 		}
 
@@ -163,7 +163,7 @@ int IVIHuffTab::decodeHuffDesc(IVI45DecContext *ctx, int descCoded, int whichTab
 			if (result) {
 				// reset faulty description
 				_custDesc._numRows = 0;
-				warning("Error while initializing custom vlc table!");
+				WARN << "Error while initializing custom vlc table!";
 				return result;
 			}
 		}
@@ -201,7 +201,7 @@ IVIBandDesc::IVIBandDesc() : _plane(0), _bandNum(0), _width(0), _height(0),
 		_dcTransform(nullptr), _is2dTrans(0), _checksum(0), _checksumPresent(false),
 		_intraBase(nullptr), _interBase(nullptr), _intraScale(nullptr),
 		_interScale(nullptr) {
-	Common::fill(&_bufs[0], &_bufs[4], (int16 *)nullptr);
+	Common::fill(&_bufs[0], &_bufs[4], (int16_t *)nullptr);
 	Common::fill(&_corr[0], &_corr[61 * 2], 0);
 }
 
@@ -230,7 +230,7 @@ int IVIBandDesc::initTiles(IVITile *refTile, int p, int b, int tHeight, int tWid
 			tile->_refMbs = 0;
 			if (p || b) {
 				if (tile->_numMBs != refTile->_numMBs) {
-					warning("refTile mismatch");
+					WARN << "refTile mismatch";
 					return -1;
 				}
 				tile->_refMbs = refTile->_mbs;
@@ -261,7 +261,7 @@ bool IVIPicConfig::ivi_pic_config_cmp(const IVIPicConfig &cfg2) {
 IVIPlaneDesc::IVIPlaneDesc() : _width(0), _height(0), _numBands(0), _bands(nullptr) {
 }
 
-int IVIPlaneDesc::initPlanes(IVIPlaneDesc *planes, const IVIPicConfig *cfg, bool isIndeo4) {
+int IVIPlaneDesc::initPlanes(IVIPlaneDesc *planes, const IVIPicConfig *cfg) {
 	uint32_t b_width, b_height, align_fac, width_aligned, height_aligned, bufSize;
 	IVIBandDesc *band;
 
@@ -299,7 +299,7 @@ int IVIPlaneDesc::initPlanes(IVIPlaneDesc *planes, const IVIPicConfig *cfg, bool
 		align_fac = p ? 8 : 16;
 		width_aligned = FFALIGN(b_width, align_fac);
 		height_aligned = FFALIGN(b_height, align_fac);
-		bufSize = width_aligned * height_aligned * sizeof(int16);
+		bufSize = width_aligned * height_aligned * sizeof(int16_t);
 
 		for (int b = 0; b < planes[p]._numBands; b++) {
 			band = &planes[p]._bands[b]; // select appropriate _plane/band
@@ -309,21 +309,16 @@ int IVIPlaneDesc::initPlanes(IVIPlaneDesc *planes, const IVIPicConfig *cfg, bool
 			band->_height = b_height;
 			band->_pitch = width_aligned;
 			band->_aHeight = height_aligned;
-			band->_bufs[0] = (int16 *)calloc(bufSize, 1);
-			band->_bufs[1] = (int16 *)calloc(bufSize, 1);
+			band->_bufs[0] = (int16_t *)calloc(bufSize, 1);
+			band->_bufs[1] = (int16_t *)calloc(bufSize, 1);
 			band->_bufSize = bufSize / 2;
 			if (!band->_bufs[0] || !band->_bufs[1])
 				return -2;
 
 			// allocate the 3rd band buffer for scalability mode
 			if (cfg->_lumaBands > 1) {
-				band->_bufs[2] = (int16 *)calloc(bufSize, 1);
+				band->_bufs[2] = (int16_t *)calloc(bufSize, 1);
 				if (!band->_bufs[2])
-					return -2;
-			}
-			if (isIndeo4) {
-				band->_bufs[3] = (int16 *)calloc(bufSize, 1);
-				if (!band->_bufs[3])
 					return -2;
 			}
 			// reset custom vlc
@@ -444,7 +439,7 @@ IVI45DecContext::IVI45DecContext() : _gb(nullptr), _frameNum(0), _frameType(0),
 		_bRefBuf(0), _rvmapSel(0), _inImf(false), _inQ(false), _picGlobQuant(0),
 		_unknown1(0), _gopHdrSize(0), _gopFlags(0), _lockWord(0), _hasBFrames(false),
 		_hasTransp(false), _usesTiling(false), _usesHaar(false), _usesFullpel(false),
-		_gopInvalid(false), _isIndeo4(false), _transKeyColor(0), _pFrame(nullptr),
+		_gopInvalid(false), _transKeyColor(0), _pFrame(nullptr),
 		_gotPFrame(false) {
 	Common::fill(&_bufInvalid[0], &_bufInvalid[4], 0);
 	Common::copy(&_ff_ivi_rvmap_tabs[0], &_ff_ivi_rvmap_tabs[9], &_rvmapTabs[0]);
@@ -522,12 +517,12 @@ int IndeoDecoderBase::decodeIndeoFrame() {
 	}
 
 	if (_ctx._gopFlags & IVI5_IS_PROTECTED) {
-		warning("Password-protected clip");
+		WARN << "Password-protected clip";
 		return -1;
 	}
 
 	if (!_ctx._planes[0]._bands) {
-		warning("Color planes not initialized yet");
+		WARN << "Color planes not initialized yet";
 		return -1;
 	}
 
@@ -573,10 +568,7 @@ int IndeoDecoderBase::decodeIndeoFrame() {
 		return result;
 
 	if (_ctx._isScalable) {
-		if (_ctx._isIndeo4)
-			recomposeHaar(&_ctx._planes[0], frame->_data[0], frame->_linesize[0]);
-		else
-			recompose53(&_ctx._planes[0], frame->_data[0], frame->_linesize[0]);
+                    recompose53(&_ctx._planes[0], frame->_data[0], frame->_linesize[0]);
 	} else {
 		outputPlane(&_ctx._planes[0], frame->_data[0], frame->_linesize[0]);
 	}
@@ -592,29 +584,6 @@ int IndeoDecoderBase::decodeIndeoFrame() {
 	if (_ctx._hasTransp)
 		decodeTransparency();
 
-	// If the bidirectional mode is enabled, next I and the following P
-	// frame will be sent together. Unfortunately the approach below seems
-	// to be the only way to handle the B-frames mode.
-	// That's exactly the same Intel decoders do.
-	if (_ctx._isIndeo4 && _ctx._frameType == IVI4_FRAMETYPE_INTRA) {
-		// TODO: It appears from the reference decoder that this should be
-		// aligning GetBits to a 32-bit boundary before reading again?
-
-		int left;
-
-		// skip version string
-		while (_ctx._gb->getBits(8)) {
-			if (_ctx._gb->getBitsLeft() < 8)
-				return -1;
-		}
-		left = _ctx._gb->pos() & 0x18;
-		_ctx._gb->skip(64 - left);
-		if (_ctx._gb->getBitsLeft() > 18 &&
-			_ctx._gb->peekBits(21) == 0xBFFF8) { // syncheader + inter _type
-			error("Indeo decoder: Mode not currently implemented in ScummVM");
-		}
-	}
-
 	// Free the now un-needed frame data
 	frame->freeFrame();
 
@@ -624,27 +593,21 @@ int IndeoDecoderBase::decodeIndeoFrame() {
 int IndeoDecoderBase::decode_band(IVIBandDesc *band) {
 	band->_buf = band->_bufs[_ctx._dstBuf];
 	if (!band->_buf) {
-		warning("Band buffer points to no data!");
+		WARN << "Band buffer points to no data!";
 		return -1;
 	}
-	if (_ctx._isIndeo4 && _ctx._frameType == IVI4_FRAMETYPE_BIDIR) {
-		band->_refBuf = band->_bufs[_ctx._bRefBuf];
-		band->_bRefBuf = band->_bufs[_ctx._refBuf];
-	} else {
-		band->_refBuf = band->_bufs[_ctx._refBuf];
-		band->_bRefBuf = 0;
-	}
+        band->_refBuf = band->_bufs[_ctx._refBuf];
+        band->_bRefBuf = 0;
 	band->_dataPtr = _ctx._frameData + (_ctx._gb->pos() >> 3);
 
 	int result = decodeBandHeader(band);
 	if (result) {
-		warning("Error while decoding band header: %d",
-			result);
+		WARN << "Error while decoding band header:" << result;
 		return result;
 	}
 
 	if (band->_isEmpty) {
-		warning("Empty band encountered!");
+		WARN << "Empty band encountered!";
 		return -1;
 	}
 
@@ -654,8 +617,8 @@ int IndeoDecoderBase::decode_band(IVIBandDesc *band) {
 	for (int i = 0; i < band->_numCorr; i++) {
 		int idx1 = band->_corr[i * 2];
 		int idx2 = band->_corr[i * 2 + 1];
-		SWAP(band->_rvMap->_runtab[idx1], band->_rvMap->_runtab[idx2]);
-		SWAP(band->_rvMap->_valtab[idx1], band->_rvMap->_valtab[idx2]);
+		std::swap(band->_rvMap->_runtab[idx1], band->_rvMap->_runtab[idx2]);
+		std::swap(band->_rvMap->_valtab[idx1], band->_rvMap->_valtab[idx2]);
 		if (idx1 == band->_rvMap->_eobSym || idx2 == band->_rvMap->_eobSym)
 			band->_rvMap->_eobSym ^= idx1 ^ idx2;
 		if (idx1 == band->_rvMap->_escSym || idx2 == band->_rvMap->_escSym)
@@ -678,11 +641,11 @@ int IndeoDecoderBase::decode_band(IVIBandDesc *band) {
 				(_ctx._planes[0]._bands[0]._mbSize >> 3) - (band->_mbSize >> 3));
 			if (result < 0)
 				break;
-			warning("Empty tile encountered!");
+			WARN << "Empty tile encountered!";
 		} else {
 			tile->_dataSize = decodeTileDataSize(_ctx._gb);
 			if (!tile->_dataSize) {
-				warning("Tile data size is zero!");
+				WARN << "Tile data size is zero!";
 				result = -1;
 				break;
 			}
@@ -693,12 +656,12 @@ int IndeoDecoderBase::decode_band(IVIBandDesc *band) {
 
 			result = decodeBlocks(_ctx._gb, band, tile);
 			if (result < 0) {
-				warning("Corrupted tile data encountered!");
+				WARN << "Corrupted tile data encountered!";
 				break;
 			}
 
 			if ((((int)_ctx._gb->pos() - pos) >> 3) != tile->_dataSize) {
-				warning("Tile _dataSize mismatch!");
+				WARN << "Tile _dataSize mismatch!";
 				result = -1;
 				break;
 			}
@@ -712,8 +675,8 @@ int IndeoDecoderBase::decode_band(IVIBandDesc *band) {
 	for (int i = band->_numCorr - 1; i >= 0; i--) {
 		int idx1 = band->_corr[i * 2];
 		int idx2 = band->_corr[i * 2 + 1];
-		SWAP(band->_rvMap->_runtab[idx1], band->_rvMap->_runtab[idx2]);
-		SWAP(band->_rvMap->_valtab[idx1], band->_rvMap->_valtab[idx2]);
+		std::swap(band->_rvMap->_runtab[idx1], band->_rvMap->_runtab[idx2]);
+		std::swap(band->_rvMap->_valtab[idx1], band->_rvMap->_valtab[idx2]);
 		if (idx1 == band->_rvMap->_eobSym || idx2 == band->_rvMap->_eobSym)
 			band->_rvMap->_eobSym ^= idx1 ^ idx2;
 		if (idx1 == band->_rvMap->_escSym || idx2 == band->_rvMap->_escSym)
@@ -725,60 +688,18 @@ int IndeoDecoderBase::decode_band(IVIBandDesc *band) {
 	return result;
 }
 
-void IndeoDecoderBase::recomposeHaar(const IVIPlaneDesc *_plane,
-		uint8_t *dst, const int dstPitch) {
-
-	// all bands should have the same _pitch
-	int32 pitch = _plane->_bands[0]._pitch;
-
-	// get pointers to the wavelet bands
-	const short *b0Ptr = _plane->_bands[0]._buf;
-	const short *b1Ptr = _plane->_bands[1]._buf;
-	const short *b2Ptr = _plane->_bands[2]._buf;
-	const short *b3Ptr = _plane->_bands[3]._buf;
-
-	for (int y = 0; y < _plane->_height; y += 2) {
-		for (int x = 0, indx = 0; x < _plane->_width; x += 2, indx++) {
-			// load coefficients
-			int b0 = b0Ptr[indx]; //should be: b0 = (_numBands > 0) ? b0Ptr[indx] : 0;
-			int b1 = b1Ptr[indx]; //should be: b1 = (_numBands > 1) ? b1Ptr[indx] : 0;
-			int b2 = b2Ptr[indx]; //should be: b2 = (_numBands > 2) ? b2Ptr[indx] : 0;
-			int b3 = b3Ptr[indx]; //should be: b3 = (_numBands > 3) ? b3Ptr[indx] : 0;
-
-							   // haar wavelet recomposition
-			int p0 = (b0 + b1 + b2 + b3 + 2) >> 2;
-			int p1 = (b0 + b1 - b2 - b3 + 2) >> 2;
-			int p2 = (b0 - b1 + b2 - b3 + 2) >> 2;
-			int p3 = (b0 - b1 - b2 + b3 + 2) >> 2;
-
-			// bias, convert and output four pixels
-			dst[x] = avClipUint8(p0 + 128);
-			dst[x + 1] = avClipUint8(p1 + 128);
-			dst[dstPitch + x] = avClipUint8(p2 + 128);
-			dst[dstPitch + x + 1] = avClipUint8(p3 + 128);
-		}// for x
-
-		dst += dstPitch << 1;
-
-		b0Ptr += pitch;
-		b1Ptr += pitch;
-		b2Ptr += pitch;
-		b3Ptr += pitch;
-	}// for y
-}
-
 void IndeoDecoderBase::recompose53(const IVIPlaneDesc *_plane,
 		uint8_t *dst, const int dstPitch) {
-	int32 p0, p1, p2, p3, tmp0, tmp1, tmp2;
-	int32 b0_1, b0_2, b1_1, b1_2, b1_3, b2_1, b2_2, b2_3, b2_4, b2_5, b2_6;
-	int32 b3_1, b3_2, b3_3, b3_4, b3_5, b3_6, b3_7, b3_8, b3_9;
+	int32_t p0, p1, p2, p3, tmp0, tmp1, tmp2;
+	int32_t b0_1, b0_2, b1_1, b1_2, b1_3, b2_1, b2_2, b2_3, b2_4, b2_5, b2_6;
+	int32_t b3_1, b3_2, b3_3, b3_4, b3_5, b3_6, b3_7, b3_8, b3_9;
 	const int numBands = 4;
 
 	// all bands should have the same _pitch
-	int32 pitch_ = _plane->_bands[0]._pitch;
+	int32_t pitch_ = _plane->_bands[0]._pitch;
 
 	// pixels at the position "y-1" will be set to pixels at the "y" for the 1st iteration
-	int32 back_pitch = 0;
+	int32_t back_pitch = 0;
 
 	// get pointers to the wavelet bands
 	const short *b0Ptr = _plane->_bands[0]._buf;
@@ -903,10 +824,10 @@ void IndeoDecoderBase::recompose53(const IVIPlaneDesc *_plane,
 			}
 
 			// output four pixels
-			dst[x] = avClipUint8((p0 >> 6) + 128);
-			dst[x + 1] = avClipUint8((p1 >> 6) + 128);
-			dst[dstPitch + x] = avClipUint8((p2 >> 6) + 128);
-			dst[dstPitch + x + 1] = avClipUint8((p3 >> 6) + 128);
+			dst[x] = avClipUint8_t((p0 >> 6) + 128);
+			dst[x + 1] = avClipUint8_t((p1 >> 6) + 128);
+			dst[dstPitch + x] = avClipUint8_t((p2 >> 6) + 128);
+			dst[dstPitch + x + 1] = avClipUint8_t((p3 >> 6) + 128);
 		}// for x
 
 		dst += dstPitch << 1;
@@ -921,7 +842,7 @@ void IndeoDecoderBase::recompose53(const IVIPlaneDesc *_plane,
 }
 
 void IndeoDecoderBase::outputPlane(IVIPlaneDesc *_plane, uint8_t *dst, int dstPitch) {
-	const int16 *src = _plane->_bands[0]._buf;
+	const int16_t *src = _plane->_bands[0]._buf;
 	uint32_t pitch = _plane->_bands[0]._pitch;
 
 	if (!src)
@@ -929,14 +850,14 @@ void IndeoDecoderBase::outputPlane(IVIPlaneDesc *_plane, uint8_t *dst, int dstPi
 
 	for (int y = 0; y < _plane->_height; y++) {
 		for (int x = 0; x < _plane->_width; x++)
-			dst[x] = avClipUint8(src[x] + 128);
+			dst[x] = avClipUint8_t(src[x] + 128);
 		src += pitch;
 		dst += dstPitch;
 	}
 }
 
 int IndeoDecoderBase::processEmptyTile(IVIBandDesc *band,
-			IVITile *tile, int32 mvScale) {
+			IVITile *tile, int32_t mvScale) {
 	if (tile->_numMBs != IVI_MBs_PER_TILE(tile->_width, tile->_height, band->_mbSize)) {
 		warning("Allocated tile size %d mismatches "
 			"parameters %d in processEmptyTile()",
@@ -992,7 +913,7 @@ int IndeoDecoderBase::processEmptyTile(IVIBandDesc *band,
 					|| mb->_xPos + dmv_x + band->_mbSize + cx > band->_pitch
 					|| mb->_yPos + dmv_y < 0
 					|| mb->_yPos + dmv_y + band->_mbSize + cy > band->_aHeight) {
-					warning("MV out of bounds");
+					WARN << "MV out of bounds";
 					return -1;
 				}
 			}
@@ -1034,8 +955,8 @@ int IndeoDecoderBase::processEmptyTile(IVIBandDesc *band,
 		}
 	} else {
 		// copy data from the reference tile into the current one
-		const int16 *src = band->_refBuf + tile->_yPos * band->_pitch + tile->_xPos;
-		int16 *dst = band->_buf + tile->_yPos * band->_pitch + tile->_xPos;
+		const int16_t *src = band->_refBuf + tile->_yPos * band->_pitch + tile->_xPos;
+		int16_t *dst = band->_buf + tile->_yPos * band->_pitch + tile->_xPos;
 		for (int y = 0; y < tile->_height; y++) {
 			memcpy(dst, src, tile->_width*sizeof(band->_buf[0]));
 			src += band->_pitch;
@@ -1067,7 +988,7 @@ int IndeoDecoderBase::decodeBlocks(GetBits *_gb, IVIBandDesc *band, IVITile *til
 	int mvX = 0, mvY = 0, mvX2 = 0, mvY2 = 0;
 
 	// init intra prediction for the DC coefficient
-	int32 prevDc  = 0;
+	int32_t prevDc  = 0;
 	int blkSize   = band->_blkSize;
 	// number of blocks per mb
 	int numBlocks = (band->_mbSize != blkSize) ? 4 : 1;
@@ -1095,10 +1016,7 @@ int IndeoDecoderBase::decodeBlocks(GetBits *_gb, IVIBandDesc *band, IVITile *til
 		uint32_t bufOffs = mb->_bufOffs;
 
 		uint32_t quant = band->_globQuant + mb->_qDelta;
-		if (_ctx._isIndeo4)
-			quant = avClipUintp2(quant, 5);
-		else
-			quant = CLIP((int)quant, 0, 23);
+                quant = CLIP((int)quant, 0, 23);
 
 		const uint8_t *scaleTab = isIntra ? band->_intraScale : band->_interScale;
 		if (scaleTab)
@@ -1238,12 +1156,12 @@ int IndeoDecoderBase::iviMc(IVIBandDesc *band, IviMCFunc mc, IviMCAvgFunc mcAvg,
 
 int IndeoDecoderBase::decodeCodedBlocks(GetBits *gb, IVIBandDesc *band,
 		IviMCFunc mc, IviMCAvgFunc mcAvg, int mvX, int mvY,
-		int mvX2, int mvY2, int32 *prevDc, int isIntra,
+		int mvX2, int mvY2, int32_t *prevDc, int isIntra,
 		int mcType, int mcType2, uint32_t quant, int offs) {
 	const uint16_t *baseTab = isIntra ? band->_intraBase : band->_interBase;
 	RVMapDesc *rvmap = band->_rvMap;
 	uint8_t colFlags[8];
-	int32 trvec[64];
+	int32_t trvec[64];
 	uint32_t sym = 0, q;
 	int lo, hi;
 	int pos, run, val;
@@ -1259,7 +1177,7 @@ int IndeoDecoderBase::decodeCodedBlocks(GetBits *gb, IVIBandDesc *band,
 		return -1;
 
 	if (!band->_scan) {
-		warning("Scan pattern is not set.");
+		WARN << "Scan pattern is not set.";
 		return -1;
 	}
 
@@ -1281,7 +1199,7 @@ int IndeoDecoderBase::decodeCodedBlocks(GetBits *gb, IVIBandDesc *band,
 			val = IVI_TOSIGNED((hi << 6) | lo);
 		} else {
 			if (sym >= 256U) {
-				warning("Invalid sym encountered");
+				WARN << "Invalid sym encountered";
 				return -1;
 			}
 			run = rvmap->_runtab[sym];
@@ -1295,7 +1213,7 @@ int IndeoDecoderBase::decodeCodedBlocks(GetBits *gb, IVIBandDesc *band,
 		pos = band->_scan[scanPos];
 
 		if (!val)
-			warning("Val = 0 encountered!");
+			WARN << "Val = 0 encountered!";
 
 		q = (baseTab[pos] * quant) >> 9;
 		if (q > 1)
@@ -1316,7 +1234,7 @@ int IndeoDecoderBase::decodeCodedBlocks(GetBits *gb, IVIBandDesc *band,
 	}
 
 	if (band->_transformSize > band->_blkSize) {
-		warning("Too large transform");
+		WARN << "Too large transform";
 		return -1;
 	}
 
@@ -1332,7 +1250,7 @@ int IndeoDecoderBase::decodeCodedBlocks(GetBits *gb, IVIBandDesc *band,
 	return 0;
 }
 
-int IndeoDecoderBase::iviDcTransform(IVIBandDesc *band, int32 *prevDc,
+int IndeoDecoderBase::iviDcTransform(IVIBandDesc *band, int32_t *prevDc,
 		int bufOffs, int blkSize) {
 	int bufSize = band->_pitch * band->_aHeight - bufOffs;
 	int minSize = (blkSize - 1) * band->_pitch + blkSize;

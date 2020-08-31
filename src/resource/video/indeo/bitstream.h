@@ -288,15 +288,15 @@ public:
  */
 class BitStreamMemoryStream {
 private:
-	const byte * const _ptrOrig;
-	const byte *_ptr;
+	const uint8_t * const _ptrOrig;
+	const uint8_t *_ptr;
 	const uint32_t _size;
 	uint32_t _pos;
 	bool _disposeMemory;
 	bool _eos;
 
 public:
-	BitStreamMemoryStream(const byte *dataPtr, uint32_t dataSize, bool disposeMemory = false) :
+	BitStreamMemoryStream(const uint8_t *dataPtr, uint32_t dataSize, bool disposeMemory = false) :
 		_ptrOrig(dataPtr),
 		_ptr(dataPtr),
 		_size(dataSize),
@@ -306,7 +306,7 @@ public:
 
 	~BitStreamMemoryStream() {
 		if (_disposeMemory)
-			free(const_cast<byte *>(_ptrOrig));
+			free(const_cast<uint8_t *>(_ptrOrig));
 	}
 
 	bool eos() const {
@@ -317,11 +317,11 @@ public:
 		return false;
 	}
 
-	int32 pos() const {
+	int32_t pos() const {
 		return _pos;
 	}
 
-	int32 size() const {
+	int32_t size() const {
 		return _size;
 	}
 
@@ -334,7 +334,7 @@ public:
 		return true;
 	}
 
-	byte readByte() {
+	uint8_t readByte() {
 		if (_pos >= _size) {
 			_eos = true;
 			return 0;

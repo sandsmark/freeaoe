@@ -134,10 +134,10 @@ struct ColorComponent<8> {
  * contain mask values.
  */
 struct PixelFormat {
-	byte bytesPerPixel; /**< Number of bytes used in the pixel format. */
+	uint8_t bytesPerPixel; /**< Number of bytes used in the pixel format. */
 
-	byte rLoss, gLoss, bLoss, aLoss; /**< Precision loss of each color component. */
-	byte rShift, gShift, bShift, aShift; /**< Binary left shift of each color component in the pixel value. */
+	uint8_t rLoss, gLoss, bLoss, aLoss; /**< Precision loss of each color component. */
+	uint8_t rShift, gShift, bShift, aShift; /**< Binary left shift of each color component in the pixel value. */
 
 	inline PixelFormat() {
 		bytesPerPixel =
@@ -145,9 +145,9 @@ struct PixelFormat {
 		rShift = gShift = bShift = aShift = 0;
 	}
 
-	inline PixelFormat(byte BytesPerPixel,
-						byte RBits, byte GBits, byte BBits, byte ABits,
-						byte RShift, byte GShift, byte BShift, byte AShift) {
+	inline PixelFormat(uint8_t BytesPerPixel,
+						uint8_t RBits, uint8_t GBits, uint8_t BBits, uint8_t ABits,
+						uint8_t RShift, uint8_t GShift, uint8_t BShift, uint8_t AShift) {
 		bytesPerPixel = BytesPerPixel;
 		rLoss = 8 - RBits;
 		gLoss = 8 - GBits;
@@ -180,7 +180,7 @@ struct PixelFormat {
 		return !(*this == fmt);
 	}
 
-	inline uint32 RGBToColor(uint8 r, uint8 g, uint8 b) const {
+	inline uint32_t RGBToColor(uint8_t r, uint8_t g, uint8_t b) const {
 		return
 			((0xFF >> aLoss) << aShift) |
 			((   r >> rLoss) << rShift) |
@@ -188,7 +188,7 @@ struct PixelFormat {
 			((   b >> bLoss) << bShift);
 	}
 
-	inline uint32 ARGBToColor(uint8 a, uint8 r, uint8 g, uint8 b) const {
+	inline uint32_t ARGBToColor(uint8_t a, uint8_t r, uint8_t g, uint8_t b) const {
 		return
 			((a >> aLoss) << aShift) |
 			((r >> rLoss) << rShift) |
@@ -196,13 +196,13 @@ struct PixelFormat {
 			((b >> bLoss) << bShift);
 	}
 
-	inline void colorToRGB(uint32 color, uint8 &r, uint8 &g, uint8 &b) const {
+	inline void colorToRGB(uint32_t color, uint8_t &r, uint8_t &g, uint8_t &b) const {
 		r = expand(rBits(), color >> rShift);
 		g = expand(gBits(), color >> gShift);
 		b = expand(bBits(), color >> bShift);
 	}
 
-	inline void colorToARGB(uint32 color, uint8 &a, uint8 &r, uint8 &g, uint8 &b) const {
+	inline void colorToARGB(uint32_t color, uint8_t &a, uint8_t &r, uint8_t &g, uint8_t &b) const {
 		a = (aBits() == 0) ? 0xFF : expand(aBits(), color >> aShift);
 		r = expand(rBits(), color >> rShift);
 		g = expand(gBits(), color >> gShift);
@@ -213,23 +213,23 @@ struct PixelFormat {
 	// Convenience functions for getting number of color component bits //
 	//////////////////////////////////////////////////////////////////////
 
-	inline byte rBits() const {
+	inline uint8_t rBits() const {
 		return (8 - rLoss);
 	}
 
-	inline byte gBits() const {
+	inline uint8_t gBits() const {
 		return (8 - gLoss);
 	}
 
-	inline byte bBits() const {
+	inline uint8_t bBits() const {
 		return (8 - bLoss);
 	}
 
-	inline byte aBits() const {
+	inline uint8_t aBits() const {
 		return (8 - aLoss);
 	}
 
-	inline byte bpp() const {
+	inline uint8_t bpp() const {
 		return rBits() + gBits() + bBits() + aBits();
 	}
 
