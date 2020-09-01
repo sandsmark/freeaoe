@@ -20,14 +20,14 @@
 
 namespace Constants {
 
-static const int TILE_SIZE = 48;
-static const float TILE_SIZE_F = 48.f;
+static constexpr int TILE_SIZE = 48;
+static constexpr float TILE_SIZE_F = 48.f;
 
-static const int MAP_MAX_SIZE = 255;
+static constexpr int MAP_MAX_SIZE = 255;
 
 // Isometric sizes:
-static const int TILE_SIZE_VERTICAL = 48;
-static const int TILE_SIZE_HORIZONTAL = 96;
-static const int TILE_SIZE_HEIGHT = 24; //Mountain
+static constexpr int TILE_SIZE_VERTICAL = 48;
+static constexpr int TILE_SIZE_HORIZONTAL = 96;
+static constexpr int TILE_SIZE_HEIGHT = 24; //Mountain
 
 }
