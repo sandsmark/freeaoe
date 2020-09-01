@@ -143,8 +143,10 @@ const Drawable::Image::Ptr &TerrainSprite::pngTexture(const MapTile &tile, const
     subRect.left = (tile.frame % cols) * 64;
     subRect.top = (tile.frame / cols) * 64;
 
+    const int area = subRect.width * subRect.height;
+
     // First generate an alpha mask that we use to blend the two frames below
-    const int byteCount = subRect.width * subRect.height * 4;
+    const int byteCount = area * 4;
     if (byteCount <= 0) {
         WARN << "invalid size" << subRect.width << subRect.height;
         return Drawable::Image::null;
@@ -191,7 +193,7 @@ const Drawable::Image::Ptr &TerrainSprite::pngTexture(const MapTile &tile, const
 #endif
     for (const Blend &tileBlend : tile.blends) {
         const genie::BlendMode &blendMode = AssetManager::Inst()->getBlendmode(tileBlend.blendMode);
-        std::vector<float> alphamask(subRect.width * subRect.height, 1.);
+        std::vector<float> alphamask(area, 1.);
         if (blendMode.pixelCount >= alphamask.size()) {
             WARN << "Invalid alphamask";
             break;
@@ -415,6 +417,11 @@ const Drawable::Image::Ptr &TerrainSprite::texture(const MapTile &tile, const IR
 
     const int width = m_slp->frameWidth(tile.frame);
     const int area = width * filter.height;
+    if (area <= 0) {
+        WARN << "invalid size" << width << filter.height;
+        return Drawable::Image::null;
+    }
+
     std::vector<Uint8> pixelsBuf(area * 4, 0);
     uint32_t *pixels = reinterpret_cast<uint32_t*>(pixelsBuf.data());
 
