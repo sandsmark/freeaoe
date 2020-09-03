@@ -166,6 +166,8 @@ private:
 
     std::vector<std::vector<std::weak_ptr<Entity>>> m_tileUnits;
 
+    std::array<std::array<uint8_t, 8>, 8> m_blendmodeTable;
+
     bool m_updated = false;
 };
 

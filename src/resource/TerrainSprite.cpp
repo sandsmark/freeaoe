@@ -93,31 +93,6 @@ TerrainSprite::TerrainSprite(unsigned int id_) : id(id_)
 
 TerrainSprite::~TerrainSprite() {  }
 
-uint8_t TerrainSprite::blendMode(const uint8_t ownMode, const uint8_t neighborMode) noexcept
-{
-    const std::array<std::array<uint8_t, 8>, 8> blendmodeTable = {{
-        {{ 2, 3, 2, 1, 1, 6, 5, 4 }},
-        {{ 3, 3, 3, 1, 1, 6, 5, 4 }},
-        {{ 2, 3, 2, 1, 1, 6, 1, 4 }},
-        {{ 1, 1, 1, 0, 7, 6, 5, 4 }},
-        {{ 1, 1, 1, 7, 7, 6, 5, 4 }},
-        {{ 6, 6, 6, 6, 6, 6, 5, 4 }},
-        {{ 5, 5, 1, 5, 5, 5, 5, 4 }},
-        {{ 4, 3, 4, 4, 4, 4, 4, 4 }}
-    }};
-
-    if (IS_UNLIKELY(ownMode > blendmodeTable.size() || neighborMode > blendmodeTable[ownMode].size())) {
-        WARN << "invalid mode" <<  ownMode << neighborMode;
-        return 0;
-    }
-
-    return blendmodeTable[ownMode][neighborMode];
-}
-
-
-
-
-
 #if PNG_TERRAIN_TEXTURES
 const Drawable::Image::Ptr &TerrainSprite::pngTexture(const MapTile &tile, const IRenderTargetPtr &renderer)
 {
@@ -339,6 +314,11 @@ const Drawable::Image::Ptr &TerrainSprite::texture(const MapTile &tile, const IR
     // by addressing the original commands in the image
     for (const Blend &tileBlend : tile.blends) {
         const genie::BlendMode &blendMode = AssetManager::Inst()->getBlendmode(tileBlend.blendMode);
+
+        if (blendMode.pixelCount < Blend::BlendTileCount) {
+            WARN << "Invalid blendmode" << tileBlend.blendMode << "pixel count:" << blendMode.pixelCount << "requires" << int(Blend::BlendTileCount);
+            continue;
+        }
 
         // First generate an alpha mask that we use to blend the two frames below
         std::vector<uint8_t> alphamask(blendMode.pixelCount, 128);

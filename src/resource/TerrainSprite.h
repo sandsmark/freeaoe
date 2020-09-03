@@ -47,9 +47,7 @@ public:
     /// @param Id resource id
     //
     TerrainSprite(unsigned int id_);
-    virtual ~TerrainSprite();
-
-    static uint8_t blendMode(const uint8_t ownMode, const uint8_t neighborMode) noexcept;
+    ~TerrainSprite();
 
 #if PNG_TERRAIN_TEXTURES
     inline int coordinatesToFrame(int x, int y) const noexcept {

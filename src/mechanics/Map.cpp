@@ -359,6 +359,33 @@ void Map::updateMapData() noexcept
 {
     TIME_THIS;
 
+    // Not the most efficient, but meh
+    if (DataManager::Inst().gameVersion() <= genie::GV_AoK) {
+        // AoK at least
+        // Not really sure if it is correct, kind of guessed the values
+        m_blendmodeTable = {{
+            {{ 3, 2, 3, 1, 1, 2, 2, 2 }},
+            {{ 2, 2, 2, 1, 1, 2, 2, 2 }},
+            {{ 3, 2, 3, 1, 1, 2, 1, 2 }},
+            {{ 1, 1, 1, 0, 0, 2, 2, 2 }},
+            {{ 1, 1, 1, 0, 0, 2, 2, 2 }},
+            {{ 2, 2, 2, 2, 2, 2, 2, 2 }},
+            {{ 2, 2, 1, 2, 2, 2, 2, 2 }},
+            {{ 2, 2, 2, 2, 2, 2, 2, 2 }}
+        }};
+    } else {
+        m_blendmodeTable = {{ // AoK at least
+            {{ 2, 3, 2, 1, 1, 6, 5, 4 }},
+            {{ 3, 3, 3, 1, 1, 6, 5, 4 }},
+            {{ 2, 3, 2, 1, 1, 6, 1, 4 }},
+            {{ 1, 1, 1, 0, 7, 6, 5, 4 }},
+            {{ 1, 1, 1, 7, 7, 6, 5, 4 }},
+            {{ 6, 6, 6, 6, 6, 6, 5, 4 }},
+            {{ 5, 5, 1, 5, 5, 5, 5, 4 }},
+            {{ 4, 3, 4, 4, 4, 4, 4, 4 }}
+        }};
+    }
+
     for (int col = 0; col < cols_; col++) {
         for (int row = 0; row < rows_; row++) {
             MapTile &tile = tiles_[row * cols_ + col];
@@ -672,8 +699,11 @@ void Map::updateTileBlend(int tileX, int tileY) noexcept
         }
 
         const genie::Terrain &neighbor = DataManager::Inst().getTerrain(id); //neighborTerrains[id];
+        if (IS_UNLIKELY(tileData.BlendType < 0 || tileData.BlendType > 7 || neighbor.BlendType < 0 || neighbor.BlendType > 7)) {
+            continue;
+        }
 
-        blends.blendMode = TerrainSprite::blendMode(tileData.BlendType, neighbor.BlendType);
+        blends.blendMode = m_blendmodeTable[tileData.BlendType][neighbor.BlendType];
         blends.terrainId = id;
         blends.frame = AssetManager::Inst()->getTerrain(id)->coordinatesToFrame(tileX, tileY);
         if (IS_UNLIKELY(blends.frame == -1)) {
