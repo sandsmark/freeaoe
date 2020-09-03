@@ -77,6 +77,8 @@ public:
     static std::string winePath();
 #endif
 
+    bool testMode = false;
+
 private:
     Config(const std::string &applicationName);
     void setKnownOptions(const std::vector<OptionDefinition> &options);

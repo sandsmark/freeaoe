@@ -1,9 +1,12 @@
 #include <genie/script/ScnFile.h>
+#include <genie/util/Utility.h>
+#include <genie/util/Logger.h>
 #include <filesystem>
 #include <memory>
 #include <string>
 
 #include "core/Logger.h"
+#include "global/Config.h"
 #include "mechanics/Map.h"
 #include "mechanics/MapTile.h"
 #include "resource/AssetManager.h"
@@ -11,15 +14,13 @@
 #include "resource/LanguageManager.h"
 #include "resource/TerrainSprite.h"
 
-static const char *gamePath = nullptr;
-
 void testLoadTiles()
 {
     DBG << "Testing map rendering speed";
 
-
     genie::CpxFile cpxFile;
-    cpxFile.setFileName(std::string(gamePath) + "/Campaign/xcam3.cpx");
+    cpxFile.setFileName(genie::util::resolvePathCaseInsensitive(Config::Inst().getValue(Config::GamePath) + "/Campaign/cam8.cpn"));
+    //cpxFile.setFileName(std::string(gamePath) + "/Campaign/xcam3.cpx");
     cpxFile.load();
 
     genie::ScnFilePtr scenarioFile = cpxFile.getScnFile(0);
@@ -63,19 +64,23 @@ int main(int argc, char *argv[]) try
         WARN << "Please pass path to game installation directory";
         return 1;
     }
-    gamePath = argv[1];
+    genie::Logger::setLogLevel(genie::Logger::L_INFO);
+
+    const char *gamePath = argv[1];
+    Config::Inst().testMode = true;
 //    std::string gamePath(argv[1]);
     //std::string dataPath = std::string(gamePath) + "/Data/";
     try {
         if (!std::filesystem::exists(gamePath)) {
             throw std::runtime_error("Data path does not exist");
         }
+        Config::Inst().setValue(Config::GamePath, gamePath);
 
-        if (!LanguageManager::Inst()->initialize(gamePath)) {
+        if (!LanguageManager::Inst()->initialize()) {
             throw std::runtime_error("Failed to load language.dll");
         }
 
-        if (!DataManager::Inst().initialize(gamePath)) {
+        if (!DataManager::Inst().initialize()) {
             throw std::runtime_error("Failed to load game data");
         }
 
@@ -83,7 +88,7 @@ int main(int argc, char *argv[]) try
         AssetManager::create(DataManager::Inst().isHd());
         DBG << "created";
 
-        if (!AssetManager::Inst()->initialize(gamePath, DataManager::Inst().gameVersion())) {
+        if (!AssetManager::Inst()->initialize(DataManager::Inst().gameVersion())) {
             throw std::runtime_error("Failed to load game assets");
         }
     } catch(const std::exception &e) {

@@ -444,6 +444,10 @@ void Config::parseConfigFile(const std::string &path)
 
 void Config::writeConfigFile(const std::string &path)
 {
+    if (testMode) {
+        return;
+    }
+
     DBG << "storing config";
     std::ofstream file(path);
     if (!file.is_open()) {
