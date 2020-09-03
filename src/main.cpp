@@ -35,6 +35,7 @@
 #include "editor/Editor.h"
 #include "debug/SampleGameFactory.h"
 #include <genie/util/Utility.h>
+#include <genie/util/Logger.h>
 
 #include "ui/HomeScreen.h"
 
@@ -193,6 +194,8 @@ int main(int argc, char **argv) try
     for (int i=1; i<argc; i++) {
         if (std::string(argv[i]) == "--debug") {
             LogPrinter::enableAllDebug = true;
+            genie::Logger::setLogLevel(genie::Logger::L_INFO);
+            break;
         }
     }
     DBG << "executable path" << util::executablePath();
