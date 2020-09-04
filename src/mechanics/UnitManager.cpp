@@ -183,13 +183,10 @@ bool UnitManager::update(Time time)
 
             unitIterator = m_units.erase(unitIterator);
         } else {
+            // Update the living units that are left
+            updated = unit->update(time) || updated;
             unitIterator++;
         }
-    }
-
-    // Update the living units that are left
-    for (const Unit::Ptr &unit : m_units) {
-        updated = unit->update(time) || updated;
     }
 
     updated = m_moveTargetMarker->update(time) || updated;
