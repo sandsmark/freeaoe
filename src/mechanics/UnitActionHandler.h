@@ -20,7 +20,7 @@ struct UnitActionHandler
     Task findTaskWithTarget(const std::shared_ptr<Unit> &target);
     static Task findMatchingTask(const std::shared_ptr<Player> &ownPlayer, const std::shared_ptr<Unit> &target, const std::unordered_set<Task> &potentials);
 
-    bool hasAutoTargets() const noexcept { return !m_autoTargetTasks.empty(); }
+    bool hasAutoTargets() const noexcept { return m_autoTargetTasks.size() > 0; }
     Task checkForAutoTargets() noexcept;
 
     int taskGraphicId(const genie::ActionType taskType, const IAction::UnitState state);

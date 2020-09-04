@@ -170,11 +170,11 @@ Task UnitActionHandler::findMatchingTask(const std::shared_ptr<Player> &ownPlaye
 
 Task UnitActionHandler::checkForAutoTargets() noexcept
 {
-    if (m_unit->stance != Unit::Stance::Aggressive || m_autoTargetTasks.empty() || m_currentAction) {
+    if (m_unit->stance != Unit::Stance::Aggressive || m_autoTargetTasks.size() == 0 || m_currentAction) {
         return {};
     }
 
-    MapPtr map = m_unit->m_map.lock();
+    const MapPtr map = m_unit->m_map.lock();
     if (!map) {
         WARN << "no map";
         return {};
@@ -196,7 +196,7 @@ Task UnitActionHandler::checkForAutoTargets() noexcept
     float closestDistance = los * Constants::TILE_SIZE;
     const std::vector<std::weak_ptr<Entity>> entities = map->entitiesBetween(left, top, right, bottom);
     for (const std::weak_ptr<Entity> &entity : entities) {
-        Unit::Ptr other = Unit::fromEntity(entity);
+        const Unit::Ptr other = Unit::fromEntity(entity);
         if (!other) {
             continue;
         }
@@ -215,8 +215,7 @@ Task UnitActionHandler::checkForAutoTargets() noexcept
             continue;
         }
 
-        Task potentialTask;
-        potentialTask = findMatchingTask(m_unit->player().lock(), other, m_autoTargetTasks);
+        const Task potentialTask = findMatchingTask(m_unit->player().lock(), other, m_autoTargetTasks);
         if (!potentialTask.data) {
             continue;
         }
