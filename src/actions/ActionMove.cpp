@@ -189,6 +189,7 @@ MapPos ActionMove::findClosestWalkableBorder(const MapPos &start, const MapPos &
 
     MapPos newPos = target;
     if (clearanceLength > 0.f) {
+        clearanceLength += coarseness;
 //        DBG << "Found target unit";
 #ifdef DEBUG
         testedPoints.push_back(target);
