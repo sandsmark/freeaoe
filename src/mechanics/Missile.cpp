@@ -154,7 +154,7 @@ bool Missile::update(Time time) noexcept
         return false;
     }
 
-    if (m_data.Moving.TrackingUnit != -1&& rand() % 100 < m_data.Moving.TrackingUnitDensity * 100 * 0.15) {
+    if (m_data.Moving.TrackingUnit != -1 && rand() % 100 < m_data.Moving.TrackingUnitDensity * 100 * 0.15) {
         m_previousSmokeTime = time;
         if (player) {
             const genie::Unit &trailingData = player->civilization.unitData(m_data.Moving.TrackingUnit);
