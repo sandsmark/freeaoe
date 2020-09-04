@@ -21,6 +21,7 @@
 #include <assert.h>
 #include <memory>
 #include <vector>
+#include <array>
 
 #include "MapTile.h"
 #include "core/Constants.h"
