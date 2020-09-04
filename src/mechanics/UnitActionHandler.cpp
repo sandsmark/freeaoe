@@ -209,7 +209,7 @@ Task UnitActionHandler::checkForAutoTargets() noexcept
             continue;
         }
 
-        const float distance = other->position().distance(position);
+        const float distance = m_unit->distanceTo(other);
 
         if (distance > closestDistance) {
             continue;
