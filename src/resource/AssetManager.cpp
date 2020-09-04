@@ -284,25 +284,45 @@ bool AssetManager::initializeInternal(const std::string &dataPath, const genie::
     m_dataPath = dataPath;
     m_gameVersion = gameVersion;
 
-    blendomatic_file_ = std::make_unique<genie::BlendomaticFile>();
-    blendomatic_file_->load(dataPath + blendomaticFilename());
+    std::string filename;
 
-    m_stemplatesFile = std::make_unique<genie::SlpTemplateFile>();
-    m_stemplatesFile->load(dataPath + "STemplet.dat");
+    try {
+        filename = findFile(blendomaticFilename(), m_dataPath);
+        blendomatic_file_ = std::make_unique<genie::BlendomaticFile>();
+        if (DataManager::Inst().gameVersion() >= genie::GV_SWGB) {
+            blendomatic_file_->overrideModeCount = DataManager::Inst().blendModeCount();
+        }
+        blendomatic_file_->load(filename);
 
-    m_filtermapFile = std::make_shared<genie::FiltermapFile>();
-    m_filtermapFile->load(dataPath + "FilterMaps.dat");
+        filename = findFile("STemplet.dat", m_dataPath);
+        m_stemplatesFile = std::make_unique<genie::SlpTemplateFile>();
+        m_stemplatesFile->load(filename);
 
-    m_patternmasksFile = std::make_shared<genie::PatternMasksFile>();
-    m_patternmasksFile->load(dataPath + "PatternMasks.dat");
-    m_patternmasksFile->icmFile.load(dataPath + "view_icm.dat");
-    m_patternmasksFile->lightmapFile.load(dataPath + "lightMaps.dat");
+        filename = findFile("FilterMaps.dat", m_dataPath);
+        m_filtermapFile = std::make_shared<genie::FiltermapFile>();
+        m_filtermapFile->load(filename);
 
-    m_blkEdgeFile = std::make_shared<genie::BlkEdgeFile>();
-    m_blkEdgeFile->load(findFile("blkedge.dat", m_dataPath));
+        filename = findFile("PatternMasks.dat", m_dataPath);
+        m_patternmasksFile = std::make_shared<genie::PatternMasksFile>();
+        m_patternmasksFile->load(filename);
 
-    m_tileEdgeFile = std::make_shared<genie::TileEdgeFile>();
-    m_tileEdgeFile->load(findFile("tileedge.dat", m_dataPath));
+        filename = findFile("view_icm.dat", m_dataPath);
+        m_patternmasksFile->icmFile.load(filename);
+
+        filename = findFile("lightMaps.dat", m_dataPath);
+        m_patternmasksFile->lightmapFile.load(filename);
+
+        filename = findFile("blkedge.dat", m_dataPath);
+        m_blkEdgeFile = std::make_shared<genie::BlkEdgeFile>();
+        m_blkEdgeFile->load(filename);
+
+        filename = findFile("tileedge.dat", m_dataPath);
+        m_tileEdgeFile = std::make_shared<genie::TileEdgeFile>();
+        m_tileEdgeFile->load(filename);
+    } catch (const std::exception &e) {
+        WARN << "Failed to load" << filename << e.what();
+        throw e;
+    }
 
     const std::vector<std::string> gamedataFiles({
                                                      { "gamedata.drs" },
@@ -720,7 +740,12 @@ DrsFilePtr AssetManager::loadDrs(const std::string &filename)
 
     std::shared_ptr<genie::DrsFile> file = std::make_shared<genie::DrsFile>();
     file->setGameVersion(m_gameVersion);
-    file->load(filePath);
+    try {
+        file->load(filePath);
+    } catch (const std::exception &e) {
+        WARN << "Failed to load" << filename << e.what();
+        throw e;
+    }
 
     m_allFiles.push_back(file);
 

@@ -230,11 +230,12 @@ bool DataManager::initialize()
 
     const std::vector<std::pair<std::string, genie::GameVersion>> datFilenames({
 //        {"empires2_x2_p1.dat", genie::GV_TC  }, // forgotten kingdoms, TODO
-        {"empires2_x1_p1.dat", genie::GV_TC  }, // the conquerors, patch 1
-        {"empires2_x1.dat",    genie::GV_TC  }, // the conquerors
-        {"empires2.dat",       genie::GV_AoK }, // age of kings
-        {"empires_x1.dat",     genie::GV_RoR },
-        {"Empires.dat",        genie::GV_AoE },
+        {"empires2_x1_p1.dat", genie::GV_TC   }, // the conquerors, patch 1
+        {"empires2_x1.dat",    genie::GV_TC   }, // the conquerors
+        {"empires2.dat",       genie::GV_AoK  }, // age of kings
+        {"empires_x1.dat",     genie::GV_RoR  },
+        {"Empires.dat",        genie::GV_AoE  },
+        {"GENIE.DAT",          genie::GV_SWGB },
     });
 
     std::string dataPath = gamePath + "/Data/";

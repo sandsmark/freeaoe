@@ -72,6 +72,8 @@ public:
 
     const genie::Civ &civilization(unsigned int id) const;
 
+    int32_t blendModeCount() const { return dat_file_->swgbBlendModes; }
+
 private:
     DataManager() = default;
     virtual ~DataManager() = default;
