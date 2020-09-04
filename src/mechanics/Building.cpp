@@ -350,6 +350,10 @@ void Building::finalizeUnit() noexcept
     waypoint.y = position().y + 24;
 
     Unit::Ptr unit = UnitFactory::Inst().createUnit(m_currentProduct->unit->ID, owner, m_unitManager);
+    if (!unit) {
+        WARN << "Failed to finalize unit";
+        return;
+    }
     m_unitManager.add(unit, waypoint);
 
     Player::Ptr player = unit->player().lock();

@@ -183,7 +183,6 @@ bool Unit::update(Time time) noexcept
         }
 
         if (!actions.m_currentAction || currentAction != actions.m_currentAction || prevState != actions.m_currentAction->unitState()) {
-        DBG << "updating graphix" << prevState << actions.m_currentAction->unitState();
             updateGraphic();
         }
     }

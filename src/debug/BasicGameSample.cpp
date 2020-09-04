@@ -76,6 +76,10 @@ void BasicGameSample::addHumanWalls()
     Unit::Ptr unit;
     std::function<void(int, int, float)> addWall = [&](int x, int y, float angle) {
         unit = UnitFactory::Inst().createUnit(Unit::PalisadeWall, m_humanPlayer, *unitManager_);
+        if (!unit) {
+            WARN << "FAiled to create wall";
+            return;
+        }
         unitManager_->add(unit, MapPos(48*x, 48*y, 0));
         unit->setAngle(angle);
     };
@@ -124,6 +128,10 @@ void BasicGameSample::addEnemyUnits()
     unitManager_->add(unit, MapPos(48*5, 48*5, 0));
 
     unit = UnitFactory::Inst().createUnit(Unit::PalisadeWall, m_enemyPlayer, *unitManager_);
+    if (!unit) {
+        WARN << "Failed to create palisade";
+        return;
+    }
     unitManager_->add(unit, MapPos(48*10, 48*15, 0));
     unit->setAngle(unit->renderer().sprite()->orientationToAngle(0));
 }

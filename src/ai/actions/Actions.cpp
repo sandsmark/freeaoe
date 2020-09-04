@@ -319,6 +319,10 @@ bool ai::Actions::BuildBuilding::tryBuild(Player *player, int unitId)
 
     ::Unit::Ptr unit = UnitFactory::Inst().createUnit(unitId, builder->player().lock(), builder->unitManager());
     ::Building::Ptr buildingToPlace = ::Unit::asBuilding(unit);
+    if (!buildingToPlace) {
+        WARN << "failed to create building";
+        return false;
+    }
 
     // TODO: find proper placement, for now just place it by the builder
     MapPos pos = builder->position() + unit->clearanceSize() * 1.1; // meh, just some spacing

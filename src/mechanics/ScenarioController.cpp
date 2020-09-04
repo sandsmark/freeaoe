@@ -376,6 +376,10 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
         }
         MapPos location(effect.location.y * Constants::TILE_SIZE, effect.location.x * Constants::TILE_SIZE);
         Unit::Ptr unit = UnitFactory::Inst().createUnit(effect.object, player, *m_gameState->unitManager());
+        if (!unit) {
+            WARN << "Failed to create unit";
+            return;
+        }
         DBG << "Created" << unit->debugName;
         m_gameState->unitManager()->add(unit, location);
         break;

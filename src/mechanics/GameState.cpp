@@ -285,6 +285,10 @@ void GameState::setupScenario()
         for (const genie::ScnUnit &scnunit : scenario_->playerUnits[playerNum].units) {
             MapPos unitPos((scnunit.positionY) * Constants::TILE_SIZE, (scnunit.positionX) * Constants::TILE_SIZE, scnunit.positionZ * DataManager::Inst().terrainBlock().ElevHeight);
             Unit::Ptr unit = UnitFactory::createUnit(scnunit.objectID, player, *m_unitManager);
+            if (!unit) {
+                WARN << "Failed to create unit";
+                continue;
+            }
             unit->spawnId = scnunit.spawnID;
             m_unitManager->add(unit, unitPos);
 

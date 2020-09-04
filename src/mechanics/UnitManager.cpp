@@ -742,11 +742,12 @@ void UnitManager::placeBuilding(const UnplacedBuilding &building)
     Unit::Ptr unit = UnitFactory::Inst().createUnit(building.unitID, m_humanPlayer.lock(), *this);
     Building::Ptr buildingToPlace = Unit::asBuilding(unit);
 
-    DBG << "placing bulding";
     if (!buildingToPlace) {
         WARN << "Can't place null building";
         return;
     }
+
+    DBG << "placing bulding";
 
     Player::Ptr humanPlayer = m_humanPlayer.lock();
     if (!humanPlayer) {

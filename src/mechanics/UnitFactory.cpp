@@ -108,6 +108,11 @@ Unit::Ptr UnitFactory::createUnit(const int ID, const Player::Ptr &owner, UnitMa
         unit = std::make_shared<Unit>(gunit, owner, unitManager);
     }
 
+    if (!unit->renderer().sprite()) {
+        WARN << "Failed to load graphics for" << unit->debugName;
+        return nullptr;
+    }
+
 
     for (const genie::Unit::ResourceStorage &res : gunit.ResourceStorages) {
         if (res.Type == -1) {
