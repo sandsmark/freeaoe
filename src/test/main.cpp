@@ -19,8 +19,15 @@ void testLoadTiles()
     DBG << "Testing map rendering speed";
 
     genie::CpxFile cpxFile;
-    cpxFile.setFileName(genie::util::resolvePathCaseInsensitive(Config::Inst().getValue(Config::GamePath) + "/Campaign/cam8.cpn"));
-    //cpxFile.setFileName(std::string(gamePath) + "/Campaign/xcam3.cpx");
+    std::string campaignPath = genie::util::resolvePathCaseInsensitive(Config::Inst().getValue(Config::GamePath) + "/Campaign/xcam3.cpx");
+    if (campaignPath.empty()) {
+        campaignPath = genie::util::resolvePathCaseInsensitive(Config::Inst().getValue(Config::GamePath) + "/Campaign/cam8.cpn");
+    }
+    if (campaignPath.empty()) {
+        WARN << "Failed to find campaign file";
+        return;
+    }
+    cpxFile.setFileName(campaignPath);
     cpxFile.load();
 
     genie::ScnFilePtr scenarioFile = cpxFile.getScnFile(0);
@@ -77,7 +84,7 @@ int main(int argc, char *argv[]) try
         Config::Inst().setValue(Config::GamePath, gamePath);
 
         if (!LanguageManager::Inst()->initialize()) {
-            throw std::runtime_error("Failed to load language.dll");
+            WARN << "Failed to load language.dll";
         }
 
         if (!DataManager::Inst().initialize()) {
