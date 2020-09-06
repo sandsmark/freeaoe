@@ -444,7 +444,7 @@ const Drawable::Image::Ptr &TerrainSprite::texture(const MapTile &tile, const IR
     if (renderer) {
         m_textures[tile] = renderer->createImage(Size(width, filter.height), reinterpret_cast<uint8_t*>(pixels));
     } else {
-        DBG << "no renderer!";
+        //DBG << "no renderer!";
     }
 
     return m_textures[tile];
