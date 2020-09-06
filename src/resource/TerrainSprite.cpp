@@ -441,10 +441,10 @@ const Drawable::Image::Ptr &TerrainSprite::texture(const MapTile &tile, const IR
     addOutline(pixels, width, filter.height);
 #endif
 
-    if (IS_LIKELY(renderer)) {
+    if (renderer) {
         m_textures[tile] = renderer->createImage(Size(width, filter.height), reinterpret_cast<uint8_t*>(pixels));
     } else {
-        WARN << "no renderer!";
+        DBG << "no renderer!";
     }
 
     return m_textures[tile];
