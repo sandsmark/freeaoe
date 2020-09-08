@@ -149,8 +149,8 @@ include_directories(
 
 # Because we want to support msvc we can't use the standard funny linker or incbin tricks
 add_subdirectory(src/tools/resgen)
-add_resource(FONT_ALEGREYA fonts/Alegreya/Alegreya-Bold.latin)
-add_resource(FONT_BERRYROTUNDA fonts/BerryRotunda/BerryRotunda.ttf)
+add_resource(FONT_ALEGREYA misc/fonts/Alegreya/Alegreya-Bold.latin)
+add_resource(FONT_BERRYROTUNDA misc/fonts/BerryRotunda/BerryRotunda.ttf)
 add_resource(IMAGE_PARCHMENT misc/images/parchment.jpg)
 
 set(AI_SRC

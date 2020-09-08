@@ -20,8 +20,8 @@
 
 #include "render/Camera.h"
 
-#include "fonts/Alegreya/Alegreya-Bold.latin.h"
-#include "fonts/BerryRotunda/BerryRotunda.ttf.h"
+#include "misc/fonts/Alegreya/Alegreya-Bold.latin.h"
+#include "misc/fonts/BerryRotunda/BerryRotunda.ttf.h"
 
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/Rect.hpp>
