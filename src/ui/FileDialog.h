@@ -55,6 +55,8 @@ struct ListView
 
     const ScreenRect &rect() const noexcept { return m_rect; }
 
+    std::vector<std::string> pathHistory;
+
 private:
     void moveScrollbar(int mouseY);
 
@@ -94,11 +96,16 @@ private:
     std::unique_ptr<Button> m_okButton;
     std::unique_ptr<Button> m_cancelButton;
     std::unique_ptr<Button> m_openDownloadUrlButton;
+    std::unique_ptr<Button> m_backButton;
     std::unique_ptr<ListView> m_fileList;
     std::unique_ptr<sf::Text> m_description;
     std::unique_ptr<sf::Text> m_errorText;
     std::unique_ptr<sf::Text> m_secondaryErrorText;
+    Drawable::Image::Ptr m_bgImage;
     IRenderTargetPtr m_renderTarget;
+    Drawable::Text::Ptr m_pathText;
+    Drawable::Rect m_pathBackground;
+
 
 
 #if defined(__linux__)

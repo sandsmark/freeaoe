@@ -151,6 +151,7 @@ include_directories(
 add_subdirectory(src/tools/resgen)
 add_resource(FONT_ALEGREYA fonts/Alegreya/Alegreya-Bold.latin)
 add_resource(FONT_BERRYROTUNDA fonts/BerryRotunda/BerryRotunda.ttf)
+add_resource(IMAGE_PARCHMENT misc/images/parchment.jpg)
 
 set(AI_SRC
     src/ai/grammar.gen.tab.cpp
@@ -260,6 +261,8 @@ set (UI_SRC
     src/ui/NumberLabel.cpp
     src/ui/MouseCursor.cpp
     src/ui/IconButton.cpp
+
+    ${IMAGE_PARCHMENT}
     )
 
 set (EDITOR_SRC

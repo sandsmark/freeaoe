@@ -226,6 +226,19 @@ Drawable::Image::Ptr SfmlRenderTarget::createImage(const Size &size, const uint8
     return ret;
 }
 
+Drawable::Image::Ptr SfmlRenderTarget::loadImage(const uint8_t *data, const size_t dataSize) const
+{
+    std::shared_ptr<SfmlImage> ret = std::make_shared<SfmlImage>();
+    sf::Image image;
+    image.loadFromMemory(reinterpret_cast<const uint8_t*>(data), dataSize);
+
+    ret->texture = std::make_unique<sf::Texture>();
+    ret->texture->loadFromImage(image);
+    ret->size = image.getSize();
+
+    return ret;
+}
+
 
 void SfmlRenderTarget::draw(const Drawable::Rect &rect)
 {

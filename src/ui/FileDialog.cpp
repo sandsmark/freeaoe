@@ -4,6 +4,7 @@
 #include "core/Utility.h"
 #include "global/Config.h"
 #include "render/SfmlRenderTarget.h"
+#include "misc/images/parchment.jpg.h"
 
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Color.hpp>
@@ -31,28 +32,29 @@ bool FileDialog::setup(int width, int height)
     m_renderWindow->setView(sf::View(sf::FloatRect(0, 0, width, height)));
     m_renderTarget = std::make_shared<SfmlRenderTarget>(*m_renderWindow);
 
-
-
     {
         m_description = std::make_unique<sf::Text>("Please select the directory containing your Age of Empires 2 installation.", SfmlRenderTarget::defaultFont());
         m_description->setCharacterSize(20);
         const int descWidth = m_description->getLocalBounds().width;
-        m_description->setPosition(width/2 - descWidth/2, 2);
-        m_description->setFillColor(sf::Color::White);
+        m_description->setPosition(width/2 - descWidth/2, 20);
+        m_description->setFillColor(sf::Color::Black);
     }
 
     const Size buttonSize(250, 50);
 
-    m_fileList = std::make_unique<ListView>(ScreenRect(ScreenPos(width / 2.f - width * 3.f/8.f, 55), Size(width * 3.f/4.f, 550)), m_renderTarget);
+    m_fileList = std::make_unique<ListView>(ScreenRect(ScreenPos(width / 2.f - width * 3.f/8.f, 75), Size(width * 3.f/4.f, 550)), m_renderTarget);
     m_fileList->setCurrentPath(std::filesystem::current_path().string());
 
-    m_okButton = std::make_unique<Button>("OK", ScreenRect(ScreenPos(m_fileList->rect().x, 700), buttonSize), m_renderTarget);
+    m_okButton = std::make_unique<Button>("OK", ScreenRect(ScreenPos(m_fileList->rect().x, 710), buttonSize), m_renderTarget);
 
-    m_cancelButton = std::make_unique<Button>("Cancel", ScreenRect(ScreenPos(m_fileList->rect().right() - buttonSize.width, 700), buttonSize), m_renderTarget);
+    m_cancelButton = std::make_unique<Button>("Cancel", ScreenRect(ScreenPos(m_fileList->rect().right() - buttonSize.width, 710), buttonSize), m_renderTarget);
     m_cancelButton->enabled = true;
 
-    m_openDownloadUrlButton = std::make_unique<Button>("Download trial version", ScreenRect(ScreenPos(m_fileList->rect().center().x - buttonSize.width/2, 700), buttonSize), m_renderTarget);
+    m_openDownloadUrlButton = std::make_unique<Button>("Download trial version", ScreenRect(ScreenPos(m_fileList->rect().center().x - buttonSize.width/2, 710), buttonSize), m_renderTarget);
     m_openDownloadUrlButton->enabled = true;
+
+    m_backButton = std::make_unique<Button>("Back", ScreenRect(ScreenPos(m_fileList->rect().x - buttonSize.width/2, m_fileList->rect().y), Size(buttonSize.width / 2, buttonSize.height)), m_renderTarget);
+    m_backButton->enabled = true;
 
 #if defined(__linux__)
     m_winePath = Config::winePath();
@@ -60,10 +62,16 @@ bool FileDialog::setup(int width, int height)
         if (std::filesystem::exists(m_winePath + "/drive_c")) {
             m_winePath += "/drive_c";
         }
-        m_goToWineButton = std::make_unique<Button>("Go to Wine folder", ScreenRect(ScreenPos(m_fileList->rect().x, m_fileList->rect().bottom() + 10), buttonSize), m_renderTarget);
+        m_goToWineButton = std::make_unique<Button>("Go to Wine folder", ScreenRect(ScreenPos(m_fileList->rect().x, 650), buttonSize), m_renderTarget);
         m_goToWineButton->enabled = true;
     }
 #endif
+    m_bgImage = m_renderTarget->loadImage(resource_parchment_jpg_data, resource_parchment_jpg_size);
+
+    m_pathText = m_renderTarget->createText();
+    m_pathText->pointSize = 15;
+    m_pathText->position.x = m_fileList->rect().x + 5;
+    m_pathText->position.y = 50;
 
     return true;
 }
@@ -99,6 +107,11 @@ std::string FileDialog::getPath()
             ret = m_fileList->currentText();
         }
 
+        if (m_backButton->checkClick(event)) {
+            m_fileList->setCurrentPath(m_fileList->pathHistory.back());
+            m_fileList->pathHistory.pop_back();
+        }
+
 #if defined(__linux__)
         if (m_goToWineButton) {
             if (m_goToWineButton->checkClick(event)) {
@@ -106,14 +119,19 @@ std::string FileDialog::getPath()
             }
         }
 #endif
+        m_pathText->string = m_fileList->currentText();
 
         m_fileList->handleEvent(event);
         m_okButton->enabled = m_fileList->hasDataFolder;
+        m_backButton->enabled = !m_fileList->pathHistory.empty();
 
         m_renderWindow->clear(sf::Color(32, 32, 32));
+        m_renderTarget->draw(m_bgImage, {0, 0});
+        m_renderTarget->draw(m_pathText);
         m_openDownloadUrlButton->render(m_renderTarget);
         m_cancelButton->render(m_renderTarget);
         m_okButton->render(m_renderTarget);
+        m_backButton->render(m_renderTarget);
         m_fileList->render(m_renderTarget);
         m_renderWindow->draw(*m_description);
         if (m_errorText) {
@@ -136,8 +154,8 @@ void FileDialog::setErrorString(const std::string &error) noexcept
     m_errorText = std::make_unique<sf::Text>("Failed to load game data: " + error, SfmlRenderTarget::defaultFont());
     m_errorText->setCharacterSize(17);
     const int textWidth = m_errorText->getLocalBounds().width;
-    m_errorText->setPosition(m_renderWindow->getSize().x/2.f - textWidth/2.f, 25);
-    m_errorText->setFillColor(sf::Color(255, 128, 128));
+    m_errorText->setPosition(m_renderWindow->getSize().x/2.f - textWidth/2.f, 0);
+    m_errorText->setFillColor(sf::Color(100, 32, 32));
 }
 
 Button::Button(const std::string &text, const ScreenRect &rect, const IRenderTargetPtr &renderTarget) :
@@ -151,7 +169,7 @@ Button::Button(const std::string &text, const ScreenRect &rect, const IRenderTar
     m_text->position.x = m_rect.x + (m_rect.width / 2. - textWidth / 2.);
     m_text->position.y = m_rect.y + (m_rect.height / 2. - textHeight);
 
-    m_background.borderSize = 2;
+    m_background.borderSize = 3;
     m_background.rect = m_rect;
 }
 
@@ -195,20 +213,23 @@ bool Button::checkClick(const sf::Event &event)
 void Button::render(IRenderTargetPtr window)
 {
     if (!enabled) {
-        m_background.borderColor = Drawable::Color(128, 128, 128);
-        m_background.fillColor = Drawable::Color(64, 64, 64);
+        m_background.borderColor = Drawable::Color(64, 64, 64);
+        m_background.fillColor = Drawable::Color(64, 64, 64, 128);
         m_background.filled = true;
-        m_text->color = Drawable::Color(128, 128, 128);
+        m_text->outlineColor = Drawable::Transparent;
+        m_text->color = Drawable::Color(64, 64, 64);
     } else if (m_pressed) {
         m_background.borderColor = Drawable::Black;
-        m_background.fillColor = Drawable::White;
+        m_background.fillColor = {0, 0, 0, 200};
         m_background.filled = true;
-        m_text->color = Drawable::Black;
-    } else {
-        m_background.borderColor = Drawable::White;
-        m_background.fillColor = Drawable::Black;
-        m_background.filled = true;
+        m_text->outlineColor = Drawable::Transparent;
         m_text->color = Drawable::White;
+    } else {
+        m_background.borderColor = Drawable::Color(0, 0, 0, 64);
+        m_background.fillColor = {0, 0, 0, 128};
+        m_background.filled = true;
+        m_text->outlineColor = Drawable::Black;
+        m_text->color = {0xda, 0xd1, 0xb2};
     }
     window->draw(m_background);
     window->draw(m_text);
@@ -230,24 +251,24 @@ ListView::ListView(const ScreenRect rect, const IRenderTargetPtr &window) :
         m_texts.push_back(std::move(text));
     }
 
-    m_background.borderSize = 2;
+    m_background.borderSize = 3;
     m_background.rect = m_rect;
     m_background.filled = true;
-    m_background.fillColor = Drawable::Black;
-    m_background.borderColor = Drawable::White;
+    m_background.fillColor = {0, 0, 0, 200};
+    m_background.borderColor = Drawable::Black;
 
     m_selectedOutline.borderSize = 1;
     m_selectedOutline.rect.setTopLeft(m_rect.topLeft());
-    m_selectedOutline.fillColor = Drawable::White;
+    m_selectedOutline.fillColor = {0xda, 0xd1, 0xb2};
     m_selectedOutline.filled = true;
     m_selectedOutline.borderColor = Drawable::Transparent;
 
-    m_scrollBar.borderSize = 2;
+    m_scrollBar.borderSize = 0;
     m_scrollBar.rect  = ScreenRect(ScreenPos(m_rect.topRight() + ScreenPos(-20, 5)),
                                    Size(0, 10));
-    m_scrollBar.fillColor = Drawable::Color(0, 0, 0, 128);
+    m_scrollBar.fillColor = Drawable::Color(128, 128, 128, 200);
     m_scrollBar.filled = true;
-    m_scrollBar.borderColor = Drawable::White;
+    m_scrollBar.borderColor = {0, 0, 0, 32};
 
     updateScrollbar();
 }
@@ -265,7 +286,7 @@ void ListView::handleEvent(const sf::Event &event)
     }
 
     if (event.type == sf::Event::MouseButtonReleased) {
-        m_scrollBar.fillColor = Drawable::Color(0, 0, 0, 128);
+        m_scrollBar.fillColor = Drawable::Color(255, 255, 255, 200);
         m_pressed = false;
         return;
     }
@@ -293,7 +314,7 @@ void ListView::handleEvent(const sf::Event &event)
 
     // scrollbar hit
     if (mousePos.x > m_rect.x + m_rect.width - 20) {
-        m_scrollBar.fillColor = Drawable::Color(128, 128, 128, 128);
+        m_scrollBar.fillColor = Drawable::White;
         moveScrollbar(mousePos.y);
         m_pressed = true;
         return;
@@ -305,12 +326,14 @@ void ListView::handleEvent(const sf::Event &event)
         return;
     }
 
+    // Didn't click the same item
     if (index != m_currentItem) {
         m_currentItem = index;
         return;
     }
 
     if (std::filesystem::is_directory(m_list[m_currentItem])) {
+        pathHistory.push_back(m_currentPath.string());
         setCurrentPath(std::filesystem::canonical(m_list[m_currentItem]).string());
     }
 }
