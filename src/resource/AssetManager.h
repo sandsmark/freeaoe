@@ -89,8 +89,15 @@ public:
         Graphics,
         Terrain,
     };
+    enum class StandardSlpType {
+        Buildings,
+        Units,
+        Technology,
+        Commands
+    };
 
     enum UiCiv : int {
+        Invalid = 0,
         Briton = 1,
         Frank = 2,
         Goth = 3,
@@ -142,6 +149,7 @@ public:
     //
     virtual SlpFilePtr getSlp(uint32_t id, const ResourceType type = ResourceType::Undefined);
     virtual SlpFilePtr getSlp(const std::string &name, const ResourceType type = ResourceType::Undefined);
+    virtual SlpFilePtr getInterfaceSlp(const StandardSlpType type, const int playerCiv);
 
     virtual SlpFilePtr getUiOverlay(const UiResolution res, const UiCiv civ);
 

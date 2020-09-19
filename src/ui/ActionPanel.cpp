@@ -292,81 +292,26 @@ void ActionPanel::onPlayerResourceChanged(Player *player, const genie::ResourceT
 
 bool ActionPanel::loadButtons(const int playerCiv)
 {
-    int unitsSLP = 0;
-    int buildingsSLP = 0;
-    int techSLP = 0;
-    int commandsSLP = SLP::Commands;
-    switch(DataManager::Inst().gameVersion()) {
-    case genie::GV_CC:
-        DBG << "Loading SWGB CC";
-        unitsSLP = SLP::SWGB::CC::UnitsOffset;
-        buildingsSLP = SLP::SWGB::CC::BuildingsOffset;
-        techSLP = SLP::SWGB::CC::TechnologyOffset;
-
-        if (playerCiv < SLP::SWGB::CC::MaxCiv) {
-            unitsSLP += playerCiv;
-            buildingsSLP += playerCiv;
-            techSLP += playerCiv;
-        } else {
-            WARN << "Invalid civ" << playerCiv;
-        }
-
-        break;
-    case genie::GV_SWGB:
-        DBG << "Loading SWGB";
-        unitsSLP = SLP::SWGB::UnitsOffset;
-        buildingsSLP = SLP::SWGB::BuildingsOffset;
-//        commandsSLP = SLP::SWGB::CommandSLPOffset; // TODO: there's three of them, figure out how to choose which
-        techSLP = SLP::SWGB::TechnologyOffset;
-
-        if (playerCiv < SLP::SWGB::MaxCiv) {
-            unitsSLP += playerCiv;
-            buildingsSLP += playerCiv;
-            techSLP += playerCiv;
-        } else {
-            WARN << "Invalid civ" << playerCiv;
-        }
-        break;
-    default:
-        DBG << "Loading AoE2";
-        unitsSLP = SLP::AoE2::Units;
-        buildingsSLP = SLP::AoE2::Buildings;
-        techSLP = SLP::AoE2::Technology;
-        break;
-    }
-
-    genie::SlpFilePtr unitIconsSlp = AssetManager::Inst()->getSlp(unitsSLP, AssetManager::ResourceType::Interface);
-    if (!unitIconsSlp) {
-        WARN << "Failed to load unit icons";
-        return false;
-    }
+    genie::SlpFilePtr unitIconsSlp = AssetManager::Inst()->getInterfaceSlp(AssetManager::StandardSlpType::Units, playerCiv);
+    REQUIRE(unitIconsSlp, return false);
     for (size_t i=0; i<unitIconsSlp->getFrameCount(); i++) {
         m_unitIcons[i].loadFromImage(Resource::convertFrameToImage(unitIconsSlp->getFrame(i)));
     }
 
-    genie::SlpFilePtr buildingIconsSlp = AssetManager::Inst()->getSlp(buildingsSLP, AssetManager::ResourceType::Interface);
-    if (!buildingIconsSlp) {
-        WARN << "Failed to load building icons";
-        return false;
-    }
+    genie::SlpFilePtr buildingIconsSlp = AssetManager::Inst()->getInterfaceSlp(AssetManager::StandardSlpType::Buildings, playerCiv);
+    REQUIRE(buildingIconsSlp, return false);
     for (size_t i=0; i<buildingIconsSlp->getFrameCount(); i++) {
         m_buildingIcons[i].loadFromImage(Resource::convertFrameToImage(buildingIconsSlp->getFrame(i)));
     }
 
-    genie::SlpFilePtr researchIconsSlp = AssetManager::Inst()->getSlp(techSLP, AssetManager::ResourceType::Interface);
-    if (!researchIconsSlp) {
-        WARN << "Failed to load research icons";
-        return false;
-    }
+    genie::SlpFilePtr researchIconsSlp = AssetManager::Inst()->getInterfaceSlp(AssetManager::StandardSlpType::Technology, playerCiv);
+    REQUIRE(researchIconsSlp, return false);
     for (size_t i=0; i<researchIconsSlp->getFrameCount(); i++) {
         m_researchIcons[i].loadFromImage(Resource::convertFrameToImage(researchIconsSlp->getFrame(i)));
     }
 
-    genie::SlpFilePtr commandIconsSlp = AssetManager::Inst()->getSlp(commandsSLP, AssetManager::ResourceType::Interface);
-    if (!commandIconsSlp) {
-        WARN << "Failed to load action icons";
-        return false;
-    }
+    genie::SlpFilePtr commandIconsSlp = AssetManager::Inst()->getInterfaceSlp(AssetManager::StandardSlpType::Commands, playerCiv);
+    REQUIRE(commandIconsSlp, return false);
     for (size_t i=0; i<int(Command::IconCount); i++) {
         if (i >= commandIconsSlp->getFrameCount()) {
             WARN << "icon out of range " << i << "max is" << commandIconsSlp->getFrameCount();

@@ -64,35 +64,28 @@ bool UnitInfoPanel::init()
         m_statItems[i].text->pointSize = 12;
     }
 
+    // TODO: get proper player civ
+    const int playerCiv = 0;
+
     // Unit icons
-//    genie::SlpFilePtr unitIconsSlp = AssetManager::Inst()->getSlp("btnunit.shp", AssetManager::ResourceType::Interface);
-    genie::SlpFilePtr unitIconsSlp = AssetManager::Inst()->getSlp(53253, AssetManager::ResourceType::Interface);
-    if (!unitIconsSlp) {
-        WARN << "Failed to load unit icons";
-        return false;
-    }
+    genie::SlpFilePtr unitIconsSlp = AssetManager::Inst()->getInterfaceSlp(AssetManager::StandardSlpType::Units, playerCiv);
+    REQUIRE(unitIconsSlp, return false);
     m_unitIcons.resize(unitIconsSlp->getFrameCount());
     for (size_t i=0; i<unitIconsSlp->getFrameCount(); i++) {
         m_unitIcons[i] = m_renderTarget->convertFrameToImage(unitIconsSlp->getFrame(i));
     }
 
     // Building icons
-    genie::SlpFilePtr buildingIconsSlp = AssetManager::Inst()->getSlp("ico_bld2.shp", AssetManager::ResourceType::Interface);
-    if (!buildingIconsSlp) {
-        WARN << "Failed to load building icons";
-        return false;
-    }
+    genie::SlpFilePtr buildingIconsSlp = AssetManager::Inst()->getInterfaceSlp(AssetManager::StandardSlpType::Buildings, playerCiv);
+    REQUIRE(buildingIconsSlp, return false);
     m_buildingIcons.resize(buildingIconsSlp->getFrameCount());
     for (size_t i=0; i<buildingIconsSlp->getFrameCount(); i++) {
         m_buildingIcons[i] = m_renderTarget->convertFrameToImage(buildingIconsSlp->getFrame(i));
     }
 
     // Tech/research icons
-    genie::SlpFilePtr techIconsSlp = AssetManager::Inst()->getSlp(53241, AssetManager::ResourceType::Interface);
-    if (!techIconsSlp) {
-        WARN << "Failed to load research icons";
-        return false;
-    }
+    genie::SlpFilePtr techIconsSlp = AssetManager::Inst()->getInterfaceSlp(AssetManager::StandardSlpType::Technology, playerCiv);
+    REQUIRE(techIconsSlp, return false);
     m_researchIcons.resize(techIconsSlp->getFrameCount());
     for (size_t i=0; i<techIconsSlp->getFrameCount(); i++) {
         m_researchIcons[i] = m_renderTarget->convertFrameToImage(techIconsSlp->getFrame(i));

@@ -25,6 +25,7 @@
 #include "Sprite.h"
 #include "core/Utility.h"
 #include "global/Config.h"
+#include "SlpIDs.h"
 
 #include <genie/resource/DrsFile.h>
 #include <genie/resource/PalFile.h>
@@ -63,6 +64,72 @@ genie::SlpFilePtr AssetManager::getSlp(const std::string &name, const ResourceTy
 {
     DBG << "finding" << name << filenameID(name);
     return getSlp(filenameID(name), type);
+}
+
+SlpFilePtr AssetManager::getInterfaceSlp(const AssetManager::StandardSlpType type, const int uiCiv)
+{
+    // not the most efficient so sue me
+    int unitsSLP = 0;
+    int buildingsSLP = 0;
+    int techSLP = 0;
+    int commandsSLP = SLP::Commands;
+
+    switch(DataManager::Inst().gameVersion()) {
+    case genie::GV_CC:
+        DBG << "Loading SWGB CC";
+        unitsSLP = SLP::SWGB::CC::UnitsOffset;
+        buildingsSLP = SLP::SWGB::CC::BuildingsOffset;
+        techSLP = SLP::SWGB::CC::TechnologyOffset;
+
+        if (uiCiv > 0 && uiCiv < SLP::SWGB::CC::MaxCiv) {
+            unitsSLP += uiCiv;
+            buildingsSLP += uiCiv;
+            techSLP += uiCiv;
+        }
+
+        break;
+    case genie::GV_SWGB:
+        DBG << "Loading SWGB";
+        unitsSLP = SLP::SWGB::UnitsOffset;
+        buildingsSLP = SLP::SWGB::BuildingsOffset;
+//        commandsSLP = SLP::SWGB::CommandSLPOffset; // TODO: there's three of them, figure out how to choose which
+        techSLP = SLP::SWGB::TechnologyOffset;
+
+        if (uiCiv > 0 && uiCiv < SLP::SWGB::MaxCiv) {
+            unitsSLP += uiCiv;
+            buildingsSLP += uiCiv;
+            techSLP += uiCiv;
+        } else {
+            WARN << "Invalid civ" << uiCiv;
+        }
+        break;
+    default:
+        DBG << "Loading AoE2";
+        unitsSLP = AssetManager::Inst()->filenameID("btnunit.shp");
+        buildingsSLP = AssetManager::Inst()->filenameID("ico_bld2.shp");
+        techSLP = AssetManager::Inst()->filenameID("btntech.shp");
+        commandsSLP = AssetManager::Inst()->filenameID("btncmd.shp");
+        break;
+    }
+    int slpId = 0;
+    switch(type) {
+    case StandardSlpType::Buildings:
+        slpId = buildingsSLP;
+        break;
+    case StandardSlpType::Units:
+        slpId = unitsSLP;
+        break;
+    case StandardSlpType::Technology:
+        slpId = techSLP;
+        break;
+    case StandardSlpType::Commands:
+        slpId = commandsSLP;
+        break;
+    default:
+        WARN << "Invalid type" << int(type);
+        return nullptr;
+    }
+    return getSlp(slpId, ResourceType::Interface);
 }
 
 genie::SlpFilePtr AssetManager::getUiOverlay(const AssetManager::UiResolution res, const AssetManager::UiCiv civ)
