@@ -128,6 +128,7 @@ private:
     std::array<MessageLine, s_numMessagesLines> m_visibleText;
 
     Drawable::Image::Ptr m_uiOverlay;
+    int m_uiOverlayOffset = 0;
 
     ScreenPos m_selectionStart;
     ScreenPos m_selectionCurr;

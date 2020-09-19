@@ -299,7 +299,7 @@ void Engine::drawUi()
         renderTarget_->draw(m_selectionRect, Drawable::Transparent, Drawable::White);
     }
 
-    renderTarget_->draw(m_uiOverlay, ScreenPos(0, 0));
+    renderTarget_->draw(m_uiOverlay, ScreenPos(0, m_uiOverlayOffset));
 
     for (const std::unique_ptr<IconButton> &button : m_buttons) {
         button->render();
@@ -568,7 +568,26 @@ bool Engine::setup(const std::shared_ptr<genie::ScnFile> &scenario)
     loadUiOverlay();
 
     Size uiSize = m_uiOverlay->size;
-    if (!m_uiOverlay->size.isValid()) {
+    if (m_uiOverlay->size.isValid()) {
+        switch(int(uiSize.width)) {
+        case 1600:
+            uiSize.height = 1200;
+            break;
+        case 1280:
+            uiSize.height = 1024;
+            break;
+        case 1024:
+            uiSize.height = 768;
+            break;
+        case 800:
+            uiSize.height = 600;
+            break;
+        default:
+            WARN << "unknown ui width:" << uiSize.width;
+            break;
+        }
+        m_uiOverlayOffset = uiSize.height - m_uiOverlay->size.height;
+    } else {
         WARN << "We don't have a valid UI overlay";
         uiSize = Size(640, 480);
     }
