@@ -66,9 +66,12 @@ bool HomeScreen::init()
     }
 
     const genie::PalFile &palette = AssetManager::Inst()->getPalette(m_paletteId);
+    DBG << "palette:" << m_paletteId;
 
     if (isHd) {
         m_descriptionRect = ScreenRect(675, 650, 475, 100);
+    } else if (DataManager::Inst().gameVersion() >= genie::GV_SWGB) {
+        m_descriptionRect = ScreenRect(410, 510, 375, 80);
     } else {
         m_descriptionRect = ScreenRect(390, 506, 393, 94);
     }
@@ -85,7 +88,6 @@ bool HomeScreen::init()
     } else {
         m_description.setCharacterSize(10);
     }
-
     if (isHd) {
         // Gotten from the main-menu.json (easier to just massage the contents and copy than implementing a json parser..)
         m_buttons[Button::Singleplayer].rect = { 532,   9, 192, 258 };
@@ -107,6 +109,49 @@ bool HomeScreen::init()
         m_buttons[Button::Options].textRect =      { 304, 450, 117,  24 };
         m_buttons[Button::Exit].textRect =         { 200, 704, 160,  26 };
 
+        for (int i=0; i<Button::TypeCount; i++) {
+            if (i == Button::Banner) {
+                m_buttons[i].frame = 50;
+            } else {
+                m_buttons[i].frame = 10 + i * 4;
+            }
+        }
+    } else if (DataManager::Inst().gameVersion() >= genie::GV_SWGB) {
+        // TODO: these are a bit off, but I can' be bothered to try to match exactly
+        m_buttons[Button::Singleplayer].rect = { 275,  200, 138, 80 };
+        m_buttons[Button::Singleplayer].frame = 34;
+        m_buttons[Button::Singleplayer].textRect = { 250,  200, 180,  18 };
+
+        m_buttons[Button::Multiplayer].rect =  { 194, 360, 177, 147 };
+        m_buttons[Button::Multiplayer].frame = 14;
+        m_buttons[Button::Multiplayer].textRect =  { 194, 400, 180,  18 };
+
+        m_buttons[Button::Zone].rect =         { 103, 80,  185,  90 };
+        m_buttons[Button::Zone].frame = 18;
+        m_buttons[Button::Zone].textRect =         { 100, 80, 180,  18 };
+
+        m_buttons[Button::Tutorial].rect =     {   320, 75, 100, 124 };
+        m_buttons[Button::Tutorial].frame = 22;
+        m_buttons[Button::Tutorial].textRect =     {   260,  60, 120,  18 };
+
+        m_buttons[Button::MapEditor].rect =    { 150, 515,  214,  74 };
+        m_buttons[Button::MapEditor].frame = 26;
+        m_buttons[Button::MapEditor].textRect =    { 200, 550, 180,  18 };
+
+        m_buttons[Button::History].rect =      { 103, 164, 174,  153 };
+        m_buttons[Button::History].frame = 30;
+        m_buttons[Button::History].textRect =      {  103, 230, 180,  18 };
+
+        m_buttons[Button::Options].rect =      { 0, 350,  141, 169 };
+        m_buttons[Button::Options].frame = 10;
+        m_buttons[Button::Options].textRect =      {  0, 351, 180,  18 };
+
+        m_buttons[Button::Banner].rect =       {   0,   0, 427, 170 };
+        m_buttons[Button::Banner].frame = 49;
+
+        m_buttons[Button::Exit].rect =         {   5, 535, 93,  50 };
+        m_buttons[Button::Exit].frame = 46;
+        m_buttons[Button::Exit].textRect =         {   0, 562, 90,  18 };
     } else if (m_backgroundSize.height == 600) {
         // These are fun to figure out.
         // Aka. found by trial and error (extract image, try to count pixels in
@@ -131,6 +176,14 @@ bool HomeScreen::init()
         m_buttons[Button::History].textRect =      {  64, 169, 180,  18 };
         m_buttons[Button::Options].textRect =      {  56, 351, 180,  18 };
         m_buttons[Button::Exit].textRect =         {   0, 562, 160,  18 };
+
+        for (int i=0; i<Button::TypeCount; i++) {
+            if (i == Button::Banner) {
+                m_buttons[i].frame = 49;
+            } else {
+                m_buttons[i].frame = 10 + i * 4;
+            }
+        }
     } else {
         m_buttons[Button::Singleplayer].rect = { 309,  12, 120, 189 };
         m_buttons[Button::Multiplayer].rect =  { 263, 217,  97, 131 };
@@ -151,6 +204,14 @@ bool HomeScreen::init()
         m_buttons[Button::History].textRect =      {  64, 169, 180,  18 };
         m_buttons[Button::Options].textRect =      {  56, 351, 180,  18 };
         m_buttons[Button::Exit].textRect =         {   0, 562, 160,  18 };
+
+        for (int i=0; i<Button::TypeCount; i++) {
+            if (i == Button::Banner) {
+                m_buttons[i].frame = 49;
+            } else {
+                m_buttons[i].frame = 10 + i * 4;
+            }
+        }
     }
 
     // Indicate which aren't implemented yet
@@ -165,15 +226,11 @@ bool HomeScreen::init()
         }
 
         Button &b = m_buttons[i];
-
-        int frameNum = 10 + i * 4;
-        if (i == Button::Banner) {
-            if (isHd) {
-                frameNum = 50;
-            } else {
-                frameNum = 49;
-            }
+        int frameNum = b.frame;
+        if (frameNum == -1) {
+            continue;
         }
+
         if (frameNum + 3 > m_backgroundSlp->getFrameCount()) {
             WARN << "Invalid frame index" << frameNum << "for" << i << "max is" << m_backgroundSlp->getFrameCount();
             continue;
@@ -269,6 +326,9 @@ HomeScreen::Button::Type HomeScreen::getSelection()
 void HomeScreen::render()
 {
     for (int i=0; i<Button::TypeCount; i++) {
+        if (m_buttons[i].frame == -1) {
+            continue;
+        }
         sf::Sprite sprite;
         ScreenPos pos = m_buttons[i].rect.topLeft();
 
@@ -288,6 +348,9 @@ void HomeScreen::render()
 
     }
     for (int i=0; i<Button::TypeCount; i++) {
+        if (m_buttons[i].frame == -1) {
+            continue;
+        }
         ScreenPos pos = m_buttons[i].textRect.center();
         sf::FloatRect textRect = m_buttons[i].text.getLocalBounds();
         pos.x -= textRect.width / 2;

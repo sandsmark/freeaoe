@@ -56,7 +56,7 @@ public:
         ScreenRect rect;
 
 
-        int frame = 0;
+        int frame = -1;
 
         std::string description;
 

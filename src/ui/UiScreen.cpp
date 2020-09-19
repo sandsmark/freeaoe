@@ -51,7 +51,7 @@ static sf::Color convertColor(const genie::Color &color)
 
 bool UiScreen::init()
 {
-    if (!DataManager::Inst().isHd()) {
+    if (!DataManager::Inst().isHd() || DataManager::Inst().gameVersion() >= genie::GV_SWGB) {
         const std::string uiFilename = 'x' + m_uiFileName;
 
         m_uiFile = AssetManager::Inst()->getUIFile(uiFilename);

@@ -8,7 +8,7 @@ namespace AoE2 {
 static constexpr int Units = 50730;
 static constexpr int Technology = 50729;
 static constexpr int Buildings = 50705;
-};
+}
 
 // From http://swgb.heavengames.com/downloads/showfile.php?fileid=2762
 namespace SWGB {
