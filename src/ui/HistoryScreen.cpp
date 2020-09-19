@@ -40,6 +40,7 @@
 #include "resource/AssetManager.h"
 #include "resource/LanguageManager.h"
 #include "resource/Resource.h"
+#include "resource/DataManager.h"
 
 HistoryScreen::HistoryScreen() :
     UiScreen("scr_hist.sin")
@@ -188,17 +189,17 @@ bool HistoryScreen::init(const std::string &filesDir)
         m_visibleTitles[i].text.setFont(stylishFont);
         m_visibleTitles[i].text.setCharacterSize(s_titlesTextSize);
         m_visibleTitles[i].text.setPosition(17, posY);
-        m_visibleTitles[i].text.setFillColor(sf::Color::Black);
+        m_visibleTitles[i].text.setFillColor(m_textFillColor);
         m_visibleTitles[i].text.setOutlineThickness(1.5);
-        m_visibleTitles[i].text.setOutlineColor(sf::Color::Transparent);
+        m_visibleTitles[i].text.setOutlineColor(m_textOutlineColor);
         m_visibleTitles[i].rect = ScreenRect(17, posY, 195, stylishFont.getLineSpacing(s_titlesTextSize));
         posY += stylishFont.getLineSpacing(s_titlesTextSize) * 1.2;
     }
 
-    m_textRect.x = 317;
-    m_textRect.y = 275;
-    m_textRect.width = s_textWidth;
-    m_textRect.height = 255;
+        m_textRect.x = 317;
+        m_textRect.y = 275;
+        m_textRect.width = s_textWidth;
+        m_textRect.height = 255;
 
     const sf::Font &font = SfmlRenderTarget::defaultFont();
     posY = m_textRect.y;
@@ -206,17 +207,21 @@ bool HistoryScreen::init(const std::string &filesDir)
         m_visibleText[i].setFont(font);
         m_visibleText[i].setCharacterSize(s_mainTextSize);
         m_visibleText[i].setPosition(m_textRect.x, posY);
-        m_visibleText[i].setFillColor(sf::Color::Black);
+        m_visibleText[i].setFillColor(m_textFillColor);
         posY += font.getLineSpacing(s_mainTextSize);
     }
 
     // Main screen button
-    const genie::PalFile &buttonPalette = AssetManager::Inst()->getPalette(50531);
-    genie::SlpFramePtr buttonBg = slpFile->getFrame(0);
-    m_uiElements[MainScreenButton].texture.loadFromImage(Resource::convertFrameToImage(buttonBg, buttonPalette));
-    m_uiElements[MainScreenButton].pressTexture.loadFromImage(Resource::convertFrameToImage(slpFile->getFrame(1), buttonPalette));
-    const ScreenRect buttonRect(m_textRect.center().x - buttonBg->getWidth() / 2,  m_textRect.bottom(), buttonBg->getWidth(), buttonBg->getHeight());
-    m_uiElements[MainScreenButton].rect = buttonRect;
+    if (DataManager::Inst().gameVersion() >= genie::GV_SWGB) {
+        m_uiElements[MainScreenButton].rect = ScreenRect(m_textRect.center().x - 90,  m_textRect.bottom() + 10, 200, 40);
+    } else {
+        const genie::PalFile &buttonPalette = AssetManager::Inst()->getPalette(50531);
+        genie::SlpFramePtr buttonBg = slpFile->getFrame(0);
+        m_uiElements[MainScreenButton].texture.loadFromImage(Resource::convertFrameToImage(buttonBg, buttonPalette));
+        m_uiElements[MainScreenButton].pressTexture.loadFromImage(Resource::convertFrameToImage(slpFile->getFrame(1), buttonPalette));
+        ScreenRect buttonRect(m_textRect.center().x - buttonBg->getWidth() / 2,  m_textRect.bottom(), buttonBg->getWidth(), buttonBg->getHeight());
+        m_uiElements[MainScreenButton].rect = buttonRect;
+    }
 
     m_mainScreenText.setFont(SfmlRenderTarget::stylishFont());
     m_mainScreenText.setString("Main Menu");
