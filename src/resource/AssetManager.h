@@ -111,6 +111,15 @@ public:
         Korean = 18,
     };
 
+    enum UiCiv_SWGB : int {
+        GalacticEmpire = 1,
+        Gungans = 2,
+        RebelAlliance = 3,
+        RoyalNaboo = 4,
+        TradeFederation = 5,
+        Wookies = 6,
+    };
+
     static std::string uiFilename(const UiResolution resolution, const UiCiv civ);
 
     AssetManager(const AssetManager &) = default;
@@ -200,7 +209,7 @@ private:
     DrsFileVector m_gamedataFiles;
     DrsFileVector m_soundFiles;
 
-    DrsFilePtr m_interfaceFile;
+    DrsFileVector m_interfaceFiles;
     DrsFilePtr m_graphicsFile;
     DrsFilePtr m_terrainFile;
 

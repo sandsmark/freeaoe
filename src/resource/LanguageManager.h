@@ -15,12 +15,12 @@ public:
     static LanguageManager *Inst();
     bool initialize();
 
-    static const std::string &getString(unsigned int id);
+    static std::string getString(unsigned int id);
 
-    static const std::string &cpnTitle(const uint8_t campaignNum);
-    static const std::string &cpxTitle(const uint8_t campaignNum);
-    static const std::string &cpnScenarioTitle(const uint8_t campaignNum, const uint8_t scenarioNum);
-    static const std::string &cpxScenarioTitle(const uint8_t campaignNum, const uint8_t scenarioNum);
+    static std::string cpnTitle(const uint8_t campaignNum);
+    static std::string cpxTitle(const uint8_t campaignNum);
+    static std::string cpnScenarioTitle(const uint8_t campaignNum, const uint8_t scenarioNum);
+    static std::string cpxScenarioTitle(const uint8_t campaignNum, const uint8_t scenarioNum);
 
 private:
     LanguageManager() = default;

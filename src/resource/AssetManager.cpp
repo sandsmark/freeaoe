@@ -92,7 +92,15 @@ genie::ScnFilePtr AssetManager::getScn(uint32_t id)
 
 std::shared_ptr<genie::UIFile> AssetManager::getUIFile(const std::string &name)
 {
-    return m_interfaceFile->getUIFile(filenameID(name));
+    std::shared_ptr<genie::UIFile> ret;
+    for (const std::shared_ptr<genie::DrsFile> &drsFile : m_interfaceFiles) {
+        ret = drsFile->getUIFile(filenameID(name));
+        if (ret) {
+            return ret;
+        }
+    }
+    DBG << "failed to find" << name << "in interface files";
+    return ret;
 }
 
 std::shared_ptr<uint8_t[]> AssetManager::getWavPtr(uint32_t id)
@@ -133,7 +141,14 @@ genie::SlpFilePtr AssetManager::getSlp(uint32_t id, const ResourceType type)
 
     switch (type) {
     case ResourceType::Interface:
-        return m_interfaceFile->getSlpFile(id);
+        for (const std::shared_ptr<genie::DrsFile> &drsFile : m_interfaceFiles) {
+            slp_ptr = drsFile->getSlpFile(id);
+            if (slp_ptr) {
+                return slp_ptr;
+            }
+        }
+        DBG << "failed to find" << id << "in interface files, falling back to all files";
+        break;
     case ResourceType::Graphics:
         return m_graphicsFile->getSlpFile(id);
     case ResourceType::Terrain:
@@ -229,9 +244,12 @@ const genie::VisibilityMask &AssetManager::exploredVisibilityMask(const genie::S
 //------------------------------------------------------------------------------
 const genie::PalFile &AssetManager::getPalette(uint32_t id)
 {
-    const genie::PalFile &palette = m_interfaceFile->getPalFile(id);
-    if (palette.isValid()) {
-        return palette;
+    for (const std::shared_ptr<genie::DrsFile> &drsFile : m_allFiles) {
+        const genie::PalFile &palette = drsFile->getPalFile(id);
+
+        if (palette.isValid()) {
+            return palette;
+        }
     }
 
     for (const std::shared_ptr<genie::DrsFile> &drsFile : m_allFiles) {
@@ -244,7 +262,7 @@ const genie::PalFile &AssetManager::getPalette(uint32_t id)
 
     WARN << "No pal file with id" << id << "found!";
 
-    return palette;
+    return genie::PalFile::null;
 }
 
 std::string AssetManager::uiFilename(const AssetManager::UiResolution resolution, const AssetManager::UiCiv civ)
@@ -336,9 +354,14 @@ bool AssetManager::initializeInternal(const std::string &dataPath, const genie::
         return false;
     }
 
-    m_interfaceFile = loadDrs("interfac.drs");
-    if (!m_interfaceFile) {
-        WARN << "Failed to load interface file";
+    const std::vector<std::string> interfaceFiles({
+            {"interfac.drs"},
+            {"interfac_x1.drs"}
+        });
+
+    m_interfaceFiles = loadDrs(interfaceFiles);
+    if (m_interfaceFiles.empty()) {
+        WARN << "Failed to load interface files";
         return false;
     }
 
@@ -388,6 +411,8 @@ int AssetManager::filenameID(const std::string &filename)
         { "ico_unit.shp", 50730   }, // same as btnunit.shp
         { "ico_game.shp", 50752   },
         { "ico_misc.shp", 53011   },
+
+        // ico_bld1-4.shp looks identical, for some reason
         { "ico_bld1.shp", 50705   },
         { "ico_bld2.shp", 50706   },
         { "ico_bld3.shp", 50707   },

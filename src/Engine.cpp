@@ -548,19 +548,13 @@ bool Engine::setup(const std::shared_ptr<genie::ScnFile> &scenario)
     }
 
     m_minimap = std::make_unique<Minimap>(renderTarget_);
-    if (!m_minimap->init()) {
-        WARN << "failed to init minimap";
-    }
+    REQUIRE(m_minimap->init(), return false);
 
     m_actionPanel = std::make_unique<ActionPanel>(renderTarget_);
-    if (!m_actionPanel->init()) {
-        WARN << "failed to init action panel";
-    }
+    REQUIRE(m_actionPanel->init(), return false);
 
     m_unitInfoPanel = std::make_unique<UnitInfoPanel>(renderTarget_);
-    if (!m_unitInfoPanel->init()) {
-        WARN << "failed to init info panel";
-    }
+    REQUIRE(m_unitInfoPanel->init(), return false);
 
     m_mapRenderer = std::make_unique<MapRenderer>();
     m_mapRenderer->setRenderTarget(renderTarget_);

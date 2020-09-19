@@ -23,6 +23,8 @@
 #include "resource/AssetManager.h"
 #include "resource/LanguageManager.h"
 #include "resource/Resource.h"
+#include "resource/SlpIDs.h"
+#include "resource/DataManager.h"
 
 ActionPanel::ActionPanel(const std::shared_ptr<SfmlRenderTarget> &renderTarget) :
     m_renderTarget(renderTarget)
@@ -39,62 +41,6 @@ ActionPanel::~ActionPanel()
 
 bool ActionPanel::init()
 {
-    genie::SlpFilePtr unitIconsSlp = AssetManager::Inst()->getSlp("btnunit.shp", AssetManager::ResourceType::Interface);
-    if (!unitIconsSlp) {
-        WARN << "Failed to load unit icons";
-        return false;
-    }
-    for (size_t i=0; i<unitIconsSlp->getFrameCount(); i++) {
-        m_unitIcons[i].loadFromImage(Resource::convertFrameToImage(unitIconsSlp->getFrame(i)));
-    }
-
-    // ico_bld1-4.shp looks identical, for some reason
-    genie::SlpFilePtr buildingIconsSlp = AssetManager::Inst()->getSlp("ico_bld2.shp", AssetManager::ResourceType::Interface);
-    if (!buildingIconsSlp) {
-        WARN << "Failed to load building icons";
-        return false;
-    }
-    for (size_t i=0; i<buildingIconsSlp->getFrameCount(); i++) {
-        m_buildingIcons[i].loadFromImage(Resource::convertFrameToImage(buildingIconsSlp->getFrame(i)));
-    }
-
-    genie::SlpFilePtr researchIconsSlp = AssetManager::Inst()->getSlp("btntech.shp", AssetManager::ResourceType::Interface);
-    if (!researchIconsSlp) {
-        WARN << "Failed to load research icons";
-        return false;
-    }
-    for (size_t i=0; i<researchIconsSlp->getFrameCount(); i++) {
-        m_researchIcons[i].loadFromImage(Resource::convertFrameToImage(researchIconsSlp->getFrame(i)));
-    }
-
-    genie::SlpFilePtr commandIconsSlp = AssetManager::Inst()->getSlp("btncmd.shp", AssetManager::ResourceType::Interface);
-    if (!commandIconsSlp) {
-        WARN << "Failed to load action icons";
-        return false;
-    }
-    for (size_t i=0; i<int(Command::IconCount); i++) {
-        if (i >= commandIconsSlp->getFrameCount()) {
-            WARN << "icon out of range " << i;
-            return false;
-        }
-        m_commandIcons[Command(i)].loadFromImage(Resource::convertFrameToImage(commandIconsSlp->getFrame(i)));
-    }
-
-    { // hax
-        sf::Image prevImage = Resource::convertFrameToImage(commandIconsSlp->getFrame(int(Command::NextPage)));
-        prevImage.flipHorizontally();
-        m_commandIcons[Command::PreviousPage].loadFromImage(prevImage);
-    }
-
-    { // can't find this icon anywhere else
-        genie::SlpFilePtr cursorsSlp = AssetManager::Inst()->getSlp("mcursors.shp", AssetManager::ResourceType::Interface);
-        if (!cursorsSlp) {
-            WARN << "Failed to load cursors";
-            return false;
-        }
-        sf::Image garrisonIcon = Resource::convertFrameToImage(cursorsSlp->getFrame(13));
-        m_commandIcons[Command::Garrison].loadFromImage(garrisonIcon);
-    }
 
     return true;
 }
@@ -180,6 +126,8 @@ bool ActionPanel::update(Time /*time*/)
 
 void ActionPanel::draw()
 {
+    REQUIRE(!m_commandIcons.empty() && !m_unitIcons.empty() && !m_buildingIcons.empty() && !m_researchIcons.empty(), return);
+
     for (const InterfaceButton &button : currentButtons) {
         if (button.interfacePage != m_currentPage) {
             continue;
@@ -252,6 +200,8 @@ void ActionPanel::setHumanPlayer(const Player::Ptr &player)
 
     m_humanPlayerId = player->playerId;
     m_humanPlayer = player;
+
+    REQUIRE(loadButtons(player->civilization.id()), return);
 }
 
 ScreenRect ActionPanel::rect() const
@@ -278,7 +228,7 @@ void ActionPanel::releaseButtons()
     }
 }
 
-const std::string &ActionPanel::helpTextId(const ActionPanel::Command icon)
+std::string ActionPanel::helpTextId(const ActionPanel::Command icon)
 {
     static const std::unordered_map<ActionPanel::Command, int> helpTextIds = {
         { Command::Cancel, 4911 },
@@ -338,6 +288,112 @@ void ActionPanel::onPlayerResourceChanged(Player *player, const genie::ResourceT
     if (player->playerId == m_humanPlayerId) {
         m_buttonsDirty = true;
     }
+}
+
+bool ActionPanel::loadButtons(const int playerCiv)
+{
+    int unitsSLP = 0;
+    int buildingsSLP = 0;
+    int techSLP = 0;
+    int commandsSLP = SLP::Commands;
+    switch(DataManager::Inst().gameVersion()) {
+    case genie::GV_CC:
+        DBG << "Loading SWGB CC";
+        unitsSLP = SLP::SWGB::CC::UnitsOffset;
+        buildingsSLP = SLP::SWGB::CC::BuildingsOffset;
+        techSLP = SLP::SWGB::CC::TechnologyOffset;
+
+        if (playerCiv < SLP::SWGB::CC::MaxCiv) {
+            unitsSLP += playerCiv;
+            buildingsSLP += playerCiv;
+            techSLP += playerCiv;
+        } else {
+            WARN << "Invalid civ" << playerCiv;
+        }
+
+        break;
+    case genie::GV_SWGB:
+        DBG << "Loading SWGB";
+        unitsSLP = SLP::SWGB::UnitsOffset;
+        buildingsSLP = SLP::SWGB::BuildingsOffset;
+//        commandsSLP = SLP::SWGB::CommandSLPOffset; // TODO: there's three of them, figure out how to choose which
+        techSLP = SLP::SWGB::TechnologyOffset;
+
+        if (playerCiv < SLP::SWGB::MaxCiv) {
+            unitsSLP += playerCiv;
+            buildingsSLP += playerCiv;
+            techSLP += playerCiv;
+        } else {
+            WARN << "Invalid civ" << playerCiv;
+        }
+        break;
+    default:
+        DBG << "Loading AoE2";
+        unitsSLP = SLP::AoE2::Units;
+        buildingsSLP = SLP::AoE2::Buildings;
+        techSLP = SLP::AoE2::Technology;
+        break;
+    }
+
+    genie::SlpFilePtr unitIconsSlp = AssetManager::Inst()->getSlp(unitsSLP, AssetManager::ResourceType::Interface);
+    if (!unitIconsSlp) {
+        WARN << "Failed to load unit icons";
+        return false;
+    }
+    for (size_t i=0; i<unitIconsSlp->getFrameCount(); i++) {
+        m_unitIcons[i].loadFromImage(Resource::convertFrameToImage(unitIconsSlp->getFrame(i)));
+    }
+
+    genie::SlpFilePtr buildingIconsSlp = AssetManager::Inst()->getSlp(buildingsSLP, AssetManager::ResourceType::Interface);
+    if (!buildingIconsSlp) {
+        WARN << "Failed to load building icons";
+        return false;
+    }
+    for (size_t i=0; i<buildingIconsSlp->getFrameCount(); i++) {
+        m_buildingIcons[i].loadFromImage(Resource::convertFrameToImage(buildingIconsSlp->getFrame(i)));
+    }
+
+    genie::SlpFilePtr researchIconsSlp = AssetManager::Inst()->getSlp(techSLP, AssetManager::ResourceType::Interface);
+    if (!researchIconsSlp) {
+        WARN << "Failed to load research icons";
+        return false;
+    }
+    for (size_t i=0; i<researchIconsSlp->getFrameCount(); i++) {
+        m_researchIcons[i].loadFromImage(Resource::convertFrameToImage(researchIconsSlp->getFrame(i)));
+    }
+
+    genie::SlpFilePtr commandIconsSlp = AssetManager::Inst()->getSlp(commandsSLP, AssetManager::ResourceType::Interface);
+    if (!commandIconsSlp) {
+        WARN << "Failed to load action icons";
+        return false;
+    }
+    for (size_t i=0; i<int(Command::IconCount); i++) {
+        if (i >= commandIconsSlp->getFrameCount()) {
+            WARN << "icon out of range " << i << "max is" << commandIconsSlp->getFrameCount();
+            return false;
+        }
+        m_commandIcons[Command(i)].loadFromImage(Resource::convertFrameToImage(commandIconsSlp->getFrame(i)));
+    }
+
+    ////////// HAX ///////////
+    { // hax
+        sf::Image prevImage = Resource::convertFrameToImage(commandIconsSlp->getFrame(int(Command::NextPage)));
+        prevImage.flipHorizontally();
+        m_commandIcons[Command::PreviousPage].loadFromImage(prevImage);
+    }
+
+    { // can't find this icon anywhere else
+        genie::SlpFilePtr cursorsSlp = AssetManager::Inst()->getSlp("mcursors.shp", AssetManager::ResourceType::Interface);
+        if (!cursorsSlp) {
+            WARN << "Failed to load cursors";
+            return false;
+        }
+        sf::Image garrisonIcon = Resource::convertFrameToImage(cursorsSlp->getFrame(13));
+        m_commandIcons[Command::Garrison].loadFromImage(garrisonIcon);
+    }
+
+
+    return true;
 }
 
 void ActionPanel::updateButtons()

@@ -59,27 +59,32 @@ bool LanguageManager::initialize()
     return true;
 }
 
-const std::string &LanguageManager::getString(unsigned int id)
+std::string LanguageManager::getString(unsigned int id)
 {
     std::unordered_map<unsigned int, std::string> &cache = Inst()->m_cache;
+    // With HD we preload everything into the cache, so don't bother checking
+    if (Inst()->m_isHd) {
+        return cache[id];
+    }
 
     if (cache.find(id) != cache.end()) {
-        return cache[id];
+        DBG << "cache hit for" << id;
+        DBG << cache[id];
+//        return cache[id];
     }
 
     std::string ret;
 
-    // With HD we preload everything into the cache, so don't bother checking
-    if (!Inst()->m_isHd) {
-        for (const std::shared_ptr<genie::LangFile> &langfile : Inst()->m_langFiles) {
-            ret = langfile->getString(id);
-            if (!ret.empty()) {
-                break;
-            }
+    for (const std::shared_ptr<genie::LangFile> &langfile : Inst()->m_langFiles) {
+        ret = langfile->getString(id);
+        if (!ret.empty()) {
+            break;
         }
     }
+    DBG << "found" << ret << "for" << id;
 
     if (ret.empty()) {
+        DBG << "Failed to find for" << id;
         ret = "";
     }
 
@@ -88,23 +93,23 @@ const std::string &LanguageManager::getString(unsigned int id)
     return cache[id];
 }
 
-const std::string &LanguageManager::cpnTitle(const uint8_t campaignNum)
+std::string LanguageManager::cpnTitle(const uint8_t campaignNum)
 {
     // IDK? It's in the DLL at this offset
     return getString(34928 + campaignNum * 30);
 }
 
-const std::string &LanguageManager::cpxTitle(const uint8_t campaignNum)
+std::string LanguageManager::cpxTitle(const uint8_t campaignNum)
 {
     return getString(34928 + campaignNum * 30 + 300); // cpx files are +300
 }
 
-const std::string &LanguageManager::cpnScenarioTitle(const uint8_t campaignNum, const uint8_t scenarioNum)
+std::string LanguageManager::cpnScenarioTitle(const uint8_t campaignNum, const uint8_t scenarioNum)
 {
     return getString(34928 + campaignNum * 30 + 1 + scenarioNum);
 }
 
-const std::string &LanguageManager::cpxScenarioTitle(const uint8_t campaignNum, const uint8_t scenarioNum)
+std::string LanguageManager::cpxScenarioTitle(const uint8_t campaignNum, const uint8_t scenarioNum)
 {
     return getString(34928 + campaignNum * 30 + 1 + scenarioNum + 300);
 }

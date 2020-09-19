@@ -43,6 +43,14 @@ class Unit;
 class ActionPanel : public IState, public EventListener
 {
 public:
+    enum class TechnologySLP {
+        GalacticEmpire = 50690,
+        Gungans = 50691,
+        RebelAlliance = 50692,
+        RoyalNaboo = 50693,
+        TradeFederation = 50694,
+        Wookies = 50695
+    };
     enum class Technology {
         CropRotation = 1,
         HeavyPlow = 2,
@@ -254,11 +262,12 @@ public:
     void releaseButtons();
 //    void setAttackStance(const Unit::Stance stance) const;
 
-    static const std::string &helpTextId(const Command icon);
+    static std::string helpTextId(const Command icon);
 
 private:
     void onActionsChanged() { m_buttonsDirty = true; }
     void onPlayerResourceChanged(Player *player, const genie::ResourceType type, float newValue) override;
+    bool loadButtons(const int playerCiv);
 
     struct InterfaceButton {
         enum Type {

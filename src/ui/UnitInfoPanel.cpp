@@ -65,7 +65,8 @@ bool UnitInfoPanel::init()
     }
 
     // Unit icons
-    genie::SlpFilePtr unitIconsSlp = AssetManager::Inst()->getSlp("btnunit.shp", AssetManager::ResourceType::Interface);
+//    genie::SlpFilePtr unitIconsSlp = AssetManager::Inst()->getSlp("btnunit.shp", AssetManager::ResourceType::Interface);
+    genie::SlpFilePtr unitIconsSlp = AssetManager::Inst()->getSlp(53253, AssetManager::ResourceType::Interface);
     if (!unitIconsSlp) {
         WARN << "Failed to load unit icons";
         return false;
@@ -87,7 +88,7 @@ bool UnitInfoPanel::init()
     }
 
     // Tech/research icons
-    genie::SlpFilePtr techIconsSlp = AssetManager::Inst()->getSlp("btntech.shp", AssetManager::ResourceType::Interface);
+    genie::SlpFilePtr techIconsSlp = AssetManager::Inst()->getSlp(53241, AssetManager::ResourceType::Interface);
     if (!techIconsSlp) {
         WARN << "Failed to load research icons";
         return false;
@@ -254,6 +255,18 @@ void UnitInfoPanel::draw()
 void UnitInfoPanel::drawSingleUnit()
 {
     Unit::Ptr unit = *m_selectedUnits.begin();
+    if (!unit) {
+        WARN << "No selected units??";
+        return;
+    }
+
+    REQUIRE(unit->data(), WARN << "Unit" << unit->debugName << "missing data"; return);
+    REQUIRE(m_name, return);
+
+    if (!unit->data()) {
+        WARN << "Unit" << unit->debugName << "missing data";
+        return;
+    }
 
     ScreenPos pos = rect().topLeft();
     m_name->string = LanguageManager::getString(unit->data()->LanguageDLLName);
