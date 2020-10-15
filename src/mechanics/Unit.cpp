@@ -52,6 +52,11 @@
 #include "resource/Sprite.h"
 #include "render/GraphicRender.h"
 
+template<> struct std::hash<std::pair<int, int>> {
+    std::size_t operator()(const std::pair<int, int> &point) const noexcept { return point.first ^ point.second; }
+};
+
+
 std::shared_ptr<Unit> Unit::fromEntity(const EntityPtr &entity) noexcept
 {
     if (!entity) {
@@ -397,30 +402,25 @@ void Unit::setPosition(const MapPos &pos, const bool initial)
 
     Player::Ptr owner = player().lock();
 
-    // TODO merf, don't really want this to happen here, maybe use events?
-    if (!initial && owner) {
-        forEachVisibleTile([&](const int tileX, const int tileY) {
-            owner->visibility->removeUnitLookingAt(tileX, tileY);
-        });
-    }
 
     MapPos oldTilePosition = position() / Constants::TILE_SIZE;
     MapPos newTilePosition = pos / Constants::TILE_SIZE;
     oldTilePosition.round();
     newTilePosition.round();
-    if (oldTilePosition != newTilePosition) {
+    const bool switchedTile = oldTilePosition != newTilePosition;
+    if (switchedTile) {
         EventManager::unitMoved(this, oldTilePosition, newTilePosition);
     }
 
-    Entity::setPosition(pos, initial);
-
-    if (owner) {
+    // TODO merf, don't really want this to happen here, maybe use events?
+    std::unordered_set<std::pair<int, int>> tilesHidden;
+    if (switchedTile && !initial && owner) {
         forEachVisibleTile([&](const int tileX, const int tileY) {
-            owner->visibility->addUnitLookingAt(tileX, tileY);
+            tilesHidden.insert({tileX, tileY});
         });
-    } else {
-        WARN << "No player set!";
     }
+
+    Entity::setPosition(pos, initial);
 
     for (Annex &annex : annexes) {
         annex.unit->setPosition(pos + annex.offset, initial);
@@ -428,6 +428,30 @@ void Unit::setPosition(const MapPos &pos, const bool initial)
 
     if (data()->Type >= genie::Unit::CombatantType) {
         m_unitManager.onCombatantUnitsMoved();
+    }
+
+    if (!owner) {
+        WARN << "No player set!";
+        return;
+    }
+
+    std::unordered_set<std::pair<int, int>> newVisibleTiles;
+    if (switchedTile) {
+        forEachVisibleTile([&](const int tileX, const int tileY) {
+            const std::pair<int, int> tile(tileX, tileY);
+            if (tilesHidden.count(tile)) {
+                tilesHidden.erase(tile);
+            } else {
+                newVisibleTiles.insert(tile);
+            }
+        });
+
+        for (const std::pair<int, int> &tile : tilesHidden) {
+            owner->visibility->removeUnitLookingAt(tile.first, tile.second);
+        }
+        for (const std::pair<int, int> &tile : newVisibleTiles) {
+            owner->visibility->addUnitLookingAt(tile.first, tile.second);
+        }
     }
 }
 
