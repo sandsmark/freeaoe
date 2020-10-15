@@ -19,11 +19,9 @@ namespace ai {
 
     class ScriptTokenizer : public yyFlexLexer {
     public:
-        ScriptTokenizer(std::istream &in, ai::ScriptLoader &driver) : yyFlexLexer(in, std::cout), _driver(driver) {}
+        ScriptTokenizer(std::istream &in) : yyFlexLexer(in, std::cout) {}
         virtual ~ScriptTokenizer() {}
         ai::ScriptParser::symbol_type yylex(ai::ScriptLoader &_driver);
         int yylex() override { assert(false); return 0; }
-    private:
-        ai::ScriptLoader &_driver;
     };
 }

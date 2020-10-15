@@ -25,9 +25,9 @@ ScriptLoader::~ScriptLoader()
 int ScriptLoader::parse(std::istream& in, std::ostream& out)
 {
 
-    ScriptTokenizer scanner {in, *this};
+    ScriptTokenizer scanner {in};
     ScriptParser parser {*this, scanner};
-    //parser.set_debug_stream(out);
+    parser.set_debug_stream(out);
     //parser.set_debug_level(4);
 
     int res = parser.parse();

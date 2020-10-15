@@ -32,7 +32,6 @@ using UnitPtr = std::shared_ptr<Unit>;
 class Map;
 using MapPtr = std::shared_ptr<Map>;
 
-
 class ActionMove : public IAction
 {
     struct MapUnit {
