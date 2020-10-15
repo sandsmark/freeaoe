@@ -29,6 +29,7 @@ public:
     virtual ~ISampleGame() {}
     virtual void setupMap() = 0;
     virtual void setupActors(const ResourceMap &startingResources) = 0;
+    virtual void setupUnits() = 0;
     virtual std::shared_ptr<Player> getGaiaPlayer() = 0;
     virtual std::shared_ptr<Player> getHumanPlayer() = 0;
     virtual std::shared_ptr<Player> getEnemyPlayer() = 0;

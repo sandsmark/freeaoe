@@ -41,7 +41,10 @@ void BasicGameSample::setupActors(const ResourceMap &startingResources)
     m_humanPlayer->playerColor = 0;
     m_enemyPlayer = std::make_shared<Player>(2, 2, startingResources);
     m_enemyPlayer->playerColor = 1;
+}
 
+void BasicGameSample::setupUnits()
+{
     addHumanTownCenter();
     addHumanWalls();
     addHumanUnits();

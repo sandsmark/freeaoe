@@ -108,6 +108,19 @@ bool UnitManager::init()
     return true;
 }
 
+void UnitManager::setPlayers(const std::vector<std::shared_ptr<Player>> &players)
+{
+    for (const std::shared_ptr<Player> &player : players) {
+        m_players.emplace_back(player);
+    }
+}
+
+void UnitManager::setHumanPlayer(const std::shared_ptr<Player> &player)
+{
+    m_humanPlayer = player;
+    m_humanPlayerID = player->playerId;
+}
+
 bool UnitManager::update(Time time)
 {
     bool updated = false;

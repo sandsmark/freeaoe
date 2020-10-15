@@ -35,6 +35,7 @@ public:
 
     void setupMap() override;
     void setupActors(const ResourceMap &startingResources) override;
+    void setupUnits() override;
 
     Player::Ptr getGaiaPlayer() override;
     Player::Ptr getHumanPlayer() override;

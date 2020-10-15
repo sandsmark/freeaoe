@@ -114,9 +114,14 @@ public:
 
     void add(const Unit::Ptr &unit, const MapPos &position);
     void remove(const Unit::Ptr &unit);
+    void remove(const DopplegangerEntity::Ptr &unit);
 
     bool init();
-    void setHumanPlayer(const std::shared_ptr<Player> &player) { m_humanPlayer = player; }
+
+    void setPlayers(const std::vector<std::shared_ptr<Player>> &players);
+    void setHumanPlayer(const std::shared_ptr<Player> &player);
+    int humanPlayerID() const { return m_humanPlayerID; }
+    std::shared_ptr<Player> humanPlayer() const { return m_humanPlayer.lock(); }
 
     bool update(Time time);
 
@@ -188,7 +193,9 @@ private:
 
     bool m_availableActionsChanged = true; // Because we might get a bunch of events in a single update, do it only once
 
+    std::vector<std::weak_ptr<Player>> m_players;
     std::weak_ptr<Player> m_humanPlayer;
+    int m_humanPlayerID = -1;
 };
 
 inline LogPrinter operator <<(LogPrinter os, const UnitManager::State state)

@@ -35,6 +35,7 @@ public:
 
     void setupMap() override;
     void setupActors(const ResourceMap &startingResources) override;
+    void setupUnits() override;
 
     std::shared_ptr<Player> getGaiaPlayer() override;
     std::shared_ptr<Player> getHumanPlayer() override;

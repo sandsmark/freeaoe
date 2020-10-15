@@ -140,8 +140,6 @@ bool GameState::init()
         setupGame();
     }
 
-    m_unitManager->setHumanPlayer(m_humanPlayer);
-
     map_->updateMapData();
 
     return true;
@@ -281,6 +279,16 @@ void GameState::setupScenario()
         }
 
         m_players.push_back(player);
+    }
+
+    if (!m_humanPlayer) {
+        WARN << "no human player defined, setting to 1. player";
+        m_humanPlayer = m_players[1];
+    }
+    m_unitManager->setHumanPlayer(m_humanPlayer);
+
+    for (size_t playerNum = 0; playerNum < scenario_->enabledPlayerCount + 1; playerNum++) { // +1 for gaia
+        const Player::Ptr &player = m_players[playerNum];
 
         for (const genie::ScnUnit &scnunit : scenario_->playerUnits[playerNum].units) {
             MapPos unitPos((scnunit.positionY) * Constants::TILE_SIZE, (scnunit.positionX) * Constants::TILE_SIZE, scnunit.positionZ * DataManager::Inst().terrainBlock().ElevHeight);
@@ -310,11 +318,6 @@ void GameState::setupScenario()
     }
     renderTarget_->camera()->setTargetPosition(cameraPos);
 
-    if (!m_humanPlayer) {
-        WARN << "no human player defined, setting to 1. player";
-        m_humanPlayer = m_players[1];
-    }
-
     m_scenarioController->setScenario(scenario_);
 }
 
@@ -326,10 +329,13 @@ void GameState::setupGame()
     sampleGameSetup->setupActors(defaultStartingResources[m_gameType]);
 
     m_humanPlayer = sampleGameSetup->getHumanPlayer();
+    m_unitManager->setHumanPlayer(m_humanPlayer);
 
     m_players.push_back(sampleGameSetup->getGaiaPlayer());
     m_players.push_back(m_humanPlayer);
     m_players.push_back(sampleGameSetup->getEnemyPlayer());
+
+    sampleGameSetup->setupUnits();
 
     MapPos cameraPos(map_->pixelWidth() / 2.f, map_->pixelHeight()  / 2.f);
     renderTarget_->camera()->setTargetPosition(cameraPos);

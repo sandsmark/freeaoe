@@ -38,7 +38,10 @@ void AllunitsGameSample::setupActors(const ResourceMap &startingResources)
     m_gaiaPlayer = std::make_shared<Player>(UnitManager::GaiaID, UnitManager::GaiaID, startingResources);
     m_humanPlayer = std::make_shared<Player>(1, 1, startingResources);
     m_enemyPlayer = std::make_shared<Player>(2, 2, startingResources);
+}
 
+void AllunitsGameSample::setupUnits()
+{
     addHumanTownCenter();
     addHumanUnits();
     addEnemyBuildings();
