@@ -18,12 +18,14 @@
 
 #pragma once
 
+#include "core/SignalEmitter.h"
+
 #include <string>
 #include <unordered_map>
 #include <vector>
 
 //
-class Config
+class Config : public SignalEmitter<Config>
 {
 public:
     enum OptionType {
@@ -33,6 +35,10 @@ public:
         ScenarioFile,
         EnableDebug,
         PrintHelp,
+        MusicVolume,
+        SoundVolume,
+
+        OptionsCount
     };
 
     enum StorePolicy {
@@ -52,6 +58,7 @@ public:
         OptionArgumentType argumentType;
         StorePolicy saved = NotStored;
     };
+    using Signals = OptionType;
 
     //----------------------------------------------------------------------------
     /// Get instance (singleton pattern)

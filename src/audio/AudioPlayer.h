@@ -21,6 +21,9 @@ public:
 
     static AudioPlayer &instance();
 
+    void onSoundVolumeChanged();
+    void onMusicVolumeChanged();
+
 private:
     void playSample(const std::shared_ptr<uint8_t[]> &data, const float pan = 0.f, const float volume = 1.f);
 

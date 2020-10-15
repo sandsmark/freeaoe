@@ -324,6 +324,8 @@ void Config::setValue(const OptionType option, const std::string &value)
     m_values[option] = value;
 
     writeConfigFile(m_filePath);
+
+    emit(option);
 }
 
 //------------------------------------------------------------------------------
@@ -335,11 +337,30 @@ Config::Config(const std::string &applicationName)
             { Config::SinglePlayer, "single-player", "Launch a simple test map", Config::NoArgument, Config::NotStored },
             { Config::GameSample, "game-sample", "Game samples to load", Config::HasArgument, Config::NotStored },
             { Config::PrintHelp, "help", "Show usage", Config::NoArgument, Config::NotStored },
+            { Config::SoundVolume, "sound-volume", "Sound volume", Config::HasArgument, Config::Stored },
+            { Config::MusicVolume, "music-volume", "Music volume", Config::HasArgument, Config::Stored },
 
 
             // Not actually parsed here (need it earlier to enable it), just so it knows about it
             { Config::EnableDebug, "debug", "Print all debug output", Config::NoArgument, Config::NotStored },
         });
+
+#ifndef NDEBUG
+    for (int opt=0; opt<OptionsCount; opt++) {
+        bool found = false;
+        // really inefficient, so sue me
+        for (const std::pair<std::string, OptionDefinition> &def : m_knownOptions) {
+            if (def.second.id == opt) {
+                found = true;
+                break;
+            }
+        }
+        if (found) {
+            continue;
+        }
+        WARN << "Missing definition for option" << opt;
+    }
+#endif
 
 #if defined(__linux__)
     char *rawPath = getenv("XDG_CONFIG_HOME");
@@ -419,6 +440,8 @@ bool Config::parseOption(const std::string &option)
 
     }
     m_values[it->second.id] = value;
+
+    emit(it->second.id);
 
     return true;
 }

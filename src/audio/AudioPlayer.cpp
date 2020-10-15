@@ -11,6 +11,7 @@
 #include "resource/AssetManager.h"
 #include "resource/DataManager.h"
 #include "sts_mixer.h"
+#include "global/Config.h"
 
 #include <genie/util/Utility.h>
 #include <genie/dat/Sound.h>
@@ -77,6 +78,8 @@ AudioPlayer::AudioPlayer() :
     m_mixer(std::make_unique<sts_mixer_t>())
 {
     sts_mixer_init(m_mixer.get(), 44100, STS_MIXER_SAMPLE_FORMAT_16);
+    onMusicVolumeChanged();
+    onSoundVolumeChanged();
 
 
     ma_device_config config = ma_device_config_init(ma_device_type_playback);
@@ -99,6 +102,9 @@ AudioPlayer::AudioPlayer() :
         ma_device_uninit(m_device.get());
         return;
     }
+
+    Config::Inst().connect(Config::SoundVolume, this, &AudioPlayer::onSoundVolumeChanged);
+    Config::Inst().connect(Config::MusicVolume, this, &AudioPlayer::onMusicVolumeChanged);
 }
 
 AudioPlayer::~AudioPlayer()
@@ -106,6 +112,8 @@ AudioPlayer::~AudioPlayer()
     std::lock_guard<std::mutex> guard(m_mutex);
     ma_device_uninit(m_device.get());
     sts_mixer_shutdown(m_mixer.get());
+
+    Config::Inst().disconnect(this);
 }
 
 struct WavHeader {
@@ -399,4 +407,30 @@ AudioPlayer &AudioPlayer::instance()
 {
     static AudioPlayer inst;
     return inst;
+}
+
+void AudioPlayer::onSoundVolumeChanged()
+{
+    if (!Config::Inst().isOptionSet(Config::SoundVolume)) {
+        return;
+    }
+
+    float volume = m_mixer->sample_gain;
+    try {
+        volume = std::stof(Config::Inst().getValue(Config::SoundVolume));
+    } catch (const std::exception &) {} //idgaf
+    m_mixer->sample_gain = std::clamp(volume, 0.f, 1.f);
+
+}
+
+void AudioPlayer::onMusicVolumeChanged()
+{
+    if (!Config::Inst().isOptionSet(Config::MusicVolume)) {
+        return;
+    }
+    float volume = m_mixer->stream_gain;
+    try {
+        volume = std::stof(Config::Inst().getValue(Config::MusicVolume));
+    } catch (const std::exception &) {} //idgaf
+    m_mixer->stream_gain = std::clamp(volume, 0.f, 1.f);
 }

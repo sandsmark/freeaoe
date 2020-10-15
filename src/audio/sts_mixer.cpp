@@ -89,7 +89,8 @@ void sts_mixer_init(sts_mixer_t* mixer, unsigned int frequency, int audio_format
 
   for (i = 0; i < STS_MIXER_VOICES; ++i) { sts_mixer__reset_voice(mixer, i); }
   mixer->frequency = frequency;
-  mixer->gain = 1.0f;
+  mixer->sample_gain = 1.0f;
+  mixer->stream_gain = 1.0f;
   mixer->audio_format = audio_format;
 }
 
@@ -168,7 +169,6 @@ void sts_mixer_stop_stream(sts_mixer_t* mixer, sts_mixer_stream_t* stream) {
   }
 }
 
-
 void sts_mixer_mix_audio(sts_mixer_t* mixer, void* output, unsigned int samples) {
   sts_mixer_voice_t*  voice;
   unsigned int        i, position;
@@ -187,7 +187,7 @@ void sts_mixer_mix_audio(sts_mixer_t* mixer, void* output, unsigned int samples)
       if (voice->state == STS_MIXER_VOICE_PLAYING) {
         position = (int)voice->position;
         if (position < voice->sample->length) {
-          sample = sts_mixer__clamp_sample(sts_mixer__get_sample(voice->sample, position) * voice->gain);
+          sample = sts_mixer__clamp_sample(sts_mixer__get_sample(voice->sample, position) * voice->gain * mixer->sample_gain);
           left += sts_mixer__clamp_sample(sample * (0.5f - voice->pan));
           right += sts_mixer__clamp_sample(sample * (0.5f + voice->pan));
           voice->position += (float)voice->sample->frequency * advance * voice->pitch;
@@ -201,8 +201,8 @@ void sts_mixer_mix_audio(sts_mixer_t* mixer, void* output, unsigned int samples)
           position = 0;
         }
         if (voice->stream->sample.length > 0) {
-          left += sts_mixer__clamp_sample(sts_mixer__get_sample(&voice->stream->sample, position) * voice->gain);
-          right += sts_mixer__clamp_sample(sts_mixer__get_sample(&voice->stream->sample, position + 1) * voice->gain);
+          left += sts_mixer__clamp_sample(sts_mixer__get_sample(&voice->stream->sample, position) * voice->gain * mixer->stream_gain);
+          right += sts_mixer__clamp_sample(sts_mixer__get_sample(&voice->stream->sample, position + 1) * voice->gain * mixer->stream_gain);
           voice->position += (float)voice->stream->sample.frequency * advance;
         } else {
           sts_mixer__reset_voice(mixer, i);
