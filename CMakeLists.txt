@@ -320,6 +320,7 @@ if (BUILD_TESTS)
 endif()
 
 if (ENABLE_SANITIZERS)
+    # these are way too big and complex for the sanitizers
     set_source_files_properties(src/ai/grammar.gen.tab.cpp PROPERTIES COMPILE_FLAGS -fno-sanitize=all)
     set_source_files_properties(src/ai/lex.yy.cc PROPERTIES COMPILE_FLAGS -fno-sanitize=all)
 endif()
