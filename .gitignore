@@ -25,3 +25,4 @@ build-*/
 test/data/
 !test/data/.placeholder
 CMakeLists.txt.user.*
+/data/
