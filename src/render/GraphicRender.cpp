@@ -213,7 +213,7 @@ void GraphicRender::setDamageOverlay(const int spriteId) noexcept
     }
 
     if (!m_damageOverlay) {
-        m_damageOverlay = std::make_unique<GraphicRender>();
+        m_damageOverlay = std::make_shared<GraphicRender>();
     }
 
     m_damageOverlay->setPlayerColor(m_playerColor);

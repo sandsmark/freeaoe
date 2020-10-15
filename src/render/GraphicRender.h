@@ -74,6 +74,7 @@ typedef std::shared_ptr<GraphicRender> GraphicRenderPtr;
 class GraphicRender
 {
 public:
+    GraphicRender() = default;
     virtual ~GraphicRender() = default;
 
     bool update(Time time, const bool isVisible) noexcept;
@@ -82,6 +83,7 @@ public:
     virtual void render(IRenderTarget &renderTarget, const ScreenPos screenPos, const RenderType renderpass) noexcept;
 
     void setPlayerColor(int playerColor) noexcept;
+    int playerColor() const { return m_playerColor; }
     void setCivId(int civId) noexcept { m_civId = civId; }
 
     void setDamageOverlay(const int spriteId) noexcept;
@@ -107,7 +109,15 @@ public:
 
     void setPlaySounds(bool playSound) noexcept { m_playSounds = playSound; }
 
+
+    /// Enable explicit copying
+    std::unique_ptr<GraphicRender> copy() const { return std::make_unique<GraphicRender>(*this); }
+
 private:
+    friend std::unique_ptr<GraphicRender> std::make_unique<GraphicRender>(const GraphicRender&);
+    GraphicRender(const GraphicRender &other) = default;
+    const GraphicRender &operator=(const GraphicRender&) = delete;
+
     void maybePlaySound(const float pan, const float volume) noexcept;
 
     struct GraphicDelta {
@@ -128,7 +138,7 @@ private:
     float m_angle = 0;
     SpritePtr m_sprite;
 
-    std::unique_ptr<GraphicRender> m_damageOverlay;
+    std::shared_ptr<GraphicRender> m_damageOverlay;
 
     bool m_frameChanged = false;
     int m_currentSound = 0;
