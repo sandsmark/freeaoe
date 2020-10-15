@@ -37,7 +37,12 @@
 
 std::unique_ptr<GraphicRender> GraphicRender::copy() const
 {
+#ifndef _MSC_VER
     return std::make_unique<GraphicRender>(*this);
+#else
+#pragma message ("Remove me when msvc gets its shit together")
+    return std::unique_ptr<GraphicRender>(new GraphicRender(*this));
+#endif
 }
 
 bool GraphicRender::update(Time time, const bool isVisible) noexcept

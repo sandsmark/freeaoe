@@ -114,7 +114,9 @@ public:
     std::unique_ptr<GraphicRender> copy() const;
 
 private:
+#ifndef _MSC_VER
     friend std::unique_ptr<GraphicRender> std::make_unique<GraphicRender>(const GraphicRender&);
+#endif
     GraphicRender(const GraphicRender &other) = default;
     const GraphicRender &operator=(const GraphicRender&) = delete;
 
