@@ -147,3 +147,13 @@ void EventManager::tradingPriceChanged(const genie::ResourceType type, const int
 {
     call(TradingPriceChanged, [=](EventListener *l) { l->onTradingPriceChanged(type, newPrice); });
 }
+
+void EventManager::tileDiscovered(int playerID, const int tileX, const int tileY)
+{
+    call(TileDiscovered, [=](EventListener *l) { l->onTileDiscovered(playerID, tileX, tileY); });
+}
+
+void EventManager::tileHidden(int playerID, const int tileX, const int tileY)
+{
+    call(TileHidden, [=](EventListener *l) { l->onTileHidden(playerID, tileX, tileY); });
+}

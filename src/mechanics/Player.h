@@ -11,6 +11,7 @@
 #include "core/ResourceMap.h"
 #include "core/Types.h"
 #include "core/Utility.h"
+#include "global/EventManager.h"
 #include "mechanics/Civilization.h"
 
 struct Unit;
@@ -29,7 +30,7 @@ struct VisibilityMap
         Visible
     };
 
-    VisibilityMap();
+    VisibilityMap(int playerID);
 
     inline Visibility visibilityAt(const MapPos &pos) const {
         return visibilityAt(pos.x / Constants::TILE_SIZE, pos.y / Constants::TILE_SIZE);
@@ -57,6 +58,8 @@ struct VisibilityMap
         }
         m_visibility[index] = Explored;
         isDirty = true;
+
+        EventManager::tileDiscovered(m_playerId, tileX, tileY);
     }
 
     void addUnitLookingAt(const int tileX, const int tileY) {
@@ -75,6 +78,10 @@ struct VisibilityMap
                 isDirty = true;
             }
         }
+
+        if (m_visibility[index] == Visible) {
+            EventManager::tileDiscovered(m_playerId, tileX, tileY);
+        }
     }
 
     void removeUnitLookingAt(const int tileX, const int tileY) {
@@ -92,10 +99,15 @@ struct VisibilityMap
         }
 
         m_visibility[index]--;
+
+        if (m_visibility[index] == Explored) {
+            EventManager::tileHidden(m_playerId, tileX, tileY);
+        }
     }
     int edgeTileNum(const int tileX, const int tileY, const Visibility type) const;
 
 private:
+    int m_playerId;
     std::array<int, Constants::MAP_MAX_SIZE * Constants::MAP_MAX_SIZE> m_visibility;
 };
 

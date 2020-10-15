@@ -20,7 +20,7 @@ Player::Player(const int id, const int civId, const ResourceMap &startingResourc
     playerId(id),
     civilization(civId),
     name("Player " + std::to_string(id)),
-    visibility(std::make_shared<VisibilityMap>()),
+    visibility(std::make_shared<VisibilityMap>(id)),
     m_resourcesAvailable(civilization.startingResources())
 {
     // Override
@@ -519,7 +519,8 @@ struct EdgeTileLut {
 };
 } // anonymous namespace
 
-VisibilityMap::VisibilityMap()
+VisibilityMap::VisibilityMap(int playerID) :
+    m_playerId(playerID)
 {
 #ifdef CHEAT_VISIBILITY
     m_visibility.fill(Visible);

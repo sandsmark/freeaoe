@@ -54,6 +54,10 @@ public:
         ResourceBought,
         ResourceSold,
 
+        TileDiscovered,
+        TileHidden,
+
+
         EventTypeCount
     };
 
@@ -88,6 +92,9 @@ public:
     static void resourceBought(const genie::ResourceType type, const int amount);
     static void resourceSold(const genie::ResourceType type, const int amount);
     static void tradingPriceChanged(const genie::ResourceType type, const int newPrice);
+
+    static void tileDiscovered(int playerID, const int tileX, const int tileY);
+    static void tileHidden(int playerID, const int tileX, const int tileY);
 
 private:
     static void call(const EventType type, std::function<void(EventListener *listener)> function)

@@ -90,6 +90,12 @@ protected:
 
     virtual void onTradingPriceChanged(const genie::ResourceType type, const int newPrice)
         { (void)type; (void)newPrice; }
+
+    virtual void onTileDiscovered(const int playerID, const int tileX, const int tileY)
+        { (void)playerID; (void)tileX; (void)tileY; }
+
+    virtual void onTileHidden(const int playerID, const int tileX, const int tileY)
+        { (void)playerID; (void)tileX; (void)tileY; }
 };
 
 #endif // EVENTLISTENER_H
