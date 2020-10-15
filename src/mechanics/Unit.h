@@ -135,64 +135,40 @@ struct Unit : public Entity
 
     // The blinking animation thing when it is selected as a target
     int targetBlinkTimeLeft = 0;
+    bool selected = false;
 
     UnitActionHandler actions;
+    std::vector<Annex> annexes;
+    std::weak_ptr<Building> garrisonedIn;
+    ResourceMap resources;
+    int activeMissiles = 0;
 
+    // No copy, no default constructor
+    Unit() = delete;
+    Unit(const Unit &unit) = delete;
+    Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager);
+    ~Unit();
+
+    // convenience casting functions
     static std::shared_ptr<Unit> fromEntity(const EntityPtr &entity) noexcept;
     static inline std::shared_ptr<Unit> fromEntity(const std::weak_ptr<Entity> &entity) noexcept {
         return fromEntity(entity.lock());
     }
-
     static std::shared_ptr<Building> asBuilding(const Unit::Ptr &unit) noexcept;
     static std::shared_ptr<Building> asBuilding(const std::weak_ptr<Unit> &unit) noexcept;
 
-    Unit() = delete;
-    Unit(const Unit &unit) = delete;
-
-    Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager);
-
-    ~Unit();
-
+    ////////////////////////////////
+    // Geometry stuff
     inline float angle() const noexcept { return m_angle; }
     void setAngle(const float angle) noexcept;
 
     void setMap(const MapPtr &newMap) noexcept override;
     void setPosition(const MapPos &pos, const bool initial = false) override;
 
-    bool update(Time time) noexcept override;
-
-    int playerId() const { return m_playerId; }
-    const std::weak_ptr<Player> &player() const { return m_player; }
-    void setPlayer(const std::shared_ptr<Player> &player);
-
-    bool selected = false;
-    std::vector<Annex> annexes;
-
-    std::weak_ptr<Building> garrisonedIn;
-
-    ResourceMap resources;
-
     virtual ScreenRect rect() const noexcept;
     virtual bool checkClick(const ScreenPos &pos) const noexcept;
     Size selectionSize() const noexcept;
-
-    virtual void setCreationProgress(float progress) noexcept;
-    void increaseCreationProgress(float progress) noexcept;
-    float creationProgress() const noexcept;
-    float hitpointsLeft() const noexcept;
-    float healthLeft() const noexcept;
-    void takeDamage(const genie::unit::AttackOrArmor &attack, const float damageMultiplier) noexcept;
-    void kill() noexcept;
-    bool isDying() const noexcept;
-    bool isDead() const noexcept;
-
-    void setUnitData(const genie::Unit &data_) noexcept;
-    const genie::Unit *data() const noexcept {return m_data; }
-
-    int activeMissiles = 0;
-
-    UnitManager &unitManager() const noexcept { return m_unitManager; }
-
+    Size clearanceSize() const noexcept;
     MapPos center() const noexcept {
         return position() + clearanceSize() / 2.;
     }
@@ -205,7 +181,6 @@ struct Unit : public Entity
         return centreDistance - clearance;
     }
 
-    Size clearanceSize() const noexcept;
 
     double distanceTo(const Unit::Ptr &otherUnit) const noexcept
     {
@@ -219,6 +194,31 @@ struct Unit : public Entity
     // in Z direction, if that makes sense
     float tallness();
 
+    ////////////////////////////////
+    // Called every tick
+    bool update(Time time) noexcept override;
+
+    // Owners and stuff
+    int playerId() const { return m_playerId; }
+    const std::weak_ptr<Player> &player() const { return m_player; }
+    void setPlayer(const std::shared_ptr<Player> &player);
+
+    UnitManager &unitManager() const noexcept { return m_unitManager; }
+
+    // Hitpoints and similar stuff
+    virtual void setCreationProgress(float progress) noexcept;
+    void increaseCreationProgress(float progress) noexcept;
+    float creationProgress() const noexcept;
+    float hitpointsLeft() const noexcept;
+    float healthLeft() const noexcept;
+    void takeDamage(const genie::unit::AttackOrArmor &attack, const float damageMultiplier) noexcept;
+    void kill() noexcept;
+    bool isDying() const noexcept;
+    bool isDead() const noexcept;
+
+    void setUnitData(const genie::Unit &data_) noexcept;
+    const genie::Unit *data() const noexcept {return m_data; }
+
 protected:
     friend struct UnitActionHandler;
 
@@ -230,18 +230,42 @@ protected:
     const genie::Unit *m_data = nullptr;
 
     // Because we use it often
-    SpritePtr movingGraphics;
+    SpritePtr m_movingGraphics;
 
     int m_playerId = -1;
     std::weak_ptr<Player> m_player;
 
-    float m_creationProgress = 0.f;
-
     UnitManager &m_unitManager;
 
+    float m_creationProgress = 0.f;
     float m_damageTaken = 0.f;
     Time m_prevTime = 0;
     float m_angle = 0.f;
+};
+
+struct DopplegangerEntity : public StaticEntity
+{
+    const int ownerID;
+    const genie::Unit *const originalUnitData = nullptr;
+
+    typedef std::shared_ptr<DopplegangerEntity> Ptr;
+    static Ptr fromEntity(const std::shared_ptr<Entity> &entity);
+
+    DopplegangerEntity(const Unit::Ptr &originalUnit);
+
+    bool update(Time time) noexcept override;
+    bool shouldBeRemoved() const noexcept override;
+
+
+private:
+    void onOriginalGone();
+    UnitManager &m_unitManager;
+
+    bool m_wasVisible = true;
+    bool m_isRubble = false;
+    std::weak_ptr<Unit> m_originalUnit;
+    int m_deadGraphic = -1;
+    int m_dyingGraphic = -1; // TODO: haven't found a unit where this is used
 };
 
 

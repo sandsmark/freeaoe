@@ -208,3 +208,50 @@ DecayingEntity::Ptr UnitFactory::createCorpseFor(const Unit::Ptr &unit)
     return corpse;
 
 }
+
+std::shared_ptr<DopplegangerEntity> UnitFactory::createDopplegangerFor(const std::shared_ptr<Unit> &unit)
+{
+    REQUIRE(unit, return nullptr);
+
+    DopplegangerEntity::Ptr doppleganger = std::make_shared<DopplegangerEntity>(unit);
+    DBG << "Created doppleganger";
+    doppleganger->setMap(unit->map());
+    doppleganger->setPosition(unit->position());
+
+    return doppleganger;
+
+}
+
+std::shared_ptr<DecayingEntity> UnitFactory::createCorpseFor(const std::shared_ptr<DopplegangerEntity> &doppleganger)
+{
+    REQUIRE(doppleganger, return nullptr);
+
+    const genie::Unit *data = doppleganger->originalUnitData;
+    if (data->DeadUnitID == -1) {
+        return nullptr;
+    }
+
+    float decayTime = data->ResourceDecay * data->ResourceCapacity;
+
+    for (const genie::Unit::ResourceStorage &r : data->ResourceStorages) {
+        if (r.Type == int(genie::ResourceType::CorpseDecayTime)) {
+            decayTime = r.Amount;
+            break;
+        }
+    }
+
+    // I don't think this is really correct, but it works better
+    if (data->ResourceDecay == -1 || (data->ResourceDecay != 0 && data->ResourceCapacity == 0)) {
+        DBG << "decaying forever";
+        decayTime = std::numeric_limits<float>::infinity();
+    }
+
+    DecayingEntity::Ptr corpse = std::make_shared<DecayingEntity>(data->StandingGraphic.first, decayTime);
+    corpse->renderer().setPlayerColor(doppleganger->renderer().playerColor());
+    corpse->setMap(doppleganger->map());
+    corpse->setPosition(doppleganger->position());
+    corpse->renderer().setAngle(doppleganger->renderer().angle());
+
+    return corpse;
+}
+

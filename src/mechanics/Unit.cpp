@@ -461,7 +461,7 @@ void Unit::setUnitData(const genie::Unit &data_) noexcept
 
     defaultGraphics = AssetManager::Inst()->getGraphic(m_data->StandingGraphic.first);
     if (m_data->Moving.WalkingGraphic >= 0) {
-        movingGraphics = AssetManager::Inst()->getGraphic(m_data->Moving.WalkingGraphic);
+        m_movingGraphics = AssetManager::Inst()->getGraphic(m_data->Moving.WalkingGraphic);
     }
 
     if (!defaultGraphics) {
@@ -492,8 +492,8 @@ float Unit::tallness()
 void Unit::forEachVisibleTile(const std::function<void (const int, const int)> &action)
 {
     const int los = data()->LineOfSight;
-    const int tileXOffset = position().x / Constants::TILE_SIZE;
-    const int tileYOffset = position().y / Constants::TILE_SIZE;
+    const int tileXOffset = std::round(position().x / Constants::TILE_SIZE);
+    const int tileYOffset = std::round(position().y / Constants::TILE_SIZE);
     for (int y=-los; y<= los; y++) {
         for (int x=-los; x<= los; x++) {
             if (x*x + y*y < los*los) {
@@ -562,7 +562,7 @@ void Unit::updateGraphic()
         }
 
         if (!graphic) {
-            graphic = movingGraphics;
+            graphic = m_movingGraphics;
         }
 
         break;
@@ -602,4 +602,72 @@ void Unit::updateGraphic()
     m_renderer->setSprite(graphic);
 }
 
+
+DopplegangerEntity::Ptr DopplegangerEntity::fromEntity(const std::shared_ptr<Entity> &entity)
+{
+    if (!entity) {
+        return nullptr;
+    }
+    if (!entity->isDoppleganger()) {
+        return nullptr;
+    }
+    return std::static_pointer_cast<DopplegangerEntity>(entity);
+}
+
+DopplegangerEntity::DopplegangerEntity(const Unit::Ptr &originalUnit) :
+    StaticEntity(Type::Doppleganger, "Doppleganger for " + originalUnit->debugName),
+    ownerID(originalUnit->playerId()),
+    originalUnitData(originalUnit->data()),
+    m_unitManager(originalUnit->unitManager()),
+    m_originalUnit(originalUnit)
+{
+    const genie::Unit *data = originalUnit->data();
+    if (data->CreateDoppelgangerOnDeath == genie::Unit::DoppelgangerWhenDying) {
+        m_dyingGraphic = data->DyingGraphic;
+    }
+    m_deadGraphic = originalUnit->data()->Building.DestructionRubbleGraphicID;
+
+    m_renderer = originalUnit->renderer().copy();
+}
+
+bool DopplegangerEntity::update(Time /*time*/) noexcept
+{
+    if (m_isRubble || !isVisible) {
+        return false;
+    }
+
+    Unit::Ptr originalUnit = m_originalUnit.lock();
+    if (!originalUnit || (originalUnit->isDead())) {
+        if (m_deadGraphic != -1) {
+            m_renderer->setSprite(m_deadGraphic);
+            m_isRubble = true;
+        }
+        return true;
+    }
+
+    return false;
+}
+
+bool DopplegangerEntity::shouldBeRemoved() const noexcept
+{
+    // We are rubble, we stay forever
+    if (m_isRubble) {
+        return false;
+    }
+
+    Unit::Ptr originalUnit = m_originalUnit.lock();
+    if (!originalUnit) {
+        // shouldn't really happen
+        if (m_deadGraphic == -1) {
+            return true;
+        }
+        return false;
+    }
+
+    if (originalUnit->isVisible && !originalUnit->isDead()) {
+        return true;
+    }
+
+    return false;
+}
 

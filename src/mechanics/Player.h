@@ -160,6 +160,7 @@ struct Player
     void removeUnit(Unit *unit);
 
     void setUnitGroup(Unit *unit, int group);
+    int canSeeUnitsFor(const int otherID);
 
     ////////////////////
     /// Diplomacy

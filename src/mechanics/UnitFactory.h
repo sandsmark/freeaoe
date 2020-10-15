@@ -25,6 +25,7 @@
 struct Player;
 struct Unit;
 struct DecayingEntity;
+struct DopplegangerEntity;
 class UnitManager;
 
 struct Task;
@@ -36,7 +37,9 @@ public:
 
     static std::shared_ptr<Unit> duplicateUnit(const std::shared_ptr<Unit> &other);
     static std::shared_ptr<Unit> createUnit(const int ID, const std::shared_ptr<Player> &owner, UnitManager &unitManager);
+    static std::shared_ptr<DecayingEntity> createCorpseFor(const std::shared_ptr<DopplegangerEntity> &unit);
     static std::shared_ptr<DecayingEntity> createCorpseFor(const std::shared_ptr<Unit> &unit);
+    static std::shared_ptr<DopplegangerEntity> createDopplegangerFor(const std::shared_ptr<Unit> &unit);
 
 private:
     UnitFactory() = default;

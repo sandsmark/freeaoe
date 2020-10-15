@@ -101,7 +101,7 @@ bool GraphicRender::update(Time time, const bool isVisible) noexcept
 
     m_currentFrame = newFrame;
 
-    return updated || m_frameChanged;
+    return isVisible && (updated || m_frameChanged);
 }
 
 inline bool GraphicRender::isValid() const noexcept

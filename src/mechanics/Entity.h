@@ -96,22 +96,39 @@ private:
 
 
 
-struct MoveTargetMarker : public Entity
+struct MoveTargetMarker
 {
+    enum SpriteID {
+        AgeOfEmpires2 = 2961
+    };
+
     typedef std::unique_ptr<MoveTargetMarker> Ptr;
 
     MoveTargetMarker();
 
     void moveTo(const MapPos &pos) noexcept;
 
-    bool update(Time time) noexcept override;
+    bool update(Time time) noexcept;
+    std::unique_ptr<GraphicRender> renderer;
+    MapPos position() const { return m_position; }
 
 private:
+    MapPos m_position;
     bool m_isRunning = false;
 };
 
+struct StaticEntity : public Entity
+{
+    typedef std::shared_ptr<StaticEntity> Ptr;
+
+    virtual bool shouldBeRemoved() const noexcept = 0;
+
+protected:
+    StaticEntity(const Type type_, const std::string &name);
+};
+
 /// Dumb name, but is corpses and smoke trails and stuff
-struct DecayingEntity : public Entity
+struct DecayingEntity : public StaticEntity
 {
     typedef std::shared_ptr<DecayingEntity> Ptr;
 
@@ -119,7 +136,7 @@ struct DecayingEntity : public Entity
 
     bool update(Time time) noexcept override;
 
-    bool decaying() const noexcept;
+    bool shouldBeRemoved() const noexcept override;
 
 private:
     float m_decayTimeLeft = 0.f;

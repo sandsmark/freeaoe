@@ -103,7 +103,7 @@ void Entity::setPosition(const MapPos &pos, const bool initial)
 
     m_position = pos;
 
-    if (!isUnit() && !isMissile() && !isDecayingEntity()) {
+    if (!isUnit() && !isMissile() && !isDecayingEntity() && !isDoppleganger()) {
         return;
     }
     if (newTileX == oldTileX && newTileY == oldTileY) {
@@ -121,18 +121,18 @@ void Entity::setPosition(const MapPos &pos, const bool initial)
     map->addEntityAt(newTileX, newTileY, shared_from_this());
 }
 
-MoveTargetMarker::MoveTargetMarker() :
-    Entity(Type::MoveTargetMarker, "Move target marker")
+MoveTargetMarker::MoveTargetMarker()
 {
-    m_renderer->setSprite(2961);
+    renderer = std::make_unique<GraphicRender>();
+    renderer->setSprite(AgeOfEmpires2);
 
-    m_renderer->setCurrentFrame(m_renderer->frameCount() - 1); // don't play immediately
+    renderer->setCurrentFrame(renderer->frameCount() - 1); // don't play immediately
 }
 
 void MoveTargetMarker::moveTo(const MapPos &pos) noexcept
 {
     m_position = pos;
-    m_renderer->setCurrentFrame(0);
+    renderer->setCurrentFrame(0);
     m_isRunning = true;
 }
 
@@ -142,17 +142,21 @@ bool MoveTargetMarker::update(Time time) noexcept
         return false;
     }
 
-    bool updated = Entity::update(time);
+    bool updated = renderer->update(time, true); // just assume we're always visible, doesn't matter much, todo I guess
 
-    if (m_renderer->currentFrame() >= m_renderer->frameCount() - 1) {
+    if (renderer->currentFrame() >= renderer->frameCount() - 1) {
         m_isRunning = false;
     }
 
     return updated;
 }
 
+StaticEntity::StaticEntity(const Type type_, const std::string &name) : Entity(type_, name)
+{
+}
+
 DecayingEntity::DecayingEntity(const int graphicId, float decayTime) :
-    Entity(Type::Decaying, "Eye Candy Things"),
+    StaticEntity(Type::Decaying, "Eye Candy Things"),
     m_decayTimeLeft(decayTime)
 {
     m_renderer->setSprite(graphicId);
@@ -160,7 +164,7 @@ DecayingEntity::DecayingEntity(const int graphicId, float decayTime) :
 
 bool DecayingEntity::update(Time time) noexcept
 {
-    if (!decaying()) {
+    if (!shouldBeRemoved()) {
         return false;
     }
 
@@ -172,7 +176,7 @@ bool DecayingEntity::update(Time time) noexcept
     return Entity::update(time);
 }
 
-bool DecayingEntity::decaying() const noexcept
+bool DecayingEntity::shouldBeRemoved() const noexcept
 {
-    return m_decayTimeLeft > 0 || m_renderer->currentFrame() < m_renderer->frameCount() - 1;
+    return m_decayTimeLeft <= 0 && m_renderer->currentFrame() >= m_renderer->frameCount() - 1;
 }

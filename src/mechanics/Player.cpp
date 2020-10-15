@@ -293,6 +293,11 @@ void Player::setUnitGroup(Unit *unit, int group)
     EventManager::unitChangedGroup(unit, oldGroup, group);
 }
 
+int Player::canSeeUnitsFor(const int otherID)
+{
+    return otherID == playerId || isAllied(otherID);
+}
+
 void Player::addAlliedPlayer(int playerId)
 {
     m_alliedPlayers.insert(playerId);

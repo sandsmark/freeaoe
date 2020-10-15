@@ -161,7 +161,7 @@ bool Missile::update(Time time) noexcept
             DecayingEntity::Ptr trailingUnit = std::make_shared<DecayingEntity>(trailingData.StandingGraphic.first, 0.f);
             trailingUnit->setMap(m_map.lock());
             trailingUnit->setPosition(position());
-            m_unitManager.addDecayingEntity(trailingUnit);
+            m_unitManager.addStaticEntity(trailingUnit);
         }
 
     }

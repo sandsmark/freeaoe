@@ -51,6 +51,8 @@ class Tech;
 UnitManager::UnitManager()
 {
     EventManager::registerListener(this, EventManager::ResearchComplete);
+    EventManager::registerListener(this, EventManager::TileHidden);
+    EventManager::registerListener(this, EventManager::TileDiscovered);
 //    EventManager::registerListener(this, EventManager::PlayerResourceChanged); // TODO auto actions that cost things
 }
 
@@ -100,10 +102,98 @@ void UnitManager::remove(const Unit::Ptr &unit)
     m_availableActionsChanged = true;
 }
 
+void UnitManager::onUnitMoved(Unit *unit, const MapPos &oldTile, const MapPos &newTile)
+{
+    if (unit->playerId() == m_humanPlayerID) {
+        DBG << "Was human player" << unit->debugName;
+        return;
+    }
+
+    Player::Ptr human = m_humanPlayer.lock();
+    REQUIRE(human, return);
+
+    const VisibilityMap::Visibility oldVisibility = human->visibility->visibilityAt(oldTile);
+    if (oldVisibility == VisibilityMap::Unexplored) {
+        WARN << "old was unexplored";
+        return;
+    }
+    const VisibilityMap::Visibility newVisibility = human->visibility->visibilityAt(newTile);
+    if (newVisibility == VisibilityMap::Unexplored) {
+        WARN << "new was unexplored";
+        return;
+    }
+
+    if (oldVisibility == VisibilityMap::Visible && newVisibility == VisibilityMap::Explored) {
+        return;
+    }
+}
+
+void UnitManager::onTileHidden(const int playerID, const int tileX, const int tileY)
+{
+    // TODO: this should be tracked by player? just care for the human for now
+    std::vector<std::weak_ptr<Entity>> entities = m_map->entitiesAt(tileX, tileY);
+    for (const std::weak_ptr<Entity> &e : entities) {
+        Unit::Ptr unit = Unit::fromEntity(e);
+        if (!unit) {
+            continue;
+        }
+        if (unit->playerId() == playerID) {
+            continue;
+        }
+
+        WARN << "Creating doppleganger at" << tileX << tileY << "for" << unit->debugName;
+        addStaticEntity(UnitFactory::createDopplegangerFor(unit));
+        unit->isVisible = true;
+    }
+}
+
+void UnitManager::onTileDiscovered(const int playerID, const int tileX, const int tileY)
+{
+    std::unordered_set<StaticEntity::Ptr>::iterator staticEntityIterator = m_staticEntities.begin();
+    while (staticEntityIterator != m_staticEntities.end()) {
+        const StaticEntity::Ptr &entity = *staticEntityIterator;
+
+        const MapPos tilePos = entity->position() / Constants::TILE_SIZE;
+        if (tilePos.x != tileX || tilePos.y != tileY) {
+            staticEntityIterator++;
+            continue;
+        }
+        if (!entity->isDoppleganger()) {
+            staticEntityIterator++;
+            continue;
+        }
+
+        DopplegangerEntity::Ptr doppleganger = DopplegangerEntity::fromEntity(entity);
+        if (doppleganger->ownerID == playerID) {
+            staticEntityIterator++;
+            continue;
+        }
+
+        bool visibleByAll = true;
+        for (const std::weak_ptr<Player> &weakPlayer : m_players) {
+            Player::Ptr player = weakPlayer.lock();
+            REQUIRE(player, continue);
+
+            if (!player->canSeeUnitsFor(playerID)) {
+                visibleByAll = false;
+                break;
+            }
+        }
+
+        // If someone still only see the doppleganger, keep it
+        if (!visibleByAll) {
+            staticEntityIterator++;
+        } else {
+            // TODO: visibility of corpses
+            staticEntityIterator = m_staticEntities.erase(staticEntityIterator);
+        }
+    }
+}
+
 bool UnitManager::init()
 {
     m_moveTargetMarker = std::make_unique<MoveTargetMarker>();
-    m_moveTargetMarker->setMap(m_map);
+//    m_moveTargetMarker->setMap(m_map);
 
     return true;
 }
@@ -155,16 +245,16 @@ bool UnitManager::update(Time time)
         }
     }
 
-    // Update decaying entities (smoke stuff from siege, corpses, etc.)
-    std::unordered_set<DecayingEntity::Ptr>::iterator decayingEntityIterator = m_decayingEntities.begin();
-    while (decayingEntityIterator != m_decayingEntities.end()) {
-        const DecayingEntity::Ptr &entity = *decayingEntityIterator;
+    // Update decaying entities (smoke stuff from siege, corpses, etc.) as well as the doppelgangers
+    std::unordered_set<StaticEntity::Ptr>::iterator staticEntityIterator = m_staticEntities.begin();
+    while (staticEntityIterator != m_staticEntities.end()) {
+        const StaticEntity::Ptr &entity = *staticEntityIterator;
         updated = entity->update(time) || updated;
-        if (!entity->decaying()) {
-            decayingEntityIterator = m_decayingEntities.erase(decayingEntityIterator);
+        if (!entity->shouldBeRemoved()) {
+            staticEntityIterator = m_staticEntities.erase(staticEntityIterator);
             updated = true;
         } else {
-            decayingEntityIterator++;
+            staticEntityIterator++;
         }
     }
 
@@ -190,7 +280,7 @@ bool UnitManager::update(Time time)
 
             DecayingEntity::Ptr corpse = UnitFactory::Inst().createCorpseFor(unit);
             if (corpse) {
-                m_decayingEntities.insert(corpse);
+                m_staticEntities.insert(corpse);
                 updated = true;
             }
 

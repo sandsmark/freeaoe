@@ -20,16 +20,10 @@
 void UnitsRenderer::render(const std::shared_ptr<IRenderTarget> &renderTarget, const std::vector<std::weak_ptr<Entity>> &visible)
 {
     std::shared_ptr<VisibilityMap> visibilityMap = m_visibilityMap.lock();
-    if (!visibilityMap) {
-        WARN << "visibility map gone!";
-        return;
-    }
-
     std::shared_ptr<UnitManager> unitManager = m_unitManager.lock();
-    if (!unitManager) {
-        WARN << "Unit manager gone!";
-        return;
-    }
+
+    REQUIRE(unitManager, return);
+    REQUIRE(visibilityMap, return);
 
     CameraPtr camera = renderTarget->camera();
 
@@ -45,8 +39,10 @@ void UnitsRenderer::render(const std::shared_ptr<IRenderTarget> &renderTarget, c
         for (const Missile::Ptr &missile : unitManager->missiles()) {
             missile->isVisible = false;
         }
-        for (const DecayingEntity::Ptr &entity : unitManager->decayingEntities()) {
-            entity->isVisible = false;
+        for (const StaticEntity::Ptr &entity : unitManager->staticEntities()) {
+            if (!entity->isDoppleganger()) {
+                entity->isVisible = false;
+            }
         }
         m_previousCameraPos = camera->targetPosition();
     }
@@ -80,7 +76,7 @@ void UnitsRenderer::render(const std::shared_ptr<IRenderTarget> &renderTarget, c
                 continue;
             }
 
-            if (visibility != VisibilityMap::Explored || !unit->data()->FogVisibility) {
+            if (visibility != VisibilityMap::Explored && !unit->data()->FogVisibility) {
                 continue;
             }
 
@@ -93,7 +89,7 @@ void UnitsRenderer::render(const std::shared_ptr<IRenderTarget> &renderTarget, c
 
         if (entity->isMissile()) {
             Missile::Ptr missile = Entity::asMissile(entity);
-            if (visibility != VisibilityMap::Visible) {;// && missile->playerId != GaiaID) {
+            if (visibility != VisibilityMap::Visible) {
                 continue;
             }
 
@@ -108,7 +104,24 @@ void UnitsRenderer::render(const std::shared_ptr<IRenderTarget> &renderTarget, c
             continue;
         }
 
-        if (entity->isDecayingEntity() || entity->isDoppleganger()) {
+        if (entity->isDoppleganger()) {
+            Player::Ptr humanPlayer = unitManager->humanPlayer();
+            REQUIRE(humanPlayer, continue);
+
+            DopplegangerEntity::Ptr doppleganger = DopplegangerEntity::fromEntity(entity);
+
+            // Don't render the unit if it can see the real unit
+            if (humanPlayer->canSeeUnitsFor(doppleganger->ownerID)) {
+                continue;
+            }
+
+            entity->renderer().render(*renderTarget, camera->absoluteScreenPos(entity->position()), RenderType::InTheShadows);
+        }
+
+        if (entity->isDecayingEntity()) {
+            if (entity->isDoppleganger()) {
+                DBG << entity->debugName;
+            }
             if (visibility == VisibilityMap::Visible) {
                 entity->renderer().render(*renderTarget, camera->absoluteScreenPos(entity->position()), RenderType::Base);
             } else {
@@ -286,7 +299,7 @@ void UnitsRenderer::render(const std::shared_ptr<IRenderTarget> &renderTarget, c
 #endif
 
     const MoveTargetMarker::Ptr &marker = unitManager->moveTargetMarker();
-    marker->renderer().render(*renderTarget,
+    marker->renderer->render(*renderTarget,
                                           renderTarget->camera()->absoluteScreenPos(marker->position()),
                                           RenderType::Base);
 

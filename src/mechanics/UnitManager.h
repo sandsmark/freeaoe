@@ -139,7 +139,7 @@ public:
 
     const UnitVector &units() const { return m_units; }
     const std::unordered_set<std::shared_ptr<Missile>> &missiles() const { return m_missiles; }
-    const std::unordered_set<DecayingEntity::Ptr> &decayingEntities() const { return m_decayingEntities; }
+    const std::unordered_set<StaticEntity::Ptr> &staticEntities() const { return m_staticEntities; }
     const std::vector<UnplacedBuilding> &buildingsToPlace() const { return m_buildingsToPlace; }
     const MoveTargetMarker::Ptr &moveTargetMarker() const { return m_moveTargetMarker; }
 
@@ -160,12 +160,15 @@ public:
     State state() const { return m_state; }
 
     void addMissile(const std::shared_ptr<Missile> &missile) { m_missiles.insert(missile); }
-    void addDecayingEntity(const DecayingEntity::Ptr &entity) { m_decayingEntities.insert(entity); }
+    void addStaticEntity(const StaticEntity::Ptr &entity) { if (entity) m_staticEntities.insert(entity); }
 
     void onCombatantUnitsMoved() { m_unitsMoved = true; }
 
 private:
     void onResearchCompleted(Player * /*player*/, int /*researchId*/) override { m_availableActionsChanged = true; }
+    void onUnitMoved(Unit *unit, const MapPos &oldTile, const MapPos &newTile) override;
+    void onTileHidden(const int playerID, const int tileX, const int tileY) override;
+    void onTileDiscovered(const int playerID, const int tileX, const int tileY) override;
 
     void updateBuildingToPlace();
     void placeBuilding(const UnplacedBuilding &building);
@@ -177,7 +180,7 @@ private:
     const Task taskForPosition(const Unit::Ptr &unit, const ScreenPos &pos, const CameraPtr &camera) const noexcept;
 
     std::unordered_set<std::shared_ptr<Missile>> m_missiles;
-    std::unordered_set<DecayingEntity::Ptr> m_decayingEntities;
+    std::unordered_set<StaticEntity::Ptr> m_staticEntities;
     UnitVector m_units;
     MoveTargetMarker::Ptr m_moveTargetMarker;
     UnitSet m_unitsWithActions;
