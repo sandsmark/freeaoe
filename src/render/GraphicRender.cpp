@@ -35,6 +35,11 @@
 #include "render/IRenderTarget.h"
 #include "resource/Sprite.h"
 
+std::unique_ptr<GraphicRender> GraphicRender::copy() const
+{
+    return std::make_unique<GraphicRender>(*this);
+}
+
 bool GraphicRender::update(Time time, const bool isVisible) noexcept
 {
     m_frameChanged = false;

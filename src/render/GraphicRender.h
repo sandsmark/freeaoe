@@ -111,7 +111,7 @@ public:
 
 
     /// Enable explicit copying
-    std::unique_ptr<GraphicRender> copy() const { return std::make_unique<GraphicRender>(*this); }
+    std::unique_ptr<GraphicRender> copy() const;
 
 private:
     friend std::unique_ptr<GraphicRender> std::make_unique<GraphicRender>(const GraphicRender&);
