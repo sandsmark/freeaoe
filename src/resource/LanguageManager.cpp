@@ -68,9 +68,7 @@ std::string LanguageManager::getString(unsigned int id)
     }
 
     if (cache.find(id) != cache.end()) {
-        DBG << "cache hit for" << id;
-        DBG << cache[id];
-//        return cache[id];
+        return cache[id];
     }
 
     std::string ret;
@@ -81,7 +79,6 @@ std::string LanguageManager::getString(unsigned int id)
             break;
         }
     }
-    DBG << "found" << ret << "for" << id;
 
     if (ret.empty()) {
         DBG << "Failed to find for" << id;
