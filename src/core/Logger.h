@@ -166,6 +166,11 @@ struct LogPrinter {
         if (m_enabled) std::cout << '\'' << path.string() << '\'' << separator;
         return *this;
     }
+    template<typename A, typename B>
+    inline LogPrinter &operator<<(const std::pair<A, B> pair) {
+        if (m_enabled) std::cout << " pair(" << pair.first << ", " << pair.second << ")" << separator;
+        return *this;
+    }
 
     template<typename T>
     inline LogPrinter &operator<<(const std::vector<T> &vec)
