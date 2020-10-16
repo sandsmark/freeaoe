@@ -250,7 +250,7 @@ bool UnitManager::update(Time time)
     while (staticEntityIterator != m_staticEntities.end()) {
         const StaticEntity::Ptr &entity = *staticEntityIterator;
         updated = entity->update(time) || updated;
-        if (!entity->shouldBeRemoved()) {
+        if (entity->shouldBeRemoved()) {
             staticEntityIterator = m_staticEntities.erase(staticEntityIterator);
             updated = true;
         } else {
