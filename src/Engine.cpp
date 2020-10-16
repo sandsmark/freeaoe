@@ -141,9 +141,9 @@ void Engine::start()
 
             if (state->result != GameState::Result::Running) {
                 if (state->result == GameState::Result::Won) {
-                    m_resultOverlay.setString("You won.");
+                    m_resultOverlay.setString("You are victorious!");
                 } else {
-                    m_resultOverlay.setString("You were defeated."); // TODO: don't remember the exact text
+                    m_resultOverlay.setString("You have been defeated!"); // TODO: don't remember the exact text
                 }
                 const ScreenRect labelRect = m_resultOverlay.getLocalBounds();
                 const Size windowSize = renderWindow_->getSize();
