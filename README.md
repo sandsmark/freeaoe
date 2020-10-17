@@ -206,6 +206,7 @@ Compared to other reimplementations as much as possible is fetched from the data
     * Construction available/unavailable graphics.
     * Shadows.
     * Fog of war shading.
+    * Dopplegangers (i. e. persist last seen buildings. etc in fog of war).
  * Sound:
     * Sound on selection.
     * Sound when attacking.
