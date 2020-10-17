@@ -29,7 +29,7 @@
 #include <miniaudio/miniaudio.h>
 
 #ifndef DRMP3_MIN_DATA_CHUNK_SIZE
-#define DRMP3_MIN_DATA_CHUNK_SIZE   16384
+#define DRMP3_MIN_DATA_CHUNK_SIZE   1024
 #endif
 #ifndef DRMP3_DATA_CHUNK_SIZE
 #define DRMP3_DATA_CHUNK_SIZE  DRMP3_MIN_DATA_CHUNK_SIZE*4
