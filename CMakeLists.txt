@@ -93,7 +93,6 @@ if(MSVC)
 
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /fp:fast")
 
-    find_package(SFML 2.5 CONFIG COMPONENTS system window graphics REQUIRED)
     find_package(BZip2)
     find_package(ZLIB)
     find_package(PNG)
@@ -112,13 +111,13 @@ else()
     endif()
 
     add_definitions(-Wall -Wextra -pedantic -Wno-sign-compare -Wno-unused-parameter)
-    set(EXTRA_LIBS stdc++fs pthread dl)
+    set(EXTRA_LIBS pthread dl)
 
     # Somehow need this because otherwise the SFML config gets fucked
     find_package(ZLIB)
-
-    find_package(SFML COMPONENTS system window graphics REQUIRED)
 endif()
+
+find_package(SFML COMPONENTS system window graphics REQUIRED)
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     add_definitions(-Wno-nested-anon-types)
