@@ -7,6 +7,8 @@
 
 #include <genie/script/scn/Trigger.h>
 
+#include <functional>
+
 class GameState;
 class Engine;
 struct Unit;
