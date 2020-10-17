@@ -95,6 +95,7 @@ private:
     void onAttributeChanged(Player *player, int attributeId, float newValue) override;
 
     void handleTriggerEffect(const genie::TriggerEffect &effect);
+    void forEachMatchingUnit(const genie::TriggerEffect &effect, const std::function<void(const std::shared_ptr<Unit> &)> &action);
 
     // Todo: put these in an std::array based on type, so we don't have to loop over all
 
@@ -253,7 +254,7 @@ inline void printGenieTriggerEffectType(LogPrinter &os, const genie::TriggerEffe
     case genie::TriggerEffect::Patrol: os << "Patrol"; break;
     case genie::TriggerEffect::DisplayInstructions: os << "DisplayInstructions"; break;
     case genie::TriggerEffect::ClearInstructions: os << "ClearInstructions"; break;
-    case genie::TriggerEffect::FreezeUnit: os << "FreezeUnit"; break;
+    case genie::TriggerEffect::SetUnitStance: os << "SetUnitStance"; break;
     case genie::TriggerEffect::UseAdvancedButtons: os << "UseAdvancedButtons"; break;
     case genie::TriggerEffect::DamageObject: os << "DamageObject"; break;
     case genie::TriggerEffect::PlaceFoundation: os << "PlaceFoundation"; break;
@@ -332,7 +333,6 @@ inline LogPrinter operator <<(LogPrinter os, const genie::TriggerEffect &effect)
     if (effect.trigger >= 0) os << ", trigger = " << effect.trigger;
     if (effect.objectGroup >= 0) os << ", objectGroup = " << effect.objectGroup;
     if (effect.objectType >= 0) os << ", objectType = " << effect.objectType;
-    if (effect.instructionPanel >= 0) os << ", instructionPanel = " << effect.instructionPanel;
 
     if (effect.location.x != -1 || effect.location.x != -1) os << ", location = " << effect.location.x << "," <<  effect.location.y;
     if (effect.areaFrom.x != -1 || effect.areaFrom.x != -1) os << ", areaFrom = " << effect.areaFrom.x << "," <<  effect.areaFrom.y;
@@ -340,7 +340,7 @@ inline LogPrinter operator <<(LogPrinter os, const genie::TriggerEffect &effect)
 
     if (effect.objectGroup >= 0) os << ", objectGroup = " << effect.objectGroup;
     if (effect.objectType >= 0) os << ", objectType = " << effect.objectType;
-    if (effect.instructionPanel >= 0) os << ", instructionPanel = " << effect.instructionPanel;
+    if (effect.boundedValue >= 0) os << ", boundedValue = " << effect.boundedValue;
 
     if (!effect.message.empty()) os << ", message = " << effect.message;
     if (!effect.soundFile.empty()) os << ", soundFile = " << effect.soundFile;

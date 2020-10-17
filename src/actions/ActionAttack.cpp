@@ -161,7 +161,7 @@ IAction::UpdateResult ActionAttack::update(Time time)
     } else {
         // Not firing missiles, deal damage directly
         for (const genie::unit::AttackOrArmor &attack : unit->data()->Combat.Attacks) {
-            targetUnit->takeDamage(attack, 1.); // todo: damage multiplier from elevation
+            targetUnit->receiveAttack(attack, 1.); // todo: damage multiplier from elevation
         }
     }
 

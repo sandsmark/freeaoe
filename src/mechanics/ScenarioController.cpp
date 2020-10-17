@@ -327,8 +327,10 @@ bool ScenarioController::update(Time time)
 void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
 {
     switch(effect.type) {
+
+         ////////////////////////
+         // Trigger modifications
     case genie::TriggerEffect::ActivateTrigger:
-        // TODO: display order or normal order?
         if (effect.trigger < 0 || effect.trigger >= m_triggers.size()) {
             DBG << "can't activate invalid trigger";
             return;
@@ -337,7 +339,6 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
         m_triggers[effect.trigger].enabled = true;
         break;
     case genie::TriggerEffect::DeactivateTrigger:
-        // TODO: display order or normal order?
         if (effect.trigger < 0 || effect.trigger >= m_triggers.size()) {
             DBG << "can't deactivate invalid trigger";
             return;
@@ -345,6 +346,9 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
         DBG << "disabling trigger" << m_triggers[effect.trigger].name;
         m_triggers[effect.trigger].enabled = false;
         break;
+
+        ///////////////
+        // Chat stuff
     case genie::TriggerEffect::DisplayInstructions:
         AudioPlayer::instance().playStream("scenario/" + effect.soundFile + ".mp3");
         if (m_engine) {
@@ -353,10 +357,16 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
             WARN << "missing engine" << effect.message << effect.soundFile;
         }
         break;
+
+        ///////////////
+        // Camera stuff
     case genie::TriggerEffect::ChangeView:
         DBG << "Moving camera" << effect;
         m_gameState->moveCameraTo(MapPos(effect.location.y * Constants::TILE_SIZE, effect.location.x * Constants::TILE_SIZE));
         break;
+
+        /////////////
+        // Tech stuff
     case genie::TriggerEffect::ResearchTechnology: {
         DBG << "Researching" << effect;
         Player::Ptr player = m_gameState->player(effect.sourcePlayer);
@@ -367,6 +377,8 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
         player->applyResearch(effect.technology);
         break;
     }
+        ///////////////
+        // Object stuff
     case genie::TriggerEffect::CreateObject: {
         DBG << "Creating unit" << effect;
         Player::Ptr player = m_gameState->player(effect.sourcePlayer);
@@ -386,54 +398,79 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
     }
     case genie::TriggerEffect::RemoveObject: {
         DBG << "Removing unit" << effect;
-        std::vector<std::weak_ptr<Entity>> entities;
-        entities = m_gameState->map()->entitiesBetween(effect.areaFrom.y,
-                                                              effect.areaFrom.x,
-                                                              effect.areaTo.y,
-                                                              effect.areaTo.x);
-
-        for (const std::weak_ptr<Entity> &entity : entities) {
-            Unit::Ptr unit = Unit::fromEntity(entity);
-            if (!unit) {
-                WARN << "got invalid unit in area for effect";
-                continue;
-            }
-            if (!checkUnitMatchingEffect(unit, effect)) {
-                continue;
-            }
-
+        forEachMatchingUnit(effect, [this](const Unit::Ptr &unit) {
             DBG << "Removing unit" << unit->debugName;
             m_gameState->unitManager()->remove(unit);
-        }
+        });
         break;
     }
     case genie::TriggerEffect::TaskObject: {
         // again with the wtf swap of x and y
-        std::vector<std::weak_ptr<Entity>> entities;
-        entities = m_gameState->map()->entitiesBetween(effect.areaFrom.y,
-                                                              effect.areaFrom.x,
-                                                              effect.areaTo.y,
-                                                              effect.areaTo.x);
-
         // TODO, not sure if it is right to move to the middle of the tile, but whatevs
         MapPos targetPos(effect.location.y + 0.5, effect.location.x + 0.5);
         targetPos *= Constants::TILE_SIZE;
 
-        for (const std::weak_ptr<Entity> &entity : entities) {
-            Unit::Ptr unit = Unit::fromEntity(entity);
-            if (!unit) {
-                WARN << "got invalid unit in area for effect";
-                continue;
-            }
-            if (!checkUnitMatchingEffect(unit, effect)) {
-                continue;
-            }
+        forEachMatchingUnit(effect, [this, &targetPos](const Unit::Ptr &unit) {
             DBG << "Tasking object" << unit->debugName;
-
             m_gameState->unitManager()->moveUnitTo(unit, targetPos);
-        }
+        });
         break;
     }
+    case genie::TriggerEffect::DamageObject: {
+        DBG << "Damaging object" << effect;
+        forEachMatchingUnit(effect, [&](const Unit::Ptr &unit) {
+            DBG << "Damaging unit" << unit->debugName << "for" << effect.amount;
+            unit->takeDamage(effect.amount);
+        });
+        break;
+    }
+    case genie::TriggerEffect::ChangeObjectHP: {
+        forEachMatchingUnit(effect, [&](const Unit::Ptr &unit) {
+            const float deltaHP = effect.amount - unit->healthLeft();
+            DBG << "Changing unit HP" << unit->debugName << "for" << effect.amount;
+            unit->takeDamage(deltaHP);
+        });
+    }
+    case genie::TriggerEffect::SetUnitStance: {
+        Unit::Stance stance = Unit::Stance::Invalid;
+        switch(effect.boundedValue) {
+        case 1:
+            stance = Unit::Stance::Aggressive;
+            break;
+        case 2:
+            stance = Unit::Stance::Defensive;
+            break;
+        case 3:
+            stance = Unit::Stance::StandGround;
+            break;
+        case 4:
+            stance = Unit::Stance::NoAttack;
+            break;
+        default:
+            WARN << "Invalid stance" << effect.boundedValue;
+            break;
+        }
+
+        if (stance == Unit::Stance::Invalid) {
+            break;
+        }
+
+        forEachMatchingUnit(effect, [&](const Unit::Ptr &unit) {
+            unit->stance = stance;
+        });
+    }
+    case genie::TriggerEffect::HD_HealObject: {
+        forEachMatchingUnit(effect, [&](const Unit::Ptr &unit) {
+            DBG << "Healing" << unit->debugName << "for" << effect.amount;
+            unit->takeDamage(-effect.amount);
+        });
+    }
+    case genie::TriggerEffect::ChangeObjectName:
+        DBG << "TODO" << effect << "need to implement changeable display name";
+        break;
+
+        ////////////////////
+        // Game ending stuff
     case genie::TriggerEffect::DeclareVictory: {
         if (m_engine) {
             m_engine->addMessage("");
@@ -448,6 +485,34 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
     default:
         WARN << "not implemented trigger effect" << effect;
         break;
+    }
+}
+
+void ScenarioController::forEachMatchingUnit(const genie::TriggerEffect &effect, const std::function<void (const Unit::Ptr &)> &action)
+{
+    std::vector<std::weak_ptr<Entity>> entities;
+    entities = m_gameState->map()->entitiesBetween(effect.areaFrom.y,
+                                                   effect.areaFrom.x,
+                                                   effect.areaTo.y,
+                                                   effect.areaTo.x);
+
+
+    bool foundMatching = false;
+    for (const std::weak_ptr<Entity> &entity : entities) {
+        Unit::Ptr unit = Unit::fromEntity(entity);
+        if (!unit) {
+            WARN << "got invalid unit in area for effect";
+            continue;
+        }
+        if (!checkUnitMatchingEffect(unit, effect)) {
+            continue;
+        }
+        foundMatching = true;
+        action(unit);
+    }
+
+    if (!foundMatching) {
+        WARN << "Found no matching units for effect" << effect;
     }
 }
 

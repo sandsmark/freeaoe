@@ -275,7 +275,7 @@ bool Missile::update(Time time) noexcept
         }
         DBG << debugName << "hit a unit" << hitUnit->debugName << "damage multiplier" << damageMultiplier;
         for (const genie::unit::AttackOrArmor &attack : m_attacks) {
-            hitUnit->takeDamage(attack, damageMultiplier);
+            hitUnit->receiveAttack(attack, damageMultiplier);
         }
     }
 

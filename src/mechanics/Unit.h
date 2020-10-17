@@ -127,6 +127,8 @@ struct Unit : public Entity
     };
 
     enum class Stance {
+        Invalid = -1,
+
         Aggressive,
         Defensive,
         StandGround,
@@ -205,7 +207,8 @@ struct Unit : public Entity
     float creationProgress() const noexcept;
     float hitpointsLeft() const noexcept;
     float healthLeft() const noexcept;
-    void takeDamage(const genie::unit::AttackOrArmor &attack, const float damageMultiplier) noexcept;
+    void receiveAttack(const genie::unit::AttackOrArmor &attack, const float damageMultiplier) noexcept;
+    void takeDamage(const float amount); // negative == heal
     void kill() noexcept;
     bool isDying() const noexcept;
     bool isDead() const noexcept;
@@ -235,6 +238,9 @@ protected:
     float m_damageTaken = 0.f;
     Time m_prevTime = 0;
     float m_angle = 0.f;
+
+private:
+    void onDamageTaken();
 };
 
 struct DopplegangerEntity : public StaticEntity
@@ -271,10 +277,12 @@ inline LogPrinter operator <<(LogPrinter os, const Unit::Stance &stance)
     os << "Unit::Stance::";
 
     switch(stance) {
+    case Unit::Stance::Invalid: os << "Invalid"; break;
     case Unit::Stance::Aggressive: os << "Aggressive"; break;
     case Unit::Stance::Defensive: os << "Defensive"; break;
     case Unit::Stance::StandGround: os << "StandGround"; break;
     case Unit::Stance::NoAttack: os << "NoAttack"; break;
+    default: os << "Unknown" << std::to_string(int(stance)); break;
     }
 
     os << separator;

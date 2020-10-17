@@ -269,7 +269,7 @@ float Unit::creationProgress() const noexcept
     return m_creationProgress / float(m_data->Creatable.TrainTime);
 }
 
-void Unit::takeDamage(const genie::unit::AttackOrArmor &attack, const float damageMultiplier) noexcept
+void Unit::receiveAttack(const genie::unit::AttackOrArmor &attack, const float damageMultiplier) noexcept
 {
     if (hitpointsLeft() <= 0) {
         return;
@@ -285,9 +285,22 @@ void Unit::takeDamage(const genie::unit::AttackOrArmor &attack, const float dama
     }
     newDamage *= damageMultiplier;
     newDamage = std::max(newDamage, 1.f);
-
     m_damageTaken += newDamage;
+    onDamageTaken();
+}
 
+void Unit::takeDamage(const float amount)
+{
+    if (hitpointsLeft() <= 0) {
+        return;
+    }
+
+    m_damageTaken = std::max(m_damageTaken + amount, 0.f);
+    onDamageTaken();
+}
+
+void Unit::onDamageTaken()
+{
     if (hitpointsLeft() <= 0) {
         kill();
     } else {
