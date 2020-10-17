@@ -99,17 +99,21 @@ if(WIN32)
     add_definitions(-DNTDDI_VERSION=NTDDI_WINBLUE)
 endif()
 
-if(MSVC OR _VCPKG_INSTALLED_DIR)
+if(MSVC)
     add_definitions(/D_USE_MATH_DEFINES)
     add_definitions(/wd4244 /wd4018 /wd4267 /wd4996 /wd4305 /wd4800 /wd4065)
 
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /fp:fast")
 
-    find_package(SFML 2.5 CONFIG COMPONENTS system window graphics REQUIRED)
-    find_package(BZip2)
-    find_package(ZLIB)
-    find_package(PNG)
-    set(EXTRA_LIBS PNG::PNG ZLIB::ZLIB BZip2::BZip2)
+    if (NOT _VCPKG_INSTALLED_DIR) 
+        find_package(SFML 2.5 CONFIG COMPONENTS system window graphics REQUIRED)
+        find_package(BZip2)
+        find_package(ZLIB)
+        find_package(PNG)
+        set(EXTRA_LIBS PNG::PNG ZLIB::ZLIB BZip2::BZip2)
+    else()
+        include(${CMAKE_SOURCE_DIR}/cmake/vcpkg-wxwidgets.cmake)
+    endif()
 else()
     add_definitions(-fno-math-errno)
     if (NOT CMAKE_BUILD_TYPE MATCHES Debug)
@@ -125,7 +129,9 @@ else()
 
     add_definitions(-Wall -Wextra -pedantic -Wno-sign-compare -Wno-unused-parameter)
     set(EXTRA_LIBS pthread dl)
+endif()
 
+if (_VCPKG_INSTALLED_DIR)
     # Somehow need this because otherwise the SFML config gets fucked
     find_package(ZLIB)
 
