@@ -48,13 +48,16 @@ jobs:
 
 
     - name: Install SFML
-      run: vcpkg install sfml
+      run: vcpkg install sfml:x86-windows-static
 
       #- name: Uninstall old SFML
       #  run: brew uninstall --force sfml
 
       #- name: Install SFML
       #  run: brew install --cc=gcc-9 --build-from-source sfml
+
+    - name: Integrate SFML
+      run: vcpkg integrate install
 
     - name: fetch submodules
       # Use a bash shell so we can use the same syntax for environment variable
