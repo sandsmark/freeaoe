@@ -244,7 +244,7 @@ set(COMMUNICATION_SRC
 set(UNSORTED_SRC
     src/audio/AudioPlayer.cpp
     src/audio/sts_mixer.cpp
-    src/audio/Implementations.cpp
+    src/audio/Implementations.c
 )
 
 set (UI_SRC
