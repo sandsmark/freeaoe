@@ -112,7 +112,7 @@ if(MSVC)
         find_package(PNG)
         set(EXTRA_LIBS PNG::PNG ZLIB::ZLIB BZip2::BZip2)
     else()
-        include(${CMAKE_SOURCE_DIR}/cmake/vcpkg-wxwidgets.cmake)
+        #include(${CMAKE_SOURCE_DIR}/cmake/vcpkg-wxwidgets.cmake)
     endif()
 else()
     add_definitions(-fno-math-errno)
@@ -131,7 +131,7 @@ else()
     set(EXTRA_LIBS pthread dl)
 endif()
 
-if (_VCPKG_INSTALLED_DIR)
+if (NOT _VCPKG_INSTALLED_DIR)
     # Somehow need this because otherwise the SFML config gets fucked
     find_package(ZLIB)
 
