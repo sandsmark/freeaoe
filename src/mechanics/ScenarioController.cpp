@@ -430,6 +430,7 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
             DBG << "Changing unit HP" << unit->debugName << "for" << effect.amount;
             unit->takeDamage(deltaHP);
         });
+        break;
     }
     case genie::TriggerEffect::SetUnitStance: {
         Unit::Stance stance = Unit::Stance::Invalid;
@@ -458,12 +459,14 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
         forEachMatchingUnit(effect, [&](const Unit::Ptr &unit) {
             unit->stance = stance;
         });
+        break;
     }
     case genie::TriggerEffect::HD_HealObject: {
         forEachMatchingUnit(effect, [&](const Unit::Ptr &unit) {
             DBG << "Healing" << unit->debugName << "for" << effect.amount;
             unit->takeDamage(-effect.amount);
         });
+        break;
     }
     case genie::TriggerEffect::ChangeObjectName:
         DBG << "TODO" << effect << "need to implement changeable display name";
