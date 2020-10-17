@@ -44,7 +44,7 @@ jobs:
         set +e
         cmake --build . --config $BUILD_TYPE || true
 
-  wintendo:
+  crapple:
     # We abuse set+e and || true a lot to make sure caches are up to date
 
     runs-on: [macOS-latest]
