@@ -202,20 +202,20 @@ void Unit::setPlayer(const std::shared_ptr<Player> &player)
     m_playerId = player->playerId;
 }
 
-ScreenRect Unit::rect() const noexcept
+ScreenRect Unit::screenRect() const noexcept
 {
     ScreenRect ret = m_renderer->rect();
 
     for (const Annex &annex : annexes) {
-        ScreenRect annexRect = annex.unit->rect();
+        ScreenRect annexRect = annex.unit->screenRect();
         if (annexRect.isEmpty()) {
             continue;
         }
         annexRect = annexRect + annex.offset.toScreen();
         if (ret.isEmpty()) {
-            ret = annex.unit->rect();
+            ret = annex.unit->screenRect();
         } else {
-            ret += annex.unit->rect();
+            ret += annex.unit->screenRect();
         }
     }
 
@@ -484,6 +484,36 @@ Size Unit::clearanceSize() const noexcept
     return Size(data()->Size.x * Constants::TILE_SIZE, data()->Size.y * Constants::TILE_SIZE);
 }
 
+MapRect Unit::mapRect() const noexcept
+{
+    // I don't take into account height (as in Z), idk lol
+    MapRect ret(position(), Size(data()->Size.x, data()->Size.y));
+
+    for (const Annex &annex : annexes) {
+        MapRect annexRect = annex.unit->mapRect();
+        if (annexRect.isEmpty()) {
+            continue;
+        }
+        annexRect = annexRect + annex.offset;
+        if (ret.isEmpty()) {
+            ret = annex.unit->mapRect();
+        } else {
+            ret += annex.unit->mapRect();
+        }
+    }
+
+    return ret;
+}
+
+double Unit::distanceTo(const Unit::Ptr &otherUnit) const noexcept
+{
+    const double centreDistance = position().distance(otherUnit->position());
+    const Size otherSize = otherUnit->clearanceSize();
+    const Size size = clearanceSize();
+    const double clearance = std::max(size.width, size.height) + std::max(otherSize.width, otherSize.height);
+    return centreDistance - clearance;
+}
+
 float Unit::tallness()
 {
     return data()->Size.z * Constants::TILE_SIZE;
@@ -601,7 +631,6 @@ void Unit::updateGraphic()
 
     m_renderer->setSprite(graphic);
 }
-
 
 DopplegangerEntity::Ptr DopplegangerEntity::fromEntity(const std::shared_ptr<Entity> &entity)
 {

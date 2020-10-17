@@ -66,7 +66,7 @@ bool Farm::update(Time time) noexcept
     return updated;
 }
 
-ScreenRect Farm::rect() const noexcept
+ScreenRect Farm::screenRect() const noexcept
 {
     ScreenRect rect;
     rect.x = -Constants::TILE_SIZE_HORIZONTAL;
@@ -78,7 +78,7 @@ ScreenRect Farm::rect() const noexcept
 
 bool Farm::checkClick(const ScreenPos &pos) const noexcept
 {
-    return rect().contains(pos);
+    return screenRect().contains(pos);
 }
 
 void Farm::setTerrain(const Farm::TerrainTypes terrainToSet) noexcept

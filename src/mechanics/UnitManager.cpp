@@ -586,7 +586,7 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
         }
 
         const ScreenPos absoluteUnitPosition = camera->absoluteScreenPos(unit->position());
-        if (!selectionRect.overlaps(unit->rect() + absoluteUnitPosition)) {
+        if (!selectionRect.overlaps(unit->screenRect() + absoluteUnitPosition)) {
             continue;
         }
         if (isClick && !unit->checkClick(selectionRect.bottomRight() - absoluteUnitPosition)) {
@@ -779,7 +779,7 @@ Unit::Ptr UnitManager::unitAt(const ScreenPos &pos, const CameraPtr &camera) con
         }
 
         const ScreenPos unitPosition = camera->absoluteScreenPos(unit->position());
-        const ScreenRect unitRect = unit->rect() + unitPosition;
+        const ScreenRect unitRect = unit->screenRect() + unitPosition;
         if (unitRect.contains(pos)) {
             return unit;
         }

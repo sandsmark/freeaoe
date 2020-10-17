@@ -48,7 +48,7 @@ public:
     bool update(Time time) noexcept override;
 
     GraphicRender &renderer() noexcept override { return m_farmRenderer; }
-    ScreenRect rect() const noexcept override;
+    ScreenRect screenRect() const noexcept override;
     bool checkClick(const ScreenPos &pos) const noexcept override;
 
 private:

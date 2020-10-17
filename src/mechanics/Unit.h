@@ -165,13 +165,14 @@ struct Unit : public Entity
     void setMap(const MapPtr &newMap) noexcept override;
     void setPosition(const MapPos &pos, const bool initial = false) override;
 
-    virtual ScreenRect rect() const noexcept;
+    virtual ScreenRect screenRect() const noexcept;
     virtual bool checkClick(const ScreenPos &pos) const noexcept;
     Size selectionSize() const noexcept;
     Size clearanceSize() const noexcept;
     MapPos center() const noexcept {
         return position() + clearanceSize() / 2.;
     }
+    MapRect mapRect() const noexcept;
 
     float distanceTo(const MapPos &pos) const noexcept
     {
@@ -182,14 +183,7 @@ struct Unit : public Entity
     }
 
 
-    double distanceTo(const Unit::Ptr &otherUnit) const noexcept
-    {
-        const double centreDistance = position().distance(otherUnit->position());
-        const Size otherSize = otherUnit->clearanceSize();
-        const Size size = clearanceSize();
-        const double clearance = std::max(size.width, size.height) + std::max(otherSize.width, otherSize.height);
-        return centreDistance - clearance;
-    }
+    double distanceTo(const Unit::Ptr &otherUnit) const noexcept;
 
     // in Z direction, if that makes sense
     float tallness();
