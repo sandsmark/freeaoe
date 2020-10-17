@@ -34,8 +34,8 @@ jobs:
     - name: where is vcpkg
       run: vcpkg version
 
-    - name: update vcpkg
-      run: cd /usr/local/share/vcpkg/ && git clean -dfx && git pull
+        #- name: update vcpkg
+        #  run: cd /usr/local/share/vcpkg/ && git clean -dfx && git pull
 
     - name: Update vcpkg
       run: vcpkg update
