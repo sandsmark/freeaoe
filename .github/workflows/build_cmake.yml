@@ -75,14 +75,14 @@ jobs:
       shell: bash
       run: |
         set +e
-        #export CC=gcc-9
-        #export CXX=g++-9
+        export CC=gcc
+        export CXX=g++
         cmake . -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_BUILD_TYPE=Release -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON -DCMAKE_TOOLCHAIN_FILE=/usr/local/share/vcpkg/scripts/buildsystems/vcpkg.cmake || true
 
     - name: Build
       shell: bash
       run: |
-        #export CC=gcc-9
-        #export CXX=g++-9
+        export CC=gcc
+        export CXX=g++
         cmake --build . --config $BUILD_TYPE
 
