@@ -130,14 +130,6 @@ struct LogPrinter {
         if (m_enabled) std::cout << int(num) << separator;
         return *this;
     }
-    inline LogPrinter &operator<<(const uint64_t num) {
-        if (m_enabled) std::cout << num << separator;
-        return *this;
-    }
-    inline LogPrinter &operator<<(const int64_t num) {
-        if (m_enabled) std::cout << num << separator;
-        return *this;
-    }
     inline LogPrinter &operator<<(const uint32_t num) {
         if (m_enabled) std::cout << num << separator;
         return *this;
@@ -146,6 +138,19 @@ struct LogPrinter {
         if (m_enabled) std::cout << num << separator;
         return *this;
     }
+
+    // macos barfs if we just use uint64_t, so forgive ples
+    inline LogPrinter &operator<<(const long unsigned int num) {
+        static_assert(sizeof(num) == sizeof(uint64_t));
+        if (m_enabled) std::cout << num << separator;
+        return *this;
+    }
+    inline LogPrinter &operator<<(const long int num) {
+        static_assert(sizeof(num) == sizeof(int64_t));
+        if (m_enabled) std::cout << num << separator;
+        return *this;
+    }
+
     inline LogPrinter &operator<<(const double num) {
         if (m_enabled) std::cout << num << separator;
         return *this;
