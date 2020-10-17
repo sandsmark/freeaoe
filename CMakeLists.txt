@@ -129,7 +129,8 @@ else()
     find_package(ZLIB)
 endif()
 
-find_package(SFML CONFIG COMPONENTS system window graphics REQUIRED)
+find_package(SFML 2.4 REQUIRED system window graphic)
+#find_package(SFML CONFIG COMPONENTS system window graphics REQUIRED)
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     add_definitions(-Wno-nested-anon-types)
