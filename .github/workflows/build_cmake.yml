@@ -65,7 +65,7 @@ jobs:
       run: |
         vcpkg update
         vcpkg upgrade --no-dry-run
-        vcpkg install sfml:x86-windows-static
+        vcpkg install sfml
         vcpkg integrate install
 
     - name: fetch submodules
@@ -75,7 +75,7 @@ jobs:
       shell: bash
       run: |
         set +e
-        cmake . -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DENABLE_IPO=True -DCMAKE_BUILD_TYPE=Release -DVC_STATIC=True -G "Visual Studio 16 2019" -A Win32 -DVCPKG_TARGET_TRIPLET=x86-windows-static -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON || true
+        cmake . -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DENABLE_IPO=True -DCMAKE_BUILD_TYPE=Release -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON || true
 
     - name: Build
       shell: bash
