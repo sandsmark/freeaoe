@@ -247,13 +247,6 @@ set(UNSORTED_SRC
     src/audio/Implementations.cpp
 )
 
-if(APPLE)
-    set(UNSORTED_SRC
-        src/audio/Implementation_macos.mm
-        ${UNSORTED_SRC}
-    )
-endif()
-
 set (UI_SRC
     src/ui/ActionPanel.cpp
     src/ui/FileDialog.cpp
