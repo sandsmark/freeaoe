@@ -1,5 +1,4 @@
-#ifndef DIALOG_H
-#define DIALOG_H
+#pragma once
 
 #include "TextButton.h"
 
@@ -43,4 +42,3 @@ private:
     Choice m_pressedButton = Invalid;
 };
 
-#endif // DIALOG_H

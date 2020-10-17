@@ -1,5 +1,4 @@
-#ifndef AIPLAYER_H
-#define AIPLAYER_H
+#pragma once
 
 #include "mechanics/Player.h"
 #include "gen/enums.h"
@@ -36,4 +35,3 @@ struct AiPlayer : public Player
     bool canAffordResearchWithEscrow(const int researchId) const;
 };
 
-#endif // AIPLAYER_H

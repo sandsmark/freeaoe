@@ -1,5 +1,4 @@
-#ifndef EVENTMANAGER_H
-#define EVENTMANAGER_H
+#pragma once
 
 #include <array>
 #include <functional>
@@ -111,4 +110,3 @@ private:
 
 };
 
-#endif // EVENTMANAGER_H

@@ -1,5 +1,4 @@
-#ifndef ACTIONGARRISON_H
-#define ACTIONGARRISON_H
+#pragma once
 
 #include "IAction.h"
 struct Building;
@@ -20,4 +19,3 @@ private:
 };
 
 
-#endif // ACTIONGARRISON_H

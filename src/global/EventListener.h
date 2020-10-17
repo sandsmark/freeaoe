@@ -1,5 +1,4 @@
-#ifndef EVENTLISTENER_H
-#define EVENTLISTENER_H
+#pragma once
 
 struct MapPos;
 struct Player;
@@ -98,4 +97,3 @@ protected:
         { (void)playerID; (void)tileX; (void)tileY; }
 };
 
-#endif // EVENTLISTENER_H

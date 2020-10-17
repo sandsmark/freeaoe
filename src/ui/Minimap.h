@@ -1,5 +1,4 @@
-#ifndef MINIMAP_H
-#define MINIMAP_H
+#pragma once
 
 #include <memory>
 
@@ -64,4 +63,3 @@ private:
     MinimapMode m_mode = MinimapMode::Diplomatic; // easiest, so sue me
 };
 
-#endif // MINIMAP_H

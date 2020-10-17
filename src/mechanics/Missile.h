@@ -1,5 +1,4 @@
-#ifndef MISSILE_H
-#define MISSILE_H
+#pragma once
 
 #include "Entity.h"
 #include "genie/dat/unit/AttackOrArmor.h"
@@ -70,4 +69,3 @@ private:
     float m_zAcceleration = 0.f;
 };
 
-#endif // MISSILE_H

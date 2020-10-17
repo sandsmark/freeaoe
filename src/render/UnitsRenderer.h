@@ -1,5 +1,4 @@
-#ifndef UNITSRENDERER_H
-#define UNITSRENDERER_H
+#pragma once
 
 #include "core/Types.h"
 
@@ -29,4 +28,3 @@ private:
     MapPos m_previousCameraPos;
 };
 
-#endif // UNITSRENDERER_H

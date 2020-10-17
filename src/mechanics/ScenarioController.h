@@ -1,5 +1,4 @@
-#ifndef SCENARIOCONTROLLER_H
-#define SCENARIOCONTROLLER_H
+#pragma once
 
 #include "global/EventListener.h"
 #include "core/Logger.h"
@@ -418,4 +417,3 @@ inline LogPrinter operator <<(LogPrinter os, const genie::Trigger &trigger)
     return os;
 }
 
-#endif // SCENARIOCONTROLLER_H

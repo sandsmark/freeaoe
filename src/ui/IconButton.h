@@ -1,5 +1,4 @@
-#ifndef ICONBUTTON_H
-#define ICONBUTTON_H
+#pragma once
 
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Texture.hpp>
@@ -55,4 +54,3 @@ private:
 };
 
 
-#endif // ICONBUTTON_H

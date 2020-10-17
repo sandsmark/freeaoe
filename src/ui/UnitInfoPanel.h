@@ -14,8 +14,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef UNITINFOPANEL_H
-#define UNITINFOPANEL_H
+#pragma once
 
 #include "render/IRenderTarget.h"
 #include "mechanics/IState.h"
@@ -120,4 +119,3 @@ private:
     int m_buttonSize = 40;
 };
 
-#endif // UNITINFOPANEL_H

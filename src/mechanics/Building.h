@@ -1,5 +1,4 @@
-#ifndef BUILDING_H
-#define BUILDING_H
+#pragma once
 
 #include <stddef.h>
 #include <memory>
@@ -77,4 +76,3 @@ private:
     Time m_lastUpdateTime = 0;
 };
 
-#endif // BUILDING_H
