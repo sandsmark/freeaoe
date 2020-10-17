@@ -70,7 +70,7 @@ static std::string getRegistryString(const char *regGroup, const char *key)
 
     return std::string(outString);
 }
-#else
+#elif defined(__linux__)
 
 #include <wordexp.h>
 
@@ -222,6 +222,16 @@ static std::string getRegistryString(const std::string &regGroup, const std::str
     DBG << "Found game path" << path;
 
     return resolvePathCaseInsensitive(util::toLowercase(path));
+}
+#else
+static std::string getRegistryString(const std::string &regGroup, const std::string &key)
+{
+    (void)regGroup;
+    (void)key;
+
+#warning Unsupported platform
+
+    return {};
 }
 #endif
 
