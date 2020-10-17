@@ -40,6 +40,13 @@ jobs:
     - name: Update vcpkg
       run: vcpkg update
 
+    - name: cache vcpkg crap
+      uses: actions/cache@v1
+      with:
+        path: C:\Users\runneradmin\AppData\Local\vcpkg\archives\
+        key: whatthefuckvcpkg
+
+
     - name: Install SFML
       run: vcpkg install sfml
 
