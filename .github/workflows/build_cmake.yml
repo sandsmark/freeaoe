@@ -1,0 +1,85 @@
+name: CMake
+
+on: [push]
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+  VERBOSE: True
+
+jobs:
+  wintendo:
+    # We abuse set+e and || true a lot to make sure caches are up to date
+
+    runs-on: [windows-latest]
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: cache vcpkg crap
+      uses: actions/cache@v1
+      with:
+        path: C:\Users\runneradmin\AppData\Local\vcpkg\archives\
+        key: whatthefuckvcpkg
+
+    - name: Install SFML
+      run: |
+        vcpkg update
+        vcpkg upgrade --no-dry-run
+        vcpkg install sfml:x86-windows-static
+        vcpkg integrate install
+
+    - name: fetch submodules
+      run: git submodule update --init --recursive
+
+    - name: Configure CMake
+      shell: bash
+      run: |
+        set +e
+        cmake . -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DENABLE_IPO=True -DCMAKE_BUILD_TYPE=Release -DVC_STATIC=True -G "Visual Studio 16 2019" -A Win32 -DVCPKG_TARGET_TRIPLET=x86-windows-static -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake || true
+
+    - name: Build
+      shell: bash
+      run: |
+        set +e
+        cmake --build . --config $BUILD_TYPE || true
+
+  crapple:
+    # We abuse set+e and || true a lot to make sure caches are up to date
+
+    runs-on: [macOS-latest]
+    env:
+      CC: gcc-9
+      CXX: g++-9
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: cache vcpkg crap
+      uses: actions/cache@v1
+      with:
+        path: C:\Users\runneradmin\AppData\Local\vcpkg\archives\
+        key: whatthefuckvcpkg
+
+    - name: Install SFML
+      run: |
+        vcpkg update
+        vcpkg upgrade --no-dry-run
+        vcpkg install sfml
+        vcpkg integrate install
+
+    - name: fetch submodules
+      run: git submodule update --init --recursive
+
+    - name: Configure CMake
+      shell: bash
+      run: |
+        set +e
+        cmake . -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DENABLE_IPO=True -DCMAKE_BUILD_TYPE=Release -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON || true
+
+    - name: Build
+      shell: bash
+      run: |
+        set +e
+        cmake --build . --config $BUILD_TYPE || true
+
