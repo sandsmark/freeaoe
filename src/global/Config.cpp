@@ -349,7 +349,7 @@ Config::Config(const std::string &applicationName)
     for (int opt=0; opt<OptionsCount; opt++) {
         bool found = false;
         // really inefficient, so sue me
-        for (const std::pair<std::string, OptionDefinition> &def : m_knownOptions) {
+        for (const std::pair<const std::string, OptionDefinition> &def : m_knownOptions) {
             if (def.second.id == opt) {
                 found = true;
                 break;
