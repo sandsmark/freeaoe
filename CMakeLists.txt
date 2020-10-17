@@ -99,7 +99,7 @@ if(WIN32)
     add_definitions(-DNTDDI_VERSION=NTDDI_WINBLUE)
 endif()
 
-if(MSVC)
+if(MSVC OR _VCPKG_INSTALLED_DIR)
     add_definitions(/D_USE_MATH_DEFINES)
     add_definitions(/wd4244 /wd4018 /wd4267 /wd4996 /wd4305 /wd4800 /wd4065)
 
