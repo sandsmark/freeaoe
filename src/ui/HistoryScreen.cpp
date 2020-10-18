@@ -140,21 +140,34 @@ bool HistoryScreen::init(const std::string &filesDir)
     }
 
     slpFile = AssetManager::Inst()->getSlp("hist_pic.sin", AssetManager::ResourceType::Interface);
+    DBG << "hist pic frames:" << slpFile->getFrameCount();
 
     int numEntries = std::stoi(LanguageManager::getString(20310));
+    DBG << "entries" << numEntries;
 
     // For some reason there's duplicates, with blank illustrations, so we need to skip these
     std::unordered_set<std::string> addedItems;
+    int addedIndex = 0;
     for (int i=0; i<numEntries; i++) {
-        const std::string title = LanguageManager::getString(20310 + 1 + i);
-        if (addedItems.count(title)) {
+        std::string title = LanguageManager::getString(20310 + 1 + i);
+        if (util::trimString(title).empty()) {
+            DBG << "Skipping empty" << i;
+            continue;
+        } else if (addedItems.count(title)) {
+            DBG << "Duplicate" << title << i;
             continue;
         }
 
         HistoryEntry entry;
-        entry.illustration.loadFromImage(Resource::convertFrameToImage(slpFile->getFrame(i), palette));
         entry.title = title;
-        entry.index = i;
+
+        if (DataManager::Inst().gameVersion() >= genie::GV_SWGB) {
+            entry.illustration.loadFromImage(Resource::convertFrameToImage(slpFile->getFrame(addedIndex), palette));
+            entry.secondaryIllustration.loadFromImage(Resource::convertFrameToImage(slpFile->getFrame(addedIndex + 51), palette));
+        } else {
+            entry.illustration.loadFromImage(Resource::convertFrameToImage(slpFile->getFrame(i), palette));
+            entry.secondaryIllustration.loadFromImage(Resource::convertFrameToImage(slpFile->getFrame(i + 51), palette));
+        }
 
         std::string compareFilename = util::toLowercase(LanguageManager::getString(20410 + 1 + i));
 
@@ -174,7 +187,10 @@ bool HistoryScreen::init(const std::string &filesDir)
 
         m_historyEntries.push_back(entry);
         addedItems.insert(title);
+
+        addedIndex++;
     }
+    DBG << "Latest added index" << addedIndex;
 
     slpFile = AssetManager::Inst()->getSlp(50768, AssetManager::ResourceType::Interface);
     if (!slpFile) {
@@ -182,29 +198,40 @@ bool HistoryScreen::init(const std::string &filesDir)
         return false;
     }
 
-    const sf::Font &stylishFont = SfmlRenderTarget::stylishFont();
+    const sf::Font &stylishFont = DataManager::Inst().gameVersion() >= genie::GV_SWGB ?
+            SfmlRenderTarget::plainFont() :
+            SfmlRenderTarget::stylishFont();
+
+    m_titleText.setPosition(390, 25);
+    m_titleText.setCharacterSize(20);
+    m_titleText.setFont(stylishFont);
+    m_titleText.setFillColor(sf::Color::Black);
 
     float posY = 30;
     for (int i=0; i<s_numListEntries; i++) {
-        m_visibleTitles[i].text.setFont(stylishFont);
         m_visibleTitles[i].text.setCharacterSize(s_titlesTextSize);
         m_visibleTitles[i].text.setPosition(17, posY);
-        m_visibleTitles[i].text.setOutlineThickness(1.5);
+        m_visibleTitles[i].rect = ScreenRect(17, posY, 195, stylishFont.getLineSpacing(s_titlesTextSize));
 
         if (DataManager::Inst().gameVersion() >= genie::GV_SWGB) {
+            m_visibleTitles[i].text.setFont(stylishFont);
+            m_visibleTitles[i].text.setOutlineThickness(0.5);
             m_visibleTitles[i].text.setFillColor(m_textFillColor);
             m_visibleTitles[i].text.setOutlineColor(m_textOutlineColor);
+            m_visibleTitles[i].text.setStyle(m_visibleTitles[i].text.getStyle() | sf::Text::Bold);
+            posY += stylishFont.getLineSpacing(s_titlesTextSize);
         } else {
+            m_visibleTitles[i].text.setFont(stylishFont);
+            m_visibleTitles[i].text.setOutlineThickness(1.5);
             m_visibleTitles[i].text.setFillColor(sf::Color::Black);
             m_visibleTitles[i].text.setOutlineColor(sf::Color::Transparent);
+            posY += stylishFont.getLineSpacing(s_titlesTextSize) * 1.2;
         }
 
-        m_visibleTitles[i].rect = ScreenRect(17, posY, 195, stylishFont.getLineSpacing(s_titlesTextSize));
-        posY += stylishFont.getLineSpacing(s_titlesTextSize) * 1.2;
     }
 
     m_textRect.x = 317;
-    m_textRect.y = 275;
+    m_textRect.y = 280;
     m_textRect.width = s_textWidth;
     m_textRect.height = 255;
 
@@ -225,6 +252,9 @@ bool HistoryScreen::init(const std::string &filesDir)
     // Main screen button
     if (DataManager::Inst().gameVersion() >= genie::GV_SWGB) {
         m_uiElements[MainScreenButton].rect = ScreenRect(m_textRect.center().x - 90,  m_textRect.bottom() + 10, 200, 40);
+
+        m_mainScreenText.setFont(SfmlRenderTarget::plainFont());
+        m_mainScreenText.setStyle(m_mainScreenText.getStyle() | sf::Text::Bold);
     } else {
         const genie::PalFile &buttonPalette = AssetManager::Inst()->getPalette(50531);
         genie::SlpFramePtr buttonBg = slpFile->getFrame(0);
@@ -232,9 +262,10 @@ bool HistoryScreen::init(const std::string &filesDir)
         m_uiElements[MainScreenButton].pressTexture.loadFromImage(Resource::convertFrameToImage(slpFile->getFrame(1), buttonPalette));
         ScreenRect buttonRect(m_textRect.center().x - buttonBg->getWidth() / 2,  m_textRect.bottom(), buttonBg->getWidth(), buttonBg->getHeight());
         m_uiElements[MainScreenButton].rect = buttonRect;
+
+        m_mainScreenText.setFont(SfmlRenderTarget::stylishFont());
     }
 
-    m_mainScreenText.setFont(SfmlRenderTarget::stylishFont());
     m_mainScreenText.setString("Main Menu");
     m_mainScreenText.setCharacterSize(s_buttonTextSize);
     m_mainScreenText.setFillColor(m_textFillColor);
@@ -256,11 +287,19 @@ void HistoryScreen::display()
 
 void HistoryScreen::render()
 {
-    sf::Sprite sprite;
-    const sf::Texture &illustration = m_historyEntries[m_currentEntry].illustration;
-    sprite.setPosition(525 - illustration.getSize().x/2, 70);
-    sprite.setTexture(illustration);
-    m_renderWindow->draw(sprite);
+    if (m_currentEntry >= 0) {
+        sf::Sprite sprite;
+        const sf::Texture &illustration = m_historyEntries[m_currentEntry].illustration;
+        sprite.setPosition(529 - illustration.getSize().x/2, 73);
+        sprite.setTexture(illustration);
+        m_renderWindow->draw(sprite);
+
+        sf::Sprite secondarySprite;
+        secondarySprite.setPosition(14, 407);
+        secondarySprite.setTexture(m_historyEntries[m_currentEntry].secondaryIllustration);
+        m_renderWindow->draw(secondarySprite);
+    }
+    m_renderWindow->draw(m_titleText);
 
     for (int i=0; i<UiElementsCount; i++) {
         sf::Sprite buttonSprite;
@@ -325,6 +364,9 @@ bool HistoryScreen::handleMouseEvent(const sf::Event &event)
         for (int i=0; i<s_numListEntries; i++) {
             if (m_visibleTitles[i].rect.contains(ScreenPos(event.mouseButton.x, event.mouseButton.y))) {
                 const int index = i + m_titleScrollOffset;
+                if (m_historyEntries[index].title.empty()) {
+                    return false;
+                }
                 m_currentEntry = index;
                 loadFile(m_historyEntries[index].filename);
                 updateVisibleTitles();
@@ -450,6 +492,7 @@ void HistoryScreen::loadFile(const std::string &filePath)
         WARN << "failed to open" << filePath;
         return;
     }
+    m_titleText.setString(m_historyEntries[m_currentEntry].title);
 
     m_textScrollOffset = 0;
 

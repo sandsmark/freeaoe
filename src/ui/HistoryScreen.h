@@ -31,7 +31,7 @@ class Event;
 
 class HistoryScreen : public UiScreen
 {
-    static const int s_numListEntries = 18;
+    static const int s_numListEntries = 17;
     static const int s_numVisibleTextLines = 12;
     static const int s_textWidth = 400; //height = 236
     static const int s_titlesTextSize = 13;
@@ -52,9 +52,9 @@ class HistoryScreen : public UiScreen
 
     struct HistoryEntry {
         sf::Texture illustration;
+        sf::Texture secondaryIllustration;
         std::string title;
         std::string filename;
-        int index = 0;
     };
 
     enum UiElementTextures {
@@ -130,4 +130,5 @@ private:
     int m_currentEntry = 0;
 
     sf::Text m_mainScreenText;
+    sf::Text m_titleText;
 };
