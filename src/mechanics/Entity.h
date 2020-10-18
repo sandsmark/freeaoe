@@ -40,7 +40,15 @@ typedef std::shared_ptr<Map> MapPtr;
 typedef std::shared_ptr<Entity> EntityPtr;
 typedef std::shared_ptr<Sprite> SpritePtr;
 
-/// The most basic class thing, has a position on a map and can be rendered
+/// The most basic class thing, has a position on a map and can be rendered.
+///
+/// No, despite the name it's not a entity-component-system thing. The
+/// implementations I've seen of that look good on the diagrams, but the code
+/// gets very hard to understand and you end up with a lot of unknown side
+/// effects from innocous changes.
+///
+/// So it's not set in stone, but until I can find a nice way to to ECS this is
+/// going to stay the current mess it is.
 struct Entity : std::enable_shared_from_this<Entity>
 {
     const size_t id;
