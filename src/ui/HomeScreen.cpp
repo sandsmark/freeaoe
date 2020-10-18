@@ -118,40 +118,42 @@ bool HomeScreen::init()
         }
     } else if (DataManager::Inst().gameVersion() >= genie::GV_SWGB) {
         // TODO: these are a bit off, but I can' be bothered to try to match exactly
-        m_buttons[Button::Singleplayer].rect = { 275,  200, 138, 80 };
-        m_buttons[Button::Singleplayer].frame = 34;
-        m_buttons[Button::Singleplayer].textRect = { 250,  200, 180,  18 };
+        m_buttons[Button::Singleplayer].rect = { 278,  210, 138, 80 };
+        m_buttons[Button::Singleplayer].textRect = { 250,  300, 180,  18 };
 
-        m_buttons[Button::Multiplayer].rect =  { 194, 360, 177, 147 };
-        m_buttons[Button::Multiplayer].frame = 14;
+        m_buttons[Button::Multiplayer].rect =  { 217, 356, 177, 147 };
         m_buttons[Button::Multiplayer].textRect =  { 194, 400, 180,  18 };
 
-        m_buttons[Button::Zone].rect =         { 103, 80,  185,  90 };
-        m_buttons[Button::Zone].frame = 18;
-        m_buttons[Button::Zone].textRect =         { 100, 80, 180,  18 };
+        m_buttons[Button::Zone].rect =         { 70, 84,  185,  90 };
+        m_buttons[Button::Zone].textRect =         { 20, 110, 50,  18 };
 
-        m_buttons[Button::Tutorial].rect =     {   320, 75, 100, 124 };
-        m_buttons[Button::Tutorial].frame = 22;
-        m_buttons[Button::Tutorial].textRect =     {   260,  60, 120,  18 };
+        m_buttons[Button::Tutorial].rect =     {   316, 71, 100, 124 };
+        m_buttons[Button::Tutorial].textRect =     {   265,  60, 120,  18 };
 
         m_buttons[Button::MapEditor].rect =    { 150, 515,  214,  74 };
-        m_buttons[Button::MapEditor].frame = 26;
         m_buttons[Button::MapEditor].textRect =    { 200, 550, 180,  18 };
 
-        m_buttons[Button::History].rect =      { 103, 164, 174,  153 };
-        m_buttons[Button::History].frame = 30;
-        m_buttons[Button::History].textRect =      {  103, 230, 180,  18 };
+        m_buttons[Button::History].rect =      { 58, 196, 174,  153 };
+        m_buttons[Button::History].textRect =      {  30, 250, 180,  18 };
 
-        m_buttons[Button::Options].rect =      { 0, 350,  141, 169 };
-        m_buttons[Button::Options].frame = 10;
-        m_buttons[Button::Options].textRect =      {  0, 351, 180,  18 };
+        m_buttons[Button::Options].rect =      { 0, 355,  141, 169 };
+        m_buttons[Button::Options].textRect =      {  0, 470, 100,  18 };
 
-        m_buttons[Button::Banner].rect =       {   0,   0, 427, 170 };
-        m_buttons[Button::Banner].frame = 49;
+        m_buttons[Button::Banner].rect =       {   0,   0, 141, 61 };
 
         m_buttons[Button::Exit].rect =         {   5, 535, 93,  50 };
-        m_buttons[Button::Exit].frame = 46;
         m_buttons[Button::Exit].textRect =         {   0, 562, 90,  18 };
+
+        // Frame order don't make sense
+        m_buttons[Button::Singleplayer].frame = 34;
+        m_buttons[Button::Multiplayer].frame = 14;
+        m_buttons[Button::Zone].frame = 18;
+        m_buttons[Button::Tutorial].frame = 22;
+        m_buttons[Button::MapEditor].frame = 26;
+        m_buttons[Button::History].frame = 30;
+        m_buttons[Button::Options].frame = 10;
+        m_buttons[Button::Banner].frame = 49;
+        m_buttons[Button::Exit].frame = 46;
     } else if (DataManager::Inst().gameVersion() < genie::GV_TC) {
         // These are fun to figure out.
         // Aka. found by trial and error (extract image, try to count pixels in
