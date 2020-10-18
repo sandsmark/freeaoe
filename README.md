@@ -13,6 +13,11 @@ screenshots in the [doc/](doc/) folder.
 It (obviously) needs the original data files, but it works with the data
 files from the trial version (e. g. from Archive.org).
 
+### Star Wars™: Galactic Battlegrounds
+
+WIP:
+[![swgb screenshot](/doc/swgb-th.png)](/doc/swgb.png)
+
 
 Windows
 -------
