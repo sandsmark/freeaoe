@@ -106,12 +106,15 @@ static bool showHomeScreen(genie::ScnFilePtr *scenarioFile)
         }
 
         if (button == HomeScreen::Button::Tutorial) {
-            genie::CpxFile cpxFile;
+            std::string campaignFile;
             if (DataManager::Inst().isHd()){
-                cpxFile.setFileName(config.getValue(Config::GamePath) + "/resources/_common/drs/retail-campaigns/dlc0/kings/cam8.cpn");
+                campaignFile = config.getValue(Config::GamePath) + "/resources/_common/drs/retail-campaigns/dlc0/kings/cam8.cpn";
             } else {
-                cpxFile.setFileName(genie::util::resolvePathCaseInsensitive(config.getValue(Config::GamePath) + "/campaign/cam8.cpn"));
+                campaignFile = config.getValue(Config::GamePath) + "/campaign/cam8.cpn";
             }
+            genie::CpxFile cpxFile;
+            cpxFile.setFileName(genie::util::resolvePathCaseInsensitive(campaignFile));
+
             try {
                 cpxFile.load();
 
@@ -130,12 +133,15 @@ static bool showHomeScreen(genie::ScnFilePtr *scenarioFile)
             }
 
 
-            genie::CpxFile cpxFile;
+            std::string campaignFile;
             if (DataManager::Inst().isHd()){
-                cpxFile.setFileName(config.getValue(Config::GamePath) + "/resources/_common/drs/retail-campaigns/dlc0/conquerors/xcam3.cpn");
+                campaignFile = config.getValue(Config::GamePath) + "/resources/_common/drs/retail-campaigns/dlc0/conquerors/xcam3.cpn";
             } else {
-                cpxFile.setFileName(config.getValue(Config::GamePath) + "/Campaign/xcam3.cpx");
+                campaignFile = config.getValue(Config::GamePath) + "/Campaign/xcam3.cpx";
             }
+
+            genie::CpxFile cpxFile;
+            cpxFile.setFileName(genie::util::resolvePathCaseInsensitive(campaignFile));
 
             try {
                 cpxFile.load();

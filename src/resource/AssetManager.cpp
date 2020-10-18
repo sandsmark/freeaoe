@@ -754,6 +754,15 @@ int AssetManager::filenameID(const std::string &filename)
         { "real_world_jutland.scx", 56008   },
         { "real_world_nippon.scx", 56009    },
         { "real_world_byzantium.scx", 56010 },
+
+
+
+
+        ///////////////
+        // SWGB
+        { "RECOBUTT.SLP", 53008 },
+        { "border.slp", 50712 },
+        { "1main.slp", 53233 },
     };
 
     if (idMap.find(filename) == idMap.end()) {
