@@ -152,7 +152,7 @@ bool HomeScreen::init()
         m_buttons[Button::Exit].rect =         {   5, 535, 93,  50 };
         m_buttons[Button::Exit].frame = 46;
         m_buttons[Button::Exit].textRect =         {   0, 562, 90,  18 };
-    } else if (m_backgroundSize.height == 600) {
+    } else if (DataManager::Inst().gameVersion() < genie::GV_TC) {
         // These are fun to figure out.
         // Aka. found by trial and error (extract image, try to count pixels in
         // your favorite image viewer, discover that they're wrong, and adjust
