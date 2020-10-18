@@ -32,11 +32,11 @@ class Event;
 class HistoryScreen : public UiScreen
 {
     static const int s_numListEntries = 18;
-    static const int s_numVisibleTextLines = 11;
+    static const int s_numVisibleTextLines = 12;
     static const int s_textWidth = 400; //height = 236
     static const int s_titlesTextSize = 13;
     static const int s_buttonTextSize = 14;
-    static const int s_mainTextSize = 16;
+    static const int s_mainTextSize = 13;
 
     struct TextLine {
         bool italic = false;

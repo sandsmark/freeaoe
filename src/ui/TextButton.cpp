@@ -14,7 +14,7 @@ TextButton::TextButton()
 {
     m_text.setCharacterSize(17);
     m_text.setOutlineThickness(1);
-    m_text.setFont(SfmlRenderTarget::defaultFont());
+    m_text.setFont(SfmlRenderTarget::plainFont());
 
 }
 

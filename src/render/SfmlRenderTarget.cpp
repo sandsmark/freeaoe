@@ -22,6 +22,7 @@
 
 #include "misc/fonts/Alegreya/Alegreya-Bold.latin.h"
 #include "misc/fonts/BerryRotunda/BerryRotunda.ttf.h"
+#include "misc/fonts/charis/CharisSILEur-R.ttf.h"
 
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/Rect.hpp>
@@ -61,7 +62,7 @@ struct Font {
 };
 } // namespace
 
-const sf::Font &SfmlRenderTarget::defaultFont()
+const sf::Font &SfmlRenderTarget::uiFont()
 {
     static Font fontLoader(resource_Alegreya_Bold_latin_data, resource_Alegreya_Bold_latin_size);
     return fontLoader.font;
@@ -70,6 +71,12 @@ const sf::Font &SfmlRenderTarget::defaultFont()
 const sf::Font &SfmlRenderTarget::stylishFont()
 {
     static Font fontLoader(resource_BerryRotunda_ttf_data, resource_BerryRotunda_ttf_size);
+    return fontLoader.font;
+}
+
+const sf::Font &SfmlRenderTarget::plainFont()
+{
+    static Font fontLoader(resource_CharisSILEur_R_ttf_data, resource_CharisSILEur_R_ttf_size );
     return fontLoader.font;
 }
 
@@ -342,7 +349,7 @@ void SfmlRenderTarget::draw(const std::shared_ptr<IRenderTarget> &renderTarget, 
 Drawable::Text::Ptr SfmlRenderTarget::createText()
 {
     std::shared_ptr<SfmlText> ret = std::make_shared<SfmlText>();
-    ret->text->setFont(defaultFont());
+    ret->text->setFont(plainFont());
     return ret;
 }
 

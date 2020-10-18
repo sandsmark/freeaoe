@@ -57,7 +57,8 @@ class SfmlRenderTarget : public IRenderTarget
 {
 
 public:
-    static const sf::Font &defaultFont();
+    static const sf::Font &plainFont();
+    static const sf::Font &uiFont();
     static const sf::Font &stylishFont();
 
     SfmlRenderTarget(const Size &size);

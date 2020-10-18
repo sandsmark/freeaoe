@@ -590,14 +590,14 @@ bool Engine::setup(const std::shared_ptr<genie::ScnFile> &scenario)
     renderTarget_->setSize(uiSize);
 
     m_resultOverlay.setFillColor(sf::Color::White);
-    m_resultOverlay.setFont(SfmlRenderTarget::defaultFont());
+    m_resultOverlay.setFont(SfmlRenderTarget::uiFont());
     m_resultOverlay.setCharacterSize(25);
     m_resultOverlay.setOutlineColor(sf::Color::Black);
     m_resultOverlay.setOutlineThickness(3);
 
     fps_label_.setPosition(sf::Vector2f(uiSize.width - 75, uiSize.height - 20));
     fps_label_.setFillColor(sf::Color::White);
-    fps_label_.setFont(SfmlRenderTarget::defaultFont());
+    fps_label_.setFont(SfmlRenderTarget::uiFont());
     fps_label_.setCharacterSize(15);
 
     m_woodLabel->setValue(12345);

@@ -12,7 +12,7 @@
 NumberLabel::NumberLabel(const std::shared_ptr<IRenderTarget> &renderTarget) :
     m_renderTarget(renderTarget)
 {
-    m_text.setFont(SfmlRenderTarget::defaultFont());
+    m_text.setFont(SfmlRenderTarget::uiFont());
     m_text.setOutlineColor(sf::Color::Black);
     m_text.setOutlineThickness(1);
     m_text.setFillColor(sf::Color::White);

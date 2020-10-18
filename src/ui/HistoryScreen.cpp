@@ -208,7 +208,7 @@ bool HistoryScreen::init(const std::string &filesDir)
     m_textRect.width = s_textWidth;
     m_textRect.height = 255;
 
-    const sf::Font &font = SfmlRenderTarget::defaultFont();
+    const sf::Font &font = SfmlRenderTarget::plainFont();
     posY = m_textRect.y;
     for (int i=0; i<s_numVisibleTextLines; i++) {
         m_visibleText[i].setFont(font);
@@ -455,7 +455,7 @@ void HistoryScreen::loadFile(const std::string &filePath)
 
     TextLine currentLine;
 
-    const sf::Font &font = SfmlRenderTarget::defaultFont();
+    const sf::Font &font = SfmlRenderTarget::uiFont();
 
     std::string currentWord;
     float currentWordWidth= 0.f;

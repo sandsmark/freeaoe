@@ -150,6 +150,7 @@ include_directories(
 add_subdirectory(src/tools/resgen)
 add_resource(FONT_ALEGREYA misc/fonts/Alegreya/Alegreya-Bold.latin)
 add_resource(FONT_BERRYROTUNDA misc/fonts/BerryRotunda/BerryRotunda.ttf)
+add_resource(FONT_CHARIS misc/fonts/charis/CharisSILEur-R.ttf)
 add_resource(IMAGE_PARCHMENT misc/images/parchment.jpg)
 
 set(AI_SRC
@@ -288,6 +289,7 @@ set(ENGINE_SRC
     ${UI_SRC}
     ${FONT_ALEGREYA}
     ${FONT_BERRYROTUNDA}
+    ${FONT_CHARIS}
     ${SETTINGS_SRC}
     ${DEBUG_SRC}
     ${EDITOR_SRC}

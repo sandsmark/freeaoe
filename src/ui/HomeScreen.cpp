@@ -79,7 +79,7 @@ bool HomeScreen::init()
     m_description.setOutlineColor(m_textOutlineColor);
     m_description.setFillColor(m_textFillColor);
     m_description.setOutlineThickness(1);
-    m_description.setFont(SfmlRenderTarget::defaultFont());
+    m_description.setFont(SfmlRenderTarget::uiFont());
     if (AssetManager::Inst()->missingData()) {
         m_description.setCharacterSize(19);
         m_description.setString("WARNING: Terrain graphics are missing,\ncommon reason is using data from Rise of the Rajas.\nIf using Steam, opt into beta and select 'patch43 - Patch 4.3'.\nOtherwise things look crap.");
@@ -254,14 +254,14 @@ bool HomeScreen::init()
         b.selectedOffset = ScreenPos(selectedFrame->hotspot_x, selectedFrame->hotspot_y);
 
         b.text.setCharacterSize(15);
-        b.text.setFont(SfmlRenderTarget::defaultFont());
+        b.text.setFont(SfmlRenderTarget::uiFont());
         b.text.setFillColor(m_textFillColor);
         b.text.setOutlineColor(m_textOutlineColor);
         b.text.setOutlineThickness(1);
     }
 
     m_versionText.setCharacterSize(30);
-    m_versionText.setFont(SfmlRenderTarget::defaultFont());
+    m_versionText.setFont(SfmlRenderTarget::uiFont());
     m_versionText.setFillColor(m_textFillColor);
     m_versionText.setOutlineColor(m_textOutlineColor);
     m_versionText.setOutlineThickness(2);
@@ -273,7 +273,7 @@ bool HomeScreen::init()
     }
 
     m_todoText.setCharacterSize(50);
-    m_todoText.setFont(SfmlRenderTarget::defaultFont());
+    m_todoText.setFont(SfmlRenderTarget::uiFont());
     m_todoText.setFillColor(m_textFillColor);
     m_todoText.setOutlineColor(m_textOutlineColor);
     m_todoText.setOutlineThickness(5);
