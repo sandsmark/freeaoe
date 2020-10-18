@@ -33,9 +33,6 @@ ActionPanel::ActionPanel(const std::shared_ptr<SfmlRenderTarget> &renderTarget) 
 
 ActionPanel::~ActionPanel()
 {
-    if (m_unitManager) {
-        m_unitManager->disconnect(this);
-    }
 }
 
 

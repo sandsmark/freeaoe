@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "core/Types.h"
+#include "core/SignalEmitter.h"
 #include "mechanics/IState.h"
 #include "render/IRenderTarget.h"
 
@@ -14,7 +15,7 @@ class Event;
 struct Unit;
 struct VisibilityMap;
 
-class Minimap : public IState
+class Minimap : public IState, public SignalReceiver
 {
 public:
     // TODO implement the rest

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "core/SignalEmitter.h"
+
 #include <stdint.h>
 #include <memory>
 #include <mutex>
@@ -9,7 +11,7 @@ struct ma_device;
 struct sts_mixer_t;
 struct sts_mixer_sample_t;
 
-class AudioPlayer
+class AudioPlayer : public SignalReceiver
 {
 public:
     AudioPlayer();

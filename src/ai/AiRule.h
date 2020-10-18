@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <vector>
+#include "core/SignalEmitter.h"
 
 namespace ai {
 
@@ -9,7 +10,7 @@ struct Condition;
 struct Action;
 struct AiScript;
 
-struct AiRule
+struct AiRule : public SignalReceiver
 {
     AiRule(AiScript *owner) : m_owner(owner) {}
     AiRule() = delete;

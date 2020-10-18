@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/Types.h"
+#include "core/SignalEmitter.h"
 #include "global/EventListener.h"
 
 #include "mechanics/IState.h"
@@ -40,7 +41,7 @@ class Tech;
 class Unit;
 }
 
-class ActionPanel : public IState, public EventListener
+class ActionPanel : public IState, public EventListener, public SignalReceiver
 {
 public:
     enum class TechnologySLP {

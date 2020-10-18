@@ -167,6 +167,7 @@ set(AI_SRC
 set(CORE_SRC
     src/core/Logger.cpp
     src/core/Utility.cpp
+    src/core/SignalEmitter.cpp
     )
 
 set(GLOBAL_SRC

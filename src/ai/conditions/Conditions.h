@@ -16,7 +16,7 @@ namespace ai {
 
 struct AiScript;
 
-struct Condition : public EventListener, public SignalEmitter<Condition> {
+struct Condition : public EventListener, public SignalEmitter<Condition>, public SignalReceiver {
     enum Signals {
         SatisfiedChanged
     };
@@ -55,11 +55,6 @@ struct AndCondition : public Condition
         m_subcondition2->connect(SatisfiedChanged, this, &AndCondition::onSubconditionSatisfiedChanged);
     }
 
-    ~AndCondition() {
-        m_subcondition1->disconnect(this);
-        m_subcondition2->disconnect(this);
-    }
-
     void onSubconditionSatisfiedChanged()
     {
         emit(SatisfiedChanged);
@@ -92,11 +87,6 @@ struct OrCondition : public Condition
 
         m_subcondition1->connect(SatisfiedChanged, this, &OrCondition::onSubconditionSatisfiedChanged);
         m_subcondition2->connect(SatisfiedChanged, this, &OrCondition::onSubconditionSatisfiedChanged);
-    }
-
-    ~OrCondition() {
-        m_subcondition1->disconnect(this);
-        m_subcondition2->disconnect(this);
     }
 
     void onSubconditionSatisfiedChanged()

@@ -1,22 +1,53 @@
 #pragma once
 
 #include <unordered_map>
+#include <unordered_set>
 #include <functional>
 #include <algorithm>
+
+/// Because the template magic fucks with my head:
+/// The only job of SignalReceiver is to disconnect from the SignalEmitter when a receiver is deleted.
+/// SignalEmitterDeathDisconnecter in turn is responsible for making sure SignalReceiver doesn't
+/// have any stale connections around when the SignalEmitter is destroyed.
 
 template<class Emitter>
 struct SignalHolder;
 
+struct SignalReceiver;
+
+struct SignalEmitterDeathDisconnecter
+{
+    virtual ~SignalEmitterDeathDisconnecter();
+
+protected:
+    void removeReceiver(SignalReceiver *receiver);
+    void addReceiver(SignalReceiver *receiver);
+
+protected:
+    friend struct SignalReceiver;
+    std::unordered_set<SignalReceiver*> m_connectedReceivers;
+};
+
+struct SignalReceiver
+{
+    virtual ~SignalReceiver();
+private:
+    friend struct SignalEmitterDeathDisconnecter;
+    std::unordered_set<SignalEmitterDeathDisconnecter*> m_connectedEmitters;
+};
+
 struct SignalReceptacle
 {
-    SignalReceptacle(uintptr_t o, std::function<void()> f) : targetObject(o), targetFunction(f) {}
-    uintptr_t targetObject;
+    SignalReceptacle(SignalReceiver *o, std::function<void()> f) : targetObject(o), targetFunction(f) {}
+
+    SignalReceiver *targetObject;
     std::function<void()> targetFunction;
 };
 
 
 template<class Emitter>
 struct SignalEmitter
+        : public SignalEmitterDeathDisconnecter
 {
     virtual ~SignalEmitter() {
         delete d;
@@ -32,14 +63,15 @@ struct SignalEmitter
              typename Function>
     void connect(const Signal sig, Receiver *receiver, Function func) {
         static_assert(std::is_enum<Signal>());
-        d->connections.insert({sig, {uintptr_t(receiver), std::bind(func, receiver)}});
+        m_connectedReceivers.insert(receiver);
+        d->connections.insert({sig, {receiver, std::bind(func, receiver)}});
+        addReceiver(receiver);
     }
 
     template< typename Signal, class Receiver>
     void disconnect(Signal sig, Receiver *receiver);
 
-    template<class Receiver>
-    void disconnect(Receiver *receiver);
+    void disconnect(SignalReceiver *receiver);
 
     template<typename Signal>
     void emit(const Signal sig);
@@ -47,7 +79,6 @@ struct SignalEmitter
 private:
     SignalHolder<Emitter> *d = new SignalHolder<Emitter>();
 };
-
 
 template<class Emitter>
 struct SignalHolder {
@@ -77,27 +108,38 @@ void SignalEmitter<Emitter>::disconnect(Signal sig, Receiver *receiver)
 
     typedef typename SignalHolder<Emitter>::SignalMap SignalMap;
 
+    bool hasConnections = false;
     for (typename SignalMap::iterator it = d->connections.begin(); it != d->connections.end();) {
-        if (it->first == sig && it->second.targetObject == receiver) {
+        if (it->second.targetObject != receiver) {
+            continue;
+        }
+
+        if (it->first == sig) {
             it = d->connections.erase(it);
         } else {
+            hasConnections = true;
             it++;
         }
+    }
+    if (!hasConnections) {
+        removeReceiver(receiver);
     }
 }
 
 template<class Emitter>
-template<class Receiver>
-void SignalEmitter<Emitter>::disconnect(Receiver *receiver)
+void SignalEmitter<Emitter>::disconnect(SignalReceiver *receiver)
 {
     typedef typename SignalHolder<Emitter>::SignalMap SignalMap;
-    const uintptr_t receiverId  = uintptr_t(receiver);
+
+    m_connectedReceivers.erase(receiver);
 
     for (typename SignalMap::iterator it = d->connections.begin(); it != d->connections.end();) {
-        if (it->second.targetObject == receiverId) {
+        if (it->second.targetObject == receiver) {
             it = d->connections.erase(it);
         } else {
             it++;
         }
     }
+
+    removeReceiver(receiver);
 }

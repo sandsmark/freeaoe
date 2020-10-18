@@ -112,8 +112,6 @@ AudioPlayer::~AudioPlayer()
     std::lock_guard<std::mutex> guard(m_mutex);
     ma_device_uninit(m_device.get());
     sts_mixer_shutdown(m_mixer.get());
-
-    Config::Inst().disconnect(this);
 }
 
 struct WavHeader {

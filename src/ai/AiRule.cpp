@@ -7,9 +7,6 @@ namespace ai {
 
 AiRule::~AiRule()
 {
-    for (const std::shared_ptr<ai::Condition> &condition : m_conditions) {
-        condition->disconnect(this);
-    }
 }
 
 void ai::AiRule::onConditionSatisfied()
