@@ -1,9 +1,9 @@
 #pragma once
 
-#include <unordered_map>
 #include <unordered_set>
 #include <functional>
 #include <algorithm>
+#include <array>
 
 /// Because the template magic fucks with my head:
 /// The only job of SignalReceiver is to disconnect from the SignalEmitter when a receiver is deleted.
