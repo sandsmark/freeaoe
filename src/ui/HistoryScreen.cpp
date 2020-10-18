@@ -189,17 +189,24 @@ bool HistoryScreen::init(const std::string &filesDir)
         m_visibleTitles[i].text.setFont(stylishFont);
         m_visibleTitles[i].text.setCharacterSize(s_titlesTextSize);
         m_visibleTitles[i].text.setPosition(17, posY);
-        m_visibleTitles[i].text.setFillColor(m_textFillColor);
         m_visibleTitles[i].text.setOutlineThickness(1.5);
-        m_visibleTitles[i].text.setOutlineColor(m_textOutlineColor);
+
+        if (DataManager::Inst().gameVersion() >= genie::GV_SWGB) {
+            m_visibleTitles[i].text.setFillColor(m_textFillColor);
+            m_visibleTitles[i].text.setOutlineColor(m_textOutlineColor);
+        } else {
+            m_visibleTitles[i].text.setFillColor(sf::Color::Black);
+            m_visibleTitles[i].text.setOutlineColor(sf::Color::Transparent);
+        }
+
         m_visibleTitles[i].rect = ScreenRect(17, posY, 195, stylishFont.getLineSpacing(s_titlesTextSize));
         posY += stylishFont.getLineSpacing(s_titlesTextSize) * 1.2;
     }
 
-        m_textRect.x = 317;
-        m_textRect.y = 275;
-        m_textRect.width = s_textWidth;
-        m_textRect.height = 255;
+    m_textRect.x = 317;
+    m_textRect.y = 275;
+    m_textRect.width = s_textWidth;
+    m_textRect.height = 255;
 
     const sf::Font &font = SfmlRenderTarget::defaultFont();
     posY = m_textRect.y;
@@ -207,7 +214,11 @@ bool HistoryScreen::init(const std::string &filesDir)
         m_visibleText[i].setFont(font);
         m_visibleText[i].setCharacterSize(s_mainTextSize);
         m_visibleText[i].setPosition(m_textRect.x, posY);
-        m_visibleText[i].setFillColor(m_textFillColor);
+        if (DataManager::Inst().gameVersion() >= genie::GV_SWGB) {
+            m_visibleText[i].setFillColor(m_textFillColor);
+        } else {
+            m_visibleText[i].setFillColor(sf::Color::Black);
+        }
         posY += font.getLineSpacing(s_mainTextSize);
     }
 
