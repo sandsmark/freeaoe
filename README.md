@@ -1,7 +1,7 @@
 freeaoe
 =======
 
-![screenshot](/doc/screenshot.png)
+[![screenshot](/doc/screenshot-small.png)](/doc/screenshot.png)
 
 freeaoe is a project to write a free engine capable of running Age of Empires 2
 (and other Genie games like SW:GB eventually).
