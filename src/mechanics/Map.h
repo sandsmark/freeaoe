@@ -48,9 +48,10 @@ public:
 class Map : public SignalEmitter<Map>
 {
 public:
-    enum class Signals {
+    enum Signals {
         UnitsChanged,
-        TerrainChanged
+        TerrainChanged,
+        SignalCount
     };
 
     enum MapSize {

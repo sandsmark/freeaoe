@@ -41,7 +41,7 @@ typedef std::shared_ptr<Entity> EntityPtr;
 typedef std::shared_ptr<Sprite> SpritePtr;
 
 /// The most basic class thing, has a position on a map and can be rendered
-struct Entity : std::enable_shared_from_this<Entity>, SignalEmitter<Entity>
+struct Entity : std::enable_shared_from_this<Entity>
 {
     const size_t id;
     int32_t spawnId = -1;

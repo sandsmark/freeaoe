@@ -94,7 +94,8 @@ class UnitManager : public EventListener, public SignalEmitter<UnitManager>
 {
 public:
     enum Signals {
-        ActionsChanged
+        ActionsChanged,
+        SignalCount
     };
     static constexpr int GaiaID = 0;
 

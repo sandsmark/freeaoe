@@ -38,7 +38,8 @@ public:
         MusicVolume,
         SoundVolume,
 
-        OptionsCount
+        OptionsCount,
+        SignalCount = OptionsCount
     };
 
     enum StorePolicy {

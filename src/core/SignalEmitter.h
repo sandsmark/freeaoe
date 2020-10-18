@@ -64,7 +64,7 @@ struct SignalEmitter
     void connect(const Signal sig, Receiver *receiver, Function func) {
         static_assert(std::is_enum<Signal>());
         m_connectedReceivers.insert(receiver);
-        d->connections.insert({sig, {receiver, std::bind(func, receiver)}});
+        d->connections[sig].push_back({receiver, std::bind(func, receiver)});
         addReceiver(receiver);
     }
 
@@ -82,7 +82,9 @@ private:
 
 template<class Emitter>
 struct SignalHolder {
-    typedef std::unordered_multimap<typename Emitter::Signals, SignalReceptacle> SignalMap;
+    typedef std::vector<SignalReceptacle> ReceptacleVector;
+    typedef std::array<ReceptacleVector, Emitter::Signals::SignalCount> SignalMap;
+
     SignalMap connections;
 };
 
@@ -92,12 +94,9 @@ void SignalEmitter<Emitter>::emit(const Signal sig)
 {
     static_assert(std::is_enum<Signal>());
 
-    typedef typename SignalHolder<Emitter>::SignalMap SignalMap;
-
-    const std::pair<typename SignalMap::iterator, typename SignalMap::iterator> range = d->connections.equal_range(sig);
-    std::for_each(range.first, range.second, [](typename SignalMap::value_type &func) {
-        func.second.targetFunction();
-    });
+    for (const SignalReceptacle &receptacle : d->connections[sig]) {
+        receptacle.targetFunction();
+    }
 }
 
 template<class Emitter>
@@ -106,19 +105,23 @@ void SignalEmitter<Emitter>::disconnect(Signal sig, Receiver *receiver)
 {
     static_assert(std::is_enum<Signal>());
 
-    typedef typename SignalHolder<Emitter>::SignalMap SignalMap;
+    typedef typename SignalHolder<Emitter>::ReceptacleVector ReceptacleVector;
 
     bool hasConnections = false;
-    for (typename SignalMap::iterator it = d->connections.begin(); it != d->connections.end();) {
-        if (it->second.targetObject != receiver) {
-            continue;
-        }
 
-        if (it->first == sig) {
-            it = d->connections.erase(it);
-        } else {
-            hasConnections = true;
-            it++;
+    for (size_t receptacleSig = 0; receptacleSig<d->connections.size(); receptacleSig++) {
+        ReceptacleVector &receptacles = d->connections[receptacleSig];
+        for (typename ReceptacleVector::iterator it = receptacles.begin(); it != receptacles.end();) {
+            if (it->targetObject != receiver) {
+                continue;
+            }
+
+            if (receptacleSig == sig) {
+                it = receptacles.erase(it);
+            } else {
+                hasConnections = true;
+                it++;
+            }
         }
     }
     if (!hasConnections) {
@@ -129,15 +132,17 @@ void SignalEmitter<Emitter>::disconnect(Signal sig, Receiver *receiver)
 template<class Emitter>
 void SignalEmitter<Emitter>::disconnect(SignalReceiver *receiver)
 {
-    typedef typename SignalHolder<Emitter>::SignalMap SignalMap;
+    typedef typename SignalHolder<Emitter>::ReceptacleVector ReceptacleVector;
 
     m_connectedReceivers.erase(receiver);
 
-    for (typename SignalMap::iterator it = d->connections.begin(); it != d->connections.end();) {
-        if (it->second.targetObject == receiver) {
-            it = d->connections.erase(it);
-        } else {
-            it++;
+    for (ReceptacleVector &receptacles : d->connections) {
+        for (typename ReceptacleVector::iterator it = receptacles.begin(); it != receptacles.end();) {
+            if (it->targetObject == receiver) {
+                it = receptacles.erase(it);
+            } else {
+                it++;
+            }
         }
     }
 

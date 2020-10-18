@@ -18,7 +18,8 @@ struct AiScript;
 
 struct Condition : public EventListener, public SignalEmitter<Condition>, public SignalReceiver {
     enum Signals {
-        SatisfiedChanged
+        SatisfiedChanged,
+        SignalCount
     };
 
     virtual ~Condition();

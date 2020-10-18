@@ -22,7 +22,8 @@ struct AiScript : public SignalEmitter<AiScript>
     enum Signals {
         GoalChanged,
         EscrowChanged,
-        TimerTriggered
+        TimerTriggered,
+        SignalCount
     };
 
     AiScript(AiPlayer *player) : m_player(player) { }
