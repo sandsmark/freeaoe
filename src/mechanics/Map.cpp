@@ -22,7 +22,6 @@
 #include "core/Utility.h"
 #include "resource/TerrainSprite.h"
 #include "resource/AssetManager.h"
-#include "mechanics/Unit.h"
 #include "resource/DataManager.h"
 
 #include <unordered_set>
@@ -302,7 +301,7 @@ void Map::removeEntityAt(unsigned int col, unsigned int row, const int entityId)
     }
 }
 
-void Map::addEntityAt(int col, int row, const EntityPtr &entity) noexcept
+void Map::addEntityAt(int col, int row, const EntityPtr &entity, int foundationTerrain) noexcept
 {
     unsigned int index = row * cols_ + col;
 
@@ -322,24 +321,21 @@ void Map::addEntityAt(int col, int row, const EntityPtr &entity) noexcept
         return;
     }
 
-    Unit::Ptr unit = Unit::fromEntity(entity);
-    const int newTerrain = unit->data()->Building.FoundationTerrainID;
-
-    if (newTerrain < 0) {
+    if (foundationTerrain < 0) {
         return;
     }
 
-    const int width = unit->data()->Size.x;
-    const int height = unit->data()->Size.y;
+    const int width = entity->tileSize().width;
+    const int height = entity->tileSize().height;
     bool gotError = false;
     for (int x = 0; x < width*2; x++) {
         for (int y = 0; y < height*2; y++) {
-            gotError = !updateTileAt(col + x - width, row + y - width, newTerrain) || gotError;
+            gotError = !updateTileAt(col + x - width, row + y - width, foundationTerrain) || gotError;
         }
     }
 
     if (gotError) {
-        WARN << "Unit" << unit->debugName << "size extends out of map from" << (col - width) << (row - width) << "to" << (col + width) << (row + width);
+        WARN << "Unit" << entity->debugName << "size extends out of map from" << (col - width) << (row - width) << "to" << (col + width) << (row + width);
     }
 
     for (int col_ = std::max(col - 1, 0); col_ < std::min(col + width + 2, cols_); col_++) {

@@ -58,6 +58,7 @@ struct Size {
         width(w), height(h)
     {}
 
+    // Explicit because it throws away the z, which is TODO to use everywhere
     explicit Size (const genie::XYZF &genieVec) : width(genieVec.x), height(genieVec.y) { }
 
     Size(const genie::XYF &xyf) :

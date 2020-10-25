@@ -30,6 +30,12 @@ public:
 
     Missile(const genie::Unit &data, const std::shared_ptr<Unit> &sourceUnit, const MapPos &target, const std::shared_ptr<Unit> &targetUnit);
 
+    // convenience casting functions
+    static std::shared_ptr<Missile> fromEntity(const EntityPtr &entity) noexcept;
+    static inline std::shared_ptr<Missile> fromEntity(const std::weak_ptr<Entity> &entity) noexcept {
+        return fromEntity(entity.lock());
+    }
+
     void setBlastType(const BlastType type, const float radius) noexcept;
 
     bool update(Time time) noexcept override;
@@ -41,6 +47,8 @@ public:
     double distanceTo(const MapPos &sourcePosition, const std::shared_ptr<Unit> &otherUnit) const noexcept;
 
     Size clearanceSize() const noexcept;
+
+    Size tileSize() const override;
 
 private:
     bool initialize();

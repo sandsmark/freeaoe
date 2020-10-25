@@ -468,6 +468,11 @@ void Unit::setPosition(const MapPos &pos, const bool initial)
     }
 }
 
+int Unit::foundationTerrain() const
+{
+    return data()->Building.FoundationTerrainID;
+}
+
 void Unit::setUnitData(const genie::Unit &data_) noexcept
 {
     m_data = &data_;
@@ -516,6 +521,11 @@ MapRect Unit::mapRect() const noexcept
     }
 
     return ret;
+}
+
+Size Unit::tileSize() const noexcept
+{
+    return Size(data()->Size);
 }
 
 double Unit::distanceTo(const Unit::Ptr &otherUnit) const noexcept
@@ -657,7 +667,7 @@ DopplegangerEntity::Ptr DopplegangerEntity::fromEntity(const std::shared_ptr<Ent
 }
 
 DopplegangerEntity::DopplegangerEntity(const Unit::Ptr &originalUnit) :
-    StaticEntity(Type::Doppleganger, "Doppleganger for " + originalUnit->debugName),
+    StaticEntity(Type::Doppleganger, "Doppleganger for " + originalUnit->debugName, Size(originalUnit->data()->Size)),
     ownerID(originalUnit->playerId()),
     originalUnitData(originalUnit->data()),
     m_unitManager(originalUnit->unitManager()),

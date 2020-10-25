@@ -111,7 +111,7 @@ public:
     bool updateTileAt(const int col, const int row, unsigned id) noexcept;
 
     void removeEntityAt(unsigned int col, unsigned int row, const int entityId) noexcept;
-    void addEntityAt(int col, int row, const EntityPtr &entity) noexcept;
+    void addEntityAt(int col, int row, const EntityPtr &entity, int foundationTerrain) noexcept;
 
     inline const std::vector<std::weak_ptr<Entity>> &entitiesAt(unsigned int col, unsigned int row) const noexcept {
         unsigned int index = row * cols_ + col;

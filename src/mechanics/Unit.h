@@ -166,6 +166,7 @@ struct Unit : public Entity
 
     void setMap(const MapPtr &newMap) noexcept override;
     void setPosition(const MapPos &pos, const bool initial = false) override;
+    int foundationTerrain() const override;
 
     virtual ScreenRect screenRect() const noexcept;
     virtual bool checkClick(const ScreenPos &pos) const noexcept;
@@ -175,6 +176,7 @@ struct Unit : public Entity
         return position() + clearanceSize() / 2.;
     }
     MapRect mapRect() const noexcept;
+    Size tileSize() const noexcept override;
 
     float distanceTo(const MapPos &pos) const noexcept
     {

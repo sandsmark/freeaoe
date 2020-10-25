@@ -17,8 +17,6 @@
 */
 
 #include "Entity.h"
-#include "Missile.h"
-#include "Building.h"
 #include "core/Constants.h"
 #include "core/Types.h"
 #include "Map.h"
@@ -59,19 +57,6 @@ bool Entity::update(Time time) noexcept
     return updated && isVisible;
 }
 
-std::shared_ptr<Missile> Entity::asMissile(const std::shared_ptr<Entity> &entity) noexcept
-{
-    if (!entity) {
-        return nullptr;
-    }
-
-    if (!entity->isMissile()) {
-        return nullptr;
-    }
-
-    return std::static_pointer_cast<Missile>(entity);
-}
-
 void Entity::setMap(const MapPtr &newMap) noexcept
 {
     const int tileX = m_position.x / Constants::TILE_SIZE;
@@ -82,7 +67,7 @@ void Entity::setMap(const MapPtr &newMap) noexcept
         oldMap->removeEntityAt(tileX, tileY, id);
 
         if (newMap) { // todo assume we have a valid position
-            newMap->addEntityAt(tileX, tileY, shared_from_this());
+            newMap->addEntityAt(tileX, tileY, shared_from_this(), foundationTerrain());
         }
     }
 
@@ -118,7 +103,7 @@ void Entity::setPosition(const MapPos &pos, const bool initial)
     if (!initial) {
         map->removeEntityAt(oldTileX, oldTileY, id);
     }
-    map->addEntityAt(newTileX, newTileY, shared_from_this());
+    map->addEntityAt(newTileX, newTileY, shared_from_this(), foundationTerrain());
 }
 
 MoveTargetMarker::MoveTargetMarker()
@@ -151,12 +136,13 @@ bool MoveTargetMarker::update(Time time) noexcept
     return updated;
 }
 
-StaticEntity::StaticEntity(const Type type_, const std::string &name) : Entity(type_, name)
+StaticEntity::StaticEntity(const Type type_, const std::string &name, const Size size) : Entity(type_, name),
+    m_tileSize(size)
 {
 }
 
-DecayingEntity::DecayingEntity(const int graphicId, float decayTime) :
-    StaticEntity(Type::Decaying, "Eye Candy Things"),
+DecayingEntity::DecayingEntity(const int graphicId, float decayTime, const Size size) :
+    StaticEntity(Type::Decaying, "Eye Candy Things", size),
     m_decayTimeLeft(decayTime)
 {
     m_renderer->setSprite(graphicId);

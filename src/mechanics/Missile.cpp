@@ -54,6 +54,17 @@ Missile::~Missile()
     }
 }
 
+std::shared_ptr<Missile> Missile::fromEntity(const EntityPtr &entity) noexcept
+{
+    if (!entity) {
+        return nullptr;
+    }
+    if (!entity->isMissile()) {
+        return nullptr;
+    }
+    return std::static_pointer_cast<Missile>(entity);
+}
+
 void Missile::setBlastType(const BlastType type, const float radius) noexcept
 {
     m_blastType = type;
@@ -158,7 +169,11 @@ bool Missile::update(Time time) noexcept
         m_previousSmokeTime = time;
         if (player) {
             const genie::Unit &trailingData = player->civilization.unitData(m_data.Moving.TrackingUnit);
-            DecayingEntity::Ptr trailingUnit = std::make_shared<DecayingEntity>(trailingData.StandingGraphic.first, 0.f);
+            DecayingEntity::Ptr trailingUnit = std::make_shared<DecayingEntity>(
+                        trailingData.StandingGraphic.first,
+                        0.f,
+                        Size(trailingData.Size)
+                        );
             trailingUnit->setMap(m_map.lock());
             trailingUnit->setPosition(position());
             m_unitManager.addStaticEntity(trailingUnit);
@@ -314,6 +329,11 @@ double Missile::distanceTo(const MapPos &sourcePosition, const std::shared_ptr<U
 Size Missile::clearanceSize() const noexcept
 {
     return Size(m_data.Size.x * Constants::TILE_SIZE, m_data.Size.y * Constants::TILE_SIZE);
+}
+
+Size Missile::tileSize() const
+{
+    return Size(m_data.Size);
 }
 
 void Missile::die()

@@ -199,7 +199,11 @@ DecayingEntity::Ptr UnitFactory::createCorpseFor(const Unit::Ptr &unit)
         DBG << "decaying forever";
         decayTime = std::numeric_limits<float>::infinity();
     }
-    DecayingEntity::Ptr corpse = std::make_shared<DecayingEntity>(corpseData.StandingGraphic.first, decayTime);
+    DecayingEntity::Ptr corpse = std::make_shared<DecayingEntity>(
+                corpseData.StandingGraphic.first,
+                decayTime,
+                Size(corpseData.Size)
+                );
     corpse->renderer().setPlayerColor(owner->playerColor);
     corpse->setMap(unit->map());
     corpse->setPosition(unit->position());
@@ -246,7 +250,11 @@ std::shared_ptr<DecayingEntity> UnitFactory::createCorpseFor(const std::shared_p
         decayTime = std::numeric_limits<float>::infinity();
     }
 
-    DecayingEntity::Ptr corpse = std::make_shared<DecayingEntity>(data->StandingGraphic.first, decayTime);
+    DecayingEntity::Ptr corpse = std::make_shared<DecayingEntity>(
+                data->StandingGraphic.first,
+                decayTime,
+                Size(data->Size)
+                );
     corpse->renderer().setPlayerColor(doppleganger->renderer().playerColor());
     corpse->setMap(doppleganger->map());
     corpse->setPosition(doppleganger->position());

@@ -32,7 +32,6 @@ class Map;
 struct Unit;
 struct Entity;
 struct MoveTargetMarker;
-struct Missile;
 class GraphicRender;
 class Sprite;
 
@@ -62,8 +61,6 @@ struct Entity : std::enable_shared_from_this<Entity>
 
     virtual GraphicRender &renderer() noexcept { return *m_renderer; }
 
-    static std::shared_ptr<Missile> asMissile(const std::shared_ptr<Entity> &entity) noexcept;
-
     const std::string debugName;
 
     bool isVisible = false;
@@ -72,6 +69,10 @@ struct Entity : std::enable_shared_from_this<Entity>
     MapPtr map() const noexcept;
     inline const MapPos &position() const noexcept { return m_position; }
     virtual void setPosition(const MapPos &pos, const bool initial = false);
+
+    virtual Size tileSize() const = 0;
+
+    virtual int foundationTerrain() const { return -1; }
 
     inline bool isUnit() const noexcept { return m_type >= Type::Unit; }
     inline bool isBuilding() const noexcept { return m_type >= Type::Building; }
@@ -131,8 +132,11 @@ struct StaticEntity : public Entity
 
     virtual bool shouldBeRemoved() const noexcept = 0;
 
+    Size tileSize() const override { return m_tileSize; }
+
 protected:
-    StaticEntity(const Type type_, const std::string &name);
+    StaticEntity(const Type type_, const std::string &name, const Size size);
+    const Size m_tileSize;
 };
 
 /// Dumb name, but is corpses and smoke trails and stuff
@@ -140,7 +144,7 @@ struct DecayingEntity : public StaticEntity
 {
     typedef std::shared_ptr<DecayingEntity> Ptr;
 
-    DecayingEntity(const int graphicId, float decayTime);
+    DecayingEntity(const int graphicId, float decayTime, const Size size);
 
     bool update(Time time) noexcept override;
 

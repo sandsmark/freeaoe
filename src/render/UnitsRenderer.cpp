@@ -88,7 +88,7 @@ void UnitsRenderer::render(const std::shared_ptr<IRenderTarget> &renderTarget, c
         }
 
         if (entity->isMissile()) {
-            Missile::Ptr missile = Entity::asMissile(entity);
+            Missile::Ptr missile = Missile::fromEntity(entity);
             if (visibility != VisibilityMap::Visible) {
                 continue;
             }
