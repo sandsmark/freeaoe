@@ -243,7 +243,7 @@ void UnitsRenderer::render(const std::shared_ptr<IRenderTarget> &renderTarget, c
             }
         }
 
-        const ScreenPos pos = renderTarget->camera()->absoluteScreenPos(unit->position());
+        const ScreenPos pos = camera->absoluteScreenPos(unit->position());
         unit->renderer().render(*renderTarget, pos, RenderType::Base);
 
 
@@ -300,7 +300,7 @@ void UnitsRenderer::render(const std::shared_ptr<IRenderTarget> &renderTarget, c
 
     const MoveTargetMarker::Ptr &marker = unitManager->moveTargetMarker();
     marker->renderer->render(*renderTarget,
-                                          renderTarget->camera()->absoluteScreenPos(marker->position()),
+                                          camera->absoluteScreenPos(marker->position()),
                                           RenderType::Base);
 
     for (const Missile::Ptr &missile : visibleMissiles) {
