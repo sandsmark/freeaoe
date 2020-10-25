@@ -147,18 +147,6 @@ bool Unit::update(Time time) noexcept
 
     bool updated = false;
 
-    if (m_prevTime) {
-        int timeDelta = time - m_prevTime;
-
-        if (targetBlinkTimeLeft) {
-            targetBlinkTimeLeft -= timeDelta;
-        }
-
-        if (targetBlinkTimeLeft < 0) {
-            targetBlinkTimeLeft = 0;
-        }
-    }
-
     m_prevTime = time;
 
     for (Annex &annex : annexes) {

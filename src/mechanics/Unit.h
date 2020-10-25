@@ -135,9 +135,6 @@ struct Unit : public Entity
         NoAttack
     } stance = Stance::Aggressive;
 
-    // The blinking animation thing when it is selected as a target
-    int targetBlinkTimeLeft = 0;
-
     UnitActionHandler actions;
     std::vector<Annex> annexes;
     std::weak_ptr<Building> garrisonedIn;
@@ -213,6 +210,7 @@ struct Unit : public Entity
     void kill() noexcept;
     bool isDying() const noexcept;
     bool isDead() const noexcept;
+    bool isAlive() const noexcept { return !isDying() && !isDead(); }
 
     void setUnitData(const genie::Unit &data_) noexcept;
     const genie::Unit *data() const {

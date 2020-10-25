@@ -151,10 +151,11 @@ void UnitsRenderer::render(const std::shared_ptr<IRenderTarget> &renderTarget, c
     std::reverse(visibleUnits.begin(), visibleUnits.end());
 
     for (const Unit::Ptr &unit : visibleUnits) {
+        const int blinkTimeLeft = unitManager->targetBlinkTimeLeft(unit->id);
 
-        const bool blinkingAsTarget = unit->targetBlinkTimeLeft > 0 &&
-                (((unit->targetBlinkTimeLeft) / 500) % 2 == 0) &&
-                !unit->isDead() && !unit->isDying();
+        const bool blinkingAsTarget = blinkTimeLeft > 0 &&
+                (((blinkTimeLeft) / 500) % 2 != 0) &&
+                unit->isAlive();
 
         if (blinkingAsTarget || unitManager->selected().contains(unit)) {
             sf::RectangleShape rect;

@@ -292,6 +292,26 @@ bool UnitManager::update(Time time)
         }
     }
 
+    Time deltaTime = time - m_lastUpdateTime;
+    m_lastUpdateTime = time;
+
+    // Update targeted blinking times
+    std::unordered_map<int, int>::iterator it = m_targetBlinkTimeLeft.begin();
+    while (it != m_targetBlinkTimeLeft.end()) {
+        const bool blinkVisibleBefore = ((it->second) / 500) % 2 == 0;
+        it->second -= deltaTime;
+        if (it->second <= 0) {
+            it = m_targetBlinkTimeLeft.erase(it);
+            continue;
+        }
+
+        const bool blinkVisibleAfter = ((it->second) / 500) % 2 == 0;
+        if (blinkVisibleBefore != blinkVisibleAfter) {
+            updated = true;
+        }
+        it++;
+    }
+
     updated = m_moveTargetMarker->update(time) || updated;
 
     return updated;
@@ -420,7 +440,7 @@ void UnitManager::onRightClick(const ScreenPos &screenPos, const CameraPtr &came
         task.target = target;
         IAction::assignTask(task, unit, IAction::AssignType::Replace);
         if (target) {
-            target->targetBlinkTimeLeft = 3000; // 3s
+            m_targetBlinkTimeLeft[target->id] = 3000;
         }
         foundTasks = true;
     }
@@ -834,6 +854,15 @@ void UnitManager::selectAttackTarget()
 void UnitManager::selectGarrisonTarget()
 {
     m_state = State::SelectingGarrisonTarget;
+}
+
+int UnitManager::targetBlinkTimeLeft(int unitID) const noexcept
+{
+    std::unordered_map<int, int>::const_iterator it = m_targetBlinkTimeLeft.find(unitID);
+    if (it == m_targetBlinkTimeLeft.end()) {
+        return 0;
+    }
+    return it->second;
 }
 
 void UnitManager::placeBuilding(const UnplacedBuilding &building)

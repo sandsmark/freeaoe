@@ -207,6 +207,8 @@ public:
 
     void onCombatantUnitsMoved() { m_unitsMoved = true; }
 
+    int targetBlinkTimeLeft(int unitID) const noexcept;
+
 private:
     void onResearchCompleted(Player * /*player*/, int /*researchId*/) override { m_availableActionsChanged = true; }
     void onUnitMoved(Unit *unit, const MapPos &oldTile, const MapPos &newTile) override;
@@ -229,6 +231,9 @@ private:
     UnitSet m_unitsWithActions;
     TaskSet m_currentActions;
 
+    /// The blinking animation thing when it is selected as a target
+    std::unordered_map<int, int> m_targetBlinkTimeLeft; // TODO: find a better way to do this
+
     UnitSet m_selectedUnits;
     MapPtr m_map;
 
@@ -242,6 +247,8 @@ private:
     std::vector<std::weak_ptr<Player>> m_players;
     std::weak_ptr<Player> m_humanPlayer;
     int m_humanPlayerID = -1;
+
+    Time m_lastUpdateTime = 0;
 };
 
 inline LogPrinter operator <<(LogPrinter os, const UnitManager::State state)
