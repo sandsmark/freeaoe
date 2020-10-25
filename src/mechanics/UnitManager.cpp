@@ -70,7 +70,8 @@ void UnitManager::add(const Unit::Ptr &unit, const MapPos &position)
     unit->setPosition(position, true);
     m_units.push_back(unit);
     if (unit->actions.hasAutoTargets()) {
-        m_unitsWithActions.insert(unit);
+        // stl is shit
+        m_unitsWithActions.add(unit);
     }
 
     EventManager::unitCreated(unit.get());
@@ -79,12 +80,12 @@ void UnitManager::add(const Unit::Ptr &unit, const MapPos &position)
 void UnitManager::remove(const Unit::Ptr &unit)
 {
     // Could just mark it as dead, but don't want a corpse, I think
-    if (m_selectedUnits.count(unit)) {
+    if (m_selectedUnits.contains(unit)) {
         EventManager::unitDeselected(unit.get());
-        m_selectedUnits.erase(unit);
+        m_selectedUnits.remove(unit);
     }
 
-    m_unitsWithActions.erase(unit);
+    m_unitsWithActions.remove(unit);
 
     UnitVector::iterator it = std::find(m_units.begin(), m_units.end(), unit);
     if (it != m_units.end()) {
@@ -269,9 +270,9 @@ bool UnitManager::update(Time time)
         // Remove from selected if it is dying
         if (isDead || isDying) {
             unit->selected = false;
-            m_selectedUnits.erase(unit);
+            m_selectedUnits.remove(unit);
             EventManager::unitDeselected(unit.get());
-            m_unitsWithActions.erase(unit);
+            m_unitsWithActions.remove(unit);
             m_availableActionsChanged = true;
         }
 
@@ -391,7 +392,7 @@ void UnitManager::onRightClick(const ScreenPos &screenPos, const CameraPtr &came
 {
     m_buildingsToPlace.clear();
 
-    if (m_selectedUnits.empty()) {
+    if (m_selectedUnits.isEmpty()) {
         return;
     }
 
@@ -608,21 +609,21 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
             //continue;
         }
 
-        newSelection.insert(unit);
+        newSelection.add(unit);
     }
 
     UnitSet newlySelected;
     if (isClick) {
-        if (!newSelection.empty()) {
+        if (!newSelection.isEmpty()) {
             const Unit::Ptr mostVisibleUnit = *std::min_element(newSelection.begin(), newSelection.end(), MapPositionSorter());
-            if (!previouslySelected.count(mostVisibleUnit)) {
-                newlySelected.insert(mostVisibleUnit);
+            if (!previouslySelected.contains(mostVisibleUnit)) {
+                newlySelected.add(mostVisibleUnit);
             }
         }
     } else {
         for (const Unit::Ptr &unit : newSelection) {
-            if (!previouslySelected.count(unit)) {
-                newlySelected.insert(unit);
+            if (!previouslySelected.contains(unit)) {
+                newlySelected.add(unit);
             }
         }
     }
@@ -634,14 +635,14 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
     }
 
     for (const Unit::Ptr &unit : previouslySelected) {
-        if (!newlySelected.count(unit)) {
+        if (!newlySelected.contains(unit)) {
             unit->selected = false;
             DBG << "Deselected" << unit->debugName << unit->id;
             EventManager::unitDeselected(unit.get());
         }
     }
 
-    if (newSelection.empty()) {
+    if (newSelection.isEmpty()) {
         DBG << "Unable to find anything to select in " << selectionRect;
         return;
     }
@@ -651,7 +652,7 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
         const Unit::Ptr mostVisibleUnit = *std::min_element(newSelection.begin(), newSelection.end(), MapPositionSorter());
         setSelectedUnits({std::move(mostVisibleUnit)});
     } else {
-        setSelectedUnits(std::move(newSelection));
+        setSelectedUnits(std::move(newSelection.units));
     }
 }
 
@@ -674,13 +675,13 @@ void UnitManager::updateAvailableActions()
     emit(ActionsChanged);
 }
 
-void UnitManager::setSelectedUnits(const UnitSet &units)
+void UnitManager::setSelectedUnits(const UnitVector &units)
 {
-    m_selectedUnits = units;
+    m_selectedUnits.units = units;
     m_buildingsToPlace.clear();
     m_availableActionsChanged = true;
 
-    if (units.empty()) {
+    if (m_selectedUnits.isEmpty()) {
         return;
     }
 
@@ -689,7 +690,7 @@ void UnitManager::setSelectedUnits(const UnitSet &units)
     // or do we only play it if there's only one selected unit
 #if 1
     if (m_selectedUnits.size() == 1) {
-        playSound(*m_selectedUnits.begin());
+        playSound(m_selectedUnits.first());
     }
 #else
     int selectionSound = (*units.begin())->data()->SelectionSound;
@@ -742,14 +743,14 @@ void UnitManager::startPlaceBuilding(const int unitId, const std::shared_ptr<Pla
     m_state = State::PlacingBuilding;
 }
 
-void UnitManager::enqueueProduceUnit(const genie::Unit *unitData, const UnitSet &producers)
+void UnitManager::enqueueProduceUnit(const genie::Unit *unitData, const UnitVector &producers)
 {
     if (producers.empty()) {
         WARN << "Handed no producers";
         return;
     }
 
-    Building::Ptr producer = Unit::asBuilding(*producers.begin());
+    Building::Ptr producer = Unit::asBuilding(producers[0]);
     if (!producer) {
         WARN << "Invalid producer";
         return;
@@ -758,14 +759,14 @@ void UnitManager::enqueueProduceUnit(const genie::Unit *unitData, const UnitSet 
     producer->enqueueProduceUnit(unitData);
 }
 
-void UnitManager::enqueueResearch(const genie::Tech *techData, const UnitSet &producers)
+void UnitManager::enqueueResearch(const genie::Tech *techData, const UnitVector &producers)
 {
     if (producers.empty()) {
         WARN << "Handed no producers";
         return;
     }
 
-    Building::Ptr producer = Unit::asBuilding(*producers.begin());
+    Building::Ptr producer = Unit::asBuilding(producers[0]);
     if (!producer) {
         WARN << "Invalid producer";
         return;
@@ -806,7 +807,7 @@ Unit::Ptr UnitManager::clickedUnitAt(const ScreenPos &pos, const CameraPtr &came
 
 const Task UnitManager::defaultActionAt(const ScreenPos &pos, const CameraPtr &camera) const noexcept
 {
-    if (m_selectedUnits.empty()) {
+    if (m_selectedUnits.isEmpty()) {
         return Task();
     }
 
@@ -816,7 +817,7 @@ const Task UnitManager::defaultActionAt(const ScreenPos &pos, const CameraPtr &c
     }
 
     // One of the selected themselves
-    if (m_selectedUnits.count(target)) {
+    if (m_selectedUnits.contains(target)) {
         return Task();
     }
 
@@ -918,7 +919,7 @@ void UnitManager::playSound(const Unit::Ptr &unit)
 
 const Task UnitManager::taskForPosition(const Unit::Ptr &unit, const ScreenPos &pos, const CameraPtr &camera) const noexcept
 {
-    if (m_selectedUnits.empty()) {
+    if (m_selectedUnits.isEmpty()) {
         return Task();
     }
 
@@ -928,7 +929,7 @@ const Task UnitManager::taskForPosition(const Unit::Ptr &unit, const ScreenPos &
     }
 
     // One of the selected themselves
-    if (m_selectedUnits.count(target)) {
+    if (m_selectedUnits.contains(target)) {
         return Task();
     }
 

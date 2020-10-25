@@ -461,11 +461,11 @@ void UnitInfoPanel::drawSingleUnit()
             WARN << "Expired unit garrisoned in" << garrisonedUnit->debugName;
             continue;
         }
-        garrisoned.insert(garrisonedUnit);
+        garrisoned.add(garrisonedUnit);
     }
 
-    if (!garrisoned.empty()) {
-        updateUnitsList(garrisoned, ScreenPos(100, 2)); // a bit arbitrary
+    if (!garrisoned.isEmpty()) {
+        updateUnitsList(garrisoned.units, ScreenPos(100, 2)); // a bit arbitrary
         drawUnitsList();
     }
 }
@@ -491,7 +491,7 @@ void UnitInfoPanel::drawUnitsList()
 
 }
 
-void UnitInfoPanel::updateUnitsList(const UnitSet &units, const ScreenPos offset)
+void UnitInfoPanel::updateUnitsList(const UnitVector &units, const ScreenPos offset)
 {
     const int maxVertical = 3;
     Size iconSize;

@@ -34,7 +34,6 @@ class Texture;
 }  // namespace sf
 
 typedef std::vector<std::shared_ptr<Unit>> UnitVector;
-typedef std::unordered_set<std::shared_ptr<Unit>> UnitSet;
 
 namespace genie {
 class Tech;
@@ -321,7 +320,7 @@ private:
     int m_buttonOffset = 0;
 
     // TODO: should be weak pointer, this is STRONK shared ptr
-    UnitSet m_selectedUnits;
+    UnitVector m_selectedUnits;
     UnitManager::State m_unitManagerState = UnitManager::State::Default;
 
     std::vector<InterfaceButton> currentButtons;

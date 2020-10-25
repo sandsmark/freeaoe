@@ -88,7 +88,49 @@ struct MapPositionSorter
 // IDEA: Class containing all entities, (adds, removes, updates them).
 // Base class (EntitySpace?)
 typedef std::vector<std::shared_ptr<Unit>> UnitVector;
-typedef std::unordered_set<std::shared_ptr<Unit>> UnitSet;
+//typedef std::unordered_set<std::shared_ptr<Unit>> UnitSet;
+
+/// STL's API design is a flying, then crashing, shitshow.
+/// should probably make it templated idk idc
+struct UnitSet {
+    using iterator = std::vector<std::shared_ptr<Unit>>::iterator;
+    using const_iterator = std::vector<std::shared_ptr<Unit>>::const_iterator;
+
+    inline iterator begin() { return units.begin(); }
+    inline iterator end() { return units.end(); }
+
+    inline const_iterator begin() const { return units.begin(); }
+    inline const_iterator end() const { return units.end(); }
+
+    inline bool isEmpty() const { return units.empty(); }
+    size_t size() const { return units.size(); }
+
+    const std::shared_ptr<Unit> &first() const { return units[0]; }
+
+    bool contains(const std::shared_ptr<Unit> &unit) const {
+        return std::find(units.begin(), units.end(), unit) != units.end();
+    }
+
+    // STL sucks, so let's wrap it
+    inline void add(const std::shared_ptr<Unit> &unit) {
+        const std::vector<std::shared_ptr<Unit>>::const_iterator it = std::find(units.begin(), units.end(), unit);
+        if (it != units.end()) {
+            return;
+        }
+        units.push_back(unit);
+    }
+
+    inline bool remove(const std::shared_ptr<Unit> &unit) {
+        const std::vector<std::shared_ptr<Unit>>::const_iterator it = std::find(units.begin(), units.end(), unit);
+        if (it == units.end()) {
+            return false;
+        }
+        units.erase(it);
+        return true;
+    }
+
+    std::vector<std::shared_ptr<Unit>> units;
+};
 
 class UnitManager : public EventListener, public SignalEmitter<UnitManager>
 {
@@ -135,8 +177,8 @@ public:
     void setMap(const MapPtr &map);
     const MapPtr &map() { return m_map; }
 
-    void setSelectedUnits(const UnitSet &units);
-    const UnitSet &selected() const { return m_selectedUnits; }
+    void setSelectedUnits(const UnitVector &units);
+    const UnitVector &selected() const { return m_selectedUnits.units; }
 
     const UnitVector &units() const { return m_units; }
     const std::unordered_set<std::shared_ptr<Missile>> &missiles() const { return m_missiles; }
@@ -145,8 +187,8 @@ public:
     const MoveTargetMarker::Ptr &moveTargetMarker() const { return m_moveTargetMarker; }
 
     void startPlaceBuilding(const int unitId, const std::shared_ptr<Player> &player);
-    void enqueueProduceUnit(const genie::Unit *unitData, const UnitSet &producers);
-    void enqueueResearch(const genie::Tech *techData, const UnitSet &producers);
+    void enqueueProduceUnit(const genie::Unit *unitData, const UnitVector &producers);
+    void enqueueResearch(const genie::Tech *techData, const UnitVector &producers);
 
     Unit::Ptr unitAt(const ScreenPos &pos, const CameraPtr &camera) const;
     Unit::Ptr clickedUnitAt(const ScreenPos &pos, const CameraPtr &camera);
