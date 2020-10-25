@@ -133,7 +133,7 @@ void Minimap::updateCamera()
 
 Drawable::Color Minimap::unitColor(const std::shared_ptr<Unit> &unit)
 {
-    if (unit->selected) {
+    if (m_unitManager->selected().contains(unit)) {
         return Drawable::White;
     }
 

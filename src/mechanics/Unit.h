@@ -137,7 +137,6 @@ struct Unit : public Entity
 
     // The blinking animation thing when it is selected as a target
     int targetBlinkTimeLeft = 0;
-    bool selected = false;
 
     UnitActionHandler actions;
     std::vector<Annex> annexes;

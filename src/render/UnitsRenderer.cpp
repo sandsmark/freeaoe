@@ -156,7 +156,7 @@ void UnitsRenderer::render(const std::shared_ptr<IRenderTarget> &renderTarget, c
                 (((unit->targetBlinkTimeLeft) / 500) % 2 == 0) &&
                 !unit->isDead() && !unit->isDying();
 
-        if (blinkingAsTarget || unit->selected) {
+        if (blinkingAsTarget || unitManager->selected().contains(unit)) {
             sf::RectangleShape rect;
             sf::CircleShape circle;
             circle.setFillColor(sf::Color::Transparent);

@@ -269,7 +269,6 @@ bool UnitManager::update(Time time)
 
         // Remove from selected if it is dying
         if (isDead || isDying) {
-            unit->selected = false;
             m_selectedUnits.remove(unit);
             EventManager::unitDeselected(unit.get());
             m_unitsWithActions.remove(unit);
@@ -629,14 +628,12 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
     }
 
     for (const Unit::Ptr &unit : newlySelected) {
-        unit->selected = true;
         DBG << "Selected" << unit->debugName << unit->id;
         EventManager::unitSelected(unit.get());
     }
 
     for (const Unit::Ptr &unit : previouslySelected) {
         if (!newlySelected.contains(unit)) {
-            unit->selected = false;
             DBG << "Deselected" << unit->debugName << unit->id;
             EventManager::unitDeselected(unit.get());
         }

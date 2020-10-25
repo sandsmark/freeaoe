@@ -212,8 +212,8 @@ bool UnitInfoPanel::update(Time /*time*/)
         return false;
     }
 
-    if (unitManager->selected() != m_selectedUnits) {
-        m_selectedUnits = unitManager->selected();
+    if (unitManager->selected().units != m_selectedUnits) {
+        m_selectedUnits = unitManager->selected().units;
 
         m_dirty = true;
     }

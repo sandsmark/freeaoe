@@ -102,7 +102,7 @@ bool ActionPanel::update(Time /*time*/)
         m_bottomOffset = 20;
     }
     if (m_buttonsDirty) {
-        m_selectedUnits = m_unitManager->selected();
+        m_selectedUnits = m_unitManager->selected().units;
         updateButtons();
         m_dirty = true;
     }

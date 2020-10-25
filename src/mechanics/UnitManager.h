@@ -178,7 +178,7 @@ public:
     const MapPtr &map() { return m_map; }
 
     void setSelectedUnits(const UnitVector &units);
-    const UnitVector &selected() const { return m_selectedUnits.units; }
+    const UnitSet &selected() const { return m_selectedUnits; }
 
     const UnitVector &units() const { return m_units; }
     const std::unordered_set<std::shared_ptr<Missile>> &missiles() const { return m_missiles; }
