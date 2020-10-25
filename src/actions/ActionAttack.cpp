@@ -138,12 +138,20 @@ IAction::UpdateResult ActionAttack::update(Time time)
     }
     const float timeSinceLastAttack = (time - m_lastAttackTime) * 0.0015;
 
-    if (timeSinceLastAttack >= unit->data()->Combat.ReloadTime) {
-        m_firing = false;
+    if (m_frameDelay > 0) {
+        if (timeSinceLastAttack >= unit->data()->Combat.ReloadTime) {
+            m_firing = false;
+        }
+    } else {
+        if (timeSinceLastAttack < unit->data()->Combat.DisplayedReloadTime) {
+            m_firing = true;
+        } else {
+            m_firing = false;
+        }
     }
 
     // Check if we're still reloading
-    if (timeSinceLastAttack <= unit->data()->Combat.ReloadTime + m_frameDelay) {
+    if (timeSinceLastAttack < unit->data()->Combat.ReloadTime + m_frameDelay) {
         return IAction::UpdateResult::NotUpdated;
     }
 
@@ -152,7 +160,10 @@ IAction::UpdateResult ActionAttack::update(Time time)
         return IAction::UpdateResult::Completed;
     }
     m_lastAttackTime = time;
-    m_firing = true;
+
+    if (m_frameDelay > 0) {
+        m_firing = true;
+    }
 
     // TODO: Create a flare here owned by the owner of the targeted unit, to show where the attack is coming from
 
@@ -161,11 +172,14 @@ IAction::UpdateResult ActionAttack::update(Time time)
         spawnMissiles(unit, unit->data()->Creatable.SecondaryProjectileUnit, targetUnit);
     } else if (unit->data()->Combat.ProjectileUnitID != -1) {
         spawnMissiles(unit, unit->data()->Combat.ProjectileUnitID, targetUnit);
-    } else {
+    } else if (targetUnit) {
         // Not firing missiles, deal damage directly
         for (const genie::unit::AttackOrArmor &attack : unit->data()->Combat.Attacks) {
             targetUnit->receiveAttack(attack, 1.); // todo: damage multiplier from elevation
         }
+    } else {
+        WARN << "No target unit, and not firing missiles";
+        return IAction::UpdateResult::Completed;
     }
 
     return IAction::UpdateResult::Updated;
