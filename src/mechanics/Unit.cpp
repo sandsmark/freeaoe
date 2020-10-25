@@ -505,7 +505,7 @@ Size Unit::clearanceSize() const noexcept
 MapRect Unit::mapRect() const noexcept
 {
     // I don't take into account height (as in Z), idk lol
-    MapRect ret(position(), Size(data()->Size.x, data()->Size.y));
+    MapRect ret(position() / Constants::TILE_SIZE, tileSize());
 
     for (const Annex &annex : annexes) {
         MapRect annexRect = annex.unit->mapRect();
