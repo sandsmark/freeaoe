@@ -15,7 +15,9 @@ class UnitManager;
 class UnitsRenderer
 {
 public:
+    void begin(const std::shared_ptr<IRenderTarget> &renderTarget);
     void render(const std::shared_ptr<IRenderTarget> &renderTarget, const std::vector<std::weak_ptr<Entity>> &visible);
+    void display(const std::shared_ptr<IRenderTarget> &renderTarget);
 
     void setUnitManager(const std::shared_ptr<UnitManager> &unitManager);
     void setVisibilityMap(const std::weak_ptr<VisibilityMap> &visibilityMap) { m_visibilityMap = visibilityMap; }

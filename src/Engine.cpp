@@ -170,13 +170,7 @@ void Engine::start()
             renderWindow_->clear(sf::Color::Green);
             m_mapRenderer->display();
 
-            std::vector<std::weak_ptr<Entity>> visibleEntities;
-            visibleEntities = state->map()->entitiesBetween(m_mapRenderer->firstVisibleColumn(),
-                                                            m_mapRenderer->firstVisibleRow(),
-                                                            m_mapRenderer->lastVisibleColumn(),
-                                                            m_mapRenderer->lastVisibleRow());
-
-            m_unitsRenderer->render(renderTarget_, visibleEntities);
+            drawEntities(state->map());
 
             state->draw();
 
@@ -326,6 +320,24 @@ void Engine::drawUi()
     }
 
     m_mouseCursor->render();
+}
+
+void Engine::drawEntities(const std::shared_ptr<Map> &map)
+{
+    TIME_THIS;
+
+    const int firstCol = m_mapRenderer->firstVisibleColumn();
+    const int lastCol = m_mapRenderer->lastVisibleColumn();
+    const int firstRow = m_mapRenderer->firstVisibleRow();
+    const int lastRow = m_mapRenderer->lastVisibleRow();
+
+    m_unitsRenderer->begin(renderTarget_);
+    for (int col = firstCol; col <  lastCol; col++) {
+        for (int row = firstRow; row <  lastRow; row++) {
+            m_unitsRenderer->render(renderTarget_, map->entitiesAt(col, row));
+        }
+    }
+    m_unitsRenderer->display(renderTarget_);
 }
 
 bool Engine::handleEvent(const sf::Event &event, const std::shared_ptr<GameState> &state)

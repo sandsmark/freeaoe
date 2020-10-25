@@ -122,16 +122,6 @@ public:
         return m_tileUnits[index];
     }
 
-    inline const std::vector<std::weak_ptr<Entity>> entitiesBetween(int firstCol, int firstRow, int lastCol, int lastRow) const noexcept {
-        std::vector<std::weak_ptr<Entity>> entities;
-        for (int col=firstCol; col<lastCol; col++) {
-            for (int row=firstRow; row<lastRow; row++) {
-                entities.insert(entities.end(), entitiesAt(col, row).begin(), entitiesAt(col, row).end());
-            }
-        }
-        return entities;
-    }
-
     void updateMapData() noexcept;
 
     bool tilesUpdated() const noexcept { return m_updated; }

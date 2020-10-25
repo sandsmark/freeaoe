@@ -194,45 +194,50 @@ Task UnitActionHandler::checkForAutoTargets() noexcept
     const int bottom = position.y / Constants::TILE_SIZE + los;
 
     float closestDistance = los * Constants::TILE_SIZE;
-    const std::vector<std::weak_ptr<Entity>> entities = map->entitiesBetween(left, top, right, bottom);
-    for (const std::weak_ptr<Entity> &entity : entities) {
-        const Unit::Ptr other = Unit::fromEntity(entity);
-        if (!other) {
-            continue;
-        }
 
-        if (other->id == m_unit->id) {
-            continue;
-        }
-        if (other->playerId() == UnitManager::GaiaID) {
-            // I don't think we should auto-target gaia units?
-            continue;
-        }
+    for (int col = left; col <  right; col++) {
+        for (int row = top; row <  bottom; row++) {
+            const std::vector<std::weak_ptr<Entity>> &entities = map->entitiesAt(col, row);
+            for (const std::weak_ptr<Entity> &entity : entities) {
+                const Unit::Ptr other = Unit::fromEntity(entity);
+                if (!other) {
+                    continue;
+                }
 
-        const float distance = m_unit->distanceTo(other);
+                if (other->id == m_unit->id) {
+                    continue;
+                }
+                if (other->playerId() == UnitManager::GaiaID) {
+                    // I don't think we should auto-target gaia units?
+                    continue;
+                }
 
-        if (distance > closestDistance) {
-            continue;
-        }
+                const float distance = m_unit->distanceTo(other);
 
-        const Task potentialTask = findMatchingTask(m_unit->player().lock(), other, m_autoTargetTasks);
-        if (!potentialTask.data) {
-            continue;
-        }
+                if (distance > closestDistance) {
+                    continue;
+                }
 
-        // TODO: should only prefer civilians (and I think only wolves? lions?)
-        // should attack others as well
-        // Maybe check combat level instead? but then suddenly we get wolves trying to find a path to ships
-        if (potentialTask.data->ActionType == genie::ActionType::Combat && data->Class == genie::Unit::PredatorAnimal) {
-            if (other->data()->Creatable.CreatableType != genie::unit::Creatable::VillagerType) {
-                continue;
+                const Task potentialTask = findMatchingTask(m_unit->player().lock(), other, m_autoTargetTasks);
+                if (!potentialTask.data) {
+                    continue;
+                }
+
+                // TODO: should only prefer civilians (and I think only wolves? lions?)
+                // should attack others as well
+                // Maybe check combat level instead? but then suddenly we get wolves trying to find a path to ships
+                if (potentialTask.data->ActionType == genie::ActionType::Combat && data->Class == genie::Unit::PredatorAnimal) {
+                    if (other->data()->Creatable.CreatableType != genie::unit::Creatable::VillagerType) {
+                        continue;
+                    }
+                }
+
+                if (potentialTask.data) {
+                    newTask = potentialTask;
+                    target = other;
+                    closestDistance = distance;
+                }
             }
-        }
-
-        if (potentialTask.data) {
-            newTask = potentialTask;
-            target = other;
-            closestDistance = distance;
         }
     }
 

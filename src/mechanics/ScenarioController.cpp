@@ -493,25 +493,23 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
 
 void ScenarioController::forEachMatchingUnit(const genie::TriggerEffect &effect, const std::function<void (const Unit::Ptr &)> &action)
 {
-    std::vector<std::weak_ptr<Entity>> entities;
-    entities = m_gameState->map()->entitiesBetween(effect.areaFrom.y,
-                                                   effect.areaFrom.x,
-                                                   effect.areaTo.y,
-                                                   effect.areaTo.x);
-
-
     bool foundMatching = false;
-    for (const std::weak_ptr<Entity> &entity : entities) {
-        Unit::Ptr unit = Unit::fromEntity(entity);
-        if (!unit) {
-            WARN << "got invalid unit in area for effect";
-            continue;
+    for (int col = effect.areaFrom.x; col <  effect.areaTo.x; col++) {
+        for (int row = effect.areaFrom.y; row <  effect.areaTo.y; row++) {
+            const std::vector<std::weak_ptr<Entity>> &entities = m_gameState->map()->entitiesAt(col, row);
+            for (const std::weak_ptr<Entity> &entity : entities) {
+                Unit::Ptr unit = Unit::fromEntity(entity);
+                if (!unit) {
+                    WARN << "got invalid unit in area for effect";
+                    continue;
+                }
+                if (!checkUnitMatchingEffect(unit, effect)) {
+                    continue;
+                }
+                foundMatching = true;
+                action(unit);
+            }
         }
-        if (!checkUnitMatchingEffect(unit, effect)) {
-            continue;
-        }
-        foundMatching = true;
-        action(unit);
     }
 
     if (!foundMatching) {

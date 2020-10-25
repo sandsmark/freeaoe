@@ -17,22 +17,18 @@
 
 #include <SFML/Graphics.hpp>
 
-void UnitsRenderer::render(const std::shared_ptr<IRenderTarget> &renderTarget, const std::vector<std::weak_ptr<Entity>> &visible)
+void UnitsRenderer::begin(const std::shared_ptr<IRenderTarget> &renderTarget)
 {
-    std::shared_ptr<VisibilityMap> visibilityMap = m_visibilityMap.lock();
-    std::shared_ptr<UnitManager> unitManager = m_unitManager.lock();
-
-    REQUIRE(unitManager, return);
-    REQUIRE(visibilityMap, return);
-
-    CameraPtr camera = renderTarget->camera();
-
     if (!m_outlineOverlay || m_outlineOverlay->getSize() != renderTarget->getSize()) {
         m_outlineOverlay = renderTarget->createTextureTarget(renderTarget->getSize());
     }
 
-    if (camera->targetPosition() != m_previousCameraPos) {
+    m_outlineOverlay->clear(Drawable::Transparent);
 
+    CameraPtr camera = renderTarget->camera();
+
+    std::shared_ptr<UnitManager> unitManager = m_unitManager.lock();
+    if (camera->targetPosition() != m_previousCameraPos) {
         for (const Unit::Ptr &unit : unitManager->units()) {
             unit->isVisible = false;
         }
@@ -44,8 +40,18 @@ void UnitsRenderer::render(const std::shared_ptr<IRenderTarget> &renderTarget, c
                 entity->isVisible = false;
             }
         }
-        m_previousCameraPos = camera->targetPosition();
     }
+}
+
+void UnitsRenderer::render(const std::shared_ptr<IRenderTarget> &renderTarget, const std::vector<std::weak_ptr<Entity>> &visible)
+{
+    std::shared_ptr<VisibilityMap> visibilityMap = m_visibilityMap.lock();
+    std::shared_ptr<UnitManager> unitManager = m_unitManager.lock();
+
+    REQUIRE(unitManager, return);
+    REQUIRE(visibilityMap, return);
+
+    CameraPtr camera = renderTarget->camera();
 
     std::vector<Unit::Ptr> visibleUnits;
     std::vector<Missile::Ptr> visibleMissiles;
@@ -132,9 +138,6 @@ void UnitsRenderer::render(const std::shared_ptr<IRenderTarget> &renderTarget, c
         }
     }
     std::sort(visibleUnits.begin(), visibleUnits.end(), MapPositionSorter());
-
-
-    m_outlineOverlay->clear(Drawable::Transparent);
 
     for (const Unit::Ptr &unit : visibleUnits) {
         const ScreenPos unitPosition = camera->absoluteScreenPos(unit->position());
@@ -267,26 +270,7 @@ void UnitsRenderer::render(const std::shared_ptr<IRenderTarget> &renderTarget, c
 #endif
     }
 
-    m_outlineOverlay->display();
-
-    {
-        // this is a bit wrong, on bright buildings it's almost not visible,
-        // but haven't found a better solution other than writing a custom shader (and I'm lazy)
-        renderTarget->draw(m_outlineOverlay, sf::BlendAdd);
-    }
-
-#if defined(DEBUG)
-    for (size_t i=0; i<ActionMove::testedPoints.size(); i++) {
-        const MapPos &mpos = ActionMove::testedPoints[i];
-        sf::CircleShape circle;
-        ScreenPos pos = camera->absoluteScreenPos(mpos);
-        circle.setPosition(pos.x, pos.y);
-        circle.setRadius(2);
-        int col = 128 * i / ActionMove::testedPoints.size() + 128;
-        circle.setFillColor(sf::Color(128 + col, 255 - col, 255, 128));
-        circle.setOutlineColor(sf::Color::Transparent);
-        renderTarget->draw(circle);
-    }
+#if DEBUG_PATHFINDING
     for (const Unit::Ptr &unit : visibleUnits) {
         sf::CircleShape circle;
         ScreenPos pos = camera->absoluteScreenPos(unit->position());
@@ -298,14 +282,23 @@ void UnitsRenderer::render(const std::shared_ptr<IRenderTarget> &renderTarget, c
     }
 #endif
 
+    for (const Missile::Ptr &missile : visibleMissiles) {
+        missile->renderer().render(*renderTarget, camera->absoluteScreenPos(missile->position()), RenderType::Base);
+    }
+}
+
+void UnitsRenderer::display(const std::shared_ptr<IRenderTarget> &renderTarget)
+{
+    std::shared_ptr<UnitManager> unitManager = m_unitManager.lock();
+    REQUIRE(unitManager, return);
+
+    CameraPtr camera = renderTarget->camera();
+
     const MoveTargetMarker::Ptr &marker = unitManager->moveTargetMarker();
     marker->renderer->render(*renderTarget,
                                           camera->absoluteScreenPos(marker->position()),
                                           RenderType::Base);
 
-    for (const Missile::Ptr &missile : visibleMissiles) {
-        missile->renderer().render(*renderTarget, renderTarget->camera()->absoluteScreenPos(missile->position()), RenderType::Base);
-    }
 
     if (unitManager->state() == UnitManager::State::PlacingBuilding || unitManager->state() == UnitManager::State::PlacingWall) {
 //        DBG << "placing buildings" << m_buildingsToPlace.size();
@@ -337,9 +330,31 @@ void UnitsRenderer::render(const std::shared_ptr<IRenderTarget> &renderTarget, c
         for (const UnplacedBuilding &building : buildingsToPlace) {
             building.graphic->setOrientation(building.orientation);
             building.graphic->render(*renderTarget,
-                                        renderTarget->camera()->absoluteScreenPos(building.position),
+                                        camera->absoluteScreenPos(building.position),
                                         building.canPlace ? RenderType::ConstructAvailable : RenderType::ConstructUnavailable);
         }
+    }
+
+#if DEBUG_PATHFINDING
+    for (size_t i=0; i<ActionMove::testedPoints.size(); i++) {
+        const MapPos &mpos = ActionMove::testedPoints[i];
+        sf::CircleShape circle;
+        ScreenPos pos = camera->absoluteScreenPos(mpos);
+        circle.setPosition(pos.x, pos.y);
+        circle.setRadius(2);
+        int col = 128 * i / ActionMove::testedPoints.size() + 128;
+        circle.setFillColor(sf::Color(128 + col, 255 - col, 255, 128));
+        circle.setOutlineColor(sf::Color::Transparent);
+        renderTarget->draw(circle);
+    }
+#endif
+
+    m_outlineOverlay->display();
+
+    {
+        // this is a bit wrong, on bright buildings it's almost not visible,
+        // but haven't found a better solution other than writing a custom shader (and I'm lazy)
+        renderTarget->draw(m_outlineOverlay, sf::BlendAdd);
     }
 
 }

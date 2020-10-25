@@ -32,6 +32,7 @@
 #include <vector>
 
 class GameState;
+class Map;
 class MapRenderer;
 class ActionPanel;
 class SfmlRenderTarget;
@@ -80,6 +81,7 @@ private:
     void loadTopButtons();
     void loadUiOverlay();
     void drawUi();
+    void drawEntities(const std::shared_ptr<Map> &map);
     bool updateCamera(const std::shared_ptr<GameState> &state);
     bool handleEvent(const sf::Event &event, const std::shared_ptr<GameState> &state);
     bool handleKeyEvent(const sf::Event &event, const std::shared_ptr<GameState> &state);
