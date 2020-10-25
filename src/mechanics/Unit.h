@@ -258,7 +258,6 @@ struct Unit : public Entity
 
     /// Retrieve the current genie unit data
     const genie::Unit *data() const {
-        REQUIRE(m_data, return nullptr);
         return m_data;
     }
 
