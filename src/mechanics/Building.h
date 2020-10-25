@@ -30,6 +30,9 @@ struct Building : public Unit
 
     bool ungarrison(const std::shared_ptr<Unit> &unit);
 
+    static std::shared_ptr<Building> fromUnit(const Unit::Ptr &unit) noexcept;
+    static std::shared_ptr<Building> fromUnit(const std::weak_ptr<Unit> &unit) noexcept;
+
     bool enqueueProduceUnit(const genie::Unit *data) noexcept;
     bool enqueueProduceResearch(const genie::Tech *data) noexcept;
     void abortProduction(size_t index) noexcept;

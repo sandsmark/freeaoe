@@ -10,7 +10,7 @@
 
 ActionGarrison::ActionGarrison(const std::shared_ptr<Unit> &unit, const Task &task) :
     IAction(Type::Garrison, unit, task),
-    m_target(Unit::asBuilding(task.target))
+    m_target(Building::fromUnit(task.target))
 {
 }
 

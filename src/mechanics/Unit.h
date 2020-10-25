@@ -147,13 +147,11 @@ struct Unit : public Entity
     Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager);
     ~Unit();
 
-    // convenience casting functions
+    /// convenience casting functions
     static std::shared_ptr<Unit> fromEntity(const EntityPtr &entity) noexcept;
     static inline std::shared_ptr<Unit> fromEntity(const std::weak_ptr<Entity> &entity) noexcept {
         return fromEntity(entity.lock());
     }
-    static std::shared_ptr<Building> asBuilding(const Unit::Ptr &unit) noexcept;
-    static std::shared_ptr<Building> asBuilding(const std::weak_ptr<Unit> &unit) noexcept;
 
     ////////////////////////////////
     // Geometry stuff
@@ -164,14 +162,30 @@ struct Unit : public Entity
     void setPosition(const MapPos &pos, const bool initial = false) override;
     int foundationTerrain() const override;
 
+    //////////////////////////////////////////
+    /// Geometry or whatever you call it stuff
+
+    /// The visual rect of this unit on the screen
     virtual ScreenRect screenRect() const noexcept;
+
+    /// Check if this click hit the unit (e. g. some units only count hits on opaque pixels)
     virtual bool checkClick(const ScreenPos &pos) const noexcept;
+
+    /// The size of the selection rect
     Size selectionSize() const noexcept;
+
+    /// How close can it be to other units
     Size clearanceSize() const noexcept;
+
+    /// The center of this unit
     MapPos center() const noexcept {
         return position() + clearanceSize() / 2.;
     }
+
+    /// The rect this unit occupies in map coordinates
     MapRect mapRect() const noexcept;
+
+    /// Number of tiles occupied by this unit
     Size tileSize() const noexcept override;
 
     float distanceTo(const MapPos &pos) const noexcept
@@ -182,10 +196,10 @@ struct Unit : public Entity
         return centreDistance - clearance;
     }
 
-
+    /// Distance to other unit, taking into account the size of the other unit
     double distanceTo(const Unit::Ptr &otherUnit) const noexcept;
 
-    // in Z direction, if that makes sense
+    /// in Z direction, if that makes sense
     float tallness();
 
     ////////////////////////////////
@@ -199,20 +213,50 @@ struct Unit : public Entity
 
     UnitManager &unitManager() const noexcept { return m_unitManager; }
 
-    // Hitpoints and similar stuff
+    ///////////////////////////////
+    /// Hitpoints and similar stuff
+
+    /// Set absolute creation progress
     virtual void setCreationProgress(float progress) noexcept;
+
+    /// When creation is progressing
     void increaseCreationProgress(float progress) noexcept;
+
+    /// The current creation progress
     float creationProgress() const noexcept;
+
+    /// Number of hitpoints left, taking creation progress into account
     float hitpointsLeft() const noexcept;
+
+    /// Percentage of health left
     float healthLeft() const noexcept;
+
+    /// Increase received damage taking the kind of attack and damage multiplier into account
     void receiveAttack(const genie::unit::AttackOrArmor &attack, const float damageMultiplier) noexcept;
+
+    /// Take damage, or heal if amount is negative, without any modifiers
     void takeDamage(const float amount); // negative == heal
+
+    /// Instantly kill unit
     void kill() noexcept;
+
+    /// If the unit is dying, i. e. showing the death animation
     bool isDying() const noexcept;
+
+    /// Has been killed, and finished the death animation
     bool isDead() const noexcept;
+
+    /// Is neither dead nor dying (showing the death animation)
     bool isAlive() const noexcept { return !isDying() && !isDead(); }
 
+
+    ////////////////////////////////
+    /// Unit data stuff
+
+    /// Set the base genie unit data
     void setUnitData(const genie::Unit &data_) noexcept;
+
+    /// Retrieve the current genie unit data
     const genie::Unit *data() const {
         REQUIRE(m_data, return nullptr);
         return m_data;

@@ -767,7 +767,7 @@ void UnitManager::enqueueProduceUnit(const genie::Unit *unitData, const UnitVect
         return;
     }
 
-    Building::Ptr producer = Unit::asBuilding(producers[0]);
+    Building::Ptr producer = Building::fromUnit(producers[0]);
     if (!producer) {
         WARN << "Invalid producer";
         return;
@@ -783,7 +783,7 @@ void UnitManager::enqueueResearch(const genie::Tech *techData, const UnitVector 
         return;
     }
 
-    Building::Ptr producer = Unit::asBuilding(producers[0]);
+    Building::Ptr producer = Building::fromUnit(producers[0]);
     if (!producer) {
         WARN << "Invalid producer";
         return;
@@ -873,7 +873,7 @@ void UnitManager::placeBuilding(const UnplacedBuilding &building)
     }
 
     Unit::Ptr unit = UnitFactory::Inst().createUnit(building.unitID, m_humanPlayer.lock(), *this);
-    Building::Ptr buildingToPlace = Unit::asBuilding(unit);
+    Building::Ptr buildingToPlace = Building::fromUnit(unit);
 
     if (!buildingToPlace) {
         WARN << "Can't place null building";

@@ -8,7 +8,7 @@
 ActionBuild::ActionBuild(const Unit::Ptr &builder, const Task &task) :
     IAction(Type::Build, builder, task)
 {
-    Building::Ptr building = Unit::asBuilding(task.target);
+    Building::Ptr building = Building::fromUnit(task.target);
     if (!building) {
         WARN << "target building gone";
     }

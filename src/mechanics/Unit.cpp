@@ -38,7 +38,6 @@
 
 #include "Civilization.h"
 #include "Map.h"
-#include "Building.h"
 #include "UnitManager.h"
 #include "audio/AudioPlayer.h"
 #include "core/Constants.h"
@@ -66,23 +65,6 @@ std::shared_ptr<Unit> Unit::fromEntity(const EntityPtr &entity) noexcept
         return nullptr;
     }
     return std::static_pointer_cast<Unit>(entity);
-}
-
-std::shared_ptr<Building> Unit::asBuilding(const Unit::Ptr &unit) noexcept
-{
-    if (!unit) {
-        return nullptr;
-    }
-
-    if (!unit->isBuilding()) {
-        return nullptr;
-    }
-    return std::static_pointer_cast<Building>(unit);
-}
-
-std::shared_ptr<Building> Unit::asBuilding(const std::weak_ptr<Unit> &unit) noexcept
-{
-    return asBuilding(unit.lock());
 }
 
 Unit::Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager) :

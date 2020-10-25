@@ -64,6 +64,23 @@ bool Building::ungarrison(const std::shared_ptr<Unit> &unit)
     return false;
 }
 
+std::shared_ptr<Building> Building::fromUnit(const Unit::Ptr &unit) noexcept
+{
+    if (!unit) {
+        return nullptr;
+    }
+
+    if (!unit->isBuilding()) {
+        return nullptr;
+    }
+    return std::static_pointer_cast<Building>(unit);
+}
+
+std::shared_ptr<Building> Building::fromUnit(const std::weak_ptr<Unit> &unit) noexcept
+{
+    return fromUnit(unit.lock());
+}
+
 bool Building::enqueueProduceUnit(const genie::Unit *data) noexcept
 {
     if (!data) {

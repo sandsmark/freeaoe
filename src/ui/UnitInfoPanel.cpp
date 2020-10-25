@@ -177,7 +177,7 @@ bool UnitInfoPanel::handleEvent(sf::Event event)
         singleUnit = *m_selectedUnits.begin();
     }
 
-    Building::Ptr building = Unit::asBuilding(singleUnit);
+    Building::Ptr building = Building::fromUnit(singleUnit);
     if (building && building->isProducing()) {
         building->abortProduction(clickedButton);
         return true;
@@ -318,7 +318,7 @@ void UnitInfoPanel::drawSingleUnit()
 
     // Render garrisoned and garrison capacity
     if (unit->isBuilding() && unit->data()->GarrisonCapacity) {
-        Building::Ptr building = Unit::asBuilding(unit);
+        Building::Ptr building = Building::fromUnit(unit);
         StatItem &item = m_statItems[StatItem::GarrisonCapacity];
         m_renderTarget->draw(item.icon, ScreenPos(pos));
         item.text->position = ScreenPos(rightX, pos.y);
@@ -427,7 +427,7 @@ void UnitInfoPanel::drawSingleUnit()
 
 
     // Render player name and civ, only if building is not producing and don't have any units garrisoned
-    Building::Ptr building = Unit::asBuilding(unit);
+    Building::Ptr building = Building::fromUnit(unit);
     if (!building || (!building->isProducing() && building->garrisonedUnits.empty())) {
         std::shared_ptr<Player> player = unit->player().lock();
         if (!player) {
