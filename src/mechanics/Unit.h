@@ -216,7 +216,10 @@ struct Unit : public Entity
     bool isDead() const noexcept;
 
     void setUnitData(const genie::Unit &data_) noexcept;
-    const genie::Unit *data() const noexcept {return m_data; }
+    const genie::Unit *data() const {
+        REQUIRE(m_data, return nullptr);
+        return m_data;
+    }
 
 protected:
     friend struct UnitActionHandler;
