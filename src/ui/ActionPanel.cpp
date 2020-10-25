@@ -369,7 +369,7 @@ void ActionPanel::updateButtons()
         currentButtons.push_back(killButton);
     }
 
-    const std::unordered_set<Task> actions = unit->actions.availableActions();
+    const TaskSet actions = unit->actions.availableActions();
     std::unordered_set<genie::ActionType> addedTypes;
     for (const Task &task : actions) {
         if (addedTypes.count(task.data->ActionType)) {
@@ -419,7 +419,7 @@ void ActionPanel::updateButtons()
         }
     }
 
-    if (!actions.empty()) {
+    if (!actions.isEmpty()) {
         InterfaceButton stopButton;
         stopButton.action = Command::Stop;
         stopButton.index = 9;

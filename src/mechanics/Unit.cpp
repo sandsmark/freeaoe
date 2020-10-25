@@ -488,12 +488,12 @@ void Unit::setUnitData(const genie::Unit &data_) noexcept
 
     m_renderer->setSprite(defaultGraphics);
 
-    actions.m_autoTargetTasks.clear();
+    actions.m_autoTargetTasks.tasks.clear();
     for (const Task &task : actions.availableActions()) {
         if (!task.data->EnableTargeting) {
             continue;
         }
-        actions.m_autoTargetTasks.insert(task);
+        actions.m_autoTargetTasks.add(task);
     }
 }
 

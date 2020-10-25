@@ -151,7 +151,7 @@ public:
     Unit::Ptr unitAt(const ScreenPos &pos, const CameraPtr &camera) const;
     Unit::Ptr clickedUnitAt(const ScreenPos &pos, const CameraPtr &camera);
 
-    const std::unordered_set<Task> availableActions() const { return m_currentActions; }
+    const TaskSet availableActions() const { return m_currentActions; }
 
     const Task defaultActionAt(const ScreenPos &pos, const CameraPtr &camera) const noexcept;
     void moveUnitTo(const Unit::Ptr &unit, const MapPos &targetPos);
@@ -185,7 +185,7 @@ private:
     UnitVector m_units;
     MoveTargetMarker::Ptr m_moveTargetMarker;
     UnitSet m_unitsWithActions;
-    std::unordered_set<Task> m_currentActions;
+    TaskSet m_currentActions;
 
     UnitSet m_selectedUnits;
     MapPtr m_map;

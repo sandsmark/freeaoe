@@ -14,11 +14,11 @@ UnitActionHandler::UnitActionHandler(Unit *unit) :
 
 }
 
-std::unordered_set<Task> UnitActionHandler::availableActions() const noexcept
+TaskSet UnitActionHandler::availableActions() const noexcept
 {
-     const genie::Unit *data = m_unit->m_data;
+    const genie::Unit *data = m_unit->m_data;
 
-    std::unordered_set<Task> tasks;
+    TaskSet tasks;
     for (const genie::Task &task : DataManager::Inst().getTasks(data->ID)) {
 
         // TODO: some units (archery range) have a combat task, but no attacks
@@ -27,7 +27,7 @@ std::unordered_set<Task> UnitActionHandler::availableActions() const noexcept
             continue;
         }
 
-        tasks.insert(Task(&task, data->ID));
+        tasks.add(Task(&task, data->ID));
     }
 
     if (!data->Action.TaskSwapGroup) {
@@ -45,7 +45,7 @@ std::unordered_set<Task> UnitActionHandler::availableActions() const noexcept
             if (task.ActionType == genie::ActionType::Combat && data->Combat.Attacks.empty()) {
                 continue;
             }
-            tasks.insert(Task(&task, swappable->ID));
+            tasks.add(Task(&task, swappable->ID));
         }
     }
 
@@ -55,7 +55,7 @@ std::unordered_set<Task> UnitActionHandler::availableActions() const noexcept
 
 Task UnitActionHandler::findAnyTask(const genie::ActionType &type, int targetUnit) noexcept
 {
-    std::unordered_set<Task> available = availableActions();
+    TaskSet available = availableActions();
     for (const Task &task : available) {
         if (task.data->ActionType == type && task.data->UnitID == targetUnit) {
             return task;
@@ -77,7 +77,7 @@ Task UnitActionHandler::findTaskWithTarget(const std::shared_ptr<Unit> &target)
     return findMatchingTask(m_unit->player().lock(), target, availableActions());
 }
 
-Task UnitActionHandler::findMatchingTask(const std::shared_ptr<Player> &ownPlayer, const std::shared_ptr<Unit> &target, const std::unordered_set<Task> &potentials)
+Task UnitActionHandler::findMatchingTask(const std::shared_ptr<Player> &ownPlayer, const std::shared_ptr<Unit> &target, const TaskSet &potentials)
 {
     if (!ownPlayer){
         WARN << "no player passed for task finding";

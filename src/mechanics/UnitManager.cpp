@@ -567,7 +567,7 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
 
     const UnitSet previouslySelected = std::move(m_selectedUnits);
 
-    m_currentActions.clear();
+    m_currentActions.tasks.clear();
 
     Player::Ptr humanPlayer = m_humanPlayer.lock();
     if (!humanPlayer) {
@@ -662,11 +662,14 @@ void UnitManager::setMap(const MapPtr &map)
 
 void UnitManager::updateAvailableActions()
 {
-    m_currentActions.clear();
+    m_currentActions.tasks.clear();
 
+    std::unordered_set<Task> updated;
     for (const Unit::Ptr &unit : m_selectedUnits) {
-        m_currentActions.merge(unit->actions.availableActions());
+        const TaskSet tasks = unit->actions.availableActions();
+        updated.merge(std::unordered_set<Task>(tasks.begin(), tasks.end()));
     }
+    m_currentActions.tasks = std::vector<Task>(updated.begin(), updated.end());
 
     emit(ActionsChanged);
 }
