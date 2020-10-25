@@ -108,6 +108,10 @@ else()
             set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffast-math")
         endif()
         #string(REPLACE "-O3" "-Ofast" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
+    else() # debug
+        # no optimization is so horrible useless for everything
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O1")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O1")
     endif()
 
     add_definitions(-Wall -Wextra -pedantic -Wno-sign-compare -Wno-unused-parameter)
