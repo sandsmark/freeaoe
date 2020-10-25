@@ -81,8 +81,11 @@ IAction::UpdateResult ActionAttack::update(Time time)
                 unit->distanceTo(m_targetPosition)
         ) / Constants::TILE_SIZE; // everything is defined by tile size in the dat files
 
+    const bool overlaps = targetUnit ? targetUnit->mapRect().overlaps(unit->mapRect()) :
+                                       unit->mapRect().contains(m_targetPosition);
+
     // Check if we are too far away
-    if (distance > unit->data()->Combat.MaxRange) {
+    if (!overlaps && distance > unit->data()->Combat.MaxRange) {
         if (!unit->data()->Speed) {
             DBG << "this unit can't move...";
             return IAction::UpdateResult::Failed;
