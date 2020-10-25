@@ -169,7 +169,7 @@ void UnitsRenderer::render(const std::shared_ptr<IRenderTarget> &renderTarget, c
                 circle.setPointCount(4);
             }
 
-#ifdef DEBUG
+#if DEBUG_PATHFINDING
             rect.setFillColor(sf::Color::Transparent);
             rect.setOutlineColor(sf::Color::White);
             rect.setOutlineThickness(1);
@@ -247,7 +247,7 @@ void UnitsRenderer::render(const std::shared_ptr<IRenderTarget> &renderTarget, c
         unit->renderer().render(*renderTarget, pos, RenderType::Base);
 
 
-#if defined(DEBUG)
+#if DEBUG_PATHFINDING
         ActionPtr action = unit->actions.currentAction();
         if (action && action->type == IAction::Type::Move) {
             std::shared_ptr<ActionMove> moveAction = std::static_pointer_cast<ActionMove>(action);

@@ -48,7 +48,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#ifdef DEBUG
+#if DEBUG_PATHFINDING
 std::vector<MapPos> ActionMove::testedPoints;
 #endif
 
@@ -191,7 +191,7 @@ MapPos ActionMove::findClosestWalkableBorder(const MapPos &start, const MapPos &
     if (clearanceLength > 0.f) {
         clearanceLength += coarseness;
 //        DBG << "Found target unit";
-#ifdef DEBUG
+#if DEBUG_PATHFINDING
         testedPoints.push_back(target);
 #endif
         const float angleToTarget = start.angleTo(target);
@@ -217,7 +217,7 @@ MapPos ActionMove::findClosestWalkableBorder(const MapPos &start, const MapPos &
                 continue;
             }
 
-#ifdef DEBUG
+#if DEBUG_PATHFINDING
             testedPoints.push_back(potential);
 #endif
 
@@ -294,7 +294,7 @@ MapPos ActionMove::findClosestWalkableBorder(const MapPos &start, const MapPos &
         x += uincrX;
         y += uincrY;
 
-#ifdef DEBUG
+#if DEBUG_PATHFINDING
         testedPoints.push_back(MapPos(x, y));
 #endif
 
@@ -697,7 +697,7 @@ static std::vector<MapPos> simplifyRdp(const std::vector<MapPos> &path, const fl
 
 std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarseness) noexcept
 {
-#ifdef DEBUG
+#if DEBUG_PATHFINDING
     testedPoints.clear();
 #endif
     if (start == end) {
@@ -777,7 +777,7 @@ std::vector<MapPos> ActionMove::findPath(MapPos start, MapPos end, int coarsenes
 
         visited.insert(parent);
 
-#ifdef DEBUG
+#if DEBUG_PATHFINDING
         testedPoints.push_back(MapPos(parent.x * coarseness, parent.y * coarseness));
 #endif
 
@@ -994,7 +994,7 @@ bool ActionMove::isPassable(const int x, const int y, const bool useCache) noexc
 
 void ActionMove::updatePath() noexcept
 {
-#ifdef DEBUG
+#if DEBUG_PATHFINDING
     testedPoints.clear();
 #endif
     TIME_THIS;

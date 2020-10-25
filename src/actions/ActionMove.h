@@ -27,6 +27,8 @@
 #include <vector>
 #include <thread>
 
+#define DEBUG_PATHFINDING 0
+
 struct Unit;
 using UnitPtr = std::shared_ptr<Unit>;
 class Map;
@@ -44,7 +46,7 @@ public:
     float maxDistance = 0.f;
 //    float minDistance = 0.f; // TODO: avoid a roundtrip into actionattack if target moves
 
-#ifdef DEBUG
+#if DEBUG_PATHFINDING
     static std::vector<MapPos> testedPoints;
 #endif
     virtual ~ActionMove();
