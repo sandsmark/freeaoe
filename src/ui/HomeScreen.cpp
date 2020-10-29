@@ -242,7 +242,9 @@ bool HomeScreen::init()
         const genie::SlpFramePtr &selectedFrame = m_backgroundSlp->getFrame(frameNum + 1);
         const genie::SlpFramePtr &hoverFrame = m_backgroundSlp->getFrame(frameNum + 2);
 
-        if (i != Button::Banner) {
+        if (i == Button::Banner) {
+            b.text.setString(LanguageManager::getString(9500 + 9));
+        } else {
             b.text.setString(LanguageManager::getString(9500 + i));
         }
         b.description = LanguageManager::getString(31000 + i);
