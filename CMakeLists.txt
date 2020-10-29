@@ -213,6 +213,7 @@ set(RESOURCE_SRC
     src/resource/AssetManager.h
     src/resource/TerrainSprite.cpp
     src/resource/TerrainSprite.h
+    src/resource/SlpIDs.h
     )
 
 set(MECHANICS_SRC
