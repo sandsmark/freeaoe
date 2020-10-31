@@ -41,7 +41,7 @@ class PalFile;
 
 HomeScreen::~HomeScreen()
 {
-    AudioPlayer::instance().stopStream("stream/xopen.mp3");
+    AudioPlayer::instance().stopStream("open.mp3");
 }
 
 HomeScreen::HomeScreen() :
@@ -56,7 +56,7 @@ bool HomeScreen::init()
         return false;
     }
 
-    AudioPlayer::instance().playStream("stream/xopen.mp3");
+    AudioPlayer::instance().playStream("open.mp3");
 
     const bool isHd = DataManager::Inst().isHd();
 

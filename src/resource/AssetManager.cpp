@@ -463,6 +463,8 @@ bool AssetManager::initializeInternal(const std::string &dataPath, const genie::
 
 int AssetManager::filenameID(const std::string &filename)
 {
+    // Could just be looked up at runtime from the various internal name fields, but duplicated
+    // for speed and convenvience.
     const std::unordered_map<std::string, int> idMap = {
         // Various button icons
         { "btncmd.shp", 50721     },
@@ -808,6 +810,11 @@ const std::string &AssetManager::assetsPath() const
 std::string AssetManager::soundsPath() const
 {
     return m_gamePath + "/sound/";
+}
+
+std::string AssetManager::streamsPath() const
+{
+    return m_gamePath + "/sound/stream/";
 }
 
 bool AssetManager::missingData() const

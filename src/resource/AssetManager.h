@@ -197,6 +197,7 @@ public:
 
     virtual const std::string &assetsPath() const;
     virtual std::string soundsPath() const;
+    virtual std::string streamsPath() const;
 
     virtual bool missingData() const;
 
