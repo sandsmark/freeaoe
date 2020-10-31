@@ -61,7 +61,7 @@ struct UnitActionHandler
     static Task findMatchingTask(const std::shared_ptr<Player> &ownPlayer, const std::shared_ptr<Unit> &target, const TaskSet &potentials);
 
     bool hasAutoTargets() const noexcept { return m_autoTargetTasks.size() > 0; }
-    Task checkForAutoTargets() noexcept;
+    Task checkForAutoTargets() ;
 
     int taskGraphicId(const genie::ActionType taskType, const IAction::UnitState state);
 

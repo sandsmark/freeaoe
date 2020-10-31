@@ -757,6 +757,13 @@ inline ScreenRect MapRect::boundingScreenRect() const
     return ScreenRect(ScreenPos(x1, y1), Size(x2-x1, y1-y2));
 }
 
+// TODO: not really a type?
+enum PlayerAlignment {
+    NoAlignment,
+    Allied, // Allied
+    Enemy // no friend
+};
+
 inline LogPrinter operator <<(LogPrinter os, const MapRect &rect) {
     const char *separator = os.separator;
     os.separator = "";

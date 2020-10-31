@@ -359,10 +359,8 @@ bool UnitManager::onLeftClick(const ScreenPos &screenPos, const CameraPtr &camer
     case State::SelectingAttackTarget: {
         DBG << "Selecting attack target";
         MapPos targetPos = camera->absoluteMapPos(screenPos);
-        Unit::Ptr targetUnit = unitAt(screenPos, camera);
-        if (targetUnit && targetUnit->playerId() == humanPlayer->playerId) {
-            targetUnit.reset();
-        }
+        Unit::Ptr targetUnit = unitAt(screenPos, camera, Enemy);
+
         for (const Unit::Ptr &unit : m_selectedUnits) {
             if (unit->playerId() != humanPlayer->playerId) {
                 continue;
@@ -385,11 +383,27 @@ bool UnitManager::onLeftClick(const ScreenPos &screenPos, const CameraPtr &camer
     }
     case State::SelectingGarrisonTarget: {
         DBG << "Selecting garrison target";
-        Unit::Ptr targetUnit = unitAt(screenPos, camera);
-        if (!targetUnit || !humanPlayer->isAllied(targetUnit->playerId())) {
-            WARN << "No valid unit at selected position";
+        Unit::Ptr targetUnit;
+
+        forEachUnitAt(screenPos, camera, [&targetUnit, &humanPlayer](const Unit::Ptr &potentialTarget) {
+            if (!humanPlayer->isAllied(potentialTarget->playerId())) {
+                return false;
+            }
+
+            // TODO: check free garrison space (though reaaal edge with overlap + already full)
+            if (potentialTarget->data()->GarrisonCapacity <= 0) {
+                return false;
+            }
+
+            targetUnit = potentialTarget;
+            return true;
+        });
+
+        if (!targetUnit) {
+            WARN << "No valid garrison target at selected position";
             break;
         }
+
         for (const Unit::Ptr &unit : m_selectedUnits) {
             if (unit->playerId() != humanPlayer->playerId) {
                 continue;
@@ -826,13 +840,31 @@ void UnitManager::enqueueResearch(const genie::Tech *techData, const UnitVector 
     producer->enqueueProduceResearch(techData);
 }
 
-Unit::Ptr UnitManager::unitAt(const ScreenPos &pos, const CameraPtr &camera) const
+Unit::Ptr UnitManager::unitAt(const ScreenPos &pos, const CameraPtr &camera, const PlayerAlignment alignment) const
 {
+    Player::Ptr humanPlayer = m_humanPlayer.lock();
+
     std::reverse_iterator<UnitVector::const_iterator> unitIterator;
     for (unitIterator = m_units.rbegin(); unitIterator != m_units.rend(); unitIterator++) {
         Unit::Ptr unit = *unitIterator;
         if (!unit->isVisible) {
             continue;
+        }
+
+        switch(alignment) {
+        case Allied:
+            if (!humanPlayer->isAllied(unit->playerId())) {
+                continue;
+            }
+            break;
+        case Enemy:
+            if (humanPlayer->isAllied(unit->playerId())) {
+                continue;
+            }
+            break;
+        case NoAlignment:
+        default:
+            break;
         }
 
         const ScreenPos unitPosition = camera->absoluteScreenPos(unit->position());
@@ -847,7 +879,7 @@ Unit::Ptr UnitManager::unitAt(const ScreenPos &pos, const CameraPtr &camera) con
 
 Unit::Ptr UnitManager::clickedUnitAt(const ScreenPos &pos, const CameraPtr &camera)
 {
-    Unit::Ptr unit = unitAt(pos, camera);
+    Unit::Ptr unit = unitAt(pos, camera, NoAlignment);
     if (!unit) {
         return nullptr;
     }

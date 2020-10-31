@@ -190,7 +190,6 @@ public:
     void enqueueProduceUnit(const genie::Unit *unitData, const UnitVector &producers);
     void enqueueResearch(const genie::Tech *techData, const UnitVector &producers);
 
-    Unit::Ptr unitAt(const ScreenPos &pos, const CameraPtr &camera) const;
     Unit::Ptr clickedUnitAt(const ScreenPos &pos, const CameraPtr &camera);
 
     const TaskSet availableActions() const { return m_currentActions; }
@@ -219,6 +218,8 @@ private:
     void updateBuildingToPlace();
     void placeBuilding(const UnplacedBuilding &building);
     void updateAvailableActions();
+
+    Unit::Ptr unitAt(const ScreenPos &pos, const CameraPtr &camera, const PlayerAlignment alignment) const;
     void forEachUnitAt(const ScreenPos &position, const CameraPtr camera, const std::function<bool(const Unit::Ptr&)> &action);
 
     void playSound(const Unit::Ptr &unit);
