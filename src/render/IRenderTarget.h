@@ -101,6 +101,12 @@ private:
 
 struct Text
 {
+    enum Style {
+        Plain,
+        UI,
+        Stylish
+    };
+
     enum Alignment {
         AlignLeft, AlignRight
     } alignment = AlignLeft;
@@ -180,7 +186,7 @@ public:
 
     virtual std::shared_ptr<IRenderTarget> createTextureTarget(const Size &size) = 0;
 
-    virtual Drawable::Text::Ptr createText() = 0;
+    virtual Drawable::Text::Ptr createText(const Drawable::Text::Style style = Drawable::Text::Plain) = 0;
     virtual void draw(const Drawable::Text::Ptr &text) = 0;
 
     virtual void clear(const Drawable::Color &color = Drawable::Color(0, 0, 0, 255)) = 0;

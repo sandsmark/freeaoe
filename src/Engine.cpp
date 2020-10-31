@@ -189,7 +189,7 @@ void Engine::start()
             if (renderTime > 0) {
                 fpsSamples++;
                 totalFps += 1000. / renderTime;
-                fps_label_.setString("fps: " + std::to_string(1000/renderTime));
+                fps_label_->string = "fps: " + std::to_string(1000/renderTime);
             }
 
             // Update the window
@@ -309,7 +309,7 @@ void Engine::drawUi()
     m_stoneLabel->render();
     m_populationLabel->render();
 
-    renderWindow_->draw(fps_label_);
+    renderTarget_->draw(fps_label_);
 
     const Time currentTime = GameClock.getElapsedTime().asMilliseconds();
     for (const MessageLine &messageLine : m_visibleText) {
@@ -607,10 +607,10 @@ bool Engine::setup(const std::shared_ptr<genie::ScnFile> &scenario)
     m_resultOverlay.setOutlineColor(sf::Color::Black);
     m_resultOverlay.setOutlineThickness(3);
 
-    fps_label_.setPosition(sf::Vector2f(uiSize.width - 75, uiSize.height - 20));
-    fps_label_.setFillColor(sf::Color::White);
-    fps_label_.setFont(SfmlRenderTarget::uiFont());
-    fps_label_.setCharacterSize(15);
+    fps_label_ = renderTarget_->createText(Drawable::Text::UI);
+    fps_label_->position = ScreenPos(uiSize.width - 75, uiSize.height - 20);
+    fps_label_->color = Drawable::White;
+    fps_label_->pointSize = 15;
 
     m_woodLabel->setValue(12345);
     m_foodLabel->setValue(12345);

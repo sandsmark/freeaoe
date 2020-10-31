@@ -346,10 +346,22 @@ void SfmlRenderTarget::draw(const std::shared_ptr<IRenderTarget> &renderTarget, 
 }
 
 
-Drawable::Text::Ptr SfmlRenderTarget::createText()
+Drawable::Text::Ptr SfmlRenderTarget::createText(const Drawable::Text::Style style)
 {
     std::shared_ptr<SfmlText> ret = std::make_shared<SfmlText>();
-    ret->text->setFont(plainFont());
+    switch(style) {
+    case Drawable::Text::UI:
+        ret->text->setFont(uiFont());
+        break;
+    case Drawable::Text::Stylish:
+        ret->text->setFont(stylishFont());
+        break;
+    case Drawable::Text::Plain:
+    default:
+        ret->text->setFont(plainFont());
+        break;
+    }
+
     return ret;
 }
 

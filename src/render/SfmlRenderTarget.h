@@ -105,7 +105,7 @@ public:
     std::unique_ptr<sf::RenderTexture> m_renderTexture;
 
 
-    Drawable::Text::Ptr createText() override;
+    Drawable::Text::Ptr createText(const Drawable::Text::Style style = Drawable::Text::Plain) override;
     void draw(const Drawable::Text::Ptr &text) override;
 };
 

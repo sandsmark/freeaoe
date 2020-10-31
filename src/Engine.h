@@ -102,7 +102,7 @@ private:
 
     sf::Text m_resultOverlay;
 
-    sf::Text fps_label_;
+    Drawable::Text::Ptr fps_label_;
     std::vector<std::unique_ptr<IconButton>> m_buttons;
 
     std::unique_ptr<NumberLabel> m_woodLabel;
