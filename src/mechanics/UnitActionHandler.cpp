@@ -79,10 +79,9 @@ Task UnitActionHandler::findTaskWithTarget(const std::shared_ptr<Unit> &target)
 
 Task UnitActionHandler::findMatchingTask(const std::shared_ptr<Player> &ownPlayer, const std::shared_ptr<Unit> &target, const TaskSet &potentials)
 {
-    if (!ownPlayer){
-        WARN << "no player passed for task finding";
-        return Task();
-    }
+    REQUIRE(ownPlayer, return Task());
+
+    Task matched;
     for (const Task &task : potentials) {
         const genie::Task *action = task.data;
 
@@ -129,19 +128,27 @@ Task UnitActionHandler::findMatchingTask(const std::shared_ptr<Player> &ownPlaye
 
         if (target->creationProgress() < 1) {
             if (action->ActionType == genie::ActionType::Build) {
-                return task;
+                matched = task;
+                break;
             }
 
             continue;
         }
 
         if (action->UnitID == target->data()->ID) {
-            return task;
+            matched = task;
+            break;
         }
 
         if (action->ClassID == target->data()->Class) {
-            return task;
+            matched = task;
+            break;
         }
+    }
+
+    if (matched.isValid()) {
+        matched.target = target;
+        return matched;
     }
 
     // Try more generic targeting
@@ -161,10 +168,14 @@ Task UnitActionHandler::findMatchingTask(const std::shared_ptr<Player> &ownPlaye
             continue;
         }
 
-        return task;
+        matched = task;
+        break;
+    }
+    if (matched.isValid()) {
+        matched.target = target;
     }
 
-    return Task();
+    return matched;
 
 }
 

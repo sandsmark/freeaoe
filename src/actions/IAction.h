@@ -35,6 +35,8 @@ struct Task {
     Task(const genie::Task *t, int id);
     Task() = default;
 
+    bool isValid() const { return taskId != -1; }
+
     int taskId = -1;
     int unitId = -1; // for task group swapping
     std::weak_ptr<Unit> target;

@@ -195,7 +195,8 @@ public:
 
     const TaskSet availableActions() const { return m_currentActions; }
 
-    const Task defaultActionAt(const ScreenPos &pos, const CameraPtr &camera) const noexcept;
+    void onCursorPositionChanged(const ScreenPos &pos, const CameraPtr &camera);
+    const Task &currentActionUnderCursor() const { return m_taskUnderCursor; }
     void moveUnitTo(const Unit::Ptr &unit, const MapPos &targetPos);
     void selectAttackTarget();
     void selectGarrisonTarget();
@@ -218,36 +219,40 @@ private:
     void updateBuildingToPlace();
     void placeBuilding(const UnplacedBuilding &building);
     void updateAvailableActions();
-
-    State m_state = State::Default;
+    void forEachUnitAt(const ScreenPos &position, const CameraPtr camera, const std::function<bool(const Unit::Ptr&)> &action);
 
     void playSound(const Unit::Ptr &unit);
     const Task taskForPosition(const Unit::Ptr &unit, const ScreenPos &pos, const CameraPtr &camera) const noexcept;
 
+    // Generic stuff
+    State m_state = State::Default;
+    MapPtr m_map;
+
+    /// Units (and similar)
     std::unordered_set<std::shared_ptr<Missile>> m_missiles;
     std::unordered_set<StaticEntity::Ptr> m_staticEntities;
     UnitVector m_units;
     MoveTargetMarker::Ptr m_moveTargetMarker;
-    UnitSet m_unitsWithActions;
-    TaskSet m_currentActions;
 
-    /// The blinking animation thing when it is selected as a target
-    std::unordered_map<int, int> m_targetBlinkTimeLeft; // TODO: find a better way to do this
-
-    UnitSet m_selectedUnits;
-    MapPtr m_map;
-
-    std::vector<UnplacedBuilding> m_buildingsToPlace;
-    MapPos m_wallPlacingStart;
-
-    bool m_unitsMoved = true;
-
-    bool m_availableActionsChanged = true; // Because we might get a bunch of events in a single update, do it only once
-
+    /// Players info
     std::vector<std::weak_ptr<Player>> m_players;
     std::weak_ptr<Player> m_humanPlayer;
     int m_humanPlayerID = -1;
 
+    /// The blinking animation thing when it is selected as a target
+    std::unordered_map<int, int> m_targetBlinkTimeLeft; // TODO: find a better way to do this
+
+    /// Actions/task stuff
+    UnitSet m_selectedUnits;
+    UnitSet m_unitsWithActions;
+    TaskSet m_currentActions;
+    Task m_taskUnderCursor;
+    std::vector<UnplacedBuilding> m_buildingsToPlace;
+    MapPos m_wallPlacingStart;
+
+    /// Tracking state between updates
+    bool m_unitsMoved = true;
+    bool m_availableActionsChanged = true; // Because we might get a bunch of events in a single update, do it only once
     Time m_lastUpdateTime = 0;
 };
 

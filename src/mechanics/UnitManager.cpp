@@ -428,29 +428,33 @@ void UnitManager::onRightClick(const ScreenPos &screenPos, const CameraPtr &came
         WARN << "human player gone";
         return;
     }
-
-    // Thanks task swap group satan
     bool foundTasks = false;
-    for (const Unit::Ptr &unit : m_selectedUnits) {
-        if (unit->playerId() != humanPlayer->playerId) {
-            continue;
-        }
-        Task task = taskForPosition(unit, screenPos, camera);
-        if (!task.data) {
-            continue;
-        }
 
-        if (task.data->ActionType == genie::ActionType::Combat) {
-            AudioPlayer::instance().playSound(unit->data()->Action.AttackSound, humanPlayer->civilization.id());
-        }
+    if (m_taskUnderCursor.isValid()) {
+        REQUIRE(m_taskUnderCursor.data, m_taskUnderCursor.taskId = -1; return);
 
-        Unit::Ptr target = unitAt(screenPos, camera);
-        task.target = target;
-        IAction::assignTask(task, unit, IAction::AssignType::Replace);
-        if (target) {
-            m_targetBlinkTimeLeft[target->id] = 3000;
+        // Thanks task swap group satan
+        for (const Unit::Ptr &unit : m_selectedUnits) {
+            if (unit->playerId() != humanPlayer->playerId) {
+                continue;
+            }
+            if (unit->data()->ID != m_taskUnderCursor.unitId) {
+                continue;
+            }
+
+
+            if (m_taskUnderCursor.data->ActionType == genie::ActionType::Combat) {
+                AudioPlayer::instance().playSound(unit->data()->Action.AttackSound, humanPlayer->civilization.id());
+            }
+
+            IAction::assignTask(m_taskUnderCursor, unit, IAction::AssignType::Replace);
+            Unit::Ptr target = m_taskUnderCursor.target.lock();
+            if (target) {
+                m_targetBlinkTimeLeft[target->id] = 3000;
+            }
+
+            foundTasks = true;
         }
-        foundTasks = true;
     }
 
     if (foundTasks) {
@@ -700,6 +704,25 @@ void UnitManager::updateAvailableActions()
     emit(ActionsChanged);
 }
 
+void UnitManager::forEachUnitAt(const ScreenPos &position, const CameraPtr camera, const std::function<bool(const Unit::Ptr &)> &action)
+{
+    std::reverse_iterator<UnitVector::const_iterator> unitIterator;
+    for (unitIterator = m_units.rbegin(); unitIterator != m_units.rend(); unitIterator++) {
+        Unit::Ptr unit = *unitIterator;
+        if (!unit->isVisible) {
+            continue;
+        }
+
+        const ScreenPos unitPosition = camera->absoluteScreenPos(unit->position());
+        const ScreenRect unitRect = unit->screenRect() + unitPosition;
+        if (unitRect.contains(position)) {
+            if (action(unit)) {
+                break;
+            }
+        }
+    }
+}
+
 void UnitManager::setSelectedUnits(const UnitVector &units)
 {
     m_selectedUnits.units = units;
@@ -832,23 +855,31 @@ Unit::Ptr UnitManager::clickedUnitAt(const ScreenPos &pos, const CameraPtr &came
     return unit;
 }
 
-const Task UnitManager::defaultActionAt(const ScreenPos &pos, const CameraPtr &camera) const noexcept
+void UnitManager::onCursorPositionChanged(const ScreenPos &pos, const CameraPtr &camera)
 {
-    if (m_selectedUnits.isEmpty()) {
-        return Task();
-    }
+    m_taskUnderCursor = Task();
 
-    Unit::Ptr target = unitAt(pos, camera);
-    if (!target) {
-        return Task();
-    }
+    Player::Ptr humanPlayer = m_humanPlayer.lock();
+    REQUIRE(humanPlayer, return);
 
-    // One of the selected themselves
-    if (m_selectedUnits.contains(target)) {
-        return Task();
-    }
+    forEachUnitAt(pos, camera, [this, &humanPlayer](const Unit::Ptr &target) {
+        REQUIRE(target, return false);
 
-    return UnitActionHandler::findMatchingTask(m_humanPlayer.lock(), target, m_currentActions);
+        if (m_selectedUnits.size() == 1 && m_selectedUnits.contains(target)) {
+            // because this is a lambda, return instead of continue
+            return false;
+        }
+
+        Task task = UnitActionHandler::findMatchingTask(humanPlayer, target, m_currentActions);
+        if (!task.isValid()) {
+            return false;
+        }
+
+        // TODO: should we check for multiple tasks and prioritize?
+        m_taskUnderCursor = task;
+        return true;
+    });
+
 }
 
 void UnitManager::moveUnitTo(const Unit::Ptr &unit, const MapPos &targetPos)
@@ -951,23 +982,4 @@ void UnitManager::playSound(const Unit::Ptr &unit)
     } else {
         WARN << "Lost the player";
     }
-}
-
-const Task UnitManager::taskForPosition(const Unit::Ptr &unit, const ScreenPos &pos, const CameraPtr &camera) const noexcept
-{
-    if (m_selectedUnits.isEmpty()) {
-        return Task();
-    }
-
-    Unit::Ptr target = unitAt(pos, camera);
-    if (!target) {
-        return Task();
-    }
-
-    // One of the selected themselves
-    if (m_selectedUnits.contains(target)) {
-        return Task();
-    }
-
-    return unit->actions.findTaskWithTarget(target);
 }

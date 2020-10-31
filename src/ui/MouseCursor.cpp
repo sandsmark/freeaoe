@@ -36,16 +36,22 @@ bool MouseCursor::setPosition(const ScreenPos &position)
 
 bool MouseCursor::update(const std::shared_ptr<UnitManager> &unitManager)
 {
+    unitManager->onCursorPositionChanged(m_position, m_renderTarget->camera());
+
     switch(unitManager->state()) {
     case UnitManager::State::Default: {
-        const Task targetAction = unitManager->defaultActionAt(m_position, m_renderTarget->camera());
-        if (!targetAction.data) {
+        const Task &targetAction = unitManager->currentActionUnderCursor();
+        if (!targetAction.isValid()) {
             return setCursor(MouseCursor::Normal);
-        } else if (targetAction.data->ActionType == genie::ActionType::Combat) {
+        }
+
+        REQUIRE(targetAction.data, return setCursor(MouseCursor::Normal));
+        if (targetAction.data->ActionType == genie::ActionType::Combat) {
             return setCursor(MouseCursor::Attack);
         } else {
             return setCursor(MouseCursor::Action);
         }
+
         break;
     }
     case UnitManager::State::SelectingAttackTarget: {
