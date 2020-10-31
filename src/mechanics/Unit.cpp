@@ -194,12 +194,12 @@ ScreenRect Unit::screenRect() const noexcept
 
 bool Unit::containsCursorPos(const ScreenPos &pos) const noexcept
 {
-    if (m_renderer->checkClick(pos)) {
+    if (m_renderer->containsCursorPos(pos)) {
         return true;
     }
 
     for (const Annex &annex : annexes) {
-        if (annex.unit->checkClick(pos + annex.offset.toScreen())) {
+        if (annex.unit->containsCursorPos(pos + annex.offset.toScreen())) {
             return true;
         }
     }

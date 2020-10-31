@@ -94,7 +94,7 @@ public:
     int spriteId() const noexcept;
 
     ScreenRect rect() const noexcept;
-    bool checkClick(const ScreenPos &pos) const noexcept;
+    bool containsCursorPos(const ScreenPos &pos) const noexcept;
 
     void setOrientation(int orientation) noexcept;
 

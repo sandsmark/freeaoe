@@ -436,7 +436,7 @@ ScreenPos Sprite::getHotspot(uint32_t frame_num, float angle) const noexcept
     return ScreenPos(hot_spot_x, frame->hotspot_y);
 }
 
-bool Sprite::checkClick(const ScreenPos &pos, uint32_t frame_num, float angle) const noexcept
+bool Sprite::containsCursorPos(const ScreenPos &pos, uint32_t frame_num, float angle) const noexcept
 {
     if (!slp_) {
         return false;

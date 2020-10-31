@@ -329,14 +329,14 @@ ScreenRect GraphicRender::rect() const noexcept
     return ret;
 }
 
-bool GraphicRender::checkClick(const ScreenPos &pos) const noexcept
+bool GraphicRender::containsCursorPos(const ScreenPos &pos) const noexcept
 {
     if (!isValid()) {
         return false;
     }
     const ScreenPos correctedPos = pos + m_sprite->getHotspot(m_currentFrame, m_angle);
 
-    if (m_sprite->checkClick(correctedPos, m_currentFrame, m_angle)) {
+    if (m_sprite->containsCursorPos(correctedPos, m_currentFrame, m_angle)) {
         return true;
     }
 
@@ -349,7 +349,7 @@ bool GraphicRender::checkClick(const ScreenPos &pos) const noexcept
             continue;
         }
 
-        if (delta.graphic->checkClick(pos - delta.offset)) {
+        if (delta.graphic->containsCursorPos(pos - delta.offset)) {
             return true;
         }
     }

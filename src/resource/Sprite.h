@@ -147,7 +147,7 @@ public:
     ScreenRect rect(uint32_t frame_num, float angle) const noexcept;
     ScreenPos getHotspot(uint32_t frame_num, float angle) const noexcept;
 
-    bool checkClick(const ScreenPos &pos, uint32_t frame_num, float angle) const noexcept;
+    bool containsCursorPos(const ScreenPos &pos, uint32_t frame_num, float angle) const noexcept;
 
     inline const std::vector<genie::GraphicDelta> &deltas() const noexcept { return m_data.Deltas; }
 
