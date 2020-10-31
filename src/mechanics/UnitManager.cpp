@@ -142,6 +142,14 @@ void UnitManager::onTileHidden(const int playerID, const int tileX, const int ti
             continue;
         }
 
+        const bool deathDoppleganger =
+                unit->data()->CreateDoppelgangerOnDeath == genie::Unit::DoppelgangerAfterDeath ||
+                unit->data()->CreateDoppelgangerOnDeath == genie::Unit::DoppelgangerWhenDying;
+
+        if (!unit->isBuilding() && !deathDoppleganger && unit->data()->FogVisibility != genie::Unit::DoppelgangerFogVisibility) {
+            continue;
+        }
+
         WARN << "Creating doppleganger at" << tileX << tileY << "for" << unit->debugName;
         addStaticEntity(UnitFactory::createDopplegangerFor(unit));
         unit->isVisible = true;
