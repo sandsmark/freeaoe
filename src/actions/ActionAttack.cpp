@@ -131,11 +131,11 @@ IAction::UpdateResult ActionAttack::update(Time time)
     const ScreenPos targetScreenPosition = m_targetPosition.toScreen();
     unit->setAngle(screenPosition.angleTo(targetScreenPosition));
 
-    if (!m_lastAttackTime) {
-        m_lastAttackTime = time + unit->data()->Combat.ReloadTime; // skip the reloading
-        m_firing = false;
-        return IAction::UpdateResult::Updated;
-    }
+//    if (!m_lastAttackTime) {
+//        m_lastAttackTime = time + unit->data()->Combat.ReloadTime; // skip the reloading
+//        m_firing = false;
+//        return IAction::UpdateResult::Updated;
+//    }
     const float timeSinceLastAttack = (time - m_lastAttackTime) * 0.0015;
 
     if (m_frameDelay > 0) {
