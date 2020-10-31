@@ -95,3 +95,8 @@ std::string util::executablePath()
 
     return path;
 }
+
+void throwException__(const std::string &message)
+{
+    throw std::logic_error(message);
+}

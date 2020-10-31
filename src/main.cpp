@@ -195,7 +195,10 @@ bool requestFilePath(const std::string &errorMessage)
 }
 
 // TODO: Bad_alloc
-int main(int argc, char **argv) try
+int main(int argc, char **argv)
+#ifdef NDEBUG
+try
+#endif
 {
     for (int i=1; i<argc; i++) {
         if (std::string(argv[i]) == "--debug") {
@@ -251,7 +254,10 @@ int main(int argc, char **argv) try
     engine.start();
 
     return 0;
-} catch (const std::exception &e) {
+}
+#ifdef NDEBUG
+ catch (const std::exception &e) {
     std::cerr << "uncatched exception '" << e.what() << "', terminating uncleanly" << std::endl;
     return 1;
 }
+#endif

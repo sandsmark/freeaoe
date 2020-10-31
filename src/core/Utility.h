@@ -40,13 +40,16 @@
 #ifndef NDEBUG
     // Throw a generic exception instead of assert()ing, since eventually there will be more stuff handling it in main()
     #ifdef _MSC_VER
-        #define REQUIRE(condition, action) if (IS_UNLIKELY(!condition)) { throw std::runtime_error(std::string("Assertion '") + #condition + "' failed in " + __FUNCTION__  + " at " + __FILE__ + ":" + std::to_string(__LINE__)); }
+        #define REQUIRE(condition, action) if (IS_UNLIKELY(!(condition))) { throw std::logic_error(std::string("Assertion '") + #condition + "' failed in " + __FUNCTION__  + " at " + __FILE__ + ":" + std::to_string(__LINE__)); }
     #else //_MSC_VER
-        #define REQUIRE(condition, action) if (IS_UNLIKELY(!condition)) { throw std::runtime_error(std::string("Assertion '") + #condition + "' failed in " + __PRETTY_FUNCTION__  + " at " + __FILE__ + ":" + std::to_string(__LINE__)); }
+
+        /// to make stacktraces work properlier
+        void throwException__(const std::string &message);
+        #define REQUIRE(condition, action) if (IS_UNLIKELY(!(condition))) { throwException__(std::string("Assertion '") + #condition + "' failed in " + __PRETTY_FUNCTION__  + " at " + __FILE__ + ":" + std::to_string(__LINE__)); }
     #endif//_MSC_VER
 
 #else // ... and this is in release builds
-    #define REQUIRE(condition, action) if (IS_UNLIKELY(!condition)) { WARN << "Assertion" << #condition << "failed"; action; }
+    #define REQUIRE(condition, action) if (IS_UNLIKELY(!(condition))) { WARN << "Assertion" << #condition << "failed"; action; }
 #endif
 
 namespace util {
