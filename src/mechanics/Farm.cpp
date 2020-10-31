@@ -76,7 +76,7 @@ ScreenRect Farm::screenRect() const noexcept
     return rect;
 }
 
-bool Farm::checkClick(const ScreenPos &pos) const noexcept
+bool Farm::containsCursorPos(const ScreenPos &pos) const noexcept
 {
     return screenRect().contains(pos);
 }

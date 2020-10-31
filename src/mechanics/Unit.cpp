@@ -192,7 +192,7 @@ ScreenRect Unit::screenRect() const noexcept
     return ret;
 }
 
-bool Unit::checkClick(const ScreenPos &pos) const noexcept
+bool Unit::containsCursorPos(const ScreenPos &pos) const noexcept
 {
     if (m_renderer->checkClick(pos)) {
         return true;

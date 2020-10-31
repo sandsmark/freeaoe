@@ -639,7 +639,7 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
         if (!selectionRect.overlaps(unit->screenRect() + absoluteUnitPosition)) {
             continue;
         }
-        if (isClick && !unit->checkClick(selectionRect.bottomRight() - absoluteUnitPosition)) {
+        if (isClick && !unit->containsCursorPos(selectionRect.bottomRight() - absoluteUnitPosition)) {
             continue;
         }
         hasHumanPlayer = hasHumanPlayer || unit->playerId() == humanPlayer->playerId;
@@ -732,7 +732,7 @@ void UnitManager::forEachUnitAt(const ScreenPos &position, const CameraPtr camer
         }
 
         const ScreenPos relativePosition = position - camera->absoluteScreenPos(unit->position());
-        if (unit->checkClick(relativePosition)) {
+        if (unit->containsCursorPos(relativePosition)) {
             if (action(unit)) {
                 break;
             }
@@ -884,7 +884,7 @@ Unit::Ptr UnitManager::clickedUnitAt(const ScreenPos &pos, const CameraPtr &came
         return nullptr;
     }
     const ScreenPos relativePosition = pos - camera->absoluteScreenPos(unit->position());
-    if (!unit->checkClick(relativePosition)) {
+    if (!unit->containsCursorPos(relativePosition)) {
         return nullptr;
     }
     return unit;

@@ -169,7 +169,7 @@ struct Unit : public Entity
     virtual ScreenRect screenRect() const noexcept;
 
     /// Check if this click hit the unit (e. g. some units only count hits on opaque pixels)
-    virtual bool checkClick(const ScreenPos &pos) const noexcept;
+    virtual bool containsCursorPos(const ScreenPos &pos) const noexcept;
 
     /// The size of the selection rect
     Size selectionSize() const noexcept;

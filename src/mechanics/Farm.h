@@ -49,7 +49,7 @@ public:
 
     GraphicRender &renderer() noexcept override { return m_farmRenderer; }
     ScreenRect screenRect() const noexcept override;
-    bool checkClick(const ScreenPos &pos) const noexcept override;
+    bool containsCursorPos(const ScreenPos &pos) const noexcept override;
 
 private:
     void setTerrain(const TerrainTypes terrainToSet) noexcept;
