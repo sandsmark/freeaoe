@@ -159,73 +159,127 @@ add_resource(IMAGE_PARCHMENT misc/images/parchment.jpg)
 
 set(AI_SRC
     src/ai/grammar.gen.tab.cpp
+    src/ai/grammar.gen.tab.hpp
     src/ai/lex.yy.cc
     src/ai/AiRule.cpp
+    src/ai/AiRule.h
     src/ai/AiScript.cpp
+    src/ai/AiScript.h
     src/ai/ScriptLoader.cpp
+    src/ai/ScriptLoader.h
     src/ai/actions/Actions.cpp
+    src/ai/actions/Actions.h
     src/ai/conditions/Conditions.cpp
+    src/ai/conditions/Conditions.h
     src/ai/Ids.cpp
+    src/ai/Ids.h
     src/ai/AiPlayer.cpp
+    src/ai/AiPlayer.h
+
+    src/ai/EnumLogDefs.h
+    src/ai/location.hh
+    src/ai/ScriptTokenizer.h
+    src/ai/gen/enums.h
     )
 
 set(CORE_SRC
     src/core/Logger.cpp
+    src/core/Logger.h
     src/core/Utility.cpp
+    src/core/Utility.h
     src/core/SignalEmitter.cpp
+    src/core/SignalEmitter.h
     )
 
 set(GLOBAL_SRC
     src/global/Config.cpp
+    src/global/Config.h
     src/global/EventManager.cpp
+    src/global/EventManager.h
     src/global/EventListener.cpp
+    src/global/EventListener.h
     )
 
 set(RESOURCE_SRC
     src/resource/DataManager.cpp
+    src/resource/DataManager.h
     src/resource/Sprite.cpp
+    src/resource/Sprite.h
     src/resource/LanguageManager.cpp
+    src/resource/LanguageManager.h
     src/resource/Resource.cpp
+    src/resource/Resource.h
     src/resource/AssetManager.cpp
+    src/resource/AssetManager.h
     src/resource/TerrainSprite.cpp
+    src/resource/TerrainSprite.h
     )
 
 set(MECHANICS_SRC
     src/mechanics/Entity.cpp
+    src/mechanics/Entity.h
     src/mechanics/Civilization.cpp
+    src/mechanics/Civilization.h
     src/mechanics/Farm.cpp
+    src/mechanics/Farm.h
     src/mechanics/GameState.cpp
+    src/mechanics/GameState.h
     src/mechanics/Map.cpp
+    src/mechanics/Map.h
     src/mechanics/Player.cpp
+    src/mechanics/Player.h
     src/mechanics/StateManager.cpp
+    src/mechanics/StateManager.h
     src/mechanics/UnitActionHandler.cpp
+    src/mechanics/UnitActionHandler.h
     src/mechanics/UnitFactory.cpp
+    src/mechanics/UnitFactory.h
     src/mechanics/UnitManager.cpp
+    src/mechanics/UnitManager.h
     src/mechanics/Unit.cpp
+    src/mechanics/Unit.h
     src/mechanics/Missile.cpp
+    src/mechanics/Missile.h
     src/mechanics/MapTile.cpp
+    src/mechanics/MapTile.h
     src/mechanics/Building.cpp
+    src/mechanics/Building.h
     src/mechanics/ScenarioController.cpp
+    src/mechanics/ScenarioController.h
     )
 
 set(ACTIONS_SRC
     src/actions/IAction.cpp
+    src/actions/IAction.h
     src/actions/ActionAttack.cpp
+    src/actions/ActionAttack.h
     src/actions/ActionBuild.cpp
+    src/actions/ActionBuild.h
     src/actions/ActionGather.cpp
+    src/actions/ActionGather.h
     src/actions/ActionMove.cpp
+    src/actions/ActionMove.h
     src/actions/ActionFly.cpp
+    src/actions/ActionFly.h
     src/actions/ActionGarrison.cpp
+    src/actions/ActionGarrison.h
     )
 
 set(RENDER_SRC
     src/render/Camera.cpp
+    src/render/Camera.h
     src/render/GraphicRender.cpp
+    src/render/GraphicRender.h
     src/render/IRenderer.cpp
+    src/render/IRenderer.h
     src/render/IRenderTarget.cpp
+    src/render/IRenderTarget.h
     src/render/MapRenderer.cpp
+    src/render/MapRenderer.h
     src/render/SfmlRenderTarget.cpp
+    src/render/SfmlRenderTarget.h
     src/render/UnitsRenderer.cpp
+    src/render/UnitsRenderer.h
     )
 
 set(SERVER_SRC
@@ -238,50 +292,78 @@ set(SETTINGS_SRC
 
 set(COMMUNICATION_SRC
     src/client/GameClient.cpp
+    src/client/GameClient.h
     src/communication/TunnelToClient.cpp
+    src/communication/TunnelToClient.h
     src/communication/TunnelToServer.cpp
+    src/communication/TunnelToServer.h
     src/communication/UnitStatus.cpp
+    src/communication/UnitStatus.h
     src/communication/commands/CommandMove.cpp
+    src/communication/commands/CommandMove.h
     src/communication/commands/CommandSpawn.cpp
+    src/communication/commands/CommandSpawn.h
     src/communication/tunnels/LocalTunnelToClient.cpp
+    src/communication/tunnels/LocalTunnelToClient.h
     src/communication/tunnels/LocalunnelToServer.cpp
+    src/communication/tunnels/LocalunnelToServer.h
     )
 
 set(UNSORTED_SRC
     src/audio/AudioPlayer.cpp
+    src/audio/AudioPlayer.h
     src/audio/sts_mixer.cpp
+    src/audio/sts_mixer.h
     src/audio/Implementations.cpp
 )
 
 set (UI_SRC
     src/ui/ActionPanel.cpp
+    src/ui/ActionPanel.h
     src/ui/FileDialog.cpp
+    src/ui/FileDialog.h
     src/ui/UnitInfoPanel.cpp
+    src/ui/UnitInfoPanel.h
     src/ui/HomeScreen.cpp
+    src/ui/HomeScreen.h
     src/ui/HistoryScreen.cpp
+    src/ui/HistoryScreen.h
     src/ui/UiScreen.cpp
+    src/ui/UiScreen.h
     src/ui/TextButton.cpp
+    src/ui/TextButton.h
     src/ui/Minimap.cpp
+    src/ui/Minimap.h
     src/ui/Dialog.cpp
+    src/ui/Dialog.h
     src/ui/NumberLabel.cpp
+    src/ui/NumberLabel.h
     src/ui/MouseCursor.cpp
+    src/ui/MouseCursor.h
     src/ui/IconButton.cpp
+    src/ui/IconButton.h
 
     ${IMAGE_PARCHMENT}
     )
 
 set (EDITOR_SRC
     src/editor/Editor.cpp
+    src/editor/Editor.h
     )
 
 set(DEBUG_SRC
     src/debug/AllunitsGameSample.cpp
+    src/debug/AllunitsGameSample.h
     src/debug/BasicGameSample.cpp
+    src/debug/BasicGameSample.h
     src/debug/SampleGameFactory.cpp
+    src/debug/SampleGameFactory.h
     )
 
 set(ENGINE_SRC
     src/Engine.cpp
+    src/Engine.h
+
     ${CORE_SRC}
     ${AI_SRC}
     ${RESOURCE_SRC}
