@@ -717,9 +717,8 @@ void UnitManager::forEachUnitAt(const ScreenPos &position, const CameraPtr camer
             continue;
         }
 
-        const ScreenPos unitPosition = camera->absoluteScreenPos(unit->position());
-        const ScreenRect unitRect = unit->screenRect() + unitPosition;
-        if (unitRect.contains(position)) {
+        const ScreenPos relativePosition = position - camera->absoluteScreenPos(unit->position());
+        if (unit->checkClick(relativePosition)) {
             if (action(unit)) {
                 break;
             }
