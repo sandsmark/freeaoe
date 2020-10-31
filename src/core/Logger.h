@@ -75,9 +75,10 @@ struct LogPrinter {
         *m_refs = 1;
 
 #ifndef _MSC_VER
-        std::cout <<  "\033[0;37m"<< className << " ";
+        std::cout <<  "\033[2;90m"<< className << "\t";
 #endif
 
+        // No MSVC check here, since it works with Wine. No idea about wintendo, not my problem.
         switch (type) {
         case LogType::Debug:
             std::cout << "\033[02;32m";
@@ -201,7 +202,7 @@ struct LogPrinter {
         assert(*m_refs >= 0);
 
         if (*m_refs == 0) {
-            std::cout << "\033[0;37m("
+            std::cout << "\033[0m\033[2;37m("
                       << m_funcName << " "
                       << m_filename << ":" << m_linenum
                       << ")\033[0m" << std::endl;
@@ -224,8 +225,8 @@ private:
 #define DBG LogPrinter(__FUNCTION__, LogPrinter::extractClassName(__FUNCTION__), __FILE__, __LINE__, LogPrinter::LogType::Debug)
 #define WARN LogPrinter(__FUNCTION__, LogPrinter::extractClassName(__FUNCTION__), __FILE__, __LINE__, LogPrinter::LogType::Warning)
 #else
-#define DBG LogPrinter(__PRETTY_FUNCTION__, LogPrinter::extractClassName(__PRETTY_FUNCTION__), __FILE__, __LINE__, LogPrinter::LogType::Debug)
-#define WARN LogPrinter(__PRETTY_FUNCTION__, LogPrinter::extractClassName(__PRETTY_FUNCTION__), __FILE__, __LINE__, LogPrinter::LogType::Warning)
+#define DBG LogPrinter(__FUNCTION__, LogPrinter::extractClassName(__PRETTY_FUNCTION__), __FILE__, __LINE__, LogPrinter::LogType::Debug)
+#define WARN LogPrinter(__FUNCTION__, LogPrinter::extractClassName(__PRETTY_FUNCTION__), __FILE__, __LINE__, LogPrinter::LogType::Warning)
 #endif
 
 class LifeTimePrinter
