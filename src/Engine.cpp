@@ -141,14 +141,12 @@ void Engine::start()
 
             if (state->result != GameState::Result::Running) {
                 if (state->result == GameState::Result::Won) {
-                    m_resultOverlay.setString("You are victorious!");
+                    m_resultOverlay->string = "You are victorious!";
                 } else {
-                    m_resultOverlay.setString("You have been defeated!"); // TODO: don't remember the exact text
+                    m_resultOverlay->string = "You have been defeated!"; // TODO: don't remember the exact text
                 }
-                const ScreenRect labelRect = m_resultOverlay.getLocalBounds();
                 const Size windowSize = renderWindow_->getSize();
-
-                m_resultOverlay.setPosition(windowSize.width / 2 - labelRect.width / 2, windowSize.height / 2 - labelRect.height / 2);
+                m_resultOverlay->position = ScreenPos(windowSize.width / 2, windowSize.height / 2);
             }
         }
 
@@ -601,11 +599,11 @@ bool Engine::setup(const std::shared_ptr<genie::ScnFile> &scenario)
     renderWindow_->setSize(uiSize);
     renderTarget_->setSize(uiSize);
 
-    m_resultOverlay.setFillColor(sf::Color::White);
-    m_resultOverlay.setFont(SfmlRenderTarget::uiFont());
-    m_resultOverlay.setCharacterSize(25);
-    m_resultOverlay.setOutlineColor(sf::Color::Black);
-    m_resultOverlay.setOutlineThickness(3);
+    m_resultOverlay = renderTarget_->createText(Drawable::Text::UI);
+    m_resultOverlay->alignment = Drawable::Text::AlignCenter;
+    m_resultOverlay->color = Drawable::White;
+    m_resultOverlay->pointSize = 25;
+    m_resultOverlay->outlineColor = Drawable::Black;
 
     fps_label_ = renderTarget_->createText(Drawable::Text::UI);
     fps_label_->position = ScreenPos(uiSize.width - 75, uiSize.height - 20);

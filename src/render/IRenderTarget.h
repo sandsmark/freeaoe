@@ -108,7 +108,7 @@ struct Text
     };
 
     enum Alignment {
-        AlignLeft, AlignRight
+        AlignLeft, AlignRight, AlignCenter
     } alignment = AlignLeft;
 
     typedef std::shared_ptr<Text> Ptr;

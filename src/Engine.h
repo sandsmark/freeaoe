@@ -100,7 +100,7 @@ private:
 
     StateManager state_manager_;
 
-    sf::Text m_resultOverlay;
+    Drawable::Text::Ptr m_resultOverlay;
 
     Drawable::Text::Ptr fps_label_;
     std::vector<std::unique_ptr<IconButton>> m_buttons;

@@ -398,6 +398,9 @@ void SfmlRenderTarget::draw(const Drawable::Text::Ptr &text)
 
         if (text->alignment == Drawable::Text::AlignRight) {
             sfmlText->text->setPosition(sf::Vector2f(text->position.x - sfmlText->text->getLocalBounds().width, text->position.y));
+        } else if (text->alignment == Drawable::Text::AlignCenter) {
+            const ScreenRect textRect = sfmlText->text->getLocalBounds();
+            sfmlText->text->setPosition(sf::Vector2f(text->position.x - textRect.width / 2, text->position.y - textRect.height/2));
         } else {
             sfmlText->text->setPosition(text->position);
         }
