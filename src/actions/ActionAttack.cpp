@@ -136,7 +136,7 @@ IAction::UpdateResult ActionAttack::update(Time time)
 //        m_firing = false;
 //        return IAction::UpdateResult::Updated;
 //    }
-    const float timeSinceLastAttack = (time - m_lastAttackTime) * 0.0015;
+    const float timeSinceLastAttack = (time - unit->lastAttackTime) * 0.0015;
 
     if (m_frameDelay > 0) {
         if (timeSinceLastAttack >= unit->data()->Combat.ReloadTime) {
@@ -159,7 +159,7 @@ IAction::UpdateResult ActionAttack::update(Time time)
     if (targetUnit && targetUnit->healthLeft() <= 0.f) {
         return IAction::UpdateResult::Completed;
     }
-    m_lastAttackTime = time;
+    unit->lastAttackTime = time;
 
     if (m_frameDelay > 0) {
         m_firing = true;

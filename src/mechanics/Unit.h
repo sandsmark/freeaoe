@@ -140,6 +140,7 @@ struct Unit : public Entity
     std::weak_ptr<Building> garrisonedIn;
     ResourceMap resources;
     int activeMissiles = 0;
+    Time lastAttackTime = 0;
 
     // No copy, no default constructor
     Unit() = delete;
