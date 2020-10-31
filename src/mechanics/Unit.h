@@ -261,6 +261,10 @@ struct Unit : public Entity
         return m_data;
     }
 
+    // Checking task swap IDs
+    bool canMatchGenieUnitID(const int id) const;
+    // TODO: need basically the same for all attributes
+
 protected:
     friend struct UnitActionHandler;
 

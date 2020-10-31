@@ -135,7 +135,7 @@ Task UnitActionHandler::findMatchingTask(const std::shared_ptr<Player> &ownPlaye
             continue;
         }
 
-        if (action->UnitID == target->data()->ID) {
+        if (target->canMatchGenieUnitID(action->UnitID)) {
             matched = task;
             break;
         }
@@ -171,6 +171,7 @@ Task UnitActionHandler::findMatchingTask(const std::shared_ptr<Player> &ownPlaye
         matched = task;
         break;
     }
+
     if (matched.isValid()) {
         matched.target = target;
     }

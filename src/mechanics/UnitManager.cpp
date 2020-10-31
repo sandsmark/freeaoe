@@ -438,7 +438,8 @@ void UnitManager::onRightClick(const ScreenPos &screenPos, const CameraPtr &came
             if (unit->playerId() != humanPlayer->playerId) {
                 continue;
             }
-            if (unit->data()->ID != m_taskUnderCursor.unitId) {
+
+            if (!unit->canMatchGenieUnitID(m_taskUnderCursor.unitId)) {
                 continue;
             }
 
@@ -454,6 +455,9 @@ void UnitManager::onRightClick(const ScreenPos &screenPos, const CameraPtr &came
             }
 
             foundTasks = true;
+        }
+        if (!foundTasks) {
+            WARN << "Have target under cursor, but found noone to assign?";
         }
     }
 

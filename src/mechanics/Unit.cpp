@@ -467,6 +467,25 @@ void Unit::setUnitData(const genie::Unit &data_) noexcept
     }
 }
 
+bool Unit::canMatchGenieUnitID(const int id) const
+{
+    const int myID = m_data->ID;
+    if (id == myID) {
+        return true;
+    }
+
+    Player::Ptr owner = m_player.lock();
+    REQUIRE(owner, return false);
+
+    for (const genie::Unit *swappable : owner->civilization.swappableUnits(m_data->Action.TaskSwapGroup)) {
+        if (swappable->ID == id) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 Size Unit::clearanceSize() const noexcept
 {
     return Size(data()->Size.x * Constants::TILE_SIZE, data()->Size.y * Constants::TILE_SIZE);
