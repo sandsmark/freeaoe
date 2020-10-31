@@ -45,7 +45,8 @@ bool MouseCursor::update(const std::shared_ptr<UnitManager> &unitManager)
             return setCursor(MouseCursor::Normal);
         }
 
-        REQUIRE(targetAction.data, return setCursor(MouseCursor::Normal));
+        REQUIRE(targetAction.data, return false);
+
         if (targetAction.data->ActionType == genie::ActionType::Combat) {
             return setCursor(MouseCursor::Attack);
         } else {
@@ -76,8 +77,12 @@ void MouseCursor::render()
     m_cursor_pos_text.setString(std::to_string(m_position.x) + ", " + std::to_string(m_position.y));
     m_cursor_pos_text.setCharacterSize(11);
     m_cursor_pos_text.setPosition(ScreenPos(m_position));
+
+    if (m_currentType != Invalid) {
+        m_renderTarget->draw(m_image, m_position);
+    }
+
     m_renderTarget->draw(m_cursor_pos_text);
-    m_renderTarget->draw(m_image, m_position);
 }
 
 bool MouseCursor::setCursor(const MouseCursor::Type type)
@@ -90,13 +95,15 @@ bool MouseCursor::setCursor(const MouseCursor::Type type)
         return false;
     }
 
-    const genie::SlpFramePtr &newFrame = m_cursorsFile->getFrame(type);
-    if (!newFrame) {
-        WARN << "Failed to load new cursor SLP for type" << type;
-        return false;
+    if (type != Invalid) {
+        REQUIRE(type < m_cursorsFile->getFrameCount(), return false);
+
+        const genie::SlpFramePtr &newFrame = m_cursorsFile->getFrame(type);
+        REQUIRE(newFrame != nullptr, return false);
+
+        m_image = m_renderTarget->convertFrameToImage(newFrame);
     }
 
-    m_image = m_renderTarget->convertFrameToImage(newFrame);
     m_currentType = type;
     return true;
 }
