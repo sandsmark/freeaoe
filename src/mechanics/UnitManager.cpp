@@ -802,7 +802,9 @@ void UnitManager::enqueueResearch(const genie::Tech *techData, const UnitVector 
 
 Unit::Ptr UnitManager::unitAt(const ScreenPos &pos, const CameraPtr &camera) const
 {
-    for (const Unit::Ptr &unit : m_units) {
+    std::reverse_iterator<UnitVector::const_iterator> unitIterator;
+    for (unitIterator = m_units.rbegin(); unitIterator != m_units.rend(); unitIterator++) {
+        Unit::Ptr unit = *unitIterator;
         if (!unit->isVisible) {
             continue;
         }
