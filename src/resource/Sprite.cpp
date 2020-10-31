@@ -463,11 +463,15 @@ bool Sprite::containsCursorPos(const ScreenPos &pos, uint32_t frame_num, float a
             return true;
         }
 
-        const genie::GameVersion gameVersion = DataManager::Inst().gameVersion();
-        if (gameVersion >= genie::GV_AoKE3 && gameVersion <= genie::GV_TC) {
+        if (!frame->is32bit()) {
             return false;
         }
-        DBG << "Assuming" << gameVersion << "needs to check pixels with mask";
+
+//        const genie::GameVersion gameVersion = DataManager::Inst().gameVersion();
+//        if (gameVersion >= genie::GV_AoKE3 && gameVersion <= genie::GV_TC) {
+//            return false;
+//        }
+//        DBG << "Assuming" << gameVersion << "needs to check pixels with mask";
         // I assume this is needed for another version of Genie
         genie::XY spot(std::round(pos.x), std::round(pos.y));
 
