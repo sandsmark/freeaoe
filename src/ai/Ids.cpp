@@ -679,46 +679,32 @@ std::unordered_set<int> ai::unitIds(const ai::Unit type, const Civ civ)
         switch(civ) {
         case Civ::Briton:
             return unitIds(Unit::Longbowman, civ);
-            break;
         case Civ::Byzantine:
             return unitIds(Unit::Cataphract, civ);
-            break;
         case Civ::Celtic:
             return unitIds(Unit::WoadRaider, civ);
-            break;
         case Civ::Chinese:
             return unitIds(Unit::ChuKoNu, civ);
-            break;
         case Civ::Frankish:
             return unitIds(Unit::ThrowingAxeman, civ);
-            break;
         case Civ::Gothic:
             return unitIds(Unit::Huskarl, civ);
-            break;
         case Civ::Japanese:
             return unitIds(Unit::Samurai, civ);
-            break;
         case Civ::Mongol:
             return unitIds(Unit::Mangudai, civ);
-            break;
         case Civ::Persian:
             return unitIds(Unit::WarElephant, civ);
-            break;
         case Civ::Saracen:
             return unitIds(Unit::Mameluke, civ);
-            break;
         case Civ::Teutonic:
             return unitIds(Unit::TeutonicKnight, civ);
-            break;
         case Civ::Turkish:
             return unitIds(Unit::Janissary, civ);
-            break;
         case Civ::Viking:
             return unitIds(Unit::Berserk, civ);
-            break;
         case Civ::MyCiv:
             WARN << "Error in script parsing, we need to know what your civ is";
-            break;
         }
         WARN << "Unhandled civ" << civ;
         break;

@@ -143,8 +143,6 @@ Drawable::Color Minimap::unitColor(const std::shared_ptr<Unit> &unit)
             return Drawable::Color(128, 192, 128);
         } else if (unit->playerId() == 1) { ///TODO fixme get the human player
             return Drawable::Blue;
-        } else {
-            return Drawable::Red;
         }
         break;
     case MinimapMode::Economic: //TODO

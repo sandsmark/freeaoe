@@ -406,7 +406,7 @@ bool AssetManager::initializeInternal(const std::string &dataPath, const genie::
         m_tileEdgeFile->load(filename);
     } catch (const std::exception &e) {
         WARN << "Failed to load" << filename << e.what();
-        throw e;
+        throw;
     }
 
     const std::vector<std::string> gamedataFiles({
@@ -852,7 +852,7 @@ DrsFilePtr AssetManager::loadDrs(const std::string &filename)
         file->load(filePath);
     } catch (const std::exception &e) {
         WARN << "Failed to load" << filename << e.what();
-        throw e;
+        throw;
     }
 
     m_allFiles.push_back(file);

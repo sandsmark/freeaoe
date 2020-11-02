@@ -197,7 +197,10 @@ void Engine::start()
         }
 
     }
-    DBG << "avg fps:" << (totalFps / fpsSamples);
+
+    if (totalFps > 0 && fpsSamples > 0) {
+        DBG << "avg fps:" << (totalFps / fpsSamples);
+    }
 }
 
 void Engine::addMessage(const std::string &message)

@@ -335,9 +335,9 @@ inline LogPrinter operator <<(LogPrinter os, const genie::TriggerEffect &effect)
     if (effect.objectGroup >= 0) os << ", objectGroup = " << effect.objectGroup;
     if (effect.objectType >= 0) os << ", objectType = " << effect.objectType;
 
-    if (effect.location.x != -1 || effect.location.x != -1) os << ", location = " << effect.location.x << "," <<  effect.location.y;
-    if (effect.areaFrom.x != -1 || effect.areaFrom.x != -1) os << ", areaFrom = " << effect.areaFrom.x << "," <<  effect.areaFrom.y;
-    if (effect.areaTo.x != -1 || effect.areaTo.x != -1) os << ", areaTo = " << effect.areaTo.x << "," <<  effect.areaTo.y;
+    if (effect.location.x != -1 || effect.location.y != -1) os << ", location = " << effect.location.x << "," <<  effect.location.y;
+    if (effect.areaFrom.x != -1 || effect.areaFrom.y != -1) os << ", areaFrom = " << effect.areaFrom.x << "," <<  effect.areaFrom.y;
+    if (effect.areaTo.x != -1 || effect.areaTo.y != -1) os << ", areaTo = " << effect.areaTo.x << "," <<  effect.areaTo.y;
 
     if (effect.objectGroup >= 0) os << ", objectGroup = " << effect.objectGroup;
     if (effect.objectType >= 0) os << ", objectType = " << effect.objectType;
