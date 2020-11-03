@@ -651,7 +651,7 @@ struct MapRect {
     }
 
     bool isEmpty() const {
-        return util::floatsEquals(width, 0.f) || util::floatsEquals(width, 0.f);
+        return util::floatsEquals(width, 0.f) || util::floatsEquals(height, 0.f);
     }
 
     ScreenRect boundingScreenRect() const;
