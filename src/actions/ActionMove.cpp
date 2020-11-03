@@ -160,7 +160,7 @@ MapPos ActionMove::findClosestWalkableBorder(const MapPos &start, const MapPos &
             }
             const std::vector<std::weak_ptr<Entity>> &entities = m_map->entitiesAt(dx, dy);
 
-            if (entities.size() == 0) {
+            if (entities.size() == 0) { // NOLINT
                 continue;
             }
 
@@ -338,7 +338,7 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
 
         m_prevTime = time;
         updatePath();
-        if (m_path.size() == 0) {
+        if (m_path.size() == 0) { // NOLINT
             return UpdateResult::Failed;
         }
 
@@ -397,7 +397,7 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
         return UpdateResult::Completed;
     }
 
-    if (m_path.size() == 0) {
+    if (m_path.size() == 0) { // NOLINT
         m_targetReached = true;
 
         if (unitPosition.distance(m_destination) < 1 || targetRect.contains(unitPosition)) {
@@ -425,13 +425,13 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
         unitPosition = m_path.back();
         unitPosition.z = m_map->elevationAt(unitPosition);
         m_path.pop_back();
-        if (m_path.size() == 0) {
+        if (m_path.size() == 0) { // NOLINT
             break;
         }
         distanceLeft = util::hypot(m_path.back().x - unitPosition.x, m_path.back().y - unitPosition.y);
     }
 
-    if (m_path.size() == 0) {
+    if (m_path.size() == 0) { // NOLINT
         m_targetReached = true;
         if (!isPassable(unitPosition.x, unitPosition.y)) {
             WARN << "path empty after loop, complete, distance left:" << unitPosition.distance(m_destination) << unit->debugName;
@@ -457,7 +457,7 @@ IAction::UpdateResult ActionMove::update(Time time) noexcept
             return UpdateResult::Completed;
         }
 
-        if (m_path.size() == 0) {
+        if (m_path.size() == 0) { // NOLINT
             WARN << "failed to find new target path";
             m_targetReached = true;
             return UpdateResult::Failed;
@@ -1050,7 +1050,7 @@ void ActionMove::updatePath() noexcept
 
     // Try coarser
     // Uglier, but hopefully faster
-    if (m_path.size() == 0) {
+    if (m_path.size() == 0) { // NOLINT
         WARN << "failed to find path, trying 0.2 resolution";
         if (newDest != m_destination) {
             newDest = findClosestWalkableBorder(unit->position(), m_destination, 5);
@@ -1061,7 +1061,7 @@ void ActionMove::updatePath() noexcept
 
     TIME_TICK;
 
-    if (m_path.size() == 0) {
+    if (m_path.size() == 0) { // NOLINT
         WARN << "failed to find path, trying 0.1 resolution";
         if (newDest != m_destination) {
             newDest = findClosestWalkableBorder(unit->position(), m_destination, 10);
@@ -1070,7 +1070,7 @@ void ActionMove::updatePath() noexcept
         m_path = findPath(unit->position(), newDest, 10);
     }
 
-    if (m_path.size() == 0) {
+    if (m_path.size() == 0) { // NOLINT
         DBG << "Failed to find path for" << unit->debugName;
     }
 

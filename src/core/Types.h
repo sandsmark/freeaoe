@@ -99,8 +99,8 @@ struct Size {
 
     inline bool operator==(const Size &other) const {
         return (
-            other.width == width &&
-            other.height == height
+            util::floatsEquals(other.width, width) &&
+            util::floatsEquals(other.height, height)
         );
     }
 
@@ -125,9 +125,9 @@ struct MapPos {
 
     inline bool operator==(const MapPos &other) const {
         return (
-            other.x == x &&
-            other.y == y &&
-            other.z == z
+            util::floatsEquals(other.x, x) &&
+            util::floatsEquals(other.y, y) &&
+            util::floatsEquals(other.z, z)
         );
     }
 
@@ -322,20 +322,20 @@ struct ScreenPos {
         return sf::Vector2f(x, y);
     }
 
-    inline bool operator!=(const sf::Vector2f &other) const {
-        return (other.x != x || other.y != y);
-    }
-
     inline bool operator==(const sf::Vector2f &other) const {
-        return (other.x == x && other.y == y);
+        return (util::floatsEquals(other.x, x) && util::floatsEquals(other.y, y));
     }
 
-    inline bool operator!=(const ScreenPos &other) const {
-        return (other.x != x || other.y != y);
+    inline bool operator!=(const sf::Vector2f &other) const {
+        return !(*this == other);
     }
 
     inline bool operator==(const ScreenPos &other) const {
-        return (other.x == x && other.y == y);
+        return (util::floatsEquals(other.x, x) && util::floatsEquals(other.y, y));
+    }
+
+    inline bool operator!=(const ScreenPos &other) const {
+        return !(*this == other);
     }
 
     inline ScreenPos &operator+=(const ScreenPos &other) {
@@ -540,14 +540,16 @@ struct ScreenRect
         return contains(point.x, point.y);
     }
 
-    bool operator==(const ScreenRect &other) const {
-        return x == other.x && y == other.y &&
-               width == other.width && height == other.height;
+    inline bool operator==(const ScreenRect &other) const {
+        return
+            util::floatsEquals(x, other.x) &&
+            util::floatsEquals(y, other.y) &&
+            util::floatsEquals(width, other.width) &&
+            util::floatsEquals(height, other.height);
     }
 
-    bool operator!=(const ScreenRect &other) const {
-        return x != other.x || y != other.y ||
-               width != other.width || height != other.height;
+    inline bool operator!=(const ScreenRect &other) const {
+        return !(*this == other);
     }
 
     bool overlaps(const ScreenRect &otherRect) const {
@@ -649,14 +651,10 @@ struct MapRect {
     }
 
     bool isEmpty() const {
-        return !(width > 0 && height > 0);
+        return util::floatsEquals(width, 0.f) || util::floatsEquals(width, 0.f);
     }
 
     ScreenRect boundingScreenRect() const;
-
-    operator bool() const {
-        return (width > 0 && height > 0);
-    }
 
     bool contains(const MapPos &point) const {
         return (
