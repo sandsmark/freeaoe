@@ -416,10 +416,10 @@ void ListView::setCurrentPath(std::string pathString)
     }
 
     std::sort(m_list.begin(), m_list.end(), [](const std::filesystem::path &a, const std::filesystem::path &b){
-        const int aIsDir = std::filesystem::is_directory(a);
-        const int bIsDir = std::filesystem::is_directory(b);
-        if (aIsDir != bIsDir) {
-            return !aIsDir < !bIsDir;
+        const int aIsNotDir = !std::filesystem::is_directory(a);
+        const int bIsNotDir = !std::filesystem::is_directory(b);
+        if (aIsNotDir != bIsNotDir) {
+            return aIsNotDir < bIsNotDir;
         }
 
         const std::string aName = util::toLowercase(a.filename().string());
