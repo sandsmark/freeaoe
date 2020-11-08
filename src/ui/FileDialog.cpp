@@ -127,7 +127,7 @@ std::string FileDialog::getPath()
         m_okButton->enabled = m_fileList->hasDataFolder;
         m_backButton->enabled = !m_fileList->pathHistory.empty();
 
-        m_renderWindow->clear(sf::Color(32, 32, 32));
+        m_renderTarget->clear(sf::Color(32, 32, 32));
         m_renderTarget->draw(m_bgImage, {0, 0});
         m_renderTarget->draw(m_pathText);
         m_openDownloadUrlButton->render(m_renderTarget);
@@ -157,7 +157,7 @@ void FileDialog::setErrorString(const std::string &error) noexcept
     m_errorText->string = "Failed to load game data: " + error;
     m_errorText->pointSize = 17;
     m_errorText->alignment = Drawable::Text::AlignHCenter;
-    m_errorText->position.x = m_renderWindow->getSize().x/2;
+    m_errorText->position.x = m_renderTarget->getSize().width/2;
     m_errorText->color = Drawable::Color(100, 32, 32);
 }
 
