@@ -98,9 +98,8 @@ private:
     std::unique_ptr<Button> m_openDownloadUrlButton;
     std::unique_ptr<Button> m_backButton;
     std::unique_ptr<ListView> m_fileList;
-    std::unique_ptr<sf::Text> m_description;
-    std::unique_ptr<sf::Text> m_errorText;
-    std::unique_ptr<sf::Text> m_secondaryErrorText;
+    Drawable::Text::Ptr m_description;
+    Drawable::Text::Ptr m_errorText;
     Drawable::Image::Ptr m_bgImage;
     IRenderTargetPtr m_renderTarget;
     Drawable::Text::Ptr m_pathText;

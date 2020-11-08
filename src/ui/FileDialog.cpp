@@ -33,11 +33,13 @@ bool FileDialog::setup(int width, int height)
     m_renderTarget = std::make_shared<SfmlRenderTarget>(*m_renderWindow);
 
     {
-        m_description = std::make_unique<sf::Text>("Please select the directory containing your Age of Empires 2 installation.", SfmlRenderTarget::uiFont());
-        m_description->setCharacterSize(20);
-        const int descWidth = m_description->getLocalBounds().width;
-        m_description->setPosition(width/2 - descWidth/2, 20);
-        m_description->setFillColor(sf::Color::Black);
+        m_description = m_renderTarget->createText(Drawable::Text::UI);
+        m_description->string = "Please select the directory containing your Age of Empires 2 installation.";
+        m_description->pointSize = 20;
+        m_description->position.x = width/2;
+        m_description->position.y = 20;
+        m_description->alignment = Drawable::Text::AlignHCenter;
+        m_description->color = Drawable::Black;
     }
 
     const Size buttonSize(250, 50);
@@ -133,9 +135,9 @@ std::string FileDialog::getPath()
         m_okButton->render(m_renderTarget);
         m_backButton->render(m_renderTarget);
         m_fileList->render(m_renderTarget);
-        m_renderWindow->draw(*m_description);
+        m_renderTarget->draw(m_description);
         if (m_errorText) {
-            m_renderWindow->draw(*m_errorText);
+            m_renderTarget->draw(m_errorText);
         }
 
 #if defined(__linux__)
@@ -151,11 +153,12 @@ std::string FileDialog::getPath()
 
 void FileDialog::setErrorString(const std::string &error) noexcept
 {
-    m_errorText = std::make_unique<sf::Text>("Failed to load game data: " + error, SfmlRenderTarget::uiFont());
-    m_errorText->setCharacterSize(17);
-    const int textWidth = m_errorText->getLocalBounds().width;
-    m_errorText->setPosition(m_renderWindow->getSize().x/2.f - textWidth/2.f, 0);
-    m_errorText->setFillColor(sf::Color(100, 32, 32));
+    m_errorText = m_renderTarget->createText(Drawable::Text::UI);
+    m_errorText->string = "Failed to load game data: " + error;
+    m_errorText->pointSize = 17;
+    m_errorText->alignment = Drawable::Text::AlignHCenter;
+    m_errorText->position.x = m_renderWindow->getSize().x/2;
+    m_errorText->color = Drawable::Color(100, 32, 32);
 }
 
 Button::Button(const std::string &text, const ScreenRect &rect, const IRenderTargetPtr &renderTarget) :
