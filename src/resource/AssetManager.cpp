@@ -56,7 +56,7 @@ void AssetManager::create(const bool isHd)
 
 const std::unique_ptr<AssetManager> &AssetManager::Inst()
 {
-    REQUIRE(m_instance, m_instance = create(DataManager::Inst().isHd()));
+    REQUIRE(m_instance, return nullptr);
     return m_instance;
 }
 
