@@ -92,7 +92,7 @@ SfmlWindow::SfmlWindow(const Size size, const std::string &title)
     window->setView(sf::View(sf::FloatRect(0, 0, size.width, size.height)));
 
 //    return std::make_unique<SfmlWindow>(std::move(m_renderWindow));
-    renderTarget = std::make_unique<SfmlRenderTarget>(*window);
+    renderTarget.reset(new SfmlRenderTarget(*window));
     //renderTarget = std::make_unique<SfmlRenderTarget>(*implWindow);
 }
 
