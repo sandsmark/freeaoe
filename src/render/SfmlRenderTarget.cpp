@@ -392,18 +392,28 @@ void SfmlRenderTarget::draw(const Drawable::Text::Ptr &text)
         sfmlText->text->setOutlineThickness(2);
     }
 
+    // todo: if we care, check for mutually exclusive alignments
+
     if (sfmlText->lastAlignment != text->alignment || sfmlText->lastPos != text->position || changed) {
         sfmlText->lastPos = text->position;
         sfmlText->lastAlignment = text->alignment;
 
-        if (text->alignment == Drawable::Text::AlignRight) {
-            sfmlText->text->setPosition(sf::Vector2f(text->position.x - sfmlText->text->getLocalBounds().width, text->position.y));
-        } else if (text->alignment == Drawable::Text::AlignCenter) {
-            const ScreenRect textRect = sfmlText->text->getLocalBounds();
-            sfmlText->text->setPosition(sf::Vector2f(text->position.x - textRect.width / 2, text->position.y - textRect.height/2));
-        } else {
-            sfmlText->text->setPosition(text->position);
+        const Size textSize = ScreenRect(sfmlText->text->getLocalBounds()).size();
+        ScreenPos position = text->position;
+        if (text->alignment & Drawable::Text::AlignRight) {
+            // todo: wrong?
+            position.x = text->position.x - textSize.width;
+        } else if (text->alignment & Drawable::Text::AlignHCenter) {
+            position.x = text->position.x - textSize.width / 2;
         }
+
+        if (text->alignment & Drawable::Text::AlignBottom) {
+            position.y = text->position.y - textSize.height;
+        } else if (text->alignment & Drawable::Text::AlignVCenter) {
+            position.y = text->position.y - textSize.height/2;
+        }
+
+        sfmlText->text->setPosition(position);
     }
 
     renderTarget_->draw(*sfmlText->text);

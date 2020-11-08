@@ -107,9 +107,17 @@ struct Text
         Stylish
     };
 
-    enum Alignment {
-        AlignLeft, AlignRight, AlignCenter
-    } alignment = AlignLeft;
+    enum Alignment : int {
+        AlignLeft = 1 << 0,
+        AlignRight = 1 << 1,
+        AlignVCenter = 1 << 2,
+        AlignTop = 1 << 3,
+        AlignBottom = 1 << 4,
+        AlignHCenter = 1 << 5,
+        AlignCenter =  AlignVCenter | AlignHCenter,
+    } alignment = Alignment(AlignLeft | AlignTop);
+
+    void setAlignment(int align) { alignment = Alignment(align); }
 
     typedef std::shared_ptr<Text> Ptr;
 
