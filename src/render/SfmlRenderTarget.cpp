@@ -29,6 +29,7 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderTexture.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Transform.hpp>
@@ -72,6 +73,47 @@ const sf::Font &SfmlRenderTarget::stylishFont()
 {
     static Font fontLoader(resource_BerryRotunda_ttf_data, resource_BerryRotunda_ttf_size);
     return fontLoader.font;
+}
+
+std::unique_ptr<Drawable::Window> SfmlRenderTarget::createWindow(const Size size, const std::string &title)
+{
+
+//    std::unique_ptr<sf::RenderWindow> m_renderWindow = std::make_unique<sf::RenderWindow>(sf::VideoMode(size.width, size.height), title);
+//    m_renderWindow->setSize(size);
+//    m_renderWindow->setView(sf::View(sf::FloatRect(0, 0, size.width, size.height)));
+
+    return std::make_unique<SfmlWindow>(size, title);
+}
+
+SfmlWindow::SfmlWindow(const Size size, const std::string &title)
+{
+    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(size.width, size.height), title);
+    window->setSize(size);
+    window->setView(sf::View(sf::FloatRect(0, 0, size.width, size.height)));
+
+//    return std::make_unique<SfmlWindow>(std::move(m_renderWindow));
+    renderTarget.reset(new SfmlRenderTarget(*window));
+    //renderTarget = std::make_unique<SfmlRenderTarget>(*implWindow);
+}
+
+SfmlWindow::~SfmlWindow()
+{
+
+}
+
+void SfmlWindow::display()
+{
+    window->display();
+}
+
+bool SfmlWindow::isOpen() const
+{
+    return window->isOpen();
+}
+
+void SfmlWindow::close()
+{
+    window->close();
 }
 
 const sf::Font &SfmlRenderTarget::plainFont()
@@ -211,7 +253,6 @@ void SfmlRenderTarget::display()
     //  render_window_->Display();
 }
 
-
 Drawable::Image::Ptr SfmlRenderTarget::createImage(const Size &size, const uint8_t *bytes) const
 {
     std::shared_ptr<SfmlImage> ret = std::make_shared<SfmlImage>();
@@ -346,7 +387,7 @@ void SfmlRenderTarget::draw(const std::shared_ptr<IRenderTarget> &renderTarget, 
 }
 
 
-Drawable::Text::Ptr SfmlRenderTarget::createText(const Drawable::Text::Style style)
+Drawable::Text::Ptr SfmlRenderTarget::createText(const Drawable::Text::Style style) const
 {
     std::shared_ptr<SfmlText> ret = std::make_shared<SfmlText>();
     switch(style) {

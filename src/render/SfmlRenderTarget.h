@@ -30,6 +30,7 @@ class RenderTarget;
 class Sprite;
 class Texture;
 class Text;
+class RenderWindow;
 }
 
 struct SfmlImage : public Drawable::Image
@@ -57,6 +58,8 @@ class SfmlRenderTarget : public IRenderTarget
 {
 
 public:
+    static std::unique_ptr<Drawable::Window> createWindow(const Size size, const std::string &title);
+
     static const sf::Font &plainFont();
     static const sf::Font &uiFont();
     static const sf::Font &stylishFont();
@@ -105,7 +108,18 @@ public:
     std::unique_ptr<sf::RenderTexture> m_renderTexture;
 
 
-    Drawable::Text::Ptr createText(const Drawable::Text::Style style = Drawable::Text::Plain) override;
+    Drawable::Text::Ptr createText(const Drawable::Text::Style style = Drawable::Text::Plain) const override;
     void draw(const Drawable::Text::Ptr &text) override;
 };
 
+
+struct SfmlWindow : public Drawable::Window
+{
+    SfmlWindow(const Size size, const std::string &title);
+    ~SfmlWindow();
+    std::unique_ptr<sf::RenderWindow> window;
+
+    void display() override;
+    bool isOpen() const override;
+    void close() override;
+};

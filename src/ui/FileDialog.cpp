@@ -27,13 +27,9 @@ FileDialog::~FileDialog() { }
 
 bool FileDialog::setup(int width, int height)
 {
-    m_renderWindow = std::make_unique<sf::RenderWindow>(sf::VideoMode(width, height), "freeaoe");
-    m_renderWindow->setSize(sf::Vector2u(width, height));
-    m_renderWindow->setView(sf::View(sf::FloatRect(0, 0, width, height)));
-    m_renderTarget = std::make_shared<SfmlRenderTarget>(*m_renderWindow);
-
+    m_window = std::make_unique<SfmlWindow>(Size(width, height), "freeaoe");
     {
-        m_description = m_renderTarget->createText(Drawable::Text::UI);
+        m_description = m_window->renderTarget->createText(Drawable::Text::UI);
         m_description->string = "Please select the directory containing your Age of Empires 2 installation.";
         m_description->pointSize = 20;
         m_description->position.x = width/2;
@@ -44,18 +40,18 @@ bool FileDialog::setup(int width, int height)
 
     const Size buttonSize(250, 50);
 
-    m_fileList = std::make_unique<ListView>(ScreenRect(ScreenPos(width / 2.f - width * 3.f/8.f, 75), Size(width * 3.f/4.f, 550)), m_renderTarget);
+    m_fileList = std::make_unique<ListView>(ScreenRect(ScreenPos(width / 2.f - width * 3.f/8.f, 75), Size(width * 3.f/4.f, 550)), m_window->renderTarget);
     m_fileList->setCurrentPath(std::filesystem::current_path().string());
 
-    m_okButton = std::make_unique<Button>("OK", ScreenRect(ScreenPos(m_fileList->rect().x, 710), buttonSize), m_renderTarget);
+    m_okButton = std::make_unique<Button>("OK", ScreenRect(ScreenPos(m_fileList->rect().x, 710), buttonSize), m_window->renderTarget);
 
-    m_cancelButton = std::make_unique<Button>("Cancel", ScreenRect(ScreenPos(m_fileList->rect().right() - buttonSize.width, 710), buttonSize), m_renderTarget);
+    m_cancelButton = std::make_unique<Button>("Cancel", ScreenRect(ScreenPos(m_fileList->rect().right() - buttonSize.width, 710), buttonSize), m_window->renderTarget);
     m_cancelButton->enabled = true;
 
-    m_openDownloadUrlButton = std::make_unique<Button>("Download trial version", ScreenRect(ScreenPos(m_fileList->rect().center().x - buttonSize.width/2, 710), buttonSize), m_renderTarget);
+    m_openDownloadUrlButton = std::make_unique<Button>("Download trial version", ScreenRect(ScreenPos(m_fileList->rect().center().x - buttonSize.width/2, 710), buttonSize), m_window->renderTarget);
     m_openDownloadUrlButton->enabled = true;
 
-    m_backButton = std::make_unique<Button>("Back", ScreenRect(ScreenPos(m_fileList->rect().x - buttonSize.width/2, m_fileList->rect().y), Size(buttonSize.width / 2, buttonSize.height)), m_renderTarget);
+    m_backButton = std::make_unique<Button>("Back", ScreenRect(ScreenPos(m_fileList->rect().x - buttonSize.width/2, m_fileList->rect().y), Size(buttonSize.width / 2, buttonSize.height)), m_window->renderTarget);
     m_backButton->enabled = true;
 
 #if defined(__linux__)
@@ -64,13 +60,13 @@ bool FileDialog::setup(int width, int height)
         if (std::filesystem::exists(m_winePath + "/drive_c")) {
             m_winePath += "/drive_c";
         }
-        m_goToWineButton = std::make_unique<Button>("Go to Wine folder", ScreenRect(ScreenPos(m_fileList->rect().x, 650), buttonSize), m_renderTarget);
+        m_goToWineButton = std::make_unique<Button>("Go to Wine folder", ScreenRect(ScreenPos(m_fileList->rect().x, 650), buttonSize), m_window->renderTarget);
         m_goToWineButton->enabled = true;
     }
 #endif
-    m_bgImage = m_renderTarget->loadImage(resource_parchment_jpg_data, resource_parchment_jpg_size);
+    m_bgImage = m_window->renderTarget->loadImage(resource_parchment_jpg_data, resource_parchment_jpg_size);
 
-    m_pathText = m_renderTarget->createText();
+    m_pathText = m_window->renderTarget->createText();
     m_pathText->pointSize = 15;
     m_pathText->position.x = m_fileList->rect().x + 5;
     m_pathText->position.y = 50;
@@ -82,16 +78,16 @@ std::string FileDialog::getPath()
 {
     std::string ret;
 
-    while (m_renderWindow->isOpen()) {
+    while (m_window->isOpen()) {
         // Process events
         sf::Event event;
-        if (!m_renderWindow->waitEvent(event)) {
+        if (!m_window->window->waitEvent(event)) {
             WARN << "failed to get event";
             break;
         }
 
         if (event.type == sf::Event::Closed) {
-            m_renderWindow->close();
+            m_window->close();
             continue;
         }
 
@@ -101,11 +97,11 @@ std::string FileDialog::getPath()
         }
 
         if (m_cancelButton->checkClick(event)) {
-            m_renderWindow->close();
+            m_window->close();
         }
 
         if (m_okButton->checkClick(event)) {
-            m_renderWindow->close();
+            m_window->close();
             ret = m_fileList->currentText();
         }
 
@@ -127,25 +123,25 @@ std::string FileDialog::getPath()
         m_okButton->enabled = m_fileList->hasDataFolder;
         m_backButton->enabled = !m_fileList->pathHistory.empty();
 
-        m_renderTarget->clear(sf::Color(32, 32, 32));
-        m_renderTarget->draw(m_bgImage, {0, 0});
-        m_renderTarget->draw(m_pathText);
-        m_openDownloadUrlButton->render(m_renderTarget);
-        m_cancelButton->render(m_renderTarget);
-        m_okButton->render(m_renderTarget);
-        m_backButton->render(m_renderTarget);
-        m_fileList->render(m_renderTarget);
-        m_renderTarget->draw(m_description);
+        m_window->renderTarget->clear(Drawable::Color(32, 32, 32));
+        m_window->renderTarget->draw(m_bgImage, {0, 0});
+        m_window->renderTarget->draw(m_pathText);
+        m_openDownloadUrlButton->render(m_window->renderTarget);
+        m_cancelButton->render(m_window->renderTarget);
+        m_okButton->render(m_window->renderTarget);
+        m_backButton->render(m_window->renderTarget);
+        m_fileList->render(m_window->renderTarget);
+        m_window->renderTarget->draw(m_description);
         if (m_errorText) {
-            m_renderTarget->draw(m_errorText);
+            m_window->renderTarget->draw(m_errorText);
         }
 
 #if defined(__linux__)
         if (m_goToWineButton) {
-            m_goToWineButton->render(m_renderTarget);
+            m_goToWineButton->render(m_window->renderTarget);
         }
 #endif
-        m_renderWindow->display();
+        m_window->display();
     }
 
     return ret;
@@ -153,15 +149,15 @@ std::string FileDialog::getPath()
 
 void FileDialog::setErrorString(const std::string &error) noexcept
 {
-    m_errorText = m_renderTarget->createText(Drawable::Text::UI);
+    m_errorText = m_window->renderTarget->createText(Drawable::Text::UI);
     m_errorText->string = "Failed to load game data: " + error;
     m_errorText->pointSize = 17;
     m_errorText->alignment = Drawable::Text::AlignHCenter;
-    m_errorText->position.x = m_renderTarget->getSize().width/2;
+    m_errorText->position.x = m_window->renderTarget->getSize().width/2;
     m_errorText->color = Drawable::Color(100, 32, 32);
 }
 
-Button::Button(const std::string &text, const ScreenRect &rect, const IRenderTargetPtr &renderTarget) :
+Button::Button(const std::string &text, const ScreenRect &rect, const std::unique_ptr<IRenderTarget> &renderTarget) :
     m_rect(rect)
 {
     m_text = renderTarget->createText();
@@ -213,7 +209,7 @@ bool Button::checkClick(const sf::Event &event)
     return m_pressed;
 }
 
-void Button::render(IRenderTargetPtr window)
+void Button::render(const std::unique_ptr<IRenderTarget> &window)
 {
     if (!enabled) {
         m_background.borderColor = Drawable::Color(64, 64, 64);
@@ -238,7 +234,7 @@ void Button::render(IRenderTargetPtr window)
     window->draw(m_text);
 }
 
-ListView::ListView(const ScreenRect rect, const IRenderTargetPtr &window) :
+ListView::ListView(const ScreenRect rect, const std::unique_ptr<IRenderTarget> &window) :
     m_rect(rect)
 {
     m_itemHeight = rect.height / numVisible;
@@ -341,7 +337,7 @@ void ListView::handleEvent(const sf::Event &event)
     }
 }
 
-void ListView::render(IRenderTargetPtr window)
+void ListView::render(const std::unique_ptr<IRenderTarget> &window)
 {
     window->draw(m_background);
 

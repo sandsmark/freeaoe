@@ -18,12 +18,14 @@ class Font;
 class Text;
 }
 
+struct SfmlWindow;
+
 struct Button
 {
-    Button(const std::string &text, const ScreenRect &rect, const IRenderTargetPtr &renderTarget);
+    Button(const std::string &text, const ScreenRect &rect, const std::unique_ptr<IRenderTarget> &renderTarget);
 
     bool checkClick(const sf::Event &event);
-    void render(IRenderTargetPtr window);
+    void render(const std::unique_ptr<IRenderTarget> &window);
 
     bool enabled = false;
 
@@ -40,10 +42,10 @@ struct ListView
 
     const int numVisible = 20;
 
-    ListView(const ScreenRect rect, const IRenderTargetPtr &window);
+    ListView(const ScreenRect rect, const std::unique_ptr<IRenderTarget> &window);
 
     void handleEvent(const sf::Event &event);
-    void render(IRenderTargetPtr window);
+    void render(const std::unique_ptr<IRenderTarget> &window);
 
     void setCurrentPath(std::string pathString);
 
@@ -91,7 +93,7 @@ public:
     void setErrorString(const std::string &error) noexcept;
 
 private:
-    std::unique_ptr<sf::RenderWindow> m_renderWindow;
+    std::unique_ptr<SfmlWindow> m_window;
     std::unique_ptr<sf::Font> m_font;
     std::unique_ptr<Button> m_okButton;
     std::unique_ptr<Button> m_cancelButton;
@@ -101,7 +103,6 @@ private:
     Drawable::Text::Ptr m_description;
     Drawable::Text::Ptr m_errorText;
     Drawable::Image::Ptr m_bgImage;
-    IRenderTargetPtr m_renderTarget;
     Drawable::Text::Ptr m_pathText;
     Drawable::Rect m_pathBackground;
 

@@ -140,7 +140,7 @@ private:
     friend class IRenderTarget;
 };
 
-}
+} //namespace Drawable
 
 class IRenderTarget
 {
@@ -194,15 +194,33 @@ public:
 
     virtual std::shared_ptr<IRenderTarget> createTextureTarget(const Size &size) = 0;
 
-    virtual Drawable::Text::Ptr createText(const Drawable::Text::Style style = Drawable::Text::Plain) = 0;
+    virtual Drawable::Text::Ptr createText(const Drawable::Text::Style style = Drawable::Text::Plain) const = 0;
     virtual void draw(const Drawable::Text::Ptr &text) = 0;
 
     virtual void clear(const Drawable::Color &color = Drawable::Color(0, 0, 0, 255)) = 0;
 
-
 protected:
     CameraPtr m_camera;
 };
+
+namespace Drawable {
+struct Window
+{
+    virtual ~Window() = default;
+
+    std::unique_ptr<IRenderTarget> renderTarget;
+
+    virtual bool isOpen() const = 0;
+    virtual void close() = 0;
+
+    //----------------------------------------------------------------------------
+    /// Displays frame.
+    //
+    virtual void display(void) = 0;
+protected:
+    Window() = default;
+};
+}//namespace Drawable
 
 typedef std::shared_ptr<IRenderTarget> IRenderTargetPtr;
 
