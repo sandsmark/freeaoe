@@ -40,6 +40,7 @@ typedef std::shared_ptr<SlpFrame> SlpFramePtr;
 
 struct Camera;
 using CameraPtr = std::shared_ptr<Camera>;
+class IRenderTarget;
 
 namespace Drawable {
 struct Color {
@@ -208,7 +209,7 @@ struct Window
 {
     virtual ~Window() = default;
 
-    std::unique_ptr<IRenderTarget> renderTarget;
+    std::unique_ptr<::IRenderTarget> renderTarget;
 
     virtual bool isOpen() const = 0;
     virtual void close() = 0;
