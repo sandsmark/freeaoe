@@ -214,9 +214,10 @@ try
         return 1;
     }
 
-    do {
+    while (true) {
         try {
             initData();
+            break;
         } catch(const std::exception &e) {
             WARN << "failed to load:" << e.what() << strerror(errno);
 
@@ -229,7 +230,7 @@ try
                 return 1;
             }
         }
-    } while (!std::filesystem::exists(Config::Inst().getValue(Config::GamePath)));
+    }
 
     AudioPlayer::instance();
 
