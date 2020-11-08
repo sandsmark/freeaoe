@@ -33,7 +33,7 @@ class Map;
 class UnitManager;
 class ScenarioController;
 
-typedef std::shared_ptr<Map> MapPtr;
+using MapPtr = std::shared_ptr<Map>;
 
 namespace genie {
 class ScnFile;

@@ -99,7 +99,6 @@ private:
     void forEachMatchingUnit(const genie::TriggerEffect &effect, const std::function<void(const std::shared_ptr<Unit> &)> &action);
 
     // Todo: put these in an std::array based on type, so we don't have to loop over all
-
     std::vector<Trigger> m_triggers;
     Time m_lastUpdateTime = 0;
 
