@@ -22,7 +22,7 @@ struct SfmlWindow;
 
 struct Button
 {
-    Button(const std::string &text, const ScreenRect &rect, const std::unique_ptr<IRenderTarget> &renderTarget);
+    Button(const std::string &text, const ScreenRect &rect, const IRenderTarget &renderTarget);
 
     bool checkClick(const sf::Event &event);
     void render(const std::unique_ptr<IRenderTarget> &window);
@@ -42,7 +42,7 @@ struct ListView
 
     const int numVisible = 20;
 
-    ListView(const ScreenRect rect, const std::unique_ptr<IRenderTarget> &window);
+    ListView(const ScreenRect rect, const IRenderTarget &window);
 
     void handleEvent(const sf::Event &event);
     void render(const std::unique_ptr<IRenderTarget> &window);

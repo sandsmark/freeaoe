@@ -101,7 +101,7 @@ public:
 
     sf::RenderTarget *renderTarget_;
 
-    std::shared_ptr<IRenderTarget> createTextureTarget(const Size &size) override;
+    std::shared_ptr<IRenderTarget> createTextureTarget(const Size &size) const override;
 
     void clear(const Drawable::Color &color = Drawable::Color(0, 0, 0, 255)) override;
 

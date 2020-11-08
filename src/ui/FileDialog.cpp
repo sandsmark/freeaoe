@@ -40,18 +40,18 @@ bool FileDialog::setup(int width, int height)
 
     const Size buttonSize(250, 50);
 
-    m_fileList = std::make_unique<ListView>(ScreenRect(ScreenPos(width / 2.f - width * 3.f/8.f, 75), Size(width * 3.f/4.f, 550)), m_window->renderTarget);
+    m_fileList = std::make_unique<ListView>(ScreenRect(ScreenPos(width / 2.f - width * 3.f/8.f, 75), Size(width * 3.f/4.f, 550)), *m_window->renderTarget);
     m_fileList->setCurrentPath(std::filesystem::current_path().string());
 
-    m_okButton = std::make_unique<Button>("OK", ScreenRect(ScreenPos(m_fileList->rect().x, 710), buttonSize), m_window->renderTarget);
+    m_okButton = std::make_unique<Button>("OK", ScreenRect(ScreenPos(m_fileList->rect().x, 710), buttonSize), *m_window->renderTarget);
 
-    m_cancelButton = std::make_unique<Button>("Cancel", ScreenRect(ScreenPos(m_fileList->rect().right() - buttonSize.width, 710), buttonSize), m_window->renderTarget);
+    m_cancelButton = std::make_unique<Button>("Cancel", ScreenRect(ScreenPos(m_fileList->rect().right() - buttonSize.width, 710), buttonSize), *m_window->renderTarget);
     m_cancelButton->enabled = true;
 
-    m_openDownloadUrlButton = std::make_unique<Button>("Download trial version", ScreenRect(ScreenPos(m_fileList->rect().center().x - buttonSize.width/2, 710), buttonSize), m_window->renderTarget);
+    m_openDownloadUrlButton = std::make_unique<Button>("Download trial version", ScreenRect(ScreenPos(m_fileList->rect().center().x - buttonSize.width/2, 710), buttonSize), *m_window->renderTarget);
     m_openDownloadUrlButton->enabled = true;
 
-    m_backButton = std::make_unique<Button>("Back", ScreenRect(ScreenPos(m_fileList->rect().x - buttonSize.width/2, m_fileList->rect().y), Size(buttonSize.width / 2, buttonSize.height)), m_window->renderTarget);
+    m_backButton = std::make_unique<Button>("Back", ScreenRect(ScreenPos(m_fileList->rect().x - buttonSize.width/2, m_fileList->rect().y), Size(buttonSize.width / 2, buttonSize.height)), *m_window->renderTarget);
     m_backButton->enabled = true;
 
 #if defined(__linux__)
@@ -60,7 +60,7 @@ bool FileDialog::setup(int width, int height)
         if (std::filesystem::exists(m_winePath + "/drive_c")) {
             m_winePath += "/drive_c";
         }
-        m_goToWineButton = std::make_unique<Button>("Go to Wine folder", ScreenRect(ScreenPos(m_fileList->rect().x, 650), buttonSize), m_window->renderTarget);
+        m_goToWineButton = std::make_unique<Button>("Go to Wine folder", ScreenRect(ScreenPos(m_fileList->rect().x, 650), buttonSize), *m_window->renderTarget);
         m_goToWineButton->enabled = true;
     }
 #endif
@@ -157,10 +157,10 @@ void FileDialog::setErrorString(const std::string &error) noexcept
     m_errorText->color = Drawable::Color(100, 32, 32);
 }
 
-Button::Button(const std::string &text, const ScreenRect &rect, const std::unique_ptr<IRenderTarget> &renderTarget) :
+Button::Button(const std::string &text, const ScreenRect &rect, const IRenderTarget &renderTarget) :
     m_rect(rect)
 {
-    m_text = renderTarget->createText();
+    m_text = renderTarget.createText();
     m_text->string = text;
     m_text->pointSize = 24;
     const int textWidth = m_text->size().width;
@@ -234,13 +234,13 @@ void Button::render(const std::unique_ptr<IRenderTarget> &window)
     window->draw(m_text);
 }
 
-ListView::ListView(const ScreenRect rect, const std::unique_ptr<IRenderTarget> &window) :
+ListView::ListView(const ScreenRect rect, const IRenderTarget &window) :
     m_rect(rect)
 {
     m_itemHeight = rect.height / numVisible;
 
     for (int i=0; i<numVisible; i++) {
-        Drawable::Text::Ptr text = window->createText();
+        Drawable::Text::Ptr text = window.createText();
         text->pointSize = 18;
         text->outlineColor = Drawable::Transparent;
         const int textHeight = text->size().height;

@@ -13,7 +13,7 @@ IRenderTarget::IRenderTarget() : m_camera(std::make_shared<Camera>())
 
 IRenderTarget::~IRenderTarget() {}
 
-Drawable::Image::Ptr IRenderTarget::convertFrameToImage(const genie::SlpFramePtr &frame)
+Drawable::Image::Ptr IRenderTarget::convertFrameToImage(const genie::SlpFramePtr &frame) const
 {
     return convertFrameToImage(frame, AssetManager::Inst()->getPalette(50500));
 }
