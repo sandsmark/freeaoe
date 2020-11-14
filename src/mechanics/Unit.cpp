@@ -389,8 +389,8 @@ void Unit::setPosition(const MapPos &pos, const bool initial)
 
     MapPos oldTilePosition = position() / Constants::TILE_SIZE;
     MapPos newTilePosition = pos / Constants::TILE_SIZE;
-    oldTilePosition.round();
-    newTilePosition.round();
+    oldTilePosition.floor();
+    newTilePosition.floor();
     const bool switchedTile = oldTilePosition != newTilePosition;
     if (switchedTile) {
         EventManager::unitMoved(this, oldTilePosition, newTilePosition);
@@ -541,8 +541,8 @@ float Unit::tallness()
 void Unit::forEachVisibleTile(const std::function<void (const int, const int)> &action)
 {
     const int los = m_lineOfSight;
-    const int tileXOffset = std::round(position().x / Constants::TILE_SIZE) - 1;
-    const int tileYOffset = std::round(position().y / Constants::TILE_SIZE) - 1;
+    const int tileXOffset = position().x / Constants::TILE_SIZE;
+    const int tileYOffset = position().y / Constants::TILE_SIZE;
     for (int y=-los; y<= los; y++) {
         for (int x=-los; x<= los; x++) {
             if (x*x + y*y < los*los) {

@@ -228,6 +228,11 @@ struct MapPos {
         y = std::round(y);
         z = std::round(z);
     }
+    inline void floor() {
+        x = std::floor(x);
+        y = std::floor(y);
+        z = std::floor(z);
+    }
 
     inline void clampX(const float min, const float max) noexcept {
         x = std::clamp(x, min, max);
