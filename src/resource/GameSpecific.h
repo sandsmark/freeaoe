@@ -1,5 +1,15 @@
 #pragma once
 
+struct Unit;
+
+namespace genie {
+class Unit;
+}
+
+struct Checks {
+    static bool canConvert(const Unit *converter, const Unit *convertee);
+};
+
 namespace SLP
 {
     static constexpr int Cursors = 51000;
@@ -51,6 +61,21 @@ namespace SWGB
 
 } // namespace SLP
 
+namespace SWGB
+{
+    // from aokts
+    enum UnitID {
+        SithMaster = 89,
+        SithMaster2 = 115, // need to test, aokts has multiple?
+        SithMasterHolocron = 33,
+        SithMasterHolocron2 = 98, // need to test, aokts has multiple?
+        SithKnight = 44,
+        SithKnight2 = 97, // again, aokts two etc.
+        SithKnightHolocron = 22,
+        SithKnightHolocron2 = 36, // aokts has two..
+
+    };
+}
 
 
 namespace AoE2 {
@@ -83,6 +108,10 @@ enum UnitID {
     Monastery = 104,
     SiegeWorkshop = 49,
     Stable = 101,
+    RelicCart = 159,
+    Wonder = 276,
+    Outlaw = 158,
+    FriarTuck = 163, // special monk
 
     Dock = 45,
 

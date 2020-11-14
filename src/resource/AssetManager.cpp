@@ -25,7 +25,7 @@
 #include "Sprite.h"
 #include "core/Utility.h"
 #include "global/Config.h"
-#include "SlpIDs.h"
+#include "GameSpecific.h"
 
 #include <genie/resource/DrsFile.h>
 #include <genie/resource/PalFile.h>

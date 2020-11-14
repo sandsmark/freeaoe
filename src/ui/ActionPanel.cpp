@@ -23,7 +23,7 @@
 #include "resource/AssetManager.h"
 #include "resource/LanguageManager.h"
 #include "resource/Resource.h"
-#include "resource/SlpIDs.h"
+#include "resource/GameSpecific.h"
 #include "resource/DataManager.h"
 
 ActionPanel::ActionPanel(const std::shared_ptr<SfmlRenderTarget> &renderTarget) :
