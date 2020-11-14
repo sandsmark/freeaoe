@@ -16,6 +16,7 @@
 #include "mechanics/Civilization.h"
 
 struct Unit;
+class Map;
 
 namespace genie {
 class EffectCommand;
@@ -126,7 +127,7 @@ struct Player : public EventListener
         Enemy
     };
 
-    Player(const int id, const int civId, const ResourceMap &startingResources = {});
+    Player(const int id, const int civId, const std::shared_ptr<Map> &map, const ResourceMap &startingResources = {});
     virtual ~Player() = default;
 
 
@@ -231,4 +232,6 @@ private:
     std::unordered_set<int> m_activeTechs;
     std::vector<DiplomaticStance> m_diplomaticStances;
     std::unordered_map<int, genie::Tech> m_currentlyAvailableTechs;
+
+    std::weak_ptr<Map> m_map;
 };

@@ -249,14 +249,14 @@ void GameState::setupScenario()
         if (playerNum == UnitManager::GaiaID) {
             realPlayerNum = 8;
 
-            player = std::make_shared<Player>(playerNum, UnitManager::GaiaID);
+            player = std::make_shared<Player>(playerNum, UnitManager::GaiaID, map_);
             player->civilization.setGaiaOverrideCiv(playersData.resourcesPlusPlayerInfo[realPlayerNum].civilizationID);
             player->name = "Gaia";
             player->playerColor = -1;
         } else {
             realPlayerNum = playerNum - 1;
 
-            player = std::make_shared<Player>(playerNum, playersData.resourcesPlusPlayerInfo[realPlayerNum].civilizationID);
+            player = std::make_shared<Player>(playerNum, playersData.resourcesPlusPlayerInfo[realPlayerNum].civilizationID, map_);
             player->name = playersData.playerNames[realPlayerNum];
             player->playerColor = scenario_->players[realPlayerNum].playerColor;
         }

@@ -5,8 +5,8 @@
 
 struct AiPlayer : public Player
 {
-    AiPlayer(const int id, const int civId, const ResourceMap &startingResources = {}) :
-        Player(id, civId, startingResources)
+    AiPlayer(const int id, const int civId, const std::shared_ptr<Map> &map, const ResourceMap &startingResources = {}) :
+        Player(id, civId, map, startingResources)
     {}
 
     ai::DifficultyLevel difficultyLevel = ai::DifficultyLevel::Moderate;

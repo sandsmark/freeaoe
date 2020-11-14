@@ -14,15 +14,17 @@
 #include "global/EventManager.h"
 #include "audio/AudioPlayer.h"
 #include "resource/DataManager.h"
+#include "mechanics/Map.h"
 
 //#define CHEAT_VISIBILITY 1
 
-Player::Player(const int id, const int civId, const ResourceMap &startingResources) :
+Player::Player(const int id, const int civId, const std::shared_ptr<Map> &map, const ResourceMap &startingResources) :
     playerId(id),
     civilization(civId),
     name("Player " + std::to_string(id)),
     visibility(std::make_shared<VisibilityMap>(id)),
-    m_resourcesAvailable(civilization.startingResources())
+    m_resourcesAvailable(civilization.startingResources()),
+    m_map(map)
 {
     // Override
     for (const std::pair<const genie::ResourceType, float> &r : startingResources) {
