@@ -487,6 +487,31 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
 
         ////////////////////
         // Player stuff
+    case genie::TriggerEffect::ChangeDiplomacy: {
+        DBG << "changing diplomacy:" << effect;
+
+        Player::Ptr player = m_gameState->player(effect.sourcePlayer);
+        if (!player) {
+            WARN << "couldn't get player for change diplomacy";
+            break;
+        }
+
+        switch(effect.diplomacy) {
+        case 0:
+            player->setDiplomaticStance(effect.targetPlayer, Player::Allied);
+            break;
+        case 1:
+            player->setDiplomaticStance(effect.targetPlayer, Player::Neutral);
+            break;
+        case 3:
+            player->setDiplomaticStance(effect.targetPlayer, Player::Enemy);
+            break;
+        case 2:
+        default:
+            WARN << "Invalid stance" << effect.diplomacy;
+            break;
+        }
+    }
     case genie::TriggerEffect::SendTribute: {
         DBG << "Sending tribute" << effect;
         Player::Ptr sourcePlayer = m_gameState->player(effect.sourcePlayer);

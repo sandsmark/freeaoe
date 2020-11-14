@@ -119,6 +119,11 @@ struct Player
         CastleAge,
         ImperialAge
     };
+    enum DiplomaticStance {
+        Neutral = 0,
+        Allied,
+        Enemy
+    };
 
     Player(const int id, const int civId, const ResourceMap &startingResources = {});
     virtual ~Player() = default;
@@ -164,9 +169,8 @@ struct Player
 
     ////////////////////
     /// Diplomacy
-    void addAlliedPlayer(int playerId);
-    void removeAlliedPlayer(int playerId);
-    bool isAllied(int playerId);
+    void setDiplomaticStance(const uint8_t playerId, const DiplomaticStance stance);
+    bool isAllied(uint8_t playerId);
 
     ////////////////////
     /// Resources
@@ -224,6 +228,6 @@ private:
     ResourceMap m_resourcesAvailable;
     std::unordered_set<Unit*> m_units;
     std::unordered_set<int> m_activeTechs;
-    std::unordered_set<int> m_alliedPlayers;
+    std::vector<DiplomaticStance> m_diplomaticStances;
     std::unordered_map<int, genie::Tech> m_currentlyAvailableTechs;
 };

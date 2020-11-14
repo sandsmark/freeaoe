@@ -299,20 +299,21 @@ int Player::canSeeUnitsFor(const int otherID)
     return otherID == playerId || isAllied(otherID);
 }
 
-void Player::addAlliedPlayer(int playerId)
+void Player::setDiplomaticStance(const uint8_t playerId, const Player::DiplomaticStance stance)
 {
-    m_alliedPlayers.insert(playerId);
+    if (playerId >= m_diplomaticStances.size()) {
+        m_diplomaticStances.resize(playerId + 1);
+    }
+    m_diplomaticStances[playerId] = stance;
 }
 
-void Player::removeAlliedPlayer(int playerId)
+bool Player::isAllied(uint8_t playerId)
 {
-    m_alliedPlayers.erase(playerId);
-}
-
-bool Player::isAllied(int playerId)
-{
-    // STL sucks
-    return m_alliedPlayers.count(playerId) > 0 || playerId == this->playerId; // yes, we ally ourselves pls
+    if (playerId == this->playerId) {
+        return true;
+    }
+    REQUIRE (playerId < m_diplomaticStances.size(), return false);
+    return m_diplomaticStances[playerId] == Allied;
 }
 
 void Player::setAvailableResource(const genie::ResourceType type, float newValue)
