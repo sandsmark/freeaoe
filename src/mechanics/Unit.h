@@ -210,7 +210,7 @@ struct Unit : public Entity
     // Owners and stuff
     int playerId() const { return m_playerId; }
     const std::weak_ptr<Player> &player() const { return m_player; }
-    void setPlayer(const std::shared_ptr<Player> &player);
+    void setPlayer(const std::shared_ptr<Player> &newPlayer);
 
     UnitManager &unitManager() const noexcept { return m_unitManager; }
 

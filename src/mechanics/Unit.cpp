@@ -166,11 +166,34 @@ bool Unit::update(Time time) noexcept
     return Entity::update(time) || updated;
 }
 
-void Unit::setPlayer(const std::shared_ptr<Player> &player)
+void Unit::setPlayer(const std::shared_ptr<Player> &newPlayer)
 {
-    m_player = player;
-    m_playerId = player->playerId;
-    m_renderer->setPlayerColor(player->playerColor);
+    // TODO: the unit will still receive upgrades from the old player,
+    // because we apply research and updates to the unit data, and don't use it as modifiers.
+
+    Player::Ptr oldPlayer = m_player.lock();
+    if (newPlayer == oldPlayer) {
+        return;
+    }
+
+    if (oldPlayer && m_lineOfSight) {
+        forEachVisibleTile([&](const int tileX, const int tileY) {
+            oldPlayer->visibility->removeUnitLookingAt(tileX, tileY);
+        });
+    }
+
+    m_player = newPlayer;
+    m_playerId = newPlayer->playerId;
+    m_renderer->setPlayerColor(newPlayer->playerColor);
+
+    if (newPlayer) {
+        m_lineOfSight = data()->LineOfSight;
+
+        // TODO merf, don't really want this to happen here, maybe use events?
+        forEachVisibleTile([&](const int tileX, const int tileY) {
+            newPlayer->visibility->addUnitLookingAt(tileX, tileY);
+        });
+    }
 }
 
 ScreenRect Unit::screenRect() const noexcept
