@@ -5,6 +5,7 @@ struct Player;
 struct Unit;
 
 #include <stdint.h>
+#include <string>
 
 namespace genie {
 enum class ResourceType : int16_t;
@@ -95,5 +96,8 @@ protected:
 
     virtual void onTileHidden(const int playerID, const int tileX, const int tileY)
         { (void)playerID; (void)tileX; (void)tileY; }
+
+    virtual void onChatMessage(const int sourcePlayer, const int targetPlayer, const std::string &message)
+        { (void)sourcePlayer; (void)targetPlayer; (void)message; }
 };
 

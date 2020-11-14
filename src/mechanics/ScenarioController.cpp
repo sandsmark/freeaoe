@@ -357,6 +357,10 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
             WARN << "missing engine" << effect.message << effect.soundFile;
         }
         break;
+    case genie::TriggerEffect::SendChat:
+        // Source player? But that is what aokts seems to use
+        EventManager::sendChatMessage(-1, effect.sourcePlayer, effect.message);
+        break;
 
         ///////////////
         // Camera stuff

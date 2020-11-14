@@ -3,6 +3,7 @@
 #include <array>
 #include <functional>
 #include <list>
+#include <string>
 
 struct EventListener;
 struct MapPos;
@@ -56,6 +57,7 @@ public:
         TileDiscovered,
         TileHidden,
 
+        ChatMessage,
 
         EventTypeCount
     };
@@ -94,6 +96,8 @@ public:
 
     static void tileDiscovered(int playerID, const int tileX, const int tileY);
     static void tileHidden(int playerID, const int tileX, const int tileY);
+
+    static void sendChatMessage(const int sourcePlayer, const int targetPlayer, const std::string &message);
 
 private:
     static void call(const EventType type, std::function<void(EventListener *listener)> function)

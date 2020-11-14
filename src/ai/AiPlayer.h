@@ -33,5 +33,7 @@ struct AiPlayer : public Player
     // meh, duplicating code ish
     bool canAffordUnitWithEscrow(const int unitId) const;
     bool canAffordResearchWithEscrow(const int researchId) const;
+
+    void onChatMessage(const int sourcePlayer, const int targetPlayer, const std::string &message) override;
 };
 

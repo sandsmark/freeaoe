@@ -8,6 +8,8 @@ void AiPlayer::addResource(const genie::ResourceType type, float amount)
     m_reserves[type] += toEscrow;
 
     Player::addResource(type, amount - toEscrow);
+
+    EventManager::registerListener(this, EventManager::ChatMessage);
 }
 
 bool AiPlayer::canAffordUnitWithEscrow(const int unitId) const
@@ -65,4 +67,13 @@ bool AiPlayer::canAffordResearchWithEscrow(const int researchId) const
 
     return true;
 
+}
+
+void AiPlayer::onChatMessage(const int sourcePlayer, const int targetPlayer, const std::string &message)
+{
+    WARN << "todo, got chat message, handle that ai trigger" << sourcePlayer << message;
+
+    if (targetPlayer != playerId) {
+        return;
+    }
 }

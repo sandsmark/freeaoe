@@ -157,3 +157,8 @@ void EventManager::tileHidden(int playerID, const int tileX, const int tileY)
 {
     call(TileHidden, [=](EventListener *l) { l->onTileHidden(playerID, tileX, tileY); });
 }
+
+void EventManager::sendChatMessage(const int sourcePlayer, const int targetPlayer, const std::string &message)
+{
+    call(ChatMessage, [=](EventListener *l) { l->onChatMessage(sourcePlayer, targetPlayer, message); });
+}
