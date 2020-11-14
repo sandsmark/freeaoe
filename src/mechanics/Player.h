@@ -12,6 +12,7 @@
 #include "core/Types.h"
 #include "core/Utility.h"
 #include "global/EventManager.h"
+#include "global/EventListener.h"
 #include "mechanics/Civilization.h"
 
 struct Unit;
@@ -111,7 +112,7 @@ private:
     std::array<int, Constants::MAP_MAX_SIZE * Constants::MAP_MAX_SIZE> m_visibility;
 };
 
-struct Player
+struct Player : public EventListener
 {
     enum Age {
         DarkAge,
