@@ -541,8 +541,8 @@ float Unit::tallness()
 void Unit::forEachVisibleTile(const std::function<void (const int, const int)> &action)
 {
     const int los = m_lineOfSight;
-    const int tileXOffset = position().x / Constants::TILE_SIZE;
-    const int tileYOffset = position().y / Constants::TILE_SIZE;
+    const int tileXOffset = std::round(position().x / Constants::TILE_SIZE) - 1;
+    const int tileYOffset = std::round(position().y / Constants::TILE_SIZE) - 1;
     for (int y=-los; y<= los; y++) {
         for (int x=-los; x<= los; x++) {
             if (x*x + y*y < los*los) {
