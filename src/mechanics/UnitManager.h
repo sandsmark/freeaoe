@@ -63,13 +63,9 @@ struct MapPositionSorter
     bool operator()(const Unit::Ptr &lhs, const Unit::Ptr &rhs) const {
         const MapPos &mpos1 = lhs->position();
         const MapPos &mpos2 = rhs->position();
-        if (mpos1.z != mpos2.z) {
-            return mpos1.z > mpos2.z;
-        }
 
-        const ScreenPos pos1 = mpos1.toScreen();
-        const ScreenPos pos2 = mpos2.toScreen();
-
+        const ScreenPos pos1 = lhs->screenRect().bottomLeft() + mpos1.toScreen();
+        const ScreenPos pos2 = rhs->screenRect().bottomLeft() + mpos2.toScreen();
 
         if (pos1.y != pos2.y) {
             return pos1.y < pos2.y;
