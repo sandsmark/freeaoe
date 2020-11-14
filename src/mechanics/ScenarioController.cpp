@@ -326,7 +326,12 @@ bool ScenarioController::update(Time time)
 
 void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
 {
-    switch(effect.type) {
+    const genie::TriggerEffect::Type effectType = genie::TriggerEffect::Type(effect.type);
+
+    switch(effectType) {
+    case genie::TriggerEffect::None:
+        DBG << "Trigger missing type" << effect;
+        break;
 
          ////////////////////////
          // Trigger modifications
@@ -360,6 +365,10 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
     case genie::TriggerEffect::SendChat:
         // Source player? But that is what aokts seems to use
         EventManager::sendChatMessage(-1, effect.sourcePlayer, effect.message);
+        break;
+    case genie::TriggerEffect::Sound:
+        DBG << "Playing sound" << effect;
+        AudioPlayer::instance().playStream("scenario/" + effect.soundFile);
         break;
 
         ///////////////
