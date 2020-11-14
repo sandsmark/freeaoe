@@ -333,11 +333,16 @@ void Engine::drawEntities(const std::shared_ptr<Map> &map)
     const int lastRow = m_mapRenderer->lastVisibleRow();
 
     m_unitsRenderer->begin(renderTarget_);
+    std::vector<EntityPtr> visibleEntities;
     for (int col = firstCol; col <  lastCol; col++) {
         for (int row = firstRow; row <  lastRow; row++) {
-            m_unitsRenderer->render(renderTarget_, map->entitiesAt(col, row));
+            for (const std::weak_ptr<Entity> &e : map->entitiesAt(col, row)) {
+                visibleEntities.push_back(e.lock());;
+
+            }
         }
     }
+    m_unitsRenderer->render(renderTarget_, visibleEntities);
     m_unitsRenderer->display(renderTarget_);
 }
 

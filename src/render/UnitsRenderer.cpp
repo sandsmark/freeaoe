@@ -43,7 +43,7 @@ void UnitsRenderer::begin(const std::shared_ptr<IRenderTarget> &renderTarget)
     }
 }
 
-void UnitsRenderer::render(const std::shared_ptr<IRenderTarget> &renderTarget, const std::vector<std::weak_ptr<Entity>> &visible)
+void UnitsRenderer::render(const std::shared_ptr<IRenderTarget> &renderTarget, const std::vector<std::shared_ptr<Entity>> &visible)
 {
     std::shared_ptr<VisibilityMap> visibilityMap = m_visibilityMap.lock();
     std::shared_ptr<UnitManager> unitManager = m_unitManager.lock();
@@ -55,8 +55,7 @@ void UnitsRenderer::render(const std::shared_ptr<IRenderTarget> &renderTarget, c
 
     std::vector<Unit::Ptr> visibleUnits;
     std::vector<Missile::Ptr> visibleMissiles;
-    for (const std::weak_ptr<Entity> &e : visible) {
-        std::shared_ptr<Entity> entity = e.lock();
+    for (const std::shared_ptr<Entity> &entity : visible) {
         if (!entity) {
             WARN << "got dead entity";
             continue;
