@@ -12,6 +12,7 @@
 #include "mechanics/Civilization.h"
 #include "mechanics/Unit.h"
 #include "global/EventManager.h"
+#include "audio/AudioPlayer.h"
 #include "resource/DataManager.h"
 
 //#define CHEAT_VISIBILITY 1
@@ -319,6 +320,19 @@ void Player::setAvailableResource(const genie::ResourceType type, float newValue
     m_resourcesAvailable[type] = newValue;
 
     EventManager::playerResourceChanged(this, type, newValue);
+}
+
+void Player::sendTribute(const std::shared_ptr<Player> &player, const genie::ResourceType type, const int amount)
+{
+    const int available = resourcesAvailable(type) - resourcesUsed(type);
+    if (available <= amount) {
+        DBG << "Not enough to send" << available << amount;
+        return;
+    }
+    removeResource(type, amount);
+    player->addResource(type, amount);
+
+    AudioPlayer::instance().playSound(AudioPlayer::TributeSound);
 }
 
 Unit *Player::findUnitByTypeID(const int type) const

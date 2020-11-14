@@ -114,6 +114,29 @@ AudioPlayer::~AudioPlayer()
     sts_mixer_shutdown(m_mixer.get());
 }
 
+void AudioPlayer::playSound(const AudioPlayer::StandardSound id, const float pan, const float volume)
+{
+    int fileID = -1;
+    switch(id) {
+    case TributeSound:
+        fileID = AssetManager::filenameID("tribute.wav");
+        break;
+    }
+
+    if (fileID < 0) {
+        DBG << "Didn't find standard sound for" << id;
+        return;
+    }
+
+    std::shared_ptr<uint8_t[]> wavPtr = AssetManager::Inst()->getWavPtr(fileID);
+    if (!wavPtr) {
+        WARN << "failed to get wav data for" << fileID;
+        return;
+    }
+
+    playSample(wavPtr, pan, volume);
+}
+
 struct WavHeader {
     // RIFF header
     uint32_t ChunkID;

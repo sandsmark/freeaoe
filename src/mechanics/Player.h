@@ -194,6 +194,7 @@ struct Player
         }
         return it->second;
     }
+    void sendTribute(const std::shared_ptr<Player> &player, const genie::ResourceType type, const int amount);
 
     static constexpr int UngroupedGroupID = 0;
     const std::unordered_set<Unit*> &unitsInGroup(int group) {

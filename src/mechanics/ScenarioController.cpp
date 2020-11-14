@@ -486,6 +486,26 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
         break;
 
         ////////////////////
+        // Player stuff
+    case genie::TriggerEffect::SendTribute: {
+        DBG << "Sending tribute" << effect;
+        Player::Ptr sourcePlayer = m_gameState->player(effect.sourcePlayer);
+        if (!sourcePlayer) {
+            WARN << "couldn't get source player for sending tribute";
+            break;
+        }
+        Player::Ptr targetPlayer = m_gameState->player(effect.targetPlayer);
+        if (!targetPlayer) {
+            WARN << "couldn't get target player for sending tribute";
+            break;
+        }
+        sourcePlayer->sendTribute(targetPlayer, genie::ResourceType(effect.resource), effect.amount);
+
+        break;
+
+    }
+
+        ////////////////////
         // Game ending stuff
     case genie::TriggerEffect::DeclareVictory: {
         if (m_engine) {

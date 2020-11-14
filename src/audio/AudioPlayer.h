@@ -14,8 +14,14 @@ struct sts_mixer_sample_t;
 class AudioPlayer : public SignalReceiver
 {
 public:
+    enum StandardSound {
+        TributeSound
+    };
+
     AudioPlayer();
     ~AudioPlayer();
+
+    void playSound(const StandardSound id, const float pan = 0.f, const float volume = 1.f);
 
     void playSound(const int id, const int civilization, const float pan = 0.f, const float volume = 1.f);
     void playStream(const std::string &filename);
