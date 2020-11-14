@@ -30,6 +30,8 @@ Minimap::Minimap(const IRenderTargetPtr &renderTarget) :
     m_renderTarget(renderTarget)
 {
     updateRect(renderTarget->getSize());
+    EventManager::registerListener(this, EventManager::TileDiscovered);
+    EventManager::registerListener(this, EventManager::TileHidden);
 }
 
 bool Minimap::updateRect(const Size &size)
@@ -52,6 +54,20 @@ bool Minimap::updateRect(const Size &size)
     m_windowSize = size;
 
     return true;
+}
+
+void Minimap::onTileDiscovered(const int playerID, const int /*tileX*/, const int /*tileY*/)
+{
+    if (playerID == m_unitManager->humanPlayerID()) {
+        m_terrainUpdated = true;
+    }
+}
+
+void Minimap::onTileHidden(const int playerID, const int /*tileX*/, const int /*tileY*/)
+{
+    if (playerID == m_unitManager->humanPlayerID()) {
+        m_terrainUpdated = true;
+    }
 }
 
 void Minimap::setMap(const std::shared_ptr<Map> &map)
@@ -141,7 +157,7 @@ Drawable::Color Minimap::unitColor(const std::shared_ptr<Unit> &unit)
     case MinimapMode::Diplomatic:
         if (unit->playerId() == UnitManager::GaiaID) {
             return Drawable::Color(128, 192, 128);
-        } else if (unit->playerId() == 1) { ///TODO fixme get the human player
+        } else if (unit->playerId() == m_unitManager->humanPlayerID()) {
             return Drawable::Blue;
         }
         break;

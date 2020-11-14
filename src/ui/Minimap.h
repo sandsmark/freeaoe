@@ -4,6 +4,7 @@
 
 #include "core/Types.h"
 #include "core/SignalEmitter.h"
+#include "global/EventListener.h"
 #include "mechanics/IState.h"
 #include "render/IRenderTarget.h"
 
@@ -15,7 +16,7 @@ class Event;
 struct Unit;
 struct VisibilityMap;
 
-class Minimap : public IState, public SignalReceiver
+class Minimap : public IState, public SignalReceiver, public EventListener
 {
 public:
     // TODO implement the rest
@@ -43,6 +44,9 @@ private:
     void updateTerrain();
     void updateCamera();
     bool updateRect(const Size &windowSize);
+
+    void onTileDiscovered(const int playerID, const int tileX, const int tileY) override;
+    void onTileHidden(const int playerID, const int tileX, const int tileY) override;
 
     Drawable::Color unitColor(const std::shared_ptr<Unit> &unit);
 
