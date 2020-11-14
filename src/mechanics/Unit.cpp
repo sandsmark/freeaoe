@@ -396,6 +396,10 @@ void Unit::setPosition(const MapPos &pos, const bool initial)
         EventManager::unitMoved(this, oldTilePosition, newTilePosition);
     }
 
+    if (!m_lineOfSight) {
+        m_lineOfSight = data()->LineOfSight;
+    }
+
     // TODO merf, don't really want this to happen here, maybe use events?
     std::unordered_set<std::pair<int, int>> tilesHidden;
     if (switchedTile && !initial && owner) {
@@ -421,6 +425,8 @@ void Unit::setPosition(const MapPos &pos, const bool initial)
 
     std::unordered_set<std::pair<int, int>> newVisibleTiles;
     if (switchedTile) {
+        // Now we can update it with the current data, we have collected what we saw last time
+        m_lineOfSight = data()->LineOfSight;
         forEachVisibleTile([&](const int tileX, const int tileY) {
             const std::pair<int, int> tile(tileX, tileY);
             if (tilesHidden.count(tile)) {
@@ -534,7 +540,7 @@ float Unit::tallness()
 
 void Unit::forEachVisibleTile(const std::function<void (const int, const int)> &action)
 {
-    const int los = data()->LineOfSight;
+    const int los = m_lineOfSight;
     const int tileXOffset = std::round(position().x / Constants::TILE_SIZE);
     const int tileYOffset = std::round(position().y / Constants::TILE_SIZE);
     for (int y=-los; y<= los; y++) {

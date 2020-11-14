@@ -289,6 +289,9 @@ protected:
     Time m_prevTime = 0;
     float m_angle = 0.f;
 
+    // Need to store it since it can change
+    int m_lineOfSight = 0;
+
 private:
     void onDamageTaken();
 };
