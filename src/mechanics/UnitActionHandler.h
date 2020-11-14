@@ -77,6 +77,7 @@ struct UnitActionHandler
     std::deque<ActionPtr> m_actionQueue;
 
     TaskSet m_autoTargetTasks;
+    bool autoConvert = false;
 
 private:
     Unit *m_unit;

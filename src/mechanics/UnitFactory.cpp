@@ -86,12 +86,94 @@ void UnitFactory::handleDefaultAction(const Unit::Ptr &unit, const Task &task)
 
         //TODO
     case genie::ActionType::Graze:
+        break;
     case genie::ActionType::GetAutoConverted:
+        unit->actions.autoConvert =true;
         break;
     default:
         WARN << "unhandled default action" << task.data->actionTypeName() << "for" << unit->debugName;
     }
 
+}
+
+static bool checkForAutoConvert(const Unit::Ptr &unit)
+{
+    if (unit->playerId() != UnitManager::GaiaID) {
+        return false;
+    }
+
+    // No idea if there's a better way...
+    switch(unit->data()->Class) {
+    case genie::Unit::Archer:
+    case genie::Unit::Artifact:
+    case genie::Unit::TradeBoat:
+    case genie::Unit::BuildingClass:
+    case genie::Unit::Civilian:
+    case genie::Unit::Infantry:
+    case genie::Unit::Cavalry:
+    case genie::Unit::SiegeWeapon:
+    case genie::Unit::Healer:
+    case genie::Unit::Monk:
+    case genie::Unit::TradeCart:
+    case genie::Unit::TransportBoat:
+    case genie::Unit::FishingBoat:
+    case genie::Unit::Warship:
+    case genie::Unit::Conquistador:
+    case genie::Unit::WarElephant:
+    case genie::Unit::Hero:
+    case genie::Unit::ElephantArcher:
+    case genie::Unit::Wall:
+    case genie::Unit::Phalanx:
+    case genie::Unit::Flag:
+    case genie::Unit::Petard:
+    case genie::Unit::CavalryArcher:
+    case genie::Unit::MonkWithRelic:
+    case genie::Unit::HandCannoneer:
+    case genie::Unit::TwoHandedSwordsman:
+    case genie::Unit::Pikeman:
+    case genie::Unit::Scout:
+    case genie::Unit::Farm:
+    case genie::Unit::Spearman:
+    case genie::Unit::PackedUnit:
+    case genie::Unit::Tower:
+    case genie::Unit::BoardingBoat:
+    case genie::Unit::UnpackedSiegeUnit:
+    case genie::Unit::Ballista:
+    case genie::Unit::Raider:
+    case genie::Unit::CavalryRaider:
+    case genie::Unit::King:
+    case genie::Unit::MiscBuilding:
+        return true;
+
+    case genie::Unit::OceanFish:
+    case genie::Unit::BerryBush:
+    case genie::Unit::StoneMine:
+    case genie::Unit::PreyAnimal:
+    case genie::Unit::PredatorAnimal:
+    case genie::Unit::Miscellaneous:
+    case genie::Unit::TerrainClass:
+    case genie::Unit::Tree:
+    case genie::Unit::TreeStump:
+    case genie::Unit::DomesticAnimal:
+    case genie::Unit::DeepSeaFish:
+    case genie::Unit::GoldMine:
+    case genie::Unit::ShoreFish:
+    case genie::Unit::Cliff:
+    case genie::Unit::Doppelganger:
+    case genie::Unit::Bird:
+    case genie::Unit::Gate:
+    case genie::Unit::SalvagePile:
+    case genie::Unit::ResourcePile:
+    case genie::Unit::Relic:
+    case genie::Unit::OreMine:
+    case genie::Unit::Livestock:
+    case genie::Unit::ControlledAnimal:
+        return false;
+    default:
+        WARN << "Unknown class" << unit->data()->Class;
+        break;
+    }
+    return unit->data()->Type < genie::Unit::CombatantType;
 }
 
 Unit::Ptr UnitFactory::createUnit(const int ID, const Player::Ptr &owner, UnitManager &unitManager)
@@ -162,6 +244,10 @@ Unit::Ptr UnitFactory::createUnit(const int ID, const Player::Ptr &owner, UnitMa
             handleDefaultAction(unit, task);
             continue;
         }
+    }
+
+    if (!unit->actions.autoConvert) {
+        unit->actions.autoConvert = checkForAutoConvert(unit);
     }
 
     return unit;

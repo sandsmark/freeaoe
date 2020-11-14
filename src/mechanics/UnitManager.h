@@ -214,6 +214,7 @@ private:
     void onUnitMoved(Unit *unit, const MapPos &oldTile, const MapPos &newTile) override;
     void onTileHidden(const int playerID, const int tileX, const int tileY) override;
     void onTileDiscovered(const int playerID, const int tileX, const int tileY) override;
+    void onUnitDiscovered(Player *player, Unit *unit) override;
 
     void updateBuildingToPlace();
     void placeBuilding(const UnplacedBuilding &building);

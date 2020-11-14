@@ -53,6 +53,7 @@ UnitManager::UnitManager()
     EventManager::registerListener(this, EventManager::ResearchComplete);
     EventManager::registerListener(this, EventManager::TileHidden);
     EventManager::registerListener(this, EventManager::TileDiscovered);
+    EventManager::registerListener(this, EventManager::DiscoveredUnit);
 //    EventManager::registerListener(this, EventManager::PlayerResourceChanged); // TODO auto actions that cost things
 }
 
@@ -131,6 +132,7 @@ void UnitManager::onUnitMoved(Unit *unit, const MapPos &oldTile, const MapPos &n
 
 void UnitManager::onTileHidden(const int playerID, const int tileX, const int tileY)
 {
+    ///TODO: use unitdiscovered/unitdisappeared
     // TODO: this should be tracked by player? just care for the human for now
     std::vector<std::weak_ptr<Entity>> entities = m_map->entitiesAt(tileX, tileY);
     for (const std::weak_ptr<Entity> &e : entities) {
@@ -197,6 +199,21 @@ void UnitManager::onTileDiscovered(const int playerID, const int tileX, const in
             staticEntityIterator = m_staticEntities.erase(staticEntityIterator);
         }
     }
+}
+
+void UnitManager::onUnitDiscovered(Player *player, Unit *unit)
+{
+    if (unit->actions.autoConvert) { // Not sure about the best way for this
+        const uint8_t targetId = player->playerId;
+        DBG << targetId << m_players.size();
+        REQUIRE(targetId < m_players.size(), return);
+
+        Player::Ptr newOwner = m_players[targetId].lock();
+        REQUIRE(newOwner, return);
+
+        unit->setPlayer(newOwner);
+    }
+
 }
 
 bool UnitManager::init()
