@@ -352,6 +352,9 @@ void AudioPlayer::playStream(const std::string &filename)
     if (filePath.empty()) { // try old, without x
         filePath = genie::util::resolvePathCaseInsensitive(AssetManager::Inst()->streamsPath() + filename);
     }
+    if (filePath.empty()) { // assume it is a normal sound
+        filePath = genie::util::resolvePathCaseInsensitive(AssetManager::Inst()->soundsPath() + filename);
+    }
     if (filePath.empty()) {
         WARN << "Unable to find" << filename;
         return;
