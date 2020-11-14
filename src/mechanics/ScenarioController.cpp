@@ -375,6 +375,8 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
         // Camera stuff
     case genie::TriggerEffect::ChangeView:
         DBG << "Moving camera" << effect;
+
+        // WARNING: flipped x and y
         m_gameState->moveCameraTo(MapPos(effect.location.y * Constants::TILE_SIZE, effect.location.x * Constants::TILE_SIZE));
         break;
 
@@ -399,6 +401,7 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
             WARN << "couldn't get player for effect";
             break;
         }
+        // WARNING: flipped x and y
         MapPos location(effect.location.y * Constants::TILE_SIZE, effect.location.x * Constants::TILE_SIZE);
         Unit::Ptr unit = UnitFactory::Inst().createUnit(effect.object, player, *m_gameState->unitManager());
         if (!unit) {
@@ -420,6 +423,7 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
     case genie::TriggerEffect::TaskObject: {
         // again with the wtf swap of x and y
         // TODO, not sure if it is right to move to the middle of the tile, but whatevs
+        // WARNING: flipped x and y
         MapPos targetPos(effect.location.y + 0.5, effect.location.x + 0.5);
         targetPos *= Constants::TILE_SIZE;
 
@@ -552,8 +556,15 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
 void ScenarioController::forEachMatchingUnit(const genie::TriggerEffect &effect, const std::function<void (const Unit::Ptr &)> &action)
 {
     bool foundMatching = false;
-    for (int col = effect.areaFrom.x; col <  effect.areaTo.x; col++) {
-        for (int row = effect.areaFrom.y; row <  effect.areaTo.y; row++) {
+
+    /// !! OBS !! notice that Y and X are flipped in the areas in the scn file
+    const int fromX = std::min(effect.areaFrom.y, effect.areaTo.y);
+    const int fromY = std::min(effect.areaFrom.x, effect.areaTo.x);
+    const int toX = std::max(effect.areaFrom.y, effect.areaTo.y);
+    const int toY = std::max(effect.areaFrom.x, effect.areaTo.x);
+    bool foundUnits = false;
+    for (int col = fromX; col <  toX; col++) {
+        for (int row = fromY; row <  toY; row++) {
             const std::vector<std::weak_ptr<Entity>> &entities = m_gameState->map()->entitiesAt(col, row);
             for (const std::weak_ptr<Entity> &entity : entities) {
                 Unit::Ptr unit = Unit::fromEntity(entity);
@@ -561,6 +572,7 @@ void ScenarioController::forEachMatchingUnit(const genie::TriggerEffect &effect,
                     WARN << "got invalid unit in area for effect";
                     continue;
                 }
+                foundUnits = true;
                 if (!checkUnitMatchingEffect(unit, effect)) {
                     continue;
                 }
@@ -568,6 +580,27 @@ void ScenarioController::forEachMatchingUnit(const genie::TriggerEffect &effect,
                 action(unit);
             }
         }
+    }
+
+    // WARNING: flipped x and y
+    const std::vector<std::weak_ptr<Entity>> &entities = m_gameState->map()->entitiesAt(effect.location.y, effect.location.x);
+    for (const std::weak_ptr<Entity> &entity : entities) {
+        Unit::Ptr unit = Unit::fromEntity(entity);
+        if (!unit) {
+            WARN << "got invalid unit in area for effect";
+            continue;
+        }
+        foundUnits = true;
+        if (!checkUnitMatchingEffect(unit, effect)) {
+            DBG << "Unit" << unit->debugName << "Not matching";
+            continue;
+        }
+        foundMatching = true;
+        action(unit);
+    }
+
+    if (!foundUnits) {
+        DBG << "Found no units for effect" << effect;
     }
 
     if (!foundMatching) {
@@ -623,6 +656,7 @@ void ScenarioController::onUnitMoved(Unit *unit, const MapPos &oldTile, const Ma
                 continue;
             }
 
+            // WARNING: flipped x and y
             const MapRect conditionRect(MapPos(condition.data.areaFrom.y, condition.data.areaFrom.x),
                                         MapPos(condition.data.areaTo.y, condition.data.areaTo.x)
                 );
