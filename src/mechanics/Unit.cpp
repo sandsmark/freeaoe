@@ -185,6 +185,7 @@ void Unit::setPlayer(const std::shared_ptr<Player> &newPlayer)
     m_player = newPlayer;
     m_playerId = newPlayer->playerId;
     m_renderer->setPlayerColor(newPlayer->playerColor);
+    actions.clearActionQueue();
 
     if (newPlayer) {
         m_lineOfSight = data()->LineOfSight;
