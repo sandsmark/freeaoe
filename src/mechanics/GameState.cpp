@@ -285,6 +285,7 @@ void GameState::setupScenario()
         WARN << "no human player defined, setting to 1. player";
         m_humanPlayer = m_players[1];
     }
+    m_unitManager->setPlayers(m_players);
     m_unitManager->setHumanPlayer(m_humanPlayer);
 
     for (size_t playerNum = 0; playerNum < scenario_->enabledPlayerCount + 1; playerNum++) { // +1 for gaia
@@ -335,6 +336,7 @@ void GameState::setupGame()
     m_players.push_back(m_humanPlayer);
     m_players.push_back(sampleGameSetup->getEnemyPlayer());
 
+    m_unitManager->setPlayers(m_players);
     sampleGameSetup->setupUnits();
 
     MapPos cameraPos(map_->pixelWidth() / 2.f, map_->pixelHeight()  / 2.f);
