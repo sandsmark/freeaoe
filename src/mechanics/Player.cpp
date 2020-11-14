@@ -312,7 +312,9 @@ bool Player::isAllied(uint8_t playerId)
     if (playerId == this->playerId) {
         return true;
     }
-    REQUIRE (playerId < m_diplomaticStances.size(), return false);
+    if (playerId >= m_diplomaticStances.size()) {
+        return false;
+    }
     return m_diplomaticStances[playerId] == Allied;
 }
 
