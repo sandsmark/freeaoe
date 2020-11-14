@@ -170,6 +170,7 @@ void Unit::setPlayer(const std::shared_ptr<Player> &player)
 {
     m_player = player;
     m_playerId = player->playerId;
+    m_renderer->setPlayerColor(player->playerColor);
 }
 
 ScreenRect Unit::screenRect() const noexcept
