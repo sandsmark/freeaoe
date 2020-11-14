@@ -31,6 +31,15 @@ Player::Player(const int id, const int civId, const std::shared_ptr<Map> &map, c
         m_resourcesAvailable[r.first] = r.second;
     }
 
+    EventManager::registerListener(this, EventManager::DiscoveredUnit);
+    EventManager::registerListener(this, EventManager::TileDiscovered);
+    EventManager::registerListener(this, EventManager::TileHidden);
+    EventManager::registerListener(this, EventManager::UnitMoved);
+
+    EventManager::registerListener(this, EventManager::UnitGarrisoned);
+    EventManager::registerListener(this, EventManager::UnitCreated);
+    EventManager::registerListener(this, EventManager::UnitDestroyed);
+
     updateAvailableTechs();
 }
 
@@ -364,6 +373,97 @@ std::vector<Unit *> Player::findUnitsByTypeID(const int type) const
 
     return ret;
 
+}
+
+void Player::onTileHidden(const int playerID, const int tileX, const int tileY)
+{
+    if (playerID != this->playerId) {
+        return;
+    }
+
+    std::shared_ptr<Map> map = this->m_map.lock();
+    REQUIRE(map, return);
+    for (std::weak_ptr<Entity> entity : map->entitiesAt(tileX, tileY)) {
+        Unit::Ptr unit = Unit::fromEntity(entity);
+        if (!unit) {
+            continue;
+        }
+        if (unit->playerId() == this->playerId) {
+            continue;
+        }
+        EventManager::unitDisappeared(this, unit.get());
+    }
+}
+
+void Player::onTileDiscovered(const int playerID, const int tileX, const int tileY)
+{
+    if (playerID != this->playerId) {
+        return;
+    }
+
+    std::shared_ptr<Map> map = this->m_map.lock();
+    REQUIRE(map, return);
+    for (const std::weak_ptr<Entity> &entity : map->entitiesAt(tileX, tileY)) {
+        Unit::Ptr unit = Unit::fromEntity(entity);
+        if (!unit) {
+            continue;
+        }
+        if (unit->playerId() == this->playerId) {
+            continue;
+        }
+        EventManager::unitDiscovered(this, unit.get());
+    }
+}
+
+void Player::onUnitMoved(Unit *unit, const MapPos &oldTile, const MapPos &newTile)
+{
+    // Check if we now see it or we don't see it anymore
+    if (unit->playerId() == playerId) {
+        return;
+    }
+
+    const bool oldVisible = visibility->visibilityAt(oldTile) == VisibilityMap::Visible;
+    const bool newVisible = visibility->visibilityAt(newTile) == VisibilityMap::Visible;
+    if (newVisible == oldVisible) {
+        return;
+    }
+
+    if (newVisible) {
+        EventManager::unitDiscovered(this, unit);
+    } else {
+        EventManager::unitDisappeared(this, unit);
+    }
+
+
+}
+
+void Player::onUnitGarrisoned(Unit *unit, Unit *garrisonedIn)
+{
+    (void)garrisonedIn;
+
+    if (visibility->visibilityAt(unit->position() / Constants::TILE_SIZE) != VisibilityMap::Visible) {
+        return;
+    }
+
+    EventManager::unitDisappeared(this, unit);
+}
+
+void Player::onUnitDying(Unit *unit)
+{
+    if (visibility->visibilityAt(unit->position() / Constants::TILE_SIZE) != VisibilityMap::Visible) {
+        return;
+    }
+
+    EventManager::unitDisappeared(this, unit);
+}
+
+void Player::onUnitCreated(Unit *unit)
+{
+    if (visibility->visibilityAt(unit->position() / Constants::TILE_SIZE) != VisibilityMap::Visible) {
+        return;
+    }
+
+    EventManager::unitDiscovered(this, unit);
 }
 
 void Player::updateAvailableTechs()

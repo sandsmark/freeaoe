@@ -218,6 +218,13 @@ struct Player : public EventListener
     Unit *findUnitByTypeID(const int type) const;
     std::vector<Unit*> findUnitsByTypeID(const int type) const;
 
+    void onTileHidden(const int playerID, const int tileX, const int tileY) override;
+    void onTileDiscovered(const int playerID, const int tileX, const int tileY) override;
+    void onUnitMoved(Unit *unit, const MapPos &oldTile, const MapPos &newTile) override;
+    void onUnitGarrisoned(Unit *unit, Unit *garrisonedIn) override;
+    void onUnitDying(Unit *unit) override;
+    void onUnitCreated(Unit *unit) override;
+
 private:
     ResourceMap resourcesNeeded(const genie::Unit &unit) const;
 
