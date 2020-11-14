@@ -236,10 +236,7 @@ try
 
     genie::ScnFilePtr scenarioFile;
 
-    if (config.isOptionSet(Config::GameSample)) {
-        const std::string alias = config.getValue(Config::GameSample);
-        SampleGameFactory::Inst().setSampleFromAlias(alias);
-    } else if (!config.isOptionSet(Config::SinglePlayer)) {
+    if (!config.isOptionSet(Config::GameSample) && !config.isOptionSet(Config::SinglePlayer)) {
         if (!showHomeScreen(&scenarioFile)) {
             return 0;
         }

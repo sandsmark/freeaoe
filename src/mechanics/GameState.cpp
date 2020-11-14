@@ -33,6 +33,7 @@
 #include "debug/SampleGameFactory.h"
 #include "debug/ISampleGame.h"
 #include "global/EventManager.h"
+#include "global/Config.h"
 #include "mechanics/UnitManager.h"
 #include "mechanics/Player.h"
 #include "mechanics/Map.h"
@@ -324,7 +325,13 @@ void GameState::setupScenario()
 
 void GameState::setupGame()
 {
-    SampleGamePtr sampleGameSetup = SampleGameFactory::Inst().createGameSetup(map_, m_unitManager);
+    SampleGamePtr sampleGameSetup;
+    if (Config::Inst().isOptionSet(Config::GameSample)) {
+        SampleGameFactory::Inst().setSampleFromAlias(Config::Inst().getValue(Config::GameSample));
+    }
+    if (!sampleGameSetup) {
+        sampleGameSetup = SampleGameFactory::Inst().createGameSetup(map_, m_unitManager);
+    }
 
     sampleGameSetup->setupMap();
     sampleGameSetup->setupActors(defaultStartingResources[m_gameType]);
