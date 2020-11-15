@@ -336,7 +336,7 @@ std::string Config::getValue(const OptionType option)
     }
     if (option == GamePath) {
         const std::filesystem::path path(it->second);
-        if (!std::filesystem::exists(path)) {
+        if (!std::filesystem::exists(path) || path == path.root_path()) {
             return {};
         }
         return path.generic_string();
