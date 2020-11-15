@@ -10,6 +10,7 @@
 
 #include <memory>
 #include <filesystem>
+#include <cstdint>
 
 class AssetManager_HD : public AssetManager
 {
