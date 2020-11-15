@@ -5,6 +5,8 @@
 #include "global/Config.h"
 
 #include <genie/resource/DrsFile.h>
+#include <genie/util/Utility.h>
+#include <genie/resource/WavFile.h>
 
 #include <memory>
 #include <filesystem>
@@ -23,6 +25,8 @@ public:
     const std::string &assetsPath() const override;
     std::string soundsPath() const override;
     std::string streamsPath() const override;
+    std::string locateStreamFile(const std::string &filename) override;
+    std::shared_ptr<uint8_t[]> loadWav(uint32_t id) const override;
     bool missingData() const override;
 
     std::string blendomaticFilename() const override { return "blendomatic_x1.dat"; }
@@ -167,6 +171,81 @@ std::string AssetManager_HD::soundsPath() const
 std::string AssetManager_HD::streamsPath() const
 {
     return m_hdAssetPath + "/sound/stream/";
+}
+
+std::string AssetManager_HD::locateStreamFile(const std::string &filename)
+{
+    static const std::vector<std::string> possibleFolders = {
+        "resources/_common/sound/stream/",
+        "resources-dlc2/_common/sound/stream/",
+        "resources/_common/sound/civ/",
+        "resources/_common/sound/music/",
+        "resources-dlc2/_common/sound/civ/",
+        "resources/en/campaign/sound/",
+        "resources/en/sound/scenario/",
+        "resources/en/sound/taunt/",
+         // TODO: other languages?
+    };
+
+    const std::string gamePath = Config::Inst().getValue(Config::GamePath);
+    for (const std::string &folder : possibleFolders) {
+        std::string path = genie::util::resolvePathCaseInsensitive(folder + filename, gamePath);
+        if (!path.empty()) {
+            return path;
+        }
+    }
+    return "";
+}
+
+std::shared_ptr<uint8_t[]> AssetManager_HD::loadWav(uint32_t id) const try
+{
+    // TODO: move to genieutils?
+    static const std::vector<std::string> possibleFolders = {
+        "resources/_common/drs/sounds/",
+        "resources-dlc2/_common/drs/gamedata_x2/",
+        "resources/_common/drs/gamedata_x2/",
+        "resources/_common/drs/interface/",
+        "resources/_common/sound/terrain/",
+    };
+
+    const std::string filename = std::to_string(id) + ".wav";
+    const std::string gamePath = Config::Inst().getValue(Config::GamePath);
+    std::string path;
+    for (const std::string &folder : possibleFolders) {
+        path = genie::util::resolvePathCaseInsensitive(folder + filename, gamePath);
+        if (!path.empty()) {
+            break;
+        }
+    }
+    if (path.empty()) {
+        WARN << "Failed to locate" << filename << "in" << gamePath;
+        return nullptr;
+    }
+    DBG << "Loading" << path;
+
+    std::ifstream file(path, std::ios::binary|std::ios::in);
+    if (!file.good()) {
+        WARN << "FAiled to open" << path;
+        return nullptr;
+    }
+
+    file.seekg(0, std::ios_base::end);
+    ssize_t size = ssize_t(file.tellg());
+    file.seekg(0);
+
+    std::shared_ptr<uint8_t[]> ptr(new uint8_t[size]);
+    file.read(reinterpret_cast<char*>(ptr.get()), size);
+
+    genie::WavFile::WavHeader *header = reinterpret_cast<genie::WavFile::WavHeader*>(ptr.get());
+    if (size < header->Subchunk2Size) {
+        WARN << "Invalid filesize" << size << "expected more than" << header->Subchunk2Size;
+        return nullptr;
+    }
+
+    return ptr;
+} catch (const std::exception &e) {
+    WARN << "Failed to load wav" << e.what();
+    return nullptr;
 }
 
 bool AssetManager_HD::missingData() const

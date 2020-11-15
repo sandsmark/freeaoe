@@ -172,6 +172,24 @@ std::shared_ptr<genie::UIFile> AssetManager::getUIFile(const std::string &name)
     return ret;
 }
 
+std::shared_ptr<uint8_t[]> AssetManager::loadWav(uint32_t id) const
+{
+    std::shared_ptr<uint8_t[]> wavPtr;
+    for (const std::shared_ptr<genie::DrsFile> &drsFile : m_soundFiles) {
+        wavPtr = drsFile->getWavPtr(id);
+        if (wavPtr) {
+            return wavPtr;
+        }
+    }
+    for (const std::shared_ptr<genie::DrsFile> &drsFile : m_allFiles) {
+        wavPtr = drsFile->getWavPtr(id);
+        if (wavPtr) {
+            return wavPtr;
+        }
+    }
+    return wavPtr;
+}
+
 std::shared_ptr<uint8_t[]> AssetManager::getWavPtr(uint32_t id)
 {
     std::weak_ptr<uint8_t[]> weakPtr = m_wavCache[id];
@@ -181,23 +199,12 @@ std::shared_ptr<uint8_t[]> AssetManager::getWavPtr(uint32_t id)
     }
 
     m_wavCache.erase(id);
-
-    for (const std::shared_ptr<genie::DrsFile> &drsFile : m_soundFiles) {
-        wavPtr = drsFile->getWavPtr(id);
-        if (wavPtr) {
-            m_wavCache[id] = wavPtr;
-            return wavPtr;
-        }
+    wavPtr = loadWav(id);
+    if (!wavPtr) {
+        return nullptr;
     }
-    DBG << "failed to find wav file for" << id << "trying fallback";
-    for (const std::shared_ptr<genie::DrsFile> &drsFile : m_allFiles) {
-        wavPtr = drsFile->getWavPtr(id);
-        if (wavPtr) {
-            m_wavCache[id] = wavPtr;
-            return wavPtr;
-        }
-    }
-    return nullptr;
+    m_wavCache[id] = wavPtr;
+    return wavPtr;
 }
 
 //------------------------------------------------------------------------------
@@ -821,19 +828,25 @@ std::string AssetManager::streamsPath() const
 
 std::string AssetManager::locateStreamFile(const std::string &filename)
 {
-    std::string path = genie::util::resolvePathCaseInsensitive(streamsPath() + "x" + filename);
-    if (!path.empty()) {
-        return path;
+    // TODO: give hints, like campaign/scenario/whatever
+    static const std::vector<std::string> possibleFolders = {
+        "/sound/stream/x",
+        "/sound/stream/",
+        "/sound/campaign/x",
+        "/sound/campaign/",
+        "/sound/scenario/x",
+        "/sound/scenario/",
+        "/sound/",
+        "/taunt/",
+    };
+
+    for (const std::string &folder : possibleFolders) {
+        std::string path = genie::util::resolvePathCaseInsensitive(folder + filename, m_gamePath);
+        if (!path.empty()) {
+            return path;
+        }
     }
-
-    path = genie::util::resolvePathCaseInsensitive(streamsPath() + filename);
-    if (!path.empty()) {
-        return path;
-    }
-
-    path = genie::util::resolvePathCaseInsensitive(soundsPath() + filename);
-
-    return path;
+    return "";
 }
 
 bool AssetManager::missingData() const

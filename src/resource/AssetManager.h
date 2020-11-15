@@ -199,6 +199,8 @@ public:
     virtual std::string soundsPath() const;
     virtual std::string streamsPath() const;
 
+    virtual std::string locateStreamFile(const std::string &filename);
+
     virtual bool missingData() const;
 
 protected:
@@ -206,6 +208,7 @@ protected:
     friend std::unique_ptr<AssetManager> std::make_unique<AssetManager>();
     AssetManager() = default;
     virtual ~AssetManager() = default;
+    virtual std::shared_ptr<uint8_t[]> loadWav(uint32_t id) const;
 
     virtual std::string blendomaticFilename() const { return "blendomatic.dat"; }
 
