@@ -156,7 +156,6 @@ void UnitsRenderer::render(const std::shared_ptr<IRenderTarget> &renderTarget, c
                 unit->isAlive();
 
         if (blinkingAsTarget || unitManager->selected().contains(unit)) {
-            sf::RectangleShape rect;
             sf::CircleShape circle;
             circle.setFillColor(sf::Color::Transparent);
             circle.setOutlineThickness(1);
@@ -222,26 +221,25 @@ void UnitsRenderer::render(const std::shared_ptr<IRenderTarget> &renderTarget, c
                 break;
             }
 
-            if (!blinkingAsTarget) {
+            // draw health indicator
+            if (showHealthbar) {
                 pos.x -= Constants::TILE_SIZE_HORIZONTAL / 8;
                 pos.y -= height + Constants::TILE_SIZE_HEIGHT * unit->data()->HPBarHeight;
 
-                rect.setOutlineColor(sf::Color::Transparent);
-                rect.setPosition(pos);
+                Drawable::Rect healthBar;
+                healthBar.rect.setTopLeft(pos);
+                healthBar.borderSize = 0;
+                healthBar.filled = true;
 
-            }
-
-            // draw health indicator
-            if (showHealthbar) {
                 if (unit->healthLeft() < 1.) {
-                    rect.setFillColor(sf::Color::Red);
-                    rect.setSize(sf::Vector2f(Constants::TILE_SIZE_HORIZONTAL / 4., 2));
-                    m_outlineOverlay->draw(rect);
+                    healthBar.fillColor = Drawable::Red;
+                    healthBar.rect.setSize(Size(Constants::TILE_SIZE_HORIZONTAL / 4., 2));
+                    m_outlineOverlay->draw(healthBar);
                 }
 
-                rect.setFillColor(sf::Color::Green);
-                rect.setSize(sf::Vector2f(unit->healthLeft() * Constants::TILE_SIZE_HORIZONTAL / 4., 2));
-                m_outlineOverlay->draw(rect);
+                healthBar.fillColor = Drawable::Green;
+                healthBar.rect.setSize(Size(unit->healthLeft() * Constants::TILE_SIZE_HORIZONTAL / 4., 2));
+                m_outlineOverlay->draw(healthBar);
             }
         }
 
