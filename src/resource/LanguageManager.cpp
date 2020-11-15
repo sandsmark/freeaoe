@@ -28,31 +28,35 @@ bool LanguageManager::initialize()
         m_isHd = true;
 
         DBG << "Loading HD language files";
-        if (!loadTxtFile(hdFile)) {
-            WARN << "Failed to load main strings";
-            return false;
-        }
 
         const std::string language = Config::Inst().getValue(Config::Language);
-        std::vector<std::string> extraStringFiles = {
-            "/resources/" + language  + "/strings/key-value/key-value-modded-strings-utf8.txt",
-            "/resources/" + language + "/strings/key-value/key-value-strings-utf8.txt",
-        };
+        std::vector<std::string> extraStringFiles;
+        extraStringFiles.push_back("/resources/" + language + "/strings/history/history-utf8.txt");
+        extraStringFiles.push_back("/resources/" + language  + "/strings/key-value/key-value-modded-strings-utf8.txt");
+        extraStringFiles.push_back("/resources/" + language + "/strings/key-value/key-value-strings-utf8.txt");
 
         if (language != "en") {
             // Always load the english as a fallback
+            extraStringFiles.push_back("/resources/en/strings/history/history-utf8.txt");
             extraStringFiles.push_back("/resources/en/strings/key-value/key-value-strings-utf8.txt");
             extraStringFiles.push_back("/resources/en/strings/key-value/key-value-modded-strings-utf8.txt");
         };
 
+
         for (const std::string &extra : extraStringFiles) {
             const std::string path = genie::util::resolvePathCaseInsensitive(extra, gamePath);
             if (path.empty()) {
+                DBG << "Failed to find" << extra;
                 continue;
             }
             if (!loadTxtFile(path)) {
                 WARN << "Failed to load" << path;
             }
+        }
+
+        if (!loadTxtFile(hdFile)) {
+            WARN << "Failed to load main strings";
+            return false;
         }
 
 
@@ -153,12 +157,17 @@ bool LanguageManager::loadTxtFile(const std::string &filename)
         if (line.empty()) {
             continue;
         }
+        std::string::size_type commentPos = line.find("//");
+        if (commentPos != std::string::npos) {
+            line = util::trimString(line.substr(0, commentPos));
+        }
 
         if (!std::isdigit(line[0])) {
             continue;
         }
         std::string::size_type spacePos = line.find(' ');
         if (spacePos == std::string::npos) {
+            WARN << "Failed to find space in" << line;
             continue;
         }
 
@@ -170,7 +179,7 @@ bool LanguageManager::loadTxtFile(const std::string &filename)
             text = text.substr(1, text.length() - 2);
         }
 
-        if (text.empty()) {
+        if (util::trimString(text).empty()) {
             WARN << "empty string";
             continue;
         }
