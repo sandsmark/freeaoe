@@ -142,9 +142,11 @@ bool HistoryScreen::init(const std::string &filesDir)
         element.rect.width = frame->getWidth();
         element.rect.height = frame->getHeight();
     }
+    SlpFilePtr aokSlp = AssetManager::Inst()->getSlp("hist_pic.sin", AssetManager::ResourceType::Interface);
+    DBG << "aok hist pic frames:" << aokSlp->getFrameCount();
 
-    slpFile = AssetManager::Inst()->getSlp("hist_pic.sin", AssetManager::ResourceType::Interface);
-    DBG << "hist pic frames:" << slpFile->getFrameCount();
+    SlpFilePtr aocSlp = AssetManager::Inst()->getSlp("hist_picx.sin", AssetManager::ResourceType::Interface);
+    DBG << "aoc hist pic frames:" << aocSlp->getFrameCount();
 
     int numEntries = std::stoi(LanguageManager::getString(20310));
     DBG << "entries" << numEntries;
@@ -162,11 +164,10 @@ bool HistoryScreen::init(const std::string &filesDir)
             continue;
         }
 
-        HistoryEntry entry;
-        entry.title = title;
-
         size_t primaryIllustrationIndex = 0;
         size_t secondaryIllustrationIndex = 0;
+        size_t illustrationSource = 1;
+
         if (DataManager::Inst().gameVersion() >= genie::GV_SWGB) {
             primaryIllustrationIndex = addedIndex;
             secondaryIllustrationIndex = addedIndex + 51;
@@ -174,29 +175,82 @@ bool HistoryScreen::init(const std::string &filesDir)
             primaryIllustrationIndex = i;
             secondaryIllustrationIndex = i + 51;
         }
-        if (primaryIllustrationIndex < slpFile->getFrameCount()) {
-            entry.illustration.loadFromImage(Resource::convertFrameToImage(slpFile->getFrame(primaryIllustrationIndex), palette));
-        }
-        if (secondaryIllustrationIndex < slpFile->getFrameCount()) {
-            entry.secondaryIllustration.loadFromImage(Resource::convertFrameToImage(slpFile->getFrame(secondaryIllustrationIndex), palette));
 
-        }
+        // Based on info from http://aok.heavengames.com/blacksmith/showfile.php?fileid=11916
+        // Can't really get it to make sense (seems to get off by one somewhere),
+        // but I don't have any better idea either.
+        // Might be because of how the strings .txt file overriding works, though I tried different
+        // things there as well.
+        if (DataManager::Inst().isHd()) {
+            std::vector<std::string> illustrationInfo = util::stringSplit(LanguageManager::getString(20810 + 1 + i), ',');
+            if (illustrationInfo.size() != 3) {
+                WARN << "Invalid illustration info for" << title << LanguageManager::getString(20810 + 1 + i) << (20810 + 1 + i);
+                addedIndex++;
+                continue;
+            }
 
-        std::string compareFilename = util::toLowercase(LanguageManager::getString(20410 + 1 + i));
-
-        std::string filePath;
-        for (const std::filesystem::directory_entry &candidateEntry : std::filesystem::directory_iterator(filesDir)) {
-            std::string candidate = util::toLowercase(candidateEntry.path().filename().string());
-            if (candidate == compareFilename) {
-                filePath = candidateEntry.path().string();
-                break;
+            DBG << "from file:" << illustrationInfo[0] << illustrationInfo[1] << illustrationInfo[2];
+            DBG << "Actual" << primaryIllustrationIndex << secondaryIllustrationIndex;
+            try {
+                illustrationSource = std::stoi(util::trimString(illustrationInfo[0]));
+                primaryIllustrationIndex = std::stoi(util::trimString(illustrationInfo[1]));
+                secondaryIllustrationIndex = std::stoi(util::trimString(illustrationInfo[2]));
+            } catch (const std::out_of_range &e) {
+                WARN << "exceptions are dumb" << e.what();
+                continue;
             }
         }
 
-        if (filePath.empty()) {
-            WARN << "failed to find" << compareFilename;
+        SlpFilePtr slpSource;
+        switch(illustrationSource) {
+        case 1:
+            slpSource = aokSlp;
+            break;
+        case 2:
+            slpSource = aocSlp;
+            break;
+        default:
+            WARN << "Invalid source slp for illustrations" << illustrationSource;
+            continue;
         }
-        entry.filename = filePath;
+        if (primaryIllustrationIndex >= slpSource->getFrameCount()) {
+            WARN << primaryIllustrationIndex << "out of range for" << slpSource->getFrameCount();
+            continue;
+        }
+        if (secondaryIllustrationIndex >= slpSource->getFrameCount()) {
+            WARN << "secondary" << secondaryIllustrationIndex << "is out of range for" << slpSource->getFrameCount();
+            continue;
+        }
+
+
+        HistoryEntry entry;
+        entry.title = title;
+
+        entry.illustration.loadFromImage(Resource::convertFrameToImage(slpSource->getFrame(primaryIllustrationIndex), palette));
+        entry.secondaryIllustration.loadFromImage(Resource::convertFrameToImage(slpSource->getFrame(secondaryIllustrationIndex), palette));
+
+        std::string compareFilename = util::toLowercase(LanguageManager::getString(20410 + 1 + i));
+        if (!util::trimString(compareFilename).empty()) {
+
+            std::string filePath;
+            for (const std::filesystem::directory_entry &candidateEntry : std::filesystem::directory_iterator(filesDir)) {
+                std::string candidate = util::toLowercase(candidateEntry.path().filename().string());
+                if (candidate.find("utf8") != std::string::npos) {
+                    //                candidate = util::stringReplace(candidate, "-utf8", "");
+                }
+                if (candidate == compareFilename) {
+                    filePath = candidateEntry.path().string();
+                    break;
+                }
+            }
+
+            if (filePath.empty()) {
+                WARN << "failed to find" << compareFilename;
+            } else {
+                addedIndex++;
+            }
+            entry.filename = filePath;
+        }
 
         m_historyEntries.push_back(entry);
         addedItems.insert(title);
