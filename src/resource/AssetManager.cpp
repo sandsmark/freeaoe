@@ -46,7 +46,6 @@
 
 std::unique_ptr<AssetManager> AssetManager::m_instance;
 
-
 void AssetManager::create(const bool isHd)
 {
     if (isHd) {
@@ -816,14 +815,9 @@ const std::string &AssetManager::assetsPath() const
     return m_dataPath;
 }
 
-std::string AssetManager::soundsPath() const
+std::string AssetManager::campaignsPath() const
 {
-    return m_gamePath + "/sound/";
-}
-
-std::string AssetManager::streamsPath() const
-{
-    return m_gamePath + "/sound/stream/";
+    return genie::util::resolvePathCaseInsensitive("/campaign/", m_gamePath);
 }
 
 std::string AssetManager::locateStreamFile(const std::string &filename)

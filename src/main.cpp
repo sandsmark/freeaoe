@@ -106,14 +106,8 @@ static bool showHomeScreen(genie::ScnFilePtr *scenarioFile)
         }
 
         if (button == HomeScreen::Button::Tutorial) {
-            std::string campaignFile;
-            if (DataManager::Inst().isHd()){
-                campaignFile = config.getValue(Config::GamePath) + "/resources/_common/drs/retail-campaigns/dlc0/kings/cam8.cpn";
-            } else {
-                campaignFile = config.getValue(Config::GamePath) + "/campaign/cam8.cpn";
-            }
             genie::CpxFile cpxFile;
-            cpxFile.setFileName(genie::util::resolvePathCaseInsensitive(campaignFile));
+            cpxFile.setFileName(genie::util::resolvePathCaseInsensitive("cam8.cpn", AssetManager::Inst()->campaignsPath()));
 
             try {
                 cpxFile.load();

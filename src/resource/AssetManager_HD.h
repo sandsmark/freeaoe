@@ -24,11 +24,11 @@ public:
     const genie::PalFile &getPalette(uint32_t id) override;
     bool initialize(const genie::GameVersion gameVersion) override;
     const std::string &assetsPath() const override;
-    std::string soundsPath() const override;
-    std::string streamsPath() const override;
     std::string locateStreamFile(const std::string &filename) override;
     std::shared_ptr<uint8_t[]> loadWav(uint32_t id) const override;
     bool missingData() const override;
+
+    std::string campaignsPath() const override;
 
     std::string blendomaticFilename() const override { return "blendomatic_x1.dat"; }
 
@@ -136,7 +136,7 @@ bool AssetManager_HD::initialize(const genie::GameVersion gameVersion)
 
     AssetManager::initializeInternal(gamePath + "/resources/_common/dat/", gameVersion);
 
-    m_hdAssetPath = gamePath + "/resources/_common/";
+    m_hdAssetPath = genie::util::resolvePathCaseInsensitive("/resources/_common/", gamePath);
 
     DBG << "Is HD, not loading DRS files";
     TIME_THIS;
@@ -162,16 +162,6 @@ bool AssetManager_HD::initialize(const genie::GameVersion gameVersion)
 const std::string &AssetManager_HD::assetsPath() const
 {
     return m_hdAssetPath;
-}
-
-std::string AssetManager_HD::soundsPath() const
-{
-    return m_hdAssetPath + "/sound/";
-}
-
-std::string AssetManager_HD::streamsPath() const
-{
-    return m_hdAssetPath + "/sound/stream/";
 }
 
 std::string AssetManager_HD::locateStreamFile(const std::string &filename)
@@ -252,6 +242,11 @@ std::shared_ptr<uint8_t[]> AssetManager_HD::loadWav(uint32_t id) const try
 bool AssetManager_HD::missingData() const
 {
     return !std::filesystem::exists(m_hdAssetPath + "/drs/terrain/");
+}
+
+std::string AssetManager_HD::campaignsPath() const
+{
+    return genie::util::resolvePathCaseInsensitive("/campaign/", m_hdAssetPath);
 }
 
 std::string AssetManager_HD::findHdFile(const std::string &filename) const

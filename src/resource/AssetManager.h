@@ -196,8 +196,7 @@ public:
     static std::string findFile(const std::string &filename, const std::string &folder);
 
     virtual const std::string &assetsPath() const;
-    virtual std::string soundsPath() const;
-    virtual std::string streamsPath() const;
+    virtual std::string campaignsPath() const;
 
     virtual std::string locateStreamFile(const std::string &filename);
 
