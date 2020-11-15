@@ -211,6 +211,7 @@ set(RESOURCE_SRC
     src/resource/Resource.h
     src/resource/AssetManager.cpp
     src/resource/AssetManager.h
+    src/resource/AssetManager_HD.h
     src/resource/TerrainSprite.cpp
     src/resource/TerrainSprite.h
     src/resource/GameSpecific.cpp

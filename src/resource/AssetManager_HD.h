@@ -22,6 +22,7 @@ public:
     bool initialize(const genie::GameVersion gameVersion) override;
     const std::string &assetsPath() const override;
     std::string soundsPath() const override;
+    std::string streamsPath() const override;
     bool missingData() const override;
 
     std::string blendomaticFilename() const override { return "blendomatic_x1.dat"; }
@@ -161,6 +162,11 @@ const std::string &AssetManager_HD::assetsPath() const
 std::string AssetManager_HD::soundsPath() const
 {
     return m_hdAssetPath + "/sound/";
+}
+
+std::string AssetManager_HD::streamsPath() const
+{
+    return m_hdAssetPath + "/sound/stream/";
 }
 
 bool AssetManager_HD::missingData() const
