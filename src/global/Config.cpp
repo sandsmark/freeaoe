@@ -21,6 +21,8 @@
 #include "core/Logger.h"
 #include "core/Utility.h"
 
+#include <genie/util/Utility.h>
+
 #include <filesystem>
 #include <iomanip>
 #include <iostream>
@@ -268,15 +270,15 @@ bool Config::parseOptions(int argc, char **argv)
         }
     }
 
-    if (m_values[GamePath].empty()) {
-        m_values[GamePath] = getRegistryString(s_registryGroupTC, s_registryKey);
+    if (getValue(GamePath).empty()) {
+        setValue(GamePath, getRegistryString(s_registryGroupTC, s_registryKey));
     }
-    if (m_values[GamePath].empty()) {
-        m_values[GamePath] = getRegistryString(s_registryGroupAoK, s_registryKey);
+    if (getValue(GamePath).empty()) {
+        setValue(GamePath, getRegistryString(s_registryGroupAoK, s_registryKey));
     }
 #if defined(DEFAULT_DATA_PATH)
     if (getValue(GamePath).empty()) {
-        setValue(GamePath, DEFAULT_DATA_PATH);
+        setValue(GamePath, getRegistryString(DEFAULT_DATA_PATH);
     }
 #endif
 
@@ -304,24 +306,31 @@ bool Config::isOptionSet(const Config::OptionType option)
 std::string Config::getValue(const OptionType option)
 {
     // TODO separate getters, it's a bit dumb with all this generic shit for basically just one
-    if (option == GamePath) {
-        const std::filesystem::path path(m_values[GamePath]);
-        if (!std::filesystem::exists(path)) {
-            return {};
-        }
-        return path.generic_string();
-    }
     std::unordered_map<OptionType, std::string>::const_iterator it = m_values.find(option);
     if (it == m_values.end()) {
         DBG << "Unconfigured option" << option;
         return "";
+    }
+    if (option == GamePath) {
+        const std::filesystem::path path(it->second);
+        if (!std::filesystem::exists(path)) {
+            return {};
+        }
+        return path.generic_string();
     }
     return it->second;
 }
 
 void Config::setValue(const OptionType option, const std::string &value)
 {
-    m_values[option] = value;
+    if (option == GamePath) {
+        std::string path = genie::util::resolvePathCaseInsensitive(value);
+        if (!path.empty()) {
+            m_values[option] = path;
+        }
+    } else {
+        m_values[option] = value;
+    }
 
     writeConfigFile(m_filePath);
 
@@ -432,14 +441,7 @@ bool Config::parseOption(const std::string &option)
         return false;
     }
 
-    if (it->second.id == GamePath) {
-        if (!std::filesystem::exists(value)) {
-            WARN << value << "Does not exist, skipping";
-            return true;
-        }
-
-    }
-    m_values[it->second.id] = value;
+    setValue(it->second.id, value);
 
     emit(it->second.id);
 

@@ -97,7 +97,6 @@ private:
     void writeConfigFile(const std::string &path);
 
     std::string m_dataPath;
-    std::string m_gamePath;
     std::string m_scenarioFile;
     std::string m_filePath;
     std::unordered_map<OptionType, std::string> m_values;
