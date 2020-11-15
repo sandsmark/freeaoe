@@ -37,6 +37,7 @@ public:
         PrintHelp,
         MusicVolume,
         SoundVolume,
+        Language,
 
         OptionsCount,
         SignalCount = OptionsCount

@@ -330,7 +330,10 @@ std::string Config::getValue(const OptionType option)
 {
     // TODO separate getters, it's a bit dumb with all this generic shit for basically just one
     std::unordered_map<OptionType, std::string>::const_iterator it = m_values.find(option);
-    if (it == m_values.end()) {
+    if (it == m_values.end() || it->second.empty()) {
+        if (option == Language) { // always return a valid one
+            return "en";
+        }
         DBG << "Unconfigured option" << option;
         return "";
     }
@@ -352,10 +355,26 @@ void Config::setValue(const OptionType option, const std::string &value)
             m_values[option] = path;
         }
     } else {
-        m_values[option] = value;
-    }
+        if (option == Language) {
+            if (value.length() != 2) {
+                WARN << "I think all language lengths should be 2, you're on your own";
+            }
+            if (value == "_common") { // don't be clever
+                WARN << "Nope";
+                return;
+            }
+            std::unordered_set<std::string> knownValid = {
+                "br", "de", "en", "es", "fr", "it", "jp", "ko", "nl", "ru", "zh",
+            };
+            if (!knownValid.count(value)) {
+                WARN << value << "is not a language I've seen in AoE2HD, setting anyways";
+            }
+        }
 
-    writeConfigFile(m_filePath);
+        m_values[option] = value;
+
+        writeConfigFile(m_filePath);
+    }
 
     emit(option);
 }
@@ -371,6 +390,7 @@ Config::Config(const std::string &applicationName)
             { Config::PrintHelp, "help", "Show usage", Config::NoArgument, Config::NotStored },
             { Config::SoundVolume, "sound-volume", "Sound volume", Config::HasArgument, Config::Stored },
             { Config::MusicVolume, "music-volume", "Music volume", Config::HasArgument, Config::Stored },
+            { Config::Language, "language", "Language, e. g. 'en' or 'jp', only for HD so far", Config::HasArgument, Config::Stored },
 
 
             // Not actually parsed here (need it earlier to enable it), just so it knows about it
