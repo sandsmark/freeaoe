@@ -142,7 +142,18 @@ bool AssetManager_HD::initialize(const genie::GameVersion gameVersion)
     DBG << "Is HD, not loading DRS files";
     TIME_THIS;
 
-    for (const std::string &subfolder : {"drs/graphics", "drs/gamedata_x2", "drs/terrain", "drs/terrain/textures", "drs/gamedata_x1", "drs/interface", "drs/sounds", "slp" }) {
+    static const std::vector<std::string> folders = {
+         "drs/graphics",
+         "drs/terrain",
+         "drs/terrain/textures",
+         "drs/interface",
+         "drs/sounds",
+         "slp",
+         "drs/gamedata_x1", // the expansion stuff at the end, they override
+         "drs/gamedata_x2",
+    };
+
+    for (const std::string &subfolder : folders) {
         const std::string folder = m_hdAssetPath + subfolder + "/";
         if (!std::filesystem::exists(folder)) {
             WARN << "folder no exist" << folder;
