@@ -49,6 +49,10 @@ HistoryScreen::HistoryScreen() :
 
 bool HistoryScreen::init(const std::string &filesDir)
 {
+    if (filesDir.empty()) {
+        WARN << "No history dir passed";
+        return false;
+    }
     if (!std::filesystem::exists(filesDir)) {
         WARN << filesDir << "does not exist";
         return false;
@@ -161,12 +165,21 @@ bool HistoryScreen::init(const std::string &filesDir)
         HistoryEntry entry;
         entry.title = title;
 
+        size_t primaryIllustrationIndex = 0;
+        size_t secondaryIllustrationIndex = 0;
         if (DataManager::Inst().gameVersion() >= genie::GV_SWGB) {
-            entry.illustration.loadFromImage(Resource::convertFrameToImage(slpFile->getFrame(addedIndex), palette));
-            entry.secondaryIllustration.loadFromImage(Resource::convertFrameToImage(slpFile->getFrame(addedIndex + 51), palette));
+            primaryIllustrationIndex = addedIndex;
+            secondaryIllustrationIndex = addedIndex + 51;
         } else {
-            entry.illustration.loadFromImage(Resource::convertFrameToImage(slpFile->getFrame(i), palette));
-            entry.secondaryIllustration.loadFromImage(Resource::convertFrameToImage(slpFile->getFrame(i + 51), palette));
+            primaryIllustrationIndex = i;
+            secondaryIllustrationIndex = i + 51;
+        }
+        if (primaryIllustrationIndex < slpFile->getFrameCount()) {
+            entry.illustration.loadFromImage(Resource::convertFrameToImage(slpFile->getFrame(primaryIllustrationIndex), palette));
+        }
+        if (secondaryIllustrationIndex < slpFile->getFrameCount()) {
+            entry.secondaryIllustration.loadFromImage(Resource::convertFrameToImage(slpFile->getFrame(secondaryIllustrationIndex), palette));
+
         }
 
         std::string compareFilename = util::toLowercase(LanguageManager::getString(20410 + 1 + i));
