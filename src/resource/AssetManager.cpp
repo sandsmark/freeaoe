@@ -820,6 +820,11 @@ std::string AssetManager::campaignsPath() const
     return genie::util::resolvePathCaseInsensitive("/campaign/", m_gamePath);
 }
 
+std::string AssetManager::historyFilesPath() const
+{
+    return genie::util::resolvePathCaseInsensitive("/history/", m_gamePath);
+}
+
 std::string AssetManager::locateStreamFile(const std::string &filename)
 {
     // TODO: give hints, like campaign/scenario/whatever

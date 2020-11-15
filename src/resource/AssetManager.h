@@ -197,6 +197,7 @@ public:
 
     virtual const std::string &assetsPath() const;
     virtual std::string campaignsPath() const;
+    virtual std::string historyFilesPath() const;
 
     virtual std::string locateStreamFile(const std::string &filename);
 

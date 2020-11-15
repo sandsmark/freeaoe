@@ -85,7 +85,7 @@ static bool showHomeScreen(genie::ScnFilePtr *scenarioFile)
 
         if (button == HomeScreen::Button::History) {
             HistoryScreen history;
-            if (!history.init(config.getValue(Config::GamePath) + "/History/")) {
+            if (!history.init(AssetManager::Inst()->historyFilesPath())) {
                 continue;
             }
 

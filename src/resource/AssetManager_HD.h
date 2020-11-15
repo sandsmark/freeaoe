@@ -29,6 +29,7 @@ public:
     bool missingData() const override;
 
     std::string campaignsPath() const override;
+    std::string historyFilesPath() const override;
 
     std::string blendomaticFilename() const override { return "blendomatic_x1.dat"; }
 
@@ -248,6 +249,25 @@ bool AssetManager_HD::missingData() const
 std::string AssetManager_HD::campaignsPath() const
 {
     return genie::util::resolvePathCaseInsensitive("/campaign/", m_hdAssetPath);
+}
+
+std::string AssetManager_HD::historyFilesPath() const
+{
+    const std::vector<std::string> possibleFolders = {
+        "/resources/" + Config::Inst().getValue(Config::Language) + "/strings/",
+        "/resources-dlc2/en/strings/",
+        "/resources/_common/strings/", // haven't seen it, but maybe
+    };
+    // todo should probably store this like the normal asset manager
+    const std::string gamePath = Config::Inst().getValue(Config::GamePath);
+    for (const std::string &folder : possibleFolders) {
+        std::string path = genie::util::resolvePathCaseInsensitive(folder + "history", gamePath);
+        if (!path.empty()) {
+            return path;
+        }
+    }
+    return "";
+
 }
 
 std::string AssetManager_HD::findHdFile(const std::string &filename) const
