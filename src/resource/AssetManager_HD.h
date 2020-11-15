@@ -168,6 +168,7 @@ std::string AssetManager_HD::locateStreamFile(const std::string &filename)
 {
     static const std::vector<std::string> possibleFolders = {
         "resources/_common/sound/stream/",
+        "resources/en/sound/",
         "resources-dlc2/_common/sound/stream/",
         "resources/_common/sound/civ/",
         "resources/_common/sound/music/",
