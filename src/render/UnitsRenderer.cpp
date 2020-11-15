@@ -156,9 +156,9 @@ void UnitsRenderer::render(const std::shared_ptr<IRenderTarget> &renderTarget, c
                 unit->isAlive();
 
         if (blinkingAsTarget || unitManager->selected().contains(unit)) {
-            sf::CircleShape circle;
-            circle.setFillColor(sf::Color::Transparent);
-            circle.setOutlineThickness(1);
+            Drawable::Circle circle;
+            circle.filled = false;
+            circle.borderSize = 1;
 
             double width = unit->data()->OutlineSize.x * Constants::TILE_SIZE_HORIZONTAL;
             double height =  unit->data()->OutlineSize.y * Constants::TILE_SIZE_VERTICAL;
@@ -167,7 +167,7 @@ void UnitsRenderer::render(const std::shared_ptr<IRenderTarget> &renderTarget, c
                 width /= 2.;
                 height /= 2.;
             } else {
-                circle.setPointCount(4);
+                circle.pointCount = 4;
             }
 
 #ifdef DEBUG_PATHFINDING
@@ -181,19 +181,19 @@ void UnitsRenderer::render(const std::shared_ptr<IRenderTarget> &renderTarget, c
 
             ScreenPos pos = camera->absoluteScreenPos(unit->position());
 
-            circle.setPosition(pos.x - width, pos.y - height);
-            circle.setRadius(width);
-            circle.setScale(1, height / width);
-            circle.setOutlineColor(sf::Color::Black);
+            circle.center = ScreenPos(pos.x - width, pos.y - height);
+            circle.radius = width;
+            circle.aspectRatio = height / width;
+            circle.borderColor = Drawable::Black;
             renderTarget->draw(circle);
 
             if (blinkingAsTarget) {
-                circle.setOutlineColor(sf::Color::Green);
+                circle.borderColor = Drawable::Green;
             } else {
-                circle.setOutlineColor(sf::Color::White);
+                circle.borderColor = Drawable::White;
             }
-            circle.setOutlineThickness(2);
-            circle.setPosition(pos.x - width, pos.y - height + 1);
+            circle.borderSize = 2;
+            circle.center = ScreenPos(pos.x - width, pos.y - height + 1);
             renderTarget->draw(circle);
 
             // TODO: figure out what this is used for in which games
@@ -305,22 +305,22 @@ void UnitsRenderer::display(const std::shared_ptr<IRenderTarget> &renderTarget)
             const double width = buildingsToPlace[0].data->OutlineSize.x * Constants::TILE_SIZE_HORIZONTAL + 1;
             const double height =  buildingsToPlace[0].data->OutlineSize.y * Constants::TILE_SIZE_VERTICAL + 1;
 
-            sf::CircleShape circle;
-            circle.setFillColor(sf::Color::Transparent);
-            circle.setOutlineThickness(1);
-            circle.setRadius(width);
-            circle.setPointCount(4);
-            circle.setScale(1, height / width);
+            Drawable::Circle circle;
+            circle.filled = false;
+            circle.borderSize = 1;
+            circle.radius = width;
+            circle.pointCount = 4;
+            circle.aspectRatio = height / width;
 
             ScreenPos pos = camera->absoluteScreenPos(buildingsToPlace[0].position);
 
 
-            circle.setPosition(pos.x - width, pos.y - height + 1);
-            circle.setOutlineColor(sf::Color::Black);
+            circle.center = ScreenPos(pos.x - width, pos.y - height + 1);
+            circle.borderColor = Drawable::Black;
             renderTarget->draw(circle);
 
-            circle.setPosition(pos.x - width, pos.y - height);
-            circle.setOutlineColor(sf::Color::White);
+            circle.center = ScreenPos(pos.x - width, pos.y - height);
+            circle.borderColor = Drawable::White;
             renderTarget->draw(circle);
         }
 
