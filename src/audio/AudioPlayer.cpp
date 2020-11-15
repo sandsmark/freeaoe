@@ -18,7 +18,6 @@
 #include <genie/dat/SoundItem.h>
 #include <stddef.h>
 
-
 #include <miniaudio/extras/dr_mp3.h>
 
 #define MA_NO_JACK
@@ -138,15 +137,6 @@ void AudioPlayer::playSound(const AudioPlayer::StandardSound id, const float pan
 }
 
 struct WavHeader {
-    // RIFF header
-    uint32_t ChunkID;
-    uint32_t ChunkSize;
-    uint32_t Format;
-
-    // fmt subchunk
-    uint32_t Subchunk1ID;
-    uint32_t Subchunk1Size;
-
     enum AudioFormats {
         PCM = 0x1,
         ADPCM = 0x2,
@@ -157,6 +147,15 @@ struct WavHeader {
         AAC = 0xff,
         WWISE = 0xffffu,
     };
+
+    // RIFF header
+    uint32_t ChunkID;
+    uint32_t ChunkSize;
+    uint32_t Format;
+
+    // fmt subchunk
+    uint32_t Subchunk1ID;
+    uint32_t Subchunk1Size;
 
     uint16_t AudioFormat;
     uint16_t NumChannels;
@@ -179,11 +178,15 @@ void AudioPlayer::playSample(const std::shared_ptr<uint8_t[]> &data, const float
     }
 
     WavHeader *header = reinterpret_cast<WavHeader*>(data.get());
+    if (memcmp(data.get(), "RIFF", 4) != 0) {
+        WARN << "Invalid chunk header";
+        return;
+    }
 
     if (header->AudioFormat != WavHeader::PCM) {
         WARN << "Can only play PCM, got audio format" << header->AudioFormat;
         WARN << header->Format;
-        WARN << header->NumChannels;
+        WARN << "Channels" << header->NumChannels;
         WARN << header->ChunkID;
         return;
     }
@@ -348,13 +351,7 @@ inline std::string maErrorString(const ma_result result)
 
 void AudioPlayer::playStream(const std::string &filename)
 {
-    std::string filePath = genie::util::resolvePathCaseInsensitive(AssetManager::Inst()->streamsPath() + "x" + filename);
-    if (filePath.empty()) { // try old, without x
-        filePath = genie::util::resolvePathCaseInsensitive(AssetManager::Inst()->streamsPath() + filename);
-    }
-    if (filePath.empty()) { // assume it is a normal sound
-        filePath = genie::util::resolvePathCaseInsensitive(AssetManager::Inst()->soundsPath() + filename);
-    }
+    std::string filePath = AssetManager::Inst()->locateStreamFile(filename);
     if (filePath.empty()) {
         WARN << "Unable to find" << filename;
         return;

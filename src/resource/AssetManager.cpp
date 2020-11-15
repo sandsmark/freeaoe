@@ -34,6 +34,8 @@
 #include <genie/resource/SlpTemplate.h>
 #include <genie/resource/EdgeFiles.h>
 
+#include <genie/util/Utility.h>
+
 #include <filesystem>
 #include <fstream>
 #include <memory>
@@ -815,6 +817,23 @@ std::string AssetManager::soundsPath() const
 std::string AssetManager::streamsPath() const
 {
     return m_gamePath + "/sound/stream/";
+}
+
+std::string AssetManager::locateStreamFile(const std::string &filename)
+{
+    std::string path = genie::util::resolvePathCaseInsensitive(streamsPath() + "x" + filename);
+    if (!path.empty()) {
+        return path;
+    }
+
+    path = genie::util::resolvePathCaseInsensitive(streamsPath() + filename);
+    if (!path.empty()) {
+        return path;
+    }
+
+    path = genie::util::resolvePathCaseInsensitive(soundsPath() + filename);
+
+    return path;
 }
 
 bool AssetManager::missingData() const
