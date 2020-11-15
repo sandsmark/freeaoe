@@ -91,6 +91,24 @@ static std::string resolvePath(const char *path)
     return resolved;
 }
 
+static std::string locateSteamVersion()
+{
+    char *xdgDataHome = getenv("XDG_DATA_HOME");
+    std::string dataHome;
+    if (xdgDataHome && strlen(xdgDataHome) && std::filesystem::exists(xdgDataHome)) {
+        dataHome = xdgDataHome;
+    } else {
+        dataHome = "~/.local/share";
+    }
+    dataHome = resolvePath(dataHome.c_str()); // handles XDG_DATA_HOME containing ~
+    dataHome += "/"; // Justin Case
+    const std::string ret = genie::util::resolvePathCaseInsensitive("Steam/steamapps///common//Age2HD/", dataHome);
+    if (!ret.empty()) {
+        DBG << "Located steam version at" << ret;
+    }
+    return ret;
+}
+
 std::string Config::winePath()
 {
     const std::string prefixPath = resolvePath(getenv("WINEPREFIX"));
@@ -276,6 +294,11 @@ bool Config::parseOptions(int argc, char **argv)
     if (getValue(GamePath).empty()) {
         setValue(GamePath, getRegistryString(s_registryGroupAoK, s_registryKey));
     }
+#if defined(__linux__)
+    if (getValue(GamePath).empty()) {
+        setValue(GamePath, locateSteamVersion());
+    }
+#endif
 #if defined(DEFAULT_DATA_PATH)
     if (getValue(GamePath).empty()) {
         setValue(GamePath, getRegistryString(DEFAULT_DATA_PATH);
