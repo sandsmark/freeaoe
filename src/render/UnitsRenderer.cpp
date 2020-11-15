@@ -10,8 +10,7 @@
 #include "GraphicRender.h"
 #include "IRenderTarget.h"
 
-#ifdef DEBUG
-// For debugging pathfinding
+#ifdef DEBUG_PATHFINDING
 #include "actions/ActionMove.h"
 #endif
 
@@ -172,7 +171,7 @@ void UnitsRenderer::render(const std::shared_ptr<IRenderTarget> &renderTarget, c
                 circle.setPointCount(4);
             }
 
-#if DEBUG_PATHFINDING
+#ifdef DEBUG_PATHFINDING
             rect.setFillColor(sf::Color::Transparent);
             rect.setOutlineColor(sf::Color::White);
             rect.setOutlineThickness(1);
@@ -250,7 +249,7 @@ void UnitsRenderer::render(const std::shared_ptr<IRenderTarget> &renderTarget, c
         unit->renderer().render(*renderTarget, pos, RenderType::Base);
 
 
-#if DEBUG_PATHFINDING
+#ifdef DEBUG_PATHFINDING
         ActionPtr action = unit->actions.currentAction();
         if (action && action->type == IAction::Type::Move) {
             std::shared_ptr<ActionMove> moveAction = std::static_pointer_cast<ActionMove>(action);
@@ -270,7 +269,7 @@ void UnitsRenderer::render(const std::shared_ptr<IRenderTarget> &renderTarget, c
 #endif
     }
 
-#if DEBUG_PATHFINDING
+#ifdef DEBUG_PATHFINDING
     for (const Unit::Ptr &unit : visibleUnits) {
         sf::CircleShape circle;
         ScreenPos pos = camera->absoluteScreenPos(unit->position());
@@ -335,7 +334,7 @@ void UnitsRenderer::display(const std::shared_ptr<IRenderTarget> &renderTarget)
         }
     }
 
-#if DEBUG_PATHFINDING
+#ifdef DEBUG_PATHFINDING
     for (size_t i=0; i<ActionMove::testedPoints.size(); i++) {
         const MapPos &mpos = ActionMove::testedPoints[i];
         sf::CircleShape circle;
