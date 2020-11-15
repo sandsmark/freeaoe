@@ -23,18 +23,38 @@ bool LanguageManager::initialize()
     m_isHd = false;
 
     const std::string gamePath = Config::Inst().getValue(Config::GamePath) + "/";
-    std::string hdFile = gamePath + "/resources/en/strings/key-value/key-value-strings-utf8.txt";
-    if (std::filesystem::exists(hdFile)) {
+    std::string hdFile = genie::util::resolvePathCaseInsensitive("/resources/_common/strings/key-value/non-localized-key-value-strings-utf8.txt", gamePath);
+    if (!hdFile.empty() && std::filesystem::exists(hdFile)) {
+        m_isHd = true;
+
+        DBG << "Loading HD language files";
         if (!loadTxtFile(hdFile)) {
             WARN << "Failed to load main strings";
             return false;
         }
 
-        if (!loadTxtFile(gamePath + "/resources/en/strings/key-value/key-value-modded-strings-utf8.txt")) {
-            WARN << "Failed to load modded strings";
+        const std::string language = Config::Inst().getValue(Config::Language);
+        std::vector<std::string> extraStringFiles = {
+            "/resources/" + language  + "/strings/key-value/key-value-modded-strings-utf8.txt",
+            "/resources/" + language + "/strings/key-value/key-value-strings-utf8.txt",
+        };
+
+        if (language != "en") {
+            // Always load the english as a fallback
+            extraStringFiles.push_back("/resources/en/strings/key-value/key-value-strings-utf8.txt");
+            extraStringFiles.push_back("/resources/en/strings/key-value/key-value-modded-strings-utf8.txt");
+        };
+
+        for (const std::string &extra : extraStringFiles) {
+            const std::string path = genie::util::resolvePathCaseInsensitive(extra, gamePath);
+            if (path.empty()) {
+                continue;
+            }
+            if (!loadTxtFile(path)) {
+                WARN << "Failed to load" << path;
+            }
         }
 
-        m_isHd = true;
 
         return true;
     }
