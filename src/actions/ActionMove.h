@@ -49,7 +49,7 @@ public:
 #if DEBUG_PATHFINDING
     static std::vector<MapPos> testedPoints;
 #endif
-    virtual ~ActionMove();
+    ~ActionMove() override;
 
     UpdateResult update(Time time) noexcept override;
 
