@@ -234,7 +234,7 @@ std::shared_ptr<uint8_t[]> AssetManager_HD::loadWav(uint32_t id) const try
     }
 
     file.seekg(0, std::ios_base::end);
-    ssize_t size = ssize_t(file.tellg());
+    size_t size = size_t(file.tellg());
     file.seekg(0);
 
     std::shared_ptr<uint8_t[]> ptr(new uint8_t[size]);
