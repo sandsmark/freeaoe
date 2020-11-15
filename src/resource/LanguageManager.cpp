@@ -1,6 +1,7 @@
 #include "LanguageManager.h"
 
 #include <genie/lang/LangFile.h>
+#include <genie/util/Utility.h>
 #include <algorithm>
 #include <filesystem>
 #include <istream>
@@ -144,7 +145,7 @@ bool LanguageManager::loadTxtFile(const std::string &filename)
         int id = std::stoi(line.substr(0, spacePos));
 
         // For some reason it has dumb quotes around it, which is retareded when all of them are on a single line
-        std::string text = line.substr(spacePos + 1);
+        std::string text = util::trimString(line.substr(spacePos + 1));
         if (text.size() > 2 && text[0] == '"' && text[text.length() - 1] == '"') {
             text = text.substr(1, text.length() - 2);
         }
