@@ -75,7 +75,7 @@ struct LogPrinter {
         *m_refs = 1;
 
 #ifndef _MSC_VER
-        std::cout <<  "\033[2;90m"<< className << "\t";
+        std::cout <<  "\033[0;90m"<< className << "\t";
 #endif
 
         // No MSVC check here, since it works with Wine. No idea about wintendo, not my problem.
