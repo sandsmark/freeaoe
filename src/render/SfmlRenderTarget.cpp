@@ -318,6 +318,8 @@ void SfmlRenderTarget::draw(const Drawable::Circle &circle)
 
     if (circle.filled) {
         shape.setFillColor(convertColor(circle.fillColor));
+    } else {
+        shape.setFillColor(sf::Color::Transparent);
     }
 
     if (circle.pointCount > 0) {
