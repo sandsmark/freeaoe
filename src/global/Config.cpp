@@ -301,7 +301,7 @@ bool Config::parseOptions(int argc, char **argv)
 #endif
 #if defined(DEFAULT_DATA_PATH)
     if (getValue(GamePath).empty()) {
-        setValue(GamePath, getRegistryString(DEFAULT_DATA_PATH);
+        setValue(GamePath, DEFAULT_DATA_PATH);
     }
 #endif
 
