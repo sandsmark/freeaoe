@@ -195,6 +195,10 @@ void Unit::setPlayer(const std::shared_ptr<Player> &newPlayer)
             newPlayer->visibility->addUnitLookingAt(tileX, tileY);
         });
     }
+
+    for (const Annex &annex : annexes) {
+        annex.unit->setPlayer(newPlayer);
+    }
 }
 
 ScreenRect Unit::screenRect() const noexcept
