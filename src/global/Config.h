@@ -97,6 +97,7 @@ private:
     void parseConfigFile(const std::string &path);
     void writeConfigFile(const std::string &path);
 
+    bool m_loaded = false;
     std::string m_dataPath;
     std::string m_scenarioFile;
     std::string m_filePath;

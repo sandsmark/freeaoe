@@ -305,6 +305,8 @@ bool Config::parseOptions(int argc, char **argv)
     }
 #endif
 
+    m_loaded = true;
+
     if (m_values != configuredOptions) {
         writeConfigFile(m_filePath);
     }
@@ -353,6 +355,8 @@ void Config::setValue(const OptionType option, const std::string &value)
         std::string path = genie::util::resolvePathCaseInsensitive(value);
         if (!path.empty()) {
             m_values[option] = path;
+        } else {
+            WARN << "Failed to resolve game path" << value;
         }
     } else {
         if (option == Language) {
@@ -512,7 +516,7 @@ void Config::parseConfigFile(const std::string &path)
 
 void Config::writeConfigFile(const std::string &path)
 {
-    if (testMode) {
+    if (testMode || !m_loaded) {
         return;
     }
 
