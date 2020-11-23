@@ -233,7 +233,7 @@ static std::string getRegistryString(const std::string &regGroup, const std::str
         return {};
     }
 
-    if (util::toLowercase(path).starts_with("C:")) {
+    if (util::toLowercase(path).starts_with("c:")) {
         path = path.substr(2);
     }
 
