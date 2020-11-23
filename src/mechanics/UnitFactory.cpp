@@ -84,6 +84,17 @@ void UnitFactory::handleDefaultAction(const Unit::Ptr &unit, const Task &task)
         break;
     }
 
+        // Gaia unit that attacks on sight
+    case genie::ActionType::Combat:
+        // E. g. bears
+        if (!task.data->EnableTargeting) {
+            return;
+        }
+        [[fallthrough]];
+    case genie::ActionType::Hunt: // E. g. wolves
+//        unit->actions.queueAction(std::make_shared<ActionHunt>(unit, task));
+        break;
+
         //TODO
     case genie::ActionType::Graze:
         break;
