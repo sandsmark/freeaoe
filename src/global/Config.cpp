@@ -325,9 +325,12 @@ void Config::setKnownOptions(const std::vector<Config::OptionDefinition> &option
 
 bool Config::isOptionSet(const Config::OptionType option)
 {
-    return (m_values.find(option) != m_values.end());
+    const std::unordered_map<OptionType, std::string>::const_iterator it = m_values.find(option);
+    if (it == m_values.end()) {
+        return false;
+    }
+    return !it->second.empty();
 }
-
 
 std::string Config::getValue(const OptionType option)
 {
@@ -536,7 +539,11 @@ void Config::writeConfigFile(const std::string &path)
             continue;
         }
 
-        const std::string &value = m_values[option.id];
+        const std::string value = getValue(option.id);
+        if (value.empty()) {
+            DBG << "option" << option.id << "is empty";
+            continue;
+        }
 
         file << name << "=" << value << "\n";
     }
