@@ -117,9 +117,11 @@ void BasicGameSample::addHumanUnits()
 //    unit = UnitFactory::Inst().createUnit(Unit::ArcheryRange, m_humanPlayer, *unitManager_);
 //    unitManager_->add(unit, MapPos(48 * 10, 48 * 5, 0));
 
-//    unit = UnitFactory::Inst().createUnit(827, MapPos(48*10, 48*9, 0), m_humanPlayer, *unitManager_);
-//    unitManager_->add(unit);
+    // War wagon
+    unit = UnitFactory::Inst().createUnit(827, m_humanPlayer, *unitManager_);
+    unitManager_->add(unit, MapPos(48*10, 48*9, 0));
 
+    // Militia
 //    unit = UnitFactory::Inst().createUnit(74, m_humanPlayer, *unitManager_);
 //    unitManager_->add(unit, MapPos(48*8, 48*10, 0));
 }
