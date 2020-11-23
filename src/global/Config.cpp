@@ -320,6 +320,7 @@ void Config::setKnownOptions(const std::vector<Config::OptionDefinition> &option
     for (const OptionDefinition &option : options) {
         m_knownOptions[option.name] = option;
     }
+    REQUIRE(m_knownOptions.size() == OptionsCount, );
 }
 
 bool Config::isOptionSet(const Config::OptionType option)
