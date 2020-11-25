@@ -219,8 +219,8 @@ struct LogPrinter {
         // If printGenieTriggerConditionType() in ScenarioController.h has more than 9 case statements,
         // clang-tidy think we deref a nullptr here. Which I think is bullshit, but that's not my job to call.
         REQUIRE(m_refs, return);
+        assert(*m_refs > 0);
         (*m_refs)--;
-        assert(*m_refs >= 0);
 
         if (*m_refs == 0) {
             std::cout << "\033[0m\033[2;37m("
@@ -267,9 +267,8 @@ public:
         if (elapsedMs < 10) {
             return;
         }
-
         for (size_t i=0; i<m_ticks.size(); i++) {
-            for (int j=0; j<indent * 2 + 1; j++) std::cout << ' ';
+            for (int j=0; j<indent * 2u + 1; j++) std::cout << ' ';
             std::cout
                     << "\033[0;36m"
                     << m_ticks[i] << " ms\t"
