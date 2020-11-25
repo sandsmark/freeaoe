@@ -515,6 +515,7 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
             WARN << "Invalid stance" << effect.diplomacy;
             break;
         }
+        break;
     }
     case genie::TriggerEffect::SendTribute: {
         DBG << "Sending tribute" << effect;
