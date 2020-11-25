@@ -927,6 +927,7 @@ bool ActionMove::isPassable(const int x, const int y, const bool useCache) noexc
 
     const double z = m_map->elevationAt(MapPos(x, y));
     const Unit::Ptr unit = m_unit.lock();
+    REQUIRE(unit, return false);
     genie::XYZF size = unit->data()->Size;
     size.x *= Constants::TILE_SIZE_F;
     size.y *= Constants::TILE_SIZE_F;
