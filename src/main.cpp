@@ -166,7 +166,7 @@ static bool showHomeScreen(genie::ScnFilePtr *scenarioFile)
     return true;
 }
 
-bool requestFilePath(const std::string &errorMessage)
+static bool requestFilePath(const std::string &errorMessage)
 {
     Config &config = Config::Inst();
 
