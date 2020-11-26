@@ -439,7 +439,9 @@ void AudioPlayer::onSoundVolumeChanged()
     float volume = m_mixer->sample_gain;
     try {
         volume = std::stof(Config::Inst().getValue(Config::SoundVolume));
-    } catch (const std::exception &) {} //idgaf
+    } catch (const std::exception &) {
+        volume = m_mixer->sample_gain;
+    } //idgaf
     m_mixer->sample_gain = std::clamp(volume, 0.f, 1.f);
 
 }
@@ -452,6 +454,8 @@ void AudioPlayer::onMusicVolumeChanged()
     float volume = m_mixer->stream_gain;
     try {
         volume = std::stof(Config::Inst().getValue(Config::MusicVolume));
-    } catch (const std::exception &) {} //idgaf
+    } catch (const std::exception &) {
+        volume = m_mixer->stream_gain;
+    } //idgaf
     m_mixer->stream_gain = std::clamp(volume, 0.f, 1.f);
 }
