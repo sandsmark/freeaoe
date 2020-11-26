@@ -383,7 +383,7 @@ void Player::onTileHidden(const int playerID, const int tileX, const int tileY)
 
     std::shared_ptr<Map> map = this->m_map.lock();
     REQUIRE(map, return);
-    for (std::weak_ptr<Entity> entity : map->entitiesAt(tileX, tileY)) {
+    for (const std::weak_ptr<Entity> &entity : map->entitiesAt(tileX, tileY)) {
         Unit::Ptr unit = Unit::fromEntity(entity);
         if (!unit) {
             continue;

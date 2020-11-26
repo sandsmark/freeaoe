@@ -326,6 +326,7 @@ std::shared_ptr<DopplegangerEntity> UnitFactory::createDopplegangerFor(const std
 std::shared_ptr<DecayingEntity> UnitFactory::createCorpseFor(const std::shared_ptr<DopplegangerEntity> &doppleganger)
 {
     REQUIRE(doppleganger, return nullptr);
+    REQUIRE(doppleganger->originalUnitData, return nullptr);
 
     const genie::Unit *data = doppleganger->originalUnitData;
     if (data->DeadUnitID == -1) {
