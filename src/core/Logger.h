@@ -30,6 +30,15 @@
 #include <cassert>
 #include "core/Utility.h"
 
+#ifdef _MSC_VER
+// Not sure if this class extraction works, msvc is weird
+#define DBG LogPrinter(__FUNCTION__, LogPrinter::extractClassName(__FUNCTION__), __FILE__, __LINE__, LogPrinter::LogType::Debug)
+#define WARN LogPrinter(__FUNCTION__, LogPrinter::extractClassName(__FUNCTION__), __FILE__, __LINE__, LogPrinter::LogType::Warning)
+#else
+#define DBG LogPrinter(__FUNCTION__, LogPrinter::extractClassName(__PRETTY_FUNCTION__), __FILE__, __LINE__, LogPrinter::LogType::Debug)
+#define WARN LogPrinter(__FUNCTION__, LogPrinter::extractClassName(__PRETTY_FUNCTION__), __FILE__, __LINE__, LogPrinter::LogType::Warning)
+#endif
+
 struct LogPrinter {
     enum class LogType {
         Debug,
@@ -231,15 +240,6 @@ private:
     int *m_refs = nullptr;
     bool m_enabled = true;
 };
-
-#ifdef _MSC_VER
-// Not sure if this class extraction works, msvc is weird
-#define DBG LogPrinter(__FUNCTION__, LogPrinter::extractClassName(__FUNCTION__), __FILE__, __LINE__, LogPrinter::LogType::Debug)
-#define WARN LogPrinter(__FUNCTION__, LogPrinter::extractClassName(__FUNCTION__), __FILE__, __LINE__, LogPrinter::LogType::Warning)
-#else
-#define DBG LogPrinter(__FUNCTION__, LogPrinter::extractClassName(__PRETTY_FUNCTION__), __FILE__, __LINE__, LogPrinter::LogType::Debug)
-#define WARN LogPrinter(__FUNCTION__, LogPrinter::extractClassName(__PRETTY_FUNCTION__), __FILE__, __LINE__, LogPrinter::LogType::Warning)
-#endif
 
 class LifeTimePrinter
 {
