@@ -45,7 +45,7 @@
 
         /// to make stacktraces work properlier
         void throwException__(const std::string &message);
-        #define REQUIRE(condition, action) if (IS_UNLIKELY(!(condition))) { throwException__(std::string("Assertion '") + #condition + "' failed in " + __PRETTY_FUNCTION__  + " at " + __FILE__ + ":" + std::to_string(__LINE__)); }
+        #define REQUIRE(condition, action) if (IS_UNLIKELY(!(condition))) { throwException__(std::string("Assertion '") + #condition + "' failed in " + __PRETTY_FUNCTION__  + " at " + __FILE__ + ":" + std::to_string(__LINE__)); action; }
     #endif//_MSC_VER
 
 #else // ... and this is in release builds
