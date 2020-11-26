@@ -124,7 +124,7 @@ inline void printGenieTriggerConditionType(LogPrinter &os, const genie::TriggerC
     case genie::TriggerCondition::DestroyObject: os << "DestroyObject"; break;
     case genie::TriggerCondition::CaptureObject: os << "CaptureObject"; break;
     case genie::TriggerCondition::AccumulateAttribute: os << "AccumulateAttribute"; break;
-    case genie::TriggerCondition::ResearchTehcnology: os << "ResearchTehcnology"; break;
+    case genie::TriggerCondition::ResearchTechnology: os << "ResearchTechnology"; break;
     case genie::TriggerCondition::Timer: os << "Timer"; break;
     case genie::TriggerCondition::ObjectSelected: os << "ObjectSelected"; break;
     case genie::TriggerCondition::AISignal: os << "AISignal"; break;
