@@ -367,7 +367,7 @@ void AudioPlayer::playStream(const std::string &filename)
         return;
     }
 
-    sts_mixer_stream_t *stream = new sts_mixer_stream_t{};
+    std::unique_ptr<sts_mixer_stream_t> stream = std::make_unique<sts_mixer_stream_t>();
     stream->callback = &AudioPlayer::mp3Callback;
     stream->stop_callback = &AudioPlayer::mp3StopCallback;
 
@@ -401,14 +401,14 @@ void AudioPlayer::playStream(const std::string &filename)
 
     stream->userdata = mp3Decoder.get();
 
-    int id = sts_mixer_play_stream(m_mixer.get(), stream, 0.5);
+    int id = sts_mixer_play_stream(m_mixer.get(), stream.get(), 0.5);
     if (id < 0) {
         WARN << "unable to play sample, too many playing already";
-        delete stream;
         return;
     }
     m_activeStreams[filename] = id;
 
+    stream.release();
     mp3Decoder.release();
 }
 
