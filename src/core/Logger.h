@@ -28,6 +28,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <cassert>
+#include "core/Utility.h"
 
 struct LogPrinter {
     enum class LogType {
@@ -109,6 +110,12 @@ struct LogPrinter {
         if (!m_enabled) {
             return;
         }
+
+        // Fun fact:
+        // If printGenieTriggerConditionType() in ScenarioController.h has more than 9 case statements,
+        // and we don't have this check here, clang-tidy thinks we use uninitialized memory in the destructor.
+        // I'm fairly certain we don't, but just so we can shut it up.
+        REQUIRE(*other.m_refs > 0, return);
 
         m_refs = other.m_refs;
 
@@ -198,6 +205,11 @@ struct LogPrinter {
         if (!m_enabled) {
             return;
         }
+
+        // Fun fact:
+        // If printGenieTriggerConditionType() in ScenarioController.h has more than 9 case statements,
+        // clang-tidy think we deref a nullptr here. Which I think is bullshit, but that's not my job to call.
+        REQUIRE(m_refs, return);
         (*m_refs)--;
         assert(*m_refs >= 0);
 
