@@ -188,7 +188,7 @@ public:
 
     Unit::Ptr clickedUnitAt(const ScreenPos &pos, const CameraPtr &camera);
 
-    const TaskSet availableActions() const { return m_currentActions; }
+    const TaskSet &availableActions() const { return m_currentActions; }
 
     void onCursorPositionChanged(const ScreenPos &pos, const CameraPtr &camera);
     const TaskSet &currentActionUnderCursor() const { return m_tasksUnderCursor; }
