@@ -168,6 +168,8 @@ bool Unit::update(Time time) noexcept
 
 void Unit::setPlayer(const std::shared_ptr<Player> &newPlayer)
 {
+    REQUIRE(newPlayer, return);
+
     // TODO: the unit will still receive upgrades from the old player,
     // because we apply research and updates to the unit data, and don't use it as modifiers.
 
@@ -187,14 +189,12 @@ void Unit::setPlayer(const std::shared_ptr<Player> &newPlayer)
     m_renderer->setPlayerColor(newPlayer->playerColor);
     actions.clearActionQueue();
 
-    if (newPlayer) {
-        m_lineOfSight = data()->LineOfSight;
+    m_lineOfSight = data()->LineOfSight;
 
-        // TODO merf, don't really want this to happen here, maybe use events?
-        forEachVisibleTile([&](const int tileX, const int tileY) {
-            newPlayer->visibility->addUnitLookingAt(tileX, tileY);
-        });
-    }
+    // TODO merf, don't really want this to happen here, maybe use events?
+    forEachVisibleTile([&](const int tileX, const int tileY) {
+        newPlayer->visibility->addUnitLookingAt(tileX, tileY);
+    });
 
     for (const Annex &annex : annexes) {
         annex.unit->setPlayer(newPlayer);
