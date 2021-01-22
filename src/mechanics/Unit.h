@@ -146,7 +146,7 @@ struct Unit : public Entity
     Unit() = delete;
     Unit(const Unit &unit) = delete;
     Unit(const genie::Unit &data_, const std::shared_ptr<Player> &player_, UnitManager &unitManager);
-    ~Unit();
+    ~Unit() override;
 
     /// convenience casting functions
     static std::shared_ptr<Unit> fromEntity(const EntityPtr &entity) noexcept;
