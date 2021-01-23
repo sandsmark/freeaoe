@@ -316,7 +316,7 @@ private:
     std::unordered_map<int, sf::Texture> m_buildingIcons;
     std::unordered_map<int, sf::Texture> m_researchIcons;
 
-    int m_currentPage = 3;
+    int m_currentPage = 0;
     int m_buttonOffset = 0;
 
     // TODO: should be weak pointer, this is STRONK shared ptr
