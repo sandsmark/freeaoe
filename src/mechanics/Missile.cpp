@@ -85,15 +85,9 @@ void Missile::setBlastType(const BlastType type, const float radius) noexcept
 
 bool Missile::initialize()
 {
-    Unit::Ptr sourceUnit = m_sourceUnit.lock();
-    if (!sourceUnit) {
-        WARN << "Source unit gone before we could start";
-        die();
-        return true;
-    }
     m_startingElevation = position().z;
 
-    m_distanceLeft = std::min(position().distance(m_targetPosition), sourceUnit->data()->Combat.MaxRange * Constants::TILE_SIZE);
+    m_distanceLeft = position().distance(m_targetPosition);
     const float heightDifference = (position().z - m_targetPosition.z);
     const float flightTime = m_distanceLeft / m_data.Speed;
     float timeToApex = flightTime / 2;
