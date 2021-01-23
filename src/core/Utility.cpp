@@ -100,3 +100,9 @@ void throwException__(const std::string &message)
 {
     throw std::logic_error(message);
 }
+
+std::string util::executableDirectory()
+{
+    std::filesystem::path filePath = executablePath();
+    return filePath.parent_path().string();
+}

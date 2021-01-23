@@ -289,6 +289,10 @@ bool Config::parseOptions(int argc, char **argv)
     }
 
     if (getValue(GamePath).empty()) {
+        setValue(GamePath, util::executableDirectory());
+    }
+
+    if (getValue(GamePath).empty()) {
         setValue(GamePath, getRegistryString(s_registryGroupTC, s_registryKey));
     }
     if (getValue(GamePath).empty()) {

@@ -237,7 +237,7 @@ try
             break;
         }
     }
-    DBG << "executable path" << util::executablePath();
+    DBG << "executable path" << util::executablePath() << "folder:" << util::executableDirectory();
 
     Config &config = Config::Inst();
 
