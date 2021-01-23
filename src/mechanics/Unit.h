@@ -180,7 +180,9 @@ struct Unit : public Entity
 
     /// The center of this unit
     MapPos center() const noexcept {
-        return position() + clearanceSize() / 2.;
+        MapPos c = position() + clearanceSize() / 2.;
+        c.z += tallness() * Constants::TILE_SIZE / 2.;
+        return c;
     }
 
     /// The rect this unit occupies in map coordinates
