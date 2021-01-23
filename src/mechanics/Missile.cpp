@@ -34,7 +34,6 @@ Missile::Missile(const genie::Unit &data, const Unit::Ptr &sourceUnit, const Map
     m_data(data),
     m_targetPosition(target)
 {
-    m_startingElevation = sourceUnit->position().z;
     m_attacks = sourceUnit->data()->Combat.Attacks;
     sourceUnit->activeMissiles++;
     defaultGraphics = AssetManager::Inst()->getGraphic(data.StandingGraphic.first);
@@ -92,6 +91,7 @@ bool Missile::initialize()
         die();
         return true;
     }
+    m_startingElevation = position().z;
 
     m_distanceLeft = std::min(position().distance(m_targetPosition), sourceUnit->data()->Combat.MaxRange * Constants::TILE_SIZE);
     const float heightDifference = (position().z - m_targetPosition.z);

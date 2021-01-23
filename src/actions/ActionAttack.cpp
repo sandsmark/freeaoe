@@ -207,7 +207,7 @@ void ActionAttack::spawnMissiles(const Unit::Ptr &source, const int unitId, cons
     for (int i=0; i<missilesUnitCanFire(source); i++) {
         MapPos individualTarget = m_targetPosition;
         if (targetUnit) {
-            individualTarget.z += targetUnit->tallness()/ Constants::TILE_SIZE;
+            individualTarget.z += targetUnit->tallness()/2;
         }
         Missile::Ptr missile = std::make_shared<Missile>(gunit, source, individualTarget, targetUnit);
         missile->setMap(source->map());
