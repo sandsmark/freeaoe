@@ -201,7 +201,7 @@ struct Unit : public Entity
     double distanceTo(const Unit::Ptr &otherUnit) const noexcept;
 
     /// in Z direction, if that makes sense
-    float tallness();
+    float tallness() const noexcept;
 
     ////////////////////////////////
     // Called every tick

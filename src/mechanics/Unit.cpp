@@ -561,7 +561,7 @@ double Unit::distanceTo(const Unit::Ptr &otherUnit) const noexcept
     return centreDistance - clearance;
 }
 
-float Unit::tallness()
+float Unit::tallness() const noexcept
 {
     return data()->Size.z * Constants::TILE_SIZE;
 }
