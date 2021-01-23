@@ -263,7 +263,7 @@ struct Unit : public Entity
     }
 
     // Checking task swap IDs
-    bool canMatchGenieUnitID(const int id) const;
+    bool canMatchGenieUnitID(const int otherID) const;
     // TODO: need basically the same for all attributes
 
 protected:

@@ -502,10 +502,10 @@ void Unit::setUnitData(const genie::Unit &data_) noexcept
     }
 }
 
-bool Unit::canMatchGenieUnitID(const int id) const
+bool Unit::canMatchGenieUnitID(const int otherID) const
 {
     const int myID = m_data->ID;
-    if (id == myID) {
+    if (otherID == myID) {
         return true;
     }
 
@@ -513,7 +513,7 @@ bool Unit::canMatchGenieUnitID(const int id) const
     REQUIRE(owner, return false);
 
     for (const genie::Unit *swappable : owner->civilization.swappableUnits(m_data->Action.TaskSwapGroup)) {
-        if (swappable->ID == id) {
+        if (swappable->ID == otherID) {
             return true;
         }
     }
