@@ -458,7 +458,7 @@ void UnitInfoPanel::drawSingleUnit()
     for (const std::weak_ptr<Unit> &garrisonedWeak : building->garrisonedUnits) {
         Unit::Ptr garrisonedUnit = garrisonedWeak.lock();
         if (!garrisonedUnit) {
-            WARN << "Expired unit garrisoned in" << garrisonedUnit->debugName;
+            WARN << "Expired unit garrisoned in" << building->debugName;
             continue;
         }
         garrisoned.add(garrisonedUnit);

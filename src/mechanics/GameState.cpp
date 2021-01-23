@@ -325,13 +325,10 @@ void GameState::setupScenario()
 
 void GameState::setupGame()
 {
-    SampleGamePtr sampleGameSetup;
     if (Config::Inst().isOptionSet(Config::GameSample)) {
         SampleGameFactory::Inst().setSampleFromAlias(Config::Inst().getValue(Config::GameSample));
     }
-    if (!sampleGameSetup) {
-        sampleGameSetup = SampleGameFactory::Inst().createGameSetup(map_, m_unitManager);
-    }
+    SampleGamePtr sampleGameSetup = SampleGameFactory::Inst().createGameSetup(map_, m_unitManager);
 
     sampleGameSetup->setupMap();
     sampleGameSetup->setupActors(defaultStartingResources[m_gameType]);

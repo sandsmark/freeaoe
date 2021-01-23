@@ -36,6 +36,9 @@
 #define DUMB_CLANG_IT_IS_USED
 #endif // _MSC_VER
 
+// REQUIRE is used in some noexcept functions, which is defined behavior and leads to std::terminate which is fine (by me)
+// So don't listen to cppcheck if it complains to you.
+
 // Because cmake is confusing (double negatives? really?): this is in debug builds
 #ifndef NDEBUG
     // Throw a generic exception instead of assert()ing, since eventually there will be more stuff handling it in main()
