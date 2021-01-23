@@ -708,6 +708,7 @@ void UnitManager::selectUnits(const ScreenRect &selectionRect, const CameraPtr &
 
     if (newSelection.isEmpty()) {
         DBG << "Unable to find anything to select in " << selectionRect;
+        setSelectedUnits({}); // clear
         return;
     }
 
