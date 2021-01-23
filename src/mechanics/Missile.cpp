@@ -105,7 +105,7 @@ bool Missile::initialize()
     m_zAcceleration = (m_zVelocity) / (m_data.Speed * timeToApex);
 
     m_angle = position().angleTo(m_targetPosition);
-    m_renderer->setAngle(m_angle);
+    m_renderer->setAngle(position().toScreen().angleTo(m_targetPosition.toScreen()));
 
     return false;
 }
