@@ -96,7 +96,12 @@ bool Missile::initialize()
     m_distanceLeft = std::min(position().distance(m_targetPosition), sourceUnit->data()->Combat.MaxRange * Constants::TILE_SIZE);
     const float heightDifference = (position().z - m_targetPosition.z);
     const float flightTime = m_distanceLeft / m_data.Speed;
-    const float timeToApex = flightTime / 2 - std::hypot(heightDifference/(m_data.Speed*2), heightDifference/(m_data.Speed*2));
+    float timeToApex = flightTime / 2;
+
+    if (heightDifference > 0.f) {
+        timeToApex -= std::hypot(heightDifference/(m_data.Speed*2), heightDifference/(m_data.Speed*2));
+    }
+
     float arc = m_data.Missile.ProjectileArc;
     if (arc < 0) {
         arc = std::abs(arc);
