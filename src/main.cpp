@@ -39,6 +39,40 @@
 
 #include "ui/HomeScreen.h"
 
+#ifdef _WIN32
+#include <windows.h>
+static HANDLE s_stdoutHandle;
+static DWORD s_outModeInit;
+static void fixWindowsConsole()
+{
+    DWORD outMode = 0;
+    s_stdoutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+
+    if(s_stdoutHandle == INVALID_HANDLE_VALUE) {
+        puts("failed to get stdout handle");
+    }
+
+    if(!GetConsoleMode(s_stdoutHandle, &outMode)) {
+        puts("failed to get windows console mode");
+    }
+
+    s_outModeInit = outMode;
+
+    // Enable ANSI escape codes
+    outMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+
+    if(!SetConsoleMode(s_stdoutHandle, outMode)) {
+        puts("Failed to set console mode");
+    }
+}
+static void restoreWindowsConsole()
+{
+    if(!SetConsoleMode(s_stdoutHandle, s_outModeInit)) {
+        puts("Failed to restore windows console mode");
+    }
+}
+#endif
+
 static void initData()
 {
     if (!Config::Inst().isOptionSet(Config::GamePath)) {
@@ -193,6 +227,9 @@ int main(int argc, char **argv)
 try
 #endif
 {
+#ifdef _WIN32
+    fixWindowsConsole();
+#endif
     for (int i=1; i<argc; i++) {
         if (std::string(argv[i]) == "--debug") {
             LogPrinter::enableAllDebug = true;
@@ -243,6 +280,9 @@ try
     }
 
     engine.start();
+#ifdef _WIN32
+    restoreWindowsConsole();
+#endif
 
     return 0;
 }
