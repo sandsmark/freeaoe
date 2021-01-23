@@ -362,7 +362,7 @@ void ActionPanel::updateButtons()
         return;
     }
 
-    if (unit->data()->Type >= genie::Unit::MovingType && unit->data()->Type < genie::Unit::BuildingType) {
+    if (unit->data()->Type >= genie::Unit::MovingType) {
         InterfaceButton killButton;
         killButton.action = Command::Kill;
         killButton.index = 3;
@@ -548,11 +548,6 @@ void ActionPanel::addMilitaryButtons(const std::shared_ptr<Unit> &unit)
         currentButtons.push_back(button);
     } else {
         InterfaceButton button;
-        button.type = InterfaceButton::Other;
-        button.interfacePage = 0;
-        button.index = 3;
-        button.action = Command::AttackWithSword; // In AOC uses a very different Icon. Seems like a Beta formation. AttackWithSword=AttackMove
-        currentButtons.push_back(button);
 
         button.type = InterfaceButton::Other;
         button.interfacePage = 0;
