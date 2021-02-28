@@ -173,7 +173,6 @@ Task UnitActionHandler::findMatchingTask(const std::shared_ptr<Player> &ownPlaye
     }
 
     if (matched.isValid()) {
-        matched.unitId = target->data()->ID;
         matched.target = target;
     }
 
