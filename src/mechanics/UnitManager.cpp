@@ -461,31 +461,34 @@ void UnitManager::onRightClick(const ScreenPos &screenPos, const CameraPtr &came
     }
     bool foundTasks = false;
 
-    if (m_taskUnderCursor.isValid()) {
-        REQUIRE(m_taskUnderCursor.data, m_taskUnderCursor.taskId = -1; return);
+    if (!m_tasksUnderCursor.isEmpty()) {
+        for (Task task : m_tasksUnderCursor) {
+            REQUIRE(task.data && task.taskId != -1, continue);
 
-        // Thanks task swap group satan
-        for (const Unit::Ptr &unit : m_selectedUnits) {
-            if (unit->playerId() != humanPlayer->playerId) {
-                continue;
+            // Thanks task swap group satan
+            for (const Unit::Ptr &unit : m_selectedUnits) {
+                if (unit->playerId() != humanPlayer->playerId) {
+                    continue;
+                }
+
+                if (!unit->canMatchGenieUnitID(task.unitId)) {
+                    WARN << "could not match genie unit id" << unit->debugName;
+                    continue;
+                }
+
+
+                if (task.data->ActionType == genie::ActionType::Combat) {
+                    AudioPlayer::instance().playSound(unit->data()->Action.AttackSound, humanPlayer->civilization.id());
+                }
+
+                IAction::assignTask(task, unit, IAction::AssignType::Replace);
+                Unit::Ptr target = task.target.lock();
+                if (target) {
+                    m_targetBlinkTimeLeft[target->id] = 3000;
+                }
+
+                foundTasks = true;
             }
-
-            if (!unit->canMatchGenieUnitID(m_taskUnderCursor.unitId)) {
-                continue;
-            }
-
-
-            if (m_taskUnderCursor.data->ActionType == genie::ActionType::Combat) {
-                AudioPlayer::instance().playSound(unit->data()->Action.AttackSound, humanPlayer->civilization.id());
-            }
-
-            IAction::assignTask(m_taskUnderCursor, unit, IAction::AssignType::Replace);
-            Unit::Ptr target = m_taskUnderCursor.target.lock();
-            if (target) {
-                m_targetBlinkTimeLeft[target->id] = 3000;
-            }
-
-            foundTasks = true;
         }
         if (!foundTasks) {
             WARN << "Have target under cursor, but found noone to assign?";
@@ -728,7 +731,7 @@ void UnitManager::setMap(const MapPtr &map)
 
 void UnitManager::updateAvailableActions()
 {
-    m_currentActions.tasks.clear();
+    m_currentActions.clear();
 
     std::unordered_set<Task> updated;
     for (const Unit::Ptr &unit : m_selectedUnits) {
@@ -910,12 +913,12 @@ Unit::Ptr UnitManager::clickedUnitAt(const ScreenPos &pos, const CameraPtr &came
 
 void UnitManager::onCursorPositionChanged(const ScreenPos &pos, const CameraPtr &camera)
 {
-    m_taskUnderCursor = Task();
+    m_tasksUnderCursor.clear();
 
     Player::Ptr humanPlayer = m_humanPlayer.lock();
     REQUIRE(humanPlayer, return);
 
-    forEachUnitAt(pos, camera, [this, &humanPlayer](const Unit::Ptr &target) {
+    forEachUnitAt(pos, camera, [this](const Unit::Ptr &target) {
         REQUIRE(target, return false);
 
         if (m_selectedUnits.size() == 1 && m_selectedUnits.contains(target)) {
@@ -923,14 +926,17 @@ void UnitManager::onCursorPositionChanged(const ScreenPos &pos, const CameraPtr 
             return false;
         }
 
-        Task task = UnitActionHandler::findMatchingTask(humanPlayer, target, m_currentActions);
-        if (!task.isValid()) {
-            return false;
-        }
+        // TODO: we could/should probably limit ourselves to m_availableActions, but whatever
+        for (const Unit::Ptr &unit : m_selectedUnits) {
+            Task task = unit->actions.findTaskWithTarget(target);
+            if (!task.isValid()) {
+                return false;
+            }
 
-        // TODO: should we check for multiple tasks and prioritize?
-        m_taskUnderCursor = task;
-        return true;
+            // TODO: should we check for multiple tasks and prioritize?
+            m_tasksUnderCursor.add(task);
+        }
+        return false;
     });
 
 }

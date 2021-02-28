@@ -191,7 +191,7 @@ public:
     const TaskSet availableActions() const { return m_currentActions; }
 
     void onCursorPositionChanged(const ScreenPos &pos, const CameraPtr &camera);
-    const Task &currentActionUnderCursor() const { return m_taskUnderCursor; }
+    const TaskSet &currentActionUnderCursor() const { return m_tasksUnderCursor; }
     void moveUnitTo(const Unit::Ptr &unit, const MapPos &targetPos);
     void selectAttackTarget();
     void selectGarrisonTarget();
@@ -244,7 +244,7 @@ private:
     UnitSet m_selectedUnits;
     UnitSet m_unitsWithActions;
     TaskSet m_currentActions;
-    Task m_taskUnderCursor;
+    TaskSet m_tasksUnderCursor;
     std::vector<UnplacedBuilding> m_buildingsToPlace;
     MapPos m_wallPlacingStart;
 

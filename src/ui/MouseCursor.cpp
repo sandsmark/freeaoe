@@ -40,10 +40,12 @@ bool MouseCursor::update(const std::shared_ptr<UnitManager> &unitManager)
 
     switch(unitManager->state()) {
     case UnitManager::State::Default: {
-        const Task &targetAction = unitManager->currentActionUnderCursor();
-        if (!targetAction.isValid()) {
+        const TaskSet &targetActions = unitManager->currentActionUnderCursor();
+        if (targetActions.isEmpty()) {
             return setCursor(MouseCursor::Normal);
         }
+
+        const Task &targetAction = targetActions.first(); // TODO: simplification, might want to prioritize or something
 
         REQUIRE(targetAction.data, return false);
 
