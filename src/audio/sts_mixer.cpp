@@ -30,8 +30,6 @@
 
 #include "sts_mixer.h"
 
-#include <algorithm>
-
 enum {
   STS_MIXER_VOICE_STOPPED,
   STS_MIXER_VOICE_PLAYING,
@@ -39,8 +37,17 @@ enum {
 };
 
 
-static float sts_mixer__clamp_sample(const float sample) {
-  return std::clamp(sample, -1.f, 1.f);
+// as usual, std:: (in this case std::clamp) is really dumb, so we do it ourselves
+static inline float sts_mixer__clamp(const float value, const float min, const float max) {
+  if (value < min) { return min; }
+  if (value > max) { return max; }
+  return value;
+}
+
+static inline float sts_mixer__clamp_sample(const float sample) {
+  if (sample < -1.0f) { return -1.0f; }
+  if (sample > 1.0f) { return 1.0f; }
+  return sample;
 }
 
 
@@ -117,8 +124,8 @@ int sts_mixer_play_sample(sts_mixer_t* mixer, sts_mixer_sample_t* sample, float 
   if (i >= 0) {
     voice = &mixer->voices[i];
     voice->gain = gain;
-    voice->pitch = std::clamp(pitch, 0.1f, 10.0f);
-    voice->pan = std::clamp(pan * 0.5f, -0.5f, 0.5f);
+    voice->pitch = sts_mixer__clamp(pitch, 0.1f, 10.0f);
+    voice->pan = sts_mixer__clamp(pan * 0.5f, -0.5f, 0.5f);
     voice->position = 0.0f;
     delete voice->sample;
     voice->sample = sample;
