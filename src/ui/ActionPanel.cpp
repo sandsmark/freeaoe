@@ -299,19 +299,19 @@ bool ActionPanel::loadButtons(const int playerCiv)
     genie::SlpFilePtr unitIconsSlp = AssetManager::Inst()->getInterfaceSlp(AssetManager::StandardSlpType::Units, playerCiv);
     REQUIRE(unitIconsSlp, return false);
     for (size_t i=0; i<unitIconsSlp->getFrameCount(); i++) {
-        m_unitIcons[i].loadFromImage(Resource::convertFrameToImage(unitIconsSlp->getFrame(i)));
+        m_unitIcons[i] = m_renderTarget->convertFrameToImage(unitIconsSlp->getFrame(i));
     }
 
     genie::SlpFilePtr buildingIconsSlp = AssetManager::Inst()->getInterfaceSlp(AssetManager::StandardSlpType::Buildings, playerCiv);
     REQUIRE(buildingIconsSlp, return false);
     for (size_t i=0; i<buildingIconsSlp->getFrameCount(); i++) {
-        m_buildingIcons[i].loadFromImage(Resource::convertFrameToImage(buildingIconsSlp->getFrame(i)));
+        m_buildingIcons[i] = m_renderTarget->convertFrameToImage(buildingIconsSlp->getFrame(i));
     }
 
     genie::SlpFilePtr researchIconsSlp = AssetManager::Inst()->getInterfaceSlp(AssetManager::StandardSlpType::Technology, playerCiv);
     REQUIRE(researchIconsSlp, return false);
     for (size_t i=0; i<researchIconsSlp->getFrameCount(); i++) {
-        m_researchIcons[i].loadFromImage(Resource::convertFrameToImage(researchIconsSlp->getFrame(i)));
+        m_researchIcons[i] = m_renderTarget->convertFrameToImage(researchIconsSlp->getFrame(i));
     }
 
     genie::SlpFilePtr commandIconsSlp = AssetManager::Inst()->getInterfaceSlp(AssetManager::StandardSlpType::Commands, playerCiv);
@@ -321,14 +321,13 @@ bool ActionPanel::loadButtons(const int playerCiv)
             WARN << "icon out of range " << i << "max is" << commandIconsSlp->getFrameCount();
             return false;
         }
-        m_commandIcons[Command(i)].loadFromImage(Resource::convertFrameToImage(commandIconsSlp->getFrame(i)));
+        m_commandIcons[Command(i)] = m_renderTarget->convertFrameToImage(commandIconsSlp->getFrame(i));
     }
 
     ////////// HAX ///////////
     { // hax
-        sf::Image prevImage = Resource::convertFrameToImage(commandIconsSlp->getFrame(int(Command::NextPage)));
-        prevImage.flipHorizontally();
-        m_commandIcons[Command::PreviousPage].loadFromImage(prevImage);
+        const genie::SlpFramePtr prevImage = commandIconsSlp->getFrame(int(Command::NextPage));
+        m_commandIcons[Command::PreviousPage] = m_renderTarget->convertFrameToImage(prevImage->mirrorX());
     }
 
     { // can't find this icon anywhere else
@@ -337,8 +336,7 @@ bool ActionPanel::loadButtons(const int playerCiv)
             WARN << "Failed to load cursors";
             return false;
         }
-        sf::Image garrisonIcon = Resource::convertFrameToImage(cursorsSlp->getFrame(13));
-        m_commandIcons[Command::Garrison].loadFromImage(garrisonIcon);
+        m_commandIcons[Command::Garrison] = m_renderTarget->convertFrameToImage(cursorsSlp->getFrame(13));
     }
 
 

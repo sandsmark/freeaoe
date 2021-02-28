@@ -311,10 +311,10 @@ private:
     int m_humanPlayerId = -1;
     ScreenRect m_rect;
 
-    std::unordered_map<Command, sf::Texture> m_commandIcons;
-    std::unordered_map<int, sf::Texture> m_unitIcons;
-    std::unordered_map<int, sf::Texture> m_buildingIcons;
-    std::unordered_map<int, sf::Texture> m_researchIcons;
+    std::unordered_map<Command, Drawable::Image::Ptr> m_commandIcons;
+    std::unordered_map<int, Drawable::Image::Ptr> m_unitIcons;
+    std::unordered_map<int, Drawable::Image::Ptr> m_buildingIcons;
+    std::unordered_map<int, Drawable::Image::Ptr> m_researchIcons;
 
     int m_currentPage = 0;
     int m_buttonOffset = 0;
