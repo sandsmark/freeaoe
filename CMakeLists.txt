@@ -104,23 +104,13 @@ if(MSVC)
     find_package(PNG)
     set(EXTRA_LIBS PNG::PNG ZLIB::ZLIB BZip2::BZip2)
 else()
-    add_definitions(-fno-math-errno)
-    if (NOT CMAKE_BUILD_TYPE MATCHES Debug)
-        # clang gets undefined references to builtin exp, log, etc. with -ffinite-math-only/-fno-honor-infinities, so we do this the hard way
-        if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -funsafe-math-optimizations -fno-honor-nans -fassociative-math -freciprocal-math -fno-signed-zeros -fno-trapping-math -ffp-contract=fast")
-            add_definitions(-D__FAST_MATH__)
-        else()
-            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffast-math")
-        endif()
-        #string(REPLACE "-O3" "-Ofast" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
-    else() # debug
-        # no optimization is so horrible useless for everything
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
-    endif()
+    # We're not doing rocket surgery so let's get some fast yolo math.
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffast-math")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -Wno-sign-compare -Wno-unused-parameter")
 
-    add_definitions(-Wall -Wextra -pedantic -Wno-sign-compare -Wno-unused-parameter)
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O2")
+    set(CMAKE_CXX_FLAGS_INIT "${CMAKE_CXX_FLAGS_INIT} -O2")
+
     set(EXTRA_LIBS pthread dl)
 
     # Somehow need this because otherwise the SFML config gets fucked
