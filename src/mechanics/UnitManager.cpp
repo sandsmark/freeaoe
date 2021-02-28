@@ -116,12 +116,12 @@ void UnitManager::onUnitMoved(Unit *unit, const MapPos &oldTile, const MapPos &n
 
     const VisibilityMap::Visibility oldVisibility = human->visibility->visibilityAt(oldTile);
     if (oldVisibility == VisibilityMap::Unexplored) {
-        WARN << "old was unexplored";
+        DBG << "old was unexplored";
         return;
     }
     const VisibilityMap::Visibility newVisibility = human->visibility->visibilityAt(newTile);
     if (newVisibility == VisibilityMap::Unexplored) {
-        WARN << "new was unexplored";
+        DBG << "new was unexplored";
         return;
     }
 
@@ -152,7 +152,7 @@ void UnitManager::onTileHidden(const int playerID, const int tileX, const int ti
             continue;
         }
 
-        WARN << "Creating doppleganger at" << tileX << tileY << "for" << unit->debugName;
+        DBG << "Creating doppleganger at" << tileX << tileY << "for" << unit->debugName;
         addStaticEntity(UnitFactory::createDopplegangerFor(unit));
         unit->isVisible = true;
     }

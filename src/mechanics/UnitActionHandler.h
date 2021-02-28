@@ -47,6 +47,9 @@ struct TaskSet {
         tasks.erase(it);
         return true;
     }
+    void clear() {
+        tasks.clear();
+    }
 
     std::vector<Task> tasks;
 };
