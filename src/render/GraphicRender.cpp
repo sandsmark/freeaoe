@@ -302,9 +302,9 @@ ScreenRect GraphicRender::rect() const noexcept
     const ScreenPos hotspot = m_sprite->getHotspot(m_currentFrame, m_angle);
     ret.x = -hotspot.x;
     ret.y = -hotspot.y;
-    const sf::Vector2u size = m_sprite->size(m_currentFrame, m_angle);
-    ret.width = size.x;
-    ret.height = size.y;
+    const Size size = m_sprite->size(m_currentFrame, m_angle);
+    ret.width = size.width;
+    ret.height = size.width;
 
     for (const GraphicDelta &delta : m_deltas) {
         if (!delta.graphic->isValid()) {
