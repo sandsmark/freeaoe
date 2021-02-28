@@ -30,6 +30,7 @@ struct TaskSet {
 
     // STL sucks, so let's wrap it
     inline void add(const Task &task) {
+        REQUIRE(task.isValid(), return);
         const std::vector<Task>::const_iterator it = std::find(tasks.begin(), tasks.end(), task);
         if (it != tasks.end()) {
             return;
@@ -38,6 +39,7 @@ struct TaskSet {
     }
 
     inline bool remove(const Task &task) {
+        REQUIRE(task.isValid(), return false);
         const std::vector<Task>::const_iterator it = std::find(tasks.begin(), tasks.end(), task);
         if (it == tasks.end()) {
             return false;
