@@ -131,24 +131,31 @@ void ActionPanel::draw()
         }
 
         if (button.showBorder) {
-            sf::RectangleShape bevelRect(Size(40, 40));
-            sf::RectangleShape shadowRect(Size(38, 38));
+            Drawable::Rect bevelRect;
+            bevelRect.rect.setTopLeft(buttonPosition(button.index) - ScreenPos(2, 2));
+            bevelRect.rect.setSize(Size(40, 40));
+            bevelRect.filled = true;
+
+            Drawable::Rect shadowRect;
+            shadowRect.rect.setTopLeft(buttonPosition(button.index));
+            shadowRect.rect.setSize(Size(38, 38));
+            shadowRect.filled = true;
 
             // need this because the garrison icon is actually a cursor
-            sf::RectangleShape backgroundRect(Size(36, 36));
-            backgroundRect.setFillColor(sf::Color::Black);
-
-            bevelRect.setPosition(buttonPosition(button.index) - ScreenPos(2, 2));
-            shadowRect.setPosition(buttonPosition(button.index));
-            backgroundRect.setPosition(buttonPosition(button.index));
+            Drawable::Rect backgroundRect;
+            backgroundRect.rect.setTopLeft(buttonPosition(button.index));
+            backgroundRect.rect.setSize(Size(36, 36));
+            backgroundRect.filled = true;
 
             if (button.pressed) {
-                bevelRect.setFillColor(sf::Color(64, 64, 64));
-                shadowRect.setFillColor(sf::Color(192, 192, 192));
+                bevelRect.fillColor = Drawable::Color(64, 64, 64);
+                shadowRect.fillColor = Drawable::Color(192, 192, 192);
             } else {
-                bevelRect.setFillColor(sf::Color(192, 192, 192));
-                shadowRect.setFillColor(sf::Color(64, 64, 64));
+                bevelRect.fillColor = Drawable::Color(192, 192, 192);
+                shadowRect.fillColor = Drawable::Color(64, 64, 64);
             }
+            bevelRect.borderColor =  bevelRect.fillColor;
+            shadowRect.borderColor =  shadowRect.fillColor;
 
             m_renderTarget->draw(bevelRect);
             m_renderTarget->draw(shadowRect);
