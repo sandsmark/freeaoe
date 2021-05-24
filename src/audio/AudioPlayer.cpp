@@ -22,6 +22,7 @@
 
 #include <tinysoundfont/tsf.h>
 #include <tinysoundfont/tml.h>
+#include <misc/soundfont/wt_181k_g/wt_181k_G.sf2.h>
 #include <misc/general808/General808.sf2.h>
 
 #define MA_NO_JACK
@@ -108,7 +109,6 @@ void AudioPlayer::midiCallback(sts_mixer_sample_t *sample, void *userdata)
     uint8_t *stream = sample->data.get();
     sample->length = 0;
 
-
     //Number of samples to process
     const int bytesPerSample = 2 * sizeof(float);
     int sampleCount = MIDI_BUFFER_SIZE / bytesPerSample; //2 output channels
@@ -149,7 +149,7 @@ void AudioPlayer::midiCallback(sts_mixer_sample_t *sample, void *userdata)
 
         if (!midi->msg) {
             midi->msg = midi->loader; // loop
-            break;
+            midi->msec = 0.;
         }
     }
 }
@@ -522,7 +522,8 @@ void AudioPlayer::playMidi(const std::string &filename)
 
     std::unique_ptr<MidiHolder> midi = std::make_unique<MidiHolder>();
 
-    midi->player = tsf_load_memory(resource_General808_sf2_data, resource_General808_sf2_size);
+//    midi->player = tsf_load_memory(resource_General808_sf2_data, resource_General808_sf2_size);
+    midi->player = tsf_load_memory(resource_wt_181k_G_sf2_data, resource_wt_181k_G_sf2_size);
 
     if (!midi->player) {
         WARN << "Failed to load soundfont";

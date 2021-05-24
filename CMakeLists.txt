@@ -162,6 +162,7 @@ add_resource(IMAGE_PARCHMENT misc/images/parchment.jpg)
 
 # Soundfont (for midi playback)
 add_resource(SOUNDFONT_GENERAL808 misc/general808/General808.sf2)
+add_resource(SOUNDFONT_WT_181K_G misc/soundfont/wt_181k_g/wt_181k_G.sf2)
 
 set(AI_SRC
     src/ai/grammar.gen.tab.cpp
@@ -386,6 +387,7 @@ set(ENGINE_SRC
     ${FONT_BERRYROTUNDA}
     ${FONT_CHARIS}
     ${SOUNDFONT_GENERAL808}
+    ${SOUNDFONT_WT_181K_G}
     ${SETTINGS_SRC}
     ${DEBUG_SRC}
     ${EDITOR_SRC}
