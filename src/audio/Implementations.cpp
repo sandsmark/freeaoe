@@ -12,3 +12,9 @@
 #define MA_NO_PULSEAUDIO
 //#define ma_DEBUG_OUTPUT
 #include <miniaudio/miniaudio.h>
+
+#define TSF_IMPLEMENTATION
+#include <tinysoundfont/tsf.h>
+
+#define TML_IMPLEMENTATION
+#include <tinysoundfont/tml.h>

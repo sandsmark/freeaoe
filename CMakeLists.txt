@@ -138,6 +138,10 @@ if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/src/extern/genieutils/include/genie/Types.
     add_subdirectory(src/extern/genieutils)
 endif()
 
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/src/extern/tinysoundfont)
+    message(STATUS "Using bundled tinysoundfont")
+    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/extern/tinysoundfont)
+endif()
 
 include_directories(
     src/

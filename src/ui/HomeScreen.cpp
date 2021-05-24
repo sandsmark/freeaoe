@@ -23,12 +23,14 @@
 #include <SFML/Window/Event.hpp>
 #include <genie/resource/SlpFile.h>
 #include <genie/resource/SlpFrame.h>
+#include <genie/util/Utility.h>
 #include <memory>
 
 #include "audio/AudioPlayer.h"
 #include "TextButton.h"
 #include "core/Logger.h"
 #include "core/Utility.h"
+#include "global/Config.h"
 #include "render/SfmlRenderTarget.h"
 #include "resource/AssetManager.h"
 #include "resource/DataManager.h"
@@ -42,6 +44,7 @@ class PalFile;
 HomeScreen::~HomeScreen()
 {
     AudioPlayer::instance().stopStream("open.mp3");
+    AudioPlayer::instance().stopStream("open.mid"); // I'm lazy, sue me
 }
 
 HomeScreen::HomeScreen() :
@@ -56,7 +59,9 @@ bool HomeScreen::init()
         return false;
     }
 
-    AudioPlayer::instance().playStream("open.mp3");
+    if (!AudioPlayer::instance().playStream("open.mp3")) {
+        AudioPlayer::instance().playMidi("open.mid");
+    }
 
     const bool isHd = DataManager::Inst().isHd();
 

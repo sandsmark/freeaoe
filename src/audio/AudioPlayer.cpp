@@ -20,6 +20,10 @@
 
 #include <miniaudio/extras/dr_mp3.h>
 
+#include <tinysoundfont/tsf.h>
+#include <tinysoundfont/tml.h>
+#include <misc/general808/General808.sf2.h>
+
 #define MA_NO_JACK
 #define MA_NO_SDL
 #define MA_NO_OPENAL
@@ -34,8 +38,29 @@
 #define DRMP3_MIN_DATA_CHUNK_SIZE   1024
 #endif
 #ifndef DRMP3_DATA_CHUNK_SIZE
-#define DRMP3_DATA_CHUNK_SIZE  DRMP3_MIN_DATA_CHUNK_SIZE*4
+#define DRMP3_DATA_CHUNK_SIZE  (DRMP3_MIN_DATA_CHUNK_SIZE*4)
 #endif
+
+#ifndef TSF_RENDER_EFFECTSAMPLEBLOCK
+#define TSF_RENDER_EFFECTSAMPLEBLOCK 64
+#endif
+
+#define MIDI_BUFFER_SIZE (4096 * 2 * sizeof(float))
+
+struct MidiHolder {
+    ~MidiHolder() {
+        tml_free(loader);
+        tsf_close(player);
+    }
+
+    tml_message *loader = nullptr;
+    tml_message *msg = nullptr;
+
+    // Could really just re-use, but then threading
+    tsf *player = nullptr;
+
+    double msec = 0.;
+};
 
 void AudioPlayer::malCallback(ma_device *device, void *buffer, const void* /*input*/, uint32_t frameCount)
 {
@@ -64,6 +89,76 @@ void AudioPlayer::mp3StopCallback(const int id, sts_mixer_sample_t *sample, void
     ma_decoder* decoder = reinterpret_cast<ma_decoder*>(userdata);
     ma_decoder_uninit(decoder);
     delete decoder;
+
+    std::unordered_map<std::string, int>::iterator it = instance().m_activeStreams.begin();
+    for (; it != instance().m_activeStreams.end(); it++) {
+        if (it->second == id) {
+            DBG << it->first << "stopped";
+            instance().m_activeStreams.erase(it);
+            return;
+        }
+    }
+    WARN << "Failed to find" << id << "in active streams";
+}
+
+void AudioPlayer::midiCallback(sts_mixer_sample_t *sample, void *userdata)
+{
+    MidiHolder *midi = reinterpret_cast<MidiHolder*>(userdata);
+
+    uint8_t *stream = sample->data.get();
+    sample->length = 0;
+
+
+    //Number of samples to process
+    const int bytesPerSample = 2 * sizeof(float);
+    int sampleCount = MIDI_BUFFER_SIZE / bytesPerSample; //2 output channels
+    for (int sampleBlock = TSF_RENDER_EFFECTSAMPLEBLOCK; sampleCount > 0; sampleCount -= sampleBlock) {
+        //We progress the MIDI playback and then process TSF_RENDER_EFFECTSAMPLEBLOCK samples at once
+        if (sampleBlock > sampleCount) {
+            sampleBlock = sampleCount;
+        }
+
+        const double advance = sampleBlock * (1000. / sample->frequency);
+
+        //Loop through all MIDI messages which need to be played up until the current playback time
+        for (midi->msec += advance; midi->msg && midi->msec >= midi->msg->time; midi->msg = midi->msg->next) {
+            switch (midi->msg->type)
+            {
+            case TML_PROGRAM_CHANGE: //channel program (preset) change (special handling for 10th MIDI channel with drums)
+                tsf_channel_set_presetnumber(midi->player, midi->msg->channel, midi->msg->program, (midi->msg->channel == 9));
+                break;
+            case TML_NOTE_ON: //play a note
+                tsf_channel_note_on(midi->player, midi->msg->channel, midi->msg->key, midi->msg->velocity / 127.0f);
+                break;
+            case TML_NOTE_OFF: //stop a note
+                tsf_channel_note_off(midi->player, midi->msg->channel, midi->msg->key);
+                break;
+            case TML_PITCH_BEND: //pitch wheel modification
+                tsf_channel_set_pitchwheel(midi->player, midi->msg->channel, midi->msg->pitch_bend);
+                break;
+            case TML_CONTROL_CHANGE: //MIDI controller messages
+                tsf_channel_midi_control(midi->player, midi->msg->channel, midi->msg->control, midi->msg->control_value);
+                break;
+            }
+        }
+
+        // Render the block of audio samples in float format
+        tsf_render_float(midi->player, (float*)stream, sampleBlock, 0);
+        sample->length += sampleBlock * 2;
+        stream += sampleBlock * bytesPerSample;//(2 * sizeof(float));
+
+        if (!midi->msg) {
+            midi->msg = midi->loader; // loop
+            break;
+        }
+    }
+}
+
+void AudioPlayer::midiStopCallback(const int id, sts_mixer_sample_t *sample, void *userdata)
+{
+    (void)sample;
+
+    delete reinterpret_cast<MidiHolder*>(userdata);
 
     std::unordered_map<std::string, int>::iterator it = instance().m_activeStreams.begin();
     for (; it != instance().m_activeStreams.end(); it++) {
@@ -352,12 +447,12 @@ inline std::string maErrorString(const ma_result result)
     }
 }
 
-void AudioPlayer::playStream(const std::string &filename)
+bool AudioPlayer::playStream(const std::string &filename)
 {
     std::string filePath = AssetManager::Inst()->locateStreamFile(filename);
     if (filePath.empty()) {
         WARN << "Unable to find" << filename;
-        return;
+        return false;
     }
 
     ma_decoder_config decoderConfig = ma_decoder_config_init(ma_format_unknown, 2, 0);
@@ -367,7 +462,7 @@ void AudioPlayer::playStream(const std::string &filename)
     ma_result result = ma_decoder_init_file_mp3(filePath.c_str(), &decoderConfig, mp3Decoder.get());
     if (result != MA_SUCCESS) {
         WARN << "Failed to init MP3 decoder for" << filePath << maErrorString(result);
-        return;
+        return false;
     }
 
     std::unique_ptr<sts_mixer_stream_t> stream = std::make_unique<sts_mixer_stream_t>();
@@ -394,7 +489,7 @@ void AudioPlayer::playStream(const std::string &filename)
         break;
     default:
         WARN << "Invalid decoded format" << decoderConfig.format;
-        return;
+        return false;
     }
 
     stream->sample.frequency = mp3Decoder->outputSampleRate;
@@ -407,12 +502,63 @@ void AudioPlayer::playStream(const std::string &filename)
     int id = sts_mixer_play_stream(m_mixer.get(), stream.get(), 0.5);
     if (id < 0) {
         WARN << "unable to play sample, too many playing already";
+        return false;
+    }
+    m_activeStreams[filename] = id;
+
+    (void)stream.release();
+    (void)mp3Decoder.release();
+
+    return true;
+}
+
+void AudioPlayer::playMidi(const std::string &filename)
+{
+    const std::string filePath = genie::util::resolvePathCaseInsensitive("sound/midi/" + filename, Config::Inst().getValue(Config::GamePath));
+    if (filePath.empty()) {
+        WARN << "Failed to find" << filename;
+        return;
+    }
+
+    std::unique_ptr<MidiHolder> midi = std::make_unique<MidiHolder>();
+
+    midi->player = tsf_load_memory(resource_General808_sf2_data, resource_General808_sf2_size);
+
+    if (!midi->player) {
+        WARN << "Failed to load soundfont";
+        return;
+    }
+
+    midi->loader = tml_load_filename(filePath.c_str());
+    if (!midi->loader) {
+        WARN << "Failed to load midi file" << filePath;
+        return;
+    }
+    midi->msg = midi->loader;
+
+    std::unique_ptr<sts_mixer_stream_t> stream = std::make_unique<sts_mixer_stream_t>();
+    stream->callback = &AudioPlayer::midiCallback;
+    stream->stop_callback = &AudioPlayer::midiStopCallback;
+    stream->sample.audio_format = STS_MIXER_SAMPLE_FORMAT_FLOAT;
+    stream->sample.frequency = 44100;
+
+    stream->sample.length = 0; // force a fetch on first play
+    stream->sample.data = std::shared_ptr<uint8_t[]>(new uint8_t[MIDI_BUFFER_SIZE * 2]);
+    stream->sample.audiodata = stream->sample.data.get();
+
+    stream->userdata = midi.get();
+
+    tsf_set_output(midi->player, TSF_STEREO_INTERLEAVED, stream->sample.frequency, 0.0f);
+
+    int id = sts_mixer_play_stream(m_mixer.get(), stream.get(), 0.5);
+    if (id < 0) {
+        WARN << "unable to play sample, too many playing already";
         return;
     }
     m_activeStreams[filename] = id;
 
-    stream.release();
-    mp3Decoder.release();
+    (void)stream.release();
+    (void)midi.release();
 }
 
 void AudioPlayer::stopStream(const std::string &filename)
