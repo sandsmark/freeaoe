@@ -26,7 +26,6 @@ extern "C" {
 }
 
 #include <misc/soundfont/wt_181k_g/wt_181k_G.sf2.h>
-#include <misc/general808/General808.sf2.h>
 
 #define MA_NO_JACK
 #define MA_NO_SDL
@@ -542,7 +541,6 @@ void AudioPlayer::playMidi(const std::string &filename)
 
     std::unique_ptr<MidiHolder> midi = std::make_unique<MidiHolder>();
 
-//    midi->player = tsf_load_memory(resource_General808_sf2_data, resource_General808_sf2_size);
     midi->player = tsf_load_memory(resource_wt_181k_G_sf2_data, resource_wt_181k_G_sf2_size);
 
     if (!midi->player) {
