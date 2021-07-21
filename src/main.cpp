@@ -237,6 +237,9 @@ try
             break;
         }
     }
+    if (!LogPrinter::enableAllDebug) {
+        genie::Logger::setLogLevel(genie::Logger::L_WARNING);
+    }
     DBG << "executable path" << util::executablePath() << "folder:" << util::executableDirectory();
 
     Config &config = Config::Inst();
