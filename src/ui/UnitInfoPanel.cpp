@@ -37,8 +37,8 @@
 #include "resource/LanguageManager.h"
 #include "resource/Resource.h"
 
-UnitInfoPanel::UnitInfoPanel(const std::shared_ptr<IRenderTarget> &renderTarget) :
-    m_renderTarget(renderTarget)
+UnitInfoPanel::UnitInfoPanel(std::shared_ptr<IRenderTarget> renderTarget) :
+    m_renderTarget(std::move(renderTarget))
 {
 }
 

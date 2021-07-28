@@ -34,10 +34,10 @@
 #include "mechanics/Unit.h"
 #include "mechanics/UnitManager.h"
 
-IAction::IAction(const Type type_, const std::shared_ptr<Unit> &unit, const Task &task) :
+IAction::IAction(const Type type_, const std::shared_ptr<Unit> &unit, Task task) :
     type(type_),
     m_unit(unit),
-    m_task(task)
+    m_task(std::move(task))
 {
 }
 

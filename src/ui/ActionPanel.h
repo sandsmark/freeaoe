@@ -245,7 +245,7 @@ public:
         Undefined
     };
 
-    ActionPanel(const std::shared_ptr<SfmlRenderTarget> &renderTarget);
+    ActionPanel(std::shared_ptr<SfmlRenderTarget> renderTarget);
     ActionPanel() = delete;
     ~ActionPanel();
 

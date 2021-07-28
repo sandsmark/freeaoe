@@ -108,7 +108,7 @@ public:
     int requiredUnitID = -1;
 
 protected:
-    IAction(const Type type_, const std::shared_ptr<Unit> &unit, const Task &task);
+    IAction(const Type type_, const std::shared_ptr<Unit> &unit, Task task);
 //    IAction(const Type type_, const std::shared_ptr<Unit> &unit);
     std::weak_ptr<Unit> m_unit;
     Time m_prevTime = 0;

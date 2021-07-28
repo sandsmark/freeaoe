@@ -9,7 +9,7 @@ struct ScreenPos;
 
 struct NumberLabel
 {
-    NumberLabel(const std::shared_ptr<IRenderTarget> &renderTarget);
+    NumberLabel(std::shared_ptr<IRenderTarget> renderTarget);
 
     bool setValue(const int value);
     bool setMaxValue(const int maxValue);

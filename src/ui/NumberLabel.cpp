@@ -9,8 +9,8 @@
 
 #include <string>
 
-NumberLabel::NumberLabel(const std::shared_ptr<IRenderTarget> &renderTarget) :
-    m_renderTarget(renderTarget)
+NumberLabel::NumberLabel(std::shared_ptr<IRenderTarget> renderTarget) :
+    m_renderTarget(std::move(renderTarget))
 {
     m_text.setFont(SfmlRenderTarget::uiFont());
     m_text.setOutlineColor(sf::Color::Black);

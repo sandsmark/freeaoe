@@ -8,8 +8,8 @@
 #include "resource/AssetManager.h"
 #include "resource/Resource.h"
 
-IconButton::IconButton(const std::shared_ptr<IRenderTarget> &renderTarget) :
-    m_renderTarget(renderTarget)
+IconButton::IconButton(std::shared_ptr<IRenderTarget> renderTarget) :
+    m_renderTarget(std::move(renderTarget))
 {
     genie::SlpFilePtr buttonsFile = AssetManager::Inst()->getSlp("btngame2x.shp");
     if (!buttonsFile) {

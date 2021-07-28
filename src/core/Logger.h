@@ -124,6 +124,7 @@ struct LogPrinter {
         // If printGenieTriggerConditionType() in ScenarioController.h has more than 9 case statements,
         // and we don't have this check here, clang-tidy thinks we use uninitialized memory in the destructor.
         // I'm fairly certain we don't, but just so we can shut it up.
+        REQUIRE(other.m_refs, return);
         REQUIRE(*other.m_refs > 0, return);
 
         m_refs = other.m_refs;

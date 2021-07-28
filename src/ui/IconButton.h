@@ -26,7 +26,7 @@ struct IconButton
         ButtonsCount
     };
 
-    IconButton(const std::shared_ptr<IRenderTarget> &renderTarget);
+    IconButton(std::shared_ptr<IRenderTarget> renderTarget);
 
     Type type() const { return m_type; }
     bool setType(const Type type);

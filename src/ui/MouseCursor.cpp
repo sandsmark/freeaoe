@@ -8,8 +8,8 @@
 #include "render/IRenderTarget.h"
 #include "resource/AssetManager.h"
 
-MouseCursor::MouseCursor(const std::shared_ptr<IRenderTarget> &renderTarget) :
-    m_renderTarget(renderTarget)
+MouseCursor::MouseCursor(std::shared_ptr<IRenderTarget> renderTarget) :
+    m_renderTarget(std::move(renderTarget))
 {
     m_cursorsFile = AssetManager::Inst()->getSlp(AssetManager::filenameID("mcursors.shp"));
     if (!m_cursorsFile) {

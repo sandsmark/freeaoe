@@ -335,22 +335,26 @@ void ScenarioController::handleTriggerEffect(const genie::TriggerEffect &effect)
 
          ////////////////////////
          // Trigger modifications
-    case genie::TriggerEffect::ActivateTrigger:
-        if (effect.trigger < 0 || effect.trigger >= m_triggers.size()) {
+    case genie::TriggerEffect::ActivateTrigger: {
+        uint32_t triggerIndex = effect.trigger;
+        if (triggerIndex >= m_triggers.size()) {
             DBG << "can't activate invalid trigger";
             return;
         }
         DBG << "enabling trigger" << m_triggers[effect.trigger].name;
-        m_triggers[effect.trigger].enabled = true;
+        m_triggers[triggerIndex].enabled = true;
         break;
-    case genie::TriggerEffect::DeactivateTrigger:
-        if (effect.trigger < 0 || effect.trigger >= m_triggers.size()) {
+    }
+    case genie::TriggerEffect::DeactivateTrigger: {
+        uint32_t triggerIndex = effect.trigger;
+        if (triggerIndex >= m_triggers.size()) {
             DBG << "can't deactivate invalid trigger";
             return;
         }
         DBG << "disabling trigger" << m_triggers[effect.trigger].name;
-        m_triggers[effect.trigger].enabled = false;
+        m_triggers[triggerIndex].enabled = false;
         break;
+    }
 
         ///////////////
         // Chat stuff

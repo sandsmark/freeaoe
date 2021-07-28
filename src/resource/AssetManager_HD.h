@@ -47,6 +47,8 @@ private:
 
 SlpFilePtr AssetManager_HD::getSlp(uint32_t id, const ResourceType type)
 {
+    (void)type;
+
     genie::SlpFilePtr slp_ptr;
     if (m_nonExistentSlps.count(id)) {
         return slp_ptr;

@@ -153,7 +153,7 @@ public:
     virtual ~IRenderTarget();
 
     //----------------------------------------------------------------------------
-    virtual Size getSize(void) const = 0;
+    virtual Size getSize() const = 0;
 
     virtual void setSize(const Size size) const = 0;
 
@@ -178,7 +178,7 @@ public:
     //----------------------------------------------------------------------------
     /// Displays frame.
     //
-    virtual void display(void) = 0;
+    virtual void display() = 0;
 
     CameraPtr camera() { return m_camera; }
 
@@ -217,7 +217,7 @@ struct Window
     //----------------------------------------------------------------------------
     /// Displays frame.
     //
-    virtual void display(void) = 0;
+    virtual void display() = 0;
 protected:
     Window() = default;
 };

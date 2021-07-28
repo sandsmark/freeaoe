@@ -26,8 +26,8 @@
 #include "resource/GameSpecific.h"
 #include "resource/DataManager.h"
 
-ActionPanel::ActionPanel(const std::shared_ptr<SfmlRenderTarget> &renderTarget) :
-    m_renderTarget(renderTarget)
+ActionPanel::ActionPanel(std::shared_ptr<SfmlRenderTarget> renderTarget) :
+    m_renderTarget(std::move(renderTarget))
 {
 }
 

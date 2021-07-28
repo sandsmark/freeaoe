@@ -127,7 +127,7 @@ private:
 
     int m_textScrollOffset = 0;
     int m_titleScrollOffset = 0;
-    int m_currentEntry = 0;
+    size_t m_currentEntry = 0;
 
     sf::Text m_mainScreenText;
     sf::Text m_titleText;

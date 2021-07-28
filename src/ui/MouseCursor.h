@@ -19,7 +19,7 @@ struct Image;
 
 struct MouseCursor
 {
-    MouseCursor(const std::shared_ptr<IRenderTarget> &renderTarget);
+    MouseCursor(std::shared_ptr<IRenderTarget> renderTarget);
 
     bool isValid() const;
 

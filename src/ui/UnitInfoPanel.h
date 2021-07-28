@@ -36,7 +36,7 @@ typedef std::vector<std::shared_ptr<Unit>> UnitVector;
 class UnitInfoPanel : public IState
 {
 public:
-    UnitInfoPanel(const std::shared_ptr<IRenderTarget> &renderTarget);
+    UnitInfoPanel(std::shared_ptr<IRenderTarget> renderTarget);
 
     void setUnitManager(const std::shared_ptr<UnitManager> &unitManager);
 

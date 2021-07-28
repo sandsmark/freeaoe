@@ -640,7 +640,7 @@ void HistoryScreen::updateVisibleText()
     for (int i=0; i<s_numVisibleTextLines; i++) {
         m_visibleText[i].setStyle(sf::Text::Regular);
 
-        const int index = i + m_textScrollOffset;
+        const size_t index = i + m_textScrollOffset;
         if (index >= m_textLines.size()) {
             m_visibleText[i].setString("");
             continue;
@@ -664,7 +664,7 @@ void HistoryScreen::updateVisibleText()
 void HistoryScreen::updateVisibleTitles()
 {
     for (int i=0; i<s_numListEntries; i++) {
-        const int index = i + m_titleScrollOffset;
+        const size_t index = i + m_titleScrollOffset;
 
         if (index == m_currentEntry) {
             m_visibleTitles[i].text.setOutlineColor(sf::Color(192, 192, 0));
