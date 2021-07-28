@@ -35,7 +35,7 @@ void ai::Actions::DisableSelf::execute(ai::AiRule *rule)
         [=](const std::shared_ptr<AiRule> &containedRule) {
             return containedRule.get() == rule;
         }
-    ));
+    ), rule->m_owner->rules.end());
 }
 
 ai::Actions::BuyCommodity::BuyCommodity(const Commodity commodity, const int amount) :
