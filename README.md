@@ -146,7 +146,6 @@ TODO (this is probably going to get outdated)
  - Angle of arrows
  - Arrows stuck in the ground
  - Upscale shaders (WIP in the `martin/lolshaders` branch)
- - MIDI support, for music in the trial versions (WIP in the `martin/midi` branch)
  - Video support, intro videos etc. (WIP in the `martin/video` branch)
 
 Wishlist/low priority:
@@ -218,6 +217,7 @@ Compared to other reimplementations as much as possible is fetched from the data
     * Sound when training units.
     * Positional.
     * Streaming sound (scenario voices, music, etc.).
+    * MIDI support, for music in the trial versions.
  * Civilizations:
     * Starting resources.
     * Different UI interface graphics.
