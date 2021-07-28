@@ -429,7 +429,8 @@ void ListView::setCurrentPath(std::string pathString)
             return aDot < bDot;
         }
 
-        return a.filename() < b.filename();
+        // clang-tidy for some reason believes the < should be a nullptr
+        return a.filename() < b.filename(); // NOLINT
     });
 
     m_currentItem = 0;

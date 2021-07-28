@@ -52,7 +52,8 @@ void Farm::setCreationProgress(float progress) noexcept
 
 bool Farm::update(Time time) noexcept
 {
-    bool updated = Unit::update(time);
+    // We really don't want the building update()
+    bool updated = Unit::update(time); // NOLINT
 
     if (util::floatsEquals(resources[genie::ResourceType::FoodStorage], 0)) {
         setTerrain(FarmDead);

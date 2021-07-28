@@ -37,9 +37,9 @@ bool LanguageManager::initialize()
 
         if (language != "en") {
             // Always load the english as a fallback
-            extraStringFiles.push_back("/resources/en/strings/history/history-utf8.txt");
-            extraStringFiles.push_back("/resources/en/strings/key-value/key-value-strings-utf8.txt");
-            extraStringFiles.push_back("/resources/en/strings/key-value/key-value-modded-strings-utf8.txt");
+            extraStringFiles.emplace_back("/resources/en/strings/history/history-utf8.txt");
+            extraStringFiles.emplace_back("/resources/en/strings/key-value/key-value-strings-utf8.txt");
+            extraStringFiles.emplace_back("/resources/en/strings/key-value/key-value-modded-strings-utf8.txt");
         };
 
 
