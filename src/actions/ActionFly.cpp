@@ -36,7 +36,7 @@ IAction::UpdateResult ActionFly::update(Time time)
     const float elapsed = time - m_lastUpdateTime;
     m_lastUpdateTime = time;
 
-    if (time - m_lastTurnTime > 5000 && rand() % 100 > 99) {
+    if (time - m_lastTurnTime > 5000 && (rand() % 100) > 90) {
         m_lastTurnTime = time;
 
         if (rand() % 2 == 0) {

@@ -24,7 +24,6 @@ bool Checks::canConvert(const Unit *converter, const Unit *target)
         // These can never be converted
         switch (target->data()->Class) {
         case genie::Unit::Wall:
-            return false;
         case genie::Unit::Flag:
             return false;
         case genie::Unit::Farm: // Fish traps and actual farms
@@ -51,19 +50,12 @@ bool Checks::canConvert(const Unit *converter, const Unit *target)
         // https://ageofempires.fandom.com/wiki/Redemption#Affected_buildings
         switch(target->data()->ID) {
         case AoE2::TownCenter:
-            return false;
         case AoE2::RelicCart:
-            return false;
         case AoE2::Wonder:
-            return false;
         case AoE2::Outlaw:
-            return false;
         case AoE2::FriarTuck:
-            return false;
         case AoE2::Castle:
-            return false;
         case AoE2::Monastery:
-            return false;
         default:
             break;
             // TODO: krepost from definitive edition

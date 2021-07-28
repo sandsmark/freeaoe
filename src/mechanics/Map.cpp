@@ -268,7 +268,7 @@ bool Map::updateTileAt(const int col, const int row, unsigned id) noexcept
     return true;
 }
 
-void Map::removeEntityAt(unsigned int col, unsigned int row, const int entityId) noexcept
+void Map::removeEntityAt(unsigned int col, unsigned int row, const size_t entityId) noexcept
 {
     unsigned int index = row * cols_ + col;
 
