@@ -355,7 +355,7 @@ Drawable::Image::Ptr Sprite::slpFrameToImage(const IRenderTarget &renderTarget, 
 
 }
 
-const sf::Texture &Sprite::texture(uint32_t frameNum, float angleRadians, int8_t playerColor, const ImageType imageType) noexcept
+const sf::Texture &Sprite::texture(uint32_t frameNum, float angleRadians, int playerColor, const ImageType imageType) noexcept
 {
     if (!slp_) {
         return nullImage;

@@ -141,7 +141,7 @@ public:
 //    const sf::Texture &getImage(uint32_t frame_num = 0, float angle = 0, uint8_t playerId = 0, const ImageType type = ImageType::Base);
 //    const sf::Texture &overlayImage(uint32_t frame_num, float angle, uint8_t playerId);
 
-    const sf::Texture &texture(uint32_t frameNum = 0, float angleRadians = 0, int8_t playerColor = 0, const ImageType imageType = ImageType::Base) noexcept;
+    const sf::Texture &texture(uint32_t frameNum = 0, float angleRadians = 0, int playerColor = 0, const ImageType imageType = ImageType::Base) noexcept;
 
     Size size(uint32_t frame_num, float angle) const noexcept;
     ScreenRect rect(uint32_t frame_num, float angle) const noexcept;
