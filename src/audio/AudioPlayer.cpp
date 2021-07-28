@@ -20,8 +20,11 @@
 
 #include <miniaudio/extras/dr_mp3.h>
 
+extern "C" {
 #include <tinysoundfont/tsf.h>
 #include <tinysoundfont/tml.h>
+}
+
 #include <misc/soundfont/wt_181k_g/wt_181k_G.sf2.h>
 #include <misc/general808/General808.sf2.h>
 
@@ -57,7 +60,6 @@ struct MidiHolder {
     tml_message *loader = nullptr;
     tml_message *msg = nullptr;
 
-    // Could really just re-use, but then threading
     tsf *player = nullptr;
 
     double msec = 0.;
@@ -80,7 +82,13 @@ void AudioPlayer::mp3Callback(sts_mixer_sample_t *sample, void *userdata)
     ma_decoder* decoder = reinterpret_cast<ma_decoder*>(userdata);
     REQUIRE(decoder, return);
 
-    sample->length = ma_decoder_read_pcm_frames(decoder, sample->audiodata, DRMP3_MIN_DATA_CHUNK_SIZE) * 2;
+    const uint64_t framesRead = ma_decoder_read_pcm_frames(decoder, sample->audiodata, DRMP3_MIN_DATA_CHUNK_SIZE);
+
+    if (framesRead < DRMP3_MIN_DATA_CHUNK_SIZE) {
+        ma_decoder_seek_to_pcm_frame(decoder, 0);
+    }
+
+    sample->length = framesRead * 2; // 2 channels
 }
 
 void AudioPlayer::mp3StopCallback(const int id, sts_mixer_sample_t *sample, void *userdata)
@@ -128,7 +136,7 @@ void AudioPlayer::midiCallback(sts_mixer_sample_t *sample, void *userdata)
                 tsf_channel_set_presetnumber(midi->player, midi->msg->channel, midi->msg->program, (midi->msg->channel == 9));
                 break;
             case TML_NOTE_ON: //play a note
-                tsf_channel_note_on(midi->player, midi->msg->channel, midi->msg->key, midi->msg->velocity / 127.0f);
+                tsf_channel_note_on(midi->player, midi->msg->channel, midi->msg->key, std::pow(midi->msg->velocity / 127.0f, 3));
                 break;
             case TML_NOTE_OFF: //stop a note
                 tsf_channel_note_off(midi->player, midi->msg->channel, midi->msg->key);
