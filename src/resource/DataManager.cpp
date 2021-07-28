@@ -226,7 +226,7 @@ bool DataManager::initialize()
 
     const std::string gamePath = Config::Inst().getValue(Config::GamePath) + "/";
 
-    dat_file_.reset(new genie::DatFile);
+    dat_file_ = std::make_unique<genie::DatFile>();
 
     const std::vector<std::pair<std::string, genie::GameVersion>> datFilenames({
 //        {"empires2_x2_p1.dat", genie::GV_TC  }, // forgotten kingdoms, TODO
