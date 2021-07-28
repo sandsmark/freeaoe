@@ -666,7 +666,7 @@ void HistoryScreen::updateVisibleTitles()
     for (int i=0; i<s_numListEntries; i++) {
         const size_t index = i + m_titleScrollOffset;
 
-        if (index == m_currentEntry) {
+        if (int(index) == m_currentEntry) {
             m_visibleTitles[i].text.setOutlineColor(sf::Color(192, 192, 0));
         } else {
             m_visibleTitles[i].text.setOutlineColor(sf::Color::Transparent);
