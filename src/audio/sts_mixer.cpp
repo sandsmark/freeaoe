@@ -38,20 +38,20 @@ enum {
 
 
 // as usual, std:: (in this case std::clamp) is really dumb, so we do it ourselves
-static inline float sts_mixer__clamp(const float value, const float min, const float max) {
+static inline float sts_mixer_clamp(const float value, const float min, const float max) {
   if (value < min) { return min; }
   if (value > max) { return max; }
   return value;
 }
 
-static inline float sts_mixer__clamp_sample(const float sample) {
+static inline float sts_mixer_clamp_sample(const float sample) {
   if (sample < -1.0f) { return -1.0f; }
   if (sample > 1.0f) { return 1.0f; }
   return sample;
 }
 
 
-static float sts_mixer__get_sample(sts_mixer_sample_t* sample, unsigned int position) {
+static float sts_mixer_get_sample(sts_mixer_sample_t* sample, unsigned int position) {
   switch (sample->audio_format) {
     case STS_MIXER_SAMPLE_FORMAT_8:
       return (float)((int8_t*)sample->audiodata)[position] / 127.0f;
@@ -67,7 +67,7 @@ static float sts_mixer__get_sample(sts_mixer_sample_t* sample, unsigned int posi
 }
 
 
-static void sts_mixer__reset_voice(sts_mixer_t* mixer, const int i) {
+static void sts_mixer_reset_voice(sts_mixer_t* mixer, const int i) {
   sts_mixer_voice_t*  voice = &mixer->voices[i];
   voice->state = STS_MIXER_VOICE_STOPPED;
   if (voice->stream && voice->stream->stop_callback) {
@@ -81,7 +81,7 @@ static void sts_mixer__reset_voice(sts_mixer_t* mixer, const int i) {
 }
 
 
-static int sts_mixer__find_free_voice(sts_mixer_t* mixer) {
+static int sts_mixer_find_free_voice(sts_mixer_t* mixer) {
   int i;
 
   for (i = 0; i < STS_MIXER_VOICES; ++i) {
@@ -94,7 +94,7 @@ static int sts_mixer__find_free_voice(sts_mixer_t* mixer) {
 void sts_mixer_init(sts_mixer_t* mixer, unsigned int frequency, int audio_format) {
   int i;
 
-  for (i = 0; i < STS_MIXER_VOICES; ++i) { sts_mixer__reset_voice(mixer, i); }
+  for (i = 0; i < STS_MIXER_VOICES; ++i) { sts_mixer_reset_voice(mixer, i); }
   mixer->frequency = frequency;
   mixer->sample_gain = 1.0f;
   mixer->stream_gain = 1.0f;
@@ -120,12 +120,12 @@ int sts_mixer_play_sample(sts_mixer_t* mixer, sts_mixer_sample_t* sample, float 
   int                 i;
   sts_mixer_voice_t*  voice;
 
-  i = sts_mixer__find_free_voice(mixer);
+  i = sts_mixer_find_free_voice(mixer);
   if (i >= 0) {
     voice = &mixer->voices[i];
     voice->gain = gain;
-    voice->pitch = sts_mixer__clamp(pitch, 0.1f, 10.0f);
-    voice->pan = sts_mixer__clamp(pan * 0.5f, -0.5f, 0.5f);
+    voice->pitch = sts_mixer_clamp(pitch, 0.1f, 10.0f);
+    voice->pan = sts_mixer_clamp(pan * 0.5f, -0.5f, 0.5f);
     voice->position = 0.0f;
     delete voice->sample;
     voice->sample = sample;
@@ -140,7 +140,7 @@ int sts_mixer_play_stream(sts_mixer_t* mixer, sts_mixer_stream_t* stream, float 
   int                 i;
   sts_mixer_voice_t*  voice;
 
-  i = sts_mixer__find_free_voice(mixer);
+  i = sts_mixer_find_free_voice(mixer);
   if (i >= 0) {
     voice = &mixer->voices[i];
     voice->gain = gain;
@@ -155,7 +155,7 @@ int sts_mixer_play_stream(sts_mixer_t* mixer, sts_mixer_stream_t* stream, float 
 
 
 void sts_mixer_stop_voice(sts_mixer_t* mixer, int voice) {
-  if (voice >= 0 && voice < STS_MIXER_VOICES) { sts_mixer__reset_voice(mixer, voice); }
+  if (voice >= 0 && voice < STS_MIXER_VOICES) { sts_mixer_reset_voice(mixer, voice); }
 }
 
 
@@ -163,7 +163,7 @@ void sts_mixer_stop_sample(sts_mixer_t* mixer, sts_mixer_sample_t* sample) {
   int i;
 
   for (i = 0; i < STS_MIXER_VOICES; ++i) {
-    if (mixer->voices[i].sample == sample) { sts_mixer__reset_voice(mixer, i); }
+    if (mixer->voices[i].sample == sample) { sts_mixer_reset_voice(mixer, i); }
   }
 }
 
@@ -172,7 +172,7 @@ void sts_mixer_stop_stream(sts_mixer_t* mixer, sts_mixer_stream_t* stream) {
   int i;
 
   for (i = 0; i < STS_MIXER_VOICES; ++i) {
-    if (mixer->voices[i].stream == stream) { sts_mixer__reset_voice(mixer, i); }
+    if (mixer->voices[i].stream == stream) { sts_mixer_reset_voice(mixer, i); }
   }
 }
 
@@ -194,11 +194,11 @@ void sts_mixer_mix_audio(sts_mixer_t* mixer, void* output, unsigned int samples)
       if (voice->state == STS_MIXER_VOICE_PLAYING) {
         position = (int)voice->position;
         if (position < voice->sample->length) {
-          sample = sts_mixer__clamp_sample(sts_mixer__get_sample(voice->sample, position) * voice->gain * mixer->sample_gain);
-          left += sts_mixer__clamp_sample(sample * (0.5f - voice->pan));
-          right += sts_mixer__clamp_sample(sample * (0.5f + voice->pan));
+          sample = sts_mixer_clamp_sample(sts_mixer_get_sample(voice->sample, position) * voice->gain * mixer->sample_gain);
+          left += sts_mixer_clamp_sample(sample * (0.5f - voice->pan));
+          right += sts_mixer_clamp_sample(sample * (0.5f + voice->pan));
           voice->position += (float)voice->sample->frequency * advance * voice->pitch;
-        } else { sts_mixer__reset_voice(mixer, i); }
+        } else { sts_mixer_reset_voice(mixer, i); }
       } else if (voice->state == STS_MIXER_VOICE_STREAMING) {
         position = ((int)voice->position) * 2;
         if (position >= voice->stream->sample.length) {
@@ -208,18 +208,18 @@ void sts_mixer_mix_audio(sts_mixer_t* mixer, void* output, unsigned int samples)
           position = 0;
         }
         if (voice->stream->sample.length > 0) {
-          left += sts_mixer__clamp_sample(sts_mixer__get_sample(&voice->stream->sample, position) * voice->gain * mixer->stream_gain);
-          right += sts_mixer__clamp_sample(sts_mixer__get_sample(&voice->stream->sample, position + 1) * voice->gain * mixer->stream_gain);
+          left += sts_mixer_clamp_sample(sts_mixer_get_sample(&voice->stream->sample, position) * voice->gain * mixer->stream_gain);
+          right += sts_mixer_clamp_sample(sts_mixer_get_sample(&voice->stream->sample, position + 1) * voice->gain * mixer->stream_gain);
           voice->position += (float)voice->stream->sample.frequency * advance;
         } else {
-          sts_mixer__reset_voice(mixer, i);
+          sts_mixer_reset_voice(mixer, i);
         }
       }
     }
 
     // write to buffer
-    left = sts_mixer__clamp_sample(left);
-    right = sts_mixer__clamp_sample(right);
+    left = sts_mixer_clamp_sample(left);
+    right = sts_mixer_clamp_sample(right);
     switch (mixer->audio_format) {
       case STS_MIXER_SAMPLE_FORMAT_8:
         *out_8++ = (char)(left * 127.0f);
