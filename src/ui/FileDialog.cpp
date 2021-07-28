@@ -32,7 +32,7 @@ bool FileDialog::setup(int width, int height)
         m_description = m_window->renderTarget->createText(Drawable::Text::UI);
         m_description->string = "Please select the directory containing your Age of Empires 2 installation.";
         m_description->pointSize = 20;
-        m_description->position.x = width/2;
+        m_description->position.x = width/2.f;
         m_description->position.y = 20;
         m_description->alignment = Drawable::Text::AlignHCenter;
         m_description->color = Drawable::Black;
@@ -245,7 +245,7 @@ ListView::ListView(const ScreenRect rect, const IRenderTarget &window) :
         text->outlineColor = Drawable::Transparent;
         const int textHeight = text->size().height;
         text->position.x = rect.x + 10;
-        text->position.y = rect.y + i * m_itemHeight + textHeight/3;
+        text->position.y = rect.y + i * m_itemHeight + textHeight/3.f;
 
         m_texts.push_back(std::move(text));
     }

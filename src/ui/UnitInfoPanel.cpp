@@ -501,7 +501,7 @@ void UnitInfoPanel::updateUnitsList(const UnitVector &units, const ScreenPos off
 
     int unitCount = units.size();
     if (unitCount >= maxVertical * maxHorizontal) {
-        iconSize.width = iconSize.height - (unitCount - maxVertical * maxHorizontal) / 3;
+        iconSize.width = iconSize.height - (unitCount - maxVertical * maxHorizontal) / 3.f;
     } else {
         iconSize.width = iconSize.height;
     }

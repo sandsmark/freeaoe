@@ -223,7 +223,7 @@ void UnitsRenderer::render(const std::shared_ptr<IRenderTarget> &renderTarget, c
 
             // draw health indicator
             if (showHealthbar) {
-                pos.x -= Constants::TILE_SIZE_HORIZONTAL / 8;
+                pos.x -= Constants::TILE_SIZE_HORIZONTAL / 8.f;
                 pos.y -= height + Constants::TILE_SIZE_HEIGHT * unit->data()->HPBarHeight;
 
                 Drawable::Rect healthBar;

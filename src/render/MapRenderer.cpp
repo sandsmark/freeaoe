@@ -212,22 +212,22 @@ void MapRenderer::updateTexture()
 
             // If we wanted to do this 100% correctly, we would need to use the hotspot from the
             // filtered SLP and then always offset with yOffset, but this is good enough for now.
-            spos.y -= Constants::TILE_SIZE_VERTICAL / 2;
+            spos.y -= Constants::TILE_SIZE_VERTICAL / 2.f;
             if (mapTile.yOffset > 0) {
-                spos.y -= mapTile.yOffset * 2;
+                spos.y -= mapTile.yOffset * 2.f;
             }
 
 
             TerrainPtr terrain = AssetManager::Inst()->getTerrain(mapTile.terrainId);
 
             if (!terrain || !terrain->isValid()) {
-                invalidIndicator.center = spos + ScreenPos(Constants::TILE_SIZE_HORIZONTAL/2, Constants::TILE_SIZE_VERTICAL/2);
+                invalidIndicator.center = spos + ScreenPos(Constants::TILE_SIZE_HORIZONTAL/2.f, Constants::TILE_SIZE_VERTICAL/2.f);
                 m_textureTarget->draw(invalidIndicator);
                 continue;
             }
             const Drawable::Image::Ptr &tileTexture = terrain->texture(mapTile, m_textureTarget);
             if (!tileTexture->isValid()) {
-                invalidIndicator.center = spos + ScreenPos(Constants::TILE_SIZE_HORIZONTAL/2, Constants::TILE_SIZE_VERTICAL/2);
+                invalidIndicator.center = spos + ScreenPos(Constants::TILE_SIZE_HORIZONTAL/2.f, Constants::TILE_SIZE_VERTICAL/2.f);
                 m_textureTarget->draw(invalidIndicator);
                 continue;
             }

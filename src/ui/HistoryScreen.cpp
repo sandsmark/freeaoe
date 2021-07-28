@@ -327,7 +327,7 @@ bool HistoryScreen::init(const std::string &filesDir)
         genie::SlpFramePtr buttonBg = slpFile->getFrame(0);
         m_uiElements[MainScreenButton].texture.loadFromImage(Resource::convertFrameToImage(buttonBg, buttonPalette));
         m_uiElements[MainScreenButton].pressTexture.loadFromImage(Resource::convertFrameToImage(slpFile->getFrame(1), buttonPalette));
-        ScreenRect buttonRect(m_textRect.center().x - buttonBg->getWidth() / 2,  m_textRect.bottom(), buttonBg->getWidth(), buttonBg->getHeight());
+        ScreenRect buttonRect(m_textRect.center().x - buttonBg->getWidth() / 2.f,  m_textRect.bottom(), buttonBg->getWidth(), buttonBg->getHeight());
         m_uiElements[MainScreenButton].rect = buttonRect;
 
         m_mainScreenText.setFont(SfmlRenderTarget::stylishFont());
@@ -357,7 +357,7 @@ void HistoryScreen::render()
     if (m_currentEntry >= 0) {
         sf::Sprite sprite;
         const sf::Texture &illustration = m_historyEntries[m_currentEntry].illustration;
-        sprite.setPosition(529 - illustration.getSize().x/2, 73);
+        sprite.setPosition(529 - illustration.getSize().x/2.f, 73);
         sprite.setTexture(illustration);
         m_renderWindow->draw(sprite);
 
@@ -657,7 +657,7 @@ void HistoryScreen::updateVisibleText()
         }
     }
 
-    int maxY = m_uiElements[TextDownButton].rect.y - m_uiElements[TextUpButton].rect.bottom() - m_uiElements[TextPositionIndicator].rect.height;
+    float maxY = m_uiElements[TextDownButton].rect.y - m_uiElements[TextUpButton].rect.bottom() - m_uiElements[TextPositionIndicator].rect.height;
     m_uiElements[TextPositionIndicator].rect.y = m_uiElements[TextUpButton].rect.bottom() + maxY * m_textScrollOffset / int(m_textLines.size() - s_numVisibleTextLines);
 }
 
