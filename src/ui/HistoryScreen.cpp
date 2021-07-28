@@ -586,12 +586,13 @@ void HistoryScreen::loadFile(const std::string &filePath)
         if (character == '\n') {
             if (currentLine.width + currentWordWidth > s_textWidth) {
                 m_textLines.push_back(std::move(currentLine));
+                currentLine = TextLine();
             }
 
             currentLine.text += currentWord;
 
             m_textLines.push_back(std::move(currentLine));
-            currentLine.width = 0;
+            currentLine = TextLine();
             currentWord.clear();
             currentWordWidth = 0;
             continue;
@@ -599,7 +600,7 @@ void HistoryScreen::loadFile(const std::string &filePath)
 
         if (currentLine.width + currentWordWidth > s_textWidth) {
             m_textLines.push_back(std::move(currentLine));
-            currentLine.width = 0;
+            currentLine = TextLine();
         }
 
         currentLine.text += currentWord + ' ';
