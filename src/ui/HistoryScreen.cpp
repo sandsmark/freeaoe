@@ -680,6 +680,6 @@ void HistoryScreen::updateVisibleTitles()
         m_visibleTitles[i].text.setString(m_historyEntries[index].title);
     }
     int maxY = m_uiElements[TitlesDownButton].rect.y - m_uiElements[TitlesUpButton].rect.bottom() - m_uiElements[TitlesPositionIndicator].rect.height;
-    m_uiElements[TitlesPositionIndicator].rect.y = m_uiElements[TitlesUpButton].rect.bottom() + maxY * m_titleScrollOffset / int(m_historyEntries.size() - s_numListEntries);
+    m_uiElements[TitlesPositionIndicator].rect.y = m_uiElements[TitlesUpButton].rect.bottom() + maxY * m_titleScrollOffset / float(m_historyEntries.size() - s_numListEntries);
 }
 
