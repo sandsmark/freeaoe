@@ -925,7 +925,7 @@ bool ActionMove::isPassable(const int x, const int y, const bool useCache) noexc
         return false;
     }
 
-    const double z = m_map->elevationAt(MapPos(x, y));
+    const float z = m_map->elevationAt(MapPos(x, y));
     const Unit::Ptr unit = m_unit.lock();
     REQUIRE(unit, return false);
     genie::XYZF size = unit->data()->Size;
@@ -971,9 +971,9 @@ bool ActionMove::isPassable(const int x, const int y, const bool useCache) noexc
                 default: {
                     const MapPos &otherPos = otherUnit->position();
 
-                    const double centreDistance = util::hypot(x - otherPos.x, y - otherPos.y, z - otherPos.z);
+                    const float centreDistance = util::hypot(x - otherPos.x, y - otherPos.y, z - otherPos.z);
                     const Size otherSize = otherUnit->clearanceSize();
-                    const double clearance = std::max(std::max(size.x, size.y), std::max(otherSize.width, otherSize.height));
+                    const float clearance = std::max(std::max(size.x, size.y), std::max(otherSize.width, otherSize.height));
                     if (centreDistance < clearance) {
                         if (useCache) {
                             m_passable[cacheIndex] = false;
