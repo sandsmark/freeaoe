@@ -147,6 +147,18 @@ void AudioPlayer::midiCallback(sts_mixer_sample_t *sample, void *userdata)
             case TML_CONTROL_CHANGE: //MIDI controller messages
                 tsf_channel_midi_control(midi->player, midi->msg->channel, midi->msg->control, midi->msg->control_value);
                 break;
+            case TML_KEY_PRESSURE:
+                DBG << "Unhandled aftertouch/key pressure in midi";
+                break;
+            case TML_CHANNEL_PRESSURE:
+                DBG << "Unhandled channel pressure change in midi";
+                break;
+            case TML_SET_TEMPO:
+                DBG << "Unhandled tempo change in midi";
+                break;
+            default:
+                DBG << "Unhandled midi message" << midi->msg->type;
+                break;
             }
         }
 
