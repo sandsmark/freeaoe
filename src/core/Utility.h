@@ -27,6 +27,10 @@
 #include <vector>
 
 #ifndef _MSC_VER
+#include <signal.h>
+#endif
+
+#ifndef _MSC_VER
 #define IS_LIKELY(x)      __builtin_expect(!!(x), 1)
 #define IS_UNLIKELY(x)    __builtin_expect(!!(x), 0)
 #define DUMB_CLANG_IT_IS_USED __attribute__ ((unused))
@@ -52,7 +56,11 @@
     #endif//_MSC_VER
 
 #else // ... and this is in release builds
-    #define REQUIRE(condition, action) if (IS_UNLIKELY(!(condition))) { WARN << "Assertion" << #condition << "failed"; action; }
+    #ifdef _MSC_VER
+    #define REQUIRE(condition, action) if (IS_UNLIKELY(!(condition))) { puts("Assertion"  #condition  "failed"); action; }
+    #else
+    #define REQUIRE(condition, action) if (IS_UNLIKELY(!(condition))) { puts("Assertion"  #condition  "failed"); raise(SIGTRAP); action; }
+    #endif
 #endif
 
 namespace util {
