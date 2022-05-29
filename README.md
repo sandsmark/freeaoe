@@ -62,7 +62,7 @@ To build
 --------
  - Clone with --recurse-submodules (e. g. `git clone --recurse-submodules https://github.com/sandsmark/freeaoe.git`)
  - `mkdir build && cd build`
- - `cmake .. && make`
+ - `cmake .. && make -j$(nproc)`
  - `./freeaoe`
 
 I can't get it to build on macOS (and I don't have any Apple machines), so if
